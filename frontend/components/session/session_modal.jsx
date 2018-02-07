@@ -11,7 +11,7 @@ class SessionModal extends React.Component {
     this.state = {
       openModal: false,
       signIn: false,
-      formType: props.formType
+      type: props.type
     };
 
     window.SessionOpenModal = () => {
@@ -38,7 +38,7 @@ class SessionModal extends React.Component {
     return (
       <div>
         <button className="session-button" onClick={this.openModal}>
-          {this.props.formType}
+          {this.props.type}
         </button>
 
         <Modal
@@ -49,7 +49,7 @@ class SessionModal extends React.Component {
           className="session-form-container">
 
           <SessionForm
-            formType={this.state.formType}
+            type={this.state.type}
             login={this.props.login}
             signup={this.props.signup}
             errors={this.props.errors}

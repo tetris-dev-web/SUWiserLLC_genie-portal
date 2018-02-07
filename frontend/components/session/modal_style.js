@@ -10,10 +10,9 @@ module.exports = {
   },
   content : {
     position        : 'fixed',
-    width           : '50px',
-    right           : '158px',
+    right           : '0',
     border          : '1px solid #ccc',
-    borderRadius    : '0 0 15px 15px',
+    borderRadius    : '0 0 0 15px',
     padding         : '10px',
     backgroundColor : 'rgba(56, 71, 120, 0.5)',
     zIndex          : 101,

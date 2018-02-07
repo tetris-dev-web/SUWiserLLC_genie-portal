@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // testing start
   window.store = store;
   window.getState = store.getState;
-  window.fetchProjects = fetchProjects;
+  // window.fetchProjects = fetchProjects;
   // testing end
 
   const root = document.getElementById('root');

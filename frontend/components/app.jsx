@@ -5,21 +5,19 @@ import {
   Redirect,
   Switch,
   Link,
+  AuthRoute,
   HashRouter
 } from 'react-router-dom';
+import Navbar from './entities/navbar/navbar_container';
 
 const App = () => (
   <div>
-    <header>
-      <Link to="/">
-        <h1>Genus Development</h1>
-      </Link>
-    </header>
-    <Switch>
-      <AuthRoute exact path="/login" component={SessionFormContainer} />
-      <AuthRoute exact path="/signup" component={SessionFormContainer} />
-    </Switch>
+    <Navbar />
   </div>
 );
 
+// <Switch>
+//   <AuthRoute exact path="/login" component={SessionFormContainer} />
+//   <AuthRoute exact path="/signup" component={SessionFormContainer} />
+// </Switch>
 export default App;
