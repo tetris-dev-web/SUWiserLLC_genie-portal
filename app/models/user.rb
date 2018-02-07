@@ -1,5 +1,4 @@
-class Api::User < ApplicationRecord
-  # has_many :projects
+class User < ApplicationRecord
 
   validates_acceptance_of :bylaw_agreement, presence: { message: "Please " }
 
@@ -7,5 +6,4 @@ class Api::User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-
 end
