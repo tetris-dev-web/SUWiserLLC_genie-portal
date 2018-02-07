@@ -65,7 +65,7 @@ class SessionForm extends React.Component {
       bylaw_agreement: this.state.bylaw_agreement
     };
 
-    if (this.props.formType === "Log In") {
+    if (this.props.type === "Log In") {
       this.props.login(user);
     } else {
       this.props.signup(user);
@@ -80,7 +80,7 @@ class SessionForm extends React.Component {
 
     let { email, password, bylaw_agreement } = this.state;
 
-    if (this.props.formType === "login") {
+    if (this.props.type === "Log In") {
       return(
         <form className="session-form-box">
           {this.renderErrors()}
