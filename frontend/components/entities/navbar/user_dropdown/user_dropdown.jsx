@@ -49,13 +49,15 @@ class UserDropdown extends React.Component {
     // this.handleLogOut = this.handleLogOut.bind(this);
     this.toggle = this.toggle.bind(this);
     this.state = {
-      dropdownOpen: false
+      // dropdownOpen: false
+      dropdownOpen: true
     };
   }
 
   toggle() {
     this.setState({
-      dropdownOpen: !this.state.dropdownOpen
+      // dropdownOpen: !this.state.dropdownOpen
+      dropdownOpen: true
     });
   }
 

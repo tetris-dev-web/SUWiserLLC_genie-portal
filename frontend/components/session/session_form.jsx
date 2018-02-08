@@ -60,10 +60,12 @@ class SessionForm extends React.Component {
 
     const user = {
       email: this.state.email,
-      username: parsedUsername,
+      // username: parsedUsername,
       password: this.state.password,
-      bylaw_agreement: this.state.bylaw_agreement
+      // bylaw_agreement: this.state.bylaw_agreement
     };
+
+    debugger
 
     if (this.props.type === "Log In") {
       this.props.login(user);
@@ -77,7 +79,7 @@ class SessionForm extends React.Component {
   }
 
   render() {
-
+    debugger
     let { email, password, bylaw_agreement } = this.state;
 
     if (this.props.type === "Log In") {
