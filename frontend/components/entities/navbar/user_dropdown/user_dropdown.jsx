@@ -108,7 +108,7 @@ class UserDropdown extends React.Component {
         <div id="dropdown-container" className="dropdown">
           <a id="dLabel" role="button" data-toggle="dropdown" className="dropdown-link">
             <div className="user-dropdown-button">
-              {this.props.currentUser.email}
+              {/* {this.props.currentUser.email} */}
               <hr/>
               <div className="tokens-div">
                 <div id="t-d-1">50 tokens</div>
