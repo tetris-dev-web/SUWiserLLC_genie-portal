@@ -1,11 +1,9 @@
-// import 'bootstrap/dist/css/bootstrap.css';
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from 'reactstrap';
 import React from 'react';
+import {
+  ButtonToolbar,
+  DropdownButton,
+  MenuItem
+ } from 'react-bootstrap';
 // import Modal from 'react-modal';
 
 // import UserDropdown from './user_dropdown';
@@ -100,38 +98,33 @@ class UserDropdown extends React.Component {
 
   render() {
 
-    // let { user_tokens, total_tokens } = this.state;
+    const dropdownButton = (
+      <div className="user-dropdown-button">
+        {this.props.currentUser.email}
+        <hr/>
+        <div className="tokens-cont">
+          <div className="tokens-text">50 tokens</div>
+        </div>
+      </div>
+    );
+    
     return (
       <div>
-        <div id="dropdown-container" className="dropdown">
-          <a id="dLabel" role="button" data-toggle="dropdown" className="dropdown-link">
-            <div className="user-dropdown-button">
-              {this.props.currentUser.email}
-              <hr/>
-              <div className="tokens-div">
-                <div id="t-d-1">50 tokens</div>
-              </div>
-            </div>
-          </a>
-      		<ul className="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-            <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-              <DropdownToggle caret>
-                click me
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem divider />
-                <DropdownItem>Another Action</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-
-            <li>
+        <ButtonToolbar>
+          <DropdownButton
+            bsStyle="default"
+            title={dropdownButton}
+            noCaret
+            id="dropdown-no-caret"
+          >
+            <MenuItem eventKey="1">
               <a className="logout-button" onClick={this.props.logout}>
                 <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504727474/exit-white_ox7kfe.svg" />
                 <div className="button-text">log&nbsp;out</div>
               </a>
-            </li>
-          </ul>
-        </div>
+            </MenuItem>
+          </DropdownButton>
+        </ButtonToolbar>
       </div>
     );
   }

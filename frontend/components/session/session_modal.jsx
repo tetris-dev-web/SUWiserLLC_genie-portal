@@ -36,7 +36,7 @@ class SessionModal extends React.Component {
   render() {
 
     return (
-      <div>
+      <div className="session-button-cont">
         <button className="session-button" onClick={this.openModal}>
           {this.props.type}
         </button>

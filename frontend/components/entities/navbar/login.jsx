@@ -13,7 +13,7 @@ class Login extends React.Component {
             <div className="gen-dash">GENIE DASHBOARD</div>
           </div>
         </div>
-        <div className="navbar-right nav-sign-in">
+        <div className="navbar-right nav-login">
           <SessionFormContainer type="Log In"/>
           <SessionFormContainer type="Sign Up"/>
         </div>
