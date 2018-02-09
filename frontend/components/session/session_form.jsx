@@ -93,7 +93,7 @@ class SessionForm extends React.Component {
   }
 
   render() {
-    debugger
+
     let { email, password, bylaw_agreement } = this.state;
 
     if (this.props.type === "Log In") {

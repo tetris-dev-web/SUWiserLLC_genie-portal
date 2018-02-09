@@ -5,7 +5,7 @@ export const RECEIVE_SESSION_ERRORS = 'RECEIVE_SESSION_ERRORS';
 export const CLEAR_SESSION_ERRORS = 'CLEAR_SESSION_ERRORS';
 
 export const receiveCurrentUser = currentUser => {
-  debugger
+  
   return {
     type: RECEIVE_CURRENT_USER,
     currentUser
@@ -27,12 +27,12 @@ export const clearSessionErrors = () => {
 
 // Can refractor to implicit returns later like below
 export const signup = user => dispatch => {
-  debugger
+  
   return APIUtil.signup(user).then(user => {
-    debugger
+    
     return dispatch(receiveCurrentUser(user));
   }, err => {
-    debugger
+    
     return dispatch(receiveSessionErrors(err.responseJSON.errors));
   }
 );
@@ -40,12 +40,12 @@ export const signup = user => dispatch => {
 
 // Returning everything syntax for easier debugging
 export const login = user => dispatch => {
-  debugger
+  
   return APIUtil.login(user).then(user => {
-    debugger
+    
     return dispatch(receiveCurrentUser(user));
   }, err => {
-    debugger
+    
     return dispatch(receiveSessionErrors(err.responseText));
   }
 );
