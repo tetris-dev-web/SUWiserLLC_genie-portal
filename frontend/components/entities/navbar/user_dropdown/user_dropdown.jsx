@@ -49,15 +49,13 @@ class UserDropdown extends React.Component {
     // this.handleLogOut = this.handleLogOut.bind(this);
     this.toggle = this.toggle.bind(this);
     this.state = {
-      // dropdownOpen: false
-      dropdownOpen: true
+      dropdownOpen: false
     };
   }
 
   toggle() {
     this.setState({
-      // dropdownOpen: !this.state.dropdownOpen
-      dropdownOpen: true
+      dropdownOpen: !this.state.dropdownOpen
     });
   }
 
@@ -108,7 +106,7 @@ class UserDropdown extends React.Component {
         <div id="dropdown-container" className="dropdown">
           <a id="dLabel" role="button" data-toggle="dropdown" className="dropdown-link">
             <div className="user-dropdown-button">
-              {/* {this.props.currentUser.email} */}
+              {this.props.currentUser.email}
               <hr/>
               <div className="tokens-div">
                 <div id="t-d-1">50 tokens</div>

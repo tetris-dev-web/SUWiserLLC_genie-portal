@@ -13,13 +13,12 @@ class Navbar extends React.Component {
   }
 
   render() {
-    debugger
     if (this.props.currentUser) {
       return <TokenInterface />;
     } else {
       return <Login />;
     }
-
+    //
     // return(<div>
     //   <TokenInterface />
     //   <Login />

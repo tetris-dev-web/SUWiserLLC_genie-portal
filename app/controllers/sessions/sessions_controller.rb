@@ -4,7 +4,7 @@ class Sessions::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
 
   def create
-    debugger
+    # super
     resource = User.find_for_database_authentication(email: params[:user][:email])
     return invalid_login_attempt unless resource
 
@@ -12,15 +12,19 @@ class Sessions::SessionsController < Devise::SessionsController
       sign_in :user, resource
       render "api/users/show"
       # return render nothing: true
+    else
+      # debugger
+      render json: ["Username and/or password was not found"], status: 401
+      # invalid_login_attempt
     end
 
-    invalid_login_attempt
   end
 
   # GET /resource/sign_in
-  # def new
-  #   super
-  # end
+  def new
+    render json: ["Username and/or password was not found"], status: 401
+    # super
+  end
 
   # POST /resource/sign_in
   # def create
