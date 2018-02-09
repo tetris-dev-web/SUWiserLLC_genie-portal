@@ -19,7 +19,6 @@ export const login = user => (
 export const logout = () => (
   $.ajax({
     method: 'DELETE',
-    // dataType: "JSON",
     url: '/users/sign_out'
   })
 );

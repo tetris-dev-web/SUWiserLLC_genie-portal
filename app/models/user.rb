@@ -1,6 +1,6 @@
 class User < ApplicationRecord
 
-  # validates_acceptance_of :bylaw_agreement, presence: { message: "Please " }
+  # validates :bylaw_agreement, acceptance: { accept: true }
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

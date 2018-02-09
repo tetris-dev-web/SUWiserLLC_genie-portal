@@ -6,7 +6,6 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
-    
     super
   end
 
@@ -39,14 +38,17 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  # protected
+  protected
 
+# Add any extra columns to the strong params HERE: (bylaw_agreement)
   # If you have extra params to permit, append them to the sanitizer.
-  # def configure_sign_up_params
-  #   devise_parameter_sanitizer.permit(:sign_up, keys: [:attribute])
-  # end
+  def configure_sign_up_params
+    devise_parameter_sanitizer.permits(:sign_up, keys: [:bylaw_agreement])
+  end
 
+  # Add any extra columns to the strong params for UPDATING here: (password)
   # If you have extra params to permit, append them to the sanitizer.
+  # UNCOMMENT BELOW
   # def configure_account_update_params
   #   devise_parameter_sanitizer.permit(:account_update, keys: [:attribute])
   # end

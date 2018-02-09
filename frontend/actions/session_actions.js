@@ -27,11 +27,13 @@ export const clearSessionErrors = () => {
 
 // Can refractor to implicit returns later like below
 export const signup = user => dispatch => {
+  debugger
   return APIUtil.signup(user).then(user => {
+    debugger
     return dispatch(receiveCurrentUser(user));
   }, err => {
     debugger
-    return dispatch(receiveSessionErrors(err));
+    return dispatch(receiveSessionErrors(err.responseJSON.errors));
   }
 );
 };
@@ -44,7 +46,7 @@ export const login = user => dispatch => {
     return dispatch(receiveCurrentUser(user));
   }, err => {
     debugger
-    return dispatch(receiveSessionErrors(err));
+    return dispatch(receiveSessionErrors(err.responseText));
   }
 );
 };

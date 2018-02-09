@@ -1,28 +1,30 @@
 # frozen_string_literal: true
 
 class Sessions::SessionsController < Devise::SessionsController
+
   # before_action :configure_sign_in_params, only: [:create]
+
+  protect_from_forgery prepend: true
 
   def create
     # super
-    resource = User.find_for_database_authentication(email: params[:user][:email])
-    return invalid_login_attempt unless resource
 
-    if resource.valid_password?(params[:user][:password])
-      sign_in :user, resource
+    @resource = User.find_for_database_authentication(email: params[:user][:email])
+    return invalid_login_attempt unless @resource
+
+    if @resource.valid_password?(params[:user][:password])
+      sign_in :user, @resource
       render "api/users/show"
       # return render nothing: true
     else
-      # debugger
-      render json: ["Username and/or password was not found"], status: 401
-      # invalid_login_attempt
+      # render json: ["Username and/or password was not found"], status: 401
+      invalid_login_attempt
     end
-
   end
 
   # GET /resource/sign_in
   def new
-    render json: ["Username and/or password was not found"], status: 401
+    # render json: ["Username and/or password was not found"], status: 401
     # super
   end
 
