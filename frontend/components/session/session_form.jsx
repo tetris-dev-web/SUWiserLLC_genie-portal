@@ -31,15 +31,30 @@ class SessionForm extends React.Component {
 
 
   renderErrors() {
-    return(
-      <ul className="errors">
-        {this.props.errors.map((error, i) => (
-          <li key={`error-${i}`}>
-            {error}
-          </li>
-        ))}
-      </ul>
-    );
+    let currentErrors;
+    if (this.props.errors) {
+      if (typeof this.props.errors === "object") {
+        currentErrors = this.props.errors;
+        for (const errType in currentErrors) {
+          return(
+            <ul className="errors">
+              <li>
+                {`${errType} ${currentErrors[errType]}`}
+              </li>
+            </ul>
+          );
+        }
+      } else {
+        currentErrors = this.props.errors;
+        return(
+          <ul className="errors">
+            <li>
+              {currentErrors}
+            </li>
+          </ul>
+        );
+      }
+    }
   }
 
   handleSubmit(e) {
@@ -60,10 +75,11 @@ class SessionForm extends React.Component {
 
     const user = {
       email: this.state.email,
-      username: parsedUsername,
+      // username: parsedUsername,
       password: this.state.password,
       bylaw_agreement: this.state.bylaw_agreement
     };
+
 
     if (this.props.type === "Log In") {
       this.props.login(user);
@@ -126,10 +142,10 @@ class SessionForm extends React.Component {
           <br/>
           <div className="checkbox-container">
             <input
-            className="checkbox"
-            type="checkbox"
-            checked={bylaw_agreement}
-            onChange={this.toggleCheckboxChange} />
+              className="checkbox"
+              type="checkbox"
+              checked={bylaw_agreement}
+              onChange={this.toggleCheckboxChange} />
             <p className="checkbox-text"> In applying for a membership interest, I certify that I have read and agreed to <a href="#" className="link">the bylaws</a> and that I have a direct relationship to those in the club.</p>
             <br/>
           </div>
@@ -147,3 +163,20 @@ class SessionForm extends React.Component {
 }
 
 export default SessionForm;
+
+
+{/*
+  original error rendering
+
+  renderErrors() {
+  return(
+  <ul className="errors">
+  {this.props.errors.map((error, i) => (
+  <li key={`error-${i}`}>
+  {error}
+  </li>
+  ))}
+  </ul>
+  );
+  }
+  */}

@@ -7,11 +7,13 @@ import {
 const _nullErrors = [];
 
 const sessionErrorsReducer = (state = [], action) => {
+  
   Object.freeze(state);
   switch (action.type) {
     case RECEIVE_CURRENT_USER:
       return _nullErrors;
     case RECEIVE_SESSION_ERRORS:
+    
       return action.errors;
     case CLEAR_SESSION_ERRORS:
       return [];
