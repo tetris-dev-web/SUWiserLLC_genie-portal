@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import UserDropdown from './user_dropdown';
-// import { fetchUser, updateUser } from '../../../../actions/user_actions';
+import { fetchUser } from '../../../../actions/user_actions';
 import { logout } from '../../../../actions/session_actions';
 
 const mapStateToProps = state => {
@@ -11,6 +11,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    fetchUser: id => dispatch(fetchUser(id)),
     logout: () => dispatch(logout())
   };
 };

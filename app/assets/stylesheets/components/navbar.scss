@@ -11,6 +11,7 @@
       width: 70px;
       height: 70px;
       object-fit: contain;
+      align-self: center;
     }
     .genus-dev-dash {
       display: flex;
@@ -31,7 +32,7 @@
 .navbar-right {
   display: flex;
   background-color: $tan;
-  color: white;
+  color: $white;
   border-radius: 0 0 0 10px;
 }
 
@@ -106,6 +107,7 @@
     border-radius: 9px;
     padding: 3px 3px 4px 5px;
     width: 150px;
+    color: $black;
   }
   .checkbox-container {
     margin-top: 10px;
@@ -143,7 +145,7 @@
 .user-container {
   font-size: 13px;
   text-align: center;
-  padding: 15px 8px 0 15px;
+  padding: 5px;
 
   // test until we get transfer and manage
   width: 250px;
@@ -154,7 +156,7 @@
   justify-content: center;
   .tokens-text {
     padding: 1px;
-    color: white;
+    color: $white;
     &:hover {
       text-decoration: none;
     }
@@ -163,6 +165,8 @@
 
 #dropdown-no-caret {
   background-color: $db-fade3;
+  border: none;
+  // border-radius: 10px 10px 0 0;
 }
 
 .open > .dropdown-menu {
@@ -172,15 +176,16 @@
 .user-dropdown-button {
   padding: 10px;
   transition: all .2s ease-in-out;
+  color: white;
 
   // test until we get transfer and manage
-  width: 50%;
+  // width: 50%;
   hr {
     margin: 0;
   }
   &:hover {
     text-decoration: none;
-    transform: scale(1.1, 1.1);
+    transform: scale(1.05, 1.05);
     cursor: pointer;
     border-radius: 5px;
   }
@@ -189,12 +194,29 @@
   }
 }
 
+// each MenuItem
+.dropdown-menu > li > a {
+  padding: 3px 12px !important;
+  &:hover {
+    background-color: $db-fade3 !important;
+  }
+  &:focus {
+    outline: none;
+  }
+  a {
+    color: white;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
 
 
-.logout-button {
+
+.menu-item {
   display: flex;
   .button-img {
-    padding-right: 3px;
+    padding-right: 5px;
     width: 20px;
     height: auto;
     align-self: center;
@@ -259,4 +281,13 @@
 
 .dropdown-menu {
   background: teal;
+}
+
+
+// stop bootstrap media queries
+@media (min-width: 768px) {
+  .navbar-right {
+    float: none !important;
+    margin-right: 0 !important;
+  }
 }
