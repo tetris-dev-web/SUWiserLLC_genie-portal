@@ -87,10 +87,11 @@ class Profile extends React.Component {
     let { email, password, zipcode, first_name, last_name } = this.state;
 
     return(
-      <form className="profile-form-box" autoComplete="off">
+      <form className="profile-form-box">
           <input
             type="text"
             placeholder="email"
+            autoComplete="new-email"
             value={email}
             onChange={this.update('email')}
             className="profile-input"
@@ -99,6 +100,7 @@ class Profile extends React.Component {
           <input
             type="password"
             placeholder="password"
+            autoComplete="new-password"
             value={password}
             onChange={this.update('password')}
             className="profile-input"
@@ -107,6 +109,7 @@ class Profile extends React.Component {
           <input
             type="zipcode"
             placeholder="zipcode"
+            autoComplete="new-zipcode"
             value={zipcode}
             onChange={this.update('zipcode')}
             className="profile-input"
@@ -115,6 +118,7 @@ class Profile extends React.Component {
           <input
             type="first_name"
             placeholder="first name"
+            autoComplete="new-first_name"
             value={first_name}
             onChange={this.update('first_name')}
             className="profile-input"
@@ -123,6 +127,7 @@ class Profile extends React.Component {
           <input
             type="last_name"
             placeholder="last name"
+            autoComplete="new-last_name"
             value={last_name}
             onChange={this.update('last_name')}
             className="profile-input"

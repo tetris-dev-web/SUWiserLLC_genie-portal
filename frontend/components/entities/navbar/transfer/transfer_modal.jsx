@@ -1,18 +1,15 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-import SessionForm from './session_form';
+import Transfer from './transfer';
 import ModalStyle from './modal_style';
 
-class SessionModal extends React.Component {
+class TransferModal extends React.Component {
   constructor(props) {
+
     super(props);
 
-    this.state = {
-      openModal: false,
-      signIn: false,
-      type: props.type
-    };
+    this.state = { openModal: false };
 
     window.SessionOpenModal = () => {
       this.setState({openModal: true});
@@ -30,36 +27,28 @@ class SessionModal extends React.Component {
 
   closeModal() {
     this.setState({openModal: false});
-    this.props.clearSessionErrors();
   }
 
   render() {
 
     return (
-      <div className="session-button-cont">
-        <button className="session-button" onClick={this.openModal}>
-          {this.props.type}
-        </button>
+      <div className="modal-button-cont">
+        <div className="modal-button" onClick={this.openModal}>Transfer</div>
 
         <Modal
           isOpen={this.state.openModal}
           onRequestClose={this.closeModal}
           style={ModalStyle}
-          contentLabel="Session Modal"
+          contentLabel="Transfer Modal"
           className="modal-container">
-
-          <SessionForm
-            type={this.state.type}
-            login={this.props.login}
-            signup={this.props.signup}
-            errors={this.props.errors}
-            clearSessionErrors={this.props.clearSessionErrors}
-            closeModal={this.closeModal} />
-
+          <Transfer
+            account={this.props.account}
+            contract={this.props.contract}
+          />
         </Modal>
       </div>
     );
   }
 }
 
-export default SessionModal;
+export default TransferModal;

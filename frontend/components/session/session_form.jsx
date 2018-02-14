@@ -98,7 +98,7 @@ class SessionForm extends React.Component {
 
     if (this.props.type === "Log In") {
       return(
-        <form className="session-form-box">
+        <form className="form-box">
           {this.renderErrors()}
           <input
             type="text"

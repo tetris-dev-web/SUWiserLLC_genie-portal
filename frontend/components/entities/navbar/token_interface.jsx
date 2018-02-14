@@ -1,6 +1,6 @@
 import React from 'react';
 import UserDropdownContainer from './user_dropdown/user_dropdown_container';
-// import TransferModal from './transfer/transfer_modal';
+import TransferModal from './transfer/transfer_modal';
 // import ManageModal from './manage/manage_modal';
 
 // import getWeb3 from './getWeb3.js';
@@ -71,6 +71,7 @@ class TokenInterface extends React.Component {
           <div className="user-container">
             <UserDropdownContainer />
           </div>
+          <TransferModal />
         </div>
       </div>
     );
