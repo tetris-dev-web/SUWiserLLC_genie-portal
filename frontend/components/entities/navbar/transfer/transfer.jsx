@@ -139,7 +139,7 @@ class Transfer extends React.Component {
                 name="to-option"
                 value="me"
                 onClick={this.handleToChange}
-                defaultChecked={true}/>
+                defaultChecked={true} />
               <label htmlFor="t-cb-option-1">me</label>
             </div>
             <div className="cb cb-2 t-cb-2">

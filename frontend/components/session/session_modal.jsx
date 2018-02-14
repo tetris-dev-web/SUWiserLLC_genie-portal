@@ -24,6 +24,11 @@ class SessionModal extends React.Component {
     this.closeModal = this.closeModal.bind(this);
   }
 
+  // solves 'Warning: react-modal: App element is not defined'
+  componentWillMount() {
+    Modal.setAppElement('body');
+  }
+
   openModal() {
     this.setState({openModal: true});
   }

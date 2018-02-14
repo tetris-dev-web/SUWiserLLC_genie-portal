@@ -124,7 +124,7 @@ class SessionForm extends React.Component {
       );
     } else {
       return(
-        <form className="session-form-box">
+        <form className="form-box">
           {this.renderErrors()}
           <input
             type="text"
