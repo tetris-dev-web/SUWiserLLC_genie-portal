@@ -25,12 +25,12 @@ class Profile extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    let stateUsername = this.state.username;
-    let propsUsername = this.props.user.username;
+    var stateUsername = this.state.username;
+    var propsUsername = this.props.user.username;
 
-    let parsedUsername = this.props.user.username;
+    var parsedUsername = this.props.user.username;
 
-    if (this.state.email && this.state.email.includes('@') && stateUsername !== propsUsername) {
+    if(this.state.email && this.state.email.includes('@') && stateUsername !== propsUsername) {
       parsedUsername = this.state.email.match(/^([^@]*)@/)[1];
     }
 
@@ -64,7 +64,7 @@ class Profile extends React.Component {
   componentWillMount() {
     this.props.fetchUser(this.props.currentUser.id).then((user) => {
 
-      let updatedUser = user.currentUser;
+      let updatedUser = user.user;
 
       this.setState({
         id: updatedUser.id,
@@ -87,7 +87,7 @@ class Profile extends React.Component {
     let { email, password, zipcode, first_name, last_name } = this.state;
 
     return(
-      <form className="profile-form-box">
+      <form className="profile-form-box" autoComplete="off">
           <input
             type="text"
             placeholder="email"
