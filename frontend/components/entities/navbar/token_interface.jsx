@@ -1,7 +1,7 @@
 import React from 'react';
 import UserDropdownContainer from './user_dropdown/user_dropdown_container';
 import TransferModal from './transfer/transfer_modal';
-// import ManageModal from './manage/manage_modal';
+import ProjectFormModal from './project_form/project_form_modal';
 
 // import getWeb3 from './getWeb3.js';
 // import TruffleContract from 'truffle-contract';
@@ -72,6 +72,7 @@ class TokenInterface extends React.Component {
             <UserDropdownContainer />
           </div>
           <TransferModal />
+          <ProjectFormModal />
         </div>
       </div>
     );
