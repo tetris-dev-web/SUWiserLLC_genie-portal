@@ -22,6 +22,7 @@ class ProjectForm extends React.Component {
   }
 
   handleSubmit(e) {
+    e.preventDefault();
     // console.log('state', this.state);
     // console.log('submitted');
 
@@ -38,7 +39,6 @@ class ProjectForm extends React.Component {
     // creator_id: this.props.currentUser.id
 
     this.props.createProject(project).then( () => {
-      this.props.clearProjectErrors();
       this.props.closeModal();
     });
   }
