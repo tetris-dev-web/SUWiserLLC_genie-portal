@@ -52,7 +52,8 @@ export const fetchProject = (id) => {
 export const createProject = (project) => {
   return dispatch => {
     return APIUtil.createProject(project).then(project => {
-      return dispatch(receiveProject(project));
+      dispatch(receiveProject(project));
+      return project;
     }, err => {
       return dispatch(receiveProjectErrors(err.responseJSON));
     });
