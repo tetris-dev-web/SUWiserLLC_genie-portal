@@ -2,6 +2,9 @@
 
 import * as APIUtil from '../util/user_api_util';
 
+// ADDED
+import { receiveCurrentUser } from './session_actions';
+
 export const RECEIVE_USER = 'RECEIVE_USER';
 
 export const receiveUser = user => {
@@ -19,6 +22,7 @@ export const fetchUser = id => dispatch => {
 
 export const updateUser = user => dispatch => {
   return APIUtil.updateUser(user).then(res => {
-    return dispatch(receiveUser(res));
+    // changed to receiveCurrentUser so that state is updated
+    return dispatch(receiveCurrentUser(res));
   });
 };
