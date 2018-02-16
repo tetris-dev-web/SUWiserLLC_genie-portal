@@ -1,7 +1,7 @@
 import React from 'react';
 import UserDropdownContainer from './user_dropdown/user_dropdown_container';
-// import TransferModal from './transfer/transfer_modal';
-// import ManageModal from './manage/manage_modal';
+import TransferModal from './transfer/transfer_modal';
+import ProjectFormModal from './project_form/project_form_modal';
 
 // import getWeb3 from './getWeb3.js';
 // import TruffleContract from 'truffle-contract';
@@ -61,7 +61,7 @@ class TokenInterface extends React.Component {
     return (
       <div className="navbar-container">
         <div className= "navbar-left">
-          <img className="gen-logo" src="https://res.cloudinary.com/genus-development/image/upload/v1506647349/GDCoin-01_evbflq.png"/>
+          <img className="gen-logo" src="https://s3.amazonaws.com/temp-genie-portal/GDCoin.png"/>
           <div className="genus-dev-dash">
             <div className="gen-dev">GENUS DEVELOPMENT</div>
             <div className="gen-dash">GENIE DASHBOARD</div>
@@ -71,6 +71,8 @@ class TokenInterface extends React.Component {
           <div className="user-container">
             <UserDropdownContainer />
           </div>
+          <TransferModal />
+          <ProjectFormModal />
         </div>
       </div>
     );

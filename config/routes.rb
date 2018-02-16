@@ -9,6 +9,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :users, defaults: {format: :json}, only: [:show]
-    # resources :project_data, defaults: {format: :json}, only: [:create, :show]
+    resources :projects, defaults: {format: :json}, only: [:create, :show, :index]
   end
 end

@@ -7,6 +7,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   text-decoration: none;
   font-family: 'Open Sans Condensed', sans-serif;
   font-weight: 300;
+  background-color: transparent;
   &:active {
     color: inherit;
   }
@@ -46,18 +47,43 @@ table {
 }
 
 /* Reset `button` and button-style `input` default styles */
+a {
+  color: inherit;
+  &:focus {
+    outline: none;
+  }
+  &:active {
+    text-decoration: none;
+  }
+}
+button:focus {
+  outline: none;
+}
+
+input {
+  border:none;
+  background-image:none;
+  background-color:transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  &:focus {
+    outline: none;
+  }
+}
+
 input[type="submit"],
 input[type="reset"],
 input[type="button"],
 button {
     background: none;
     border: 0;
-    color: inherit;
+    // color: inherit;
     /* cursor: default; */
     font: inherit;
     line-height: normal;
     overflow: visible;
-    padding: 0;
+    // padding: 0;
     -webkit-appearance: button; /* for input */
     -webkit-user-select: none; /* for button */
        -moz-user-select: none;
