@@ -10,8 +10,6 @@ export const updateUser = (user) => (
     method: 'PATCH',
     // url: "/users/edit",
     url: "/api/users/update_password",
-    // url: `/api/users/${user.id}/edit`,
-
     data: {user}
   })
 );
