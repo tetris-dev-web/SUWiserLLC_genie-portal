@@ -53,13 +53,15 @@ class UserDropdown extends React.Component {
 
   updateUsernameDisplay(user) {
 
-    if (user.first_name && user.last_name) {
-      user.username = `${user.first_name} ${user.last_name}`;
-    } else {
-      user.username = user.email;
-    }
 
-    this.setState({ displayName: user.username });
+    let input = '';
+
+    if (user.first_name && user.last_name) {
+      input = `${user.first_name} ${user.last_name}`;
+    } else {
+      input = user.username;
+    }
+    this.setState({ displayName: input });
   }
 
   /*

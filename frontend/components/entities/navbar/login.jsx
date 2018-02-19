@@ -5,7 +5,7 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div className="navbar-container">
+      <nav className="series navbar-container">
         <div className= "navbar-left">
           <img className="gen-logo" src="https://s3.amazonaws.com/temp-genie-portal/GDCoin.png" />
           <div className="genus-dev-dash">
@@ -17,7 +17,7 @@ class Login extends React.Component {
           <SessionFormContainer type="Log In"/>
           <SessionFormContainer type="Sign Up"/>
         </div>
-      </div>
+      </nav>
     );
   }
 }
