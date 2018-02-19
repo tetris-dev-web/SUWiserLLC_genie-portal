@@ -16,6 +16,7 @@ class SessionForm extends React.Component {
     this.renderErrors = this.renderErrors.bind(this);
     this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeModalX = this.closeModalX.bind(this);
   }
 
   // componentWillUnmount() {
@@ -92,6 +93,10 @@ class SessionForm extends React.Component {
     this.setState({ bylaw_agreement: !this.state.bylaw_agreement });
   }
 
+  closeModalX() {
+    this.props.closeModal();
+  }
+
   render() {
 
     let { email, password, bylaw_agreement } = this.state;
@@ -106,20 +111,19 @@ class SessionForm extends React.Component {
             value={email}
             onChange={this.update('email')}
             className="session-input" />
-          <br/>
           <input
             type="password"
             placeholder="password"
             value={password}
             onChange={this.update('password')}
             className="session-input" />
-          <br/>
           <input
             type="submit"
             value="Log In"
             className="submit-button"
             onClick={this.handleSubmit} />
-          <br/>
+          <div className="close-modal-button"
+            onClick={this.closeModalX}>&times;</div>
         </form>
       );
     } else {
@@ -132,14 +136,12 @@ class SessionForm extends React.Component {
             value={email}
             onChange={this.update('email')}
             className="session-input" />
-          <br/>
           <input
             type="password"
             placeholder="password"
             value={password}
             onChange={this.update('password')}
             className="session-input" />
-          <br/>
           <div className="checkbox-container">
             <input
               className="checkbox"
@@ -147,15 +149,15 @@ class SessionForm extends React.Component {
               checked={bylaw_agreement}
               onChange={this.toggleCheckboxChange} />
             <p className="checkbox-text"> In applying for a membership interest, I certify that I have read and agreed to <a href="#" className="link">the bylaws</a> and that I have a direct relationship to those in the club.</p>
-            <br/>
           </div>
           <input
             className="submit-button"
             type="submit"
             value="Apply"
             onClick={this.handleSubmit}/>
-          <br/>
           <p className="confirmed">If confirmed, you will receive a confirmation email with your wallet address and further instructions.</p>
+          <div className="close-modal-button"
+            onClick={this.closeModalX}>&times;</div>
         </form>
       );
     }

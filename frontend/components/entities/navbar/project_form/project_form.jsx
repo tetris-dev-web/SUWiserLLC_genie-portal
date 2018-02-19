@@ -114,7 +114,6 @@ class ProjectForm extends React.Component {
             onChange={this.update('icon')} />
         </div>
 
-
         <label className="p-form-label">
           description
         </label>
@@ -129,8 +128,9 @@ class ProjectForm extends React.Component {
             value="pitch"
             onClick={this.handleSubmit} />
         </div>
-        <div onClick={this.closeModalX}>X</div>
         {this.renderErrors()}
+        <div className="close-modal-button"
+          onClick={this.closeModalX}>&times;</div>
       </form>
     );
   }
