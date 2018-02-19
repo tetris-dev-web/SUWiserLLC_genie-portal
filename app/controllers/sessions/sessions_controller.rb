@@ -15,7 +15,6 @@ class Sessions::SessionsController < Devise::SessionsController
     if @resource.valid_password?(params[:user][:password])
       sign_in :user, @resource
       render "api/users/show"
-      # return render nothing: true
     else
       # render json: ["Username and/or password was not found"], status: 401
       invalid_login_attempt
