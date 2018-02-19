@@ -25,12 +25,12 @@ class Profile extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    var stateUsername = this.state.username;
-    var propsUsername = this.props.user.username;
+    let stateUsername = this.state.username;
+    let propsUsername = this.props.currentUser.username;
 
-    var parsedUsername = this.props.user.username;
+    let parsedUsername = this.props.currentUser.username;
 
-    if(this.state.email && this.state.email.includes('@') && stateUsername !== propsUsername) {
+    if (this.state.email && this.state.email.includes('@') && stateUsername !== propsUsername) {
       parsedUsername = this.state.email.match(/^([^@]*)@/)[1];
     }
 
