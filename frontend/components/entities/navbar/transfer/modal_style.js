@@ -12,7 +12,6 @@ module.exports = {
     position        : 'fixed',
     right           : 0,
     padding         : '10px',
-    border          : '1px solid #ccc',
     borderRadius    : '0 0 0 15px',
     backgroundColor : 'rgba(56, 71, 120, 0.75)',
     zIndex          : 101,
