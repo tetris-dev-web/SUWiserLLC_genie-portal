@@ -11,7 +11,6 @@ module.exports = {
   content : {
     position        : 'fixed',
     right           : '0',
-    border          : '1px solid #ccc',
     borderRadius    : '0 0 0 15px',
     padding         : '10px',
     backgroundColor : 'rgba(56, 71, 120, 0.5)',

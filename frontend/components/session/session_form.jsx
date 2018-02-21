@@ -16,12 +16,7 @@ class SessionForm extends React.Component {
     this.renderErrors = this.renderErrors.bind(this);
     this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.closeModalX = this.closeModalX.bind(this);
   }
-
-  // componentWillUnmount() {
-  //   this.props.clearSessionErrors();
-  // }
 
   update(property) {
     return (e) => {
@@ -93,10 +88,6 @@ class SessionForm extends React.Component {
     this.setState({ bylaw_agreement: !this.state.bylaw_agreement });
   }
 
-  closeModalX() {
-    this.props.closeModal();
-  }
-
   render() {
 
     let { email, password, bylaw_agreement } = this.state;
@@ -122,8 +113,8 @@ class SessionForm extends React.Component {
             value="Log In"
             className="submit-button"
             onClick={this.handleSubmit} />
-          <div className="close-modal-button"
-            onClick={this.closeModalX}>&times;</div>
+          <div className="blue-close-modal-button close-modal-button"
+            onClick={this.props.closeModal}>&times;</div>
         </form>
       );
     } else {
@@ -156,8 +147,8 @@ class SessionForm extends React.Component {
             value="Apply"
             onClick={this.handleSubmit}/>
           <p className="confirmed">If confirmed, you will receive a confirmation email with your wallet address and further instructions.</p>
-          <div className="close-modal-button"
-            onClick={this.closeModalX}>&times;</div>
+            <div className="blue-close-modal-button close-modal-button"
+              onClick={this.props.closeModal}>&times;</div>
         </form>
       );
     }

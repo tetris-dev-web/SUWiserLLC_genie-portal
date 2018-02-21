@@ -7,13 +7,13 @@ class Footer extends React.Component {
   render() {
     return(
       <footer className="series footer footer-container">
-        <div className="footer-button footer-left">
+        <div className="footer-button">
           <BylawsModal/>
         </div>
-        <div className="footer-button footer-mid">
+        <div className="footer-button">
           <StrategyModal/>
         </div>
-        <div className="footer-button footer-right">
+        <div className="footer-button">
           <div>ABOUT</div>
         </div>
       </footer>

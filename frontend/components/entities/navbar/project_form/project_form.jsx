@@ -15,7 +15,6 @@ class ProjectForm extends React.Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.closeModalX = this.closeModalX.bind(this);
   }
 
   componentWillUnmount() {
@@ -62,10 +61,6 @@ class ProjectForm extends React.Component {
         </ul>
       );
     }
-  }
-
-  closeModalX() {
-    this.props.closeModal();
   }
 
   render() {
@@ -129,8 +124,8 @@ class ProjectForm extends React.Component {
             onClick={this.handleSubmit} />
         </div>
         {this.renderErrors()}
-        <div className="close-modal-button"
-          onClick={this.closeModalX}>&times;</div>
+        <div className="blue-close-modal-button close-modal-button"
+          onClick={this.props.closeModal}>&times;</div>
       </form>
     );
   }

@@ -24,7 +24,6 @@ class Transfer extends React.Component {
     this.handleToChange = this.handleToChange.bind(this);
     this.handleProjectChange = this.handleProjectChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.closeModalX = this.closeModalX.bind(this);
   }
 
   handleSubmit(e) {
@@ -77,10 +76,6 @@ class Transfer extends React.Component {
 
   handleProjectChange(e) {
     this.setState({ project: e.currentTarget.value });
-  }
-
-  closeModalX() {
-    this.props.closeModal();
   }
 
   render() {
@@ -201,8 +196,8 @@ class Transfer extends React.Component {
             className="white-button"
             onClick={this.handleSubmit}/>
         </div>
-        <div className="close-modal-button"
-          onClick={this.closeModalX}>&times;</div>
+        <div className="blue-close-modal-button close-modal-button"
+          onClick={this.props.closeModal}>&times;</div>
       </form>
     );
   }

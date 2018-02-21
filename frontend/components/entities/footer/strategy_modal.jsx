@@ -38,16 +38,20 @@ class StrategyModal extends React.Component {
           onRequestClose={this.closeModal}
           style={ModalStyle}
           contentLabel="Strategy Modal"
-          className="strategy-container">
-          <div className="strategy-header">Strategy</div>
-          <div className="strategy-body">
-
-            <object className="strategy-video" data="http://www.youtube.com/embed/W7qWa52k-nE"
-   width="560" height="315"></object>
-
-            <div className="strategy-info">
-              <h1 id="sm-h-1">Organizational Structure</h1>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          className="modal-container strategy-container">
+          <div className="black-close-modal-button close-modal-button"
+            onClick={this.closeModal}>&times;</div>
+          <div className="ft-modal-header-cont">
+            <div className="ft-modal-header">
+              Strategy
+            </div>
+          </div>
+          <div className="ft-modal-body strategy-body">
+            <object className="strategy-video"
+              data="http://www.youtube.com/embed/W7qWa52k-nE"></object>
+            <div className="ft-el-cont strategy-info">
+              <h1 className="ft-el-header">Organizational Structure</h1>
+              <p className="ft-el-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Aliquam dapibus at metus vel porta. Aenean nisi erat, venenatis a nulla iaculis,
                 pretium maximus nibh. Maecenas ut malesuada magna. Cras nec eleifend purus,
                 in vehicula arcu. Nullam pretium nisl magna, vitae porta tortor efficitur eget.
