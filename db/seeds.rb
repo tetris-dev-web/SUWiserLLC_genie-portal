@@ -13,13 +13,15 @@ Project.destroy_all
 user1 = User.create(
   email: "johnjrudell@gmail.com",
   password: "password",
-  bylaw_agreement: true
+  bylaw_agreement: true,
+  tokens: 20
 )
 
 user2 = User.create(
   email: "matsteele@gmail.com",
   password: "password",
-  bylaw_agreement: true
+  bylaw_agreement: true,
+  tokens: 10
 )
 
 # projects

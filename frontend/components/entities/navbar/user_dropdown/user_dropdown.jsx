@@ -27,9 +27,10 @@ class UserDropdown extends React.Component {
     this.state = {
       openModal: false,
       displayName: userType,
-      user_tokens: 500,
-      total_tokens: 49500
     };
+    // tokens: 0,
+    // user_tokens: 500,
+    // total_tokens: 49500
 
     window.SessionOpenModal = () => {
       this.setState({openModal: true});
@@ -134,7 +135,8 @@ class UserDropdown extends React.Component {
 
   render() {
 
-    let { user_tokens, total_tokens } = this.state;
+    // let { tokens, user_tokens, total_tokens } = this.state;
+    let { tokens } = this.props.currentUser;
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
@@ -145,7 +147,7 @@ class UserDropdown extends React.Component {
                 </div>
                 <hr/>
                 <div className="tokens-cont">
-                  <div className="total-tokens">{total_tokens} tokens</div>
+                  <div className="total-tokens">{tokens} tokens</div>
                 </div>
               </div>
             </a>
