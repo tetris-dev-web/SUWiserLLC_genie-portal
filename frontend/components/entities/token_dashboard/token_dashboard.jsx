@@ -56,8 +56,6 @@ class TokenDashboard extends React.Component {
 
     let svg = d3.select('#token').append('svg')
       .classed('token-svg', true)
-      // .attr('width', width)
-      // .attr('height', height)
       .attr('width', "75%")
       .attr('height', "75%")
       .attr("preserveAspectRatio", "xMinYMin meet")
@@ -69,7 +67,7 @@ class TokenDashboard extends React.Component {
       .attr('class', 'x axis axis--x')
       .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(x)
-        .tickFormat(d3.timeFormat("%m.%d.%y")));
+        .tickFormat(d3.timeFormat("%m.%y")));
 
     svg.append('path')
       .datum(data)
