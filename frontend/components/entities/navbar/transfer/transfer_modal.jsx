@@ -44,6 +44,7 @@ class TransferModal extends React.Component {
           <Transfer
             account={this.props.account}
             contract={this.props.contract}
+            closeModal={this.closeModal}
           />
         </Modal>
       </div>

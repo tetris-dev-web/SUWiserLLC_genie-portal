@@ -15,6 +15,7 @@ class ProjectForm extends React.Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeModalX = this.closeModalX.bind(this);
   }
 
   componentWillUnmount() {
@@ -63,6 +64,10 @@ class ProjectForm extends React.Component {
     }
   }
 
+  closeModalX() {
+    this.props.closeModal();
+  }
+
   render() {
 
     let { title, valuation, video,
@@ -109,7 +114,6 @@ class ProjectForm extends React.Component {
             onChange={this.update('icon')} />
         </div>
 
-
         <label className="p-form-label">
           description
         </label>
@@ -125,6 +129,8 @@ class ProjectForm extends React.Component {
             onClick={this.handleSubmit} />
         </div>
         {this.renderErrors()}
+        <div className="close-modal-button"
+          onClick={this.closeModalX}>&times;</div>
       </form>
     );
   }

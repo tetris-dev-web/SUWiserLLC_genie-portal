@@ -59,7 +59,7 @@ class TokenInterface extends React.Component {
 
   render() {
     return (
-      <div className="navbar-container">
+      <nav className="series navbar-container">
         <div className= "navbar-left">
           <img className="gen-logo" src="https://s3.amazonaws.com/temp-genie-portal/GDCoin.png"/>
           <div className="genus-dev-dash">
@@ -74,7 +74,7 @@ class TokenInterface extends React.Component {
           <TransferModal />
           <ProjectFormModal />
         </div>
-      </div>
+      </nav>
     );
   }
 }
