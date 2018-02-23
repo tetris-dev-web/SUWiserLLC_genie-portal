@@ -82,7 +82,8 @@ class SessionForm extends React.Component {
 
 
     if (this.props.type === "Log In") {
-      this.props.login(user);
+      // this.props.login(user);
+      this.props.login({email: user.email, password: user.password});
     } else {
       this.props.signup(user);
     }
