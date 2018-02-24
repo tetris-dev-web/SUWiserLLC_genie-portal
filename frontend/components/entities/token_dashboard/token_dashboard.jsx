@@ -1,5 +1,5 @@
 import React from 'react';
-// import { Route, NavLink } from 'react-router-dom';
+import { data } from '../../../util/token_data_util'
 
 class TokenDashboard extends React.Component {
 
@@ -13,37 +13,6 @@ class TokenDashboard extends React.Component {
   }
 
   drawChart() {
-    const data = [
-      {
-        "date": "12/1/17",
-        "price": 67.20,
-      },
-      {
-        "date": "1/1/18",
-        "price": 70.43,
-      },
-      {
-        "date": "2/1/18",
-        "price": 73.22,
-
-      },
-      {
-        "date": "3/1/18",
-        "price": 74.85,
-      },
-      {
-        "date": "4/1/18",
-        "price": 72.85,
-      },
-      {
-        "date": "5/1/18",
-        "price": 73.85,
-      },
-      {
-        "date": "6/1/18",
-        "price": 69.85,
-      },
-    ]
 
     const margin = { top: 20, right: 50, bottom: 30, left: 50 };
     const width = 960 - margin.left - margin.right;
@@ -54,18 +23,26 @@ class TokenDashboard extends React.Component {
     data.forEach(d => {
       d.date = parseTime(d.date);
       d.price = +d.price;
+      d.balance = +d.balance;
     });
 
     const x = d3.scaleTime().range([0, width]);
-    const y = d3.scaleLinear().range([height, 0]);
+    const y1 = d3.scaleLinear().range([height, 0]);
+    const y2 = d3.scaleLinear().range([height, 0]);
 
     x.domain([data[0].date, data[data.length - 1].date]);
-    y.domain([(data[0].price * 0.95), (data[data.length - 1].price * 1.05)]);
+    y1.domain([(data[0].price * 0.95), (data[data.length - 1].price * 1.05)]);
+    y2.domain([0, (data[data.length - 1].balance * 1.5)]);
 
     const linePrice = d3.line()
       .x(d => x(d.date))
-      .y(d => y(d.price))
+      .y(d => y1(d.price))
       .curve(d3.curveMonotoneX);
+
+    const lineBalance = d3.line()
+      .x(d => x(d.date))
+      .y(d => y2(d.balance));
+      // .curve(d3.curveMonotoneX);
 
     let svg = d3.select('#token').append('svg')
       .classed('token-svg', true)
@@ -75,7 +52,7 @@ class TokenDashboard extends React.Component {
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     svg.append('g')
-      .attr('class', 'x axis axis--x')
+      .attr('class', 'x axis')
       .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(x)
         .tickFormat(d3.timeFormat("%m.%y")));
@@ -85,32 +62,41 @@ class TokenDashboard extends React.Component {
       .attr('class', 'line')
       .attr('d', linePrice);
 
-    const focus = svg.append('g')
-      .attr('class', 'focus');
-      // .style('display', 'none');
+    // price focus
+    const focus1 = svg.append('g')
+      .attr('class', 'focus focus1')
+      .style('display', 'none');
 
-    focus.append('circle')
+    focus1.append('circle')
       .classed("circle-earned", true)
       .attr('r', 4.5);
 
-    focus.append('line')
-      .classed('x', true);
+    focus1.append('line').classed('x', true);
+    focus1.append('line').classed('y', true);
 
-    focus.append('line')
-      .classed('y', true);
-
-    focus.append('text')
+    focus1.append('text')
       .classed('price', true)
-      .attr("transform", "translate(-75, 0)")
-      .attr('dy', '.35em');
+      .attr("transform", "translate(-75, -10)");
+
+    // token focus
+    const focus2 = svg.append('g')
+      .attr('class', 'focus focus2')
+      .style('display', 'none');
+
+    focus2.append('line').classed('x', true);
+    focus2.append('line').classed('y', true);
+
+    focus2.append('text')
+      .classed('balance', true)
+      .attr("transform", "translate(30, -10)");
 
     svg.append('rect')
       .attr('class', 'overlay')
       .attr('width', width)
       .attr('height', height)
       .on('mouseover', () => {
-        focus.style('display', null);
-        // focus1.style('display', null);
+        focus1.style('display', null);
+        focus2.style('display', null);
       })
       .on('mouseout', () => {
         // only hide share-amount focus
@@ -119,10 +105,6 @@ class TokenDashboard extends React.Component {
       })
       .on('mousemove', mousemove);
 
-    d3.selectAll('.overlay')
-      .style('fill', 'none')
-      .style('pointer-events', 'all');
-
     function mousemove() {
       let x0 = x.invert(d3.mouse(this)[0]);
       let i = bisectDate(data, x0, 1);
@@ -130,28 +112,32 @@ class TokenDashboard extends React.Component {
       let d1 = data[i];
       let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 
-      d3.selectAll(".focus").selectAll('line.x')
+      d3.selectAll(".focus").selectAll('line.x, line.y')
         .attr('x1', 0)
-        .attr('x2', -x(d.date))
+        .attr('x2', 0)
         .attr('y1', 0)
         .attr('y2', 0);
 
-      d3.selectAll(".focus").selectAll('line.y')
-        .attr('x1', 0)
-        .attr('x2', 0)
-        .attr('y1', 0);
+      // price dashed line
+      focus1.selectAll('line.x').attr('x2', -x(d.date) - width);
+      focus1.selectAll('line.y').attr('y2', height - y1(d.price));
 
-      focus.select('line.y')
-        .attr('y2', height - y(d.price));
+      // balance dashed line
+      focus2.selectAll('line.x').attr('x2', x(d.date) + width * 2);
+      focus2.selectAll('line.y').attr('y2', height - y2(d.balance));
 
-      focus.attr('transform', `translate(${x(d.date)}, ${y(d.price)})`);
-      focus.select('.price').text(`price: $${d.price}`);
+      // bar width hover for shares
+      focus2.selectAll('line.y')
+        .style('stroke-width', d.balance / 125);
+
+      // append text
+      focus1.attr('transform', `translate(${x(d.date)}, ${y1(d.price)})`);
+      focus1.select('.price').text(`price: $${d.price}`);
+
+      focus2.attr('transform', `translate(${x(d.date)}, ${y2(d.balance)})`);
+      focus2.select('.balance').text(`balance: $${d.balance}`);
     }
   }
-
-  // hover() {
-  //
-  // }
 
   render() {
 
