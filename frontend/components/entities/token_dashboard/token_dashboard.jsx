@@ -3,8 +3,15 @@ import { data } from '../../../util/token_data_util'
 
 class TokenDashboard extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.drawChart = this.drawChart.bind(this);
+  }
+
   componentDidMount() {
     // this.props.fetchUsers();
+    // debugger
     this.drawChart();
   }
 
@@ -13,6 +20,14 @@ class TokenDashboard extends React.Component {
   }
 
   drawChart() {
+
+    // add tokens to every object of data
+    const tokens = this.props.currentUser.tokens;
+    for (let i = 0; i < data.length; i++) {
+      data[i]["tokens"] = tokens;
+    }
+
+    // debugger
 
     const margin = { top: 20, right: 50, bottom: 30, left: 50 };
     const width = 960 - margin.left - margin.right;
@@ -24,7 +39,10 @@ class TokenDashboard extends React.Component {
       d.date = parseTime(d.date);
       d.price = +d.price;
       d.balance = +d.balance;
+      d.tokens = +d.tokens;
     });
+
+    console.log(data);
 
     const x = d3.scaleTime().range([0, width]);
     const y1 = d3.scaleLinear().range([height, 0]);
@@ -104,6 +122,7 @@ class TokenDashboard extends React.Component {
         // focus1.style('display', 'none')
       })
       .on('mousemove', mousemove);
+      // debugger
 
     function mousemove() {
       let x0 = x.invert(d3.mouse(this)[0]);
@@ -127,13 +146,13 @@ class TokenDashboard extends React.Component {
       focus2.selectAll('line.y').attr('y2', height - y2(d.balance));
 
       // bar width hover for shares
-      focus2.selectAll('line.y')
-        .style('stroke-width', d.balance / 125);
+      focus2.selectAll('line.y').style('stroke-width', d.tokens);
 
       // append text
       focus1.attr('transform', `translate(${x(d.date)}, ${y1(d.price)})`);
       focus1.select('.price').text(`price: $${d.price}`);
 
+      // const teem = <span>d.balance</span>
       focus2.attr('transform', `translate(${x(d.date)}, ${y2(d.balance)})`);
       focus2.select('.balance').text(`balance: $${d.balance}`);
     }
