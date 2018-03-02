@@ -43,11 +43,11 @@ class Profile extends React.Component {
     let updatedUser = {
       id: this.state.id,
       email: this.state.email,
+      // password: (this.state.password.length > 6) ? this.state.password : "",
       password: this.state.password,
       zipcode: this.state.zipcode,
       first_name: this.state.first_name,
       last_name: this.state.last_name,
-      username: parsedUsername
     };
 
     this.props.updateUser(updatedUser).then(() => {
@@ -61,20 +61,30 @@ class Profile extends React.Component {
   name on the underlying Navbar Component before closing the modal
   */
 
-  componentWillMount() {
-    this.props.fetchUser(this.props.currentUser.id).then((user) => {
+  componentDidMount() {
+    let updatedUser = this.props.currentUser;
 
-      let updatedUser = user.user;
-
-      this.setState({
-        id: updatedUser.id,
-        email: updatedUser.email,
-        zipcode: updatedUser.zipcode,
-        first_name: updatedUser.first_name,
-        last_name: updatedUser.last_name
-      });
+    this.setState({
+      id: updatedUser.id,
+      email: updatedUser.email,
+      zipcode: updatedUser.zipcode,
+      first_name: updatedUser.first_name,
+      last_name: updatedUser.last_name
     });
   }
+
+  // ComponentWillReceiveProps() {
+  //   let updatedUser = this.props.currentUser;
+  //
+  //   this.setState({
+  //     id: updatedUser.id,
+  //     email: updatedUser.email,
+  //     zipcode: updatedUser.zipcode,
+  //     first_name: updatedUser.first_name,
+  //     last_name: updatedUser.last_name
+  //   });
+  // }
+
 
   /*
   We use the componentWillMount lifecycle method to autopopulate the profile
@@ -86,58 +96,59 @@ class Profile extends React.Component {
 
     let { email, password, zipcode, first_name, last_name } = this.state;
 
+    debugger
     return(
       <form className="profile-form-box">
-          <input
-            type="text"
-            placeholder="email"
-            autoComplete="new-email"
-            value={email}
-            onChange={this.update('email')}
-            className="profile-input"
-            />
+        <input
+          type="text"
+          placeholder="email"
+          autoComplete="new-email"
+          value={email}
+          onChange={this.update('email')}
+          className="profile-input"
+          />
         <br/>
-          <input
-            type="password"
-            placeholder="password"
-            autoComplete="new-password"
-            value={password}
-            onChange={this.update('password')}
-            className="profile-input"
-            />
+        <input
+          type="password"
+          placeholder="password"
+          autoComplete="new-password"
+          value={password}
+          onChange={this.update('password')}
+          className="profile-input"
+          />
         <br/>
-          <input
-            type="zipcode"
-            placeholder="zipcode"
-            autoComplete="new-zipcode"
-            value={zipcode}
-            onChange={this.update('zipcode')}
-            className="profile-input"
-            />
+        <input
+          type="zipcode"
+          placeholder="zipcode"
+          autoComplete="new-zipcode"
+          value={zipcode}
+          onChange={this.update('zipcode')}
+          className="profile-input"
+          />
         <br/>
-          <input
-            type="first_name"
-            placeholder="first name"
-            autoComplete="new-first_name"
-            value={first_name}
-            onChange={this.update('first_name')}
-            className="profile-input"
-            />
+        <input
+          type="first_name"
+          placeholder="first name"
+          autoComplete="new-first_name"
+          value={first_name}
+          onChange={this.update('first_name')}
+          className="profile-input"
+          />
         <br/>
-          <input
-            type="last_name"
-            placeholder="last name"
-            autoComplete="new-last_name"
-            value={last_name}
-            onChange={this.update('last_name')}
-            className="profile-input"
-            />
+        <input
+          type="last_name"
+          placeholder="last name"
+          autoComplete="new-last_name"
+          value={last_name}
+          onChange={this.update('last_name')}
+          className="profile-input"
+          />
         <br/>
-          <input
-            type="submit"
-            value="update"
-            className="submit-button"
-            onClick={this.handleSubmit}/><br/>
+        <input
+          type="submit"
+          value="update"
+          className="submit-button"
+          onClick={this.handleSubmit}/><br/>
       </form>
     );
   }
