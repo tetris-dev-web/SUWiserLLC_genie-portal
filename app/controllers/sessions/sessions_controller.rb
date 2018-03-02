@@ -1,30 +1,27 @@
 # frozen_string_literal: true
 
 class Sessions::SessionsController < Devise::SessionsController
+  # protect_from_forgery prepend: true
+  protect_from_forgery with: :null_session, only: Proc.new { |c| c.request.format.json? }
 
-  # before_action :configure_sign_in_params, only: [:create]
 
-  protect_from_forgery prepend: true
 
   def create
-    # super
-
     @resource = User.find_for_database_authentication(email: params[:user][:email])
     return invalid_login_attempt unless @resource
 
     if @resource.valid_password?(params[:user][:password])
       sign_in :user, @resource
+      current_user = @resource
       render "api/users/show"
     else
-      # render json: ["Username and/or password was not found"], status: 401
       invalid_login_attempt
     end
   end
 
   # GET /resource/sign_in
   def new
-    # render json: ["Username and/or password was not found"], status: 401
-    # super
+    super
   end
 
   # POST /resource/sign_in
@@ -33,9 +30,9 @@ class Sessions::SessionsController < Devise::SessionsController
   # end
 
   # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+  def destroy
+    super
+  end
 
   protected
 

@@ -15,14 +15,18 @@ export const receiveUser = user => {
 };
 
 export const fetchUser = id => dispatch => {
+  // debugger
   return APIUtil.fetchUser(id).then(user => {
-    return dispatch(receiveUser(user));
+    // debugger
+    return dispatch(receiveCurrentUser(user));
   });
 };
 
 export const updateUser = user => dispatch => {
   return APIUtil.updateUser(user).then(res => {
     // changed to receiveCurrentUser so that state is updated
-    return dispatch(receiveCurrentUser(res));
+    return dispatch(receiveCurrentUser(res), err => {
+      return dispatch(receiveSessionErrors(err.responseText));
+    });
   });
 };

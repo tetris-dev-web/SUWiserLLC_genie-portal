@@ -22,10 +22,10 @@ class TokenGraph extends React.Component {
   drawChart() {
 
     // add tokens to every object of data
-    const tokens = this.props.currentUser.tokens;
-    for (let i = 0; i < data.length; i++) {
-      data[i]["tokens"] = tokens;
-    }
+    // const tokens = this.props.currentUser.tokens;
+    // for (let i = 0; i < data.length; i++) {
+    //   data[i]["tokens"] = tokens;
+    // }
 
     const margin = { top: 20, right: 50, bottom: 30, left: 50 };
     const width = 960 - margin.left - margin.right;
@@ -145,7 +145,7 @@ class TokenGraph extends React.Component {
       focus2.selectAll('line.y').attr('y2', height - y2(d.balance));
 
       // bar width hover for shares
-      focus2.selectAll('line.y').style('stroke-width', d.tokens);
+      // focus2.selectAll('line.y').style('stroke-width', d.tokens);
 
       // append text
       focus1.attr('transform', `translate(${x(d.date)}, ${y1(d.price)})`);
