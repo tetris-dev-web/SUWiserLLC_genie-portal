@@ -12,11 +12,12 @@ class UserDropdown extends React.Component {
     const fName = this.props.currentUser.first_name;
     const lName = this.props.currentUser.last_name;
     const email = this.props.currentUser.email;
+    const parsedUsername = email.match(/^([^@]*)@/)[1];
 
 
     const uName = this.props.currentUser.username;
 
-    const userType = fName && lName ? `${fName} ${lName}` : email;
+    const userType = fName && lName ? `${fName} ${lName}` : parsedUsername;
 
     /*
     We initially set the state of the displayName to either the user's
@@ -146,7 +147,7 @@ class UserDropdown extends React.Component {
               </div>
               <hr/>
               <div className="tokens-cont">
-                <div className="total-tokens">{this.props.currentUser.tokens} tokens</div>
+                <div className="total-tokens">{tokens} tokens</div>
               </div>
             </div>
           </a>

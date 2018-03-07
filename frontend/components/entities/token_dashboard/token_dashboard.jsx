@@ -1,56 +1,76 @@
 import React from 'react';
 import TokenGraph from './token_graph';
-import { data } from '../../../util/token_data_util'
+import { data1, data2, data3 } from '../../../util/token_data_util'
 
 class TokenDashboard extends React.Component {
-
   constructor(props){
     super(props);
 
-    // var parseTime = d3.timeParse("%m/%d/%y");
-    //
-    // data1.forEach(function(datum) {
-    //   datum.Date = parseTime(datum.Date);
-    //   datum.Price = +datum.Price;
-    // });
-    //
-    // data2.forEach(function(datum) {
-    //   datum.Date = parseTime(datum.Date);
-    //   datum.Price = +datum.Price;
-    // });
-    //
+    const parseTime = d3.timeParse("%m/%d/%y");
+
+    data1.forEach(d => {
+      d.date = parseTime(d.date);
+      d.price = +d.price;
+      d.balance = +d.balance;
+      d.tokens = +d.tokens;
+    });
+
+    data2.forEach(d => {
+      d.date = parseTime(d.date);
+      d.price = +d.price;
+      d.balance = +d.balance;
+      d.tokens = +d.tokens;
+    });
+
+    data3.forEach(d => {
+      d.date = parseTime(d.date);
+      d.price = +d.price;
+      d.balance = +d.balance;
+      d.tokens = +d.tokens;
+    });
+
     this.state = {
-      data: data,
-      toggle: true
+      data: data1,
+      toggle: true,
+      totalData: data3
     };
-    //
-    // this.toggleData = this.toggleData.bind(this);
+
+    this.toggleData = this.toggleData.bind(this);
   }
 
-  // toggleData() {
-  //   if (this.state.toggle)
-  //   {
-  //     this.setState({
-  //       data: data2,
-  //       toggle: false
-  //     });
-  //   }
-  //   else
-  //   {
-  //     this.setState({
-  //       data: data1,
-  //       toggle: true
-  //     });
-  //   }
-  // }
+  toggleData() {
+    if (this.state.toggle) {
+      this.setState({
+        data: data2,
+        toggle: false
+      });
+    } else {
+      this.setState({
+        data: data1,
+        toggle: true
+      });
+    }
+  }
 
   render() {
-    return(
-      <div>
 
-        <TokenGraph currentUser={this.props.currentUser} data={this.state.data} />
-      </div>
-    );
+    if (this.props.currentUser) {
+      return (
+        <div>
+          <TokenGraph currentUser={this.props.currentUser} data={this.state.data} />
+          <button onClick={this.toggleData}>
+            Toggle!
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <TokenGraph data={this.state.totalData} />
+        </div>
+      );
+    }
+
   }
 }
 
