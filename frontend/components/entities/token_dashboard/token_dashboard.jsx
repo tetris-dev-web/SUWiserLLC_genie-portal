@@ -1,6 +1,6 @@
 import React from 'react';
 import TokenGraph from './token_graph';
-import { data1, data2, data3 } from '../../../util/token_data_util'
+import { userData, totalData } from '../../../util/token_data_util'
 
 class TokenDashboard extends React.Component {
   constructor(props){
@@ -8,21 +8,14 @@ class TokenDashboard extends React.Component {
 
     const parseTime = d3.timeParse("%m/%d/%y");
 
-    data1.forEach(d => {
+    userData.forEach(d => {
       d.date = parseTime(d.date);
       d.price = +d.price;
       d.balance = +d.balance;
       d.tokens = +d.tokens;
     });
 
-    data2.forEach(d => {
-      d.date = parseTime(d.date);
-      d.price = +d.price;
-      d.balance = +d.balance;
-      d.tokens = +d.tokens;
-    });
-
-    data3.forEach(d => {
+    totalData.forEach(d => {
       d.date = parseTime(d.date);
       d.price = +d.price;
       d.balance = +d.balance;
@@ -30,9 +23,9 @@ class TokenDashboard extends React.Component {
     });
 
     this.state = {
-      data: data1,
+      data: userData,
       toggle: true,
-      totalData: data3
+      totalData: totalData
     };
 
     this.toggleData = this.toggleData.bind(this);
@@ -41,13 +34,13 @@ class TokenDashboard extends React.Component {
   toggleData() {
     if (this.state.toggle) {
       this.setState({
-        data: data2,
+        data: totalData,
         toggle: false
       });
 
     } else {
       this.setState({
-        data: data1,
+        data: userData,
         toggle: true
       });
 
@@ -63,7 +56,6 @@ class TokenDashboard extends React.Component {
             <input type="checkbox" onClick={this.toggleData} />
             <span className="slider round"></span>
           </label>
-
         </div>
       );
     } else {

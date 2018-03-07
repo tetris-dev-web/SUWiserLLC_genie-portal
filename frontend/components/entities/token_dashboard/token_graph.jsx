@@ -12,8 +12,6 @@ class TokenGraph extends React.Component {
 
   componentDidMount() {
     // this.props.fetchUsers();
-    // debugger
-
     this.drawChart();
   }
 
@@ -107,7 +105,7 @@ class TokenGraph extends React.Component {
       .classed('balance', true)
       .attr("transform", "translate(30, -10)");
       // debugger
-    this.svg.append('rect')
+    this.testSvg = this.svg.append('rect')
       .attr('class', 'overlay')
       .attr('width', width)
       .attr('height', height)
@@ -124,8 +122,8 @@ class TokenGraph extends React.Component {
         // focus2.attr("transform", "translate(860, 150)")
         // focus2.selectAll('line.x').attr("x2", "2580")
         // focus2.selectAll('line.y').attr("y2", "300")
-      });
-      // .on('mousemove', this.handleMousemove);
+      })
+      .on('mousemove', this.handleMousemove);
       // .on('mousemove', () => {
       //   // debugger
       //   this.handleMousemove();
@@ -166,8 +164,8 @@ class TokenGraph extends React.Component {
   }
 
   handleMousemove() {
-    debugger
-    let x0 = this.x.invert(d3.mouse(this)[0]);
+    // debugger
+    let x0 = this.x.invert(d3.mouse(this.testSvg)[0]);
     let i = bisectDate(data, x0, 1);
     let d0 = data[i - 1];
     let d1 = data[i];
