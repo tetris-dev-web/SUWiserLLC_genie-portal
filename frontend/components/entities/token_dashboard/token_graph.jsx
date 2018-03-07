@@ -199,25 +199,11 @@ class TokenGraph extends React.Component {
   }
 
   updateData(props) {
-    this.x.domain([props.data[0].date, props.data[props.data.length - 1].date]);
-    this.y1.domain([(props.data[0].price * 0.95), (props.data[props.data.length - 1].price * 1.05)]);
-    this.y2.domain([0, (props.data[props.data.length - 1].balance * 1.5)]);
-
-    this.linePrice = d3.line()
-      .x(d => this.x(d.date))
-      .y(d => this.y1(d.price))
-      .curve(d3.curveMonotoneX);
-
-    // d3.select('.line').datum([props.data]);
-    d3.select('.line')
-      .datum(props.data)
-      .attr('d', this.linePrice);
-    // update the scale domains
-    // this.x_scale.domain(d3.extent(props.data, function(d) { return d.Date; }));
-    // this.y_scale.domain(d3.extent(props.data, function(d) { return d.Price; }));
-
-    // update the line data
-    // d3.select(".graph-line").data([props.data]);
+    const { data } = props;
+    this.x.domain([data[0].date, data[data.length - 1].date]);
+    this.y1.domain([(data[0].price * 0.9), (data[data.length - 1].price * 1.1)]);
+    this.y2.domain([0, (data[data.length - 1].balance * 1.5)]);
+    d3.select('.line').datum(data);
   }
 
   transition(duration) {

@@ -44,23 +44,26 @@ class TokenDashboard extends React.Component {
         data: data2,
         toggle: false
       });
+
     } else {
       this.setState({
         data: data1,
         toggle: true
       });
+
     }
   }
 
   render() {
-
     if (this.props.currentUser) {
       return (
-        <div>
+        <div className="graph-container">
           <TokenGraph currentUser={this.props.currentUser} data={this.state.data} />
-          <button onClick={this.toggleData}>
-            Toggle!
-          </button>
+          <label className="switch">
+            <input type="checkbox" onClick={this.toggleData} />
+            <span className="slider round"></span>
+          </label>
+
         </div>
       );
     } else {
