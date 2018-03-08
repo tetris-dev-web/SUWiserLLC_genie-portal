@@ -6,7 +6,7 @@ class TokenGraph extends React.Component {
   constructor(props) {
     super(props);
 
-    // this.handleMousemove = this.handleMousemove.bind(this);
+    this.handleMousemove = this.handleMousemove.bind(this);
     this.drawChart = this.drawChart.bind(this);
   }
 
@@ -25,6 +25,8 @@ class TokenGraph extends React.Component {
   }
 
   drawChart() {
+
+
     const { currentUser, data } = this.props;
     if (this.props.currentUser) {
       // add tokens to every object of data
@@ -32,6 +34,7 @@ class TokenGraph extends React.Component {
         data[i]["tokens"] = currentUser.tokens;
       }
     }
+
 
     const margin = { top: 20, right: 50, bottom: 30, left: 50 };
     const width = 960 - margin.left - margin.right;
@@ -104,7 +107,7 @@ class TokenGraph extends React.Component {
     this.focus2.append('text')
       .classed('balance', true)
       .attr("transform", "translate(30, -10)");
-      // debugger
+
     this.testSvg = this.svg.append('rect')
       .attr('class', 'overlay')
       .attr('width', width)
@@ -164,7 +167,9 @@ class TokenGraph extends React.Component {
   }
 
   handleMousemove() {
-    // debugger
+     debugger;
+    // this.x.invert should refer to the class
+    // d3.mouse(this) needs to refer to rect, not the class
     let x0 = this.x.invert(d3.mouse(this.testSvg)[0]);
     let i = bisectDate(data, x0, 1);
     let d0 = data[i - 1];

@@ -29,15 +29,16 @@ class TokenDashboard extends React.Component {
     };
 
     this.toggleData = this.toggleData.bind(this);
+
   }
 
   toggleData() {
+
     if (this.state.toggle) {
       this.setState({
         data: totalData,
         toggle: false
       });
-
     } else {
       this.setState({
         data: userData,
