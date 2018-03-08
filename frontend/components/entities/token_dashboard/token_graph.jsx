@@ -26,7 +26,6 @@ class TokenGraph extends React.Component {
 
   drawChart() {
 
-
     const { currentUser, data } = this.props;
     if (this.props.currentUser) {
       // add tokens to every object of data
@@ -35,15 +34,14 @@ class TokenGraph extends React.Component {
       }
     }
 
-
     const margin = { top: 20, right: 50, bottom: 30, left: 50 };
-    const width = 960 - margin.left - margin.right;
-    const height = 500 - margin.top - margin.bottom;
-    const bisectDate = d3.bisector(d => d.date).left;
+    this.width = 960 - margin.left - margin.right;
+    this.height = 500 - margin.top - margin.bottom;
+    this.bisectDate = d3.bisector(d => d.date).left;
 
-    this.x = d3.scaleTime().range([0, width]);
-    this.y1 = d3.scaleLinear().range([height, 0]);
-    this.y2 = d3.scaleLinear().range([height, 0]);
+    this.x = d3.scaleTime().range([0, this.width]);
+    this.y1 = d3.scaleLinear().range([this.height, 0]);
+    this.y2 = d3.scaleLinear().range([this.height, 0]);
 
     this.x.domain([data[0].date, data[data.length - 1].date]);
     this.y1.domain([(data[0].price * 0.9), (data[data.length - 1].price * 1.1)]);
@@ -70,8 +68,8 @@ class TokenGraph extends React.Component {
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     this.svg.append('g')
-      .attr('class', 'x axis x-axis')
-      .attr('transform', `translate(0, ${height})`)
+      .attr('class', 'x x-axis')
+      .attr('transform', `translate(0, ${this.height})`)
       .call(d3.axisBottom(this.x)
         .tickFormat(d3.timeFormat("%m.%y")));
 
@@ -108,70 +106,27 @@ class TokenGraph extends React.Component {
       .classed('balance', true)
       .attr("transform", "translate(30, -10)");
 
-    this.testSvg = this.svg.append('rect')
+    this.overlay = this.svg.append('rect')
       .attr('class', 'overlay')
-      .attr('width', width)
-      .attr('height', height)
+      .attr('width', this.width)
+      .attr('height', this.height)
       .on('mouseover', () => {
         this.focus1.style('display', null);
         this.focus2.style('display', null);
       })
       .on('mouseout', () => {
-        // for now set it to the end when the user mouses off the graph
-        // focus1.attr("transform", "translate(860, 165.39068666140514)")
-        // focus1.selectAll('line.x').attr("x2", "-1720")
-        // focus1.selectAll('line.y').attr("y2", "284.60931333859486")
-        //
-        // focus2.attr("transform", "translate(860, 150)")
-        // focus2.selectAll('line.x').attr("x2", "2580")
-        // focus2.selectAll('line.y').attr("y2", "300")
+        this.focus1.style('display', 'none');
+        this.focus2.style('display', 'none');
       })
       .on('mousemove', this.handleMousemove);
-      // .on('mousemove', () => {
-      //   // debugger
-      //   this.handleMousemove();
-      // });
-
-    // const mousemove = () => {
-    //   // debugger
-    //   let x0 = this.x.invert(d3.mouse(this)[0]);
-    //   let i = bisectDate(data, x0, 1);
-    //   let d0 = data[i - 1];
-    //   let d1 = data[i];
-    //   let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-    //
-    //   d3.selectAll(".focus").selectAll('line.x, line.y')
-    //     .attr('x1', 0)
-    //     .attr('x2', 0)
-    //     .attr('y1', 0)
-    //     .attr('y2', 0);
-    //
-    //   // price dashed line
-    //   focus1.selectAll('line.x').attr('x2', -x(d.date) - width);
-    //   focus1.selectAll('line.y').attr('y2', height - y1(d.price));
-    //
-    //   // balance dashed line
-    //   focus2.selectAll('line.x').attr('x2', x(d.date) + width * 2);
-    //   focus2.selectAll('line.y').attr('y2', height - y2(d.balance));
-    //
-    //   // bar width hover for shares
-    //   focus2.selectAll('line.y').style('stroke-width', d.tokens);
-    //
-    //   // append text
-    //   focus1.attr('transform', `translate(${x(d.date)}, ${y1(d.price)})`);
-    //   focus1.select('.price').text(`price: $${d.price}`);
-    //
-    //   focus2.attr('transform', `translate(${x(d.date)}, ${y2(d.balance)})`);
-    //   focus2.select('.balance').text(`balance: $${d.balance}`);
-    // }
   }
 
   handleMousemove() {
-     debugger;
-    // this.x.invert should refer to the class
-    // d3.mouse(this) needs to refer to rect, not the class
-    let x0 = this.x.invert(d3.mouse(this.testSvg)[0]);
-    let i = bisectDate(data, x0, 1);
+    const overlay = this.overlay._groups[0][0];
+    const { data } = this.props;
+
+    let x0 = this.x.invert(d3.mouse(overlay)[0]);
+    let i = this.bisectDate(data, x0, 1);
     let d0 = data[i - 1];
     let d1 = data[i];
     let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
@@ -183,21 +138,21 @@ class TokenGraph extends React.Component {
       .attr('y2', 0);
 
     // price dashed line
-    this.focus1.selectAll('line.x').attr('x2', -x(d.date) - width);
-    this.focus1.selectAll('line.y').attr('y2', height - y1(d.price));
+    this.focus1.selectAll('line.x').attr('x2', -this.x(d.date) - this.width);
+    this.focus1.selectAll('line.y').attr('y2', this.height - this.y1(d.price));
 
     // balance dashed line
-    this.focus2.selectAll('line.x').attr('x2', x(d.date) + width * 2);
-    this.focus2.selectAll('line.y').attr('y2', height - y2(d.balance));
+    this.focus2.selectAll('line.x').attr('x2', this.x(d.date) + this.width * 2);
+    this.focus2.selectAll('line.y').attr('y2', this.height - this.y2(d.balance));
 
     // bar width hover for shares
     this.focus2.selectAll('line.y').style('stroke-width', d.tokens);
 
     // append text
-    this.focus1.attr('transform', `translate(${x(d.date)}, ${y1(d.price)})`);
+    this.focus1.attr('transform', `translate(${this.x(d.date)}, ${this.y1(d.price)})`);
     this.focus1.select('.price').text(`price: $${d.price}`);
 
-    this.focus2.attr('transform', `translate(${x(d.date)}, ${y2(d.balance)})`);
+    this.focus2.attr('transform', `translate(${this.x(d.date)}, ${this.y2(d.balance)})`);
     this.focus2.select('.balance').text(`balance: $${d.balance}`);
   }
 
