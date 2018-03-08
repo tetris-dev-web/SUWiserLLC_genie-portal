@@ -33,7 +33,6 @@ class TokenDashboard extends React.Component {
   }
 
   toggleData() {
-
     if (this.state.toggle) {
       this.setState({
         data: totalData,

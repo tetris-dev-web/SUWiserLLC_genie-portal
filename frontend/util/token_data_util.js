@@ -3,36 +3,50 @@ export const userData = [
     "date": "12/1/17",
     "price": 67.20,
     "balance": 2000,
+    "earnings": 200,
+    "tokens": 25
   },
   {
     "date": "1/1/18",
     "price": 70.43,
     "balance": 3000,
+    "earnings": 250,
+    "tokens": 20
   },
   {
     "date": "2/1/18",
     "price": 73.22,
     "balance": 3900,
+    "earnings": 300,
+    "tokens": 22
   },
   {
     "date": "3/1/18",
     "price": 74.85,
     "balance": 4500,
+    "earnings": 350,
+    "tokens": 24
   },
   {
     "date": "4/1/18",
     "price": 72.85,
     "balance": 5108,
+    "earnings": 400,
+    "tokens": 27
   },
   {
     "date": "5/1/18",
     "price": 73.85,
     "balance": 5365,
+    "earnings": 496,
+    "tokens": 29
   },
   {
     "date": "6/1/18",
-    "price": 69.85,
+    "price": 75,
     "balance": 5900,
+    "earnings": 508,
+    "tokens": 32
   },
 ]
 

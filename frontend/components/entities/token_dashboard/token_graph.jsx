@@ -2,7 +2,6 @@ import React from 'react';
 // import { data } from '../../../util/token_data_util'
 
 class TokenGraph extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -25,18 +24,10 @@ class TokenGraph extends React.Component {
   }
 
   drawChart() {
-
-    const { currentUser, data } = this.props;
-    if (this.props.currentUser) {
-      // add tokens to every object of data
-      for (let i = 0; i < data.length; i++) {
-        data[i]["tokens"] = currentUser.tokens;
-      }
-    }
-
-    const margin = { top: 20, right: 50, bottom: 30, left: 50 };
-    this.width = 960 - margin.left - margin.right;
-    this.height = 500 - margin.top - margin.bottom;
+    const { data } = this.props;
+    this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
+    this.width = 960 - this.margin.left - this.margin.right;
+    this.height = 500 - this.margin.top - this.margin.bottom;
     this.bisectDate = d3.bisector(d => d.date).left;
 
     this.x = d3.scaleTime().range([0, this.width]);
@@ -48,15 +39,11 @@ class TokenGraph extends React.Component {
     this.y2.domain([0, (data[data.length - 1].balance * 1.5)]);
 
     this.linePrice = d3.line()
-      // .x(d => this.x(d.date))
-      // .y(d => this.y1(d.price))
       .x(function(d) { return this.x(d.date); }.bind(this))
       .y(function(d) { return this.y1(d.price); }.bind(this))
       .curve(d3.curveMonotoneX);
 
     this.lineBalance = d3.line()
-      // .x(d => this.x(d.date))
-      // .y(d => this.y2(d.balance));
       .x(function(d) { return this.x(d.date); }.bind(this))
       .y(function(d) { return this.y2(d.balance); }.bind(this));
 
@@ -65,7 +52,7 @@ class TokenGraph extends React.Component {
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", "0 0 960 500")
       .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+        .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 
     this.svg.append('g')
       .attr('class', 'x x-axis')
@@ -84,7 +71,7 @@ class TokenGraph extends React.Component {
       .style('display', 'none');
 
     this.focus1.append('circle')
-      .classed("circle-earned", true)
+      .classed("circle-earnings", true)
       .attr('r', 4.5);
 
     this.focus1.append('line').classed('x', true);
@@ -92,7 +79,11 @@ class TokenGraph extends React.Component {
 
     this.focus1.append('text')
       .classed('price', true)
-      .attr("transform", "translate(-75, -10)");
+      .attr("transform", "translate(-100, -10)");
+
+    this.focus1.append('text')
+      .classed('earnings', true)
+      .attr("transform", "translate(-40, -40)");
 
     // token focus
     this.focus2 = this.svg.append('g')
@@ -105,6 +96,10 @@ class TokenGraph extends React.Component {
     this.focus2.append('text')
       .classed('balance', true)
       .attr("transform", "translate(30, -10)");
+
+    this.focus2.append('text')
+      .classed('tokens', true)
+      .attr("transform", "translate(-5, 40)rotate(90)");
 
     this.overlay = this.svg.append('rect')
       .attr('class', 'overlay')
@@ -141,6 +136,23 @@ class TokenGraph extends React.Component {
     this.focus1.selectAll('line.x').attr('x2', -this.x(d.date) - this.width);
     this.focus1.selectAll('line.y').attr('y2', this.height - this.y1(d.price));
 
+    // toggle if all or user to remove earnings and tokens
+    if (d.earnings) {
+      this.focus1.selectAll(".circle-earnings")
+        .attr("r", d.earnings / 20)
+        .style("fill", "none")
+        .style("stroke-dasharray", "3 3");
+      this.focus1.select('.earnings').text(`earnings: $${d.earnings}`);
+      this.focus2.select('.tokens').text(`${d.tokens} tokens`);
+    } else {
+      this.focus1.selectAll(".circle-earnings")
+        .attr("r", 8)
+        .style("fill", "black")
+        .style("stroke-dasharray", 0);
+      this.focus1.select('.earnings').text("");
+      this.focus2.select('.tokens').text("");
+    }
+
     // balance dashed line
     this.focus2.selectAll('line.x').attr('x2', this.x(d.date) + this.width * 2);
     this.focus2.selectAll('line.y').attr('y2', this.height - this.y2(d.balance));
@@ -151,7 +163,6 @@ class TokenGraph extends React.Component {
     // append text
     this.focus1.attr('transform', `translate(${this.x(d.date)}, ${this.y1(d.price)})`);
     this.focus1.select('.price').text(`price: $${d.price}`);
-
     this.focus2.attr('transform', `translate(${this.x(d.date)}, ${this.y2(d.balance)})`);
     this.focus2.select('.balance').text(`balance: $${d.balance}`);
   }
