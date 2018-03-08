@@ -78,61 +78,6 @@ class UserDropdown extends React.Component {
     this.props.logout();
   }
 
-
-
-  // handleLogOut(e) {
-  //   e.preventDefault();
-  //   this.props.logout();
-  // }
-
-  // render() {
-  //
-  //   const dropdownButton = (
-  //     <div className="user-dropdown-button">
-  //       {this.props.currentUser.email}
-  //       <hr/>
-  //       <div className="tokens-cont">
-  //         <div className="tokens-text">50 tokens</div>
-  //       </div>
-  //     </div>
-  //   );
-  //
-  //   return (
-  //     <div>
-  //       <ButtonToolbar>
-  //         <DropdownButton
-  //           bsStyle="default"
-  //           title={dropdownButton}
-  //           noCaret
-  //           id="dropdown-no-caret">
-  //           <MenuItem eventKey="1">
-  //             <a className="menu-item">
-  //               <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504723777/lock2_ktdgqn.svg" />
-  //               <div className="button-text">wallet#</div>
-  //             </a>
-  //           </MenuItem>
-  //           <MenuItem eventKey="2">
-  //             <a className="menu-item">
-  //               <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504727474/person-white_lujptc.svg" />
-  //               <div className="button-text">profile</div>
-  //             </a>
-  //             <ProfileContainer
-  //               updateUsernameDisplay={this.updateUsernameDisplay}
-  //               closeModal={this.closeModal}
-  //               user={this.props.currentUser} />
-  //           </MenuItem>
-  //           <MenuItem eventKey="3">
-  //             <a className="menu-item logout-button" onClick={this.props.logout}>
-  //               <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504727474/exit-white_ox7kfe.svg" />
-  //               <div className="button-text">log&nbsp;out</div>
-  //             </a>
-  //           </MenuItem>
-  //         </DropdownButton>
-  //       </ButtonToolbar>
-  //     </div>
-  //   );
-  // }
-
   render() {
 
     // let { tokens, user_tokens, total_tokens } = this.state;
@@ -189,14 +134,3 @@ class UserDropdown extends React.Component {
 }
 
 export default UserDropdown;
-
-// {/*
-//   // componentWillMount() {
-//   //   this.props.fetchUser(this.props.currentUser.id);
-//   // }
-//
-//   // componentDidMount() {
-//   //   debugger
-//   //     this.props.fetchUser(this.props.currentUser.id);
-//   // }
-//   */}
