@@ -10,7 +10,7 @@ module.exports = {
   },
   content : {
     position        : 'fixed',
-    width           : '50px',
+    // width           : '50px',
     right           : '158px',
     border          : '1px solid #ccc',
     borderRadius    : '0 0 15px 15px',

@@ -12,11 +12,12 @@ class UserDropdown extends React.Component {
     const fName = this.props.currentUser.first_name;
     const lName = this.props.currentUser.last_name;
     const email = this.props.currentUser.email;
+    const parsedUsername = email.match(/^([^@]*)@/)[1];
 
 
     const uName = this.props.currentUser.username;
 
-    const userType = fName && lName ? `${fName} ${lName}` : email;
+    const userType = fName && lName ? `${fName} ${lName}` : parsedUsername;
 
     /*
     We initially set the state of the displayName to either the user's
@@ -27,9 +28,10 @@ class UserDropdown extends React.Component {
     this.state = {
       openModal: false,
       displayName: userType,
-      user_tokens: 500,
-      total_tokens: 49500
     };
+    // tokens: 0,
+    // user_tokens: 500,
+    // total_tokens: 49500
 
     window.SessionOpenModal = () => {
       this.setState({openModal: true});
@@ -76,64 +78,10 @@ class UserDropdown extends React.Component {
     this.props.logout();
   }
 
-
-
-  // handleLogOut(e) {
-  //   e.preventDefault();
-  //   this.props.logout();
-  // }
-
-  // render() {
-  //
-  //   const dropdownButton = (
-  //     <div className="user-dropdown-button">
-  //       {this.props.currentUser.email}
-  //       <hr/>
-  //       <div className="tokens-cont">
-  //         <div className="tokens-text">50 tokens</div>
-  //       </div>
-  //     </div>
-  //   );
-  //
-  //   return (
-  //     <div>
-  //       <ButtonToolbar>
-  //         <DropdownButton
-  //           bsStyle="default"
-  //           title={dropdownButton}
-  //           noCaret
-  //           id="dropdown-no-caret">
-  //           <MenuItem eventKey="1">
-  //             <a className="menu-item">
-  //               <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504723777/lock2_ktdgqn.svg" />
-  //               <div className="button-text">wallet#</div>
-  //             </a>
-  //           </MenuItem>
-  //           <MenuItem eventKey="2">
-  //             <a className="menu-item">
-  //               <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504727474/person-white_lujptc.svg" />
-  //               <div className="button-text">profile</div>
-  //             </a>
-  //             <ProfileContainer
-  //               updateUsernameDisplay={this.updateUsernameDisplay}
-  //               closeModal={this.closeModal}
-  //               user={this.props.currentUser} />
-  //           </MenuItem>
-  //           <MenuItem eventKey="3">
-  //             <a className="menu-item logout-button" onClick={this.props.logout}>
-  //               <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504727474/exit-white_ox7kfe.svg" />
-  //               <div className="button-text">log&nbsp;out</div>
-  //             </a>
-  //           </MenuItem>
-  //         </DropdownButton>
-  //       </ButtonToolbar>
-  //     </div>
-  //   );
-  // }
-
   render() {
 
-    let { user_tokens, total_tokens } = this.state;
+    // let { tokens, user_tokens, total_tokens } = this.state;
+    let { tokens } = this.props.currentUser;
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
@@ -144,7 +92,7 @@ class UserDropdown extends React.Component {
               </div>
               <hr/>
               <div className="tokens-cont">
-                <div className="total-tokens">{total_tokens} tokens</div>
+                <div className="total-tokens">{tokens} tokens</div>
               </div>
             </div>
           </a>
@@ -186,14 +134,3 @@ class UserDropdown extends React.Component {
 }
 
 export default UserDropdown;
-
-{/*
-  // componentWillMount() {
-  //   this.props.fetchUser(this.props.currentUser.id);
-  // }
-
-  // componentDidMount() {
-  //   debugger
-  //     this.props.fetchUser(this.props.currentUser.id);
-  // }
-  */}

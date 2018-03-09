@@ -1,0 +1,78 @@
+@import "./variables";
+// Toggler for token dashboard
+/* The switch - the box around the slider */
+.switch {
+  position: absolute;
+  display: inline-block;
+  right: 3%;
+  bottom: 1px;
+  width: 60px;
+  height: 25px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $tan;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  height: 19px;
+  width: 19px;
+  left: 3px;
+  bottom: 3px;
+}
+
+input:checked + .slider {
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(41px);
+  -ms-transform: translateX(41px);
+  transform: translateX(35px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.slider:after {
+ content:'User';
+ color: white;
+ display: block;
+ position: absolute;
+ transform: translate(-50%,-50%);
+ top: 50%;
+ right: -8%;
+ font-size: $font-sm;
+ font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider:after {
+  content:'All';
+  right: 40%;
+}

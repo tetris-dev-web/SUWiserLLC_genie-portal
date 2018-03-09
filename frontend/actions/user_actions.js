@@ -15,9 +15,9 @@ export const receiveUser = user => {
 };
 
 export const fetchUser = id => dispatch => {
-  debugger
+  // debugger
   return APIUtil.fetchUser(id).then(user => {
-    debugger
+    // debugger
     return dispatch(receiveCurrentUser(user));
   });
 };

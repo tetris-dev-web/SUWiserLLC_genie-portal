@@ -64,12 +64,13 @@ class Profile extends React.Component {
   componentDidMount() {
     let updatedUser = this.props.currentUser;
 
+    // used '' so that it doesn't return null for the value
     this.setState({
-      id: updatedUser.id,
-      email: updatedUser.email,
-      zipcode: updatedUser.zipcode,
-      first_name: updatedUser.first_name,
-      last_name: updatedUser.last_name
+      id: updatedUser.id || '',
+      email: updatedUser.email || '',
+      zipcode: updatedUser.zipcode || '',
+      first_name: updatedUser.first_name || '',
+      last_name: updatedUser.last_name || ''
     });
   }
 
@@ -96,7 +97,7 @@ class Profile extends React.Component {
 
     let { email, password, zipcode, first_name, last_name } = this.state;
 
-    debugger
+    // debugger
     return(
       <form className="profile-form-box">
         <input
