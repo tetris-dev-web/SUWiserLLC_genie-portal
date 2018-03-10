@@ -5,10 +5,10 @@ import ModalStyle from './modal_style';
 
 class ProjectFormModal extends React.Component {
   constructor(props) {
-
     super(props);
-
-    this.state = { openModal: false };
+    
+    //debugger (change true to false)
+    this.state = { openModal: true };
 
     window.SessionOpenModal = () => {
       this.setState({openModal: true});

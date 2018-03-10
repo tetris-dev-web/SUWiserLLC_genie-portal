@@ -65,31 +65,72 @@ class ProjectForm extends React.Component {
 
   render() {
 
+    const geojsons = [];
+    for (let i = 0; i < 5; i++) {
+      geojsons.push(
+        <tr key={i}>
+          <td>
+            <input
+              type="text"
+              placeholder="choose geojson"
+              className="geojson-input" />
+          </td>
+          <td>
+            <img
+              src="http://res.cloudinary.com/genus-development/image/upload/v1506637305/saveIcon-01_vzsjnb.png"
+              className="upload-icon" />
+          </td>
+          <td>
+            <input
+              type="checkbox"
+              className="geo-checkbox" />
+          </td>
+          <td>
+            <input
+              type="checkbox"
+              className="geo-checkbox" />
+          </td>
+        </tr>
+      );
+    }
+
     let { title, valuation, video,
           description, plan_pdf, icon} = this.state;
 
-    return(
+    return (
       <form className="form-box">
         <input
           type="text"
           placeholder="#| project title"
           value={title}
           className="project-title-input"
-          onChange={this.update('title')}
-          />
+          onChange={this.update('title')} />
         <div className="valuation-container">
           <input
             type="text"
             placeholder="#| valuation"
-            value={ valuation }
+            value={valuation}
             className="valuation-input"
-            onChange={this.update('valuation')}
-            />
+            onChange={this.update('valuation')} />
           <div className="coin-count">30000</div>
           <div className="coin-text">coins to be issued</div>
         </div>
 
-        <hr/>
+        <hr className="project-divider" />
+
+        <table class="spatial-overlays">
+          <tbody>
+            <tr className="table-header">
+              <th className="t-header-md">spatial overlays</th>
+              <th></th>
+              <th>hierarchy</th>
+              <th>opacity</th>
+            </tr>
+            {geojsons}
+          </tbody>
+        </table>
+
+        <hr className="project-divider" />
 
         <div className="video-div upload-cont">
           <input
