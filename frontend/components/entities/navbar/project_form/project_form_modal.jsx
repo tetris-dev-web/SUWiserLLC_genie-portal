@@ -6,7 +6,7 @@ import ModalStyle from './modal_style';
 class ProjectFormModal extends React.Component {
   constructor(props) {
     super(props);
-    
+
     //debugger (change true to false)
     this.state = { openModal: false };
 

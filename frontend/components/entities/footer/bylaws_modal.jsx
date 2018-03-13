@@ -6,9 +6,9 @@ class BylawsModal extends React.Component {
 
   constructor(props) {
     super(props);
-    //debugger (change true to false)
+
     this.state = {
-      openModal: true,
+      openModal: false,
     };
 
     window.SessionOpenModal = () => {
@@ -89,46 +89,5 @@ class BylawsModal extends React.Component {
     );
   }
 }
-
-// <div className="ft-el-info">
-//   <p className="ft-el-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-//     Aliquam dapibus at metus vel porta. Aenean nisi erat, venenatis a nulla iaculis,
-//     pretium maximus nibh. Maecenas ut malesuada magna. Cras nec eleifend purus,
-//     in vehicula arcu. Nullam pretium nisl magna, vitae porta tortor efficitur eget.
-//     Integer sed nulla placerat, molestie eros ac, mattis enim. Mauris in consequat risus.
-//     Vestibulum eu velit est. Suspendisse ullamcorper tempus mollis.
-//     Fusce non egestas arcu. Morbi et urna risus. Nulla a volutpat risus.</p>
-//   <img className="ft-el-img" src="https://s3.amazonaws.com/temp-genie-portal/org.png"></img>
-// </div>
-//
-//
-// <div className="ft-el-cont">
-//   <h1 className="ft-el-header">Decision Making</h1>
-//   <div className="ft-el-info">
-//     <p className="ft-el-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-//       Aliquam dapibus at metus vel porta. Aenean nisi erat, venenatis a nulla iaculis,
-//       pretium maximus nibh. Maecenas ut malesuada magna. Cras nec eleifend purus,
-//       in vehicula arcu. Nullam pretium nisl magna, vitae porta tortor efficitur eget.
-//       Integer sed nulla placerat, molestie eros ac, mattis enim. Mauris in consequat risus.
-//       Vestibulum eu velit est. Suspendisse ullamcorper tempus mollis.
-//       Fusce non egestas arcu. Morbi et urna risus. Nulla a volutpat risus.</p>
-//     <img className="ft-el-img" src="https://s3.amazonaws.com/temp-genie-portal/equity.png"></img>
-//   </div>
-// </div>
-// <div className="ft-el-cont">
-//   <h1 className="ft-el-header">Fees and Compensation</h1>
-//   <div className="ft-el-info">
-//     <p className="ft-el-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-//       Aliquam dapibus at metus vel porta. Aenean nisi erat, venenatis a nulla iaculis,
-//       pretium maximus nibh. Maecenas ut malesuada magna. Cras nec eleifend purus,
-//       in vehicula arcu. Nullam pretium nisl magna, vitae porta tortor efficitur eget.
-//       Integer sed nulla placerat, molestie eros ac, mattis enim. Mauris in consequat risus.
-//       Vestibulum eu velit est. Suspendisse ullamcorper tempus mollis.
-//       Fusce non egestas arcu. Morbi et urna risus. Nulla a volutpat risus.</p>
-//     <img className="ft-el-img" src="http://res.cloudinary.com/genus-development/image/upload/v1503949307/Genie%20Portal/Bylaws/wheel_micggb.svg"></img>
-//   </div>
-// </div>
-
-
 
 export default BylawsModal;

@@ -83,7 +83,7 @@ class TokenGraph extends React.Component {
 
     this.focus1.append('text')
       .classed('earnings', true)
-      .attr("transform", "translate(-40, -40)");
+      .attr("transform", "translate(-35, -40)");
 
     // token focus
     this.focus2 = this.svg.append('g')
@@ -95,7 +95,7 @@ class TokenGraph extends React.Component {
 
     this.focus2.append('text')
       .classed('balance', true)
-      .attr("transform", "translate(30, -10)");
+      .attr("transform", "translate(40, -10)");
 
     this.focus2.append('text')
       .classed('tokens', true)
@@ -110,8 +110,8 @@ class TokenGraph extends React.Component {
         this.focus2.style('display', null);
       })
       .on('mouseout', () => {
-        this.focus1.style('display', 'none');
-        this.focus2.style('display', 'none');
+        // this.focus1.style('display', 'none');
+        // this.focus2.style('display', 'none');
       })
       .on('mousemove', this.handleMousemove);
   }
