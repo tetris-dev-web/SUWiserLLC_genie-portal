@@ -95,7 +95,7 @@ class ProjectForm extends React.Component {
     }
 
     let { title, valuation, video,
-          description, plan_pdf, icon} = this.state;
+          description, plan_pdf, icon } = this.state;
 
     return (
       <form className="form-box">
