@@ -8,7 +8,7 @@ class ProjectFormModal extends React.Component {
     super(props);
 
     //debugger (change true to false)
-    this.state = { openModal: false };
+    this.state = { openModal: true };
 
     window.SessionOpenModal = () => {
       this.setState({openModal: true});

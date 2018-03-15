@@ -48,7 +48,7 @@ class BylawsModal extends React.Component {
           </div>
           <div className="ft-modal-body bylaws-body">
             <div className="ft-img-cont">
-              <img className="ft-img" src="https://s3.amazonaws.com/temp-genie-portal/org.png"></img>
+              <img className="ft-img" src="https://s3.amazonaws.com/temp-genie-portal/org-structure.png"></img>
             </div>
             <div className="ft-el-cont">
               <h1 className="ft-el-header">Organizational Structure</h1>

@@ -73,7 +73,7 @@ class ProjectForm extends React.Component {
             <input
               type="text"
               placeholder="choose geojson"
-              className="geojson-input" />
+              className="file-input" />
           </td>
           <td>
             <img
@@ -90,6 +90,28 @@ class ProjectForm extends React.Component {
               type="checkbox"
               className="geo-checkbox" />
           </td>
+        </tr>
+      );
+    }
+
+    const file = ['choose json', 'choose csv', 'choose mpg'];
+    const fileTitle = ['cashflow data', 'financials', 'plan'];
+    const files = [];
+    for (let i = 0; i < 3; i++) {
+      files.push(
+        <tr key={i}>
+          <td>
+            <input
+              type="text"
+              placeholder={file[i]}
+              className="file-input" />
+          </td>
+          <td className="upload-icon-cont">
+            <img
+              src="http://res.cloudinary.com/genus-development/image/upload/v1506637305/saveIcon-01_vzsjnb.png"
+              className="upload-icon file-upload-icon" />
+          </td>
+          <td className="file-title">{fileTitle[i]}</td>
         </tr>
       );
     }
@@ -118,7 +140,7 @@ class ProjectForm extends React.Component {
 
         <hr className="project-divider" />
 
-        <table class="spatial-overlays">
+        <table className="file-table spatial-overlays">
           <tbody>
             <tr className="table-header">
               <th className="t-header-md">spatial overlays</th>
@@ -132,23 +154,31 @@ class ProjectForm extends React.Component {
 
         <hr className="project-divider" />
 
-        <div className="video-div upload-cont">
+        <table className="file-table project-files">
+          <tbody>
+            {files}
+          </tbody>
+        </table>
+
+        <div className="link-upload-cont">
           <input
             type="text"
             placeholder="paste video url here"
             value={video}
-            className="video-input"
+            className="link-input"
             onChange={this.update('video')} />
         </div>
 
-        <div className="icon-div upload-cont">
+        <div className="link-upload-cont">
           <input
             type="text"
             placeholder="paste icon image url here"
             value={icon}
-            className="icon-input"
+            className="link-input"
             onChange={this.update('icon')} />
         </div>
+
+        <hr className="project-divider" />
 
         <label className="p-form-label">
           description

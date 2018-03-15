@@ -110,8 +110,8 @@ class TokenGraph extends React.Component {
         this.focus2.style('display', null);
       })
       .on('mouseout', () => {
-        // this.focus1.style('display', 'none');
-        // this.focus2.style('display', 'none');
+        this.focus1.style('display', 'none');
+        this.focus2.style('display', 'none');
       })
       .on('mousemove', this.handleMousemove);
   }
