@@ -54,16 +54,29 @@
     }
     td {
       .file-input {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+        &:focus + label {
+          outline: 1px dotted #000;
+          outline: -webkit-focus-ring-color auto 5px;
+        }
+      }
+      label {
+        display: inline-block;
         width: 80%;
         background-color: $white;
-        color: $black;
         border-radius: 5px;
         margin-bottom: 5px;
-        padding-left: 3px;
-      }
-      .upload-icon {
-        width: 20px;
-        height: 20px;
+        color: $db-fade3;
+        &:hover {
+          background-color: $db-fade;
+          color: white;
+          cursor: pointer;
+        }
       }
       .geo-checkbox {
       }
