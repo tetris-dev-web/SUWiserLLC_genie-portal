@@ -1,5 +1,6 @@
 import React from 'react';
 import { totalData } from '../../../../util/token_data_util';
+import { roundToTwo } from '../../../../util/function_util';
 
 class ProjectForm extends React.Component {
 
@@ -10,6 +11,7 @@ class ProjectForm extends React.Component {
       title: '',
       cost: '',
       valuation: '',
+      coins: '****',
       video: '',
       icon: '',
       description: '',
@@ -56,7 +58,18 @@ class ProjectForm extends React.Component {
   update(property) {
     return (e) => {
       this.setState({ [property]: e.currentTarget.value });
+
+      const { cost } = this.state;
+      const price = 70;
+      const coins = roundToTwo(cost / price);
+
+      if (cost || cost > 0) {
+        this.setState({ coins });
+      } else {
+        this.setState({ coins: '****' });
+      }
     };
+
   }
 
   updateFile(e) {
@@ -169,7 +182,7 @@ class ProjectForm extends React.Component {
             placeholder="#| valuation"
             value={valuation}
             onChange={this.update('valuation')} />
-          <div className="coin-count">****</div>
+          <div className="coin-count">{this.state.coins}</div>
           <div className="coin-text">coins to be issued</div>
         </div>
 
