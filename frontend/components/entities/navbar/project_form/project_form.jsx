@@ -8,6 +8,7 @@ class ProjectForm extends React.Component {
 
     this.state = {
       title: '',
+      cost: '',
       valuation: '',
       video: '',
       icon: '',
@@ -38,6 +39,7 @@ class ProjectForm extends React.Component {
 
     let project = {
       title: this.state.title,
+      cost: this.state.cost,
       valuation: this.state.valuation,
       video: this.state.video,
       icon: this.state.icon,
@@ -125,33 +127,47 @@ class ProjectForm extends React.Component {
               <span>choose geojson</span>
             </label>
           </td>
+          <td></td>
           <td>
-            <input type="checkbox"
-              className="geo-checkbox" />
+            <select className="heir-input">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
           </td>
           <td>
-            <input type="checkbox"
-              className="geo-checkbox" />
+            <input className="opacity-input"
+              type="number"
+              min="0"
+              max="1"
+              placeholder="0.5" />
           </td>
         </tr>
       );
     }
 
-    let { title, valuation, video,
+    let { title, cost, valuation, video,
           description, plan_pdf, icon } = this.state;
 
     return (
       <form className="form-box">
-        <input type="text"
+        <input className="main-input project-title-input"
+          type="text"
           placeholder="#| project title"
           value={title}
-          className="project-title-input"
           onChange={this.update('title')} />
+        <input className="main-input cost-input"
+          type="number"
+          placeholder="#| cost"
+          value={cost}
+          onChange={this.update('cost')} />
         <div className="valuation-container">
-          <input type="text"
+          <input className="valuation-input"
+            type="number"
             placeholder="#| valuation"
             value={valuation}
-            className="valuation-input"
             onChange={this.update('valuation')} />
           <div className="coin-count">****</div>
           <div className="coin-text">coins to be issued</div>
