@@ -29,7 +29,6 @@ project1 = Project.create(
   title: "Corgi Hostel",
   valuation: 1000000,
   video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
-  plan_pdf: "http://johnrudell.com/pdfs/johnrudell-formatted.pdf",
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user1.id

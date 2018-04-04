@@ -6,7 +6,6 @@
 #  title             :string           not null
 #  valuation         :decimal(, )      not null
 #  video             :string
-#  plan_pdf          :binary
 #  icon              :string
 #  description       :text
 #  creator_id        :integer          not null
@@ -16,6 +15,7 @@
 #  file_content_type :string
 #  file_file_size    :integer
 #  file_updated_at   :datetime
+#  cost              :decimal(, )
 #
 
 class Project < ApplicationRecord
@@ -30,8 +30,8 @@ class Project < ApplicationRecord
   #            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   #            "text/plain"], message: ", TESTING- That was not a correct file type. -TESTING"
 
-  has_attached_file :document
-  validates_attachment :document, :content_type => {:content_type => %w(image/jpeg image/jpg image/png application/pdf application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document)}
+  has_attached_file :file
+  validates_attachment :file, :content_type => {:content_type => %w(image/jpeg image/jpg image/png application/pdf application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document)}
 
   belongs_to :creator,
     foreign_key: :creator_id,

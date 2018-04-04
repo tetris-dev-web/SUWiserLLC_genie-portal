@@ -11,13 +11,13 @@ class ProjectForm extends React.Component {
       title: '',
       cost: '',
       valuation: '',
-      coins: '****',
       video: '',
       icon: '',
       description: '',
       creator_id: props.currentUser.id,
       imageFile: '',
       imageUrl: '',
+      coins: '****',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,23 +34,23 @@ class ProjectForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    // console.log('state', this.state);
-    // console.log('submitted');
 
+    const file = this.state.imageFile;
+    const formData = new FormData();
+
+    if (file) formData.append("project[file]", file);
+    // formData.append("project[image]", file);
+    formData.append("project[title]", this.state.title);
+    formData.append("project[cost]", this.state.cost);
+    formData.append("project[valuation]", this.state.valuation);
+    formData.append("project[video]", this.state.video);
+    formData.append("project[icon]", this.state.icon);
+    formData.append("project[description]", this.state.description);
+    formData.append("project[creator_id]", this.state.creator_id);
+    // debugger
     // this.props.contract.mint(this.props.account, 3000, {from:this.props.account});
 
-    let project = {
-      title: this.state.title,
-      cost: this.state.cost,
-      valuation: this.state.valuation,
-      video: this.state.video,
-      icon: this.state.icon,
-      description: this.state.description,
-      creator_id: this.state.creator_id
-    };
-    // creator_id: this.props.currentUser.id
-
-    this.props.createProject(project).then( () => {
+    this.props.createProject(formData).then( () => {
       this.props.closeModal();
     });
   }
@@ -69,7 +69,6 @@ class ProjectForm extends React.Component {
         this.setState({ coins: '****' });
       }
     };
-
   }
 
   updateFile(e) {
@@ -81,7 +80,7 @@ class ProjectForm extends React.Component {
     if (file) {
       reader.readAsDataURL(file);
     } else {
-      this.setState({ imageUrl: "", imageFile: null });
+      this.setState({ imageUrl: '', imageFile: null });
     }
   }
 
@@ -161,8 +160,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, cost, valuation, video,
-          description, plan_pdf, icon } = this.state;
+    let { title, cost, valuation, description, video, icon } = this.state;
 
     return (
       <form className="form-box">
@@ -252,11 +250,11 @@ class ProjectForm extends React.Component {
 
         <label className="p-form-label">
           description
+          <textarea
+            value={ description }
+            className="p-form-description"
+            onChange={this.update('description')} />
         </label>
-        <textarea
-          value={ description }
-          className="p-form-description"
-          onChange={this.update('description')} />
         <div className="pitch-button-cont">
           <input
             className="pitch-button"
