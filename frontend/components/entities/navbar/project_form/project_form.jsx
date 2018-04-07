@@ -39,7 +39,7 @@ class ProjectForm extends React.Component {
     const formData = new FormData();
 
     if (file) formData.append("project[file]", file);
-    // formData.append("project[image]", file);
+
     formData.append("project[title]", this.state.title);
     formData.append("project[cost]", this.state.cost);
     formData.append("project[valuation]", this.state.valuation);
@@ -73,7 +73,9 @@ class ProjectForm extends React.Component {
 
   updateFile(e) {
     const reader = new FileReader();
-    const file = e.currentTarget.files[0];
+    // const file = e.currentTarget.files[0];
+    debugger
+    const file = e.currentTarget.files;
     reader.onloadend = () =>
       this.setState({ imageUrl: reader.result, imageFile: file});
 
@@ -220,6 +222,7 @@ class ProjectForm extends React.Component {
                   name="plan-file"
                   className="file-input"
                   type="file"
+                  multiple
                   onChange={this.updateFile} />
                 <label htmlFor="plan-file">
                   <span>choose a pdf</span>

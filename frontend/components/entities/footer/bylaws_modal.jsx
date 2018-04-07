@@ -48,7 +48,7 @@ class BylawsModal extends React.Component {
           </div>
           <div className="ft-modal-body bylaws-body">
             <div className="ft-img-cont">
-              <img className="ft-img" src="https://s3.amazonaws.com/temp-genie-portal/org-structure.png"></img>
+              <img className="ft-img" src="https://s3.amazonaws.com/genie-portal-dev/static/org-structure.png"></img>
             </div>
             <div className="ft-el-cont">
               <h1 className="ft-el-header">Organizational Structure</h1>
@@ -81,7 +81,7 @@ class BylawsModal extends React.Component {
               <p><strong>Project Direction: </strong>Each project will be proposed with a management team. The direction of the project will be set in collaboration with Genus Core, with inputs and feedback prompts provided through the website. </p>
             </div>
             <div className="ft-img-cont">
-              <img className="ft-img" src="https://s3.amazonaws.com/temp-genie-portal/equity.png"></img>
+              <img className="ft-img" src="https://s3.amazonaws.com/genie-portal-dev/static/equity.png"></img>
             </div>
           </div>
         </Modal>

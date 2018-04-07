@@ -45,7 +45,7 @@ class Wallet extends React.Component {
             <button
               type="submit"
               onClick={ this.handleSubmit }>
-              <img className="wallet-submit" src="http://res.cloudinary.com/genus-development/image/upload/v1504723777/lock2_ktdgqn.svg" />
+              <img className="wallet-submit" src="https://s3.amazonaws.com/genie-portal-dev/static/wallet.svg" />
             </button>
           </div>
         </div>
