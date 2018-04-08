@@ -73,9 +73,8 @@ class ProjectForm extends React.Component {
 
   updateFile(e) {
     const reader = new FileReader();
-    // const file = e.currentTarget.files[0];
-    debugger
-    const file = e.currentTarget.files;
+    const file = e.currentTarget.files[0];
+
     reader.onloadend = () =>
       this.setState({ imageUrl: reader.result, imageFile: file});
 
