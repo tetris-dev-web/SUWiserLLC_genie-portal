@@ -5,7 +5,6 @@ import ModalStyle from './modal_style';
 
 class ProjectFormModal extends React.Component {
   constructor(props) {
-
     super(props);
 
     this.state = { openModal: false };

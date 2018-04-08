@@ -189,11 +189,11 @@ class Transfer extends React.Component {
           onChange={this.toggleBylawAgreement} />
         <p className="t-checkbox-text">I certify that I have read and agreed to <a href="#" className="link">the bylaws</a>.</p>
         </div>
-        <div className="white-button-cont">
+        <div className="transfer-button-cont">
           <input
             type="submit"
             value="transfer"
-            className="white-button"
+            className="transfer-button"
             onClick={this.handleSubmit}/>
         </div>
         <div className="blue-close-modal-button close-modal-button"

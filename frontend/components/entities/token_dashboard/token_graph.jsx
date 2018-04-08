@@ -83,7 +83,7 @@ class TokenGraph extends React.Component {
 
     this.focus1.append('text')
       .classed('earnings', true)
-      .attr("transform", "translate(-40, -40)");
+      .attr("transform", "translate(-35, -40)");
 
     // token focus
     this.focus2 = this.svg.append('g')
@@ -95,7 +95,7 @@ class TokenGraph extends React.Component {
 
     this.focus2.append('text')
       .classed('balance', true)
-      .attr("transform", "translate(30, -10)");
+      .attr("transform", "translate(40, -10)");
 
     this.focus2.append('text')
       .classed('tokens', true)
@@ -139,16 +139,16 @@ class TokenGraph extends React.Component {
     // toggle if all or user to remove earnings and tokens
     if (d.earnings) {
       this.focus1.selectAll(".circle-earnings")
-        .attr("r", d.earnings / 20)
-        .style("fill", "none")
-        .style("stroke-dasharray", "3 3");
+        .attr("r", d.earnings / 20);
+        // .style("fill", "none")
+        // .style("stroke-dasharray", "3 3");
       this.focus1.select('.earnings').text(`earnings: $${d.earnings}`);
       this.focus2.select('.tokens').text(`${d.tokens} tokens`);
     } else {
       this.focus1.selectAll(".circle-earnings")
-        .attr("r", 8)
-        .style("fill", "black")
-        .style("stroke-dasharray", 0);
+        .attr("r", 8);
+        // .style("fill", "black")
+        // .style("stroke-dasharray", 0);
       this.focus1.select('.earnings').text("");
       this.focus2.select('.tokens').text("");
     }

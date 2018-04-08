@@ -99,7 +99,7 @@ class UserDropdown extends React.Component {
           <ul className="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
             <li className="dropdown-submenu">
               <a tabIndex="-1" className="wallet-button butt">
-                <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504723777/lock2_ktdgqn.svg" />
+                <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/wallet.svg" />
                 <div className="button-text">wallet#</div>
               </a>
               <ul className="dropdown-menu dropdown-item">
@@ -108,7 +108,7 @@ class UserDropdown extends React.Component {
             </li>
             <li className="dropdown-submenu profile-menu">
               <a tabIndex="-1" className="profile-button butt">
-                <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504727474/person-white_lujptc.svg" />
+                <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/profile.svg" />
                 <div className="button-text">profile</div>
               </a>
               <ul className="dropdown-menu dropdown-item">
@@ -119,7 +119,7 @@ class UserDropdown extends React.Component {
             </li>
             <li>
               <a className="logout-button butt" onClick={this.props.logout}>
-                <img className="button-img" src="http://res.cloudinary.com/genus-development/image/upload/v1504727474/exit-white_ox7kfe.svg" />
+                <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/logout.svg" />
                 <div className="button-text">log&nbsp;out</div>
               </a>
             </li>

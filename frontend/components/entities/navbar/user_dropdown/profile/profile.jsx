@@ -64,7 +64,7 @@ class Profile extends React.Component {
   componentDidMount() {
     let updatedUser = this.props.currentUser;
 
-    // used '' so that it doesn't return null for the value
+    // used an empty '' so that it doesn't return null for the value
     this.setState({
       id: updatedUser.id || '',
       email: updatedUser.email || '',

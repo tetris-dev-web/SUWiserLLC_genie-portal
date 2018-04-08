@@ -20,6 +20,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  username               :string
+#  tokens                 :integer
 #
 
 require 'test_helper'
