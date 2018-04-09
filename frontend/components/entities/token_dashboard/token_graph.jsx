@@ -189,11 +189,7 @@ class TokenGraph extends React.Component {
   }
 
   render() {
-
-    return (
-      <div className="series content" id='token'>
-      </div>
-    );
+    return <div className="series content graph" id='token'></div>;
   }
 
 };

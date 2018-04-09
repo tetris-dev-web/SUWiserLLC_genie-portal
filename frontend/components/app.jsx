@@ -10,9 +10,10 @@ import {
 } from 'react-router-dom';
 import Navbar from './entities/navbar/navbar_container';
 import TokenDashboard from './entities/token_dashboard/token_dashboard_container';
+import ProjectDashboard from './entities/project_dashboard/project_dashboard_container';
 
 // Filler component for flex layout
-import Filler from './entities/filler';
+// import Filler from './entities/filler';
 
 import Footer from './entities/footer/footer';
 
@@ -20,7 +21,7 @@ const App = () => (
   <div className="box">
     <Navbar />
     <TokenDashboard />
-    <Filler />
+    <ProjectDashboard />
     <Footer />
   </div>
 );
