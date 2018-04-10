@@ -14,12 +14,8 @@ class ProjectDashboard extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    /* After a transaction, nextProps.data becomes an object with
-    undefined inside of it. Setting data to this.props.data fetches the
-    correct array data */
-    // debugger
 
-    this.setState({ data: nextProps.projects })
+    this.setState({ data: nextProps.projects });
     // let data;
     // if (nextProps.data instanceof Array) {
     //   data = nextProps.data;

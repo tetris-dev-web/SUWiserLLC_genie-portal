@@ -47,7 +47,7 @@ class ProjectForm extends React.Component {
     formData.append("project[icon]", this.state.icon);
     formData.append("project[description]", this.state.description);
     formData.append("project[creator_id]", this.state.creator_id);
-    // debugger
+
     // this.props.contract.mint(this.props.account, 3000, {from:this.props.account});
 
     this.props.createProject(formData).then( () => {

@@ -6,15 +6,15 @@ class ProjectGraph extends React.Component {
     super(props);
 
     this.state = {
-      data: ''
-    }
+      data: '',
+    };
 
     // this.handleMousemove = this.handleMousemove.bind(this);
     // this.drawChart = this.drawChart.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    
+    this.setState({ data: nextProps.data });
     // const { data } = this.props;
     //
     // if (typeof data === "string" && nextProps.data.length > 1) {
@@ -209,12 +209,13 @@ class ProjectGraph extends React.Component {
   // }
 
   render() {
-    debugger
-    const data = this.props.data.map(d => {
-      return (
-        <li key={d.id}>{d.name}</li>
-      );
-    });
+
+    let data = '';
+    if (this.state.data) {
+      data = this.state.data.map(d => {
+        return <li key={d.id}>{d.title} {d.created_at}</li>;
+      });
+    }
 
     return (
       <div className="series content graph" id='project'>
@@ -223,6 +224,6 @@ class ProjectGraph extends React.Component {
     );
   }
 
-};
+}
 
 export default ProjectGraph;

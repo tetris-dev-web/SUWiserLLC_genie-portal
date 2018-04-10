@@ -25,6 +25,7 @@ class TokenGraph extends React.Component {
 
   drawChart() {
     const { data } = this.props;
+
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
     this.width = 960 - this.margin.left - this.margin.right;
     this.height = 500 - this.margin.top - this.margin.bottom;
@@ -192,6 +193,6 @@ class TokenGraph extends React.Component {
     return <div className="series content graph" id='token'></div>;
   }
 
-};
+}
 
 export default TokenGraph;

@@ -1,6 +1,6 @@
 import React from 'react';
 import TokenGraph from './token_graph';
-import { userData, totalData } from '../../../util/token_data_util'
+import { userData, totalData } from '../../../../util/token_data_util';
 
 class TokenDashboard extends React.Component {
   constructor(props){
@@ -9,14 +9,16 @@ class TokenDashboard extends React.Component {
     const parseTime = d3.timeParse("%m/%d/%y");
 
     userData.forEach(d => {
-      d.date = parseTime(d.date);
+      /* It will try to parse twice if relogging in, resulting in null,
+      so you must check if it's a string */
+      if (typeof d.date === 'string') d.date = parseTime(d.date);
       d.price = +d.price;
       d.balance = +d.balance;
       d.tokens = +d.tokens;
     });
 
     totalData.forEach(d => {
-      d.date = parseTime(d.date);
+      if (typeof d.date === 'string') d.date = parseTime(d.date);
       d.price = +d.price;
       d.balance = +d.balance;
       d.tokens = +d.tokens;
@@ -48,24 +50,15 @@ class TokenDashboard extends React.Component {
   }
 
   render() {
-    if (this.props.currentUser) {
-      return (
-        <div className="graph-container">
-          <TokenGraph currentUser={this.props.currentUser} data={this.state.data} />
-          <label className="switch">
-            <input type="checkbox" onClick={this.toggleData} />
-            <span className="slider round"></span>
-          </label>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <TokenGraph data={this.state.totalData} />
-        </div>
-      );
-    }
-
+    return (
+      <div className="graph-container">
+        <TokenGraph currentUser={this.props.currentUser} data={this.state.data} />
+        <label className="switch">
+          <input type="checkbox" onClick={this.toggleData} />
+          <span className="slider round"></span>
+        </label>
+      </div>
+    );
   }
 }
 

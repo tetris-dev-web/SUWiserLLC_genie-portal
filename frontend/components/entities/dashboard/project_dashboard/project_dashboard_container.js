@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import {
   fetchProjects,
   fetchProject
-} from '../../../actions/project_actions';
+} from '../../../../actions/project_actions';
 import ProjectDashboard from './project_dashboard';
 
 const mapStateToProps = state => {
