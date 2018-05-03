@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 // import PasswordResetModal from './password_reset_container';
 
 class SessionForm extends React.Component {
@@ -16,6 +17,12 @@ class SessionForm extends React.Component {
     this.renderErrors = this.renderErrors.bind(this);
     this.toggleCheckboxChange = this.toggleCheckboxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.loggedIn) {
+      this.props.history.push('/dashboard');
+    }
   }
 
   update(property) {
@@ -156,7 +163,7 @@ class SessionForm extends React.Component {
   }
 }
 
-export default SessionForm;
+export default withRouter(SessionForm);
 
 
 {/*

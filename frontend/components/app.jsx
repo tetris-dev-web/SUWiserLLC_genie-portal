@@ -1,32 +1,26 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { Switch } from 'react-router-dom';
 import {
-  Route,
-  Redirect,
-  Switch,
-  Link,
   AuthRoute,
-  HashRouter
-} from 'react-router-dom';
+  ProtectedRoute,
+  RedirectedRoute
+} from '../util/route_util';
 import Navbar from './entities/navbar/navbar_container';
-import TokenDashboard from './entities/token_dashboard/token_dashboard_container';
-
-// Filler component for flex layout
-import Filler from './entities/filler';
-
+import Landing from './entities/landing/landing';
+import Dashboard from './entities/dashboard/dashboard';
 import Footer from './entities/footer/footer';
 
 const App = () => (
   <div className="box">
     <Navbar />
-    <TokenDashboard />
-    <Filler />
+    <RedirectedRoute />
+    <Switch>
+      <AuthRoute path="/login" component={Landing} />
+      <ProtectedRoute path="/dashboard" component={Dashboard} />
+    </Switch>
     <Footer />
   </div>
 );
 
-// <Switch>
-//   <AuthRoute exact path="/login" component={SessionFormContainer} />
-//   <AuthRoute exact path="/signup" component={SessionFormContainer} />
-// </Switch>
 export default App;

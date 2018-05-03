@@ -97,7 +97,6 @@ class Profile extends React.Component {
 
     let { email, password, zipcode, first_name, last_name } = this.state;
 
-    // debugger
     return(
       <form className="profile-form-box">
         <input

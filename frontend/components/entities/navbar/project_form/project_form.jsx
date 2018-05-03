@@ -47,7 +47,7 @@ class ProjectForm extends React.Component {
     formData.append("project[icon]", this.state.icon);
     formData.append("project[description]", this.state.description);
     formData.append("project[creator_id]", this.state.creator_id);
-    // debugger
+
     // this.props.contract.mint(this.props.account, 3000, {from:this.props.account});
 
     this.props.createProject(formData).then( () => {
@@ -130,8 +130,8 @@ class ProjectForm extends React.Component {
     const fileId = ["file1", "file2", "file3", "file4", "file5"];
     for (let i = 0; i < 5; i++) {
       geojsons.push(
-        <tr key={i}>
-          <td>
+        <div className="geo-row-container" key={i}>
+          <div className="file-container">
             <input id={fileId[i]}
               name={fileId[i]}
               className="file-input"
@@ -139,32 +139,27 @@ class ProjectForm extends React.Component {
             <label htmlFor={fileId[i]}>
               <span>choose geojson</span>
             </label>
-          </td>
-          <td></td>
-          <td>
-            <select className="heir-input">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-          </td>
-          <td>
-            <input className="opacity-input"
-              type="number"
-              min="0"
-              max="1"
-              placeholder="0.5" />
-          </td>
-        </tr>
+          </div>
+          <select className="heir-input">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+          <input className="opacity-input"
+            type="number"
+            min="0"
+            max="1"
+            placeholder="0.5" />
+        </div>
       );
     }
 
     let { title, cost, valuation, description, video, icon } = this.state;
 
     return (
-      <form className="form-box">
+      <form className="form-box p-form-box">
         <input className="main-input project-title-input"
           type="text"
           placeholder="#| project title"
@@ -187,50 +182,41 @@ class ProjectForm extends React.Component {
 
         <hr className="project-divider" />
 
-        <table className="file-table spatial-overlays">
-          <tbody>
-            <tr className="table-header">
-              <th className="t-header-md">spatial overlays</th>
-              <th></th>
-              <th>hierarchy</th>
-              <th>opacity</th>
-            </tr>
-            {geojsons}
-          </tbody>
-        </table>
+        <div className="geo-container">
+          <header className="geo-row-container">
+            <h5>spatial overlays</h5>
+            <h5>hierarchy</h5>
+            <h5>opacity</h5>
+          </header>
+          {geojsons}
+        </div>
 
         <hr className="project-divider" />
 
-        <table className="file-table project-files">
-          <tbody>
-            <tr>
-              <td>
-                <input id="fin-file"
-                  name="fin-file"
-                  className="file-input"
-                  type="file" />
-                <label htmlFor="fin-file">
-                  <span>choose csv</span>
-                </label>
-              </td>
-              <td className="file-title">financials</td>
-            </tr>
-            <tr>
-              <td>
-                <input id="plan-file"
-                  name="plan-file"
-                  className="file-input"
-                  type="file"
-                  multiple
-                  onChange={this.updateFile} />
-                <label htmlFor="plan-file">
-                  <span>choose a pdf</span>
-                </label>
-              </td>
-              <td className="file-title">plan</td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="fin-plan-container">
+          <div className="file-container">
+            <input id="fin-file"
+              name="fin-file"
+              className="file-input"
+              type="file" />
+            <label htmlFor="fin-file">
+              <span>choose csv</span>
+            </label>
+          </div>
+          <h5>financials</h5>
+          <div className="file-container">
+            <input id="plan-file"
+              name="plan-file"
+              className="file-input"
+              type="file"
+              multiple
+              onChange={this.updateFile} />
+            <label htmlFor="plan-file">
+              <span>choose a pdf</span>
+            </label>
+          </div>
+          <h5>plan</h5>
+        </div>
 
         <div className="link-upload-cont">
           <input type="text"
@@ -267,6 +253,7 @@ class ProjectForm extends React.Component {
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
+
       </form>
     );
   }
