@@ -22,3 +22,10 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+npm install
+bundle install
+bundle exec rake db:setup
+bundle exec rake db:migrate
+webpack --watch
+rails s
