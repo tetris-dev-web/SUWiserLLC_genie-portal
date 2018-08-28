@@ -23,9 +23,9 @@ Things you may want to cover:
 
 * ...
 
-npm install
-bundle install
-bundle exec rake db:setup
-bundle exec rake db:migrate
-webpack --watch
-rails s
+npm install  
+bundle install  
+bundle exec rake db:setup  
+bundle exec rake db:migrate  
+webpack --watch  
+rails s  
