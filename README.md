@@ -13,7 +13,7 @@
 
 ## Development Tools
 
-- `webpack --watch`
+(webpack is automatically happening so no need to call the command)
 
 ## Database creation
 
