@@ -1,24 +1,33 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Setting Up Your Branch OR How to Git Gud
 
-Things you may want to cover:
+- cd into the directory in which you want genie portal to be placed
+- `git clone https://github.com/GenusDev/genie-portal.git`
+- create a branch, named in according with the [GenusDev Programming Conventions](https://docs.google.com/document/d/1-PGffrw-B1d9P5A_zfo5gJrW8dK28kqx5j-xxKOMPLY) e.g. `git checkout -b JOHN-readme-edit-0903`
 
-* Ruby version
 
-* System dependencies
+## System dependencies
+- `npm install`
+- `bundle install`
 
-* Configuration
+## Development Tools
 
-* Database creation
+- `webpack`
 
-* Database initialization
+## Database creation
 
-* How to run the test suite
+- `bundle exec rake db:setup`
 
-* Services (job queues, cache servers, search engines, etc.)
+## Database initialization
 
-* Deployment instructions
+- `bundle exec rake db:migrate`   
 
-* ...
+## How to run the test suite
+
+- to be built
+
+## Start Server
+- `rails s`
+
+## links to key documents
