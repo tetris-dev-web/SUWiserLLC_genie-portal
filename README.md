@@ -12,6 +12,7 @@
 - `bundle install`
 
 ## Development Tools
+
 - `webpack --watch`
 
 ## Database creation
