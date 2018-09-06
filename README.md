@@ -13,7 +13,7 @@
 
 ## Development Tools
 
-- `webpack`
+- `webpack --watch`
 
 ## Database creation
 
