@@ -12,8 +12,7 @@
 - `bundle install`
 
 ## Development Tools
-
-(webpack is automatically happening so no need to call the command)
+- `webpack --watch`
 
 ## Database creation
 
