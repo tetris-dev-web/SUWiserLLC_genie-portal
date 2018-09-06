@@ -66,3 +66,19 @@ project3 = Project.create(
   creator_id: user1.id,
   created_at: "14/03/2018"
 )
+
+project4 = Project.create(
+  title: "HamInn",
+  revenue: 8000,
+  valuation: 57000,
+  city: "New York",
+  country: "USA",
+  continent: "North America",
+  video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
+  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+  description: "BNB/ Business Incubator",
+  creator_id: user2.id,
+  created_at: "14/03/2018"
+)
+
+proj
