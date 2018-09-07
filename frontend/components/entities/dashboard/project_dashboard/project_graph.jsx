@@ -1,5 +1,6 @@
 import React from 'react';
 // import { data } from '../../../util/token_data_util'
+import {withFauxDOM} from 'react-faux-dom'
 
 class ProjectGraph extends React.Component {
   constructor(props) {
@@ -12,8 +13,14 @@ class ProjectGraph extends React.Component {
   }
 
   componentDidMount(){
-    this.createSVG();
-    this.drawChart();
+    // this.createSVG();
+    // this.drawChart();
+
+    const faux = this.props.connectFauxDOM('div', 'chart')
+    d3.select(faux)
+      .append('div')
+      .html('Hello World!')
+    this.props.animateFauxDOM(800)
   }
 
   drawChart(){
@@ -66,14 +73,15 @@ class ProjectGraph extends React.Component {
     return (
       <div className="series content graph" id='project'>
 
-        <ul>
-          {data}
-        </ul>
-
+        {this.props.chart}
       </div>
     );
   }
 
 }
 
-export default ProjectGraph;
+ProjectGraph.defaultProps = {
+  chart: 'loading'
+}
+
+export default withFauxDOM(ProjectGraph);
