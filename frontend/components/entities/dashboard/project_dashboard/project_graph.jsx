@@ -13,7 +13,7 @@ class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
     this.drawChart = this.drawChart.bind(this);
-    this.createNodes = this.createNodes.bind(this);
+    this.createCircles = this.createCircles.bind(this);
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     // this.handleMousemove = this.handleMousemove.bind(this);
@@ -58,22 +58,26 @@ class ProjectGraph extends React.Component {
      {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
     const nodesData = projects.concat(continents).concat(cities);
-    console.log(nodesData);
     const faux = this.props.connectFauxDOM('div', 'chart')
     const simulation = this.simulation(nodesData);
     const svg = this.createSVG(faux);
-    const node = this.createNodes(svg, nodesData);
-    const links = this.createLinks(projects, cities);
+    const linksData = this.createLinks(projects, cities);
+    const circle = this.createCircles(svg, nodesData);
     const text = this.createText(svg,nodesData);
+    const link = this.drawLinks(svg, linksData)
+    const forceLinks = d3.forceLink(linksData)
+                        .id(function(d) { return d.title; })
 
-    simulation.force("links", links)
-    simulation.on('tick', () => this.tickActions(node, text));
+
+    simulation.force("links", forceLinks)
+    simulation.on('tick', () => this.tickActions(circle, text, link));
     this.props.animateFauxDOM(800)
   }
 
 
   createText(svg,nodesData) {
-    return svg.selectAll('text')
+    return svg.append('g')
+    .selectAll('text')
     .data(nodesData)
     .enter()
     .append("text")
@@ -94,14 +98,20 @@ class ProjectGraph extends React.Component {
     this.createNodes();
   }
 
-  tickActions(node, text) {
+  tickActions(circle, text, link) {
     //update circle positions to reflect node updates on each tick of the simulation
-    node
+    circle
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; })
     text
         .attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
+
+    link
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
   }
 
   createSVG(faux) {
@@ -110,11 +120,10 @@ class ProjectGraph extends React.Component {
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", "0 0 700 500")
       .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append('g');
+      .attr("height", height + margin.top + margin.bottom);
   }
 
-  createNodes(svg, nodesData) {
+  createCircles(svg, nodesData) {
     // return svg.attr("class", "nodes")
     //   .selectAll("circle")
     //   .data(nodesData)
@@ -122,7 +131,8 @@ class ProjectGraph extends React.Component {
     //   .append("circle")
     //   .attr("r", 10)
     //   .attr("fill", "red");
-    return svg.attr("class", "nodes")
+    return svg.append('g')
+      .attr("class", "nodes")
       .selectAll("circle")
       .data(nodesData)
       .enter()
@@ -145,9 +155,21 @@ class ProjectGraph extends React.Component {
         target: city.continent
       }
     })
-    console.log(projectCityLinks.concat(cityContinentLinks));
-    return d3.forceLink(projectCityLinks.concat(cityContinentLinks))
-                        .id(function(d) { return d.title; })
+
+    return projectCityLinks.concat(cityContinentLinks)
+    // return d3.forceLink(projectCityLinks.concat(cityContinentLinks))
+    //                     .id(function(d) { return d.title; })
+  }
+
+  drawLinks (svg, linksData) {
+    return svg.append('g')
+      .attr("class", "links")
+      .selectAll("line")
+      .data(linksData)
+      .enter()
+      .append("line")
+      .attr("stroke-width", 2)
+      .attr("stroke", "red");
   }
 
   render() {
