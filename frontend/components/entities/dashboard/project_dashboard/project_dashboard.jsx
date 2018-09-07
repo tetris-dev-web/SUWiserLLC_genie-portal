@@ -16,7 +16,6 @@ class ProjectDashboard extends React.Component {
 
 
   componentDidMount() {
-    debugger
     this.props.fetchProjects();
   }
 
@@ -36,7 +35,6 @@ class ProjectDashboard extends React.Component {
   // }
 
   render() {
-    debugger
     if (this.props.currentUser) {
       return (
         <div className="graph-container">
