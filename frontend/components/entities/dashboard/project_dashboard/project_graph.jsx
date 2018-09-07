@@ -24,7 +24,6 @@ class ProjectGraph extends React.Component {
   componentDidMount(){
     this.props.fetchProjects().then(() => {
       this.setUp();
-      // this.createLinks();
     })
   }
 
@@ -32,15 +31,19 @@ class ProjectGraph extends React.Component {
 
     const cities = projectKeys.reduce((cities, key) => {
       const title = this.props.data[key].city;
+      const data = {
+        title,
+        continent: this.props.data[key].continent
+      }
 
       if (!cities[title]) {
-        cities[title] = true;
+        cities[title] = data;
       }
       return cities;
     }, {});
 
     return Object.keys(cities).map(title => {
-      return {title};
+      return cities[title];
     });
   }
 
@@ -54,11 +57,14 @@ class ProjectGraph extends React.Component {
     const cities = this.getUniqueCitites(projectKeys);
 
     const nodesData = projects.concat(CONTINENTS).concat(cities);
+    console.log(nodesData);
     const faux = this.props.connectFauxDOM('div', 'chart')
     const simulation = this.simulation(nodesData);
     const svg = this.createSVG(faux);
     const node = this.createNodes(svg, nodesData);
+    const links = this.createLinks(projects, cities);
 
+    simulation.force("links", links)
     simulation.on('tick', () => this.tickActions(node));
     this.props.animateFauxDOM(800)
   }
@@ -101,18 +107,24 @@ class ProjectGraph extends React.Component {
       .attr("fill", "red");
   }
 
-  // createLinks () {
-  //   const linksData = Object.keys(this.props.data).map(key => {
-  //       const project = this.props.data[key];
-  //       return {
-  //         source: project.title,
-  //         target: project.
-  //       };
-  //   });
-  //
-  //   console.log(linksData);
-  //
-  // }
+  createLinks (projects, cities) {
+    const projectCityLinks = projects.map(project => {
+        return {
+          source: project.title,
+          target: project.city
+        };
+    });
+
+    const cityContinentLinks = cities.map(city => {
+      return {
+        source: city.title,
+        target: city.continent
+      }
+    })
+    console.log(projectCityLinks.concat(cityContinentLinks));
+    return d3.forceLink(projectCityLinks.concat(cityContinentLinks))
+                        .id(function(d) { return d.title; })
+  }
 
   render() {
     let data = '';
