@@ -24,22 +24,41 @@ class ProjectGraph extends React.Component {
   componentDidMount(){
     this.props.fetchProjects().then(() => {
       this.setUp();
+      // this.createLinks();
     })
   }
 
-  setUp () {
-    const nodesData = Object.keys(this.props.data).map(key => {
-        return this.props.data[key]
-      }).concat(CONTINENTS);
+  getUniqueCitites(projectKeys) {
 
+    const cities = projectKeys.reduce((cities, key) => {
+      const title = this.props.data[key].city;
+
+      if (!cities[title]) {
+        cities[title] = true;
+      }
+      return cities;
+    }, {});
+
+    return Object.keys(cities).map(title => {
+      return {title};
+    });
+  }
+
+  setUp () {
+    const projectKeys = Object.keys(this.props.data);
+
+    const projects = projectKeys.map(key => {
+      return this.props.data[key];
+    })
+
+    const cities = this.getUniqueCitites(projectKeys);
+
+    const nodesData = projects.concat(CONTINENTS).concat(cities);
     const faux = this.props.connectFauxDOM('div', 'chart')
     const simulation = this.simulation(nodesData);
     const svg = this.createSVG(faux);
     const node = this.createNodes(svg, nodesData);
 
-    // d3.select(faux)
-    //   .append('div')
-    //   .html('Hello World!')
     simulation.on('tick', () => this.tickActions(node));
     this.props.animateFauxDOM(800)
   }
@@ -62,7 +81,6 @@ class ProjectGraph extends React.Component {
         .attr("cy", function(d) { return d.y; })
   }
 
-
   createSVG(faux) {
     return d3.select(faux).append('svg')
       .classed('project-svg', true)
@@ -82,6 +100,19 @@ class ProjectGraph extends React.Component {
       .attr("r", 10)
       .attr("fill", "red");
   }
+
+  // createLinks () {
+  //   const linksData = Object.keys(this.props.data).map(key => {
+  //       const project = this.props.data[key];
+  //       return {
+  //         source: project.title,
+  //         target: project.
+  //       };
+  //   });
+  //
+  //   console.log(linksData);
+  //
+  // }
 
   render() {
     let data = '';
