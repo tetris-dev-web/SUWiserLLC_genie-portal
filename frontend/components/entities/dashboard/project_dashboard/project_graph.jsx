@@ -4,11 +4,6 @@ import React from 'react';
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      data: '',
-    };
-
     this.drawChart = this.drawChart.bind(this);
     this.createNodes = this.createNodes.bind(this);
 
@@ -59,23 +54,22 @@ class ProjectGraph extends React.Component {
   }
 
   render() {
-
     let data = '';
-    if (this.state.data) {
-      data = this.state.data.map(d => {
-        return <li key={d.id}>{d.title} {d.created_at}</li>;
+    if (this.props.data) {
+      // debugger
+      data = Object.keys(this.props.data).map(key => {
+        const project = this.props.data[key];
+        return <li key={project.id}>{project.title} {project.created_at}</li>;
       });
     }
 
     return (
       <div className="series content graph" id='project'>
-<<<<<<< HEAD
+
         <ul>
           {data}
         </ul>
-=======
 
->>>>>>> 2bfa07f95eefbc861a4c229bce3d1bb21e1b006e
       </div>
     );
   }

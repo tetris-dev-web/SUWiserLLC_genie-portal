@@ -8,7 +8,7 @@ import ProjectDashboard from './project_dashboard';
 const mapStateToProps = state => {
   return {
     currentUser: state.session.currentUser,
-    projects: state.entities.projects,
+    projects: state.entities.projects
   };
 };
 

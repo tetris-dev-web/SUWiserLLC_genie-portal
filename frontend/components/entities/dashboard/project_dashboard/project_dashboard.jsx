@@ -5,43 +5,18 @@ class ProjectDashboard extends React.Component {
   constructor(props){
     super(props);
 
-    this.state = {
-      data: '',
-      toggle: false,
-    };
+    // this.state = {
+    //   data: '',
+    //   toggle: false,
+    // };
 
     // this.toggleData = this.toggleData.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
 
-    this.setState({ data: nextProps.projects });
-    // let data;
-    // if (nextProps.data instanceof Array) {
-    //   data = nextProps.data;
-    // } else {
-    //   data = this.props.data
-    // }
-    //
-    // const parseTime = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ");
-    //
-    // data.forEach(d => {
-    //   d.timestamp = parseTime(d.timestamp);
-    //   d.amount = +d.amount;
-    // });
-    //
-    // const sentTrans = data.filter(d => {
-    //   return d.fromAddress === nextProps.currentUser;
-    // });
-    //
-    // const receivedTrans = data.filter(d => {
-    //   return d.toAddress === nextProps.currentUser;
-    // });
-    //
-    // this.setState({ data: sentTrans, sentTrans, receivedTrans });
-  }
 
   componentDidMount() {
+    debugger
     this.props.fetchProjects();
   }
 
@@ -61,11 +36,12 @@ class ProjectDashboard extends React.Component {
   // }
 
   render() {
+    debugger
     if (this.props.currentUser) {
       return (
         <div className="graph-container">
           <ProjectGraph currentUser={this.props.currentUser}
-            data={this.state.data} />
+            data={this.props.projects} />
         </div>
       );
     } else {
