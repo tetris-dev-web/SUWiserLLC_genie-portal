@@ -2,8 +2,8 @@ import React from 'react';
 // import { data } from '../../../util/token_data_util'
 import {withFauxDOM} from 'react-faux-dom'
 
-const CONTINENTS = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
- {title:"Europe"}, {title: "North America"}, {title:"South America"}];
+// const CONTINENTS = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
+//  {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
  const margin = {top: 20, right: 20, bottom: 30, left: 50};
  const width = 960 - margin.left - margin.right;
@@ -53,20 +53,34 @@ class ProjectGraph extends React.Component {
     const projects = projectKeys.map(key => {
       return this.props.data[key];
     })
-
     const cities = this.getUniqueCitites(projectKeys);
+    const continents = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
+     {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
-    const nodesData = projects.concat(CONTINENTS).concat(cities);
+    const nodesData = projects.concat(continents).concat(cities);
     console.log(nodesData);
     const faux = this.props.connectFauxDOM('div', 'chart')
     const simulation = this.simulation(nodesData);
     const svg = this.createSVG(faux);
     const node = this.createNodes(svg, nodesData);
     const links = this.createLinks(projects, cities);
+    const text = this.createText(svg,nodesData);
 
     simulation.force("links", links)
-    simulation.on('tick', () => this.tickActions(node));
+    simulation.on('tick', () => this.tickActions(node, text));
     this.props.animateFauxDOM(800)
+  }
+
+
+  createText(svg,nodesData) {
+    return svg.selectAll('text')
+    .data(nodesData)
+    .enter()
+    .append("text")
+    .attr("dx", (d) => {d.x})
+    .attr("dy", (d) => {d.y})
+    .style("font-size", "18px")
+    .text((d) => d.title);
   }
 
   simulation (nodesData) {
@@ -80,11 +94,14 @@ class ProjectGraph extends React.Component {
     this.createNodes();
   }
 
-  tickActions(node) {
+  tickActions(node, text) {
     //update circle positions to reflect node updates on each tick of the simulation
     node
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; })
+    text
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; })
   }
 
   createSVG(faux) {
@@ -98,6 +115,13 @@ class ProjectGraph extends React.Component {
   }
 
   createNodes(svg, nodesData) {
+    // return svg.attr("class", "nodes")
+    //   .selectAll("circle")
+    //   .data(nodesData)
+    //   .enter()
+    //   .append("circle")
+    //   .attr("r", 10)
+    //   .attr("fill", "red");
     return svg.attr("class", "nodes")
       .selectAll("circle")
       .data(nodesData)
