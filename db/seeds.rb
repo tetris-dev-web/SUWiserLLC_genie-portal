@@ -81,6 +81,7 @@ project4 = Project.create(
   created_at: "14/03/2018"
 )
 
+<<<<<<< HEAD
 project5 = Project.create(
   title: "PorkInn",
   revenue: 6000,

@@ -41,6 +41,7 @@ class ProjectGraph extends React.Component {
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append('g');
+
   }
 
   createNodes() {
@@ -68,9 +69,13 @@ class ProjectGraph extends React.Component {
 
     return (
       <div className="series content graph" id='project'>
+<<<<<<< HEAD
         <ul>
           {data}
         </ul>
+=======
+
+>>>>>>> 2bfa07f95eefbc861a4c229bce3d1bb21e1b006e
       </div>
     );
   }

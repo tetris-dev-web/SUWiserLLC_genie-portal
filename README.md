@@ -12,10 +12,6 @@
 - `bundle install`
 
 ## Development Tools
-<<<<<<< HEAD
-
-=======
->>>>>>> e16302b015e76447cdca03f8fe3d73b252ee1f99
 - `webpack --watch`
 
 ## Database creation
