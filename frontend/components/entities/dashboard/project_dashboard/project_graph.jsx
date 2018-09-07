@@ -10,6 +10,7 @@ class ProjectGraph extends React.Component {
 
     // this.handleMousemove = this.handleMousemove.bind(this);
     // this.drawChart = this.drawChart.bind(this);
+    this.createSVG = this.createSVG.bind(this);
   }
 
   componentDidMount(){
@@ -17,10 +18,11 @@ class ProjectGraph extends React.Component {
     // this.drawChart();
 
     const faux = this.props.connectFauxDOM('div', 'chart')
-    d3.select(faux)
-      .append('div')
-      .html('Hello World!')
-    this.props.animateFauxDOM(800)
+    this.createSVG(faux)
+    // d3.select(faux)
+    //   .append('div')
+    //   .html('Hello World!')
+    // this.props.animateFauxDOM(800)
   }
 
   drawChart(){
@@ -31,12 +33,12 @@ class ProjectGraph extends React.Component {
     this.setState({ data: nextProps.data });
   }
 
-  createSVG() {
+  createSVG(faux) {
     var margin = {top: 20, right: 20, bottom: 30, left: 50};
     var width = 960 - margin.left - margin.right;
     var height = 500 - margin.top - margin.bottom;
 
-    this.svg = d3.select('#project').append('svg')
+    const svg = d3.select(faux).append('svg')
       .classed('project-svg', true)
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", "0 0 700 500")
@@ -72,7 +74,6 @@ class ProjectGraph extends React.Component {
 
     return (
       <div className="series content graph" id='project'>
-
         {this.props.chart}
       </div>
     );
