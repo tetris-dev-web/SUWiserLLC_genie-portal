@@ -1,6 +1,8 @@
 import React from 'react';
 // import { data } from '../../../util/token_data_util'
 import {withFauxDOM} from 'react-faux-dom'
+import * as d3 from 'd3';
+import {event as currentEvent} from 'd3-selection';
 
 // const CONTINENTS = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
 //  {title:"Europe"}, {title: "North America"}, {title:"South America"}];
@@ -16,6 +18,7 @@ class ProjectGraph extends React.Component {
     this.createCircles = this.createCircles.bind(this);
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
+    this.addDragHandlers = this.addDragHandlers.bind(this);
     // this.handleMousemove = this.handleMousemove.bind(this);
     // this.drawChart = this.drawChart.bind(this);
     this.createSVG = this.createSVG.bind(this);
@@ -73,7 +76,38 @@ class ProjectGraph extends React.Component {
 
     simulation.force("links", forceLinks)
     simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle));
+    this.addDragHandlers( simulation,circle,innerCircle );
     this.props.animateFauxDOM(800)
+  }
+
+  addDragHandlers( simulation,circle,innerCircle ) {
+
+    const drag_start = (d) => {
+      if (!currentEvent.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    const drag_end = (d) => {
+      if (!d3.event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    const drag_drag = (d) => {
+      console.log(d3.event.x);
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
+
+    var drag_handler = d3.drag()
+    .on("start", drag_start)
+    .on("drag", drag_drag)
+    .on("end", drag_end);
+
+    drag_handler(circle);
+    // drag_handler(innerCircle);
+
   }
 
 
@@ -138,7 +172,6 @@ class ProjectGraph extends React.Component {
       .attr("r", (d) => {
         if (d.valuation) {
           const val = rscale(valuation ? Number(d.valuation) : Number(d.revenue));
-          console.log(d.valuation)
           return val;
         } else {
           return 10;

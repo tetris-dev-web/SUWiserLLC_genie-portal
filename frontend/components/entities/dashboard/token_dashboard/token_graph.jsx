@@ -1,5 +1,6 @@
 import React from 'react';
 // import { data } from '../../../util/token_data_util'
+import * as d3 from 'd3';
 
 class TokenGraph extends React.Component {
   constructor(props) {

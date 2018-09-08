@@ -1,6 +1,7 @@
 import React from 'react';
 import TokenGraph from './token_graph';
 import { userData, totalData } from '../../../../util/token_data_util';
+import * as d3 from 'd3';
 
 class TokenDashboard extends React.Component {
   constructor(props){
