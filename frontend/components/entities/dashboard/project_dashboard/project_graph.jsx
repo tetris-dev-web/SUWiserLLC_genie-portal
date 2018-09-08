@@ -57,13 +57,14 @@ class ProjectGraph extends React.Component {
     const continents = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
      {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
-     const rscale = this.createDomainScale(projects);
+     const scales = this.createDomainScales(projects);
     const nodesData = projects.concat(continents).concat(cities);
     const faux = this.props.connectFauxDOM('div', 'chart')
     const simulation = this.simulation(nodesData);
     const svg = this.createSVG(faux);
     const linksData = this.createLinks(projects, cities);
-    const circle = this.createCircles(svg, nodesData, rscale);
+    const circle = this.createCircles(svg, nodesData, scales.vScale, true);
+    const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
     const text = this.createText(svg,nodesData);
     const link = this.drawLinks(svg, linksData)
     const forceLinks = d3.forceLink(linksData)
@@ -71,7 +72,7 @@ class ProjectGraph extends React.Component {
 
 
     simulation.force("links", forceLinks)
-    simulation.on('tick', () => this.tickActions(circle, text, link));
+    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle));
     this.props.animateFauxDOM(800)
   }
 
@@ -99,9 +100,12 @@ class ProjectGraph extends React.Component {
     this.createNodes();
   }
 
-  tickActions(circle, text, link) {
+  tickActions(circle, text, link, innerCircle) {
     //update circle positions to reflect node updates on each tick of the simulation
     circle
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+    innerCircle
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; })
     text
@@ -124,7 +128,7 @@ class ProjectGraph extends React.Component {
       .attr("height", height + margin.top + margin.bottom);
   }
 
-  createCircles(svg, nodesData, rscale) {
+  createCircles(svg, nodesData, rscale, valuation) {
     return svg.append('g')
       .attr("class", "nodes")
       .selectAll("circle")
@@ -133,31 +137,39 @@ class ProjectGraph extends React.Component {
       .append("circle")
       .attr("r", (d) => {
         if (d.valuation) {
-          const val = rscale(Number(d.valuation));
+          const val = rscale(valuation ? Number(d.valuation) : Number(d.revenue));
           console.log(d.valuation)
           return val;
         } else {
           return 10;
         }
       })
-      .attr("fill", "red");
+      .attr("fill", valuation ? "red" : "blue");
   }
 
-  createDomainScale( projects ) {
-    const domain = projects.reduce((domain, project) => {
+  createDomainScales( projects ) {
+    const result = projects.reduce((domains, project) => {
       const valuation = Number(project.valuation);
+      const revenue = Number(project.revenue);
 
-      if (!domain[0] || valuation < domain[0]) {
-        domain[0] = valuation;
+      if (!domains.vDomain[0] || valuation < domains.vDomain[0]) {
+        domains.vDomain[0] = valuation;
       }
-      if (!domain[1] || valuation > domain[1]) {
-        domain[1] = valuation;
+      if (!domains.vDomain[1] || valuation > domains.vDomain[1]) {
+        domains.vDomain[1] = valuation;
+      }
+      if (!domains.rDomain[0] || valuation < domains.rDomain[0]) {
+        domains.rDomain[0] = revenue;
+      }
+      if (!domains.rDomain[1] || valuation > domains.rDomain[1]) {
+        domains.rDomain[1] = revenue;
       }
 
-      return domain;
-    }, [])
+      return domains;
+    }, {rDomain: [], vDomain: []})
 
-    return d3.scaleLinear().domain(domain).range([5,25]);
+    return {vScale: d3.scaleLinear().domain(result.vDomain).range([8,25]),
+            rScale: d3.scaleLinear().domain(result.rDomain).range([5,18])};
   }
 
   createLinks (projects, cities) {
