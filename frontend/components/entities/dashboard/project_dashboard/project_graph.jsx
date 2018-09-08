@@ -57,12 +57,13 @@ class ProjectGraph extends React.Component {
     const continents = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
      {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
+     const rscale = this.createDomainScale(projects);
     const nodesData = projects.concat(continents).concat(cities);
     const faux = this.props.connectFauxDOM('div', 'chart')
     const simulation = this.simulation(nodesData);
     const svg = this.createSVG(faux);
     const linksData = this.createLinks(projects, cities);
-    const circle = this.createCircles(svg, nodesData);
+    const circle = this.createCircles(svg, nodesData, rscale);
     const text = this.createText(svg,nodesData);
     const link = this.drawLinks(svg, linksData)
     const forceLinks = d3.forceLink(linksData)
@@ -123,22 +124,40 @@ class ProjectGraph extends React.Component {
       .attr("height", height + margin.top + margin.bottom);
   }
 
-  createCircles(svg, nodesData) {
-    // return svg.attr("class", "nodes")
-    //   .selectAll("circle")
-    //   .data(nodesData)
-    //   .enter()
-    //   .append("circle")
-    //   .attr("r", 10)
-    //   .attr("fill", "red");
+  createCircles(svg, nodesData, rscale) {
     return svg.append('g')
       .attr("class", "nodes")
       .selectAll("circle")
       .data(nodesData)
       .enter()
       .append("circle")
-      .attr("r", 10)
+      .attr("r", (d) => {
+        if (d.valuation) {
+          const val = rscale(Number(d.valuation));
+          console.log(d.valuation)
+          return val;
+        } else {
+          return 10;
+        }
+      })
       .attr("fill", "red");
+  }
+
+  createDomainScale( projects ) {
+    const domain = projects.reduce((domain, project) => {
+      const valuation = Number(project.valuation);
+
+      if (!domain[0] || valuation < domain[0]) {
+        domain[0] = valuation;
+      }
+      if (!domain[1] || valuation > domain[1]) {
+        domain[1] = valuation;
+      }
+
+      return domain;
+    }, [])
+
+    return d3.scaleLinear().domain(domain).range([5,25]);
   }
 
   createLinks (projects, cities) {
@@ -156,7 +175,16 @@ class ProjectGraph extends React.Component {
       }
     })
 
-    return projectCityLinks.concat(cityContinentLinks)
+    const continentLinks = [
+      {source: 'Antarctica', target: 'Africa'},
+      {source: 'Africa', target: 'Asia'},
+      {source: 'Asia', target: 'Australia'},
+      {source: 'Australia', target: 'Europe'},
+      {source: 'Europe', target: 'North America'},
+      {source: 'North America', target: 'South America'},
+    ]
+
+    return projectCityLinks.concat(cityContinentLinks).concat(continentLinks);
     // return d3.forceLink(projectCityLinks.concat(cityContinentLinks))
     //                     .id(function(d) { return d.title; })
   }
