@@ -5,7 +5,8 @@
 ## System dependencies
 - npm install
 - bundle install  
-* Development Tools
+
+## Development Tools
 - webpack --watch
 
 ## Database creation
@@ -22,4 +23,4 @@
 ## Start Server
 - rails s
 
-## links to key documents 
+## links to key documents
