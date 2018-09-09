@@ -62,7 +62,7 @@ class ProjectGraph extends React.Component {
 
      const scales = this.createDomainScales(projects);
     const nodesData = projects.concat(continents).concat(cities);
-    const faux = this.props.connectFauxDOM('div', 'chart')
+    const faux = this.props.connectFauxDOM('div', 'chart');
     const simulation = this.simulation(nodesData);
     const svg = this.createSVG(faux);
     const linksData = this.createLinks(projects, cities);
@@ -75,17 +75,23 @@ class ProjectGraph extends React.Component {
 
 
     simulation.force("links", forceLinks)
-    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle));
     this.addDragHandlers( simulation,circle,innerCircle );
+    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle));
     this.props.animateFauxDOM(800)
   }
 
   addDragHandlers( simulation,circle,innerCircle ) {
 
     const drag_start = (d) => {
-      if (!currentEvent.active) simulation.alphaTarget(0.3).restart();
+      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
+    }
+
+
+    const drag_drag = (d) => {
+      d.fx = d3.event.sourceEvent.x;
+      d.fy = d3.event.sourceEvent.y;
     }
 
     const drag_end = (d) => {
@@ -94,16 +100,18 @@ class ProjectGraph extends React.Component {
       d.fy = null;
     }
 
-    const drag_drag = (d) => {
-      console.log(d3.event.x);
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    }
-
-    var drag_handler = d3.drag()
+    const drag_handler = d3.drag()
     .on("start", drag_start)
     .on("drag", drag_drag)
     .on("end", drag_end);
+
+    // var drag_handler = d3.drag()
+    // .on("drag", function(d) {
+    //   console.log(this);
+    //       d3.select(this)
+    //         .attr("x", d.x = d3.event.x  )
+    //         .attr("y", d.y = d3.event.y  );
+    //         });
 
     drag_handler(circle);
     // drag_handler(innerCircle);
@@ -136,8 +144,10 @@ class ProjectGraph extends React.Component {
 
   tickActions(circle, text, link, innerCircle) {
     //update circle positions to reflect node updates on each tick of the simulation
+    // console.log('hello')
+
     circle
-        .attr("cx", function(d) { return d.x; })
+        .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; })
     innerCircle
         .attr("cx", function(d) { return d.x; })
@@ -154,7 +164,7 @@ class ProjectGraph extends React.Component {
   }
 
   createSVG(faux) {
-    return d3.select(faux).append('svg')
+    return d3.select("#graph").append('svg')
       .classed('project-svg', true)
       .attr("preserveAspectRatio", "xMinYMin meet")
       .attr("viewBox", "0 0 700 500")
@@ -258,6 +268,7 @@ class ProjectGraph extends React.Component {
     return (
       <div className='graph-container'>
         <div className="series content graph" id='project'>
+          <div id="graph"></div>
           {this.props.chart}
         </div>
       </div>
