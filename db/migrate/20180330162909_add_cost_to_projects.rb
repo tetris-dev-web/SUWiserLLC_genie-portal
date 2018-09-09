@@ -1,5 +1,5 @@
-class AddCostToProjects < ActiveRecord::Migration[5.1]
+class AddrevenueToProjects < ActiveRecord::Migration[5.1]
   def change
-    add_column :projects, :cost, :decimal
+    add_column :projects, :revenue, :decimal
   end
 end

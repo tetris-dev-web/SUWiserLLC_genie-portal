@@ -27,8 +27,11 @@ user2 = User.create(
 # projects
 project1 = Project.create(
   title: "Corgi Hostel",
-  cost: 250000,
+  revenue: 250000,
   valuation: 1000000,
+  city: "New York",
+  country: "USA",
+  continent: "North America",
   video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
@@ -38,8 +41,11 @@ project1 = Project.create(
 
 project2 = Project.create(
   title: "Yum Yum Yum",
-  cost: 250,
+  revenue: 250,
   valuation: 4000,
+  city: "Tokyo",
+  country: "Japan",
+  continent: "Asia",
   video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
@@ -49,11 +55,70 @@ project2 = Project.create(
 
 project3 = Project.create(
   title: "Sleepless Nights",
-  cost: 5060,
+  revenue: 5060,
   valuation: 47888,
+  city: "Seattle",
+  country: "USA",
+  continent: "North America",
   video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user1.id,
+  created_at: "14/03/2018"
+)
+
+project4 = Project.create(
+  title: "HamInn",
+  revenue: 8000,
+  valuation: 57000,
+  city: "New York",
+  country: "USA",
+  continent: "North America",
+  video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
+  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+  description: "BNB/ Business Incubator",
+  creator_id: user2.id,
+  created_at: "14/03/2018"
+)
+
+project5 = Project.create(
+  title: "PorkInn",
+  revenue: 6000,
+  valuation: 72000,
+  city: "Philidelphia",
+  country: "USA",
+  continent: "North America",
+  video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
+  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+  description: "BNB/ Business Incubator",
+  creator_id: user2.id,
+  created_at: "14/03/2018"
+)
+
+project6 = Project.create(
+  title: "BeefInn",
+  revenue: 9000,
+  valuation: 10000,
+  city: "Bogota",
+  country: "Columbia",
+  continent: "South America",
+  video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
+  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+  description: "BNB/ Business Incubator",
+  creator_id: user2.id,
+  created_at: "14/03/2018"
+)
+
+project6 = Project.create(
+  title: "ChickInn",
+  revenue: 27000,
+  valuation: 200000,
+  city: "Berlin",
+  country: "Germany",
+  continent: "Europe",
+  video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
+  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+  description: "BNB/ Business Incubator",
+  creator_id: user2.id,
   created_at: "14/03/2018"
 )

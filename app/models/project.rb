@@ -15,11 +15,11 @@
 #  file_content_type :string
 #  file_file_size    :integer
 #  file_updated_at   :datetime
-#  cost              :decimal(, )
+#  revenue              :decimal(, )
 #
 
 class Project < ApplicationRecord
-  validates :title, :cost, :valuation, :creator_id, presence: true
+  validates :title, :revenue, :valuation, :creator_id, :city, :country, :continent, presence: true
   validates :title, uniqueness: true
 
   # has_attached_file :file, default_url: "missing.png"

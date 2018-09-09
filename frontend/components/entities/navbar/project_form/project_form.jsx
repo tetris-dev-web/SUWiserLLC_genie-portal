@@ -9,9 +9,12 @@ class ProjectForm extends React.Component {
 
     this.state = {
       title: '',
-      cost: '',
+      revenue: '',
       valuation: '',
       video: '',
+      city: '',
+      country: '',
+      continent: '',
       icon: '',
       description: '',
       creator_id: props.currentUser.id,
@@ -41,9 +44,12 @@ class ProjectForm extends React.Component {
     if (file) formData.append("project[file]", file);
 
     formData.append("project[title]", this.state.title);
-    formData.append("project[cost]", this.state.cost);
+    formData.append("project[revenue]", this.state.revenue);
     formData.append("project[valuation]", this.state.valuation);
     formData.append("project[video]", this.state.video);
+    formData.append("project[city]", this.state.city);
+    formData.append("project[country]", this.state.country);
+    formData.append("project[continent]", this.state.continent);
     formData.append("project[icon]", this.state.icon);
     formData.append("project[description]", this.state.description);
     formData.append("project[creator_id]", this.state.creator_id);
@@ -59,11 +65,11 @@ class ProjectForm extends React.Component {
     return (e) => {
       this.setState({ [property]: e.currentTarget.value });
 
-      const { cost } = this.state;
+      const { revenue } = this.state;
       const price = 70;
-      const coins = roundToTwo(cost / price);
+      const coins = roundToTwo(revenue / price);
 
-      if (cost || cost > 0) {
+      if (revenue || revenue > 0) {
         this.setState({ coins });
       } else {
         this.setState({ coins: '****' });
@@ -156,7 +162,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, cost, valuation, description, video, icon } = this.state;
+    let { title, revenue, valuation, description, video, city, country, continent, icon } = this.state;
 
     return (
       <form className="form-box p-form-box">
@@ -165,11 +171,11 @@ class ProjectForm extends React.Component {
           placeholder="#| project title"
           value={title}
           onChange={this.update('title')} />
-        <input className="main-input cost-input"
+        <input className="main-input revenue-input"
           type="number"
-          placeholder="#| cost"
-          value={cost}
-          onChange={this.update('cost')} />
+          placeholder="#| revenue"
+          value={revenue}
+          onChange={this.update('revenue')} />
         <div className="valuation-container">
           <input className="valuation-input"
             type="number"

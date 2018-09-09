@@ -1,229 +1,288 @@
 import React from 'react';
 // import { data } from '../../../util/token_data_util'
+import {withFauxDOM} from 'react-faux-dom'
+import * as d3 from 'd3';
+import {event as currentEvent} from 'd3-selection';
+
+// const CONTINENTS = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
+//  {title:"Europe"}, {title: "North America"}, {title:"South America"}];
+
+ const margin = {top: 20, right: 20, bottom: 30, left: 50};
+ const width = 960 - margin.left - margin.right;
+ const height = 500 - margin.top - margin.bottom;
 
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      data: '',
-    };
-
+    this.drawChart = this.drawChart.bind(this);
+    this.createCircles = this.createCircles.bind(this);
+    this.simulation = this.simulation.bind(this);
+    this.setUp = this.setUp.bind(this);
+    this.addDragHandlers = this.addDragHandlers.bind(this);
     // this.handleMousemove = this.handleMousemove.bind(this);
     // this.drawChart = this.drawChart.bind(this);
+    this.createSVG = this.createSVG.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ data: nextProps.data });
-    // const { data } = this.props;
-    //
-    // if (typeof data === "string" && nextProps.data.length > 1) {
-    //   // Makes sure drawChart is fired only once
-    //   this.drawChart(nextProps);
-    // } else if (typeof data === "string") {
-    //   // Render 'no transaction' message if it's a new address
-    //   this.renderNoData();
-    // } else {
-    //   this.updateData(nextProps.data);
-    //   this.transition(500);
-    // }
+  componentDidMount(){
+    this.props.fetchProjects().then(() => {
+      this.setUp();
+    })
   }
 
-  // componentDidMount() {
-  //   // this.props.fetchUsers();
-  //   this.drawChart();
-  // }
-  //
-  // componentWillReceiveProps(nextProps) {
-  //   this.updateData(nextProps);
-  //   this.transition(500);
-  // }
-  //
-  // shouldComponentUpdate() {
-  //   return false;
-  // }
-  //
-  // drawChart() {
-  //   const { data } = this.props;
-  //   this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
-  //   this.width = 960 - this.margin.left - this.margin.right;
-  //   this.height = 500 - this.margin.top - this.margin.bottom;
-  //   this.bisectDate = d3.bisector(d => d.date).left;
-  //
-  //   this.x = d3.scaleTime().range([0, this.width]);
-  //   this.y1 = d3.scaleLinear().range([this.height, 0]);
-  //   this.y2 = d3.scaleLinear().range([this.height, 0]);
-  //
-  //   this.x.domain([data[0].date, data[data.length - 1].date]);
-  //   this.y1.domain([(data[0].price * 0.9), (data[data.length - 1].price * 1.1)]);
-  //   this.y2.domain([0, (data[data.length - 1].balance * 1.5)]);
-  //
-  //   this.linePrice = d3.line()
-  //     .x(function(d) { return this.x(d.date); }.bind(this))
-  //     .y(function(d) { return this.y1(d.price); }.bind(this))
-  //     .curve(d3.curveMonotoneX);
-  //
-  //   this.lineBalance = d3.line()
-  //     .x(function(d) { return this.x(d.date); }.bind(this))
-  //     .y(function(d) { return this.y2(d.balance); }.bind(this));
-  //
-  //   this.svg = d3.select('#token').append('svg')
-  //     .classed('token-svg', true)
-  //     .attr("preserveAspectRatio", "xMinYMin meet")
-  //     .attr("viewBox", "0 0 960 500")
-  //     .append('g')
-  //       .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
-  //
-  //   this.svg.append('g')
-  //     .attr('class', 'x x-axis')
-  //     .attr('transform', `translate(0, ${this.height})`)
-  //     .call(d3.axisBottom(this.x)
-  //       .tickFormat(d3.timeFormat("%m.%y")));
-  //
-  //   this.svg.append('path')
-  //     .datum(data)
-  //     .attr('class', 'line')
-  //     .attr('d', this.linePrice);
-  //
-  //   // price focus
-  //   this.focus1 = this.svg.append('g')
-  //     .attr('class', 'focus focus1')
-  //     .style('display', 'none');
-  //
-  //   this.focus1.append('circle')
-  //     .classed("circle-earnings", true)
-  //     .attr('r', 4.5);
-  //
-  //   this.focus1.append('line').classed('x', true);
-  //   this.focus1.append('line').classed('y', true);
-  //
-  //   this.focus1.append('text')
-  //     .classed('price', true)
-  //     .attr("transform", "translate(-100, -10)");
-  //
-  //   this.focus1.append('text')
-  //     .classed('earnings', true)
-  //     .attr("transform", "translate(-35, -40)");
-  //
-  //   // token focus
-  //   this.focus2 = this.svg.append('g')
-  //     .attr('class', 'focus focus2')
-  //     .style('display', 'none');
-  //
-  //   this.focus2.append('line').classed('x', true);
-  //   this.focus2.append('line').classed('y', true);
-  //
-  //   this.focus2.append('text')
-  //     .classed('balance', true)
-  //     .attr("transform", "translate(40, -10)");
-  //
-  //   this.focus2.append('text')
-  //     .classed('tokens', true)
-  //     .attr("transform", "translate(-5, 40)rotate(90)");
-  //
-  //   this.overlay = this.svg.append('rect')
-  //     .attr('class', 'overlay')
-  //     .attr('width', this.width)
-  //     .attr('height', this.height)
-  //     .on('mouseover', () => {
-  //       this.focus1.style('display', null);
-  //       this.focus2.style('display', null);
-  //     })
-  //     .on('mouseout', () => {
-  //       this.focus1.style('display', 'none');
-  //       this.focus2.style('display', 'none');
-  //     })
-  //     .on('mousemove', this.handleMousemove);
-  // }
-  //
-  // handleMousemove() {
-  //   const overlay = this.overlay._groups[0][0];
-  //   const { data } = this.props;
-  //
-  //   let x0 = this.x.invert(d3.mouse(overlay)[0]);
-  //   let i = this.bisectDate(data, x0, 1);
-  //   let d0 = data[i - 1];
-  //   let d1 = data[i];
-  //   let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
-  //
-  //   d3.selectAll(".focus").selectAll('line.x, line.y')
-  //     .attr('x1', 0)
-  //     .attr('x2', 0)
-  //     .attr('y1', 0)
-  //     .attr('y2', 0);
-  //
-  //   // price dashed line
-  //   this.focus1.selectAll('line.x').attr('x2', -this.x(d.date) - this.width);
-  //   this.focus1.selectAll('line.y').attr('y2', this.height - this.y1(d.price));
-  //
-  //   // toggle if all or user to remove earnings and tokens
-  //   if (d.earnings) {
-  //     this.focus1.selectAll(".circle-earnings")
-  //       .attr("r", d.earnings / 20);
-  //       // .style("fill", "none")
-  //       // .style("stroke-dasharray", "3 3");
-  //     this.focus1.select('.earnings').text(`earnings: $${d.earnings}`);
-  //     this.focus2.select('.tokens').text(`${d.tokens} tokens`);
-  //   } else {
-  //     this.focus1.selectAll(".circle-earnings")
-  //       .attr("r", 8);
-  //       // .style("fill", "black")
-  //       // .style("stroke-dasharray", 0);
-  //     this.focus1.select('.earnings').text("");
-  //     this.focus2.select('.tokens').text("");
-  //   }
-  //
-  //   // balance dashed line
-  //   this.focus2.selectAll('line.x').attr('x2', this.x(d.date) + this.width * 2);
-  //   this.focus2.selectAll('line.y').attr('y2', this.height - this.y2(d.balance));
-  //
-  //   // bar width hover for shares
-  //   this.focus2.selectAll('line.y').style('stroke-width', d.tokens);
-  //
-  //   // append text
-  //   this.focus1.attr('transform', `translate(${this.x(d.date)}, ${this.y1(d.price)})`);
-  //   this.focus1.select('.price').text(`price: $${d.price}`);
-  //   this.focus2.attr('transform', `translate(${this.x(d.date)}, ${this.y2(d.balance)})`);
-  //   this.focus2.select('.balance').text(`balance: $${d.balance}`);
-  // }
-  //
-  // updateData(props) {
-  //   const { data } = props;
-  //   this.x.domain([data[0].date, data[data.length - 1].date]);
-  //   this.y1.domain([(data[0].price * 0.9), (data[data.length - 1].price * 1.1)]);
-  //   this.y2.domain([0, (data[data.length - 1].balance * 1.5)]);
-  //   d3.select('.line').datum(data);
-  // }
-  //
-  // transition(duration) {
-  //   d3.select('.x-axis')
-  //     .transition()
-  //     .duration(duration)
-  //     .call(d3.axisBottom(this.x)
-  //       .tickFormat(d3.timeFormat("%m.%y")));
-  //
-  //   d3.select('.line')
-  //     .transition()
-  //     .duration(duration)
-  //     .attr('d', this.linePrice);
-  // }
+  getUniqueCitites(projectKeys) {
+
+    const cities = projectKeys.reduce((cities, key) => {
+      const title = this.props.data[key].city;
+      const data = {
+        title,
+        continent: this.props.data[key].continent
+      }
+
+      if (!cities[title]) {
+        cities[title] = data;
+      }
+      return cities;
+    }, {});
+
+    return Object.keys(cities).map(title => {
+      return cities[title];
+    });
+  }
+
+  setUp () {
+    const projectKeys = Object.keys(this.props.data);
+
+    const projects = projectKeys.map(key => {
+      return this.props.data[key];
+    })
+    const cities = this.getUniqueCitites(projectKeys);
+    const continents = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
+     {title:"Europe"}, {title: "North America"}, {title:"South America"}];
+
+     const faux = this.props.connectFauxDOM('div', 'chart');
+     const svg = this.createSVG(faux);
+     const linksData = this.createLinks(projects, cities);
+     const link = this.drawLinks(svg, linksData);
+     const scales = this.createDomainScales(projects);
+    const nodesData = projects.concat(continents).concat(cities);
+    const simulation = this.simulation(nodesData);
+    const circle = this.createCircles(svg, nodesData, scales.vScale, true);
+    const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
+    const text = this.createText(svg,nodesData);
+    const forceLinks = d3.forceLink(linksData)
+                        .id(function(d) { return d.title; })
+                        .distance(50);
+
+
+    simulation.force("links", forceLinks);
+    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle));
+    this.addDragHandlers( simulation,circle,innerCircle );
+    this.props.animateFauxDOM(800);
+  }
+
+  addDragHandlers( simulation,circle,innerCircle ) {
+
+    const drag_start = (d) => {
+      if (!currentEvent.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    const drag_end = (d) => {
+      if (!d3.event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    const drag_drag = (d) => {
+      console.log(d3.event.x);
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
+
+    var drag_handler = d3.drag()
+    .on("start", drag_start)
+    .on("drag", drag_drag)
+    .on("end", drag_end);
+
+    drag_handler(circle);
+    // drag_handler(innerCircle);
+
+  }
+
+
+  createText(svg,nodesData) {
+    return svg.append('g')
+    .selectAll('text')
+    .data(nodesData)
+    .enter()
+    .append("text")
+    .attr("dx", (d) => {d.x})
+    .attr("dy", (d) => {d.y})
+    .style("font-size", "18px")
+    .text((d) => d.title);
+  }
+
+  simulation (nodesData) {
+    return d3.forceSimulation()
+              .nodes(nodesData)
+              .force("charge_force", d3.forceManyBody())
+              .force("center_force", d3.forceCenter(width / 2, height / 2));
+  }
+
+  drawChart(){
+    this.createNodes();
+  }
+
+  tickActions(circle, text, link, innerCircle) {
+    //update circle positions to reflect node updates on each tick of the simulation
+    circle
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+    innerCircle
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+    text
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; })
+
+    link
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
+  }
+
+  createSVG(faux) {
+    return d3.select(faux).append('svg')
+      .classed('project-svg', true)
+      .attr("preserveAspectRatio", "xMinYMin meet")
+      .attr("viewBox", "0 0 700 500")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
+  }
+
+  createCircles(svg, nodesData, rscale, valuation) {
+    return svg.append('g')
+      .attr("class", "nodes")
+      .selectAll("circle")
+      .data(nodesData)
+      .enter()
+      .append("circle")
+      .attr("r", (d) => {
+        if (d.valuation) {
+          const val = rscale(valuation ? Number(d.valuation) : Number(d.revenue));
+          return val;
+        } else {
+          return 10;
+        }
+      })
+      .attr("fill", (d) => {
+        if (!d.valuation){
+          return !d.continent ? 'black' : '#263b6b';
+        }
+        else {
+          return valuation ? '#AA7A60' : "black";
+        }
+      });
+  }
+
+  handleMouseOver() {
+
+  }
+
+  handleMouseOut() {
+
+  }
+
+  createDomainScales( projects ) {
+    const result = projects.reduce((domains, project) => {
+      const valuation = Number(project.valuation);
+      const revenue = Number(project.revenue);
+
+      if (!domains.vDomain[0] || valuation < domains.vDomain[0]) {
+        domains.vDomain[0] = valuation;
+      }
+      if (!domains.vDomain[1] || valuation > domains.vDomain[1]) {
+        domains.vDomain[1] = valuation;
+      }
+      if (!domains.rDomain[0] || valuation < domains.rDomain[0]) {
+        domains.rDomain[0] = revenue;
+      }
+      if (!domains.rDomain[1] || valuation > domains.rDomain[1]) {
+        domains.rDomain[1] = revenue;
+      }
+
+      return domains;
+    }, {rDomain: [], vDomain: []})
+
+    return {vScale: d3.scaleLinear().domain(result.vDomain).range([8,25]),
+            rScale: d3.scaleLinear().domain(result.rDomain).range([5,18])};
+  }
+
+  createLinks (projects, cities) {
+    const projectCityLinks = projects.map(project => {
+        return {
+          source: project.title,
+          target: project.city
+        };
+    });
+
+    const cityContinentLinks = cities.map(city => {
+      return {
+        source: city.title,
+        target: city.continent
+      }
+    })
+
+    const continentLinks = [
+      {source: 'Antarctica', target: 'Africa'},
+      {source: 'Africa', target: 'Asia'},
+      {source: 'Asia', target: 'Australia'},
+      {source: 'Australia', target: 'Europe'},
+      {source: 'Europe', target: 'North America'},
+      {source: 'North America', target: 'South America'},
+    ]
+
+    return projectCityLinks.concat(cityContinentLinks).concat(continentLinks);
+    // return d3.forceLink(projectCityLinks.concat(cityContinentLinks))
+    //                     .id(function(d) { return d.title; })
+  }
+
+  drawLinks (svg, linksData) {
+    return svg.append('g')
+      .attr("class", "links")
+      .selectAll("line")
+      .data(linksData)
+      .enter()
+      .append("line")
+      .attr("stroke-width", 2)
+      .attr("stroke", "black");
+  }
 
   render() {
-
     let data = '';
-    if (this.state.data) {
-      data = this.state.data.map(d => {
-        return <li key={d.id}>{d.title} {d.created_at}</li>;
+    if (this.props.data) {
+      // debugger
+      data = Object.keys(this.props.data).map(key => {
+        const project = this.props.data[key];
+        return <li key={project.id}>{project.title} {project.created_at}</li>;
       });
     }
 
     return (
-      <div className="series content graph" id='project'>
-        <ul>{data}</ul>
+      <div className='graph-container'>
+        <div className="series content graph" id='project'>
+          {this.props.chart}
+        </div>
       </div>
     );
   }
-
 }
 
-export default ProjectGraph;
+ProjectGraph.defaultProps = {
+  chart: 'loading'
+}
+
+export default withFauxDOM(ProjectGraph);
