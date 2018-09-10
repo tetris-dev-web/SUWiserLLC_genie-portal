@@ -63,6 +63,7 @@ class ProjectGraph extends React.Component {
 
   setUp () {
     const projectKeys = Object.keys(this.props.data);
+    const svg = this.createSVG();
 
     const data = this.formatData(projectKeys);
     const projects = projectKeys.map(key => {
@@ -70,15 +71,18 @@ class ProjectGraph extends React.Component {
     })
     const cities = data.cities;
     const continents = data.continents;
-    const svg = this.createSVG();
-    const linksData = this.createLinks(projects, cities, continents);
-    const link = this.drawLinks(svg, linksData);
-    const scales = this.createDomainScales(projects);
     const nodesData = projects.concat(continents).concat(cities);
-    const simulation = this.simulation(nodesData);
+    const linksData = this.formatLinks(projects, cities, continents);
+    const scales = this.createDomainScales(projects);
+
+
+
+    const simulation = this.simulation(nodesData, scales.vScale);
+    const link = this.drawLinks(svg, linksData);
     const circle = this.createCircles(svg, nodesData, scales.vScale, true);
+    debugger
     const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
-    const text = this.createText(svg,nodesData);
+    const text = this.createText(svg, nodesData);
     const forceLinks = d3.forceLink(linksData)
                          .id(function(d) { return d.title; })
                          .distance(50);
@@ -120,6 +124,7 @@ class ProjectGraph extends React.Component {
 
   createText(svg,nodesData) {
     return svg.append('g')
+    .attr("class", "text")
     .selectAll('text')
     .data(nodesData)
     .enter()
@@ -130,11 +135,18 @@ class ProjectGraph extends React.Component {
     .text((d) => d.title);
   }
 
-  simulation (nodesData) {
+  simulation (nodesData, rscale) {
     return d3.forceSimulation()
               .nodes(nodesData)
               .force("charge_force", d3.forceManyBody())
-              .force("center_force", d3.forceCenter(width / 2, height / 2));
+              .force("center_force", d3.forceCenter(width / 2, height / 2))
+              .force("collide", d3.forceCollide(12).radius(function(d) {
+                  if (d.valuation) {
+                    return rscale(Number(d.valuation)) + 5;
+                  } else {
+                    return 10 + 20;
+                  }
+                }).strength(1).iterations(100))
   }
 
   drawChart(){
@@ -214,11 +226,11 @@ class ProjectGraph extends React.Component {
       return domains;
     }, {rDomain: [], vDomain: []})
 
-    return {vScale: d3.scaleLinear().domain(result.vDomain).range([8,25]),
-            rScale: d3.scaleLinear().domain(result.rDomain).range([5,18])};
+    return {vScale: d3.scaleLinear().domain(result.vDomain).range([21,70]),
+            rScale: d3.scaleLinear().domain(result.rDomain).range([3,10])};
   }
 
-  createLinks (projects, cities, continents) {
+  formatLinks (projects, cities, continents) {
     const projectCityLinks = projects.map(project => {
         return {
           source: project.title,
