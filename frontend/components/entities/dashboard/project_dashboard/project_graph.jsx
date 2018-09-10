@@ -65,12 +65,12 @@ class ProjectGraph extends React.Component {
      const linksData = this.createLinks(projects, cities);
      const link = this.drawLinks(svg, linksData);
      const scales = this.createDomainScales(projects);
-    const nodesData = projects.concat(continents).concat(cities);
-    const simulation = this.simulation(nodesData);
-    const circle = this.createCircles(svg, nodesData, scales.vScale, true);
-    const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
-    const text = this.createText(svg,nodesData);
-    const forceLinks = d3.forceLink(linksData)
+     const nodesData = projects.concat(continents).concat(cities);
+     const simulation = this.simulation(nodesData);
+     const circle = this.createCircles(svg, nodesData, scales.vScale, true);
+     const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
+     const text = this.createText(svg,nodesData);
+     const forceLinks = d3.forceLink(linksData)
                         .id(function(d) { return d.title; })
                         .distance(50);
 
@@ -91,8 +91,8 @@ class ProjectGraph extends React.Component {
 
 
     const drag_drag = (d) => {
-      d.fx = d3.event.sourceEvent.x;
-      d.fy = d3.event.sourceEvent.y;
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
     }
 
     const drag_end = (d) => {
