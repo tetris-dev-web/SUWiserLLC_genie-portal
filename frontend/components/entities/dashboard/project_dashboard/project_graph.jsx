@@ -60,18 +60,19 @@ class ProjectGraph extends React.Component {
     const continents = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
      {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
+     const faux = this.props.connectFauxDOM('div', 'chart');
+     const svg = this.createSVG();
+     const linksData = this.createLinks(projects, cities);
+     const link = this.drawLinks(svg, linksData);
      const scales = this.createDomainScales(projects);
     const nodesData = projects.concat(continents).concat(cities);
-    const faux = this.props.connectFauxDOM('div', 'chart');
     const simulation = this.simulation(nodesData);
-    const svg = this.createSVG(faux);
-    const linksData = this.createLinks(projects, cities);
     const circle = this.createCircles(svg, nodesData, scales.vScale, true);
     const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
     const text = this.createText(svg,nodesData);
-    const link = this.drawLinks(svg, linksData)
     const forceLinks = d3.forceLink(linksData)
                         .id(function(d) { return d.title; })
+                        .distance(50);
 
 
     simulation.force("links", forceLinks)
@@ -163,7 +164,7 @@ class ProjectGraph extends React.Component {
         .attr("y2", function(d) { return d.target.y; })
   }
 
-  createSVG(faux) {
+  createSVG() {
     return d3.select("#graph").append('svg')
       .classed('project-svg', true)
       .attr("preserveAspectRatio", "xMinYMin meet")
@@ -187,7 +188,22 @@ class ProjectGraph extends React.Component {
           return 10;
         }
       })
-      .attr("fill", valuation ? "red" : "blue");
+      .attr("fill", (d) => {
+        if (!d.valuation){
+          return !d.continent ? 'black' : '#263b6b';
+        }
+        else {
+          return valuation ? '#AA7A60' : "black";
+        }
+      });
+  }
+
+  handleMouseOver() {
+
+  }
+
+  handleMouseOut() {
+
   }
 
   createDomainScales( projects ) {
@@ -252,7 +268,7 @@ class ProjectGraph extends React.Component {
       .enter()
       .append("line")
       .attr("stroke-width", 2)
-      .attr("stroke", "red");
+      .attr("stroke", "black");
   }
 
   render() {
