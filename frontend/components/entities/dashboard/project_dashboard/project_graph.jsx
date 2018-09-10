@@ -1,11 +1,6 @@
 import React from 'react';
-// import { data } from '../../../util/token_data_util'
-import {withFauxDOM} from 'react-faux-dom'
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
-
-// const CONTINENTS = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
-//  {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
  const margin = {top: 20, right: 20, bottom: 30, left: 50};
  const width = 960 - margin.left - margin.right;
@@ -18,9 +13,8 @@ class ProjectGraph extends React.Component {
     this.createCircles = this.createCircles.bind(this);
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
+    this.formatData = this.formatData.bind(this);
     this.addDragHandlers = this.addDragHandlers.bind(this);
-    // this.handleMousemove = this.handleMousemove.bind(this);
-    // this.drawChart = this.drawChart.bind(this);
     this.createSVG = this.createSVG.bind(this);
   }
 
@@ -30,59 +24,72 @@ class ProjectGraph extends React.Component {
     })
   }
 
-  getUniqueCitites(projectKeys) {
+  formatData(projectKeys) {
+    const listData = (data) => {
+      return Object.keys(data).map(title => {
+        return data[title];
+      });
+    }
 
-    const cities = projectKeys.reduce((cities, key) => {
-      const title = this.props.data[key].city;
-      const data = {
-        title,
-        continent: this.props.data[key].continent
-      }
+    const extractData = () => {
+      return projectKeys.reduce((data, key) => {
+        const city = this.props.data[key].city;
+        const continent = this.props.data[key].continent;
+        const cityData = {
+          title: city,
+          continent
+        }
+        const continentData = {
+          title: continent
+        }
 
-      if (!cities[title]) {
-        cities[title] = data;
-      }
-      return cities;
-    }, {});
+        if (!data.cities[city]) {
+          data.cities[city] = cityData;
+        }
+        if (!data.continents[continent]) {
+          data.continents[continent] = continentData;
+        }
+        return data;
+      }, {cities: {}, continents: {}});
 
-    return Object.keys(cities).map(title => {
-      return cities[title];
-    });
+    }
+
+    const data = extractData();
+    return {
+      cities: listData(data.cities),
+      continents: listData(data.continents)
+    }
   }
 
   setUp () {
     const projectKeys = Object.keys(this.props.data);
 
+    const data = this.formatData(projectKeys);
     const projects = projectKeys.map(key => {
       return this.props.data[key];
     })
-    const cities = this.getUniqueCitites(projectKeys);
-    const continents = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
-     {title:"Europe"}, {title: "North America"}, {title:"South America"}];
-
-     const faux = this.props.connectFauxDOM('div', 'chart');
-     const svg = this.createSVG();
-     const linksData = this.createLinks(projects, cities);
-     const link = this.drawLinks(svg, linksData);
-     const scales = this.createDomainScales(projects);
-     const nodesData = projects.concat(continents).concat(cities);
-     const simulation = this.simulation(nodesData);
-     const circle = this.createCircles(svg, nodesData, scales.vScale, true);
-     const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
-     const text = this.createText(svg,nodesData);
-     const forceLinks = d3.forceLink(linksData)
-                        .id(function(d) { return d.title; })
-                        .distance(50);
+    const cities = data.cities;
+    const continents = data.continents;
+    const svg = this.createSVG();
+    const linksData = this.createLinks(projects, cities, continents);
+    const link = this.drawLinks(svg, linksData);
+    const scales = this.createDomainScales(projects);
+    const nodesData = projects.concat(continents).concat(cities);
+    const simulation = this.simulation(nodesData);
+    const circle = this.createCircles(svg, nodesData, scales.vScale, true);
+    const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
+    const text = this.createText(svg,nodesData);
+    const forceLinks = d3.forceLink(linksData)
+                         .id(function(d) { return d.title; })
+                         .distance(50);
 
 
     simulation.force("links", forceLinks)
     this.addDragHandlers( simulation,circle,innerCircle );
     simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle));
-    this.props.animateFauxDOM(800)
   }
 
   addDragHandlers( simulation,circle,innerCircle ) {
-
     const drag_start = (d) => {
       if (!d3.event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
@@ -106,17 +113,7 @@ class ProjectGraph extends React.Component {
     .on("drag", drag_drag)
     .on("end", drag_end);
 
-    // var drag_handler = d3.drag()
-    // .on("drag", function(d) {
-    //   console.log(this);
-    //       d3.select(this)
-    //         .attr("x", d.x = d3.event.x  )
-    //         .attr("y", d.y = d3.event.y  );
-    //         });
-
     drag_handler(circle);
-    // drag_handler(innerCircle);
-
   }
 
 
@@ -144,9 +141,6 @@ class ProjectGraph extends React.Component {
   }
 
   tickActions(circle, text, link, innerCircle) {
-    //update circle positions to reflect node updates on each tick of the simulation
-    // console.log('hello')
-
     circle
         .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; })
@@ -231,7 +225,7 @@ class ProjectGraph extends React.Component {
             rScale: d3.scaleLinear().domain(result.rDomain).range([5,18])};
   }
 
-  createLinks (projects, cities) {
+  createLinks (projects, cities, continents) {
     const projectCityLinks = projects.map(project => {
         return {
           source: project.title,
@@ -246,18 +240,15 @@ class ProjectGraph extends React.Component {
       }
     })
 
-    const continentLinks = [
-      {source: 'Antarctica', target: 'Africa'},
-      {source: 'Africa', target: 'Asia'},
-      {source: 'Asia', target: 'Australia'},
-      {source: 'Australia', target: 'Europe'},
-      {source: 'Europe', target: 'North America'},
-      {source: 'North America', target: 'South America'},
-    ]
+    const continentLinks = [];
+    for (let i = 0; i < continents.length - 1;  i++) {
+      continentLinks.push({
+        source: continents[i].title,
+        target: continents[i+1].title
+      });
+    }
 
     return projectCityLinks.concat(cityContinentLinks).concat(continentLinks);
-    // return d3.forceLink(projectCityLinks.concat(cityContinentLinks))
-    //                     .id(function(d) { return d.title; })
   }
 
   drawLinks (svg, linksData) {
@@ -296,4 +287,4 @@ ProjectGraph.defaultProps = {
   chart: 'loading'
 }
 
-export default withFauxDOM(ProjectGraph);
+export default ProjectGraph;
