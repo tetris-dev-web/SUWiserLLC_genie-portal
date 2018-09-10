@@ -114,6 +114,7 @@ class ProjectGraph extends React.Component {
     .on("end", drag_end);
 
     drag_handler(circle);
+    drag_handler(innerCircle);
   }
 
 
@@ -190,14 +191,6 @@ class ProjectGraph extends React.Component {
           return valuation ? '#AA7A60' : "black";
         }
       });
-  }
-
-  handleMouseOver() {
-
-  }
-
-  handleMouseOut() {
-
   }
 
   createDomainScales( projects ) {
