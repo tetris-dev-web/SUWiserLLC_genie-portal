@@ -126,8 +126,6 @@ class ProjectGraph extends React.Component {
     .data(nodesData)
     .enter()
     .append("text")
-    .attr("dx", (d) => {d.x})
-    .attr("dy", (d) => {d.y})
     .style("font-size", "18px")
     .text((d) => d.title);
   }
@@ -145,23 +143,24 @@ class ProjectGraph extends React.Component {
 
   tickActions(circle, text, link, innerCircle) {
     //update circle positions to reflect node updates on each tick of the simulation
-    // console.log('hello')
-
     circle
         .attr("cx", (d) => { return d.x; })
-        .attr("cy", function(d) { return d.y; })
+        .attr("cy", function(d) { return d.y; });
     innerCircle
         .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
+        .attr("cy", function(d) { return d.y; });
     text
-        .attr("x", function(d) { return d.x; })
-        .attr("y", function(d) { return d.y; })
+        .attr("x", function(d) {
+          debugger
+          return d.x+10;
+        })
+        .attr("y", function(d) { return d.y; });
 
     link
         .attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; })
+        .attr("y2", function(d) { return d.target.y; });
   }
 
   createSVG() {

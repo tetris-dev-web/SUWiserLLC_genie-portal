@@ -9,6 +9,7 @@ module.exports = {
     filename: "bundle.js"
   },
   // plugins: plugins,
+  mode: 'development',
   module: {
     rules: [
       {
