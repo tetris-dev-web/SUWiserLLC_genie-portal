@@ -10,7 +10,7 @@ import $ from 'jquery';
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
-    this.createCircles = this.createCircles.bind(this);
+    // this.createCircles = this.createCircles.bind(this);
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     this.formatData = this.formatData.bind(this);
@@ -74,7 +74,9 @@ class ProjectGraph extends React.Component {
     const nodesData = projects.concat(continents).concat(cities);
     const linksData = this.formatLinks(projects, cities, continents);
     const scales = this.createDomainScales(projects);
-
+    console.log(d3.symbols)
+    var shape = d3.scaleOrdinal(d3.symbols);
+    debugger
 
 
     const simulation = this.simulation(nodesData, scales.vScale);
@@ -167,18 +169,18 @@ class ProjectGraph extends React.Component {
   }
 
 
-  createText(svg,nodesData) {
-    return svg.append('g')
-    .attr("class", "text")
-    .selectAll('text')
-    .data(nodesData)
-    .enter()
-    .append("text")
-    .attr("dx", (d) => {d.x})
-    .attr("dy", (d) => {d.y})
-    .style("font-size", "18px")
-    .text((d) => d.title);
-  }
+  // createText(svg,nodesData) {
+  //   return svg.append('g')
+  //   .attr("class", "text")
+  //   .selectAll('text')
+  //   .data(nodesData)
+  //   .enter()
+  //   .append("text")
+  //   .attr("dx", (d) => {d.x})
+  //   .attr("dy", (d) => {d.y})
+  //   .style("font-size", "18px")
+  //   .text((d) => d.title);
+  // }
 
   simulation (nodesData, rscale) {
     return d3.forceSimulation()
@@ -230,30 +232,30 @@ class ProjectGraph extends React.Component {
   }
 
 
-  createCircles(svg, nodesData, rscale, valuation) {
-    return svg.append('g')
-      .attr("class", "nodes")
-      .selectAll(".nodes")
-      .data(nodesData)
-      .enter()
-      .append("circle")
-      .attr("r", (d) => {
-        if (d.valuation) {
-          const val = rscale(valuation ? Number(d.valuation) : Number(d.revenue));
-          return val;
-        } else {
-          return 10;
-        }
-      })
-      .attr("fill", (d) => {
-        if (!d.valuation){
-          return !d.continent ? 'black' : '#263b6b';
-        }
-        else {
-          return valuation ? '#AA7A60' : "black";
-        }
-      })
-  }
+  // createCircles(svg, nodesData, rscale, valuation) {
+  //   return svg.append('g')
+  //     .attr("class", "nodes")
+  //     .selectAll(".nodes")
+  //     .data(nodesData)
+  //     .enter()
+  //     .append("circle")
+  //     .attr("r", (d) => {
+  //       if (d.valuation) {
+  //         const val = rscale(valuation ? Number(d.valuation) : Number(d.revenue));
+  //         return val;
+  //       } else {
+  //         return 10;
+  //       }
+  //     })
+  //     .attr("fill", (d) => {
+  //       if (!d.valuation){
+  //         return !d.continent ? 'black' : '#263b6b';
+  //       }
+  //       else {
+  //         return valuation ? '#AA7A60' : "black";
+  //       }
+  //     })
+  // }
 
   createDomainScales( projects ) {
     const result = projects.reduce((domains, project) => {
