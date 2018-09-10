@@ -61,6 +61,7 @@ class ProjectGraph extends React.Component {
     const continents = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
      {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
+<<<<<<< HEAD
     const faux = this.props.connectFauxDOM('div', 'chart');
     const svg = this.createSVG();
     const linksData = this.createLinks(projects, cities);
@@ -72,6 +73,19 @@ class ProjectGraph extends React.Component {
     const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
     const text = this.createText(svg,nodesData);
     const forceLinks = d3.forceLink(linksData)
+=======
+     const faux = this.props.connectFauxDOM('div', 'chart');
+     const svg = this.createSVG();
+     const linksData = this.createLinks(projects, cities);
+     const link = this.drawLinks(svg, linksData);
+     const scales = this.createDomainScales(projects);
+     const nodesData = projects.concat(continents).concat(cities);
+     const simulation = this.simulation(nodesData);
+     const circle = this.createCircles(svg, nodesData, scales.vScale, true);
+     const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
+     const text = this.createText(svg,nodesData);
+     const forceLinks = d3.forceLink(linksData)
+>>>>>>> 0d5ecaed2dc3dc67969794ef433fb8d9f1a0ca81
                         .id(function(d) { return d.title; })
                         .distance(50);
 
@@ -92,8 +106,8 @@ class ProjectGraph extends React.Component {
 
 
     const drag_drag = (d) => {
-      d.fx = d3.event.sourceEvent.x;
-      d.fy = d3.event.sourceEvent.y;
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
     }
 
     const drag_end = (d) => {
