@@ -7,9 +7,9 @@ import {event as currentEvent} from 'd3-selection';
 // const CONTINENTS = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
 //  {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
- const margin = {top: 20, right: 20, bottom: 30, left: 50};
- const width = 960 - margin.left - margin.right;
- const height = 500 - margin.top - margin.bottom;
+const margin = {top: 20, right: 20, bottom: 30, left: 50};
+const width = 960 - margin.left - margin.right;
+const height = 500 - margin.top - margin.bottom;
 
 class ProjectGraph extends React.Component {
   constructor(props) {
@@ -50,21 +50,22 @@ class ProjectGraph extends React.Component {
     });
   }
 
-  setUp () {
+  setUp(){
     const projectKeys = Object.keys(this.props.data);
 
     const projects = projectKeys.map(key => {
       return this.props.data[key];
     })
+
     const cities = this.getUniqueCitites(projectKeys);
     const continents = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
      {title:"Europe"}, {title: "North America"}, {title:"South America"}];
 
-     const faux = this.props.connectFauxDOM('div', 'chart');
-     const svg = this.createSVG();
-     const linksData = this.createLinks(projects, cities);
-     const link = this.drawLinks(svg, linksData);
-     const scales = this.createDomainScales(projects);
+    const faux = this.props.connectFauxDOM('div', 'chart');
+    const svg = this.createSVG();
+    const linksData = this.createLinks(projects, cities);
+    const link = this.drawLinks(svg, linksData);
+    const scales = this.createDomainScales(projects);
     const nodesData = projects.concat(continents).concat(cities);
     const simulation = this.simulation(nodesData);
     const circle = this.createCircles(svg, nodesData, scales.vScale, true);
@@ -274,18 +275,17 @@ class ProjectGraph extends React.Component {
   render() {
     let data = '';
     if (this.props.data) {
-      // debugger
       data = Object.keys(this.props.data).map(key => {
         const project = this.props.data[key];
-        return <li key={project.id}>{project.title} {project.created_at}</li>;
+        return <li key={project.id}>{project.title} {project.created_at}</li>;  //creates react element
       });
+      //console.log(data)  //why does this print so many times?
     }
 
     return (
       <div className='graph-container'>
         <div className="series content graph" id='project'>
           <div id="graph"></div>
-          {this.props.chart}
         </div>
       </div>
     );
