@@ -110,16 +110,6 @@ class ProjectGraph extends React.Component {
     drag_handler(circle);
   }
 
-
-  // createText(svg,nodesData) {
-  //   return svg.append('g')
-  //   .selectAll('text')
-  //   .data(nodesData)
-  //   .enter()
-  //   .append("text")
-  //   .style("font-size", "18px")
-  //   .text((d) => d.title);
-  // }
   createText(nodes) {
     return nodes.append("text")
       .attr("x", (d)=>{
@@ -128,7 +118,7 @@ class ProjectGraph extends React.Component {
       .attr("y", (d)=>{
         return d.y;
       })
-      .text('HEYA');
+      .text((d) => d.title);
   }
 
   simulation (nodesData) {
@@ -148,14 +138,13 @@ class ProjectGraph extends React.Component {
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
     text
-    .attr("x", function(d) {return d.x;})
-    .attr("y", function(d) { return d.y; });
-        // .attr("x", function(d) {
-        //   if(d.valuation) {
-        //     const radius = scale(d.valuation);
-        //     return d.x + radius;
-        //   }else return d.x + 10;
-        // })
+        .attr("x", function(d) {
+          if(d.valuation) {
+            const radius = scale(d.valuation);
+            return d.x + radius;
+          }else return d.x + 10;
+        })
+        .attr("y", function(d) { return d.y; });
 
     link
         .attr("x1", function(d) { return d.source.x; })
