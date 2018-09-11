@@ -9,7 +9,6 @@ import {event as currentEvent} from 'd3-selection';
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
-    this.createCircles = this.createCircles.bind(this);
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     this.formatData = this.formatData.bind(this);
@@ -136,12 +135,8 @@ class ProjectGraph extends React.Component {
 
     simulation.force("links", forceLinks);
     this.addDragHandlers( simulation,circle,innerCircle );
-<<<<<<< HEAD
     simulation.on('tick', () => this.tickActions(circle,text,link, innerCircle,scales.vScale));
     this.props.animateFauxDOM(800);
-=======
-    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle));
->>>>>>> e39b037656b4c0dc229c73e469ee761b758389cc
   }
 
   addDragHandlers( simulation,circle,innerCircle ) {
@@ -197,10 +192,10 @@ class ProjectGraph extends React.Component {
                   } else {
                     return 10 + 20;
                   }
-                }).strength(1).iterations(100))
+                }).strength(1).iterations(100));
   }
 
-  tickActions(circle, text, link, innerCircle) {
+  tickActions(circle, text, link, innerCircle, scale) {
     circle
         .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; });
