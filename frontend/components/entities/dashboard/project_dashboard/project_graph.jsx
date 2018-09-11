@@ -81,14 +81,17 @@ class ProjectGraph extends React.Component {
                     .append('g')
                     .attr("class", "node");
 
-    const conts = svg.selectAll(".continent")
+    const continentNodes = svg.selectAll(".continent")
                     .data(continents)
                     .enter()
                     .append('g')
-                    .attr("class", "node").append('rect')
+                    .attr("class", "node");
+
+    const continentSquares = continentNodes.append('rect')
                     .attr("width",15)
                     .attr("height",15).style('fill','black')
                     .attr("rx", 3).attr("ry", 3);
+
     const circle = node.append("circle")
     .attr("r", (d) => {
       if (d.valuation) {
@@ -123,22 +126,26 @@ class ProjectGraph extends React.Component {
       else {
         return "black";
       }
-    })
+    });
 
-    const text = node.append("text")
-    .style("font-size", "18px")
-    .text((d) => d.title);
-    console.log(linksData);
+    const circleText = this.createText(node);
+    const continentText = this.createText(continentNodes);
     const forceLinks = d3.forceLink(linksData)
                          .id(function(d) { return d.title; })
                          .distance(50);
 
-    console.log(forceLinks);
     simulation.force("links", forceLinks)
     this.addDragHandlers( simulation,circle,innerCircle );
-    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle, scales.vScale,conts));
+    simulation.on('tick', () => this.tickActions(circle, circleText,continentText, link, innerCircle, scales.vScale,continentSquares));
   }
 
+  createText(node) {
+    return node.append("text")
+    .style("font-size", "18px")
+    .text((d) => {
+      return d.title;
+    });
+  }
   addDragHandlers( simulation,circle,innerCircle ) {
     const drag_start = (d) => {
       if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -183,7 +190,7 @@ class ProjectGraph extends React.Component {
                 }).strength(1).iterations(100));
   }
 
-  tickActions(circle, text, link, innerCircle, scale, continent) {
+  tickActions(circle, text,continentText, link, innerCircle, scale, continent) {
     circle
         .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; });
@@ -198,6 +205,10 @@ class ProjectGraph extends React.Component {
           }
           return d.x + 10;
         })
+        .attr("y", function(d) { return d.y; });
+
+    continentText
+        .attr("x", function(d) {return d.x + 15; })
         .attr("y", function(d) { return d.y; });
 
     link
