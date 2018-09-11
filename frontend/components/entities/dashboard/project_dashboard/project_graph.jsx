@@ -137,7 +137,7 @@ class ProjectGraph extends React.Component {
 
     simulation.force("links", forceLinks)
     this.addDragHandlers( simulation,circle,innerCircle );
-    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle));
+    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle, scales.vScale));
   }
 
   addDragHandlers( simulation,circle,innerCircle ) {
@@ -196,7 +196,7 @@ class ProjectGraph extends React.Component {
                 }).strength(1).iterations(100))
   }
 
-  tickActions(circle, text, link, innerCircle) {
+  tickActions(circle, text, link, innerCircle, scale) {
     circle
         .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; })
@@ -204,7 +204,13 @@ class ProjectGraph extends React.Component {
         .attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; })
     text
-        .attr("x", function(d) { return d.x; })
+        .attr("x", function(d) {
+          if (d.valuation) {
+            const radius= scale(d.valuation);
+            return d.x + radius;
+          }
+          return d.x + 10;
+        })
         .attr("y", function(d) { return d.y; })
 
     link
