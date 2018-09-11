@@ -3,12 +3,12 @@ import {
   fetchProjects,
   fetchProject
 } from '../../../../actions/project_actions';
-import ProjectDashboard from './project_dashboard';
+import ProjectGraph from './project_graph';
 
 const mapStateToProps = state => {
   return {
     currentUser: state.session.currentUser,
-    projects: state.entities.projects,
+    data: state.entities.projects
   };
 };
 
@@ -22,4 +22,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProjectDashboard);
+)(ProjectGraph);
