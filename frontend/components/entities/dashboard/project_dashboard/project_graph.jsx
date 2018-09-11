@@ -72,7 +72,6 @@ class ProjectGraph extends React.Component {
     const nodesData = projects.concat(continents).concat(cities);
     const linksData = this.formatLinks(projects, cities, continents);
     const scales = this.createDomainScales(projects);
-    console.log(d3.symbols)
     var shape = d3.scaleOrdinal(d3.symbols);
     debugger
 
