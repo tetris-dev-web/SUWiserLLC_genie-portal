@@ -9,7 +9,6 @@ import {event as currentEvent} from 'd3-selection';
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
-    // this.createCircles = this.createCircles.bind(this);
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     this.formatData = this.formatData.bind(this);
@@ -67,24 +66,29 @@ class ProjectGraph extends React.Component {
     const data = this.formatData(projectKeys);
     const projects = projectKeys.map(key => {
       return this.props.data[key];
-    })
+    });
     const cities = data.cities;
     const continents = data.continents;
-    const nodesData = projects.concat(continents).concat(cities);
+    const circlesData = projects.concat(cities);
     const linksData = this.formatLinks(projects, cities, continents);
     const scales = this.createDomainScales(projects);
-    console.log(d3.symbols)
-    var shape = d3.scaleOrdinal(d3.symbols);
-    debugger
 
-
-    const simulation = this.simulation(nodesData, scales.vScale);
+    const simulation = this.simulation(circlesData,continents,scales.vScale);
     const link = this.drawLinks(svg, linksData);
     const node = svg.selectAll(".node")
-                    .data(nodesData)
+                    .data(circlesData)
                     .enter()
                     .append('g')
-                    .attr("class", "node")
+                    .attr("class", "node");
+
+    const conts = svg.selectAll(".continent")
+                    .data(continents)
+                    .enter()
+                    .append('g')
+                    .attr("class", "node").append('rect')
+                    .attr("width",15)
+                    .attr("height",15).style('fill','black')
+                    .attr("rx", 3).attr("ry", 3);
     const circle = node.append("circle")
     .attr("r", (d) => {
       if (d.valuation) {
@@ -101,7 +105,7 @@ class ProjectGraph extends React.Component {
       else {
         return '#AA7A60';
       }
-    })
+    });
 
     const innerCircle = node.append("circle")
     .attr("r", (d) => {
@@ -122,21 +126,17 @@ class ProjectGraph extends React.Component {
     })
 
     const text = node.append("text")
-    .attr("dx", (d) => {d.x})
-    .attr("dy", (d) => {d.y})
     .style("font-size", "18px")
     .text((d) => d.title);
-    // const circle = this.createCircles(svg, nodesData, scales.vScale, true);
-    // const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
-    // const text = this.createText(svg, nodesData);
+    console.log(linksData);
     const forceLinks = d3.forceLink(linksData)
                          .id(function(d) { return d.title; })
                          .distance(50);
 
-
+    console.log(forceLinks);
     simulation.force("links", forceLinks)
     this.addDragHandlers( simulation,circle,innerCircle );
-    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle, scales.vScale));
+    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle, scales.vScale,conts));
   }
 
   addDragHandlers( simulation,circle,innerCircle ) {
@@ -168,40 +168,28 @@ class ProjectGraph extends React.Component {
   }
 
 
-  // createText(svg,nodesData) {
-  //   return svg.append('g')
-  //   .attr("class", "text")
-  //   .selectAll('text')
-  //   .data(nodesData)
-  //   .enter()
-  //   .append("text")
-  //   .attr("dx", (d) => {d.x})
-  //   .attr("dy", (d) => {d.y})
-  //   .style("font-size", "18px")
-  //   .text((d) => d.title);
-  // }
-
-  simulation (nodesData, rscale) {
+  simulation (nodesData,continentData, rscale) {
+    const allData = nodesData.concat(continentData);
     return d3.forceSimulation()
-              .nodes(nodesData)
+              .nodes(allData)
               .force("charge_force", d3.forceManyBody())
               .force("center_force", d3.forceCenter(width / 2, height / 2))
               .force("collide", d3.forceCollide(12).radius(function(d) {
-                  if (d.valuation) {
+                if (d.valuation) {
                     return rscale(Number(d.valuation)) + 5;
                   } else {
                     return 10 + 20;
                   }
-                }).strength(1).iterations(100))
+                }).strength(1).iterations(100));
   }
 
-  tickActions(circle, text, link, innerCircle, scale) {
+  tickActions(circle, text, link, innerCircle, scale, continent) {
     circle
         .attr("cx", (d) => { return d.x; })
-        .attr("cy", function(d) { return d.y; })
+        .attr("cy", function(d) { return d.y; });
     innerCircle
         .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
+        .attr("cy", function(d) { return d.y; });
     text
         .attr("x", function(d) {
           if (d.valuation) {
@@ -210,13 +198,17 @@ class ProjectGraph extends React.Component {
           }
           return d.x + 10;
         })
-        .attr("y", function(d) { return d.y; })
+        .attr("y", function(d) { return d.y; });
 
     link
         .attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    continent
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; });
   }
 
   createSVG() {
@@ -235,32 +227,6 @@ class ProjectGraph extends React.Component {
       .data(nodesData)
       .enter()
   }
-
-
-  // createCircles(svg, nodesData, rscale, valuation) {
-  //   return svg.append('g')
-  //     .attr("class", "nodes")
-  //     .selectAll(".nodes")
-  //     .data(nodesData)
-  //     .enter()
-  //     .append("circle")
-  //     .attr("r", (d) => {
-  //       if (d.valuation) {
-  //         const val = rscale(valuation ? Number(d.valuation) : Number(d.revenue));
-  //         return val;
-  //       } else {
-  //         return 10;
-  //       }
-  //     })
-  //     .attr("fill", (d) => {
-  //       if (!d.valuation){
-  //         return !d.continent ? 'black' : '#263b6b';
-  //       }
-  //       else {
-  //         return valuation ? '#AA7A60' : "black";
-  //       }
-  //     })
-  // }
 
   createDomainScales( projects ) {
     const result = projects.reduce((domains, project) => {
