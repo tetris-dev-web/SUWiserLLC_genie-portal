@@ -1,6 +1,4 @@
 import React from 'react';
-// import { data } from '../../../util/token_data_util'
-import {withFauxDOM} from 'react-faux-dom'
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
 
@@ -14,6 +12,7 @@ class ProjectGraph extends React.Component {
     this.createCircles = this.createCircles.bind(this);
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
+    this.formatData = this.formatData.bind(this);
     this.addDragHandlers = this.addDragHandlers.bind(this);
     this.createSVG = this.createSVG.bind(this);
   }
@@ -24,62 +23,128 @@ class ProjectGraph extends React.Component {
     });
   }
 
-  getUniqueCitites(projectKeys) {
+  formatData(projectKeys) {
+    const listData = (data) => {
+      return Object.keys(data).map(title => {
+        return data[title];
+      });
+    }
 
-    const cities = projectKeys.reduce((cities, key) => {
-      const title = this.props.data[key].city;
-      const data = {
-        title,
-        continent: this.props.data[key].continent
-      };
+    const extractData = () => {
+      return projectKeys.reduce((data, key) => {
+        const city = this.props.data[key].city;
+        const continent = this.props.data[key].continent;
+        const cityData = {
+          title: city,
+          continent
+        }
+        const continentData = {
+          title: continent
+        }
 
-      if (!cities[title]) {
-        cities[title] = data;
-      }
-      return cities;
-    }, {});
+        if (!data.cities[city]) {
+          data.cities[city] = cityData;
+        }
+        if (!data.continents[continent]) {
+          data.continents[continent] = continentData;
+        }
+        return data;
+      }, {cities: {}, continents: {}});
 
-    return Object.keys(cities).map(title => {
-      return cities[title];
-    });
+    }
+
+    const data = extractData();
+    return {
+      cities: listData(data.cities),
+      continents: listData(data.continents)
+    }
   }
 
   setUp () {
     const projectKeys = Object.keys(this.props.data);
+    const svg = this.createSVG();
 
+    const data = this.formatData(projectKeys);
     const projects = projectKeys.map(key => {
       return this.props.data[key];
-    });
-    const cities = this.getUniqueCitites(projectKeys);
-    const continents = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
-     {title:"Europe"}, {title: "North America"}, {title:"South America"}];
+    })
+    const cities = data.cities;
+    const continents = data.continents;
+    const nodesData = projects.concat(continents).concat(cities);
+    const linksData = this.formatLinks(projects, cities, continents);
+    const scales = this.createDomainScales(projects);
+    console.log(d3.symbols)
+    var shape = d3.scaleOrdinal(d3.symbols);
+    debugger
 
-     const faux = this.props.connectFauxDOM('div', 'chart');
-     const svg = this.createSVG();
-     const linksData = this.createLinks(projects, cities);
-     const link = this.drawLinks(svg, linksData);
-     const scales = this.createDomainScales(projects);
-     const nodesData = projects.concat(continents).concat(cities);
-     const simulation = this.simulation(nodesData);
 
-     const nodes = this.createNodes(svg,nodesData);
-     const circle = this.createCircles(nodes,scales.vScale, true);
-     const innerCircle = this.createCircles(nodes, scales.rScale, false);
-     const text = this.createText(nodes);
+    const simulation = this.simulation(nodesData, scales.vScale);
+    const link = this.drawLinks(svg, linksData);
+    const node = svg.selectAll(".node")
+                    .data(nodesData)
+                    .enter()
+                    .append('g')
+                    .attr("class", "node")
+    const circle = node.append("circle")
+    .attr("r", (d) => {
+      if (d.valuation) {
+        const val = scales.vScale(Number(d.valuation));
+        return val;
+      } else {
+        return 10;
+      }
+    })
+    .attr("fill", (d) => {
+      if (!d.valuation){
+        return !d.continent ? 'black' : '#263b6b';
+      }
+      else {
+        return '#AA7A60';
+      }
+    })
 
-     const forceLinks = d3.forceLink(linksData)
-                        .id(function(d) { return d.title; })
-                        .distance(50);
+    const innerCircle = node.append("circle")
+    .attr("r", (d) => {
+      if (d.revenue) {
+        const val = scales.rScale(Number(d.revenue));
+        return val;
+      } else {
+        return 10;
+      }
+    })
+    .attr("fill", (d) => {
+      if (!d.valuation){
+        return !d.continent ? 'black' : '#263b6b';
+      }
+      else {
+        return "black";
+      }
+    })
+
+    const text = node.append("text")
+    .attr("dx", (d) => {d.x})
+    .attr("dy", (d) => {d.y})
+    .style("font-size", "18px")
+    .text((d) => d.title);
+    // const circle = this.createCircles(svg, nodesData, scales.vScale, true);
+    // const innerCircle = this.createCircles(svg, nodesData, scales.rScale, false);
+    // const text = this.createText(svg, nodesData);
+    const forceLinks = d3.forceLink(linksData)
+                         .id(function(d) { return d.title; })
+                         .distance(50);
 
 
     simulation.force("links", forceLinks);
     this.addDragHandlers( simulation,circle,innerCircle );
+<<<<<<< HEAD
     simulation.on('tick', () => this.tickActions(circle,text,link, innerCircle,scales.vScale));
     this.props.animateFauxDOM(800);
+=======
+    simulation.on('tick', () => this.tickActions(circle, text, link, innerCircle));
+>>>>>>> e39b037656b4c0dc229c73e469ee761b758389cc
   }
 
   addDragHandlers( simulation,circle,innerCircle ) {
-
     const drag_start = (d) => {
       if (!d3.event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
@@ -104,29 +169,38 @@ class ProjectGraph extends React.Component {
     .on("end", drag_end);
 
     drag_handler(circle);
+    drag_handler(innerCircle);
   }
 
-  createText(nodes) {
-    return nodes.append("text")
-      .attr("x", (d)=>{
-        return d.x;
-      })
-      .attr("y", (d)=>{
-        return d.y;
-      })
-      .text((d) => d.title);
-  }
 
-  simulation (nodesData) {
+  // createText(svg,nodesData) {
+  //   return svg.append('g')
+  //   .attr("class", "text")
+  //   .selectAll('text')
+  //   .data(nodesData)
+  //   .enter()
+  //   .append("text")
+  //   .attr("dx", (d) => {d.x})
+  //   .attr("dy", (d) => {d.y})
+  //   .style("font-size", "18px")
+  //   .text((d) => d.title);
+  // }
+
+  simulation (nodesData, rscale) {
     return d3.forceSimulation()
               .nodes(nodesData)
               .force("charge_force", d3.forceManyBody())
-              .force("center_force", d3.forceCenter(width / 2, height / 2));
+              .force("center_force", d3.forceCenter(width / 2, height / 2))
+              .force("collide", d3.forceCollide(12).radius(function(d) {
+                  if (d.valuation) {
+                    return rscale(Number(d.valuation)) + 5;
+                  } else {
+                    return 10 + 20;
+                  }
+                }).strength(1).iterations(100))
   }
 
-
-  tickActions(circle,text, link, innerCircle,scale) {
-    //update circle positions to reflect node updates on each tick of the simulation
+  tickActions(circle, text, link, innerCircle) {
     circle
         .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; });
@@ -158,37 +232,39 @@ class ProjectGraph extends React.Component {
       .attr("height", height + margin.top + margin.bottom);
   }
 
-  createNodes(svg, nodesData) {
-    return svg.append('g').attr('class','nodes')
-      .selectAll("node")
+  node (svg, nodesData) {
+    return svg.append('g')
+      .attr("class", "nodes")
+      .selectAll(".nodes")
       .data(nodesData)
       .enter()
-      .append('g')
-      .attr('class','node');
   }
 
-  createCircles(nodes, rscale, valuation) {
-    const circles = nodes.append("circle")
-    .attr("r", (d) => {
-      if (d && d.valuation) {
-        const val = rscale(valuation ? Number(d.valuation) : Number(d.revenue));
-        return val;
-      } else {
-        return 10;
-      }
-    })
-    .attr("fill", (d) => {
-      if (d && !d.valuation){
-        return !d.continent ? 'black' : '#263b6b';
-      }
-      else {
-        return valuation ? '#AA7A60' : "black";
-      }
-    });
 
-    return circles;
-  }
-
+  // createCircles(svg, nodesData, rscale, valuation) {
+  //   return svg.append('g')
+  //     .attr("class", "nodes")
+  //     .selectAll(".nodes")
+  //     .data(nodesData)
+  //     .enter()
+  //     .append("circle")
+  //     .attr("r", (d) => {
+  //       if (d.valuation) {
+  //         const val = rscale(valuation ? Number(d.valuation) : Number(d.revenue));
+  //         return val;
+  //       } else {
+  //         return 10;
+  //       }
+  //     })
+  //     .attr("fill", (d) => {
+  //       if (!d.valuation){
+  //         return !d.continent ? 'black' : '#263b6b';
+  //       }
+  //       else {
+  //         return valuation ? '#AA7A60' : "black";
+  //       }
+  //     })
+  // }
 
   createDomainScales( projects ) {
     const minRevenue = d3.min(projects,(project)=>Number(project.revenue));
@@ -200,7 +276,7 @@ class ProjectGraph extends React.Component {
             rScale: d3.scaleLinear().domain([minRevenue,maxRevenue]).range([5,18])};
   }
 
-  createLinks (projects, cities) {
+  formatLinks (projects, cities, continents) {
     const projectCityLinks = projects.map(project => {
         return {
           source: project.title,
@@ -215,18 +291,15 @@ class ProjectGraph extends React.Component {
       }
     })
 
-    const continentLinks = [
-      {source: 'Antarctica', target: 'Africa'},
-      {source: 'Africa', target: 'Asia'},
-      {source: 'Asia', target: 'Australia'},
-      {source: 'Australia', target: 'Europe'},
-      {source: 'Europe', target: 'North America'},
-      {source: 'North America', target: 'South America'},
-    ]
+    const continentLinks = [];
+    for (let i = 0; i < continents.length - 1;  i++) {
+      continentLinks.push({
+        source: continents[i].title,
+        target: continents[i+1].title
+      });
+    }
 
     return projectCityLinks.concat(cityContinentLinks).concat(continentLinks);
-    // return d3.forceLink(projectCityLinks.concat(cityContinentLinks))
-    //                     .id(function(d) { return d.title; })
   }
 
   drawLinks (svg, linksData) {
@@ -264,4 +337,4 @@ ProjectGraph.defaultProps = {
   chart: 'loading'
 }
 
-export default withFauxDOM(ProjectGraph);
+export default ProjectGraph;
