@@ -192,24 +192,6 @@ class ProjectGraph extends React.Component {
     return circles;
   }
 
-  handleMouseOver(d,i,svg) {
-    // console.log(svg);
-    // svg.append("text").text(d.title)
-    // .attr('id',()=>{
-    //   return d.title + i;
-    // })
-    // .attr('x',()=>{
-    //   return d.x;
-    // })
-    // .attr('y',()=>{
-    //   return d.y;
-    // });
-  }
-
-  handleMouseOut(d,i) {
-    // debugger
-    // d3.select(d.title+i).remove();
-  }
 
   createDomainScales( projects ) {
     const result = projects.reduce((domains, project) => {
