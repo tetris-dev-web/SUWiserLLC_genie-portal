@@ -1,7 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
-import $ from 'jquery';
 
  const margin = {top: 20, right: 20, bottom: 30, left: 50};
  const width = 960 - margin.left - margin.right;
