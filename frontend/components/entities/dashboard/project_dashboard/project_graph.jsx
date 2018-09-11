@@ -4,9 +4,6 @@ import {withFauxDOM} from 'react-faux-dom'
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
 
-// const CONTINENTS = [{title: "Antarctica"}, {title: "Asia"}, {title: "Africa"}, {title: "Australia"},
-//  {title:"Europe"}, {title: "North America"}, {title:"South America"}];
-
  const margin = {top: 20, right: 20, bottom: 30, left: 50};
  const width = 960 - margin.left - margin.right;
  const height = 500 - margin.top - margin.bottom;
@@ -18,7 +15,6 @@ class ProjectGraph extends React.Component {
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     this.addDragHandlers = this.addDragHandlers.bind(this);
-    // this.handleMousemove = this.handleMousemove.bind(this);
     this.createSVG = this.createSVG.bind(this);
   }
 
@@ -163,7 +159,8 @@ class ProjectGraph extends React.Component {
   }
 
   createNodes(svg, nodesData) {
-    return svg.selectAll("node")
+    return svg.append('g').attr('class','nodes')
+      .selectAll("node")
       .data(nodesData)
       .enter()
       .append('g')
