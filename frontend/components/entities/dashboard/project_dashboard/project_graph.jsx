@@ -241,28 +241,12 @@ class ProjectGraph extends React.Component {
   }
 
   createDomainScales( projects ) {
-    const result = projects.reduce((domains, project) => {
-      const valuation = Number(project.valuation);
-      const revenue = Number(project.revenue);
-
-      if (!domains.vDomain[0] || valuation < domains.vDomain[0]) {
-        domains.vDomain[0] = valuation;
-      }
-      if (!domains.vDomain[1] || valuation > domains.vDomain[1]) {
-        domains.vDomain[1] = valuation;
-      }
-      if (!domains.rDomain[0] || valuation < domains.rDomain[0]) {
-        domains.rDomain[0] = revenue;
-      }
-      if (!domains.rDomain[1] || valuation > domains.rDomain[1]) {
-        domains.rDomain[1] = revenue;
-      }
-
-      return domains;
-    }, {rDomain: [], vDomain: []})
-
-    return {vScale: d3.scaleLinear().domain(result.vDomain).range([21,70]),
-            rScale: d3.scaleLinear().domain(result.rDomain).range([3,10])};
+    const minValuation = d3.min(projects,(project)=>Number(project.valuation));
+    const maxValuation = d3.max(projects,(project)=>Number(project.valuation));
+    const minRevenue = d3.min(projects,(project)=>Number(project.revenue));
+    const maxRevenue = d3.max(projects,(project)=>Number(project.revenue));
+    return {vScale: d3.scaleLinear().domain([minValuation,maxValuation]).range([21,70]),
+            rScale: d3.scaleLinear().domain([minRevenue,maxRevenue]).range([3,10])};
   }
 
   formatLinks (projects, cities, continents) {
