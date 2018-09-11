@@ -135,7 +135,7 @@ class ProjectGraph extends React.Component {
                          .distance(50);
 
     simulation.force("links", forceLinks)
-    this.addDragHandlers( simulation,circle,innerCircle );
+    this.addDragHandlers( simulation,circle,innerCircle,continentSquares );
     simulation.on('tick', () => this.tickActions(circle, circleText,continentText, link, innerCircle, scales.vScale,continentSquares));
   }
 
@@ -146,7 +146,7 @@ class ProjectGraph extends React.Component {
       return d.title;
     });
   }
-  addDragHandlers( simulation,circle,innerCircle ) {
+  addDragHandlers( simulation,circle,innerCircle,continentSquares ) {
     const drag_start = (d) => {
       if (!d3.event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
@@ -172,6 +172,7 @@ class ProjectGraph extends React.Component {
 
     drag_handler(circle);
     drag_handler(innerCircle);
+    drag_handler(continentSquares);
   }
 
 
