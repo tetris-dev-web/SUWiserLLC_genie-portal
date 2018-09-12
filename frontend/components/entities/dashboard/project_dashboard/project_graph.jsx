@@ -188,7 +188,7 @@ class ProjectGraph extends React.Component {
                   } else {
                     return 10 + 20;
                   }
-                }).strength(1).iterations(100));
+                }).strength(0.5));
   }
 
   tickActions(circle, text,continentText, link, innerCircle, scale, continent) {
@@ -245,10 +245,8 @@ class ProjectGraph extends React.Component {
     const maxValuation = d3.max(projects,(project)=>Number(project.valuation));
     const minRevenue = d3.min(projects,(project)=>Number(project.revenue));
     const maxRevenue = d3.max(projects,(project)=>Number(project.revenue));
-    // return {vScale: d3.scaleLinear().domain([minValuation,maxValuation]).range([21,70]),
-    //         rScale: d3.scaleLinear().domain([minRevenue,maxRevenue]).range([3,10])};
     return {vScale: d3.scaleLinear().domain([minValuation,maxValuation]).range([8,25]),
-            rScale: d3.scaleLinear().domain([minRevenue,maxRevenue]).range([5,18])};
+            rScale: d3.scaleLinear().domain([minRevenue,maxRevenue]).range([5,12])};
 
   }
 
