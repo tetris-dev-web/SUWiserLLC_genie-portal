@@ -216,26 +216,26 @@ class ProjectGraph extends React.Component {
 
     link
         .attr("x1", function(d) {
-          if(!d.continent){
-            return d.source.x + 5;
+          if(!d.source.continent){
+            return d.source.x + 7.5;
           }
           return d.source.x;
         })
         .attr("y1", function(d) {
-          if(!d.continent){
-            return d.source.y + 5;
+          if(!d.source.continent){
+            return d.source.y + 7.5;
           }
           return d.source.y;
         })
         .attr("x2", function(d) {
-          if(!d.continent){
-            return d.target.x + 5;
+          if(!d.target.continent){
+            return d.target.x + 7.5;
           }
           return d.target.x;
         })
         .attr("y2", function(d) {
-          if(!d.continent){
-            return d.target.y + 5;
+          if(!d.target.continent){
+            return d.target.y + 7.5;
           }
           return d.target.y;
         });
@@ -259,7 +259,7 @@ class ProjectGraph extends React.Component {
       .attr("class", "nodes")
       .selectAll(".nodes")
       .data(nodesData)
-      .enter()
+      .enter();
   }
 
   createDomainScales( projects ) {
