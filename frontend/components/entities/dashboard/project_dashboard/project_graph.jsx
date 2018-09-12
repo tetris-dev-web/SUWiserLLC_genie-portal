@@ -245,7 +245,7 @@ class ProjectGraph extends React.Component {
     const maxValuation = d3.max(projects,(project)=>Number(project.valuation));
     const minRevenue = d3.min(projects,(project)=>Number(project.revenue));
     const maxRevenue = d3.max(projects,(project)=>Number(project.revenue));
-    return {vScale: d3.scaleLinear().domain([minValuation,maxValuation]).range([8,25]),
+    return {vScale: d3.scaleLinear().domain([minValuation,maxValuation]).range([15,30]),
             rScale: d3.scaleLinear().domain([minRevenue,maxRevenue]).range([5,12])};
 
   }
