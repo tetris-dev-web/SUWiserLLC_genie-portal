@@ -1,6 +1,7 @@
 import React from 'react';
 import ProjectGraph from './project_graph';
 import Modal from 'react-modal';
+import ModalStyle from '../../footer/modal_style';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -29,6 +30,7 @@ class ProjectDashboard extends React.Component {
 
   render() {
     if (this.props.currentUser) {
+      const projectClicked = this.state.projectClicked;
       return (
         <div className="graph-container">
           <ProjectGraph
@@ -40,9 +42,21 @@ class ProjectDashboard extends React.Component {
           <Modal
             isOpen={this.state.openModal}
             onRequestClose={this.closeModal}
-            contentLabel="Bylaws Modal"
+            contentLabel="Project Graph Modal"
+            style={ModalStyle}
             className="modal-container">
-            <div>{this.state.projectClicked.title}</div>
+            <div className="black-close-modal-button close-modal-button"
+              onClick={this.closeModal}>&times;</div>
+            <div className="ft-modal-header-cont">
+              <div className="ft-modal-header bylaws-header">
+                {projectClicked.title} Project
+              </div>
+            </div>
+            <div>title: {projectClicked.title}</div>
+            <div>revenue: {projectClicked.revenue}</div>
+            <div>valuation: {projectClicked.valuation}</div>
+            <div>continent: {projectClicked.continent}</div>
+            <div>city: {projectClicked.city}</div>
           </Modal>
         </div>
       );
