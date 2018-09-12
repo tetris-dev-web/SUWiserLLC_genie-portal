@@ -19,7 +19,7 @@ class ProjectGraph extends React.Component {
   componentDidMount(){
     this.props.fetchProjects().then(() => {
       this.setUp();
-    })
+    });
   }
 
   formatData(projectKeys) {
@@ -27,7 +27,7 @@ class ProjectGraph extends React.Component {
       return Object.keys(data).map(title => {
         return data[title];
       });
-    }
+    };
 
     const extractData = () => {
       return projectKeys.reduce((data, key) => {
@@ -36,10 +36,10 @@ class ProjectGraph extends React.Component {
         const cityData = {
           title: city,
           continent
-        }
+        };
         const continentData = {
           title: continent
-        }
+        };
 
         if (!data.cities[city]) {
           data.cities[city] = cityData;
@@ -50,13 +50,13 @@ class ProjectGraph extends React.Component {
         return data;
       }, {cities: {}, continents: {}});
 
-    }
+    };
 
     const data = extractData();
     return {
       cities: listData(data.cities),
       continents: listData(data.continents)
-    }
+    };
   }
 
   setUp () {
@@ -91,7 +91,7 @@ class ProjectGraph extends React.Component {
                     .attr("width",15)
                     .attr("height",15).style('fill','black')
                     .attr("rx", 3).attr("ry", 3);
-
+    const that = this;
     const circle = node.append("circle")
     .attr("r", (d) => {
       if (d.valuation) {
@@ -108,6 +108,8 @@ class ProjectGraph extends React.Component {
       else {
         return '#AA7A60';
       }
+    }).on('click',(d)=>{
+      that.props.openModal(d);
     });
 
     const innerCircle = node.append("circle")
@@ -132,7 +134,7 @@ class ProjectGraph extends React.Component {
     const continentText = this.createText(continentNodes);
     const forceLinks = d3.forceLink(linksData)
                          .id(function(d) { return d.title; })
-                         .distance(50);
+                         .distance(60);
 
     simulation.force("links", forceLinks)
     this.addDragHandlers( simulation,circle,innerCircle,continentSquares );
@@ -188,7 +190,7 @@ class ProjectGraph extends React.Component {
                   } else {
                     return 10 + 20;
                   }
-                }).strength(1).iterations(100));
+                }).strength(0.5));
   }
 
   tickActions(circle, text,continentText, link, innerCircle, scale, continent) {
@@ -245,8 +247,9 @@ class ProjectGraph extends React.Component {
     const maxValuation = d3.max(projects,(project)=>Number(project.valuation));
     const minRevenue = d3.min(projects,(project)=>Number(project.revenue));
     const maxRevenue = d3.max(projects,(project)=>Number(project.revenue));
-    return {vScale: d3.scaleLinear().domain([minValuation,maxValuation]).range([21,70]),
-            rScale: d3.scaleLinear().domain([minRevenue,maxRevenue]).range([3,10])};
+    return {vScale: d3.scaleLinear().domain([minValuation,maxValuation]).range([15,30]),
+            rScale: d3.scaleLinear().domain([minRevenue,maxRevenue]).range([5,12])};
+
   }
 
   formatLinks (projects, cities, continents) {
