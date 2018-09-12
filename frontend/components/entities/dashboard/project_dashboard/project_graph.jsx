@@ -215,10 +215,30 @@ class ProjectGraph extends React.Component {
         .attr("y", function(d) { return d.y; });
 
     link
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
+        .attr("x1", function(d) {
+          if(!d.continent){
+            return d.source.x + 5;
+          }
+          return d.source.x;
+        })
+        .attr("y1", function(d) {
+          if(!d.continent){
+            return d.source.y + 5;
+          }
+          return d.source.y;
+        })
+        .attr("x2", function(d) {
+          if(!d.continent){
+            return d.target.x + 5;
+          }
+          return d.target.x;
+        })
+        .attr("y2", function(d) {
+          if(!d.continent){
+            return d.target.y + 5;
+          }
+          return d.target.y;
+        });
 
     continent
         .attr("x", function(d) { return d.x; })
