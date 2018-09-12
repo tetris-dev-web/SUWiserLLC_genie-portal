@@ -19,7 +19,7 @@ class ProjectGraph extends React.Component {
   componentDidMount(){
     this.props.fetchProjects().then(() => {
       this.setUp();
-    })
+    });
   }
 
   formatData(projectKeys) {
@@ -27,7 +27,7 @@ class ProjectGraph extends React.Component {
       return Object.keys(data).map(title => {
         return data[title];
       });
-    }
+    };
 
     const extractData = () => {
       return projectKeys.reduce((data, key) => {
@@ -36,10 +36,10 @@ class ProjectGraph extends React.Component {
         const cityData = {
           title: city,
           continent
-        }
+        };
         const continentData = {
           title: continent
-        }
+        };
 
         if (!data.cities[city]) {
           data.cities[city] = cityData;
