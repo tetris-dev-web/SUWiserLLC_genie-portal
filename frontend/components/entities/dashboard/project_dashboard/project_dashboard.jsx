@@ -49,14 +49,24 @@ class ProjectDashboard extends React.Component {
               onClick={this.closeModal}>&times;</div>
             <div className="ft-modal-header-cont">
               <div className="ft-modal-header bylaws-header">
-                {projectClicked.title} Project
+                {projectClicked.title}
               </div>
             </div>
-            <div>title: {projectClicked.title}</div>
-            <div>revenue: {projectClicked.revenue}</div>
-            <div>valuation: {projectClicked.valuation}</div>
-            <div>continent: {projectClicked.continent}</div>
-            <div>city: {projectClicked.city}</div>
+            <div className="ft-modal-body bylaws-body">
+              <div className="ft-img-cont">
+
+              </div>
+              <div className="ft-el-cont">
+                <h1 className="ft-el-header">{projectClicked.title}</h1>
+                <p><strong>Title: </strong>{projectClicked.title}</p>
+                <p><strong>Continent: </strong>{projectClicked.continent} </p>
+                <p><strong>City: </strong>{projectClicked.city} </p>
+                <p><strong>Valuation: </strong>{projectClicked.valuation} </p>
+                <p><strong>Revenue: </strong>{projectClicked.revenue} </p>
+              </div>
+              <div className="ft-img-cont">
+              </div>
+            </div>
           </Modal>
         </div>
       );
