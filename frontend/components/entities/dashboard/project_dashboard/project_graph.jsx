@@ -19,7 +19,7 @@ class ProjectGraph extends React.Component {
   componentDidMount(){
     this.props.fetchProjects().then(() => {
       this.setUp();
-    })
+    });
   }
 
   formatData(projectKeys) {
@@ -27,7 +27,7 @@ class ProjectGraph extends React.Component {
       return Object.keys(data).map(title => {
         return data[title];
       });
-    }
+    };
 
     const extractData = () => {
       return projectKeys.reduce((data, key) => {
@@ -36,10 +36,10 @@ class ProjectGraph extends React.Component {
         const cityData = {
           title: city,
           continent
-        }
+        };
         const continentData = {
           title: continent
-        }
+        };
 
         if (!data.cities[city]) {
           data.cities[city] = cityData;
@@ -50,16 +50,17 @@ class ProjectGraph extends React.Component {
         return data;
       }, {cities: {}, continents: {}});
 
-    }
+    };
 
     const data = extractData();
     return {
       cities: listData(data.cities),
       continents: listData(data.continents)
-    }
+    };
   }
 
   setUp () {
+    debugger
     const projectKeys = Object.keys(this.props.data);
     const svg = this.createSVG();
 
@@ -91,7 +92,7 @@ class ProjectGraph extends React.Component {
                     .attr("width",15)
                     .attr("height",15).style('fill','black')
                     .attr("rx", 3).attr("ry", 3);
-
+    const that = this;
     const circle = node.append("circle")
     .attr("r", (d) => {
       if (d.valuation) {
@@ -108,7 +109,10 @@ class ProjectGraph extends React.Component {
       else {
         return '#AA7A60';
       }
-    }).on('click',()=>alert('asd'));
+    }).on('click',(d)=>{
+      debugger
+      that.props.openModal();
+    });
 
     const innerCircle = node.append("circle")
     .attr("r", (d) => {

@@ -29,12 +29,14 @@ class ProjectDashboard extends React.Component {
 
   render() {
     if (this.props.currentUser) {
+      debugger
       return (
         <div className="graph-container">
           <ProjectGraph
             openModal={this.openModal}
             closeModal={this.closeModal}
             currentUser={this.props.currentUser}
+            fetchProjects={this.props.fetchProjects}
             data={this.props.projects} />
           <Modal
             isOpen={this.state.openModal}
