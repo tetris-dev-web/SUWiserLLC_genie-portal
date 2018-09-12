@@ -7,15 +7,15 @@ class ProjectDashboard extends React.Component {
     super(props);
 
     this.state = {
-      openModal: false
+      openModal: false,
+      projectClicked:{}
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
 
-  openModal() {
-    alert('modal opened');
-    this.setState({ openModal: true });
+  openModal(projectClicked) {
+    this.setState({ openModal: true, projectClicked });
   }
 
   closeModal() {
@@ -42,7 +42,7 @@ class ProjectDashboard extends React.Component {
             onRequestClose={this.closeModal}
             contentLabel="Bylaws Modal"
             className="modal-container">
-            <div>Modal content goes here</div>
+            <div>{this.state.projectClicked.title}</div>
           </Modal>
         </div>
       );

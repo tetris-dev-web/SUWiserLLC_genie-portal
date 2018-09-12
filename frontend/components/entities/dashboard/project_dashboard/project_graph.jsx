@@ -60,7 +60,6 @@ class ProjectGraph extends React.Component {
   }
 
   setUp () {
-    debugger
     const projectKeys = Object.keys(this.props.data);
     const svg = this.createSVG();
 
@@ -110,8 +109,7 @@ class ProjectGraph extends React.Component {
         return '#AA7A60';
       }
     }).on('click',(d)=>{
-      debugger
-      that.props.openModal();
+      that.props.openModal(d);
     });
 
     const innerCircle = node.append("circle")
