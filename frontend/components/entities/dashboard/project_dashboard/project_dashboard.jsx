@@ -14,7 +14,7 @@ class ProjectDashboard extends React.Component {
   }
 
   openModal() {
-    this.alert('modal opened');
+    alert('modal opened');
     this.setState({ openModal: true });
   }
 
@@ -29,7 +29,6 @@ class ProjectDashboard extends React.Component {
 
   render() {
     if (this.props.currentUser) {
-      debugger
       return (
         <div className="graph-container">
           <ProjectGraph
