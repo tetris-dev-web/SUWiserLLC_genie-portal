@@ -108,7 +108,7 @@ class ProjectGraph extends React.Component {
       else {
         return '#AA7A60';
       }
-    });
+    }).on('click',()=>alert('asd'));
 
     const innerCircle = node.append("circle")
     .attr("r", (d) => {

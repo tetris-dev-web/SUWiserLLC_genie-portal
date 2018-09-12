@@ -1,45 +1,48 @@
 import React from 'react';
 import ProjectGraph from './project_graph';
+import Modal from 'react-modal';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
     super(props);
 
-    // this.state = {
-    //   data: '',
-    //   toggle: false,
-    // };
-
-    // this.toggleData = this.toggleData.bind(this);
+    this.state = {
+      openModal: false
+    };
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
+  openModal() {
+    this.alert('modal opened');
+    this.setState({ openModal: true });
+  }
 
+  closeModal() {
+    this.setState({ openModal: false });
+  }
 
   componentDidMount() {
     this.props.fetchProjects();
   }
 
-  // toggleData() {
-  //   if (this.state.toggle) {
-  //     this.setState({
-  //       data: totalData,
-  //       toggle: false
-  //     });
-  //   } else {
-  //     this.setState({
-  //       data: userData,
-  //       toggle: true
-  //     });
-  //
-  //   }
-  // }
 
   render() {
     if (this.props.currentUser) {
       return (
         <div className="graph-container">
-          <ProjectGraph currentUser={this.props.currentUser}
+          <ProjectGraph
+            openModal={this.openModal}
+            closeModal={this.closeModal}
+            currentUser={this.props.currentUser}
             data={this.props.projects} />
+          <Modal
+            isOpen={this.state.openModal}
+            onRequestClose={this.closeModal}
+            contentLabel="Bylaws Modal"
+            className="modal-container">
+            <div>Modal content goes here</div>
+          </Modal>
         </div>
       );
     } else {
