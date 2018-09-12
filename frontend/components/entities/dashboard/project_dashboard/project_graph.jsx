@@ -132,7 +132,7 @@ class ProjectGraph extends React.Component {
     const continentText = this.createText(continentNodes);
     const forceLinks = d3.forceLink(linksData)
                          .id(function(d) { return d.title; })
-                         .distance(50);
+                         .distance(60);
 
     simulation.force("links", forceLinks)
     this.addDragHandlers( simulation,circle,innerCircle,continentSquares );
