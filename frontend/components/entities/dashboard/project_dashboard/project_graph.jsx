@@ -75,7 +75,6 @@ class ProjectGraph extends React.Component {
     const circlesData = projects;
     const linksData = this.formatLinks(projects, cities, continents);
     const scales = this.createDomainScales(projects);
-
     const simulation = this.simulation(circlesData,continents,cities,scales.vScale);
     const link = this.drawLinks(svg, linksData);
 
@@ -125,7 +124,8 @@ class ProjectGraph extends React.Component {
       }
     }).on('click',(d)=>{
       that.props.openModal(d);
-    });
+    }).on('mouseover', (d) => that.handleMouseOver(d,link,continentSquares,citySquares,circle))
+    .on('mouseout',(d)=> that.handleMouseOut(d,link,continentSquares,citySquares,circle));
 
     const innerCircle = node.append("circle")
     .attr("r", (d) => {
@@ -155,6 +155,24 @@ class ProjectGraph extends React.Component {
     simulation.force("links", forceLinks);
     this.addDragHandlers( simulation,circle,innerCircle,continentSquares,citySquares );
     simulation.on('tick', () => this.tickActions(circle, circleText,continentText,cityText, link, innerCircle, scales.vScale,continentSquares,citySquares));
+  }
+
+  handleMouseOver(d,link,continentSquares,citySquares,projects) {
+    projects.attr("opacity", (currProject) => {
+      if( !(currProject === d) ){
+        return 0.3;
+      }
+    });
+    link.attr("opacity", 0.3);
+    continentSquares.attr('opacity',0.3);
+    citySquares.attr('opacity',0.3);
+  }
+
+  handleMouseOut(d,link,continentSquares,citySquares,projects) {
+    projects.attr("opacity",1);
+    link.attr("opacity", 1);
+    continentSquares.attr('opacity',1);
+    citySquares.attr('opacity',1);
   }
 
   createText(node) {
