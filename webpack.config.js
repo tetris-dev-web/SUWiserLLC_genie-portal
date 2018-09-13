@@ -22,7 +22,11 @@ module.exports = {
       }
     ]
   },
+  mode: 'development',
   devtool: 'source-map',
+  devServer: {
+    publicPath: '/public', port: 8080
+  },
   resolve: {
     extensions: [".js", ".jsx", "*"]
   }

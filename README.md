@@ -4,7 +4,7 @@
 
 - cd into the directory in which you want genie portal to be placed
 - `git clone https://github.com/GenusDev/genie-portal.git`
-- create a branch, named in according with the [GenusDev Programming Conventions](https://docs.google.com/document/d/1-PGffrw-B1d9P5A_zfo5gJrW8dK28kqx5j-xxKOMPLY) e.g. `git checkout -b JOHN-readme-edit-0903`
+- create a branch, named in according with the [GenusDev Programming Conventions](https://docs.google.com/document/d/1-PGffrw-B1d9P5A_zfo5gJrW8dK28kqx5j-xxKOMPLY) e.g. `git checkout -b JohnR-readme-edit-0903`
 
 
 ## System dependencies
