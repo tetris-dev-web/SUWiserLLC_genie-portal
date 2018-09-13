@@ -5,6 +5,8 @@ import {event as currentEvent} from 'd3-selection';
  const margin = {top: 20, right: 20, bottom: 30, left: 50};
  const width = 960 - margin.left - margin.right;
  const height = 500 - margin.top - margin.bottom;
+const citySquareSide = 19;
+const continentSquareSide = 12;
 
 class ProjectGraph extends React.Component {
   constructor(props) {
@@ -95,12 +97,12 @@ class ProjectGraph extends React.Component {
                     .attr("class", "node");
 
     const continentSquares = continentNodes.append('rect')
-                    .attr("width",15)
-                    .attr("height",15).style('fill','black')
+                    .attr("width",citySquareSide)
+                    .attr("height",citySquareSide).style('fill','black')
                     .attr("rx", 3).attr("ry", 3);
     const citySquares = cityNodes.append('rect')
-                    .attr("width",15)
-                    .attr("height",15).style('fill','black')
+                    .attr("width",citySquareSide)
+                    .attr("height",citySquareSide).style('fill','black')
                     .attr("rx", 3).attr("ry", 3);
 
     const that = this;
@@ -235,6 +237,7 @@ class ProjectGraph extends React.Component {
     link
         .attr("x1", function(d) {
           if(!d.source.valuation){
+            debugger
             return d.source.x + 7.5;
           }
           return d.source.x;
@@ -264,6 +267,13 @@ class ProjectGraph extends React.Component {
     citySquares
         .attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; });
+  }
+
+  computeSquareLinkEntryPts( d ){
+    if(d.target.continent){
+      return citySquareSide/2;
+    }
+    return continentSquareSide/2;
   }
 
   createSVG() {
@@ -343,7 +353,7 @@ class ProjectGraph extends React.Component {
       <div className='graph-container'>
         <div className="series content graph" id='project'>
           <div id="graph"></div>
-          {this.props.chart}
+
         </div>
       </div>
     );
