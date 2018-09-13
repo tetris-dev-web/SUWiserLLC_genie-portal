@@ -239,26 +239,26 @@ class ProjectGraph extends React.Component {
     link
         .attr("x1", function(d) {
           if(!d.source.valuation){
-            return d.source.x + 7.5;
-            // return that.computeSquareLinkEntryPts(d);
+            // return d.source.x + 7.5;
+            return that.computeSquareLinkEntryPts(d,true,true);
           }
           return d.source.x;
         })
         .attr("y1", function(d) {
           if(!d.source.valuation){
-            return d.source.y + 7.5;
+            return that.computeSquareLinkEntryPts(d,true,false);
           }
           return d.source.y;
         })
         .attr("x2", function(d) {
           if(!d.target.valuation){
-            return d.target.x + 7.5;
+            return that.computeSquareLinkEntryPts(d,false,true);
           }
           return d.target.x;
         })
         .attr("y2", function(d) {
           if(!d.target.valuation){
-            return d.target.y + 7.5;
+            return that.computeSquareLinkEntryPts(d,false,false);
           }
           return d.target.y;
         });
@@ -271,12 +271,13 @@ class ProjectGraph extends React.Component {
         .attr("y", function(d) { return d.y; });
   }
 
-  computeSquareLinkEntryPts( d ){
-    debugger
-    if(d.target.continent){
-      return citySquareSide/2;
+  computeSquareLinkEntryPts( d,isSource,isX ){
+    const object = isSource ? d.source : d.target;
+    const startPt = isX ? object.x : object.y;
+    if(object.continent){
+      return startPt + citySquareSide/2;
     }
-    return continentSquareSide/2;
+    return startPt + continentSquareSide/2;
   }
 
   createSVG() {
