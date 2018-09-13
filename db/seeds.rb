@@ -80,7 +80,6 @@ project4 = Project.create(
   creator_id: user2.id,
   created_at: "14/03/2018"
 )
-
 project5 = Project.create(
   title: "PorkInn",
   revenue: 6000,
@@ -94,7 +93,6 @@ project5 = Project.create(
   creator_id: user2.id,
   created_at: "14/03/2018"
 )
-
 project6 = Project.create(
   title: "BeefInn",
   revenue: 9000,
@@ -108,7 +106,6 @@ project6 = Project.create(
   creator_id: user2.id,
   created_at: "14/03/2018"
 )
-
 project6 = Project.create(
   title: "ChickInn",
   revenue: 27000,
