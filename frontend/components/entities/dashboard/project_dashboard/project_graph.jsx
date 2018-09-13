@@ -5,6 +5,8 @@ import {event as currentEvent} from 'd3-selection';
  const margin = {top: 20, right: 20, bottom: 30, left: 50};
  const width = 960 - margin.left - margin.right;
  const height = 500 - margin.top - margin.bottom;
+const citySquareSide = 19;
+const continentSquareSide = 12;
 
 class ProjectGraph extends React.Component {
   constructor(props) {
@@ -69,14 +71,21 @@ class ProjectGraph extends React.Component {
     });
     const cities = data.cities;
     const continents = data.continents;
-    const circlesData = projects.concat(cities);
+    const circlesData = projects;
     const linksData = this.formatLinks(projects, cities, continents);
     const scales = this.createDomainScales(projects);
 
-    const simulation = this.simulation(circlesData,continents,scales.vScale);
+    const simulation = this.simulation(circlesData,continents,cities,scales.vScale);
     const link = this.drawLinks(svg, linksData);
+
     const node = svg.selectAll(".node")
                     .data(circlesData)
+                    .enter()
+                    .append('g')
+                    .attr("class", "node");
+
+    const cityNodes = svg.selectAll(".city")
+                    .data(cities)
                     .enter()
                     .append('g')
                     .attr("class", "node");
@@ -88,9 +97,14 @@ class ProjectGraph extends React.Component {
                     .attr("class", "node");
 
     const continentSquares = continentNodes.append('rect')
-                    .attr("width",15)
-                    .attr("height",15).style('fill','black')
+                    .attr("width",citySquareSide)
+                    .attr("height",citySquareSide).style('fill','black')
                     .attr("rx", 3).attr("ry", 3);
+    const citySquares = cityNodes.append('rect')
+                    .attr("width",citySquareSide)
+                    .attr("height",citySquareSide).style('fill','black')
+                    .attr("rx", 3).attr("ry", 3);
+
     const that = this;
     const circle = node.append("circle")
     .attr("r", (d) => {
@@ -132,13 +146,14 @@ class ProjectGraph extends React.Component {
 
     const circleText = this.createText(node);
     const continentText = this.createText(continentNodes);
+    const cityText = this.createText(cityNodes);
     const forceLinks = d3.forceLink(linksData)
                          .id(function(d) { return d.title; })
                          .distance(60);
 
-    simulation.force("links", forceLinks)
-    this.addDragHandlers( simulation,circle,innerCircle,continentSquares );
-    simulation.on('tick', () => this.tickActions(circle, circleText,continentText, link, innerCircle, scales.vScale,continentSquares));
+    simulation.force("links", forceLinks);
+    this.addDragHandlers( simulation,circle,innerCircle,continentSquares,citySquares );
+    simulation.on('tick', () => this.tickActions(circle, circleText,continentText,cityText, link, innerCircle, scales.vScale,continentSquares,citySquares));
   }
 
   createText(node) {
@@ -148,24 +163,25 @@ class ProjectGraph extends React.Component {
       return d.title;
     });
   }
-  addDragHandlers( simulation,circle,innerCircle,continentSquares ) {
+
+  addDragHandlers( simulation,circle,innerCircle,continentSquares,citySquares ) {
     const drag_start = (d) => {
       if (!d3.event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
-    }
+    };
 
 
     const drag_drag = (d) => {
       d.fx = d3.event.x;
       d.fy = d3.event.y;
-    }
+    };
 
     const drag_end = (d) => {
       if (!d3.event.active) simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
-    }
+    };
 
     const drag_handler = d3.drag()
     .on("start", drag_start)
@@ -175,11 +191,12 @@ class ProjectGraph extends React.Component {
     drag_handler(circle);
     drag_handler(innerCircle);
     drag_handler(continentSquares);
+    drag_handler(citySquares);
   }
 
 
-  simulation (nodesData,continentData, rscale) {
-    const allData = nodesData.concat(continentData);
+  simulation (nodesData,continentData,cityData, rscale) {
+    const allData = nodesData.concat(continentData).concat(cityData);
     return d3.forceSimulation()
               .nodes(allData)
               .force("charge_force", d3.forceManyBody())
@@ -193,7 +210,7 @@ class ProjectGraph extends React.Component {
                 }).strength(0.5));
   }
 
-  tickActions(circle, text,continentText, link, innerCircle, scale, continent) {
+  tickActions(circle, text,continentText,cityText, link, innerCircle, scale, continent,citySquares) {
     circle
         .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; });
@@ -213,16 +230,50 @@ class ProjectGraph extends React.Component {
     continentText
         .attr("x", function(d) {return d.x + 15; })
         .attr("y", function(d) { return d.y; });
+    cityText
+        .attr("x", function(d) {return d.x + 15; })
+        .attr("y", function(d) { return d.y; });
 
     link
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
+        .attr("x1", function(d) {
+          if(!d.source.valuation){
+            debugger
+            return d.source.x + 7.5;
+          }
+          return d.source.x;
+        })
+        .attr("y1", function(d) {
+          if(!d.source.valuation){
+            return d.source.y + 7.5;
+          }
+          return d.source.y;
+        })
+        .attr("x2", function(d) {
+          if(!d.target.valuation){
+            return d.target.x + 7.5;
+          }
+          return d.target.x;
+        })
+        .attr("y2", function(d) {
+          if(!d.target.valuation){
+            return d.target.y + 7.5;
+          }
+          return d.target.y;
+        });
 
     continent
         .attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; });
+    citySquares
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; });
+  }
+
+  computeSquareLinkEntryPts( d ){
+    if(d.target.continent){
+      return citySquareSide/2;
+    }
+    return continentSquareSide/2;
   }
 
   createSVG() {
@@ -239,7 +290,7 @@ class ProjectGraph extends React.Component {
       .attr("class", "nodes")
       .selectAll(".nodes")
       .data(nodesData)
-      .enter()
+      .enter();
   }
 
   createDomainScales( projects ) {
@@ -264,8 +315,8 @@ class ProjectGraph extends React.Component {
       return {
         source: city.title,
         target: city.continent
-      }
-    })
+      };
+    });
 
     const continentLinks = [];
     for (let i = 0; i < continents.length - 1;  i++) {
@@ -302,7 +353,7 @@ class ProjectGraph extends React.Component {
       <div className='graph-container'>
         <div className="series content graph" id='project'>
           <div id="graph"></div>
-          {this.props.chart}
+
         </div>
       </div>
     );
