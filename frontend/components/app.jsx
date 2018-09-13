@@ -12,7 +12,7 @@ import Dashboard from './entities/dashboard/dashboard';
 import Footer from './entities/footer/footer';
 
 const App = () => (
-  <div className="box">
+  <div className="">
     <Navbar />
     <RedirectedRoute />
     <Switch>
