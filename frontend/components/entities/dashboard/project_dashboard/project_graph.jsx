@@ -16,6 +16,7 @@ class ProjectGraph extends React.Component {
     this.formatData = this.formatData.bind(this);
     this.addDragHandlers = this.addDragHandlers.bind(this);
     this.createSVG = this.createSVG.bind(this);
+    this.tickActions = this.tickActions.bind(this);
   }
 
   componentDidMount(){
@@ -211,6 +212,7 @@ class ProjectGraph extends React.Component {
   }
 
   tickActions(circle, text,continentText,cityText, link, innerCircle, scale, continent,citySquares) {
+    const that = this;
     circle
         .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; });
@@ -237,8 +239,8 @@ class ProjectGraph extends React.Component {
     link
         .attr("x1", function(d) {
           if(!d.source.valuation){
-            debugger
             return d.source.x + 7.5;
+            // return that.computeSquareLinkEntryPts(d);
           }
           return d.source.x;
         })
@@ -270,6 +272,7 @@ class ProjectGraph extends React.Component {
   }
 
   computeSquareLinkEntryPts( d ){
+    debugger
     if(d.target.continent){
       return citySquareSide/2;
     }
