@@ -5,7 +5,7 @@ import {event as currentEvent} from 'd3-selection';
  const margin = {top: 20, right: 20, bottom: 30, left: 50};
  const width = 960 - margin.left - margin.right;
  const height = 500 - margin.top - margin.bottom;
-const citySquareSide = 19;
+const citySquareSide = 23;
 const continentSquareSide = 12;
 
 class ProjectGraph extends React.Component {
@@ -97,8 +97,8 @@ class ProjectGraph extends React.Component {
                     .attr("class", "node");
 
     const continentSquares = continentNodes.append('rect')
-                    .attr("width",citySquareSide)
-                    .attr("height",citySquareSide).style('fill','black')
+                    .attr("width",continentSquareSide)
+                    .attr("height",continentSquareSide).style('fill','black')
                     .attr("rx", 3).attr("ry", 3);
     const citySquares = cityNodes.append('rect')
                     .attr("width",citySquareSide)
