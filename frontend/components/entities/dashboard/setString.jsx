@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 
 class SetString extends Component {
-  state = {
-    stackId : null
+  constructor (props) {
+    super(props);
+    this.state = {stackId : null};
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.setValue = this.setValue.bind(this);
+    this.getTxStatus = this.getTxStatus.bind(this);
   }
 
-  handleKeyDown = (e) => {
+  handleKeyDown (e) {
     if(e.keycode=13){
       this.setValue(e.target.value);
     }
   }
 
-  setValue =(value)=>{
+  setValue (value) {
     const {drizzle, drizzleState} = this.props;
     const contract = drizzle.contracts.MyStringStore;
 
@@ -22,7 +26,7 @@ class SetString extends Component {
     this.setState({stackId});
   }
 
-  getTxStatus = () => {
+  getTxStatus () {
     const {transactions, transactionStack} = this.props.drizzleState;
     const txHash = transactionStack[this.state.stackId];
 
@@ -38,7 +42,6 @@ class SetString extends Component {
       </div>
     )
   }
-
 }
 
 export default SetString
