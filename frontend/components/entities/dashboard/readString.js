@@ -8,7 +8,6 @@ class ReadString extends React.Component {
   }
 
   componentDidMount(){
-    debugger
     const {drizzle} = this.props;
 
     const contract = drizzle.contracts.MyStringStore;
@@ -19,11 +18,11 @@ class ReadString extends React.Component {
   }
 
   render() {
-    debugger
     const { MyStringStore } = this.props.drizzleState.contracts;
     const myString = MyStringStore.myString[this.state.dataKey];
     return <p> My stored string: { myString && myString.value} </p>;
   }
 }
+
 
 export default ReadString;

@@ -2,7 +2,7 @@ import React from "react";
 import ReadString from '../entities/dashboard/readString';
 import { DrizzleContext } from "drizzle-react";
 
-export default () => (
+export default ({component: Component}) => (
   <DrizzleContext.Consumer>
     {drizzleContext => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
@@ -11,7 +11,7 @@ export default () => (
         return "Loading...";
       }
 
-      return <ReadString drizzle={drizzle} drizzleState={drizzleState}/>;
+      return <Component drizzle={drizzle} drizzleState={drizzleState}/>;
     }}
   </DrizzleContext.Consumer>
-)
+);

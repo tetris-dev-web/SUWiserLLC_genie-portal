@@ -23,11 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const chainOptions = { contracts: [MyStringStore]} ;
   const drizzleStore = generateStore(chainOptions);
   const drizzle = new Drizzle(chainOptions, drizzleStore);
-  // testing start
+
   window.drizzle = drizzle;
   window.store = store;
   window.getState = store.getState;
-  // window.fetchProjects = fetchProjects;
   // testing end
 // console.log(bcOptions)
   const root = document.getElementById('root');
