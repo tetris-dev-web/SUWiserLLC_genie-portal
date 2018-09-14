@@ -1,12 +1,24 @@
 import React from 'react';
 import TokenDashboardContainer from './token_dashboard/token_dashboard_container';
 import ProjectDashboardContainer from './project_dashboard/project_graph_container';
+import DrizzleConsumer from '../../drizzle/drizzleConsumer';
+import ReadString from './readString';
+import SetString from './readString';
+import {drizzleConnect} from 'drizzle-react';
+import PropTypes from 'prop-types'
 
-const Dashboard = () => (
-  <div className="box">
-    <TokenDashboardContainer />
-    <ProjectDashboardContainer />
-  </div>
-);
+const Dashboard = () => {
+  return (
+    <div className="box">
+      <TokenDashboardContainer />
+      <ProjectDashboardContainer />
+      <DrizzleConsumer />
+    </div>
+  );
+
+}
+
+
+
 
 export default Dashboard;

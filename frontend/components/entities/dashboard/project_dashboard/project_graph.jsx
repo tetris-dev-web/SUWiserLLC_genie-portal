@@ -237,7 +237,6 @@ class ProjectGraph extends React.Component {
     link
         .attr("x1", function(d) {
           if(!d.source.valuation){
-            debugger
             return d.source.x + 7.5;
           }
           return d.source.x;
