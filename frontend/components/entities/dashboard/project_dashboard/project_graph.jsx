@@ -2,9 +2,9 @@ import React from 'react';
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
 
- const margin = {top: 20, right: 20, bottom: 30, left: 50};
- const width = 960 - margin.left - margin.right;
- const height = 500 - margin.top - margin.bottom;
+const margin = {top: 20, right: 20, bottom: 30, left: 50};
+const width = 960 - margin.left - margin.right;
+const height = 500 - margin.top - margin.bottom;
 const citySquareSide = 19;
 const continentSquareSide = 12;
 
@@ -30,6 +30,7 @@ class ProjectGraph extends React.Component {
         return data[title];
       });
     };
+
 
     const extractData = () => {
       return projectKeys.reduce((data, key) => {
@@ -237,6 +238,7 @@ class ProjectGraph extends React.Component {
     link
         .attr("x1", function(d) {
           if(!d.source.valuation){
+        
             return d.source.x + 7.5;
           }
           return d.source.x;

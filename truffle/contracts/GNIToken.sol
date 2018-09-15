@@ -1,13 +1,13 @@
-pragma solidity 0.4.18;
+pragma solidity 0.4.24;
 
-import 'zeppelin-solidity/contracts/token/ERC20/MintableToken.sol';
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import 'openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 
 contract xFitToken is MintableToken {
   using SafeMath for uint256;
 
-  string public name = "xFitToken";
-  string public symbol = "XFT";
+  string public name = "GNIToken";
+  string public symbol = "GNI";
   uint256 public decimals = 18;
   uint256 public pinTracker = 1034;
   mapping (uint256 => TokenInfo) public pinInfo;
@@ -39,7 +39,7 @@ contract xFitToken is MintableToken {
     // need to find out how to make this interanl and still work from crowdsale
     // maybe require balanceOf[msg.sender] > 1;
     // require that the pin for msg.sender is 0 ie it has just been created
-    
+
     pinTracker = pinTracker.add(1);
     while(!(pinInfo[pinTracker].tokenOwner == 0x0000000000000000000000000000000000000000)){
         pinTracker = pinTracker.add(1);
@@ -63,7 +63,7 @@ contract xFitToken is MintableToken {
   function updatePinOwner(address _originalOwner, address _newOwner) public returns (uint256) {
     // retrieve pin
     uint256 pin = pinHolder[_originalOwner];
-    
+
     // remove previous owner
     pinHolder[_originalOwner] = 0;
 
@@ -86,8 +86,8 @@ contract xFitToken is MintableToken {
   function changePin(uint256 _currentPin, uint256 _newPin, string _tokenName) public returns(string){
     if (!(pinInfo[_newPin].tokenOwner == 0x0000000000000000000000000000000000000000)){
         return "pin is already in user";
-    } 
-    if (pinHolder[msg.sender] != _currentPin || keccak256(pinInfo[_currentPin].tokenName) != keccak256(_tokenName)){
+    }
+    if (pinHolder[msg.sender] != _currentPin || keccak256(abi.encodePacked(pinInfo[_currentPin].tokenName)) != keccak256(abi.encodePacked(_tokenName))){
         return "incorrect credentials supplied";
     }
     pinHolder[msg.sender] = _newPin;
@@ -98,13 +98,13 @@ contract xFitToken is MintableToken {
 
   function checkInUserCheck(uint256 _pin, string _tokenName) public view returns (string) {
     // checks in user
-      // returns: 
+      // returns:
       //   "already visitor": if the user has already checked in within 24 hours
       //   "invalid": if the pin and name do not match
       //   "success visitor": for successful check in at visitor gym (+ update timestamp)
       //   "success home": for successful check in at home gym (+ no update timestamp)
-    TokenInfo tokenInfo = pinInfo[_pin];
-    if (keccak256(tokenInfo.tokenName) == keccak256(_tokenName)){
+    TokenInfo storage tokenInfo = pinInfo[_pin];
+    if (keccak256(abi.encodePacked(tokenInfo.tokenName)) == keccak256(abi.encodePacked(_tokenName))){
       if (tokenInfo.projectVotedForOwner == msg.sender){
         return "success home";
       } else if (tokenInfo.lastCheckIn.add(86400) < now || tokenInfo.lastCheckIn == 0) {
@@ -117,15 +117,16 @@ contract xFitToken is MintableToken {
     }
   }
 
-  function updateUserTimestamp(uint256 _pin, string _tokenName) public {
-    TokenInfo tokenInfo = pinInfo[_pin];
+  function updateUserTimestamp(uint256 _pin) public {
+    //removed , string _tokenName parameter
+    TokenInfo storage tokenInfo = pinInfo[_pin];
     tokenInfo.lastCheckIn = now;
     pinInfo[_pin] = tokenInfo;
   }
 
   // add a requirement that the caller is the owner
   // or better yet, remove _beneficiary and use msg.sender
-  function getTokenInfo(address _beneficiary) public view returns( 
+  function getTokenInfo(address _beneficiary) public view returns(
         string, string, uint256
     ) {
         TokenInfo memory userTokenInfo = pinInfo[pinHolder[_beneficiary]];
