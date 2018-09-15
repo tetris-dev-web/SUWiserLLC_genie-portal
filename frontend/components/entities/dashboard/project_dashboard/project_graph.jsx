@@ -2,17 +2,10 @@ import React from 'react';
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
 
-<<<<<<< HEAD
 const margin = {top: 20, right: 20, bottom: 30, left: 50};
 const width = 960 - margin.left - margin.right;
 const height = 500 - margin.top - margin.bottom;
-const citySquareSide = 19;
-=======
- const margin = {top: 20, right: 20, bottom: 30, left: 50};
- const width = 960 - margin.left - margin.right;
- const height = 500 - margin.top - margin.bottom;
 const citySquareSide = 23;
->>>>>>> c7cde805ff74c9fae32147fc1e82406e18b12cea
 const continentSquareSide = 12;
 
 class ProjectGraph extends React.Component {
@@ -41,9 +34,9 @@ class ProjectGraph extends React.Component {
 
 
     const extractData = () => {
-      return projectKeys.reduce((data, key) => {
-        const city = this.props.data[key].city;
-        const continent = this.props.data[key].continent;
+      return projectKeys.reduce((_projectData, _key) => {
+        const city = this.props.data[_key].city;
+        const continent = this.props.data[_key].continent;
         const cityData = {
           title: city,
           continent
@@ -52,13 +45,13 @@ class ProjectGraph extends React.Component {
           title: continent
         };
 
-        if (!data.cities[city]) {
-          data.cities[city] = cityData;
+        if (!_projectData.cities[city]) {
+          _projectData.cities[city] = cityData;
         }
-        if (!data.continents[continent]) {
-          data.continents[continent] = continentData;
+        if (!_projectData.continents[continent]) {
+          _projectData.continents[continent] = continentData;
         }
-        return data;
+        return _projectData;
       }, {cities: {}, continents: {}});
 
     };
@@ -74,15 +67,17 @@ class ProjectGraph extends React.Component {
     const projectKeys = Object.keys(this.props.data);
     const svg = this.createSVG();
 
-    const data = this.formatData(projectKeys);
-    const projects = projectKeys.map(key => {
+    const ProjectNodeData = this.formatData(projectKeys);
+    const projectData = projectKeys.map(key => {
       return this.props.data[key];
     });
-    const cities = data.cities;
-    const continents = data.continents;
-    const circlesData = projects;
-    const linksData = this.formatLinks(projects, cities, continents);
-    const scales = this.createDomainScales(projects);
+    console.log(ProjectNodeData)
+    console.log(projectData)
+    const cities = ProjectNodeData.cities;
+    const continents = ProjectNodeData.continents;
+    const circlesData = projectData;
+    const linksData = this.formatLinks(projectData, cities, continents);
+    const scales = this.createDomainScales(projectData);
     const simulation = this.simulation(circlesData,continents,cities,scales.vScale);
     const link = this.drawLinks(svg, linksData);
 
