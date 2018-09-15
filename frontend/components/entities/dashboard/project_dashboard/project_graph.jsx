@@ -2,10 +2,17 @@ import React from 'react';
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
 
+<<<<<<< HEAD
 const margin = {top: 20, right: 20, bottom: 30, left: 50};
 const width = 960 - margin.left - margin.right;
 const height = 500 - margin.top - margin.bottom;
 const citySquareSide = 19;
+=======
+ const margin = {top: 20, right: 20, bottom: 30, left: 50};
+ const width = 960 - margin.left - margin.right;
+ const height = 500 - margin.top - margin.bottom;
+const citySquareSide = 23;
+>>>>>>> c7cde805ff74c9fae32147fc1e82406e18b12cea
 const continentSquareSide = 12;
 
 class ProjectGraph extends React.Component {
@@ -16,6 +23,7 @@ class ProjectGraph extends React.Component {
     this.formatData = this.formatData.bind(this);
     this.addDragHandlers = this.addDragHandlers.bind(this);
     this.createSVG = this.createSVG.bind(this);
+    this.tickActions = this.tickActions.bind(this);
   }
 
   componentDidMount(){
@@ -75,7 +83,6 @@ class ProjectGraph extends React.Component {
     const circlesData = projects;
     const linksData = this.formatLinks(projects, cities, continents);
     const scales = this.createDomainScales(projects);
-
     const simulation = this.simulation(circlesData,continents,cities,scales.vScale);
     const link = this.drawLinks(svg, linksData);
 
@@ -98,8 +105,8 @@ class ProjectGraph extends React.Component {
                     .attr("class", "node");
 
     const continentSquares = continentNodes.append('rect')
-                    .attr("width",citySquareSide)
-                    .attr("height",citySquareSide).style('fill','black')
+                    .attr("width",continentSquareSide)
+                    .attr("height",continentSquareSide).style('fill','black')
                     .attr("rx", 3).attr("ry", 3);
     const citySquares = cityNodes.append('rect')
                     .attr("width",citySquareSide)
@@ -125,7 +132,8 @@ class ProjectGraph extends React.Component {
       }
     }).on('click',(d)=>{
       that.props.openModal(d);
-    });
+    }).on('mouseover', (d) => that.handleMouseOver(d,link,continentSquares,citySquares,circle))
+    .on('mouseout',(d)=> that.handleMouseOut(d,link,continentSquares,citySquares,circle));
 
     const innerCircle = node.append("circle")
     .attr("r", (d) => {
@@ -155,6 +163,32 @@ class ProjectGraph extends React.Component {
     simulation.force("links", forceLinks);
     this.addDragHandlers( simulation,circle,innerCircle,continentSquares,citySquares );
     simulation.on('tick', () => this.tickActions(circle, circleText,continentText,cityText, link, innerCircle, scales.vScale,continentSquares,citySquares));
+  }
+
+  handleMouseOver(d,link,continentSquares,citySquares,projects) {
+    projects.attr("opacity", (currProject) => {
+      if( !(currProject === d) ){
+        return 0.3;
+      }
+    });
+    projects.attr("fill", (currProject) => {
+      if( (currProject === d) ){
+        return '#d62728';
+      }else{ return '#AA7A60';}
+    });
+    link.attr("opacity", 0.3);
+    continentSquares.attr('opacity',0.3);
+    citySquares.attr('opacity',0.3);
+  }
+
+  handleMouseOut(d,link,continentSquares,citySquares,projects) {
+    projects.attr("fill", (currProject) => {
+      return '#AA7A60';
+    });
+    projects.attr("opacity",1);
+    link.attr("opacity", 1);
+    continentSquares.attr('opacity',1);
+    citySquares.attr('opacity',1);
   }
 
   createText(node) {
@@ -212,6 +246,7 @@ class ProjectGraph extends React.Component {
   }
 
   tickActions(circle, text,continentText,cityText, link, innerCircle, scale, continent,citySquares) {
+    const that = this;
     circle
         .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; });
@@ -238,26 +273,26 @@ class ProjectGraph extends React.Component {
     link
         .attr("x1", function(d) {
           if(!d.source.valuation){
-        
-            return d.source.x + 7.5;
+            // return d.source.x + 7.5;
+            return that.computeSquareLinkEntryPts(d,true,true);
           }
           return d.source.x;
         })
         .attr("y1", function(d) {
           if(!d.source.valuation){
-            return d.source.y + 7.5;
+            return that.computeSquareLinkEntryPts(d,true,false);
           }
           return d.source.y;
         })
         .attr("x2", function(d) {
           if(!d.target.valuation){
-            return d.target.x + 7.5;
+            return that.computeSquareLinkEntryPts(d,false,true);
           }
           return d.target.x;
         })
         .attr("y2", function(d) {
           if(!d.target.valuation){
-            return d.target.y + 7.5;
+            return that.computeSquareLinkEntryPts(d,false,false);
           }
           return d.target.y;
         });
@@ -270,11 +305,13 @@ class ProjectGraph extends React.Component {
         .attr("y", function(d) { return d.y; });
   }
 
-  computeSquareLinkEntryPts( d ){
-    if(d.target.continent){
-      return citySquareSide/2;
+  computeSquareLinkEntryPts( d,isSource,isX ){
+    const object = isSource ? d.source : d.target;
+    const startPt = isX ? object.x : object.y;
+    if(object.continent){
+      return startPt + citySquareSide/2;
     }
-    return continentSquareSide/2;
+    return startPt + continentSquareSide/2;
   }
 
   createSVG() {
