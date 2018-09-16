@@ -2,9 +2,9 @@ import React from 'react';
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
 
- const margin = {top: 20, right: 20, bottom: 30, left: 50};
- const width = 960 - margin.left - margin.right;
- const height = 500 - margin.top - margin.bottom;
+const margin = {top: 20, right: 20, bottom: 30, left: 50};
+const width = 960 - margin.left - margin.right;
+const height = 500 - margin.top - margin.bottom;
 const citySquareSide = 23;
 const continentSquareSide = 12;
 
@@ -247,20 +247,18 @@ class ProjectGraph extends React.Component {
         .attr("cy", function(d) { return d.y; });
     text
         .attr("x", function(d) {
-          if (d.valuation) {
-            const radius= scale(d.valuation);
-            return d.x + radius;
-          }
-          return d.x + 10;
+          const radius= scale(d.valuation);
+          return d.x + radius;
         })
         .attr("y", function(d) { return d.y; });
 
     continentText
         .attr("x", function(d) {return d.x + 15; })
         .attr("y", function(d) { return d.y; });
+
     cityText
-        .attr("x", function(d) {return d.x + 15; })
-        .attr("y", function(d) { return d.y; });
+        .attr("x", function(d) {return d.x + 23; })
+        .attr("y", function(d) { return d.y - 3; });
 
     link
         .attr("x1", function(d) {
