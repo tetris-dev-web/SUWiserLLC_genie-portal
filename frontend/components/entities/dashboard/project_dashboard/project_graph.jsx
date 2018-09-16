@@ -116,12 +116,7 @@ class ProjectGraph extends React.Component {
       }
     })
     .attr("fill", (d) => {
-      if (!d.valuation){
-        return !d.continent ? 'black' : '#263b6b';
-      }
-      else {
-        return '#AA7A60';
-      }
+      return '#AA7A60';
     }).on('click',(d)=>{
       that.props.openModal(d);
     }).on('mouseover', (d) => that.handleMouseOver(d,link,continentSquares,citySquares,circle))
