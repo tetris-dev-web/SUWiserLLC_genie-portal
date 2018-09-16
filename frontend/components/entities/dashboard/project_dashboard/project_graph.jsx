@@ -106,6 +106,8 @@ class ProjectGraph extends React.Component {
                     .attr("rx", 3).attr("ry", 3);
 
     const that = this;
+    const colorScale = this.createProjectColorScale();
+
     const circle = node.append("circle")
     .attr("r", (d) => {
       if (d.valuation) {
@@ -116,7 +118,13 @@ class ProjectGraph extends React.Component {
       }
     })
     .attr("fill", (d) => {
-      return '#AA7A60';
+      if (d.title === 'Corgi Hostel' || d.title === 'BeefInn') {
+        return colorScale(100);
+      }else if (d.title === "ChickInn" || d.title === "PorkInn") {
+        return colorScale(50);
+      }else {
+        return colorScale(0);
+      }
     }).on('click',(d)=>{
       that.props.openModal(d);
     }).on('mouseover', (d) => that.handleMouseOver(d,link,continentSquares,citySquares,circle))
@@ -150,6 +158,12 @@ class ProjectGraph extends React.Component {
     simulation.force("links", forceLinks);
     this.addDragHandlers( simulation,circle,innerCircle,continentSquares,citySquares );
     simulation.on('tick', () => this.tickActions(circle, circleText,continentText,cityText, link, innerCircle, scales.vScale,continentSquares,citySquares));
+  }
+
+  createProjectColorScale(){
+    return d3.scaleLinear()
+     .domain([0,50,100])
+     .range(["#BCC5C9","#263B6B","#AA7A60"]);
   }
 
   handleMouseOver(d,link,continentSquares,citySquares,projects) {
