@@ -120,7 +120,7 @@ class ProjectGraph extends React.Component {
     .attr("fill", (d) => {
       if (d.title === 'Corgi Hostel' || d.title === 'BeefInn') {
         return colorScale(100);
-      }else if (d.title === "ChickInn" || d.title === "PorkInn") {
+      }else if (d.title === "ChickInn" || d.title === "HamInn" ||  d.title === "PorkInn") {
         return colorScale(50);
       }else {
         return colorScale(0);
