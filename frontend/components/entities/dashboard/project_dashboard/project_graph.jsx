@@ -163,20 +163,12 @@ class ProjectGraph extends React.Component {
         return 0.3;
       }
     });
-    projects.attr("fill", (currProject) => {
-      if( (currProject === d) ){
-        return '#d62728';
-      }else{ return '#AA7A60';}
-    });
     link.attr("opacity", 0.3);
     continentSquares.attr('opacity',0.3);
     citySquares.attr('opacity',0.3);
   }
 
   handleMouseOut(d,link,continentSquares,citySquares,projects) {
-    projects.attr("fill", (currProject) => {
-      return '#AA7A60';
-    });
     projects.attr("opacity",1);
     link.attr("opacity", 1);
     continentSquares.attr('opacity',1);
