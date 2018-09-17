@@ -5,7 +5,7 @@ import {event as currentEvent} from 'd3-selection';
  const margin = {top: 20, right: 20, bottom: 30, left: 50};
  const width = 960 - margin.left - margin.right;
  const height = 500 - margin.top - margin.bottom;
-const citySquareSide = 19;
+const citySquareSide = 23;
 const continentSquareSide = 12;
 
 class ProjectGraph extends React.Component {
@@ -16,6 +16,7 @@ class ProjectGraph extends React.Component {
     this.formatData = this.formatData.bind(this);
     this.addDragHandlers = this.addDragHandlers.bind(this);
     this.createSVG = this.createSVG.bind(this);
+    this.tickActions = this.tickActions.bind(this);
   }
 
   componentDidMount(){
@@ -97,8 +98,8 @@ class ProjectGraph extends React.Component {
                     .attr("class", "node");
 
     const continentSquares = continentNodes.append('rect')
-                    .attr("width",citySquareSide)
-                    .attr("height",citySquareSide).style('fill','black')
+                    .attr("width",continentSquareSide)
+                    .attr("height",continentSquareSide).style('fill','black')
                     .attr("rx", 3).attr("ry", 3);
     const citySquares = cityNodes.append('rect')
                     .attr("width",citySquareSide)
@@ -211,6 +212,7 @@ class ProjectGraph extends React.Component {
   }
 
   tickActions(circle, text,continentText,cityText, link, innerCircle, scale, continent,citySquares) {
+    const that = this;
     circle
         .attr("cx", (d) => { return d.x; })
         .attr("cy", function(d) { return d.y; });
@@ -238,6 +240,7 @@ class ProjectGraph extends React.Component {
         .attr("x1", function(d) {
           if(!d.source.valuation){
             return d.source.x + 7.5;
+            // return that.computeSquareLinkEntryPts(d);
           }
           return d.source.x;
         })
@@ -269,6 +272,7 @@ class ProjectGraph extends React.Component {
   }
 
   computeSquareLinkEntryPts( d ){
+    debugger
     if(d.target.continent){
       return citySquareSide/2;
     }
