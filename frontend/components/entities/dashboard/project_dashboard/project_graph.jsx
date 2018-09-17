@@ -10,11 +10,13 @@ const continentSquareSide = 5;
 
 //colors
 const midNightBlue = "#073444"
-const lightBlue = "#BCC5C9"
+const lightBlue = "#5EABAA"
 const midNightBlack = "#061E24"
 const rosyBrown = "#AB7A5E"
 const lightGrey = "#DEDBCF"
 const darkGrey = "#A59A91"
+
+console.log("t4ext")
 
 class ProjectGraph extends React.Component {
   constructor(props) {
@@ -133,7 +135,7 @@ class ProjectGraph extends React.Component {
       if (d.status === 'deployed') {
         return colorScale(100);
       }else if (d.status === "inDevelopment") {
-        return colorScale(38);
+        return colorScale(55);
       }else if (d.status === "pitched") {
         return colorScale(0);
       }
@@ -176,7 +178,7 @@ class ProjectGraph extends React.Component {
   createProjectColorScale(){
     return d3.scaleLinear()
      .domain([0,100])
-     .range([rosyBrown,midNightBlue]);
+     .range([rosyBrown,lightBlue]);
   }
 
   handleMouseOver(d,link,continentSquares,citySquares,projects) {
