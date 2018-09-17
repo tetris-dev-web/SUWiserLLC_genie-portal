@@ -117,6 +117,8 @@ class ProjectGraph extends React.Component {
                     .attr("rx", 3).attr("ry", 3);
 
     const that = this;
+    const colorScale = this.createProjectColorScale();
+
     const circle = node.append("circle")
     .attr("r", (d) => {
       if (d.valuation) {
@@ -127,11 +129,20 @@ class ProjectGraph extends React.Component {
       }
     })
     .attr("fill", (d) => {
+<<<<<<< HEAD
       if (!d.valuation){
         return !d.continent ? 'green' : rosyBrown;  // why is this needed?
       }
       else {
         return rosyBrown;
+=======
+      if (d.title === 'Corgi Hostel' || d.title === 'BeefInn') {
+        return colorScale(100);
+      }else if (d.title === "ChickInn" || d.title === "HamInn" ||  d.title === "PorkInn") {
+        return colorScale(50);
+      }else {
+        return colorScale(0);
+>>>>>>> 870528ff1dfc3cdf955ad09dd82a92faffec7417
       }
     }).on('click',(d)=>{
       that.props.openModal(d);
@@ -168,16 +179,17 @@ class ProjectGraph extends React.Component {
     simulation.on('tick', () => this.tickActions(circle, circleText,continentText,cityText, link, innerCircle, scales.vScale,continentSquares,citySquares));
   }
 
+  createProjectColorScale(){
+    return d3.scaleLinear()
+     .domain([0,50,100])
+     .range(["#BCC5C9","#263B6B","#AA7A60"]);
+  }
+
   handleMouseOver(d,link,continentSquares,citySquares,projects) {
     projects.attr("opacity", (currProject) => {
       if( !(currProject === d) ){
         return 0.3;
       }
-    });
-    projects.attr("fill", (currProject) => {
-      if( (currProject === d) ){
-        return '#d62728';
-      }else{ return '#AA7A60';}
     });
     link.attr("opacity", 0.3);
     continentSquares.attr('opacity',0.3);
@@ -185,9 +197,6 @@ class ProjectGraph extends React.Component {
   }
 
   handleMouseOut(d,link,continentSquares,citySquares,projects) {
-    projects.attr("fill", (currProject) => {
-      return '#AA7A60';
-    });
     projects.attr("opacity",1);
     link.attr("opacity", 1);
     continentSquares.attr('opacity',1);
@@ -258,20 +267,18 @@ class ProjectGraph extends React.Component {
         .attr("cy", function(d) { return d.y; });
     text
         .attr("x", function(d) {
-          if (d.valuation) {
-            const radius= scale(d.valuation);
-            return d.x + radius;
-          }
-          return d.x + 10;
+          const radius= scale(d.valuation);
+          return d.x + radius;
         })
         .attr("y", function(d) { return d.y; });
 
     continentText
         .attr("x", function(d) {return d.x + 15; })
         .attr("y", function(d) { return d.y; });
+
     cityText
-        .attr("x", function(d) {return d.x + 15; })
-        .attr("y", function(d) { return d.y; });
+        .attr("x", function(d) {return d.x + 23; })
+        .attr("y", function(d) { return d.y - 3; });
 
     link
         .attr("x1", function(d) {
