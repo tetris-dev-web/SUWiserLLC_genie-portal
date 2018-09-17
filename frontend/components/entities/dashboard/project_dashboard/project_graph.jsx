@@ -8,6 +8,13 @@ const height = 500 - margin.top - margin.bottom;
 const citySquareSide = 23;
 const continentSquareSide = 12;
 
+//colors
+const midNightBlue = "#073444"
+const midNightBlack = "#061E24"
+const rosyBrown = "#AB7A5E"
+const lightGrey = "#DEDBCF"
+const darkGrey = "#A59A91"
+
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
@@ -101,11 +108,12 @@ class ProjectGraph extends React.Component {
 
     const continentSquares = continentNodes.append('rect')
                     .attr("width",continentSquareSide)
-                    .attr("height",continentSquareSide).style('fill','black')
+                    .attr("height",continentSquareSide).style('fill',lightGrey)
                     .attr("rx", 3).attr("ry", 3);
+
     const citySquares = cityNodes.append('rect')
                     .attr("width",citySquareSide)
-                    .attr("height",citySquareSide).style('fill','black')
+                    .attr("height",citySquareSide).style('fill',lightGrey)
                     .attr("rx", 3).attr("ry", 3);
 
     const that = this;
@@ -120,10 +128,10 @@ class ProjectGraph extends React.Component {
     })
     .attr("fill", (d) => {
       if (!d.valuation){
-        return !d.continent ? 'black' : '#263b6b';
+        return !d.continent ? 'green' : rosyBrown;  // why is this needed?
       }
       else {
-        return '#AA7A60';
+        return rosyBrown;
       }
     }).on('click',(d)=>{
       that.props.openModal(d);
@@ -370,7 +378,7 @@ class ProjectGraph extends React.Component {
       .enter()
       .append("line")
       .attr("stroke-width", 2)
-      .attr("stroke", "black");
+      .attr("stroke", lightGrey);
   }
 
   render() {
