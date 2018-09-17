@@ -9,14 +9,13 @@ const citySquareSide = 15;
 const continentSquareSide = 5;
 
 //colors
-const midNightBlue = "#073444"
-const lightBlue = "#5EABAA"
-const midNightBlack = "#061E24"
-const rosyBrown = "#AB7A5E"
-const lightGrey = "#DEDBCF"
-const darkGrey = "#A59A91"
+const midNightBlue = "#073444";
+const lightBlue = "#5EABAA";
+const midNightBlack = "#061E24";
+const rosyBrown = "#AB7A5E";
+const lightGrey = "#DEDBCF";
+const darkGrey = "#A59A91";
 
-console.log("t4ext")
 
 class ProjectGraph extends React.Component {
   constructor(props) {
@@ -74,6 +73,7 @@ class ProjectGraph extends React.Component {
   }
 
   setUp () {
+    debugger
     const projectKeys = Object.keys(this.props.data);
     const svg = this.createSVG();
 
