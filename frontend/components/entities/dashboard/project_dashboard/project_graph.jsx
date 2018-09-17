@@ -5,11 +5,12 @@ import {event as currentEvent} from 'd3-selection';
 const margin = {top: 20, right: 20, bottom: 30, left: 50};
 const width = 960 - margin.left - margin.right;
 const height = 500 - margin.top - margin.bottom;
-const citySquareSide = 23;
-const continentSquareSide = 12;
+const citySquareSide = 15;
+const continentSquareSide = 5;
 
 //colors
 const midNightBlue = "#073444"
+const lightBlue = "#BCC5C9"
 const midNightBlack = "#061E24"
 const rosyBrown = "#AB7A5E"
 const lightGrey = "#DEDBCF"
@@ -129,20 +130,12 @@ class ProjectGraph extends React.Component {
       }
     })
     .attr("fill", (d) => {
-<<<<<<< HEAD
-      if (!d.valuation){
-        return !d.continent ? 'green' : rosyBrown;  // why is this needed?
-      }
-      else {
-        return rosyBrown;
-=======
-      if (d.title === 'Corgi Hostel' || d.title === 'BeefInn') {
+      if (d.status === 'deployed') {
         return colorScale(100);
-      }else if (d.title === "ChickInn" || d.title === "HamInn" ||  d.title === "PorkInn") {
-        return colorScale(50);
-      }else {
+      }else if (d.status === "inDevelopment") {
+        return colorScale(38);
+      }else if (d.status === "pitched") {
         return colorScale(0);
->>>>>>> 870528ff1dfc3cdf955ad09dd82a92faffec7417
       }
     }).on('click',(d)=>{
       that.props.openModal(d);
@@ -160,19 +153,20 @@ class ProjectGraph extends React.Component {
     })
     .attr("fill", (d) => {
       if (!d.valuation){
-        return !d.continent ? 'black' : '#263b6b';
+        return !d.continent ? lightGrey : '#263b6b';
       }
       else {
-        return "black";
+        return lightGrey;
       }
-    });
+    }).on('mouseover', (d) => that.handleMouseOver(d,link,continentSquares,citySquares,circle))
+    .on('mouseout',(d)=> that.handleMouseOut(d,link,continentSquares,citySquares,circle));
 
     const circleText = this.createText(node);
     const continentText = this.createText(continentNodes);
     const cityText = this.createText(cityNodes);
     const forceLinks = d3.forceLink(linksData)
                          .id(function(d) { return d.title; })
-                         .distance(60);
+                         .distance(50);
 
     simulation.force("links", forceLinks);
     this.addDragHandlers( simulation,circle,innerCircle,continentSquares,citySquares );
@@ -181,8 +175,8 @@ class ProjectGraph extends React.Component {
 
   createProjectColorScale(){
     return d3.scaleLinear()
-     .domain([0,50,100])
-     .range(["#BCC5C9","#263B6B","#AA7A60"]);
+     .domain([0,100])
+     .range([rosyBrown,midNightBlue]);
   }
 
   handleMouseOver(d,link,continentSquares,citySquares,projects) {
@@ -205,7 +199,7 @@ class ProjectGraph extends React.Component {
 
   createText(node) {
     return node.append("text")
-    .style("font-size", "18px")
+    .style("font-size", "12px")
     .text((d) => {
       return d.title;
     });
@@ -248,13 +242,13 @@ class ProjectGraph extends React.Component {
               .nodes(allData)
               .force("charge_force", d3.forceManyBody())
               .force("center_force", d3.forceCenter(width / 2, height / 2))
-              .force("collide", d3.forceCollide(12).radius(function(d) {
+              .force("collide", d3.forceCollide(50).radius(function(d) {
                 if (d.valuation) {
                     return rscale(Number(d.valuation)) + 5;
                   } else {
                     return 10 + 20;
                   }
-                }).strength(0.5));
+                }).strength(2));
   }
 
   tickActions(circle, text,continentText,cityText, link, innerCircle, scale, continent,citySquares) {
@@ -384,7 +378,7 @@ class ProjectGraph extends React.Component {
       .data(linksData)
       .enter()
       .append("line")
-      .attr("stroke-width", 2)
+      .attr("stroke-width", .5)
       .attr("stroke", lightGrey);
   }
 
