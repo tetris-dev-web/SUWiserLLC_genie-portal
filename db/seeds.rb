@@ -40,7 +40,8 @@ project1 = Project.create(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user1.id,
-  created_at: "12/01/2018"
+  created_at: "12/01/2018",
+  status: "inDevelopment"
 )
 
 project2 = Project.create(
@@ -54,7 +55,8 @@ project2 = Project.create(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user2.id,
-  created_at: "12/02/2018"
+  created_at: "12/02/2018",
+  status: "inDevelopment"
 )
 
 project3 = Project.create(
@@ -68,7 +70,8 @@ project3 = Project.create(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user1.id,
-  created_at: "14/03/2018"
+  created_at: "14/03/2018",
+  status: "pitched"
 )
 
 project4 = Project.create(
@@ -82,7 +85,8 @@ project4 = Project.create(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
-  created_at: "14/03/2018"
+  created_at: "14/03/2018",
+  status: "deployed"
 )
 project5 = Project.create(
   title: "Penn Generator",
@@ -95,7 +99,8 @@ project5 = Project.create(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
-  created_at: "14/03/2018"
+  created_at: "14/03/2018",
+  status: "deployed"
 )
 project6 = Project.create(
   title: "BeefInn",
@@ -108,7 +113,8 @@ project6 = Project.create(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
-  created_at: "14/03/2018"
+  created_at: "14/03/2018",
+  status: "pitched"
 )
 project6 = Project.create(
   title: "ChickInn",
@@ -121,5 +127,6 @@ project6 = Project.create(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
-  created_at: "14/03/2018"
+  created_at: "14/03/2018",
+  status: "pitched"
 )

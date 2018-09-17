@@ -10,6 +10,7 @@ json.extract! project,  :id,
                         :description,
                         :creator_id,
                         :creator,
-                        :created_at
+                        :created_at,
+                        :status
 
 json.file asset_path(project.file.url)

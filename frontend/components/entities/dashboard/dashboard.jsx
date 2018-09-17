@@ -4,7 +4,11 @@ import ProjectDashboardContainer from './project_dashboard/project_graph_contain
 import DrizzleConsumer from '../../drizzle/drizzleConsumer';
 import ReadString from './readString';
 import ReadStringContainer from './readStringContainer';
+<<<<<<< HEAD
 import SetString from './SetString';
+=======
+import SetString from './setString';
+>>>>>>> ChainFrameworkMatt
 import {drizzleConnect} from 'drizzle-react';
 import PropTypes from 'prop-types'
 

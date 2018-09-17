@@ -8,19 +8,14 @@
 
 
 ## System dependencies
-<<<<<<< HEAD
-- npm install
-- bundle install  
 
 ## Development Tools
 - webpack --watch
-=======
 - `npm install`
 - `bundle install`
 
 ## Development Tools
 - `webpack --watch`
->>>>>>> 169fe724f489d1048396cca2ab2c5f3bd3da16d3
 
 ## Database creation
 

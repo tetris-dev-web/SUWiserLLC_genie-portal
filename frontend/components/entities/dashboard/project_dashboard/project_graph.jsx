@@ -5,8 +5,18 @@ import {event as currentEvent} from 'd3-selection';
 const margin = {top: 20, right: 20, bottom: 30, left: 50};
 const width = 960 - margin.left - margin.right;
 const height = 500 - margin.top - margin.bottom;
-const citySquareSide = 23;
-const continentSquareSide = 12;
+const citySquareSide = 15;
+const continentSquareSide = 5;
+
+//colors
+const midNightBlue = "#073444"
+const lightBlue = "#5EABAA"
+const midNightBlack = "#061E24"
+const rosyBrown = "#AB7A5E"
+const lightGrey = "#DEDBCF"
+const darkGrey = "#A59A91"
+
+console.log("t4ext")
 
 class ProjectGraph extends React.Component {
   constructor(props) {
@@ -101,14 +111,17 @@ class ProjectGraph extends React.Component {
 
     const continentSquares = continentNodes.append('rect')
                     .attr("width",continentSquareSide)
-                    .attr("height",continentSquareSide).style('fill','black')
+                    .attr("height",continentSquareSide).style('fill',lightGrey)
                     .attr("rx", 3).attr("ry", 3);
+
     const citySquares = cityNodes.append('rect')
                     .attr("width",citySquareSide)
-                    .attr("height",citySquareSide).style('fill','black')
+                    .attr("height",citySquareSide).style('fill',lightGrey)
                     .attr("rx", 3).attr("ry", 3);
 
     const that = this;
+    const colorScale = this.createProjectColorScale();
+
     const circle = node.append("circle")
     .attr("r", (d) => {
       if (d.valuation) {
@@ -119,11 +132,12 @@ class ProjectGraph extends React.Component {
       }
     })
     .attr("fill", (d) => {
-      if (!d.valuation){
-        return !d.continent ? 'black' : '#263b6b';
-      }
-      else {
-        return '#AA7A60';
+      if (d.status === 'deployed') {
+        return colorScale(100);
+      }else if (d.status === "inDevelopment") {
+        return colorScale(55);
+      }else if (d.status === "pitched") {
+        return colorScale(0);
       }
     }).on('click',(d)=>{
       that.props.openModal(d);
@@ -141,23 +155,30 @@ class ProjectGraph extends React.Component {
     })
     .attr("fill", (d) => {
       if (!d.valuation){
-        return !d.continent ? 'black' : '#263b6b';
+        return !d.continent ? lightGrey : '#263b6b';
       }
       else {
-        return "black";
+        return lightGrey;
       }
-    });
+    }).on('mouseover', (d) => that.handleMouseOver(d,link,continentSquares,citySquares,circle))
+    .on('mouseout',(d)=> that.handleMouseOut(d,link,continentSquares,citySquares,circle));
 
     const circleText = this.createText(node);
     const continentText = this.createText(continentNodes);
     const cityText = this.createText(cityNodes);
     const forceLinks = d3.forceLink(linksData)
                          .id(function(d) { return d.title; })
-                         .distance(60);
+                         .distance(50);
 
     simulation.force("links", forceLinks);
     this.addDragHandlers( simulation,circle,innerCircle,continentSquares,citySquares );
     simulation.on('tick', () => this.tickActions(circle, circleText,continentText,cityText, link, innerCircle, scales.vScale,continentSquares,citySquares));
+  }
+
+  createProjectColorScale(){
+    return d3.scaleLinear()
+     .domain([0,100])
+     .range([rosyBrown,lightBlue]);
   }
 
   handleMouseOver(d,link,continentSquares,citySquares,projects) {
@@ -166,20 +187,12 @@ class ProjectGraph extends React.Component {
         return 0.3;
       }
     });
-    projects.attr("fill", (currProject) => {
-      if( (currProject === d) ){
-        return '#d62728';
-      }else{ return '#AA7A60';}
-    });
     link.attr("opacity", 0.3);
     continentSquares.attr('opacity',0.3);
     citySquares.attr('opacity',0.3);
   }
 
   handleMouseOut(d,link,continentSquares,citySquares,projects) {
-    projects.attr("fill", (currProject) => {
-      return '#AA7A60';
-    });
     projects.attr("opacity",1);
     link.attr("opacity", 1);
     continentSquares.attr('opacity',1);
@@ -188,7 +201,7 @@ class ProjectGraph extends React.Component {
 
   createText(node) {
     return node.append("text")
-    .style("font-size", "18px")
+    .style("font-size", "12px")
     .text((d) => {
       return d.title;
     });
@@ -231,13 +244,13 @@ class ProjectGraph extends React.Component {
               .nodes(allData)
               .force("charge_force", d3.forceManyBody())
               .force("center_force", d3.forceCenter(width / 2, height / 2))
-              .force("collide", d3.forceCollide(12).radius(function(d) {
+              .force("collide", d3.forceCollide(50).radius(function(d) {
                 if (d.valuation) {
                     return rscale(Number(d.valuation)) + 5;
                   } else {
                     return 10 + 20;
                   }
-                }).strength(0.5));
+                }).strength(2));
   }
 
   tickActions(circle, text,continentText,cityText, link, innerCircle, scale, continent,citySquares) {
@@ -250,20 +263,18 @@ class ProjectGraph extends React.Component {
         .attr("cy", function(d) { return d.y; });
     text
         .attr("x", function(d) {
-          if (d.valuation) {
-            const radius= scale(d.valuation);
-            return d.x + radius;
-          }
-          return d.x + 10;
+          const radius= scale(d.valuation);
+          return d.x + radius;
         })
         .attr("y", function(d) { return d.y; });
 
     continentText
         .attr("x", function(d) {return d.x + 15; })
         .attr("y", function(d) { return d.y; });
+
     cityText
-        .attr("x", function(d) {return d.x + 15; })
-        .attr("y", function(d) { return d.y; });
+        .attr("x", function(d) {return d.x + 23; })
+        .attr("y", function(d) { return d.y - 3; });
 
     link
         .attr("x1", function(d) {
@@ -369,8 +380,8 @@ class ProjectGraph extends React.Component {
       .data(linksData)
       .enter()
       .append("line")
-      .attr("stroke-width", 2)
-      .attr("stroke", "black");
+      .attr("stroke-width", .5)
+      .attr("stroke", lightGrey);
   }
 
   render() {
