@@ -32,4 +32,10 @@
 ## Start Server
 - `rails s`
 
+## Truffle
+- start a new truffle project: `truffle init`
+- compile contracts: `truffle compile`
+- migrate contracts: `truffle migrate`
+- start ganache server: `ganache-cli -b 3`
+
 ## links to key documents
