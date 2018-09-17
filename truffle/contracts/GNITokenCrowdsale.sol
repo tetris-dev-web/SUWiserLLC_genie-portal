@@ -1,16 +1,14 @@
-pragma solidity 0.4.18;
+pragma solidity 0.4.24;
 
-import './xFitToken.sol';
-import 'zeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol';
-import 'zeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol';
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import './GNIToken.sol';
+import 'openzeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol';
+import 'openzeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol';
+import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 
 contract xFitTokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
     using SafeMath for uint256;
 
-    function xFitTokenCrowdsale
-        (
-            uint256 _openingTime,
+    constructor (uint256 _openingTime,
             uint256 _closingTime,
             uint256 _rate,
             address _wallet,
@@ -126,7 +124,7 @@ contract xFitTokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
         projectAddresses.push(newProjectAddress);
 
         // log the creation of the new project
-        LogProject(_location, _cost, _creator, _name, _lat, _lng, false);
+        emit LogProject(_location, _cost, _creator, _name, _lat, _lng, false);
     }
 
 
@@ -142,12 +140,13 @@ contract xFitTokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
         // before buyToken, verify that the project is still undeployed
         require(!projects[_location].complete);
         buyTokens(_beneficiary);
-        updateVoteCount(_beneficiary, _location);
+        updateVoteCount(_location);
         address projectVotedForOwner = projects[_location].creator;
         xFitToken(token).assignPin(_tokenName, _beneficiary, _location, projectVotedForOwner);
     }
 
-    function updateVoteCount(address _beneficiary, string _location) internal {
+    function updateVoteCount( string _location) internal {
+        //removed address _beneficiary, - unsed var
         // update project voteTotals
         projects[_location].voteCount = projects[_location].voteCount.add(1);
         // update total vote count
@@ -191,10 +190,10 @@ contract xFitTokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
    * @dev Checks if a project can deploy, then deploys
    */
     function deployProject() public payable{
-        var(projectToDeploy, projectIndex) = canDeployProject();
-        if(keccak256(projectToDeploy) != keccak256("")){
+         (string memory projectToDeploy, uint256 projectIndex) = canDeployProject();
+        if(keccak256(abi.encodePacked(projectToDeploy)) != keccak256(abi.encodePacked(""))){
             // transfer money from wallet address to projectToDeploy address
-            Project winningProject = projects[projectToDeploy];
+            Project storage winningProject = projects[projectToDeploy];
             winningProject.creator.transfer(winningProject.cost);
 
             // subtract weiRaised by winningProject.cost
@@ -209,7 +208,7 @@ contract xFitTokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
             projectAddresses[projectIndex].deployed = true;
 
             // log the deployment of the new project
-            LogProject(winningProject.location, winningProject.cost, winningProject.creator, winningProject.name, winningProject.lat, winningProject.lng, true);
+            emit LogProject(winningProject.location, winningProject.cost, winningProject.creator, winningProject.name, winningProject.lat, winningProject.lng, true);
         }
     }
 

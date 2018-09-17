@@ -30,7 +30,7 @@ user2 = User.create(
 
 # projects
 project1 = Project.create(
-  title: "Corgi Hostel",
+  title: "Columbia Generator",
   revenue: 250000,
   valuation: 10000000,
   city: "New York",
@@ -44,12 +44,12 @@ project1 = Project.create(
 )
 
 project2 = Project.create(
-  title: "Yum Yum Yum",
+  title: "Fitness Complex",
   revenue: 250,
   valuation: 400000,
-  city: "Tokyo",
-  country: "Japan",
-  continent: "Asia",
+  city: "Rio",
+  country: "Brazil",
+  continent: "South America",
   video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
@@ -85,7 +85,7 @@ project4 = Project.create(
   created_at: "14/03/2018"
 )
 project5 = Project.create(
-  title: "PorkInn",
+  title: "Penn Generator",
   revenue: 6000,
   valuation: 72000,
   city: "Philidelphia",
