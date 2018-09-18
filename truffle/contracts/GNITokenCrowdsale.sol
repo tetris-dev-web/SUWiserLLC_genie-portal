@@ -5,10 +5,10 @@ import 'openzeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol';
 import 'openzeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol';
 import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 
-contract xFitTokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
+contract GNITokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
     using SafeMath for uint256;
 
-    constructor (uint256 _openingTime,
+    constructor(uint256 _openingTime,
             uint256 _closingTime,
             uint256 _rate,
             address _wallet,
@@ -134,7 +134,7 @@ contract xFitTokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
    * @param _location xFit project bought into
    * @param _tokenName name of token
    */
-    function buyxFitToken(address _beneficiary, string _location, string _tokenName) public payable {
+    function buyGNIToken(address _beneficiary, string _location, string _tokenName) public payable {
         // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
 
         // before buyToken, verify that the project is still undeployed
@@ -142,7 +142,7 @@ contract xFitTokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
         buyTokens(_beneficiary);
         updateVoteCount(_location);
         address projectVotedForOwner = projects[_location].creator;
-        xFitToken(token).assignPin(_tokenName, _beneficiary, _location, projectVotedForOwner);
+        GNIToken(token).assignPin(_tokenName, _beneficiary, _location, projectVotedForOwner);
     }
 
     function updateVoteCount( string _location) internal {

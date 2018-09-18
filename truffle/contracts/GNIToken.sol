@@ -3,39 +3,26 @@ pragma solidity 0.4.24;
 import 'openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol';
 import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
 
-contract xFitToken is MintableToken {
+contract GNIToken is MintableToken {
   using SafeMath for uint256;
 
-  string public name = "GNIToken";
+  /* string public name = "GNIToken"; */
   string public symbol = "GNI";
   uint256 public decimals = 18;
   uint256 public pinTracker = 1034;
-  mapping (uint256 => TokenInfo) public pinInfo;
-  mapping (address => uint256) public pinHolder;
 
   struct TokenInfo {
-      string tokenName;
       address tokenOwner;
       string projectVotedFor;
-      address projectVotedForOwner;
-      uint256 lastCheckIn;
   }
 
-  // If the user is calling from our site, they will pass in a new name
-  function transferFrom(string _newTokenName, address _from, address _to, uint256 _value) public returns (bool) {
-    super.transferFrom(_from, _to, _value);
-    uint256 pin = updatePinOwner(_from, _to);
-    updateTokenName(_newTokenName, pin);
-  }
 
-  // If the user is calling from a 3rd party, the name will remain the same
-  function transferFrom(address _from, address _to, uint256 _value) public returns (bool) {
-    super.transferFrom(_from, _to, _value);
-    updatePinOwner(_from, _to);
-  }
+  // add a requirement that the caller is the owner
+  // or better yet, remove _beneficiary and use msg.sender
+
 
   // needs to remain public
-  function assignPin(string _newTokenName, address _beneficiary, string _location, address _projectVotedForOwner) public returns (uint256) {
+  /* function assignPin(string _newTokenName, address _beneficiary, string _location, address _projectVotedForOwner) public returns (uint256) {
     // need to find out how to make this interanl and still work from crowdsale
     // maybe require balanceOf[msg.sender] > 1;
     // require that the pin for msg.sender is 0 ie it has just been created
@@ -57,9 +44,9 @@ contract xFitToken is MintableToken {
     pinInfo[pinTracker] = newToken;
 
     return pinTracker;
-  }
+  } */
 
-  // change to internal
+  /* // change to internal
   function updatePinOwner(address _originalOwner, address _newOwner) public returns (uint256) {
     // retrieve pin
     uint256 pin = pinHolder[_originalOwner];
@@ -76,14 +63,14 @@ contract xFitToken is MintableToken {
     pinInfo[pin].lastCheckIn = 0;
 
     return pin;
-  }
+  } */
 
   // change to internal
-  function updateTokenName(string _newTokenName, uint256 _pin) public {
+  /* function updateTokenName(string _newTokenName, uint256 _pin) public {
     pinInfo[_pin].tokenName = _newTokenName;
-  }
+  } */
 
-  function changePin(uint256 _currentPin, uint256 _newPin, string _tokenName) public returns(string){
+  /* function changePin(uint256 _currentPin, uint256 _newPin, string _tokenName) public returns(string){
     if (!(pinInfo[_newPin].tokenOwner == 0x0000000000000000000000000000000000000000)){
         return "pin is already in user";
     }
@@ -94,9 +81,9 @@ contract xFitToken is MintableToken {
     pinInfo[_newPin] = pinInfo[_currentPin];
     pinInfo[_currentPin].tokenOwner = 0x0000000000000000000000000000000000000000;
     return "pin successfully updated";
-  }
+  } */
 
-  function checkInUserCheck(uint256 _pin, string _tokenName) public view returns (string) {
+  /* function checkInUserCheck(uint256 _pin, string _tokenName) public view returns (string) {
     // checks in user
       // returns:
       //   "already visitor": if the user has already checked in within 24 hours
@@ -115,30 +102,15 @@ contract xFitToken is MintableToken {
     } else {
       return "invalid";
     }
-  }
+  } */
 
-  function updateUserTimestamp(uint256 _pin) public {
+  /* function updateUserTimestamp(uint256 _pin) public {
     //removed , string _tokenName parameter
     TokenInfo storage tokenInfo = pinInfo[_pin];
     tokenInfo.lastCheckIn = now;
     pinInfo[_pin] = tokenInfo;
-  }
+  } */
 
-  // add a requirement that the caller is the owner
-  // or better yet, remove _beneficiary and use msg.sender
-  function getTokenInfo(address _beneficiary) public view returns(
-        string, string, uint256
-    ) {
-        TokenInfo memory userTokenInfo = pinInfo[pinHolder[_beneficiary]];
-        return (
-            userTokenInfo.tokenName,
-            userTokenInfo.projectVotedFor,
-            pinHolder[_beneficiary]
-        );
-    }
 
-  function getAllowedInfo(address _from, address _sender) public view returns (uint256) {
-    return allowed[_from][_sender];
-  }
 
 }
