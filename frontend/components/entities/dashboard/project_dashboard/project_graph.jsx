@@ -81,8 +81,6 @@ class ProjectGraph extends React.Component {
     const projectData = projectKeys.map(key => {
       return this.props.data[key];
     });
-    console.log(ProjectNodeData)
-    console.log(projectData)
     const cities = ProjectNodeData.cities;
     const continents = ProjectNodeData.continents;
     const circlesData = projectData;
