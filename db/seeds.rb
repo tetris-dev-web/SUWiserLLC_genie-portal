@@ -13,7 +13,7 @@
 User.destroy_all
 Project.destroy_all
 
-
+Genesis_start_date = '01/01/2019'
 Genesis_sketch_link = 'https://drive.google.com/open?id=1o15Si2ON0X1Cb0QApl7LH6WXeY6JQ9CE'
 Genesis_bus_link = 'https://drive.google.com/open?id=1tuqRBAYHB_26JzoFy2xMzgePI1qTrpwL'
 Genesis_cashflow = '{
@@ -79,7 +79,7 @@ Genesis_cashflow = '{
    }
 }'
 
-
+HamInn_start_date = '01/01/2017'
 HamInn_sketch_link = 'https://drive.google.com/open?id=0B4qHw8trLI_qQ3VkX0RtRndqVTA'
 HamInn_bus_link = 'https://drive.google.com/open?id=1zxY4cZcdaAMpinQpdZmTb8Zy2i9dh2iZ'
 HamInn_cashflow = '{
@@ -179,7 +179,8 @@ project0 = Project.create(
   status: "deployed",
   cashflow: Genesis_cashflow,
   sketch_link: Genesis_sketch_link,
-  bus_plan_link: Genesis_bus_link
+  bus_plan_link: Genesis_bus_link,
+  start_date: Genesis_start_date
 )
 
 # project1 = Project.create(
@@ -242,7 +243,8 @@ project4 = Project.create(
   status: "deployed",
   cashflow: HamInn_cashflow,
   sketch_link: HamInn_sketch_link,
-  bus_plan_link: HamInn_bus_link
+  bus_plan_link: HamInn_bus_link,
+  start_date: HamInn_start_date
 )
 project5 = Project.create(
   title: "Penn Generator",
