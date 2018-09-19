@@ -4,7 +4,15 @@ import PropTypes from 'prop-types';
 class ReadString extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {dataKey: null, coinBaseBalanceDataKey: null};
+    this.state = {
+      dataKey: null,
+      coinBaseBalanceDataKey: null,
+      stackId0Balance: null,
+      stackId1Balance: null,
+      stackId2Balance: null,
+      stackId3Balance: null,
+    };
+    this.getTxStatus = this.getTxStatus.bind(this);
   }
 
   componentDidMount(){
@@ -18,23 +26,41 @@ class ReadString extends React.Component {
 
 
     // var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-    GNIToken.methods.mint.cacheSend(drizzleState.accounts[0],100, {from: drizzleState.accounts[1]})
-    const coinBaseBalanceDataKey = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[0]);
-    this.setState({coinBaseBalanceDataKey})
+    // const coinBaseBalanceDataKey = GNIToken.methods.sendTransaction.cacheSend(drizzleState.accounts[0],2, {from: drizzleState.accounts[0],value: web3.toWei("1","ether")})
+    const stackId0Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[0]);
+    const stackId1Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[1]);
+    const stackId2Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[2]);
+
+    this.setState({stackId0Balance,stackId1Balance,stackId2Balance})
+    // this.setState({coinBaseBalanceDataKey})
 
   }
+  getTxStatus () {
+    const {transactions, transactionStack} = this.props.drizzleState;
+    const txHash = transactionStack[this.state.stackIdBalance];
+
+    if(!txHash)return null;
+    return `Transaction status: ${transactions[txHash].status}`;
+  };
 
   render() {
-
     const { MyStringStore, GNIToken} = this.props.drizzleState.contracts;
     console.log(GNIToken)
     const myString = MyStringStore.myString[this.state.dataKey];
     console.log(MyStringStore)
-    const balanceValue = GNIToken.balanceOf[this.state.coinBaseBalanceDataKey];
+    const balance0Value = GNIToken.balanceOf[this.state.stackId0Balance];
+    const balance1Value = GNIToken.balanceOf[this.state.stackId1Balance];
+    const balance2Value = GNIToken.balanceOf[this.state.stackId2Balance];
 
     return (<div>
-              <p>  My stored string: { myString && myString.value} </p>;
-              <p> My stored string: { balanceValue && balanceValue.value}   </p>
+              <p> My stored string: { myString && myString.value} </p>
+              <p> account 0 balance: { balance0Value && balance0Value.value}   </p>
+              <p> account 0 address: { this.props.drizzleState.accounts[0]}   </p>
+              <p> account 1 balance: { balance1Value && balance1Value.value}   </p>
+              <p> account 1 address: { this.props.drizzleState.accounts[1]}   </p>
+              <p> account 2 balance: { balance2Value && balance2Value.value}   </p>
+              <p> account 2 address: { this.props.drizzleState.accounts[2]}   </p>
+              <div>{this.getTxStatus()}</div>
           </div>
   )}
 }
