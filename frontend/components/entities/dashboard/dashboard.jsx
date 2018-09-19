@@ -5,7 +5,6 @@ import DrizzleConsumer from '../../drizzle/drizzleConsumer';
 import ReadString from './readString';
 import ReadStringContainer from './readStringContainer';
 import SetString from './setString';
-import SetString from './SetString';
 import {drizzleConnect} from 'drizzle-react';
 import PropTypes from 'prop-types';
 
