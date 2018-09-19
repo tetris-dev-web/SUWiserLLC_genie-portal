@@ -73,7 +73,6 @@ class ProjectGraph extends React.Component {
   }
 
   setUp () {
-    debugger
     const projectKeys = Object.keys(this.props.data);
     const svg = this.createSVG();
 
