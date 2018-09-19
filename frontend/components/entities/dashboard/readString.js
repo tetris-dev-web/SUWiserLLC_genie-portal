@@ -19,7 +19,7 @@ class ReadString extends React.Component {
     const {drizzle, drizzleState} = this.props;
     const stringContract = drizzle.contracts.MyStringStore;
     const dataKey = stringContract.methods["myString"].cacheCall();
-    console.log(dataKey)
+    console.log(dataKey);
     this.setState({dataKey});
 
     const GNIToken = drizzle.contracts.GNIToken;
@@ -31,7 +31,7 @@ class ReadString extends React.Component {
     const stackId1Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[1]);
     const stackId2Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[2]);
 
-    this.setState({stackId0Balance,stackId1Balance,stackId2Balance})
+    this.setState({stackId0Balance,stackId1Balance,stackId2Balance});
     // this.setState({coinBaseBalanceDataKey})
 
   }
@@ -41,7 +41,7 @@ class ReadString extends React.Component {
 
     if(!txHash)return null;
     return `Transaction status: ${transactions[txHash].status}`;
-  };
+  }
 
   render() {
     const { MyStringStore, GNIToken} = this.props.drizzleState.contracts;

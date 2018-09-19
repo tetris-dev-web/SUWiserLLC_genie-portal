@@ -5,6 +5,7 @@ const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
     const wallet = accounts[0];
+    const cap = 100;
 
     return deployer
         .then(() => { // deploy token
@@ -30,6 +31,7 @@ module.exports = function (deployer, network, accounts) {
                 closingTime,
                 rate,
                 wallet,
+                cap,
                 GNIToken.address
             );
         })
