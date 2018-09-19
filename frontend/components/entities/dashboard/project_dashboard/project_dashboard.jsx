@@ -29,6 +29,7 @@ class ProjectDashboard extends React.Component {
 
 
   render() {
+
     if (this.props.currentUser) {
       const projectClicked = this.state.projectClicked;
       return (
@@ -56,14 +57,15 @@ class ProjectDashboard extends React.Component {
               <div className="ft-img-cont">
 
               </div>
-              <div className="ft-el-cont">
+              {!projectClicked.cashflow ? <h1>NO INFO AVAILABLE</h1> :
+              (<div className="ft-el-cont">
                 <h1 className="ft-el-header">{projectClicked.title}</h1>
                 <p><strong>Title: </strong>{projectClicked.title}</p>
                 <p><strong>Continent: </strong>{projectClicked.continent} </p>
                 <p><strong>City: </strong>{projectClicked.city} </p>
                 <p><strong>Valuation: </strong>{projectClicked.valuation} </p>
                 <p><strong>Revenue: </strong>{projectClicked.revenue} </p>
-              </div>
+              </div>)}
               <div className="ft-img-cont">
               </div>
             </div>
