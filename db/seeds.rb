@@ -163,6 +163,25 @@ user2 = User.create(
 )
 
 # projects
+
+project0 = Project.create(
+  title: "Genesis",
+  revenue: 8000,
+  valuation: 57000,
+  city: "New York",
+  country: "USA",
+  continent: "North America",
+  video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
+  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+  description: "BNB/ Business Incubator",
+  creator_id: user2.id,
+  created_at: "14/03/2018",
+  status: "deployed",
+  cashflow: Genesis_cashflow,
+  sketch_link: Genesis_sketch_link,
+  bus_plan_link: Genesis_bus_link
+)
+
 project1 = Project.create(
   title: "Columbia Generator",
   revenue: 250000,
