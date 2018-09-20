@@ -23,10 +23,23 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
         CappedCrowdsale(_cap)
         TimedCrowdsale(_openingTime, _closingTime) {
             // rewriting wallet to this will not work in contructor
-            /* wallet = this; */
+            wallet = this;
         }
 
-        function pitchProject() {
 
+
+        /**
+         * @dev pitching a project to raise cap
+         * @param _projectValue - value of total project
+         */
+         // TODO make ownable
+         // TODO
+        function pitchProjectandRaiseCap(uint256 _projectValue) public {
+          uint newTokensIssued = 1000;
+          GNIToken(token).mint(wallet, newTokensIssued);
+          uint updatedTotalSupply = GNIToken(token).totalSupply();
+          cap = cap.add(_projectValue);
+          uint newRate = cap/updatedTotalSupply;
+          rate = newRate;
         }
 }
