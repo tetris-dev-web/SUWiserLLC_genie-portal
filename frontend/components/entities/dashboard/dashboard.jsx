@@ -4,9 +4,15 @@ import ProjectDashboardContainer from './project_dashboard/project_graph_contain
 import DrizzleConsumer from '../../drizzle/drizzleConsumer';
 import ReadString from './readString';
 import ReadStringContainer from './readStringContainer';
+<<<<<<< HEAD
 import SetString from './setString';
+=======
+
+import SetString from './SetString';
+
+>>>>>>> 6b3490ab6c934b7febee2f623978a2d51e40daca
 import {drizzleConnect} from 'drizzle-react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 const Dashboard = () => {
   return (
@@ -17,7 +23,7 @@ const Dashboard = () => {
       <DrizzleConsumer component={SetString}/>
     </div>
   );
-}
+};
 
 
 
