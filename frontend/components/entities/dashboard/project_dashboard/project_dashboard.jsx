@@ -2,6 +2,7 @@ import React from 'react';
 import ProjectGraph from './project_graph';
 import Modal from 'react-modal';
 import ModalStyle from '../../footer/modal_style';
+import ProjectMap from './project_map';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -55,12 +56,18 @@ class ProjectDashboard extends React.Component {
             </div>
 
             <div className="project-modal-grid">
-              <div className="iframe">iframe</div>
-              <div className="temp">temp</div>
-              <div className="project-description">description</div>
-              <div className="cashflow-graph">cash graph</div>
-              <div className="project-location-map">map location</div>
-              <div className="project-overlays">overlays</div>
+                <div className="iframe">iframe</div>
+
+                <div className="temp">temp</div>
+
+                <div className="project-description">description</div>
+
+                <div className="cashflow-graph">cash graph</div>
+
+                <div className="project-map">
+                  <ProjectMap />
+                </div>
+                <div className="project-overlays">overlays</div>
             </div>
 
           </Modal>
