@@ -61,7 +61,6 @@ class ProjectDashboard extends React.Component {
               <div className="cashflow-graph">cash graph</div>
               <div className="project-location-map">map location</div>
               <div className="project-overlays">overlays</div>
-
             </div>
 
           </Modal>
