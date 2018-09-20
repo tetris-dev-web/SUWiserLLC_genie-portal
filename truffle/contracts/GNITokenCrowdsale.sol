@@ -142,6 +142,7 @@ contract xFitTokenCrowdsale is TimedCrowdsale, MintedCrowdsale {
         buyTokens(_beneficiary);
         updateVoteCount(_location);
         address projectVotedForOwner = projects[_location].creator;
+
         xFitToken(token).assignPin(_tokenName, _beneficiary, _location, projectVotedForOwner);
     }
 

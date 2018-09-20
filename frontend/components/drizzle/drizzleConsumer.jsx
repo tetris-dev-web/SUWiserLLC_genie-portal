@@ -5,6 +5,7 @@ import { DrizzleContext } from "drizzle-react";
 export default ({component: Component}) => (
   <DrizzleContext.Consumer>
     {drizzleContext => {
+      console.log(drizzleContext)
       const { drizzle, drizzleState, initialized } = drizzleContext;
 
       if (!initialized) {
