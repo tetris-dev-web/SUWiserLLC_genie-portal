@@ -26,10 +26,15 @@ class Transfer extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount () {
+    const {drizzle} = this.props;
+    this.setState({tokenContract: drizzle.contracts.GNIToken})
+  }
+
   handleSubmit(e) {
     console.log('submitted');
 
-    this.props.contract.transfer(
+    this.state.tokenContract.transfer(
       this.state.receivingWallet,
       this.state.shares,
       {from: this.props.account}
@@ -79,6 +84,7 @@ class Transfer extends React.Component {
   }
 
   render() {
+    debugger
 
     let {
       price,
