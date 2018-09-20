@@ -53,22 +53,17 @@ class ProjectDashboard extends React.Component {
                 {projectClicked.title}
               </div>
             </div>
-            <div className="ft-modal-body bylaws-body">
-              <div className="ft-img-cont">
 
-              </div>
-              {!projectClicked.cashflow ? <h1>NO INFO AVAILABLE</h1> :
-              (<div className="ft-el-cont">
-                <h1 className="ft-el-header">{projectClicked.title}</h1>
-                <p><strong>Title: </strong>{projectClicked.title}</p>
-                <p><strong>Continent: </strong>{projectClicked.continent} </p>
-                <p><strong>City: </strong>{projectClicked.city} </p>
-                <p><strong>Valuation: </strong>{projectClicked.valuation} </p>
-                <p><strong>Revenue: </strong>{projectClicked.revenue} </p>
-              </div>)}
-              <div className="ft-img-cont">
-              </div>
+            <div className="project-modal-grid">
+              <div className="iframe">iframe</div>
+              <div className="temp">temp</div>
+              <div className="project-description">description</div>
+              <div className="cashflow-graph">cash graph</div>
+              <div className="project-location-map">map location</div>
+              <div className="project-overlays">overlays</div>
+
             </div>
+
           </Modal>
         </div>
       );
@@ -80,5 +75,24 @@ class ProjectDashboard extends React.Component {
 
   }
 }
+
+
+//
+// <div className="ft-modal-body bylaws-body">
+//   <div className="ft-img-cont">
+//
+//   </div>
+//   {!projectClicked.cashflow ? <h1>NO INFO AVAILABLE</h1> :
+//   (<div className="ft-el-cont">
+//     <h1 className="ft-el-header">{projectClicked.title}</h1>
+//     <p><strong>Title: </strong>{projectClicked.title}</p>
+//     <p><strong>Continent: </strong>{projectClicked.continent} </p>
+//     <p><strong>City: </strong>{projectClicked.city} </p>
+//     <p><strong>Valuation: </strong>{projectClicked.valuation} </p>
+//     <p><strong>Revenue: </strong>{projectClicked.revenue} </p>
+//   </div>)}
+//   <div className="ft-img-cont">
+//   </div>
+// </div>
 
 export default ProjectDashboard;
