@@ -32,13 +32,12 @@ class Transfer extends React.Component {
   }
 
   handleSubmit(e) {
-    console.log('submitted');
 
-    this.state.tokenContract.transfer(
-      this.state.receivingWallet,
-      this.state.shares,
-      {from: this.props.account}
-    );
+    // this.state.tokenContract.methods.transfer.cacheSend(
+    //   tokenContract.methods.balaneof.cacheCall({drizzleState.accounts[0]}),
+    //   tokenContract.methods.balaneof.cacheCall({drizzleState.accounts[1]}),
+    //   {from: this.props.account}
+    // );
   }
 
   update(property) {
@@ -84,7 +83,6 @@ class Transfer extends React.Component {
   }
 
   render() {
-    debugger
 
     let {
       price,

@@ -19,6 +19,7 @@ class UserDropdown extends React.Component {
 
     const userType = fName && lName ? `${fName} ${lName}` : parsedUsername;
 
+    this.totalSupplyIdx = this.props.drizzle.contracts.GNIToken.methods.totalSupply.cacheCall();
     /*
     We initially set the state of the displayName to either the user's
     first and last name (if they have updated their profile with this information)
@@ -28,6 +29,7 @@ class UserDropdown extends React.Component {
     this.state = {
       openModal: false,
       displayName: userType,
+      tokens: 0
     };
     // tokens: 0,
     // user_tokens: 500,
@@ -44,6 +46,8 @@ class UserDropdown extends React.Component {
     this.updateUsernameDisplay = this.updateUsernameDisplay.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
   }
+
+
 
   openModal() {
     this.setState({openModal: true});
@@ -79,9 +83,12 @@ class UserDropdown extends React.Component {
   }
 
   render() {
+    debugger
+    const tokens = this.props.drizzleState.contracts.GNIToken[this.totalSupplyIdx];
+    const tokenCount = tokens ? tokens.value : 0;
 
     // let { tokens, user_tokens, total_tokens } = this.state;
-    let { tokens } = this.props.currentUser;
+    // let { tokens } = this.props.currentUser;
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
@@ -92,7 +99,7 @@ class UserDropdown extends React.Component {
               </div>
               <hr/>
               <div className="tokens-cont">
-                <div className="total-tokens">{tokens} tokens</div>
+                <div className="total-tokens">{tokenCount} tokens</div>
               </div>
             </div>
           </a>
