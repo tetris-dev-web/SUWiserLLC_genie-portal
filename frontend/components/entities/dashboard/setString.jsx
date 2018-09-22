@@ -36,7 +36,7 @@ class SetString extends Component {
 
     if(!txHash)return null;
     return `Transaction status: ${transactions[txHash].status}`;
-  };
+  }
 
   render(){
 
