@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
+import DrizzleConsumer from '../../../drizzle/drizzleConsumer';
 
 import Transfer from './transfer';
 import ModalStyle from './modal_style';
@@ -30,6 +31,7 @@ class TransferModal extends React.Component {
   }
 
   render() {
+    debugger
 
     return (
       <div className="modal-button-cont">
@@ -41,15 +43,13 @@ class TransferModal extends React.Component {
           style={ModalStyle}
           contentLabel="Transfer Modal"
           className="modal-container">
-          <Transfer
-            account={this.props.account}
-            contract={this.props.contract}
-            closeModal={this.closeModal}
-          />
+          <DrizzleConsumer props={{closeModal: this.closeModal}} component={Transfer}/>
         </Modal>
       </div>
     );
   }
 }
+// account={this.props.account}
+// contract={this.props.contract}
 
 export default TransferModal;
