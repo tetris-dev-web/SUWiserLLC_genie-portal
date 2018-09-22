@@ -1,10 +1,10 @@
 pragma solidity 0.4.24;
 
-import './GNIToken.sol';
-import 'openzeppelin-solidity/contracts/crowdsale/emission/MintedCrowdsale.sol';
-import 'openzeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol';
-import 'openzeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol';
-import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
+import '../token/GNIToken.sol';
+import './MintedCrowdsale.sol';
+import './TimedCrowdsale.sol';
+import './CappedCrowdsale.sol';
+import '../utility/SafeMath.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale {
     using SafeMath for uint256;
@@ -36,7 +36,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
          // TODO
         function pitchProjectandRaiseCap(uint256 _projectValue) public {
           uint newTokensIssued = 1000;
-          GNIToken(token).mint(wallet, newTokensIssued);
+          GNIToken(token).mint(wallet, newTokensIssued); // change logic to only issue if cap is reached
           uint updatedTotalSupply = GNIToken(token).totalSupply();
           cap = cap.add(_projectValue);
           uint newRate = cap/updatedTotalSupply;

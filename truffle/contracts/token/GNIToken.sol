@@ -1,7 +1,7 @@
 pragma solidity 0.4.24;
 
-import 'openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol';
-import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
+import '../token/ERC20/MintableToken.sol';
+import '../utility/SafeMath.sol';
 
 contract GNIToken is MintableToken {
   using SafeMath for uint256;
