@@ -19,6 +19,7 @@ class UserDropdown extends React.Component {
 
     const userType = fName && lName ? `${fName} ${lName}` : parsedUsername;
 
+    // this.totalSupplyIdx = this.props.drizzle.contracts.GNIToken.methods.totalSupply.cacheCall();
     /*
     We initially set the state of the displayName to either the user's
     first and last name (if they have updated their profile with this information)
@@ -28,6 +29,8 @@ class UserDropdown extends React.Component {
     this.state = {
       openModal: false,
       displayName: userType,
+      tokens: 0,
+      totalSupply: null
     };
     // tokens: 0,
     // user_tokens: 500,
@@ -43,7 +46,29 @@ class UserDropdown extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.updateUsernameDisplay = this.updateUsernameDisplay.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
+    this.tick = this.tick.bind(this);
   }
+
+  componentDidMount () {
+    this.interval = setInterval(() => this.tick(), 3000);
+  }
+
+  // tick () {
+  //   const totalSupplyIdx = this.props.drizzle.contracts.GNIToken.methods.totalSupply.cacheCall();
+  //   debugger
+  //   this.setState({totalSupplyIdx});
+  // }
+
+  tick () {
+    return new Promise ((resolve,reject) => {
+        const index = this.props.drizzle.contracts.GNIToken.methods.totalSupply.cacheCall()
+        resolve(index);
+      }).then((totalSupplyIdx) => {
+      const totalSupply = this.props.drizzleState.contracts.GNIToken.totalSupply[this.state.totalSupplyIdx]
+      this.setState({totalSupply});
+    })
+  }
+
 
   openModal() {
     this.setState({openModal: true});
@@ -80,8 +105,15 @@ class UserDropdown extends React.Component {
 
   render() {
 
+    // const tokens = this.props.drizzleState.contracts.GNIToken.totalSupply[this.state.totalSupplyIdx];
+    // console.log('UserDropdown', this.props.drizzleState.contracts.GNIToken);
+
+    // if(tokens){
+    //
+    //   console.log('UserDropdown', tokens);
+    // }
     // let { tokens, user_tokens, total_tokens } = this.state;
-    let { tokens } = this.props.currentUser;
+    // let { tokens } = this.props.currentUser;
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
@@ -92,7 +124,7 @@ class UserDropdown extends React.Component {
               </div>
               <hr/>
               <div className="tokens-cont">
-                <div className="total-tokens">{tokens} tokens</div>
+                <div className="total-tokens">{this.state.totalSupply && this.state.totalSupply.value} tokens</div>
               </div>
             </div>
           </a>

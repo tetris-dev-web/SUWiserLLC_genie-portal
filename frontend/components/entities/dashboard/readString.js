@@ -11,6 +11,9 @@ class ReadString extends React.Component {
       stackId1Balance: null,
       stackId2Balance: null,
       stackId3Balance: null,
+      stackIdCap: null,
+      stackIdRate: null,
+      stackIdSupply: null
     };
     this.getTxStatus = this.getTxStatus.bind(this);
   }
@@ -19,10 +22,11 @@ class ReadString extends React.Component {
     const {drizzle, drizzleState} = this.props;
     const stringContract = drizzle.contracts.MyStringStore;
     const dataKey = stringContract.methods["myString"].cacheCall();
-    console.log(dataKey);
+
     this.setState({dataKey});
 
     const GNIToken = drizzle.contracts.GNIToken;
+    const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
 
     // var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -30,8 +34,11 @@ class ReadString extends React.Component {
     const stackId0Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[0]);
     const stackId1Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[1]);
     const stackId2Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[2]);
-
-    this.setState({stackId0Balance,stackId1Balance,stackId2Balance});
+    const stackIdCap = GNITokenCrowdsale.methods.cap.cacheCall();
+    const stackIdRate = GNITokenCrowdsale.methods.rate.cacheCall();
+    const stackIdSupply = GNIToken.methods.totalSupply.cacheCall();
+    console.log('stackId =', stackIdSupply)
+    this.setState({stackId0Balance,stackId1Balance,stackId2Balance,stackIdCap, stackIdRate,stackIdSupply});
     // this.setState({coinBaseBalanceDataKey})
 
   }
@@ -44,14 +51,20 @@ class ReadString extends React.Component {
   }
 
   render() {
-    const { MyStringStore, GNIToken} = this.props.drizzleState.contracts;
-    console.log(GNIToken)
+    const { MyStringStore, GNIToken,GNITokenCrowdsale } = this.props.drizzleState.contracts;
     const myString = MyStringStore.myString[this.state.dataKey];
-    console.log(MyStringStore)
+
     const balance0Value = GNIToken.balanceOf[this.state.stackId0Balance];
     const balance1Value = GNIToken.balanceOf[this.state.stackId1Balance];
     const balance2Value = GNIToken.balanceOf[this.state.stackId2Balance];
-
+    const totalTokenSupply = GNIToken.totalSupply[this.state.stackIdSupply];
+    // if (totalTokenSupply) {
+    //
+    //   console.log('readString', totalTokenSupply);
+    // }
+    const cap = GNITokenCrowdsale.cap[this.state.stackIdCap];
+    const rate = GNITokenCrowdsale.rate[this.state.stackIdRate];
+    console.log(GNIToken)
     return (<div>
               <p> My stored string: { myString && myString.value} </p>
               <p> account 0 balance: { balance0Value && balance0Value.value}   </p>
@@ -60,6 +73,13 @@ class ReadString extends React.Component {
               <p> account 1 address: { this.props.drizzleState.accounts[1]}   </p>
               <p> account 2 balance: { balance2Value && balance2Value.value}   </p>
               <p> account 2 address: { this.props.drizzleState.accounts[2]}   </p>
+
+              <h1> totalTokenSupply : { totalTokenSupply && totalTokenSupply.value} </h1>
+              <h1> cap: { cap && cap.value} </h1>
+              <h1> rate: { rate && rate.value} </h1>
+
+
+
               <div>{this.getTxStatus()}</div>
           </div>
   )}
