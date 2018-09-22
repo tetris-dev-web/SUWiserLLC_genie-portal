@@ -69,7 +69,6 @@ class TokenInterface extends React.Component {
         </div>
         <div className="navbar-right">
           <div className="user-container">
-            <UserDropdownContainer />
           </div>
           <TransferModal />
           <ProjectFormModal />
@@ -79,4 +78,5 @@ class TokenInterface extends React.Component {
   }
 }
 
+// <UserDropdownContainer />
 export default TokenInterface;

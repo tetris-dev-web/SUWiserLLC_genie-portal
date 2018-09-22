@@ -147,31 +147,20 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.4.24;\n\nimport \"../../math/SafeMath.sol\";\nimport \"../Crowdsale.sol\";\n\n\n/**\n * @title CappedCrowdsale\n * @dev Crowdsale with a limit for total contributions.\n */\ncontract CappedCrowdsale is Crowdsale {\n  using SafeMath for uint256;\n\n  uint256 public cap;\n\n  /**\n   * @dev Constructor, takes maximum amount of wei accepted in the crowdsale.\n   * @param _cap Max amount of wei to be contributed\n   */\n  constructor(uint256 _cap) public {\n    require(_cap > 0);\n    cap = _cap;\n  }\n\n  /**\n   * @dev Checks whether the cap has been reached.\n   * @return Whether the cap was reached\n   */\n  function capReached() public view returns (bool) {\n    return weiRaised >= cap;\n  }\n\n  /**\n   * @dev Extend parent behavior requiring purchase to respect the funding cap.\n   * @param _beneficiary Token purchaser\n   * @param _weiAmount Amount of wei contributed\n   */\n  function _preValidatePurchase(\n    address _beneficiary,\n    uint256 _weiAmount\n  )\n    internal\n  {\n    super._preValidatePurchase(_beneficiary, _weiAmount);\n    require(weiRaised.add(_weiAmount) <= cap);\n  }\n\n}\n",
-  "sourcePath": "openzeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
+  "source": "pragma solidity ^0.4.24;\n\nimport '../utility/SafeMath.sol';\nimport \"./Crowdsale.sol\";\n\n\n/**\n * @title CappedCrowdsale\n * @dev Crowdsale with a limit for total contributions.\n */\ncontract CappedCrowdsale is Crowdsale {\n  using SafeMath for uint256;\n\n  uint256 public cap;\n\n  /**\n   * @dev Constructor, takes maximum amount of wei accepted in the crowdsale.\n   * @param _cap Max amount of wei to be contributed\n   */\n  constructor(uint256 _cap) public {\n    cap = _cap;\n  }\n\n  /**\n   * @dev Checks whether the cap has been reached.\n   * @return Whether the cap was reached\n   */\n  function capReached() public view returns (bool) {\n    return weiRaised >= cap;\n  }\n\n  /**\n   * @dev Extend parent behavior requiring purchase to respect the funding cap.\n   * @param _beneficiary Token purchaser\n   * @param _weiAmount Amount of wei contributed\n   */\n  function _preValidatePurchase(\n    address _beneficiary,\n    uint256 _weiAmount\n  )\n    internal\n  {\n    super._preValidatePurchase(_beneficiary, _weiAmount);\n    require(weiRaised.add(_weiAmount) <= cap);\n  }\n\n}\n",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/CappedCrowdsale.sol",
   "ast": {
-    "absolutePath": "openzeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/CappedCrowdsale.sol",
     "exportedSymbols": {
       "CappedCrowdsale": [
-<<<<<<< .merge_file_pKcsCV
-        399
+        112
       ]
     },
-    "id": 400,
+    "id": 113,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 339,
-=======
-        515
-      ]
-    },
-    "id": 516,
-    "nodeType": "SourceUnit",
-    "nodes": [
-      {
-        "id": 455,
->>>>>>> .merge_file_fkasvX
+        "id": 58,
         "literals": [
           "solidity",
           "^",
@@ -179,47 +168,27 @@
           ".24"
         ],
         "nodeType": "PragmaDirective",
-<<<<<<< .merge_file_pKcsCV
-        "src": "0:24:4"
-=======
-        "src": "0:24:6"
->>>>>>> .merge_file_fkasvX
+        "src": "0:24:1"
       },
       {
-        "absolutePath": "openzeppelin-solidity/contracts/math/SafeMath.sol",
-        "file": "../../math/SafeMath.sol",
-<<<<<<< .merge_file_pKcsCV
-        "id": 340,
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/SafeMath.sol",
+        "file": "../utility/SafeMath.sol",
+        "id": 59,
         "nodeType": "ImportDirective",
-        "scope": 400,
-        "sourceUnit": 581,
-        "src": "26:33:4",
-=======
-        "id": 456,
-        "nodeType": "ImportDirective",
-        "scope": 516,
-        "sourceUnit": 697,
-        "src": "26:33:6",
->>>>>>> .merge_file_fkasvX
+        "scope": 113,
+        "sourceUnit": 1375,
+        "src": "26:33:1",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "openzeppelin-solidity/contracts/crowdsale/Crowdsale.sol",
-        "file": "../Crowdsale.sol",
-<<<<<<< .merge_file_pKcsCV
-        "id": 341,
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
+        "file": "./Crowdsale.sol",
+        "id": 60,
         "nodeType": "ImportDirective",
-        "scope": 400,
-        "sourceUnit": 311,
-        "src": "60:26:4",
-=======
-        "id": 457,
-        "nodeType": "ImportDirective",
-        "scope": 516,
-        "sourceUnit": 427,
-        "src": "60:26:6",
->>>>>>> .merge_file_fkasvX
+        "scope": 113,
+        "sourceUnit": 341,
+        "src": "60:25:1",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -229,105 +198,56 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-<<<<<<< .merge_file_pKcsCV
-              "id": 342,
+              "id": 61,
               "name": "Crowdsale",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 310,
-              "src": "207:9:4",
+              "referencedDeclaration": 340,
+              "src": "206:9:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Crowdsale_$310",
+                "typeIdentifier": "t_contract$_Crowdsale_$340",
                 "typeString": "contract Crowdsale"
               }
             },
-            "id": 343,
+            "id": 62,
             "nodeType": "InheritanceSpecifier",
-            "src": "207:9:4"
+            "src": "206:9:1"
           }
         ],
         "contractDependencies": [
-          310
-=======
-              "id": 458,
-              "name": "Crowdsale",
-              "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 426,
-              "src": "207:9:6",
-              "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Crowdsale_$426",
-                "typeString": "contract Crowdsale"
-              }
-            },
-            "id": 459,
-            "nodeType": "InheritanceSpecifier",
-            "src": "207:9:6"
-          }
-        ],
-        "contractDependencies": [
-          426
->>>>>>> .merge_file_fkasvX
+          340
         ],
         "contractKind": "contract",
         "documentation": "@title CappedCrowdsale\n@dev Crowdsale with a limit for total contributions.",
         "fullyImplemented": false,
-<<<<<<< .merge_file_pKcsCV
-        "id": 399,
+        "id": 112,
         "linearizedBaseContracts": [
-          399,
-          310
-=======
-        "id": 515,
-        "linearizedBaseContracts": [
-          515,
-          426
->>>>>>> .merge_file_fkasvX
+          112,
+          340
         ],
         "name": "CappedCrowdsale",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-<<<<<<< .merge_file_pKcsCV
-            "id": 346,
+            "id": 65,
             "libraryName": {
               "contractScope": null,
-              "id": 344,
+              "id": 63,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 580,
-              "src": "227:8:4",
+              "referencedDeclaration": 1374,
+              "src": "226:8:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$580",
-=======
-            "id": 462,
-            "libraryName": {
-              "contractScope": null,
-              "id": 460,
-              "name": "SafeMath",
-              "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 696,
-              "src": "227:8:6",
-              "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$696",
->>>>>>> .merge_file_fkasvX
+                "typeIdentifier": "t_contract$_SafeMath_$1374",
                 "typeString": "library SafeMath"
               }
             },
             "nodeType": "UsingForDirective",
-<<<<<<< .merge_file_pKcsCV
-            "src": "221:27:4",
+            "src": "220:27:1",
             "typeName": {
-              "id": 345,
+              "id": 64,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "240:7:4",
-=======
-            "src": "221:27:6",
-            "typeName": {
-              "id": 461,
-              "name": "uint256",
-              "nodeType": "ElementaryTypeName",
-              "src": "240:7:6",
->>>>>>> .merge_file_fkasvX
+              "src": "239:7:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -336,19 +256,11 @@
           },
           {
             "constant": false,
-<<<<<<< .merge_file_pKcsCV
-            "id": 348,
+            "id": 67,
             "name": "cap",
             "nodeType": "VariableDeclaration",
-            "scope": 399,
-            "src": "252:18:4",
-=======
-            "id": 464,
-            "name": "cap",
-            "nodeType": "VariableDeclaration",
-            "scope": 515,
-            "src": "252:18:6",
->>>>>>> .merge_file_fkasvX
+            "scope": 112,
+            "src": "251:18:1",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -356,17 +268,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 347,
+              "id": 66,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "252:7:4",
-=======
-              "id": 463,
-              "name": "uint256",
-              "nodeType": "ElementaryTypeName",
-              "src": "252:7:6",
->>>>>>> .merge_file_fkasvX
+              "src": "251:7:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -377,190 +282,26 @@
           },
           {
             "body": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 363,
+              "id": 76,
               "nodeType": "Block",
-              "src": "451:44:4",
-=======
-              "id": 479,
-              "nodeType": "Block",
-              "src": "451:44:6",
->>>>>>> .merge_file_fkasvX
+              "src": "450:21:1",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "arguments": [
-                      {
-                        "argumentTypes": null,
-                        "commonType": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
-                        },
-<<<<<<< .merge_file_pKcsCV
-                        "id": 356,
-=======
-                        "id": 472,
->>>>>>> .merge_file_fkasvX
-                        "isConstant": false,
-                        "isLValue": false,
-                        "isPure": false,
-                        "lValueRequested": false,
-                        "leftExpression": {
-                          "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                          "id": 354,
-                          "name": "_cap",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 350,
-                          "src": "465:4:4",
-=======
-                          "id": 470,
-                          "name": "_cap",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 466,
-                          "src": "465:4:6",
->>>>>>> .merge_file_fkasvX
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          }
-                        },
-                        "nodeType": "BinaryOperation",
-                        "operator": ">",
-                        "rightExpression": {
-                          "argumentTypes": null,
-                          "hexValue": "30",
-<<<<<<< .merge_file_pKcsCV
-                          "id": 355,
-=======
-                          "id": 471,
->>>>>>> .merge_file_fkasvX
-                          "isConstant": false,
-                          "isLValue": false,
-                          "isPure": true,
-                          "kind": "number",
-                          "lValueRequested": false,
-                          "nodeType": "Literal",
-<<<<<<< .merge_file_pKcsCV
-                          "src": "472:1:4",
-=======
-                          "src": "472:1:6",
->>>>>>> .merge_file_fkasvX
-                          "subdenomination": null,
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_rational_0_by_1",
-                            "typeString": "int_const 0"
-                          },
-                          "value": "0"
-                        },
-<<<<<<< .merge_file_pKcsCV
-                        "src": "465:8:4",
-=======
-                        "src": "465:8:6",
->>>>>>> .merge_file_fkasvX
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_bool",
-                          "typeString": "bool"
-                        }
-                      }
-                    ],
-                    "expression": {
-                      "argumentTypes": [
-                        {
-                          "typeIdentifier": "t_bool",
-                          "typeString": "bool"
-                        }
-                      ],
-<<<<<<< .merge_file_pKcsCV
-                      "id": 353,
-                      "name": "require",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        1270,
-                        1271
-                      ],
-                      "referencedDeclaration": 1270,
-                      "src": "457:7:4",
-=======
-                      "id": 469,
-                      "name": "require",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        1386,
-                        1387
-                      ],
-                      "referencedDeclaration": 1386,
-                      "src": "457:7:6",
->>>>>>> .merge_file_fkasvX
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
-                        "typeString": "function (bool) pure"
-                      }
-                    },
-<<<<<<< .merge_file_pKcsCV
-                    "id": 357,
-=======
-                    "id": 473,
->>>>>>> .merge_file_fkasvX
-                    "isConstant": false,
-                    "isLValue": false,
-                    "isPure": false,
-                    "kind": "functionCall",
-                    "lValueRequested": false,
-                    "names": [],
-                    "nodeType": "FunctionCall",
-<<<<<<< .merge_file_pKcsCV
-                    "src": "457:17:4",
-=======
-                    "src": "457:17:6",
->>>>>>> .merge_file_fkasvX
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_tuple$__$",
-                      "typeString": "tuple()"
-                    }
-                  },
-<<<<<<< .merge_file_pKcsCV
-                  "id": 358,
-                  "nodeType": "ExpressionStatement",
-                  "src": "457:17:4"
-=======
-                  "id": 474,
-                  "nodeType": "ExpressionStatement",
-                  "src": "457:17:6"
->>>>>>> .merge_file_fkasvX
-                },
-                {
-                  "expression": {
-                    "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                    "id": 361,
-=======
-                    "id": 477,
->>>>>>> .merge_file_fkasvX
+                    "id": 74,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                      "id": 359,
+                      "id": 72,
                       "name": "cap",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 348,
-                      "src": "480:3:4",
-=======
-                      "id": 475,
-                      "name": "cap",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 464,
-                      "src": "480:3:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 67,
+                      "src": "456:3:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -570,54 +311,31 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                      "id": 360,
+                      "id": 73,
                       "name": "_cap",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 350,
-                      "src": "486:4:4",
-=======
-                      "id": 476,
-                      "name": "_cap",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 466,
-                      "src": "486:4:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 69,
+                      "src": "462:4:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "src": "480:10:4",
-=======
-                    "src": "480:10:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "456:10:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-<<<<<<< .merge_file_pKcsCV
-                  "id": 362,
+                  "id": 75,
                   "nodeType": "ExpressionStatement",
-                  "src": "480:10:4"
-=======
-                  "id": 478,
-                  "nodeType": "ExpressionStatement",
-                  "src": "480:10:6"
->>>>>>> .merge_file_fkasvX
+                  "src": "456:10:1"
                 }
               ]
             },
             "documentation": "@dev Constructor, takes maximum amount of wei accepted in the crowdsale.\n@param _cap Max amount of wei to be contributed",
-<<<<<<< .merge_file_pKcsCV
-            "id": 364,
-=======
-            "id": 480,
->>>>>>> .merge_file_fkasvX
+            "id": 77,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -625,28 +343,16 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 351,
-=======
-              "id": 467,
->>>>>>> .merge_file_fkasvX
+              "id": 70,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-<<<<<<< .merge_file_pKcsCV
-                  "id": 350,
+                  "id": 69,
                   "name": "_cap",
                   "nodeType": "VariableDeclaration",
-                  "scope": 364,
-                  "src": "430:12:4",
-=======
-                  "id": 466,
-                  "name": "_cap",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 480,
-                  "src": "430:12:6",
->>>>>>> .merge_file_fkasvX
+                  "scope": 77,
+                  "src": "429:12:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -654,17 +360,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-<<<<<<< .merge_file_pKcsCV
-                    "id": 349,
+                    "id": 68,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "430:7:4",
-=======
-                    "id": 465,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "430:7:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "429:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -674,46 +373,26 @@
                   "visibility": "internal"
                 }
               ],
-<<<<<<< .merge_file_pKcsCV
-              "src": "429:14:4"
+              "src": "428:14:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 352,
+              "id": 71,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "451:0:4"
+              "src": "450:0:1"
             },
-            "scope": 399,
-            "src": "418:77:4",
-=======
-              "src": "429:14:6"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 468,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "451:0:6"
-            },
-            "scope": 515,
-            "src": "418:77:6",
->>>>>>> .merge_file_fkasvX
+            "scope": 112,
+            "src": "417:54:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 373,
+              "id": 86,
               "nodeType": "Block",
-              "src": "652:34:4",
-=======
-              "id": 489,
-              "nodeType": "Block",
-              "src": "652:34:6",
->>>>>>> .merge_file_fkasvX
+              "src": "628:34:1",
               "statements": [
                 {
                   "expression": {
@@ -722,32 +401,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "id": 371,
-=======
-                    "id": 487,
->>>>>>> .merge_file_fkasvX
+                    "id": 84,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                      "id": 369,
+                      "id": 82,
                       "name": "weiRaised",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 101,
-                      "src": "665:9:4",
-=======
-                      "id": 485,
-                      "name": "weiRaised",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 217,
-                      "src": "665:9:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 131,
+                      "src": "641:9:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -757,56 +423,32 @@
                     "operator": ">=",
                     "rightExpression": {
                       "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                      "id": 370,
+                      "id": 83,
                       "name": "cap",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 348,
-                      "src": "678:3:4",
-=======
-                      "id": 486,
-                      "name": "cap",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 464,
-                      "src": "678:3:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 67,
+                      "src": "654:3:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "src": "665:16:4",
-=======
-                    "src": "665:16:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "641:16:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-<<<<<<< .merge_file_pKcsCV
-                  "functionReturnParameters": 368,
-                  "id": 372,
+                  "functionReturnParameters": 81,
+                  "id": 85,
                   "nodeType": "Return",
-                  "src": "658:23:4"
-=======
-                  "functionReturnParameters": 484,
-                  "id": 488,
-                  "nodeType": "Return",
-                  "src": "658:23:6"
->>>>>>> .merge_file_fkasvX
+                  "src": "634:23:1"
                 }
               ]
             },
             "documentation": "@dev Checks whether the cap has been reached.\n@return Whether the cap was reached",
-<<<<<<< .merge_file_pKcsCV
-            "id": 374,
-=======
-            "id": 490,
->>>>>>> .merge_file_fkasvX
+            "id": 87,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -814,42 +456,23 @@
             "name": "capReached",
             "nodeType": "FunctionDefinition",
             "parameters": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 365,
+              "id": 78,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "622:2:4"
+              "src": "598:2:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 368,
-=======
-              "id": 481,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "622:2:6"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 484,
->>>>>>> .merge_file_fkasvX
+              "id": 81,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-<<<<<<< .merge_file_pKcsCV
-                  "id": 367,
+                  "id": 80,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 374,
-                  "src": "646:4:4",
-=======
-                  "id": 483,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 490,
-                  "src": "646:4:6",
->>>>>>> .merge_file_fkasvX
+                  "scope": 87,
+                  "src": "622:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -857,17 +480,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-<<<<<<< .merge_file_pKcsCV
-                    "id": 366,
+                    "id": 79,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "646:4:4",
-=======
-                    "id": 482,
-                    "name": "bool",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "646:4:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "622:4:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -877,32 +493,19 @@
                   "visibility": "internal"
                 }
               ],
-<<<<<<< .merge_file_pKcsCV
-              "src": "645:6:4"
+              "src": "621:6:1"
             },
-            "scope": 399,
-            "src": "603:83:4",
-=======
-              "src": "645:6:6"
-            },
-            "scope": 515,
-            "src": "603:83:6",
->>>>>>> .merge_file_fkasvX
+            "scope": 112,
+            "src": "579:83:1",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 397,
+              "id": 110,
               "nodeType": "Block",
-              "src": "971:110:4",
-=======
-              "id": 513,
-              "nodeType": "Block",
-              "src": "971:110:6",
->>>>>>> .merge_file_fkasvX
+              "src": "947:110:1",
               "statements": [
                 {
                   "expression": {
@@ -910,21 +513,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                        "id": 384,
+                        "id": 97,
                         "name": "_beneficiary",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 376,
-                        "src": "1004:12:4",
-=======
-                        "id": 500,
-                        "name": "_beneficiary",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 492,
-                        "src": "1004:12:6",
->>>>>>> .merge_file_fkasvX
+                        "referencedDeclaration": 89,
+                        "src": "980:12:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -932,21 +526,12 @@
                       },
                       {
                         "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                        "id": 385,
+                        "id": 98,
                         "name": "_weiAmount",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 378,
-                        "src": "1018:10:4",
-=======
-                        "id": 501,
-                        "name": "_weiAmount",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 494,
-                        "src": "1018:10:6",
->>>>>>> .merge_file_fkasvX
+                        "referencedDeclaration": 91,
+                        "src": "994:10:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -966,56 +551,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                        "id": 381,
+                        "id": 94,
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1305,
-                        "src": "977:5:4",
+                        "referencedDeclaration": 1415,
+                        "src": "953:5:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_super$_CappedCrowdsale_$399",
+                          "typeIdentifier": "t_super$_CappedCrowdsale_$112",
                           "typeString": "contract super CappedCrowdsale"
                         }
                       },
-                      "id": 383,
-=======
-                        "id": 497,
-                        "name": "super",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 1421,
-                        "src": "977:5:6",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_super$_CappedCrowdsale_$515",
-                          "typeString": "contract super CappedCrowdsale"
-                        }
-                      },
-                      "id": 499,
->>>>>>> .merge_file_fkasvX
+                      "id": 96,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "_preValidatePurchase",
                       "nodeType": "MemberAccess",
-<<<<<<< .merge_file_pKcsCV
-                      "referencedDeclaration": 241,
-                      "src": "977:26:4",
-=======
-                      "referencedDeclaration": 357,
-                      "src": "977:26:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 271,
+                      "src": "953:26:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
                         "typeString": "function (address,uint256)"
                       }
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "id": 386,
-=======
-                    "id": 502,
->>>>>>> .merge_file_fkasvX
+                    "id": 99,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1023,25 +584,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-<<<<<<< .merge_file_pKcsCV
-                    "src": "977:52:4",
-=======
-                    "src": "977:52:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "953:52:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-<<<<<<< .merge_file_pKcsCV
-                  "id": 387,
+                  "id": 100,
                   "nodeType": "ExpressionStatement",
-                  "src": "977:52:4"
-=======
-                  "id": 503,
-                  "nodeType": "ExpressionStatement",
-                  "src": "977:52:6"
->>>>>>> .merge_file_fkasvX
+                  "src": "953:52:1"
                 },
                 {
                   "expression": {
@@ -1053,11 +604,7 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-<<<<<<< .merge_file_pKcsCV
-                        "id": 394,
-=======
-                        "id": 510,
->>>>>>> .merge_file_fkasvX
+                        "id": 107,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1067,21 +614,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                              "id": 391,
+                              "id": 104,
                               "name": "_weiAmount",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 378,
-                              "src": "1057:10:4",
-=======
-                              "id": 507,
-                              "name": "_weiAmount",
-                              "nodeType": "Identifier",
-                              "overloadedDeclarations": [],
-                              "referencedDeclaration": 494,
-                              "src": "1057:10:6",
->>>>>>> .merge_file_fkasvX
+                              "referencedDeclaration": 91,
+                              "src": "1033:10:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -1097,54 +635,32 @@
                             ],
                             "expression": {
                               "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                              "id": 389,
+                              "id": 102,
                               "name": "weiRaised",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 101,
-                              "src": "1043:9:4",
-=======
-                              "id": 505,
-                              "name": "weiRaised",
-                              "nodeType": "Identifier",
-                              "overloadedDeclarations": [],
-                              "referencedDeclaration": 217,
-                              "src": "1043:9:6",
->>>>>>> .merge_file_fkasvX
+                              "referencedDeclaration": 131,
+                              "src": "1019:9:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
                               }
                             },
-<<<<<<< .merge_file_pKcsCV
-                            "id": 390,
-=======
-                            "id": 506,
->>>>>>> .merge_file_fkasvX
+                            "id": 103,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "add",
                             "nodeType": "MemberAccess",
-<<<<<<< .merge_file_pKcsCV
-                            "referencedDeclaration": 579,
-                            "src": "1043:13:4",
-=======
-                            "referencedDeclaration": 695,
-                            "src": "1043:13:6",
->>>>>>> .merge_file_fkasvX
+                            "referencedDeclaration": 1373,
+                            "src": "1019:13:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
                               "typeString": "function (uint256,uint256) pure returns (uint256)"
                             }
                           },
-<<<<<<< .merge_file_pKcsCV
-                          "id": 392,
-=======
-                          "id": 508,
->>>>>>> .merge_file_fkasvX
+                          "id": 105,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1152,11 +668,7 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-<<<<<<< .merge_file_pKcsCV
-                          "src": "1043:25:4",
-=======
-                          "src": "1043:25:6",
->>>>>>> .merge_file_fkasvX
+                          "src": "1019:25:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1166,31 +678,18 @@
                         "operator": "<=",
                         "rightExpression": {
                           "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                          "id": 393,
+                          "id": 106,
                           "name": "cap",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 348,
-                          "src": "1072:3:4",
-=======
-                          "id": 509,
-                          "name": "cap",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 464,
-                          "src": "1072:3:6",
->>>>>>> .merge_file_fkasvX
+                          "referencedDeclaration": 67,
+                          "src": "1048:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           }
                         },
-<<<<<<< .merge_file_pKcsCV
-                        "src": "1043:32:4",
-=======
-                        "src": "1043:32:6",
->>>>>>> .merge_file_fkasvX
+                        "src": "1019:32:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -1204,37 +703,21 @@
                           "typeString": "bool"
                         }
                       ],
-<<<<<<< .merge_file_pKcsCV
-                      "id": 388,
+                      "id": 101,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1270,
-                        1271
+                        1392,
+                        1393
                       ],
-                      "referencedDeclaration": 1270,
-                      "src": "1035:7:4",
-=======
-                      "id": 504,
-                      "name": "require",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        1386,
-                        1387
-                      ],
-                      "referencedDeclaration": 1386,
-                      "src": "1035:7:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 1392,
+                      "src": "1011:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                         "typeString": "function (bool) pure"
                       }
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "id": 395,
-=======
-                    "id": 511,
->>>>>>> .merge_file_fkasvX
+                    "id": 108,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1242,34 +725,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-<<<<<<< .merge_file_pKcsCV
-                    "src": "1035:41:4",
-=======
-                    "src": "1035:41:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "1011:41:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-<<<<<<< .merge_file_pKcsCV
-                  "id": 396,
+                  "id": 109,
                   "nodeType": "ExpressionStatement",
-                  "src": "1035:41:4"
-=======
-                  "id": 512,
-                  "nodeType": "ExpressionStatement",
-                  "src": "1035:41:6"
->>>>>>> .merge_file_fkasvX
+                  "src": "1011:41:1"
                 }
               ]
             },
             "documentation": "@dev Extend parent behavior requiring purchase to respect the funding cap.\n@param _beneficiary Token purchaser\n@param _weiAmount Amount of wei contributed",
-<<<<<<< .merge_file_pKcsCV
-            "id": 398,
-=======
-            "id": 514,
->>>>>>> .merge_file_fkasvX
+            "id": 111,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1277,28 +746,16 @@
             "name": "_preValidatePurchase",
             "nodeType": "FunctionDefinition",
             "parameters": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 379,
-=======
-              "id": 495,
->>>>>>> .merge_file_fkasvX
+              "id": 92,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-<<<<<<< .merge_file_pKcsCV
-                  "id": 376,
+                  "id": 89,
                   "name": "_beneficiary",
                   "nodeType": "VariableDeclaration",
-                  "scope": 398,
-                  "src": "907:20:4",
-=======
-                  "id": 492,
-                  "name": "_beneficiary",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 514,
-                  "src": "907:20:6",
->>>>>>> .merge_file_fkasvX
+                  "scope": 111,
+                  "src": "883:20:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1306,17 +763,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-<<<<<<< .merge_file_pKcsCV
-                    "id": 375,
+                    "id": 88,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "907:7:4",
-=======
-                    "id": 491,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "907:7:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "883:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1327,19 +777,11 @@
                 },
                 {
                   "constant": false,
-<<<<<<< .merge_file_pKcsCV
-                  "id": 378,
+                  "id": 91,
                   "name": "_weiAmount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 398,
-                  "src": "933:18:4",
-=======
-                  "id": 494,
-                  "name": "_weiAmount",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 514,
-                  "src": "933:18:6",
->>>>>>> .merge_file_fkasvX
+                  "scope": 111,
+                  "src": "909:18:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1347,17 +789,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-<<<<<<< .merge_file_pKcsCV
-                    "id": 377,
+                    "id": 90,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "933:7:4",
-=======
-                    "id": 493,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "933:7:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "909:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1367,75 +802,40 @@
                   "visibility": "internal"
                 }
               ],
-<<<<<<< .merge_file_pKcsCV
-              "src": "901:54:4"
+              "src": "877:54:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 380,
+              "id": 93,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "971:0:4"
+              "src": "947:0:1"
             },
-            "scope": 399,
-            "src": "872:209:4",
+            "scope": 112,
+            "src": "848:209:1",
             "stateMutability": "nonpayable",
-            "superFunction": 241,
+            "superFunction": 271,
             "visibility": "internal"
           }
         ],
-        "scope": 400,
-        "src": "179:905:4"
+        "scope": 113,
+        "src": "178:882:1"
       }
     ],
-    "src": "0:1085:4"
-=======
-              "src": "901:54:6"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 496,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "971:0:6"
-            },
-            "scope": 515,
-            "src": "872:209:6",
-            "stateMutability": "nonpayable",
-            "superFunction": 357,
-            "visibility": "internal"
-          }
-        ],
-        "scope": 516,
-        "src": "179:905:6"
-      }
-    ],
-    "src": "0:1085:6"
->>>>>>> .merge_file_fkasvX
+    "src": "0:1061:1"
   },
   "legacyAST": {
-    "absolutePath": "openzeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/CappedCrowdsale.sol",
     "exportedSymbols": {
       "CappedCrowdsale": [
-<<<<<<< .merge_file_pKcsCV
-        399
+        112
       ]
     },
-    "id": 400,
+    "id": 113,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 339,
-=======
-        515
-      ]
-    },
-    "id": 516,
-    "nodeType": "SourceUnit",
-    "nodes": [
-      {
-        "id": 455,
->>>>>>> .merge_file_fkasvX
+        "id": 58,
         "literals": [
           "solidity",
           "^",
@@ -1443,47 +843,27 @@
           ".24"
         ],
         "nodeType": "PragmaDirective",
-<<<<<<< .merge_file_pKcsCV
-        "src": "0:24:4"
-=======
-        "src": "0:24:6"
->>>>>>> .merge_file_fkasvX
+        "src": "0:24:1"
       },
       {
-        "absolutePath": "openzeppelin-solidity/contracts/math/SafeMath.sol",
-        "file": "../../math/SafeMath.sol",
-<<<<<<< .merge_file_pKcsCV
-        "id": 340,
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/SafeMath.sol",
+        "file": "../utility/SafeMath.sol",
+        "id": 59,
         "nodeType": "ImportDirective",
-        "scope": 400,
-        "sourceUnit": 581,
-        "src": "26:33:4",
-=======
-        "id": 456,
-        "nodeType": "ImportDirective",
-        "scope": 516,
-        "sourceUnit": 697,
-        "src": "26:33:6",
->>>>>>> .merge_file_fkasvX
+        "scope": 113,
+        "sourceUnit": 1375,
+        "src": "26:33:1",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "openzeppelin-solidity/contracts/crowdsale/Crowdsale.sol",
-        "file": "../Crowdsale.sol",
-<<<<<<< .merge_file_pKcsCV
-        "id": 341,
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
+        "file": "./Crowdsale.sol",
+        "id": 60,
         "nodeType": "ImportDirective",
-        "scope": 400,
-        "sourceUnit": 311,
-        "src": "60:26:4",
-=======
-        "id": 457,
-        "nodeType": "ImportDirective",
-        "scope": 516,
-        "sourceUnit": 427,
-        "src": "60:26:6",
->>>>>>> .merge_file_fkasvX
+        "scope": 113,
+        "sourceUnit": 341,
+        "src": "60:25:1",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -1493,105 +873,56 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-<<<<<<< .merge_file_pKcsCV
-              "id": 342,
+              "id": 61,
               "name": "Crowdsale",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 310,
-              "src": "207:9:4",
+              "referencedDeclaration": 340,
+              "src": "206:9:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Crowdsale_$310",
+                "typeIdentifier": "t_contract$_Crowdsale_$340",
                 "typeString": "contract Crowdsale"
               }
             },
-            "id": 343,
+            "id": 62,
             "nodeType": "InheritanceSpecifier",
-            "src": "207:9:4"
+            "src": "206:9:1"
           }
         ],
         "contractDependencies": [
-          310
-=======
-              "id": 458,
-              "name": "Crowdsale",
-              "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 426,
-              "src": "207:9:6",
-              "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Crowdsale_$426",
-                "typeString": "contract Crowdsale"
-              }
-            },
-            "id": 459,
-            "nodeType": "InheritanceSpecifier",
-            "src": "207:9:6"
-          }
-        ],
-        "contractDependencies": [
-          426
->>>>>>> .merge_file_fkasvX
+          340
         ],
         "contractKind": "contract",
         "documentation": "@title CappedCrowdsale\n@dev Crowdsale with a limit for total contributions.",
         "fullyImplemented": false,
-<<<<<<< .merge_file_pKcsCV
-        "id": 399,
+        "id": 112,
         "linearizedBaseContracts": [
-          399,
-          310
-=======
-        "id": 515,
-        "linearizedBaseContracts": [
-          515,
-          426
->>>>>>> .merge_file_fkasvX
+          112,
+          340
         ],
         "name": "CappedCrowdsale",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-<<<<<<< .merge_file_pKcsCV
-            "id": 346,
+            "id": 65,
             "libraryName": {
               "contractScope": null,
-              "id": 344,
+              "id": 63,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 580,
-              "src": "227:8:4",
+              "referencedDeclaration": 1374,
+              "src": "226:8:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$580",
-=======
-            "id": 462,
-            "libraryName": {
-              "contractScope": null,
-              "id": 460,
-              "name": "SafeMath",
-              "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 696,
-              "src": "227:8:6",
-              "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$696",
->>>>>>> .merge_file_fkasvX
+                "typeIdentifier": "t_contract$_SafeMath_$1374",
                 "typeString": "library SafeMath"
               }
             },
             "nodeType": "UsingForDirective",
-<<<<<<< .merge_file_pKcsCV
-            "src": "221:27:4",
+            "src": "220:27:1",
             "typeName": {
-              "id": 345,
+              "id": 64,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "240:7:4",
-=======
-            "src": "221:27:6",
-            "typeName": {
-              "id": 461,
-              "name": "uint256",
-              "nodeType": "ElementaryTypeName",
-              "src": "240:7:6",
->>>>>>> .merge_file_fkasvX
+              "src": "239:7:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -1600,19 +931,11 @@
           },
           {
             "constant": false,
-<<<<<<< .merge_file_pKcsCV
-            "id": 348,
+            "id": 67,
             "name": "cap",
             "nodeType": "VariableDeclaration",
-            "scope": 399,
-            "src": "252:18:4",
-=======
-            "id": 464,
-            "name": "cap",
-            "nodeType": "VariableDeclaration",
-            "scope": 515,
-            "src": "252:18:6",
->>>>>>> .merge_file_fkasvX
+            "scope": 112,
+            "src": "251:18:1",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -1620,17 +943,10 @@
               "typeString": "uint256"
             },
             "typeName": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 347,
+              "id": 66,
               "name": "uint256",
               "nodeType": "ElementaryTypeName",
-              "src": "252:7:4",
-=======
-              "id": 463,
-              "name": "uint256",
-              "nodeType": "ElementaryTypeName",
-              "src": "252:7:6",
->>>>>>> .merge_file_fkasvX
+              "src": "251:7:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_uint256",
                 "typeString": "uint256"
@@ -1641,190 +957,26 @@
           },
           {
             "body": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 363,
+              "id": 76,
               "nodeType": "Block",
-              "src": "451:44:4",
-=======
-              "id": 479,
-              "nodeType": "Block",
-              "src": "451:44:6",
->>>>>>> .merge_file_fkasvX
+              "src": "450:21:1",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "arguments": [
-                      {
-                        "argumentTypes": null,
-                        "commonType": {
-                          "typeIdentifier": "t_uint256",
-                          "typeString": "uint256"
-                        },
-<<<<<<< .merge_file_pKcsCV
-                        "id": 356,
-=======
-                        "id": 472,
->>>>>>> .merge_file_fkasvX
-                        "isConstant": false,
-                        "isLValue": false,
-                        "isPure": false,
-                        "lValueRequested": false,
-                        "leftExpression": {
-                          "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                          "id": 354,
-                          "name": "_cap",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 350,
-                          "src": "465:4:4",
-=======
-                          "id": 470,
-                          "name": "_cap",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 466,
-                          "src": "465:4:6",
->>>>>>> .merge_file_fkasvX
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_uint256",
-                            "typeString": "uint256"
-                          }
-                        },
-                        "nodeType": "BinaryOperation",
-                        "operator": ">",
-                        "rightExpression": {
-                          "argumentTypes": null,
-                          "hexValue": "30",
-<<<<<<< .merge_file_pKcsCV
-                          "id": 355,
-=======
-                          "id": 471,
->>>>>>> .merge_file_fkasvX
-                          "isConstant": false,
-                          "isLValue": false,
-                          "isPure": true,
-                          "kind": "number",
-                          "lValueRequested": false,
-                          "nodeType": "Literal",
-<<<<<<< .merge_file_pKcsCV
-                          "src": "472:1:4",
-=======
-                          "src": "472:1:6",
->>>>>>> .merge_file_fkasvX
-                          "subdenomination": null,
-                          "typeDescriptions": {
-                            "typeIdentifier": "t_rational_0_by_1",
-                            "typeString": "int_const 0"
-                          },
-                          "value": "0"
-                        },
-<<<<<<< .merge_file_pKcsCV
-                        "src": "465:8:4",
-=======
-                        "src": "465:8:6",
->>>>>>> .merge_file_fkasvX
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_bool",
-                          "typeString": "bool"
-                        }
-                      }
-                    ],
-                    "expression": {
-                      "argumentTypes": [
-                        {
-                          "typeIdentifier": "t_bool",
-                          "typeString": "bool"
-                        }
-                      ],
-<<<<<<< .merge_file_pKcsCV
-                      "id": 353,
-                      "name": "require",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        1270,
-                        1271
-                      ],
-                      "referencedDeclaration": 1270,
-                      "src": "457:7:4",
-=======
-                      "id": 469,
-                      "name": "require",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        1386,
-                        1387
-                      ],
-                      "referencedDeclaration": 1386,
-                      "src": "457:7:6",
->>>>>>> .merge_file_fkasvX
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
-                        "typeString": "function (bool) pure"
-                      }
-                    },
-<<<<<<< .merge_file_pKcsCV
-                    "id": 357,
-=======
-                    "id": 473,
->>>>>>> .merge_file_fkasvX
-                    "isConstant": false,
-                    "isLValue": false,
-                    "isPure": false,
-                    "kind": "functionCall",
-                    "lValueRequested": false,
-                    "names": [],
-                    "nodeType": "FunctionCall",
-<<<<<<< .merge_file_pKcsCV
-                    "src": "457:17:4",
-=======
-                    "src": "457:17:6",
->>>>>>> .merge_file_fkasvX
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_tuple$__$",
-                      "typeString": "tuple()"
-                    }
-                  },
-<<<<<<< .merge_file_pKcsCV
-                  "id": 358,
-                  "nodeType": "ExpressionStatement",
-                  "src": "457:17:4"
-=======
-                  "id": 474,
-                  "nodeType": "ExpressionStatement",
-                  "src": "457:17:6"
->>>>>>> .merge_file_fkasvX
-                },
-                {
-                  "expression": {
-                    "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                    "id": 361,
-=======
-                    "id": 477,
->>>>>>> .merge_file_fkasvX
+                    "id": 74,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                      "id": 359,
+                      "id": 72,
                       "name": "cap",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 348,
-                      "src": "480:3:4",
-=======
-                      "id": 475,
-                      "name": "cap",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 464,
-                      "src": "480:3:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 67,
+                      "src": "456:3:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1834,54 +986,31 @@
                     "operator": "=",
                     "rightHandSide": {
                       "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                      "id": 360,
+                      "id": 73,
                       "name": "_cap",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 350,
-                      "src": "486:4:4",
-=======
-                      "id": 476,
-                      "name": "_cap",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 466,
-                      "src": "486:4:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 69,
+                      "src": "462:4:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "src": "480:10:4",
-=======
-                    "src": "480:10:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "456:10:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-<<<<<<< .merge_file_pKcsCV
-                  "id": 362,
+                  "id": 75,
                   "nodeType": "ExpressionStatement",
-                  "src": "480:10:4"
-=======
-                  "id": 478,
-                  "nodeType": "ExpressionStatement",
-                  "src": "480:10:6"
->>>>>>> .merge_file_fkasvX
+                  "src": "456:10:1"
                 }
               ]
             },
             "documentation": "@dev Constructor, takes maximum amount of wei accepted in the crowdsale.\n@param _cap Max amount of wei to be contributed",
-<<<<<<< .merge_file_pKcsCV
-            "id": 364,
-=======
-            "id": 480,
->>>>>>> .merge_file_fkasvX
+            "id": 77,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -1889,28 +1018,16 @@
             "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 351,
-=======
-              "id": 467,
->>>>>>> .merge_file_fkasvX
+              "id": 70,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-<<<<<<< .merge_file_pKcsCV
-                  "id": 350,
+                  "id": 69,
                   "name": "_cap",
                   "nodeType": "VariableDeclaration",
-                  "scope": 364,
-                  "src": "430:12:4",
-=======
-                  "id": 466,
-                  "name": "_cap",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 480,
-                  "src": "430:12:6",
->>>>>>> .merge_file_fkasvX
+                  "scope": 77,
+                  "src": "429:12:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1918,17 +1035,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-<<<<<<< .merge_file_pKcsCV
-                    "id": 349,
+                    "id": 68,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "430:7:4",
-=======
-                    "id": 465,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "430:7:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "429:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1938,46 +1048,26 @@
                   "visibility": "internal"
                 }
               ],
-<<<<<<< .merge_file_pKcsCV
-              "src": "429:14:4"
+              "src": "428:14:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 352,
+              "id": 71,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "451:0:4"
+              "src": "450:0:1"
             },
-            "scope": 399,
-            "src": "418:77:4",
-=======
-              "src": "429:14:6"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 468,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "451:0:6"
-            },
-            "scope": 515,
-            "src": "418:77:6",
->>>>>>> .merge_file_fkasvX
+            "scope": 112,
+            "src": "417:54:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 373,
+              "id": 86,
               "nodeType": "Block",
-              "src": "652:34:4",
-=======
-              "id": 489,
-              "nodeType": "Block",
-              "src": "652:34:6",
->>>>>>> .merge_file_fkasvX
+              "src": "628:34:1",
               "statements": [
                 {
                   "expression": {
@@ -1986,32 +1076,19 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "id": 371,
-=======
-                    "id": 487,
->>>>>>> .merge_file_fkasvX
+                    "id": 84,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                      "id": 369,
+                      "id": 82,
                       "name": "weiRaised",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 101,
-                      "src": "665:9:4",
-=======
-                      "id": 485,
-                      "name": "weiRaised",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 217,
-                      "src": "665:9:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 131,
+                      "src": "641:9:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -2021,56 +1098,32 @@
                     "operator": ">=",
                     "rightExpression": {
                       "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                      "id": 370,
+                      "id": 83,
                       "name": "cap",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 348,
-                      "src": "678:3:4",
-=======
-                      "id": 486,
-                      "name": "cap",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 464,
-                      "src": "678:3:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 67,
+                      "src": "654:3:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "src": "665:16:4",
-=======
-                    "src": "665:16:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "641:16:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-<<<<<<< .merge_file_pKcsCV
-                  "functionReturnParameters": 368,
-                  "id": 372,
+                  "functionReturnParameters": 81,
+                  "id": 85,
                   "nodeType": "Return",
-                  "src": "658:23:4"
-=======
-                  "functionReturnParameters": 484,
-                  "id": 488,
-                  "nodeType": "Return",
-                  "src": "658:23:6"
->>>>>>> .merge_file_fkasvX
+                  "src": "634:23:1"
                 }
               ]
             },
             "documentation": "@dev Checks whether the cap has been reached.\n@return Whether the cap was reached",
-<<<<<<< .merge_file_pKcsCV
-            "id": 374,
-=======
-            "id": 490,
->>>>>>> .merge_file_fkasvX
+            "id": 87,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -2078,42 +1131,23 @@
             "name": "capReached",
             "nodeType": "FunctionDefinition",
             "parameters": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 365,
+              "id": 78,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "622:2:4"
+              "src": "598:2:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 368,
-=======
-              "id": 481,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "622:2:6"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 484,
->>>>>>> .merge_file_fkasvX
+              "id": 81,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-<<<<<<< .merge_file_pKcsCV
-                  "id": 367,
+                  "id": 80,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 374,
-                  "src": "646:4:4",
-=======
-                  "id": 483,
-                  "name": "",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 490,
-                  "src": "646:4:6",
->>>>>>> .merge_file_fkasvX
+                  "scope": 87,
+                  "src": "622:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2121,17 +1155,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-<<<<<<< .merge_file_pKcsCV
-                    "id": 366,
+                    "id": 79,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "646:4:4",
-=======
-                    "id": 482,
-                    "name": "bool",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "646:4:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "622:4:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -2141,32 +1168,19 @@
                   "visibility": "internal"
                 }
               ],
-<<<<<<< .merge_file_pKcsCV
-              "src": "645:6:4"
+              "src": "621:6:1"
             },
-            "scope": 399,
-            "src": "603:83:4",
-=======
-              "src": "645:6:6"
-            },
-            "scope": 515,
-            "src": "603:83:6",
->>>>>>> .merge_file_fkasvX
+            "scope": 112,
+            "src": "579:83:1",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 397,
+              "id": 110,
               "nodeType": "Block",
-              "src": "971:110:4",
-=======
-              "id": 513,
-              "nodeType": "Block",
-              "src": "971:110:6",
->>>>>>> .merge_file_fkasvX
+              "src": "947:110:1",
               "statements": [
                 {
                   "expression": {
@@ -2174,21 +1188,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                        "id": 384,
+                        "id": 97,
                         "name": "_beneficiary",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 376,
-                        "src": "1004:12:4",
-=======
-                        "id": 500,
-                        "name": "_beneficiary",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 492,
-                        "src": "1004:12:6",
->>>>>>> .merge_file_fkasvX
+                        "referencedDeclaration": 89,
+                        "src": "980:12:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -2196,21 +1201,12 @@
                       },
                       {
                         "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                        "id": 385,
+                        "id": 98,
                         "name": "_weiAmount",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 378,
-                        "src": "1018:10:4",
-=======
-                        "id": 501,
-                        "name": "_weiAmount",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 494,
-                        "src": "1018:10:6",
->>>>>>> .merge_file_fkasvX
+                        "referencedDeclaration": 91,
+                        "src": "994:10:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2230,56 +1226,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                        "id": 381,
+                        "id": 94,
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1305,
-                        "src": "977:5:4",
+                        "referencedDeclaration": 1415,
+                        "src": "953:5:1",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_super$_CappedCrowdsale_$399",
+                          "typeIdentifier": "t_super$_CappedCrowdsale_$112",
                           "typeString": "contract super CappedCrowdsale"
                         }
                       },
-                      "id": 383,
-=======
-                        "id": 497,
-                        "name": "super",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 1421,
-                        "src": "977:5:6",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_super$_CappedCrowdsale_$515",
-                          "typeString": "contract super CappedCrowdsale"
-                        }
-                      },
-                      "id": 499,
->>>>>>> .merge_file_fkasvX
+                      "id": 96,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "_preValidatePurchase",
                       "nodeType": "MemberAccess",
-<<<<<<< .merge_file_pKcsCV
-                      "referencedDeclaration": 241,
-                      "src": "977:26:4",
-=======
-                      "referencedDeclaration": 357,
-                      "src": "977:26:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 271,
+                      "src": "953:26:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
                         "typeString": "function (address,uint256)"
                       }
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "id": 386,
-=======
-                    "id": 502,
->>>>>>> .merge_file_fkasvX
+                    "id": 99,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2287,25 +1259,15 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-<<<<<<< .merge_file_pKcsCV
-                    "src": "977:52:4",
-=======
-                    "src": "977:52:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "953:52:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-<<<<<<< .merge_file_pKcsCV
-                  "id": 387,
+                  "id": 100,
                   "nodeType": "ExpressionStatement",
-                  "src": "977:52:4"
-=======
-                  "id": 503,
-                  "nodeType": "ExpressionStatement",
-                  "src": "977:52:6"
->>>>>>> .merge_file_fkasvX
+                  "src": "953:52:1"
                 },
                 {
                   "expression": {
@@ -2317,11 +1279,7 @@
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         },
-<<<<<<< .merge_file_pKcsCV
-                        "id": 394,
-=======
-                        "id": 510,
->>>>>>> .merge_file_fkasvX
+                        "id": 107,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -2331,21 +1289,12 @@
                           "arguments": [
                             {
                               "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                              "id": 391,
+                              "id": 104,
                               "name": "_weiAmount",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 378,
-                              "src": "1057:10:4",
-=======
-                              "id": 507,
-                              "name": "_weiAmount",
-                              "nodeType": "Identifier",
-                              "overloadedDeclarations": [],
-                              "referencedDeclaration": 494,
-                              "src": "1057:10:6",
->>>>>>> .merge_file_fkasvX
+                              "referencedDeclaration": 91,
+                              "src": "1033:10:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
@@ -2361,54 +1310,32 @@
                             ],
                             "expression": {
                               "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                              "id": 389,
+                              "id": 102,
                               "name": "weiRaised",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 101,
-                              "src": "1043:9:4",
-=======
-                              "id": 505,
-                              "name": "weiRaised",
-                              "nodeType": "Identifier",
-                              "overloadedDeclarations": [],
-                              "referencedDeclaration": 217,
-                              "src": "1043:9:6",
->>>>>>> .merge_file_fkasvX
+                              "referencedDeclaration": 131,
+                              "src": "1019:9:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_uint256",
                                 "typeString": "uint256"
                               }
                             },
-<<<<<<< .merge_file_pKcsCV
-                            "id": 390,
-=======
-                            "id": 506,
->>>>>>> .merge_file_fkasvX
+                            "id": 103,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "add",
                             "nodeType": "MemberAccess",
-<<<<<<< .merge_file_pKcsCV
-                            "referencedDeclaration": 579,
-                            "src": "1043:13:4",
-=======
-                            "referencedDeclaration": 695,
-                            "src": "1043:13:6",
->>>>>>> .merge_file_fkasvX
+                            "referencedDeclaration": 1373,
+                            "src": "1019:13:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
                               "typeString": "function (uint256,uint256) pure returns (uint256)"
                             }
                           },
-<<<<<<< .merge_file_pKcsCV
-                          "id": 392,
-=======
-                          "id": 508,
->>>>>>> .merge_file_fkasvX
+                          "id": 105,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2416,11 +1343,7 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-<<<<<<< .merge_file_pKcsCV
-                          "src": "1043:25:4",
-=======
-                          "src": "1043:25:6",
->>>>>>> .merge_file_fkasvX
+                          "src": "1019:25:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -2430,31 +1353,18 @@
                         "operator": "<=",
                         "rightExpression": {
                           "argumentTypes": null,
-<<<<<<< .merge_file_pKcsCV
-                          "id": 393,
+                          "id": 106,
                           "name": "cap",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 348,
-                          "src": "1072:3:4",
-=======
-                          "id": 509,
-                          "name": "cap",
-                          "nodeType": "Identifier",
-                          "overloadedDeclarations": [],
-                          "referencedDeclaration": 464,
-                          "src": "1072:3:6",
->>>>>>> .merge_file_fkasvX
+                          "referencedDeclaration": 67,
+                          "src": "1048:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
                           }
                         },
-<<<<<<< .merge_file_pKcsCV
-                        "src": "1043:32:4",
-=======
-                        "src": "1043:32:6",
->>>>>>> .merge_file_fkasvX
+                        "src": "1019:32:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -2468,37 +1378,21 @@
                           "typeString": "bool"
                         }
                       ],
-<<<<<<< .merge_file_pKcsCV
-                      "id": 388,
+                      "id": 101,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1270,
-                        1271
+                        1392,
+                        1393
                       ],
-                      "referencedDeclaration": 1270,
-                      "src": "1035:7:4",
-=======
-                      "id": 504,
-                      "name": "require",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        1386,
-                        1387
-                      ],
-                      "referencedDeclaration": 1386,
-                      "src": "1035:7:6",
->>>>>>> .merge_file_fkasvX
+                      "referencedDeclaration": 1392,
+                      "src": "1011:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                         "typeString": "function (bool) pure"
                       }
                     },
-<<<<<<< .merge_file_pKcsCV
-                    "id": 395,
-=======
-                    "id": 511,
->>>>>>> .merge_file_fkasvX
+                    "id": 108,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2506,34 +1400,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-<<<<<<< .merge_file_pKcsCV
-                    "src": "1035:41:4",
-=======
-                    "src": "1035:41:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "1011:41:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-<<<<<<< .merge_file_pKcsCV
-                  "id": 396,
+                  "id": 109,
                   "nodeType": "ExpressionStatement",
-                  "src": "1035:41:4"
-=======
-                  "id": 512,
-                  "nodeType": "ExpressionStatement",
-                  "src": "1035:41:6"
->>>>>>> .merge_file_fkasvX
+                  "src": "1011:41:1"
                 }
               ]
             },
             "documentation": "@dev Extend parent behavior requiring purchase to respect the funding cap.\n@param _beneficiary Token purchaser\n@param _weiAmount Amount of wei contributed",
-<<<<<<< .merge_file_pKcsCV
-            "id": 398,
-=======
-            "id": 514,
->>>>>>> .merge_file_fkasvX
+            "id": 111,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -2541,28 +1421,16 @@
             "name": "_preValidatePurchase",
             "nodeType": "FunctionDefinition",
             "parameters": {
-<<<<<<< .merge_file_pKcsCV
-              "id": 379,
-=======
-              "id": 495,
->>>>>>> .merge_file_fkasvX
+              "id": 92,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-<<<<<<< .merge_file_pKcsCV
-                  "id": 376,
+                  "id": 89,
                   "name": "_beneficiary",
                   "nodeType": "VariableDeclaration",
-                  "scope": 398,
-                  "src": "907:20:4",
-=======
-                  "id": 492,
-                  "name": "_beneficiary",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 514,
-                  "src": "907:20:6",
->>>>>>> .merge_file_fkasvX
+                  "scope": 111,
+                  "src": "883:20:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2570,17 +1438,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-<<<<<<< .merge_file_pKcsCV
-                    "id": 375,
+                    "id": 88,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "907:7:4",
-=======
-                    "id": 491,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "907:7:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "883:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -2591,19 +1452,11 @@
                 },
                 {
                   "constant": false,
-<<<<<<< .merge_file_pKcsCV
-                  "id": 378,
+                  "id": 91,
                   "name": "_weiAmount",
                   "nodeType": "VariableDeclaration",
-                  "scope": 398,
-                  "src": "933:18:4",
-=======
-                  "id": 494,
-                  "name": "_weiAmount",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 514,
-                  "src": "933:18:6",
->>>>>>> .merge_file_fkasvX
+                  "scope": 111,
+                  "src": "909:18:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2611,17 +1464,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-<<<<<<< .merge_file_pKcsCV
-                    "id": 377,
+                    "id": 90,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "933:7:4",
-=======
-                    "id": 493,
-                    "name": "uint256",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "933:7:6",
->>>>>>> .merge_file_fkasvX
+                    "src": "909:7:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2631,51 +1477,27 @@
                   "visibility": "internal"
                 }
               ],
-<<<<<<< .merge_file_pKcsCV
-              "src": "901:54:4"
+              "src": "877:54:1"
             },
             "payable": false,
             "returnParameters": {
-              "id": 380,
+              "id": 93,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "971:0:4"
+              "src": "947:0:1"
             },
-            "scope": 399,
-            "src": "872:209:4",
+            "scope": 112,
+            "src": "848:209:1",
             "stateMutability": "nonpayable",
-            "superFunction": 241,
+            "superFunction": 271,
             "visibility": "internal"
           }
         ],
-        "scope": 400,
-        "src": "179:905:4"
+        "scope": 113,
+        "src": "178:882:1"
       }
     ],
-    "src": "0:1085:4"
-=======
-              "src": "901:54:6"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 496,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "971:0:6"
-            },
-            "scope": 515,
-            "src": "872:209:6",
-            "stateMutability": "nonpayable",
-            "superFunction": 357,
-            "visibility": "internal"
-          }
-        ],
-        "scope": 516,
-        "src": "179:905:6"
-      }
-    ],
-    "src": "0:1085:6"
->>>>>>> .merge_file_fkasvX
+    "src": "0:1061:1"
   },
   "compiler": {
     "name": "solc",
@@ -2683,9 +1505,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-<<<<<<< .merge_file_pKcsCV
-  "updatedAt": "2018-09-19T21:27:18.877Z"
-=======
-  "updatedAt": "2018-09-20T17:33:04.114Z"
->>>>>>> .merge_file_fkasvX
+  "updatedAt": "2018-09-22T23:12:41.474Z"
 }
