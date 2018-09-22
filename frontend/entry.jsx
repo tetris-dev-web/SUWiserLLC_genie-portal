@@ -30,8 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.drizzle = drizzle;
   window.store = store;
   window.getState = store.getState;
-  // testing end
-// console.log(bcOptions)
+
   const root = document.getElementById('root');
   ReactDOM.render(<Root store={store} drizzle={drizzle}/>, root);
 });

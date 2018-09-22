@@ -9,7 +9,6 @@ class ReadString extends Component {
     const {drizzle} = this.props;
 
     const contract = drizzle.contracts.MyStringStore;
-      console.log(this.props.drizzleState)
 
     const dataKey = contract.methods["myString"].cacheCall();
 

@@ -26,14 +26,18 @@ class Transfer extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(e) {
-    console.log('submitted');
+  componentDidMount () {
+    const {drizzle} = this.props;
+    this.setState({tokenContract: drizzle.contracts.GNIToken})
+  }
 
-    this.props.contract.transfer(
-      this.state.receivingWallet,
-      this.state.shares,
-      {from: this.props.account}
-    );
+  handleSubmit(e) {
+
+    // this.state.tokenContract.methods.transfer.cacheSend(
+    //   tokenContract.methods.balaneof.cacheCall({drizzleState.accounts[0]}),
+    //   tokenContract.methods.balaneof.cacheCall({drizzleState.accounts[1]}),
+    //   {from: this.props.account}
+    // );
   }
 
   update(property) {
