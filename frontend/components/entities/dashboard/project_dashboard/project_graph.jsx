@@ -16,7 +16,6 @@ const rosyBrown = "#AB7A5E"
 const lightGrey = "#DEDBCF"
 const darkGrey = "#A59A91"
 
-console.log("t4ext")
 
 class ProjectGraph extends React.Component {
   constructor(props) {

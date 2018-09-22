@@ -31,7 +31,6 @@ class TransferModal extends React.Component {
   }
 
   render() {
-    debugger
 
     return (
       <div className="modal-button-cont">
