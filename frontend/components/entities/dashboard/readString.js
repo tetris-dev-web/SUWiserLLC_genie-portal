@@ -37,7 +37,6 @@ class ReadString extends React.Component {
     const stackIdCap = GNITokenCrowdsale.methods.cap.cacheCall();
     const stackIdRate = GNITokenCrowdsale.methods.rate.cacheCall();
     const stackIdSupply = GNIToken.methods.totalSupply.cacheCall();
-    console.log('stackId =', stackIdSupply);
     this.setState({stackId0Balance,stackId1Balance,stackId2Balance,stackIdCap, stackIdRate,stackIdSupply})
     // this.setState({coinBaseBalanceDataKey})
 
@@ -64,7 +63,6 @@ class ReadString extends React.Component {
     // }
     const cap = GNITokenCrowdsale.cap[this.state.stackIdCap];
     const rate = GNITokenCrowdsale.rate[this.state.stackIdRate];
-console.log(GNIToken)
     return (<div>
               <p> My stored string: { myString && myString.value} </p>
               <p> account 0 balance: { balance0Value && balance0Value.value}   </p>

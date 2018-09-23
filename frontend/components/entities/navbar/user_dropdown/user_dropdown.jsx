@@ -8,6 +8,8 @@ class UserDropdown extends React.Component {
   constructor(props) {
     super(props);
 
+    console.log(this.props);
+    console.log(this.props.currentUser);
 
     const fName = this.props.currentUser.first_name;
     const lName = this.props.currentUser.last_name;
