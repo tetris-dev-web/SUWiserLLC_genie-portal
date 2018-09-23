@@ -109,9 +109,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\nimport \"./Crowdsale.sol\";\nimport \"../token/ERC20/MintableToken.sol\";\n\n\n/**\n * @title MintedCrowdsale\n * @dev Extension of Crowdsale contract whose tokens are minted in each purchase.\n * Token ownership should be transferred to MintedCrowdsale for minting.\n */\ncontract MintedCrowdsale is Crowdsale {\n\n  /**\n   * @dev Overrides delivery by minting tokens upon purchase.\n   * @param _beneficiary Token purchaser\n   * @param _tokenAmount Number of tokens to be minted\n   */\n  function _deliverTokens(\n    address _beneficiary,\n    uint256 _tokenAmount\n  )\n    internal\n  {\n    // Potentially dangerous assumption about the type of the token.\n    require(MintableToken(address(token)).mint(_beneficiary, _tokenAmount));\n  }\n}\n",
-  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/MintedCrowdsale.sol",
+  "sourcePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/MintedCrowdsale.sol",
   "ast": {
-    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/MintedCrowdsale.sol",
+    "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/MintedCrowdsale.sol",
     "exportedSymbols": {
       "MintedCrowdsale": [
         459
@@ -132,7 +132,7 @@
         "src": "0:24:4"
       },
       {
-        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
+        "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
         "file": "./Crowdsale.sol",
         "id": 435,
         "nodeType": "ImportDirective",
@@ -143,12 +143,12 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/MintableToken.sol",
+        "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/token/ERC20/MintableToken.sol",
         "file": "../token/ERC20/MintableToken.sol",
         "id": 436,
         "nodeType": "ImportDirective",
         "scope": 460,
-        "sourceUnit": 836,
+        "sourceUnit": 990,
         "src": "52:42:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -254,7 +254,7 @@
                                     "referencedDeclaration": 125,
                                     "src": "699:5:4",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_contract$_ERC20_$685",
+                                      "typeIdentifier": "t_contract$_ERC20_$839",
                                       "typeString": "contract ERC20"
                                     }
                                   }
@@ -262,7 +262,7 @@
                                 "expression": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_ERC20_$685",
+                                      "typeIdentifier": "t_contract$_ERC20_$839",
                                       "typeString": "contract ERC20"
                                     }
                                   ],
@@ -305,10 +305,10 @@
                               "name": "MintableToken",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 835,
+                              "referencedDeclaration": 989,
                               "src": "677:13:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_MintableToken_$835_$",
+                                "typeIdentifier": "t_type$_t_contract$_MintableToken_$989_$",
                                 "typeString": "type(contract MintableToken)"
                               }
                             },
@@ -322,7 +322,7 @@
                             "nodeType": "FunctionCall",
                             "src": "677:29:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_MintableToken_$835",
+                              "typeIdentifier": "t_contract$_MintableToken_$989",
                               "typeString": "contract MintableToken"
                             }
                           },
@@ -333,7 +333,7 @@
                           "lValueRequested": false,
                           "memberName": "mint",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 815,
+                          "referencedDeclaration": 969,
                           "src": "677:34:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -366,10 +366,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1392,
-                        1393
+                        2099,
+                        2100
                       ],
-                      "referencedDeclaration": 1392,
+                      "referencedDeclaration": 2099,
                       "src": "669:7:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -484,7 +484,7 @@
     "src": "0:748:4"
   },
   "legacyAST": {
-    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/MintedCrowdsale.sol",
+    "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/MintedCrowdsale.sol",
     "exportedSymbols": {
       "MintedCrowdsale": [
         459
@@ -505,7 +505,7 @@
         "src": "0:24:4"
       },
       {
-        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
+        "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
         "file": "./Crowdsale.sol",
         "id": 435,
         "nodeType": "ImportDirective",
@@ -516,12 +516,12 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/MintableToken.sol",
+        "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/token/ERC20/MintableToken.sol",
         "file": "../token/ERC20/MintableToken.sol",
         "id": 436,
         "nodeType": "ImportDirective",
         "scope": 460,
-        "sourceUnit": 836,
+        "sourceUnit": 990,
         "src": "52:42:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -627,7 +627,7 @@
                                     "referencedDeclaration": 125,
                                     "src": "699:5:4",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_contract$_ERC20_$685",
+                                      "typeIdentifier": "t_contract$_ERC20_$839",
                                       "typeString": "contract ERC20"
                                     }
                                   }
@@ -635,7 +635,7 @@
                                 "expression": {
                                   "argumentTypes": [
                                     {
-                                      "typeIdentifier": "t_contract$_ERC20_$685",
+                                      "typeIdentifier": "t_contract$_ERC20_$839",
                                       "typeString": "contract ERC20"
                                     }
                                   ],
@@ -678,10 +678,10 @@
                               "name": "MintableToken",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 835,
+                              "referencedDeclaration": 989,
                               "src": "677:13:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_MintableToken_$835_$",
+                                "typeIdentifier": "t_type$_t_contract$_MintableToken_$989_$",
                                 "typeString": "type(contract MintableToken)"
                               }
                             },
@@ -695,7 +695,7 @@
                             "nodeType": "FunctionCall",
                             "src": "677:29:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_MintableToken_$835",
+                              "typeIdentifier": "t_contract$_MintableToken_$989",
                               "typeString": "contract MintableToken"
                             }
                           },
@@ -706,7 +706,7 @@
                           "lValueRequested": false,
                           "memberName": "mint",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 815,
+                          "referencedDeclaration": 969,
                           "src": "677:34:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -739,10 +739,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        1392,
-                        1393
+                        2099,
+                        2100
                       ],
-                      "referencedDeclaration": 1392,
+                      "referencedDeclaration": 2099,
                       "src": "669:7:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -862,5 +862,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-09-22T23:12:41.480Z"
+  "updatedAt": "2018-09-22T23:40:44.402Z"
 }
