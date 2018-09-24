@@ -22,7 +22,6 @@ class ReadString extends React.Component {
     const {drizzle, drizzleState} = this.props;
     const stringContract = drizzle.contracts.MyStringStore;
     const dataKey = stringContract.methods["myString"].cacheCall();
-
     this.setState({dataKey});
 
     const GNIToken = drizzle.contracts.GNIToken;
@@ -64,7 +63,6 @@ class ReadString extends React.Component {
     // }
     const cap = GNITokenCrowdsale.cap[this.state.stackIdCap];
     const rate = GNITokenCrowdsale.rate[this.state.stackIdRate];
-    console.log(GNIToken)
     return (<div>
               <p> My stored string: { myString && myString.value} </p>
               <p> account 0 balance: { balance0Value && balance0Value.value}   </p>

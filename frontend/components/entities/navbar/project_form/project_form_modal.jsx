@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 import ProjectForm from './project_form_container';
 import ModalStyle from './modal_style';
+import DrizzleConsumer from '../../../drizzle/drizzleConsumer';
 
 class ProjectFormModal extends React.Component {
   constructor(props) {
@@ -44,10 +45,10 @@ class ProjectFormModal extends React.Component {
           style={ModalStyle}
           contentLabel="Manage Modal"
           className="modal-container">
-          <ProjectForm
-            contract={this.props.contract}
-            account={this.props.account}
-            closeModal={this.closeModal}
+        <ProjectForm
+          closeModal={this.closeModal}
+          drizzle={this.props.drizzle}
+          drizzleState={this.props.drizzleState}
           />
         </Modal>
       </div>
