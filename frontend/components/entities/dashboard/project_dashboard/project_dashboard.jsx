@@ -57,7 +57,14 @@ class ProjectDashboard extends React.Component {
             <div className="project-modal-grid">
                 <div className="iframe">iframe</div>
 
-                <div className="temp">temp</div>
+                <div className="temp">
+                  <h3>Capital Required</h3>
+                  <div className="thermo-canvas-container">
+                    <canvas id="myCanvas" width="100" height="100">
+                      
+                    </canvas>
+                  </div>
+                </div>
 
                 <div className="project-description">
                   <div className="project-text">
