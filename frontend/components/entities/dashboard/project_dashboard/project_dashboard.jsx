@@ -63,7 +63,7 @@ class ProjectDashboard extends React.Component {
                   <div className="project-text">
                     <h1>{projectClicked.title}</h1>
                     <div className="project-summary">
-                      summary
+                      {projectClicked.summary}
                     </div>
                   </div>
                   <div className="bus-plan-download">

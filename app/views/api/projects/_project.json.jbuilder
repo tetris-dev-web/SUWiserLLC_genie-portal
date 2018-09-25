@@ -17,6 +17,7 @@ json.extract! project,  :id,
                         :bus_plan_link,
                         :start_date,
                         :latitude,
-                        :longitude
+                        :longitude,
+                        :summary
 
 json.file asset_path(project.file.url)
