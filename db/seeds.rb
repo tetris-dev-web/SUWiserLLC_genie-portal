@@ -87,11 +87,7 @@ tan working out and training together regularly. Our aspiration has been to star
 for fitness and health for the area by taking a space on 146th to host workouts focused on high
 intensity interval training and calisthenics. The space also hosts a cafe and multiple backrooms.
 We intend to use the space creatively, including to host private parties on occasion and allow
-people to reserve the space for events.
-Our space will facilitate a diverse and open community for people serious about fitness. We in-
-tend to integrate multiple programs to maximize the fitness program for each of our members,
-including a bulk buying program for protein powder and supplements in bulk, performance
-tracking software, and potentially a meal pick up program for our members."
+people to reserve the space for events."
 
 
 HamInn_start_date = '01/01/2017'
