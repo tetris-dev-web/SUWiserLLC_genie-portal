@@ -54,7 +54,6 @@ class ProjectDashboard extends React.Component {
                 {projectClicked.title}
               </div>
             </div>
-
             <div className="project-modal-grid">
                 <div className="iframe">iframe</div>
 

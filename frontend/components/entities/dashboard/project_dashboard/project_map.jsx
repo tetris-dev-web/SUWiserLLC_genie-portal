@@ -1,17 +1,33 @@
 import React from 'react';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Map, TileLayer, Marker, Popup }  from 'react-leaflet';
 
 class ProjectMap extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      lat: 51.505,
+      lng: -0.09,
+      zoom: 13,
+    };
+  }
+
+
   render() {
-    const position =[51.505,-0.09];
-    return(
-      <Map center={position} zoom={13} dragging={false}>
+    const position = [this.state.lat, this.state.lng];
+    return (
+      <Map
+          center={position}
+          zoom={this.state.zoom}
+          doubleClickZoom={false}
+          dragging={false}
+          scrollWheelZoom={false}
+      >
         <TileLayer
           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={position} >
+        <Marker position={position}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
