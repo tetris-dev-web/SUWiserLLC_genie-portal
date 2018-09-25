@@ -33,7 +33,6 @@ class ProjectDashboard extends React.Component {
 
     if (this.props.currentUser) {
       const projectClicked = this.state.projectClicked;
-      debugger
       return (
         <div className="graph-container">
           <ProjectGraph

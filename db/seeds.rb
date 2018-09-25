@@ -85,9 +85,7 @@ business structure, a holistic* approach to fitness, and the aesthetics of the s
 evolved from a group of fitness enthusiasts, techies and finance professionals in Upper Manhat-
 tan working out and training together regularly. Our aspiration has been to start our own hub
 for fitness and health for the area by taking a space on 146th to host workouts focused on high
-intensity interval training and calisthenics. The space also hosts a cafe and multiple backrooms.
-We intend to use the space creatively, including to host private parties on occasion and allow
-people to reserve the space for events."
+intensity interval training and calisthenics. The space also hosts a cafe and multiple backrooms."
 
 
 HamInn_start_date = '01/01/2017'
