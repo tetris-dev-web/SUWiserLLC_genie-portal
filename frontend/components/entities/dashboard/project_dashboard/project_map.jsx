@@ -5,10 +5,12 @@ class ProjectMap extends React.Component {
 
   constructor(props) {
     super(props);
+    const project = this.props.projectClicked;
     this.state = {
-      lat: 51.505,
-      lng: -0.09,
-      zoom: 13,
+      project: this.props.projectClicked,
+      lat: parseFloat(project.latitude),
+      lng: parseFloat(project.longitude),
+      zoom: 14,
     };
   }
 
@@ -19,7 +21,6 @@ class ProjectMap extends React.Component {
       <Map
           center={position}
           zoom={this.state.zoom}
-          doubleClickZoom={false}
           dragging={false}
           scrollWheelZoom={false}
       >
@@ -29,7 +30,7 @@ class ProjectMap extends React.Component {
         />
         <Marker position={position}>
           <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
+            {this.state.project.title}
           </Popup>
         </Marker>
       </Map>

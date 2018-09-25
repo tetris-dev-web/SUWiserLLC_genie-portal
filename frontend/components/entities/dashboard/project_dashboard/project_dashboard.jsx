@@ -59,12 +59,26 @@ class ProjectDashboard extends React.Component {
 
                 <div className="temp">temp</div>
 
-                <div className="project-description">description</div>
+                <div className="project-description">
+                  <div className="project-text">
+                    <h1>{projectClicked.title}</h1>
+                    <div className="project-summary">
+                      summary
+                    </div>
+                  </div>
+                  <div className="bus-plan-download">
+                    <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
+                      <i className="fas fa-file-contract">
+                        business plan
+                      </i>
+                    </a>
+                  </div>
+                </div>
 
                 <div className="cashflow-graph">cash graph</div>
 
                 <div className="project-map">
-                  <ProjectMap />
+                  <ProjectMap projectClicked={ projectClicked } />
                 </div>
                 <div className="project-overlays">overlays</div>
             </div>
