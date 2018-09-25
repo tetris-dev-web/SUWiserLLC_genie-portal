@@ -206,23 +206,9 @@ project0 = Project.create(
   bus_plan_link: Genesis_bus_link,
   start_date: Genesis_start_date,
   latitude:HamInn_lat,
-  longitude:HamInn_lng
+  longitude:HamInn_lng,
+  summary:Genesis_summary
 )
-
-# project1 = Project.create(
-#   title: "Columbia Generator",
-#   revenue: 250000,
-#   valuation: 10000000,
-#   city: "New York",
-#   country: "USA",
-#   continent: "North America",
-#   video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
-#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-#   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-#   creator_id: user1.id,
-#   created_at: "12/01/2018",
-#   status: "inDevelopment"
-# )
 
 project2 = Project.create(
   title: "Fitness Complex",
@@ -272,7 +258,8 @@ project4 = Project.create(
   bus_plan_link: HamInn_bus_link,
   start_date: HamInn_start_date,
   latitude:Genesis_lat,
-  longitude:Genesis_lng
+  longitude:Genesis_lng,
+  summary:HamInn_summary
 )
 project5 = Project.create(
   title: "Penn Generator",
