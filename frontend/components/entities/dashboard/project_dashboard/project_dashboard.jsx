@@ -3,6 +3,7 @@ import ProjectGraph from './project_graph';
 import Modal from 'react-modal';
 import ModalStyle from '../../footer/modal_style';
 import ProjectMap from './project_map';
+import ProjectThermo from './project_thermo';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -60,9 +61,7 @@ class ProjectDashboard extends React.Component {
                 <div className="temp">
                   <h3>Capital Required</h3>
                   <div className="thermo-canvas-container">
-                    <canvas id="myCanvas" width="100" height="100">
-                      
-                    </canvas>
+                    <ProjectThermo />
                   </div>
                 </div>
 
