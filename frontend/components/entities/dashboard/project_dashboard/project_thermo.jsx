@@ -9,11 +9,12 @@ const ProjectThermo = function( {project} ) {
   const rectHeigth = 110;
   const filledRectHeigth = ( percentCompleted/100 ) * rectHeigth;
   const filledRectStartingY = ( rectHeigth+20 ) - ( filledRectHeigth+1 );
+  const lineStartX = (percentCompleted>90) ? 33 : (20+rectWidth);
   return (
     <Stage width={200} height={200}>
       <Layer>
         <Line
-          points={[35,filledRectStartingY,190,filledRectStartingY]}
+          points={[lineStartX,filledRectStartingY,190,filledRectStartingY]}
           stroke={'white'}
           strokeWidth={1.5}
           />
@@ -32,7 +33,6 @@ const ProjectThermo = function( {project} ) {
           width={ rectWidth }
           height={ rectHeigth }
           cornerRadius={9}
-
           stroke={'white'}
           strokeWidth={1}
           shadowBlur={5}
