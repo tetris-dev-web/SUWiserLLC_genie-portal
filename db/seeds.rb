@@ -205,7 +205,9 @@ project0 = Project.create(
   start_date: Genesis_start_date,
   latitude:HamInn_lat,
   longitude:HamInn_lng,
-  summary:Genesis_summary
+  summary:Genesis_summary,
+  capital_required:Genesis_current_cap,
+  current_capital:Genesis_current_cap
 )
 
 project2 = Project.create(
@@ -255,9 +257,11 @@ project4 = Project.create(
   sketch_link: HamInn_sketch_link,
   bus_plan_link: HamInn_bus_link,
   start_date: HamInn_start_date,
-  latitude:Genesis_lat,
-  longitude:Genesis_lng,
-  summary:HamInn_summary
+  latitude:HamInn_lat,
+  longitude:HamInn_lng,
+  summary:HamInn_summary,
+  capital_required:HamInn_cap_required,
+  current_capital:HamInn_current_cap
 )
 project5 = Project.create(
   title: "Penn Generator",

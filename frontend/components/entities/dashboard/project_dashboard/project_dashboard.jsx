@@ -61,7 +61,7 @@ class ProjectDashboard extends React.Component {
                 <div className="temp">
                   <h3>Capital Required</h3>
                   <div className="thermo-canvas-container">
-                    <ProjectThermo />
+                    <ProjectThermo project={projectClicked} />
                   </div>
                 </div>
 
