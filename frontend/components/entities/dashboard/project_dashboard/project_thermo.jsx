@@ -3,6 +3,11 @@ import Konva from 'konva';
 import { Stage, Layer, Rect,Line, Text } from 'react-konva';
 
 const ProjectThermo = function( {project} ) {
+  const { current_capital,capital_required } = project;
+  const percentCompleted = (current_capital*100) / capital_required;
+  const rectWidth = 20;
+  const rectHeigth = 110;
+  const filledRectHeigth = (percentCompleted/100) * rectHeigth ;
   debugger
   return (
     <Stage width={200} height={200}>
@@ -15,8 +20,8 @@ const ProjectThermo = function( {project} ) {
         <Rect
           x={20}
           y={20}
-          width={20}
-          height={110}
+          width={ rectWidth }
+          height={ rectHeigth }
           cornerRadius={9}
           fill={'black'}
           stroke={'white'}
@@ -26,8 +31,8 @@ const ProjectThermo = function( {project} ) {
         <Rect
           x={21}
           y={20}
-          width={18}
-          height={109}
+          width={ rectWidth-2 }
+          height={ filledRectHeigth }
           cornerRadius={9}
           fill={'#223562'}
           shadowBlur={5}

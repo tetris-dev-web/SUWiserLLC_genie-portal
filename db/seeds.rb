@@ -206,7 +206,7 @@ project0 = Project.create(
   latitude:HamInn_lat,
   longitude:HamInn_lng,
   summary:Genesis_summary,
-  capital_required:Genesis_current_cap,
+  capital_required:Genesis_cap_required,
   current_capital:Genesis_current_cap
 )
 
