@@ -18,6 +18,24 @@ const ProjectThermo = function( {project} ) {
           stroke={'white'}
           strokeWidth={1.5}
           />
+        <Text
+          x={55}
+          y={25}
+          text={ capital_required }
+          fontSize={17}
+          fontFamily={'open sans condensed'}
+          fill={'white'}
+          strokeWidth={1}
+          />
+        <Text
+          x={55}
+          y={70}
+          text={ current_capital + '\n' + 'raised' }
+          fontSize={17}
+          fontFamily={'open sans condensed'}
+          fill={'#223562'}
+          strokeWidth={1}
+          />
         <Rect
           x={21}
           y={ filledRectStartingY }
