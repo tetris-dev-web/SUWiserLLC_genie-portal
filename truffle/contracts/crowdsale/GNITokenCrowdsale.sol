@@ -8,32 +8,135 @@ import '../utility/SafeMath.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale {
     using SafeMath for uint256;
+    address public developerWallet;
+    uint256 public totalValuation;
 
     constructor
         (
           uint256 _openingTime,
-          uint256 _closingTime,
+          uint256 _doomsDay,
           uint256 _rate,
           address _wallet,
+          address _developerWallet,
           uint256 _cap,
           MintableToken _token
         )
         public
         Crowdsale(_rate, _wallet, _token)
+        //remove capped crowdsale
         CappedCrowdsale(_cap)
-        TimedCrowdsale(_openingTime, _closingTime) {
+        TimedCrowdsale(_openingTime, _doomsDay) {
             // rewriting wallet to this will not work in contructor
+            totalValuation = 0;
+            developerWallet = _developerWallet;
             wallet = this;
         }
 
+        struct Project {
+            string name;
+            uint256 projectClosingTime;
+            uint256 valuation;
+            uint256 capitalRequired;
+            string lat;
+            string lng;
+            uint256 voteCount;
+            bool capitalReached;
+            bool active;
+        }
+
+        event LogProject (
+            string name,
+            uint256 valuation,
+            uint256 capitalRequired,
+            string lat,
+            string lng,
+            uint256 voteCount,
+            bool capitalReached,
+            bool active
+        );
 
 
-        /**
-         * @dev pitching a project to raise cap
-         * @param _projectValue - value of total project
-         */
-         // TODO make ownable
-         // TODO
+        mapping(string => Project) private projects;
+
+
+         function getProjectInfo(string _name) public view returns(
+             string, uint256, uint256, bool, uint256
+
+         ) {
+             Project memory project = projects[_name];
+             return (
+                 project.name,
+                 project.valuation,
+                 project.capitalRequired,
+                 project.active,
+                 project.voteCount
+             );
+         }
+
+         function pitchProject(string _name, uint _capitalRequired, uint _valuation, string _lat, string _lng) public payable {
+             // Send project creation fee to Genus wallet
+             // need to update this to wallet, not contract
+             issueTokensBasedOnPrice(_valuation);
+
+             totalValuation = totalValuation.add(_valuation);
+
+             _forwardFunds();
+
+             // Increase crowdsale duation by 90 days
+             _extendClosingTime(90);
+
+             // Create project information
+             Project memory newProject = Project({
+                 name: _name,
+                 projectClosingTime: now + 86600 * 240,
+                 valuation: _valuation,
+                 capitalRequired: _capitalRequired,
+                 lat: _lat,
+                 lng: _lng,
+                 capitalReached: false,
+                 active: false,
+                 voteCount: 0
+             });
+
+             // Save project information
+             projects[_name] = newProject;
+
+             // Create project information
+
+
+             // save ProjectAddress information
+
+
+             // log the creation of the new project
+             emit LogProject(_name, _valuation, _capitalRequired, _lat, _lng, 0, false, false);
+         }
+
+         function issueTokensBasedOnPrice(uint256 valuation) private {
+           uint tokensToIssue = valuation.div(rate);
+
+           GNIToken(token).mint(wallet, tokensToIssue); // change logic to only issue if cap is reached
+           uint updatedTotalSupply = GNIToken(token).totalSupply();
+         }
+
+         function buyxFitToken(address _beneficiary, string _projectVotedFor) public payable {
+             // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
+
+             // before buyToken, verify that the project is still undeployed
+             require(!projects[_projectVotedFor].active);
+             buyTokens(_beneficiary);
+             updateVoteCount(_beneficiary, _projectVotedFor);
+         }
+
+         function updateVoteCount(address _beneficiary, string _projectVotedFor) internal {
+             projects[_projectVotedFor].voteCount = projects[_projectVotedFor].voteCount.add(1);
+         }
+
+         // All Project addresses
+         struct ProjectAddress {
+             string location;
+             bool deployed;
+         }
+
         function pitchProjectandRaiseCap(uint256 _projectValue) public {
           uint newTokensIssued = 1000;
           GNIToken(token).mint(wallet, newTokensIssued); // change logic to only issue if cap is reached
@@ -42,4 +145,14 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
           uint newRate = cap/updatedTotalSupply;
           rate = newRate;
         }
+
+        modifier onlyDeveloper() {
+          require(msg.sender == developerWallet);
+          _;
+        }
+
+        function _extendClosingTime(uint256 _days) internal onlyWhileOpen {
+            doomsDay = doomsDay.add(_days.mul(1728000));
+        }
+
 }

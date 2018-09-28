@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import Wallet from './wallet/wallet';
 import ProfileContainer from './profile/profile_container';
+import GNITokenData from '../../../../contract_data/GNIToken';
 
 class UserDropdown extends React.Component {
   constructor(props) {
@@ -49,10 +50,25 @@ class UserDropdown extends React.Component {
     this.updateUsernameDisplay = this.updateUsernameDisplay.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
     this.tick = this.tick.bind(this);
+    // this.address = null;
+    // this.abi = null;
+    // this.web3 = null;
   }
 
   componentDidMount () {
-    this.interval = setInterval(() => this.tick(), 3000);
+    const drizzle = this.props.drizzle;
+    const address = drizzle.contracts.GNIToken.address;
+    const abi = GNITokenData.abi;
+    debugger
+    const web3 = drizzle.web3;
+
+    const GNIToken = new web3.eth.Contract(abi, address);
+    this.interval = setInterval(() => {
+      GNIToken.methods.totalSupply().call().then(totalSupply => {
+
+        this.setState({totalSupply})
+      })
+    }, 500);
   }
 
   // tick () {
@@ -116,6 +132,9 @@ class UserDropdown extends React.Component {
     // }
     // let { tokens, user_tokens, total_tokens } = this.state;
     // let { tokens } = this.props.currentUser;
+debugger
+
+
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
@@ -126,7 +145,7 @@ class UserDropdown extends React.Component {
               </div>
               <hr/>
               <div className="tokens-cont">
-                <div className="total-tokens">{this.state.totalSupply && this.state.totalSupply.value} tokens</div>
+                <div className="total-tokens">{this.state.totalSupply ? this.state.totalSupply : null} tokens</div>
               </div>
             </div>
           </a>
