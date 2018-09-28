@@ -142,7 +142,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
           _;
         }
 
-        function _extendClosingTime(uint256 _days) internal {
+        function _extendClosingTime(uint256 _days) internal onlyWhileOpen {
             doomsDay = doomsDay.add(_days.mul(1728000));
         }
 

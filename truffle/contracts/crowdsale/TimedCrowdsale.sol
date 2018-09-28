@@ -19,6 +19,9 @@ contract TimedCrowdsale is Crowdsale {
    */
   modifier onlyWhileOpen {
     // solium-disable-next-line security/no-block-members
+    uint timestamp = block.timestamp;
+    uint time1 = openingTime;
+    uint time2 = doomsDay;
     require(block.timestamp >= openingTime && block.timestamp <= doomsDay);
     _;
   }

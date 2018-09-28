@@ -19,7 +19,7 @@ module.exports = function (deployer, network, accounts) {
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {
                     if (err) reject();
-                    const openingTime = time.timestamp + 200;
+                    const openingTime = time.timestamp + 5;
                     resolve(openingTime);
                 })
             })
