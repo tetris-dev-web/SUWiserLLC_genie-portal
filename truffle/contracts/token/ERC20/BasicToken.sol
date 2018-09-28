@@ -1,6 +1,5 @@
 pragma solidity ^0.4.24;
 
-
 import "./ERC20Basic.sol";
 import '../../utility/SafeMath.sol';
 
@@ -33,6 +32,7 @@ contract BasicToken is ERC20Basic {
   * @param _value The amount to be transferred.
   */
   function transfer(address _to, uint256 _value) public returns (bool) {
+
     require(_value <= balances[msg.sender]);
     require(_to != address(0));
 

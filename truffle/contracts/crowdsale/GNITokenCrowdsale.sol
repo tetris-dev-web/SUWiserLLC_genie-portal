@@ -73,14 +73,10 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
              );
          }
 
-         function pitchProject(string _name, uint _capitalRequired, uint _valuation, string _lat, string _lng) public payable {
-             // Send project creation fee to Genus wallet
-             // need to update this to wallet, not contract
-             issueTokensBasedOnPrice(_valuation);
+         function pitchProject(string _name, uint capitalRequired, uint _valuation, string _lat, string _lng) public payable {
+            issueTokensBasedOnPrice(_valuation);
 
              totalValuation = totalValuation.add(_valuation);
-
-             _forwardFunds();
 
              // Increase crowdsale duation by 90 days
              _extendClosingTime(90);
@@ -90,7 +86,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
                  name: _name,
                  projectClosingTime: now + 86600 * 240,
                  valuation: _valuation,
-                 capitalRequired: _capitalRequired,
+                 capitalRequired: capitalRequired,
                  lat: _lat,
                  lng: _lng,
                  capitalReached: false,
@@ -101,24 +97,19 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
              // Save project information
              projects[_name] = newProject;
 
-             // Create project information
-
-
-             // save ProjectAddress information
 
 
              // log the creation of the new project
-             emit LogProject(_name, _valuation, _capitalRequired, _lat, _lng, 0, false, false);
+             emit LogProject(_name, _valuation, capitalRequired, _lat, _lng, 0, false, false);
          }
 
          function issueTokensBasedOnPrice(uint256 valuation) private {
            uint tokensToIssue = valuation.div(rate);
 
            GNIToken(token).mint(wallet, tokensToIssue); // change logic to only issue if cap is reached
-           uint updatedTotalSupply = GNIToken(token).totalSupply();
          }
 
-         function buyxFitToken(address _beneficiary, string _projectVotedFor) public payable {
+         function buyToken(address _beneficiary, string _projectVotedFor) public payable {
              // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
 
              // before buyToken, verify that the project is still undeployed
@@ -151,7 +142,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
           _;
         }
 
-        function _extendClosingTime(uint256 _days) internal onlyWhileOpen {
+        function _extendClosingTime(uint256 _days) internal {
             doomsDay = doomsDay.add(_days.mul(1728000));
         }
 
