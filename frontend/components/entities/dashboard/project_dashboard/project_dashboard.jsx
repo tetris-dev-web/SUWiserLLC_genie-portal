@@ -3,6 +3,7 @@ import ProjectGraph from './project_graph';
 import Modal from 'react-modal';
 import ModalStyle from '../../footer/modal_style';
 import ProjectMap from './project_map';
+import ProjectThermo from './project_thermo';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -30,6 +31,7 @@ class ProjectDashboard extends React.Component {
 
 
   render() {
+
     if (this.props.currentUser) {
       const projectClicked = this.state.projectClicked;
       return (
@@ -53,22 +55,36 @@ class ProjectDashboard extends React.Component {
                 {projectClicked.title}
               </div>
             </div>
-
             <div className="project-modal-grid">
                 <div className="iframe">iframe</div>
 
-                <div className="temp">temp</div>
+                <div className="temp">
+                  <h3>Capital Required</h3>
+                  <div className="thermo-canvas-container">
+                    <ProjectThermo project={projectClicked} />
+                  </div>
+                </div>
 
                 <div className="project-description">
-                  <h4>Description</h4>
-                  <p>{projectClicked.description}</p>
-                  <a target="_blank" href="<%= projectClicked.bus_plan_link %>">Business Plan</a>
+                  <div className="project-text">
+                    <h1>{projectClicked.title}</h1>
+                    <div className="project-summary">
+                      {projectClicked.summary}
+                    </div>
+                  </div>
+                  <div className="bus-plan-download">
+                    <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
+                      <i className="fas fa-file-contract">
+                        business plan
+                      </i>
+                    </a>
+                  </div>
                 </div>
 
                 <div className="cashflow-graph">cash graph</div>
 
                 <div className="project-map">
-                  <ProjectMap />
+                  <ProjectMap projectClicked={ projectClicked } />
                 </div>
                 <div className="project-overlays">overlays</div>
             </div>

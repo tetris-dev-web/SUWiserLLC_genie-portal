@@ -14,6 +14,8 @@ User.destroy_all
 Project.destroy_all
 
 Genesis_start_date = '01/01/2019'
+Genesis_cap_required = 150000
+Genesis_current_cap = 15000
 Genesis_lat = 40.836678
 Genesis_lng = -73.943083
 Genesis_sketch_link = 'https://drive.google.com/open?id=1o15Si2ON0X1Cb0QApl7LH6WXeY6JQ9CE'
@@ -80,8 +82,17 @@ Genesis_cashflow = '{
       "28": 714944
    }
 }'
+Genesis_summary = "Genesis is a boutique gym, similar in structure to a CrossFit, but differentiated by a Co-op
+business structure, a holistic* approach to fitness, and the aesthetics of the space itself. Genesis
+evolved from a group of fitness enthusiasts, techies and finance professionals in Upper Manhat-
+tan working out and training together regularly. Our aspiration has been to start our own hub
+for fitness and health for the area by taking a space on 146th to host workouts focused on high
+intensity interval training and calisthenics. The space also hosts a cafe and multiple backrooms."
+
 
 HamInn_start_date = '01/01/2017'
+HamInn_cap_required = 40000
+HamInn_current_cap = 40000
 HamInn_lat = 40.836370
 HamInn_lng = -73.944585
 HamInn_sketch_link = 'https://drive.google.com/open?id=0B4qHw8trLI_qQ3VkX0RtRndqVTA'
@@ -148,7 +159,14 @@ HamInn_cashflow = '{
     "28": 230540
   }
 }'
-
+HamInn_summary = "We work hard to set accurate expectations in our listings of our unique experience, and we
+work hard to meet or exceed those expectations. However, we have no control over such
+things as our location and the level of street noise around us, and we urge you to consider
+the implications of reflecting these sorts of things in the number of stars you award us.
+Ideally you would have understood and accepted these factors before booking. Feel free
+to inform guests of these sorts of things in your text review, but none of them will see the
+number of stars you give us, so we hope you will instead treat stars as only a reflection of
+our performance as hosts."
 
 
 # users
@@ -186,23 +204,11 @@ project0 = Project.create(
   bus_plan_link: Genesis_bus_link,
   start_date: Genesis_start_date,
   latitude:HamInn_lat,
-  longitude:HamInn_lng
+  longitude:HamInn_lng,
+  summary:Genesis_summary,
+  capital_required:Genesis_cap_required,
+  current_capital:Genesis_current_cap
 )
-
-# project1 = Project.create(
-#   title: "Columbia Generator",
-#   revenue: 250000,
-#   valuation: 10000000,
-#   city: "New York",
-#   country: "USA",
-#   continent: "North America",
-#   video: "https://www.youtube.com/watch?v=zGP6zk7jcrQ",
-#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-#   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-#   creator_id: user1.id,
-#   created_at: "12/01/2018",
-#   status: "inDevelopment"
-# )
 
 project2 = Project.create(
   title: "Fitness Complex",
@@ -251,8 +257,11 @@ project4 = Project.create(
   sketch_link: HamInn_sketch_link,
   bus_plan_link: HamInn_bus_link,
   start_date: HamInn_start_date,
-  latitude:Genesis_lat,
-  longitude:Genesis_lng
+  latitude:HamInn_lat,
+  longitude:HamInn_lng,
+  summary:HamInn_summary,
+  capital_required:HamInn_cap_required,
+  current_capital:HamInn_current_cap
 )
 project5 = Project.create(
   title: "Penn Generator",
