@@ -30,7 +30,6 @@ class ProjectDashboard extends React.Component {
 
 
   render() {
-
     if (this.props.currentUser) {
       const projectClicked = this.state.projectClicked;
       return (
@@ -60,7 +59,11 @@ class ProjectDashboard extends React.Component {
 
                 <div className="temp">temp</div>
 
-                <div className="project-description">description</div>
+                <div className="project-description">
+                  <h4>Description</h4>
+                  <p>{projectClicked.description}</p>
+                  <a target="_blank" href="<%= projectClicked.bus_plan_link %>">Business Plan</a>
+                </div>
 
                 <div className="cashflow-graph">cash graph</div>
 
