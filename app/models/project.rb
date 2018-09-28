@@ -5,7 +5,7 @@
 #  id                :integer          not null, primary key
 #  title             :string           not null
 #  valuation         :decimal(, )      not null
-#  video             :string
+#  model_link             :string
 #  icon              :string
 #  description       :text
 #  creator_id        :integer          not null

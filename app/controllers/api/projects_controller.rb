@@ -22,7 +22,7 @@ class Api::ProjectsController < ApplicationController
   private
   def project_params
     params.require(:project).permit(
-      :id, :title, :revenue, :valuation, :video,
+      :id, :title, :revenue, :valuation, :model_link,
       :file, :icon, :description, :creator_id, :created_at,
       :city, :country, :continent, :status
     )

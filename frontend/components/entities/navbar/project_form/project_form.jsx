@@ -11,7 +11,7 @@ class ProjectForm extends React.Component {
       title: '',
       revenue: '',
       valuation: '',
-      video: '',
+      model_link: '',
       city: '',
       country: '',
       continent: '',
@@ -49,7 +49,7 @@ class ProjectForm extends React.Component {
     formData.append("project[title]", this.state.title);
     formData.append("project[revenue]", this.state.revenue);
     formData.append("project[valuation]", this.state.valuation);
-    formData.append("project[video]", this.state.video);
+    formData.append("project[model_link]", this.state.model_link);
     formData.append("project[city]", this.state.city);
     formData.append("project[country]", this.state.country);
     formData.append("project[continent]", this.state.continent);
@@ -167,7 +167,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, revenue, valuation, description, video, city, country, continent, icon } = this.state;
+    let { title, revenue, valuation, description, model_link, city, country, continent, icon } = this.state;
 
     return (
       <form className="form-box p-form-box">
@@ -247,10 +247,10 @@ class ProjectForm extends React.Component {
 
         <div className="link-upload-cont">
           <input type="text"
-            placeholder="paste video url here"
-            value={video}
+            placeholder="paste model link url here"
+            value={model_link}
             className="link-input"
-            onChange={this.update('video')} />
+            onChange={this.update('model_link')} />
         </div>
 
         <div className="link-upload-cont">

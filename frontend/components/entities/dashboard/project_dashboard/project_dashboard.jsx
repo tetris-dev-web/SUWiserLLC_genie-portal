@@ -56,7 +56,12 @@ class ProjectDashboard extends React.Component {
               </div>
             </div>
             <div className="project-modal-grid">
-                <div className="iframe">iframe</div>
+                <div className="iframe">
+                    <div className="sketchfab-embed-wrapper">
+                      <iframe width="374" height="300" src="https://sketchfab.com/models/3a78e1641d204ae695b9565d55ed74ac/embed" frameBorder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+
+                    </div>
+                </div>
 
                 <div className="temp">
                   <h3>Capital Required</h3>
