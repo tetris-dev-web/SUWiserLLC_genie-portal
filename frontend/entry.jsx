@@ -5,6 +5,8 @@ import Root from './components/root';
 import {Drizzle, generateStore} from "drizzle";
 // import MyStringStore from "./contracts/MyStringStore.json"
 import MyStringStore from '../truffle/build/contracts/MyStringStore.json';
+import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';
+import GNIToken from '../truffle/build/contracts/GNIToken.json';
 
 
 // testing start
@@ -20,15 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     store = configureStore();
   }
-  const chainOptions = { contracts: [MyStringStore]} ;
+
+  const chainOptions = {contracts: [MyStringStore,GNIToken,GNITokenCrowdsale]} ;
   const drizzleStore = generateStore(chainOptions);
   const drizzle = new Drizzle(chainOptions, drizzleStore);
 
   window.drizzle = drizzle;
   window.store = store;
   window.getState = store.getState;
-  // testing end
-// console.log(bcOptions)
+
   const root = document.getElementById('root');
   ReactDOM.render(<Root store={store} drizzle={drizzle}/>, root);
 });

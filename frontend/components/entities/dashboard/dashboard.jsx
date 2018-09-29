@@ -4,8 +4,8 @@ import ProjectDashboardContainer from './project_dashboard/project_graph_contain
 import DrizzleConsumer from '../../drizzle/drizzleConsumer';
 import ReadString from './readString';
 import ReadStringContainer from './readStringContainer';
-import SetString from './SetString';
-import {drizzleConnect} from 'drizzle-react';
+import SetString from './setString';
+import {drizzleConnect} from 'drizzle-react'; //remove?
 import PropTypes from 'prop-types';
 
 const Dashboard = () => {

@@ -21,6 +21,7 @@ class ProjectForm extends React.Component {
       imageFile: '',
       imageUrl: '',
       coins: '****',
+      status: 'pitched',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -53,12 +54,15 @@ class ProjectForm extends React.Component {
     formData.append("project[icon]", this.state.icon);
     formData.append("project[description]", this.state.description);
     formData.append("project[creator_id]", this.state.creator_id);
+    formData.append("project[status]", this.state.status);
 
     // this.props.contract.mint(this.props.account, 3000, {from:this.props.account});
 
     this.props.createProject(formData).then( () => {
       this.props.closeModal();
+      location.reload();
     });
+
   }
 
   update(property) {
@@ -171,6 +175,22 @@ class ProjectForm extends React.Component {
           placeholder="#| project title"
           value={title}
           onChange={this.update('title')} />
+        <select className="main-input continent-input"
+          value={continent}
+          onChange={this.update('continent')}>
+            <option value="" disabled>Continent</option>
+            <option value="North America">North America</option>
+            <option value="South America">South America</option>
+            <option value="Europe">Europe</option>
+            <option value="Africa">Africa</option>
+            <option value="Asia">Asia</option>
+            <option value="Australia">Australia</option>
+        </select>
+        <input className="main-input city-input"
+          type="text"
+          placeholder="#| city"
+          value={city}
+          onChange={this.update('city')} />
         <input className="main-input revenue-input"
           type="number"
           placeholder="#| revenue"
