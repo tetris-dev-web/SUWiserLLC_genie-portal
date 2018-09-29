@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import ModalStyle from '../../footer/modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
+import CashFlowGraph from './project_cashflow';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -83,7 +84,9 @@ class ProjectDashboard extends React.Component {
                       </div>
                     </div>
 
-                    <div className="cashflow-graph">cash graph</div>
+                    <div className="cashflow-graph">
+                      <CashFlowGraph />
+                    </div>
 
                     <div className="project-map">
                       <ProjectMap projectClicked={ projectClicked } />
