@@ -42,54 +42,57 @@ class ProjectDashboard extends React.Component {
             currentUser={this.props.currentUser}
             fetchProjects={this.props.fetchProjects}
             data={this.props.projects} />
-          <Modal
-            isOpen={this.state.openModal}
-            onRequestClose={this.closeModal}
-            contentLabel="Project Graph Modal"
-            style={ModalStyle}
-            className="modal-container">
-            <div className="black-close-modal-button close-modal-button"
-              onClick={this.closeModal}>&times;</div>
-            <div className="ft-modal-header-cont">
-              <div className="ft-modal-header bylaws-header">
-                {projectClicked.title}
-              </div>
-            </div>
-            <div className="project-modal-grid">
-                <div className="iframe">iframe</div>
-
-                <div className="temp">
-                  <h3>Capital Required</h3>
-                  <div className="thermo-canvas-container">
-                    <ProjectThermo project={projectClicked} />
-                  </div>
-                </div>
-
-                <div className="project-description">
-                  <div className="project-text">
-                    <h1>{projectClicked.title}</h1>
-                    <div className="project-summary">
-                      {projectClicked.summary}
+            <Modal
+              isOpen={this.state.openModal}
+              onRequestClose={this.closeModal}
+              contentLabel="Project Graph Modal"
+              style={ModalStyle}
+              className="modal-container">
+              <div className="black-close-modal-button close-modal-button"
+                onClick={this.closeModal}>&times;</div>
+              {!projectClicked.summary ? <h1>No data available</h1> :
+                <React.Fragment>
+                  <div className="ft-modal-header-cont">
+                    <div className="ft-modal-header bylaws-header">
+                      {projectClicked.title}
                     </div>
                   </div>
-                  <div className="bus-plan-download">
-                    <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
-                      <i className="fas fa-file-contract">
-                        business plan
-                      </i>
-                    </a>
+                  <div className="project-modal-grid">
+                    <div className="iframe">iframe</div>
+
+                    <div className="temp">
+                      <h3>Capital Required</h3>
+                      <div className="thermo-canvas-container">
+                        <ProjectThermo project={projectClicked} />
+                      </div>
+                    </div>
+
+                    <div className="project-description">
+                      <div className="project-text">
+                        <h1>{projectClicked.title}</h1>
+                        <div className="project-summary">
+                          {projectClicked.summary}
+                        </div>
+                      </div>
+                      <div className="bus-plan-download">
+                        <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
+                          <i className="fas fa-file-contract">
+                            business plan
+                          </i>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="cashflow-graph">cash graph</div>
+
+                    <div className="project-map">
+                      <ProjectMap projectClicked={ projectClicked } />
+                    </div>
+                    <div className="project-overlays">overlays</div>
                   </div>
-                </div>
-
-                <div className="cashflow-graph">cash graph</div>
-
-                <div className="project-map">
-                  <ProjectMap projectClicked={ projectClicked } />
-                </div>
-                <div className="project-overlays">overlays</div>
-            </div>
-
-          </Modal>
+                </React.Fragment>
+              }
+            </Modal>
         </div>
       );
     } else {
