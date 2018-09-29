@@ -2,6 +2,8 @@ import React from 'react';
 import ProjectGraph from './project_graph';
 import Modal from 'react-modal';
 import ModalStyle from '../../footer/modal_style';
+import ProjectMap from './project_map';
+import ProjectThermo from './project_thermo';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -29,6 +31,7 @@ class ProjectDashboard extends React.Component {
 
 
   render() {
+
     if (this.props.currentUser) {
       const projectClicked = this.state.projectClicked;
       return (
@@ -52,21 +55,40 @@ class ProjectDashboard extends React.Component {
                 {projectClicked.title}
               </div>
             </div>
-            <div className="ft-modal-body bylaws-body">
-              <div className="ft-img-cont">
+            <div className="project-modal-grid">
+                <div className="iframe">iframe</div>
 
-              </div>
-              <div className="ft-el-cont">
-                <h1 className="ft-el-header">{projectClicked.title}</h1>
-                <p><strong>Title: </strong>{projectClicked.title}</p>
-                <p><strong>Continent: </strong>{projectClicked.continent} </p>
-                <p><strong>City: </strong>{projectClicked.city} </p>
-                <p><strong>Valuation: </strong>{projectClicked.valuation} </p>
-                <p><strong>Revenue: </strong>{projectClicked.revenue} </p>
-              </div>
-              <div className="ft-img-cont">
-              </div>
+                <div className="temp">
+                  <h3>Capital Required</h3>
+                  <div className="thermo-canvas-container">
+                    <ProjectThermo project={projectClicked} />
+                  </div>
+                </div>
+
+                <div className="project-description">
+                  <div className="project-text">
+                    <h1>{projectClicked.title}</h1>
+                    <div className="project-summary">
+                      {projectClicked.summary}
+                    </div>
+                  </div>
+                  <div className="bus-plan-download">
+                    <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
+                      <i className="fas fa-file-contract">
+                        business plan
+                      </i>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="cashflow-graph">cash graph</div>
+
+                <div className="project-map">
+                  <ProjectMap projectClicked={ projectClicked } />
+                </div>
+                <div className="project-overlays">overlays</div>
             </div>
+
           </Modal>
         </div>
       );
@@ -78,5 +100,24 @@ class ProjectDashboard extends React.Component {
 
   }
 }
+
+
+//
+// <div className="ft-modal-body bylaws-body">
+//   <div className="ft-img-cont">
+//
+//   </div>
+//   {!projectClicked.cashflow ? <h1>NO INFO AVAILABLE</h1> :
+//   (<div className="ft-el-cont">
+//     <h1 className="ft-el-header">{projectClicked.title}</h1>
+//     <p><strong>Title: </strong>{projectClicked.title}</p>
+//     <p><strong>Continent: </strong>{projectClicked.continent} </p>
+//     <p><strong>City: </strong>{projectClicked.city} </p>
+//     <p><strong>Valuation: </strong>{projectClicked.valuation} </p>
+//     <p><strong>Revenue: </strong>{projectClicked.revenue} </p>
+//   </div>)}
+//   <div className="ft-img-cont">
+//   </div>
+// </div>
 
 export default ProjectDashboard;

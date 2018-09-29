@@ -9,12 +9,12 @@ const citySquareSide = 15;
 const continentSquareSide = 5;
 
 //colors
-const midNightBlue = "#073444"
-const lightBlue = "#5EABAA"
-const midNightBlack = "#061E24"
-const rosyBrown = "#AB7A5E"
-const lightGrey = "#DEDBCF"
-const darkGrey = "#A59A91"
+const midNightBlue = "#073444";
+const lightBlue = "#5EABAA";
+const midNightBlack = "#061E24";
+const rosyBrown = "#AB7A5E";
+const lightGrey = "#DEDBCF";
+const darkGrey = "#A59A91";
 
 
 class ProjectGraph extends React.Component {
@@ -403,6 +403,6 @@ class ProjectGraph extends React.Component {
 
 ProjectGraph.defaultProps = {
   chart: 'loading'
-}
+};
 
 export default ProjectGraph;

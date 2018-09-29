@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180917192733) do
+ActiveRecord::Schema.define(version: 20180925195637) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,15 @@ ActiveRecord::Schema.define(version: 20180917192733) do
     t.string "country"
     t.string "continent"
     t.string "status"
+    t.string "bus_plan_link"
+    t.string "sketch_link"
+    t.jsonb "cashflow"
+    t.date "start_date"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.string "summary"
+    t.float "capital_required"
+    t.float "current_capital"
     t.index ["creator_id"], name: "index_projects_on_creator_id"
   end
 
