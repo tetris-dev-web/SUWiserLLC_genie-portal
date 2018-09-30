@@ -19,8 +19,8 @@ class CashFlowGraph extends React.Component {
 
   setup(){
     const svg = this.createSVG();
-    const {numQuarters,minValue,maxValue} = this.formatCashData();
-    const {xAxis,yAxis} = this.createAxes(numQuarters);
+    const cashData = this.formatCashData();
+    const {xAxis,yAxis} = this.createAxes(cashData);
     svg.append("g")
         .attr('class','axis')
         .attr("transform", "translate(0," + (this.h - 20) + ")")
@@ -33,22 +33,22 @@ class CashFlowGraph extends React.Component {
   }
 
 
-  createAxes(numQuarters,minValue,maxValue) {
+  createAxes( {numQuarters,minValue,maxValue} ) {
     const xScale = d3.scaleLinear()
                      .domain([0,numQuarters])
                      .range([20, this.w-20]);
 
     const xAxis = d3.axisBottom()
                     .scale(xScale)
-                    .ticks(5).tickSizeOuter(0);
+                    .ticks(0).tickSizeOuter(0);
 
     const yScale = d3.scaleLinear()
-                     .domain([minValue,maxValue])
+                     .domain([maxValue,minValue])
                      .range([15, this.h-35]);
 
     const yAxis = d3.axisRight()
-                    .scale(yScale).ticks(5)
-                    .ticks(5).tickSizeOuter(0);
+                    .scale(yScale)
+                    .ticks(0).tickSizeOuter(0);
 
     return {xAxis,yAxis};
   }
