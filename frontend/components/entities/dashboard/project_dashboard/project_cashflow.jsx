@@ -19,17 +19,41 @@ class CashFlowGraph extends React.Component {
 
   setup(){
     const svg = this.createSVG();
-    const cashData = this.formatCashData();
-    const {xAxis} = this.createAxes();
+    const {numQuarters,minValue,maxValue} = this.formatCashData();
+    const {xAxis,yAxis} = this.createAxes(numQuarters);
     svg.append("g")
         .attr('class','axis')
         .attr("transform", "translate(0," + (this.h - 20) + ")")
         .call(xAxis);
+    svg.append("g")
+        .attr('class','axis')
+        .attr("transform", "translate(" + 10 + ",0)")
+        .call(yAxis);
 
   }
 
+
+  createAxes(numQuarters,minValue,maxValue) {
+    const xScale = d3.scaleLinear()
+                     .domain([0,numQuarters])
+                     .range([20, this.w-20]);
+
+    const xAxis = d3.axisBottom()
+                    .scale(xScale)
+                    .ticks(5).tickSizeOuter(0);
+
+    const yScale = d3.scaleLinear()
+                     .domain([minValue,maxValue])
+                     .range([15, this.h-35]);
+
+    const yAxis = d3.axisRight()
+                    .scale(yScale).ticks(5)
+                    .ticks(5).tickSizeOuter(0);
+
+    return {xAxis,yAxis};
+  }
+
   formatCashData() {
-    debugger
     const jsonCashData = JSON.parse(this.props.project.cashflow);
     const expectedNet = jsonCashData.ExpectedNet;
     const quarters = Object.keys(expectedNet);
@@ -44,19 +68,6 @@ class CashFlowGraph extends React.Component {
       maxValue: maxValue,
     };
   }
-
-  createAxes() {
-    const xScale = d3.scaleLinear()
-                     .domain([0,100])
-                     .range([20, this.w-20]);
-
-    const xAxis = d3.axisBottom()
-                    .scale(xScale)
-                    .ticks(0).tickSizeOuter(0);
-
-    return {xAxis};
-  }
-
   createSVG() {
     const svg = d3.select("#cash-graph").append('svg')
       .classed('project-svg', true)
