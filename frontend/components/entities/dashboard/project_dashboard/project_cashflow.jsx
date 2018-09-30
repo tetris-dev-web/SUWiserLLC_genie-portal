@@ -26,6 +26,22 @@ class CashFlowGraph extends React.Component {
       .attr("x", (d)=>{
         return (d+10)*3;})
       .attr("y", 40);
+    
+      const x = d3.scaleLinear().range([0, 200]).domain([0,200]);
+      const y = d3.scaleLinear().range([200, 0]).domain([0,200]);
+      var xAxis = d3.axis().scale(x)
+          .orient("bottom").ticks(5);
+
+      var yAxis = d3.axis().scale(y)
+          .orient("left").ticks(5);
+
+      svg.append("g")
+       .attr("class", "x axis")
+       .call(xAxis);
+
+       svg.append("g")
+         .attr("class", "y axis")
+         .call(yAxis);
 
   }
 

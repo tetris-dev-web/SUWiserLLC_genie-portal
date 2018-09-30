@@ -85,7 +85,7 @@ class ProjectDashboard extends React.Component {
                     </div>
 
                     <div className="cashflow-graph">
-                      <CashFlowGraph />
+                      <CashFlowGraph project={projectClicked} />
                     </div>
 
                     <div className="project-map">
