@@ -109,16 +109,16 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
            GNIToken(token).mint(wallet, tokensToIssue); // change logic to only issue if cap is reached
          }
 
-         function buyToken(address _beneficiary, string _projectVotedFor) public payable {
+         function buyToken(string _projectVotedFor) public payable {
              // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
 
              // before buyToken, verify that the project is still undeployed
              require(!projects[_projectVotedFor].active);
-             buyTokens(_beneficiary);
-             updateVoteCount(_beneficiary, _projectVotedFor);
+             buyTokens(msg.sender);
+             updateVoteCount(_projectVotedFor);
          }
 
-         function updateVoteCount(address _beneficiary, string _projectVotedFor) internal {
+         function updateVoteCount(string _projectVotedFor) internal {
              projects[_projectVotedFor].voteCount = projects[_projectVotedFor].voteCount.add(1);
          }
 
