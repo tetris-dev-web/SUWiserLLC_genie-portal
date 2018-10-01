@@ -29,7 +29,6 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
             // rewriting wallet to this will not work in contructor
             totalValuation = 0;
             developerWallet = _developerWallet;
-            wallet = this;
         }
 
         struct Project {
@@ -109,14 +108,14 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
            GNIToken(token).mint(wallet, tokensToIssue); // change logic to only issue if cap is reached
          }
 
-         function buyToken(string _projectVotedFor) public payable {
+         function buyToken(address _beneficiary, string _projectVotedFor) public payable {
              // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
 
              // before buyToken, verify that the project is still undeployed
-             require(!projects[_projectVotedFor].active);
-             buyTokens(msg.sender);
+             buyTokens(_beneficiary);
              updateVoteCount(_projectVotedFor);
          }
+
 
          function updateVoteCount(string _projectVotedFor) internal {
              projects[_projectVotedFor].voteCount = projects[_projectVotedFor].voteCount.add(1);
