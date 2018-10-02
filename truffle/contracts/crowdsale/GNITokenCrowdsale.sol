@@ -45,7 +45,6 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
 
         event LogProject (
             string name,
-            uint256 closingTime,
             uint256 valuation,
             uint256 capitalRequired,
             string lat,
@@ -79,7 +78,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
              totalValuation = totalValuation.add(_valuation);
 
              // Increase crowdsale duation by 90 days
-             _extendClosingTime(90);
+             _extendDoomsDay(90);
 
              // Create project information
              Project memory newProject = Project({
@@ -109,19 +108,19 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
            GNIToken(token).mint(wallet, tokensToIssue); // change logic to only issue if cap is reached
          }
 
-         function buyToken(address _beneficiary, string _projectVotedFor) public payable {
+         function buyToken(address _beneficiary, string _projectName) public payable {
              // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
 
              // before buyToken, verify that the project is still undeployed
              buyTokens(_beneficiary);
+             Project memory _projectVotedFor = projects[_projectVotedFor];
+
              updateVoteCount(_projectVotedFor);
+             extendProjectClosingTime(_projectVotedFor);
          }
 
-
-         function updateVoteCount(string _projectVotedFor) internal {
-             projects[_projectVotedFor].voteCount = projects[_projectVotedFor].voteCount.add(1);
-
-
+         function updateVoteCount(Project _projectVotedFor) internal {
+             _projectVotedFor.voteCount = _projectVotedFor.voteCount.add(1);
          }
 
          // All Project addresses
@@ -144,7 +143,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
           _;
         }
 
-        function _extendProjectClosing(Project _project) internal {
+        function extendProjectClosingTime(Project _project) internal {
           _project.closingTime = _project.closingTime.add(43200);
         }
 
