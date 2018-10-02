@@ -18,4 +18,6 @@ contract GNIToken is MintableToken {
   balances[msg.sender] = INITIAL_SUPPLY;
   }
 
+  
+
 }

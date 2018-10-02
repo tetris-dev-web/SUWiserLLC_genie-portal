@@ -72,6 +72,8 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
              );
          }
 
+
+         // all tokens go to developerWallet!
          function pitchProject(string _name, uint capitalRequired, uint _valuation, string _lat, string _lng) public payable {
             issueTokensBasedOnPrice(_valuation);
 
@@ -108,15 +110,22 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
            GNIToken(token).mint(wallet, tokensToIssue); // change logic to only issue if cap is reached
          }
 
-         function buyToken(address _beneficiary, string _projectName) public payable {
+         //remove beneficiary, just have sender, value, projectName
+         //this overrides buyTokens in Crowdsale
+         function buyTokens(string _projectName) public payable {
              // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
 
              // before buyToken, verify that the project is still undeployed
-             buyTokens(_beneficiary);
-             Project memory _projectVotedFor = projects[_projectVotedFor];
+             uint256 weiAmount = msg.value;
 
-             updateVoteCount(_projectVotedFor);
-             extendProjectClosingTime(_projectVotedFor);
+             _preValidatePurchase(msg.sender, weiAmount);
+         }
+
+         function updateProjectVotedFor(string _projectName) {
+           Project memory _projectVotedFor = projects[_projectName];
+
+           updateVoteCount(_projectVotedFor);
+           extendProjectClosingTime(_projectVotedFor);
          }
 
          function updateVoteCount(Project _projectVotedFor) internal {
