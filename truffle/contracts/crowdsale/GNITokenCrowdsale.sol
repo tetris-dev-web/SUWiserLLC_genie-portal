@@ -72,8 +72,6 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
              );
          }
 
-
-         // all tokens go to developerWallet!
          function pitchProject(string _name, uint capitalRequired, uint _valuation, string _lat, string _lng) public payable {
             issueTokensBasedOnPrice(_valuation);
 
@@ -111,7 +109,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
          }
 
          //remove beneficiary, just have sender, value, projectName
-         //this overrides buyTokens in Crowdsale
+         //overrides buyTokens
          function buyTokens(string _projectName) public payable {
              // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
 
@@ -124,6 +122,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
 
              weiRaised = weiRaised.add(weiAmount);
 
+             //instead of transfer from BasicToken
              GNIToken(token).transferTokens(wallet, tokenAmount);
 
              updateProjectVotedFor(_projectName);
