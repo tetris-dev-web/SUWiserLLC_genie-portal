@@ -33,7 +33,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
 
         struct Project {
             string name;
-            uint256 projectClosingTime;
+            uint256 closingTime;
             uint256 valuation;
             uint256 capitalRequired;
             string lat;
@@ -45,6 +45,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
 
         event LogProject (
             string name,
+            uint256 closingTime,
             uint256 valuation,
             uint256 capitalRequired,
             string lat,
@@ -83,7 +84,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
              // Create project information
              Project memory newProject = Project({
                  name: _name,
-                 projectClosingTime: now + 86600 * 240,
+                 closingTime: now + 86600 * 240,
                  valuation: _valuation,
                  capitalRequired: capitalRequired,
                  lat: _lat,
@@ -119,6 +120,8 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
 
          function updateVoteCount(string _projectVotedFor) internal {
              projects[_projectVotedFor].voteCount = projects[_projectVotedFor].voteCount.add(1);
+
+
          }
 
          // All Project addresses
@@ -141,7 +144,11 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
           _;
         }
 
-        function _extendClosingTime(uint256 _days) internal onlyWhileOpen {
+        function _extendProjectClosing(Project _project) internal {
+          _project.closingTime = _project.closingTime.add(43200);
+        }
+
+        function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
             doomsDay = doomsDay.add(_days.mul(1728000));
         }
 
