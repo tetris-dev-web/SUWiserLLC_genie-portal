@@ -119,6 +119,16 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
              uint256 weiAmount = msg.value;
 
              _preValidatePurchase(msg.sender, weiAmount);
+
+             uint256 tokenAmount = _getTokenAmount(weiAmount);
+
+             weiRaised = weiRaised.add(weiAmount);
+
+             GNIToken(token).transferTokens(wallet, tokenAmount);
+
+             updateProjectVotedFor(_projectName);
+
+             _forwardFunds();
          }
 
          function updateProjectVotedFor(string _projectName) {
