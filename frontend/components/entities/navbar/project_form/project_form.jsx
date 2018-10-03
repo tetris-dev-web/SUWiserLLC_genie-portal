@@ -22,6 +22,8 @@ class ProjectForm extends React.Component {
       imageUrl: '',
       coins: '****',
       status: 'pitched',
+      latitude: '',
+      longitude: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -57,9 +59,8 @@ class ProjectForm extends React.Component {
     formData.append("project[description]", this.state.description);
     formData.append("project[creator_id]", this.state.creator_id);
     formData.append("project[status]", this.state.status);
-    // for testing purposes. TODO: delete below two appends.
-    formData.append("project[latitude]", 40.836678);
-    formData.append("project[longitude]", -73.943083);
+    formData.append("project[latitude]", this.state.latitude);
+    formData.append("project[longitude]", this.state.longitude);
 
 
     this.props.createProject(formData).then( () => {
@@ -171,7 +172,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, revenue, valuation, description, model_id, city, country, continent, icon } = this.state;
+    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude } = this.state;
 
     return (
       <form className="form-box p-form-box">
@@ -196,6 +197,18 @@ class ProjectForm extends React.Component {
           placeholder="#| city"
           value={city}
           onChange={this.update('city')} />
+        <input className="main-input lat-input"
+          type="number"
+          step="any"
+          placeholder="#| latitude"
+          value={latitude}
+          onChange={this.update('latitude')} />
+        <input className="main-input long-input"
+          type="number"
+          step="any"
+          placeholder="#| longitude"
+          value={longitude}
+          onChange={this.update('longitude')} />
         <input className="main-input revenue-input"
           type="number"
           placeholder="#| revenue"
