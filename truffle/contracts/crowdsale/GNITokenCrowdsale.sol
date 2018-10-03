@@ -22,7 +22,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         public
         Crowdsale(_rate, _wallet, _token)
         TimedCrowdsale(_openingTime, _doomsDay) {
-            // rewriting wallet to this will not work in contructor
             totalValuation = 0;
             developerWallet = _developerWallet;
         }
@@ -67,6 +66,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
                  project.voteCount
              );
          }
+
          //change _valuation to projectvaluation
          function pitchProject(string _name, uint capitalRequired, uint _valuation, string _lat, string _lng) public payable {
             issueTokensBasedOnPrice(_valuation);
@@ -122,12 +122,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
          function updateVoteCount(Project _projectVotedFor) internal {
              _projectVotedFor.voteCount = _projectVotedFor.voteCount.add(1);
-         }
-
-         // All Project addresses
-         struct ProjectAddress {
-             string location;
-             bool deployed;
          }
 
         function extendProjectClosingTime(Project _project) internal {
