@@ -18,14 +18,5 @@ contract GNIToken is MintableToken {
   balances[msg.sender] = INITIAL_SUPPLY;
   }
 
-  function transferTokens (address from, address _to, uint256 _value) public returns (bool) {
-    require(_value <= balances[from]);
-    require(_to != address(0));
-
-    balances[from] = balances[from].sub(_value);
-    balances[_to] = balances[_to].add(_value);
-    emit Transfer(from, _to, _value);
-    return true;
-  }
 
 }
