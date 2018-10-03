@@ -30,6 +30,7 @@ contract BasicToken is ERC20Basic {
   * @param _to The address to transfer to.
   * @param _value The amount to be transferred.
   */
+  //here, msg.sender is GNITokenCrowdsale contract instance
   function transfer(address _to, uint256 _value) public returns (bool) {
 
     require(_value <= balances[msg.sender]);

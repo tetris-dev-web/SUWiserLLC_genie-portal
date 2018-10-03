@@ -101,13 +101,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          function issueTokensBasedOnPrice(uint256 valuation) private {
            uint tokensToIssue = valuation.div(rate);
 
-           GNIToken(token).mint(this, tokensToIssue); // change logic to only issue if cap is reached
+           //tokens go to the this contract; wallets(escrow and developer) are ONLY for storing funds
+           //we need to do this because transferTokens expects to take tokens from msg.sender, which is this contract
+           GNIToken(token).mint(this, tokensToIssue);
          }
 
-         
+         //sender is always the beneficiary
+         //sender becomes the contract in BasicToken
          function buyTokensAndVote (string _projectName) public payable {
            buyTokens(msg.sender);
-
            updateProjectVotedFor(_projectName);
          }
 
