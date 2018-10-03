@@ -35,7 +35,7 @@ class ProjectDashboard extends React.Component {
 
     if (this.props.currentUser) {
       const projectClicked = this.state.projectClicked;
-      const sketchfab_link = "https://sketchfab.com/models/" + projectClicked.model_id + "/embed";
+      const model_link = "https://poly.google.com/view/" + projectClicked.model_id + "/embed";
       return (
         <div className="graph-container">
           <ProjectGraph
@@ -60,12 +60,11 @@ class ProjectDashboard extends React.Component {
                     </div>
                   </div>
                   <div className="project-modal-grid">
-                    <div className="iframe">
-                        <div className="sketchfab-embed-wrapper">
-                          <iframe width="374" height="300" src={ `${sketchfab_link}` } frameBorder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
-
-                        </div>
-                    </div>
+                    {!projectClicked.model_id ? <div></div> :
+                      <div className="iframe">
+                        <iframe src={ `${model_link}` } frameBorder="0" allowvr="yes" allow="vr; xr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
+                      </div>
+                    }
                     <div className="temp">
                       <h3>Capital Required</h3>
                       <div className="thermo-canvas-container">
