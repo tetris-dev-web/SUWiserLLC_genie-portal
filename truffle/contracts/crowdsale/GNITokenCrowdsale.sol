@@ -107,7 +107,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          }
 
          //sender is always the beneficiary
-         //sender becomes the contract in BasicToken
+         //sender becomes this contract in BasicToken
          function buyTokensAndVote (string _projectName) public payable {
            buyTokens(msg.sender);
            updateProjectVotedFor(_projectName);
