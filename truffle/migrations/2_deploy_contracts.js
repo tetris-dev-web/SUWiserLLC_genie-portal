@@ -4,7 +4,8 @@ const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
-    const wallet = accounts[0];
+    const wallet = accounts[1];
+    const developerWallet = accounts[0];
     const cap = 100;  //dollars
 
     return deployer
@@ -18,7 +19,7 @@ module.exports = function (deployer, network, accounts) {
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {
                     if (err) reject();
-                    const openingTime = time.timestamp + 200;
+                    const openingTime = time.timestamp + 5;
                     resolve(openingTime);
                 })
             })
@@ -31,6 +32,7 @@ module.exports = function (deployer, network, accounts) {
                 closingTime,
                 rate,
                 wallet,
+                developerWallet,
                 cap,
                 GNIToken.address
             );

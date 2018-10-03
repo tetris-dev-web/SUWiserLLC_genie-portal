@@ -80,6 +80,7 @@ contract Crowdsale {
    * @dev low level token purchase ***DO NOT OVERRIDE***
    * @param _beneficiary Address performing the token purchase
    */
+   //overridden
   function buyTokens(address _beneficiary) public payable {
 
     uint256 weiAmount = msg.value;
@@ -198,6 +199,6 @@ contract Crowdsale {
    * @dev Determines how ETH is stored/forwarded on purchases.
    */
   function _forwardFunds() internal {
-    wallet.transfer(msg.value);
+      wallet.transfer(msg.value);
   }
 }
