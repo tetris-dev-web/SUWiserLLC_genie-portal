@@ -104,28 +104,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
            GNIToken(token).mint(this, tokensToIssue); // change logic to only issue if cap is reached
          }
 
-         //remove beneficiary, just have sender, value, projectName
-         //overrides buyTokens
-         /* function buyTokens(string _projectName) public payable {
-             // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
-
-             // before buyToken, verify that the project is still undeployed
-             uint256 weiAmount = msg.value;
-
-             _preValidatePurchase(msg.sender, weiAmount);
-
-             uint256 tokenAmount = _getTokenAmount(weiAmount);
-
-             weiRaised = weiRaised.add(weiAmount);
-
-             //instead of transfer from BasicToken
-             GNIToken(token).transferTokens(wallet, msg.sender, tokenAmount);
-
-             updateProjectVotedFor(_projectName);
-
-             _forwardFunds();
-         } */
-
+         
          function buyTokensAndVote (string _projectName) public payable {
            buyTokens(msg.sender);
 
