@@ -35,6 +35,7 @@ class ProjectDashboard extends React.Component {
 
     if (this.props.currentUser) {
       const projectClicked = this.state.projectClicked;
+      const sketchfab_link = "https://sketchfab.com/models/" + projectClicked.model_id + "/embed";
       return (
         <div className="graph-container">
           <ProjectGraph
