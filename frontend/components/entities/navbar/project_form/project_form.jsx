@@ -11,7 +11,7 @@ class ProjectForm extends React.Component {
       title: '',
       revenue: '',
       valuation: '',
-      model_link: '',
+      model_id: '',
       city: '',
       country: '',
       continent: '',
@@ -49,7 +49,7 @@ class ProjectForm extends React.Component {
     formData.append("project[title]", this.state.title);
     formData.append("project[revenue]", this.state.revenue);
     formData.append("project[valuation]", this.state.valuation);
-    formData.append("project[model_link]", this.state.model_link);
+    formData.append("project[model_id]", this.state.model_id);
     formData.append("project[city]", this.state.city);
     formData.append("project[country]", this.state.country);
     formData.append("project[continent]", this.state.continent);
@@ -57,6 +57,10 @@ class ProjectForm extends React.Component {
     formData.append("project[description]", this.state.description);
     formData.append("project[creator_id]", this.state.creator_id);
     formData.append("project[status]", this.state.status);
+    // for testing purposes. TODO: delete below two appends.
+    formData.append("project[latitude]", 40.836678);
+    formData.append("project[longitude]", -73.943083);
+
 
     this.props.createProject(formData).then( () => {
       const pitchedProject = GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
@@ -167,7 +171,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, revenue, valuation, description, model_link, city, country, continent, icon } = this.state;
+    let { title, revenue, valuation, description, model_id, city, country, continent, icon } = this.state;
 
     return (
       <form className="form-box p-form-box">
@@ -248,9 +252,9 @@ class ProjectForm extends React.Component {
         <div className="link-upload-cont">
           <input type="text"
             placeholder="paste model link url here"
-            value={model_link}
+            value={model_id}
             className="link-input"
-            onChange={this.update('model_link')} />
+            onChange={this.update('model_id')} />
         </div>
 
         <div className="link-upload-cont">

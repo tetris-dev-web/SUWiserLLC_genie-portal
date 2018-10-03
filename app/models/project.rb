@@ -5,7 +5,7 @@
 #  id                :integer          not null, primary key
 #  title             :string           not null
 #  valuation         :decimal(, )      not null
-#  model_link             :string
+#  model_id             :string
 #  icon              :string
 #  description       :text
 #  creator_id        :integer          not null

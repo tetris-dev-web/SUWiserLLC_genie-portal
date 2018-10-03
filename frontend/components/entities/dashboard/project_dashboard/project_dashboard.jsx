@@ -27,6 +27,7 @@ class ProjectDashboard extends React.Component {
 
   componentDidMount() {
     this.props.fetchProjects();
+
   }
 
 
@@ -34,6 +35,7 @@ class ProjectDashboard extends React.Component {
 
     if (this.props.currentUser) {
       const projectClicked = this.state.projectClicked;
+      const sketchfab_link = "http://sketchfab.com/models/" + projectClicked.model_id + "/embed";
       return (
         <div className="graph-container">
           <ProjectGraph
@@ -58,7 +60,7 @@ class ProjectDashboard extends React.Component {
             <div className="project-modal-grid">
                 <div className="iframe">
                     <div className="sketchfab-embed-wrapper">
-                      <iframe width="374" height="300" src="https://sketchfab.com/models/3a78e1641d204ae695b9565d55ed74ac/embed" frameBorder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+                      <iframe width="374" height="300" src={ `${sketchfab_link}` } frameBorder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
                     </div>
                 </div>
