@@ -24,6 +24,7 @@ class ProjectForm extends React.Component {
       status: 'pitched',
       latitude: '',
       longitude: '',
+      summary: 'summary',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -61,6 +62,7 @@ class ProjectForm extends React.Component {
     formData.append("project[status]", this.state.status);
     formData.append("project[latitude]", this.state.latitude);
     formData.append("project[longitude]", this.state.longitude);
+    formData.append("project[summary]", this.state.summary);
 
 
     this.props.createProject(formData).then( () => {

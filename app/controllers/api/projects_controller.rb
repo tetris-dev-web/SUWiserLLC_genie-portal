@@ -24,7 +24,7 @@ class Api::ProjectsController < ApplicationController
     params.require(:project).permit(
       :id, :title, :revenue, :valuation, :model_id,
       :file, :icon, :description, :creator_id, :created_at,
-      :city, :country, :continent, :status, :latitude, :longitude
+      :city, :country, :continent, :status, :latitude, :longitude, :summary
     )
   end
 end
