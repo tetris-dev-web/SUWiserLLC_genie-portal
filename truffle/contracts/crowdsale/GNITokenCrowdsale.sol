@@ -149,20 +149,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
              bool deployed;
          }
 
-        function pitchProjectandRaiseCap(uint256 _projectValue) public {
-          uint newTokensIssued = 1000;
-          GNIToken(token).mint(wallet, newTokensIssued); // change logic to only issue if cap is reached
-          uint updatedTotalSupply = GNIToken(token).totalSupply();
-          cap = cap.add(_projectValue);
-          uint newRate = cap/updatedTotalSupply;
-          rate = newRate;
-        }
-
-        modifier onlyDeveloper() {
-          require(msg.sender == developerWallet);
-          _;
-        }
-
         function extendProjectClosingTime(Project _project) internal {
           _project.closingTime = _project.closingTime.add(43200);
         }
