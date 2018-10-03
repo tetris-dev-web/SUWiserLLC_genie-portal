@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import ModalStyle from '../../footer/modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
+import CashFlowGraph from './project_cashflow';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -27,7 +28,6 @@ class ProjectDashboard extends React.Component {
 
   componentDidMount() {
     this.props.fetchProjects();
-
   }
 
 
@@ -35,7 +35,6 @@ class ProjectDashboard extends React.Component {
 
     if (this.props.currentUser) {
       const projectClicked = this.state.projectClicked;
-      const sketchfab_link = "http://sketchfab.com/models/" + projectClicked.model_id + "/embed";
       return (
         <div className="graph-container">
           <ProjectGraph
@@ -44,59 +43,59 @@ class ProjectDashboard extends React.Component {
             currentUser={this.props.currentUser}
             fetchProjects={this.props.fetchProjects}
             data={this.props.projects} />
-          <Modal
-            isOpen={this.state.openModal}
-            onRequestClose={this.closeModal}
-            contentLabel="Project Graph Modal"
-            style={ModalStyle}
-            className="modal-container">
-            <div className="black-close-modal-button close-modal-button"
-              onClick={this.closeModal}>&times;</div>
-            <div className="ft-modal-header-cont">
-              <div className="ft-modal-header bylaws-header">
-                {projectClicked.title}
-              </div>
-            </div>
-            <div className="project-modal-grid">
-                <div className="iframe">
-                    <div className="sketchfab-embed-wrapper">
-                      <iframe width="374" height="300" src={ `${sketchfab_link}` } frameBorder="0" allow="autoplay; fullscreen; vr" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
-
-                    </div>
-                </div>
-
-                <div className="temp">
-                  <h3>Capital Required</h3>
-                  <div className="thermo-canvas-container">
-                    <ProjectThermo project={projectClicked} />
-                  </div>
-                </div>
-
-                <div className="project-description">
-                  <div className="project-text">
-                    <h1>{projectClicked.title}</h1>
-                    <div className="project-summary">
-                      {projectClicked.summary}
+            <Modal
+              isOpen={this.state.openModal}
+              onRequestClose={this.closeModal}
+              contentLabel="Project Graph Modal"
+              style={ModalStyle}
+              className="modal-container">
+              <div className="black-close-modal-button close-modal-button"
+                onClick={this.closeModal}>&times;</div>
+              {!projectClicked.summary ? <h1>No data available</h1> :
+                <React.Fragment>
+                  <div className="ft-modal-header-cont">
+                    <div className="ft-modal-header bylaws-header">
+                      {projectClicked.title}
                     </div>
                   </div>
-                  <div className="bus-plan-download">
-                    <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
-                      <i className="fas fa-file-contract">
-                        business plan
-                      </i>
-                    </a>
+                  <div className="project-modal-grid">
+                    <div className="iframe">iframe</div>
+
+                    <div className="temp">
+                      <h3>Capital Required</h3>
+                      <div className="thermo-canvas-container">
+                        <ProjectThermo project={projectClicked} />
+                      </div>
+                    </div>
+
+                    <div className="project-description">
+                      <div className="project-text">
+                        <h1>{projectClicked.title}</h1>
+                        <div className="project-summary">
+                          {projectClicked.summary}
+                        </div>
+                      </div>
+                      <div className="bus-plan-download">
+                        <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
+                          <i className="fas fa-file-contract">
+                            business plan
+                          </i>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="cashflow-graph">
+                      <CashFlowGraph project={projectClicked} />
+                    </div>
+
+                    <div className="project-map">
+                      <ProjectMap projectClicked={ projectClicked } />
+                    </div>
+                    <div className="project-overlays">overlays</div>
                   </div>
-                </div>
-
-                <div className="cashflow-graph">cash graph</div>
-
-                <div className="project-map">
-                  <ProjectMap projectClicked={ projectClicked } />
-                </div>
-                <div className="project-overlays">overlays</div>
-            </div>
-
-          </Modal>
+                </React.Fragment>
+              }
+            </Modal>
         </div>
       );
     } else {
