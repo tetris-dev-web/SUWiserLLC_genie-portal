@@ -1,12 +1,10 @@
 pragma solidity 0.4.24;
 
 import '../token/GNIToken.sol';
-import './MintedCrowdsale.sol';
 import './TimedCrowdsale.sol';
-import './CappedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 
-contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale {
+contract GNITokenCrowdsale is TimedCrowdsale {
     using SafeMath for uint256;
     address public developerWallet;
     uint256 public totalValuation;
@@ -23,8 +21,6 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
         )
         public
         Crowdsale(_rate, _wallet, _token)
-        //remove capped crowdsale
-        CappedCrowdsale(_cap)
         TimedCrowdsale(_openingTime, _doomsDay) {
             // rewriting wallet to this will not work in contructor
             totalValuation = 0;
@@ -71,7 +67,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
                  project.voteCount
              );
          }
-
+         //change _valuation to projectvaluation
          function pitchProject(string _name, uint capitalRequired, uint _valuation, string _lat, string _lng) public payable {
             issueTokensBasedOnPrice(_valuation);
 
@@ -105,12 +101,12 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
          function issueTokensBasedOnPrice(uint256 valuation) private {
            uint tokensToIssue = valuation.div(rate);
 
-           GNIToken(token).mint(wallet, tokensToIssue); // change logic to only issue if cap is reached
+           GNIToken(token).mint(this, tokensToIssue); // change logic to only issue if cap is reached
          }
 
          //remove beneficiary, just have sender, value, projectName
          //overrides buyTokens
-         function buyTokens(string _projectName) public payable {
+         /* function buyTokens(string _projectName) public payable {
              // Can we change this to msg.sender so that there is not option to buy on behalf of someone else;
 
              // before buyToken, verify that the project is still undeployed
@@ -123,11 +119,17 @@ contract GNITokenCrowdsale is TimedCrowdsale, CappedCrowdsale,  MintedCrowdsale 
              weiRaised = weiRaised.add(weiAmount);
 
              //instead of transfer from BasicToken
-             GNIToken(token).transferTokens(wallet, tokenAmount);
+             GNIToken(token).transferTokens(wallet, msg.sender, tokenAmount);
 
              updateProjectVotedFor(_projectName);
 
              _forwardFunds();
+         } */
+
+         function buyTokensAndVote (string _projectName) public payable {
+           buyTokens(msg.sender);
+
+           updateProjectVotedFor(_projectName);
          }
 
          function updateProjectVotedFor(string _projectName) {
