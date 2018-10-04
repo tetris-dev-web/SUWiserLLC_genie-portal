@@ -107,10 +107,14 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          //sender is always the beneficiary
          //sender becomes this contract in BasicToken
          //funds from msg.value are allocated to this contract since this function is a payable.
-         //later, we can assign funds to the wallet (which is the developer wallet). No second wallet is needed because the contract serves as an escrow account.
-         function buyTokensAndVote (string _projectName) public payable {
+         //later, we can assign funds to the wallet (which is the developer wallet). No second wallet is needed because the contract serves as an escrow wallet.
+         function handleInvestment (string _projectName) public payable {
            buyTokens(msg.sender);
            updateProjectVotedFor(_projectName);
+         }
+
+         function collectFunds () public {
+           wallet.transfer(1);
          }
 
          function updateProjectVotedFor(string _projectName) {
