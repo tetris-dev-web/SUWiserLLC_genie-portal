@@ -62,7 +62,6 @@ class ProjectDashboard extends React.Component {
                     <div className="iframe">iframe</div>
 
                     <div className="temp">
-                      <h3>Capital Required</h3>
                       <div className="thermo-canvas-container">
                         <ProjectThermo project={projectClicked} />
                       </div>
