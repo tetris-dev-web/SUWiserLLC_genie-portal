@@ -101,7 +101,7 @@ contract Crowdsale {
 
     _updatePurchasingState(_beneficiary, weiAmount);
 
-    _forwardFunds();
+    /* _forwardFunds(); */
     _postValidatePurchase(_beneficiary, weiAmount);
   }
 
