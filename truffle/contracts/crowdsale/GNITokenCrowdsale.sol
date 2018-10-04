@@ -54,7 +54,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
 
          function getProjectInfo(string _name) public view returns(
-             string, uint256, uint256, bool, uint256
+             string, uint256, uint256, bool, uint256, uint256
 
          ) {
              Project memory project = projects[_name];
@@ -63,7 +63,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
                  project.valuation,
                  project.capitalRequired,
                  project.active,
-                 project.voteCount
+                 project.voteCount,
+                 project.closingTime
              );
          }
 
