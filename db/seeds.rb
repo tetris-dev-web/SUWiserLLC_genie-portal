@@ -14,6 +14,7 @@ User.destroy_all
 Project.destroy_all
 
 Genesis_start_date = '01/01/2019'
+Genesis_end_date = '09/01/2019'
 Genesis_cap_required = 150000
 Genesis_current_cap = 15000
 Genesis_lat = 40.836678
@@ -91,6 +92,7 @@ intensity interval training and calisthenics. The space also hosts a cafe and mu
 
 
 HamInn_start_date = '01/01/2017'
+HamInn_end_date = '09/01/2017'
 HamInn_cap_required = 40000
 HamInn_current_cap = 40000
 HamInn_lat = 40.836370
