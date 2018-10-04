@@ -206,6 +206,8 @@ contract Crowdsale {
    1. Changing gas in truffle.js (maybe theres another way to change gas)
    2. removing the function after this (_postValidatePurchase)
    3. removing fallback function
+
+   RESOLUTION: remove this function call completely
     */
   function _forwardFunds() internal {
       wallet.transfer(msg.value);

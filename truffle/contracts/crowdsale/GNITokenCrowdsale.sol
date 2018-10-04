@@ -114,18 +114,18 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          }
 
          function updateProjectVotedFor(string _projectName) {
-           Project memory _projectVotedFor = projects[_projectName];
 
-           updateVoteCount(_projectVotedFor);
-           extendProjectClosingTime(_projectVotedFor);
+           updateVoteCount(_projectName);
+           extendProjectClosingTime(_projectName);
+         }
+         /* Project storage _projectVotedFor = projects[_projectName]; */
+
+         function updateVoteCount(string _projectName) internal {
+             projects[_projectName].voteCount = projects[_projectName].voteCount.add(1);
          }
 
-         function updateVoteCount(Project _projectVotedFor) internal {
-             _projectVotedFor.voteCount = _projectVotedFor.voteCount.add(1);
-         }
-
-        function extendProjectClosingTime(Project _project) internal {
-          _project.closingTime = _project.closingTime.add(43200);
+        function extendProjectClosingTime(string _projectName) internal {
+          projects[_projectName].closingTime = projects[_projectName].closingTime.add(43200);
         }
 
         function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
