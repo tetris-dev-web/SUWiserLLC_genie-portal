@@ -15,15 +15,12 @@ contract GNITokenCrowdsale is TimedCrowdsale {
           uint256 _doomsDay,
           uint256 _rate,
           address _wallet,
-          address _developerWallet,
-          uint256 _cap,
           MintableToken _token
         )
         public
         Crowdsale(_rate, _wallet, _token)
         TimedCrowdsale(_openingTime, _doomsDay) {
             totalValuation = 0;
-            developerWallet = _developerWallet;
         }
 
         struct Project {
@@ -102,23 +99,24 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          function issueTokensBasedOnPrice(uint256 valuation) private {
            uint tokensToIssue = valuation.div(rate);
 
-           //tokens go to the this contract; wallets(escrow and developer) are ONLY for storing funds
-           //we need to do this because transferTokens expects to take tokens from msg.sender, which is this contract
+           //tokens go to the this contract
+           //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
            GNIToken(token).mint(this, tokensToIssue);
          }
 
          //sender is always the beneficiary
          //sender becomes this contract in BasicToken
+         //funds from msg.value are allocated to this contract. later, we can assign them to the wallet (which is the developer wallet). No second wallet is needed.
          function buyTokensAndVote (string _projectName) public payable {
            buyTokens(msg.sender);
            updateProjectVotedFor(_projectName);
          }
 
          function updateProjectVotedFor(string _projectName) {
-
            updateVoteCount(_projectName);
            extendProjectClosingTime(_projectName);
          }
+
          /* Project storage _projectVotedFor = projects[_projectName]; */
 
          function updateVoteCount(string _projectName) internal {
