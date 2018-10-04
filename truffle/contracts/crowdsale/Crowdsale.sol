@@ -80,7 +80,6 @@ contract Crowdsale {
    * @dev low level token purchase ***DO NOT OVERRIDE***
    * @param _beneficiary Address performing the token purchase
    */
-   //overridden
   function buyTokens(address _beneficiary) public payable {
 
     uint256 weiAmount = msg.value;
@@ -198,6 +197,16 @@ contract Crowdsale {
   /**
    * @dev Determines how ETH is stored/forwarded on purchases.
    */
+
+   /**
+   This works, but throws a runtime error and terminates the rest of the request
+   The issuse is either related to an unfilfilled require/revert/assert statement or exceeded gas limit
+   There doesnt seem to be any requires, and I cant see the internal workings of transfer.
+   I've tried:
+   1. Changing gas in truffle.js (maybe theres another way to change gas)
+   2. removing the function after this (_postValidatePurchase)
+   3. removing fallback function
+    */
   function _forwardFunds() internal {
       wallet.transfer(msg.value);
   }
