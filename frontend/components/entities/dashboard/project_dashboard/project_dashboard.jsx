@@ -5,6 +5,7 @@ import ModalStyle from '../../footer/modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
 import CashFlowGraph from './project_cashflow';
+import $ from 'jquery';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -28,6 +29,14 @@ class ProjectDashboard extends React.Component {
 
   componentDidMount() {
     this.props.fetchProjects();
+    // var head = $("#document").contents().find("head");
+    // var css = '<style type="text/css">' +
+    // 'a img{visibility:hidden}; ' +
+    // '</style>';
+    //
+    // $(head).append(css);
+    //
+    // console.log('mounted')
   }
 
 
@@ -62,7 +71,7 @@ class ProjectDashboard extends React.Component {
                   <div className="project-modal-grid">
                     {!projectClicked.model_id ? <div></div> :
                       <div className="iframe">
-                        <iframe src={ `${model_link}` } frameBorder="0" allowvr="yes" allow="vr; xr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
+                        <iframe id="iframe" src={ `${model_link}` } frameBorder="0" allowvr="yes" allow="vr; xr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
                       </div>
                     }
                     <div className="temp">
