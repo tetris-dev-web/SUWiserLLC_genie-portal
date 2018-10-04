@@ -6,7 +6,6 @@ import '../utility/SafeMath.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
     using SafeMath for uint256;
-    address public developerWallet;
     uint256 public totalValuation;
 
     constructor
@@ -35,7 +34,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
             bool active;
         }
 
-        event LogProject (
+        event NewProject (
+            uint id,
             string name,
             uint256 valuation,
             uint256 capitalRequired,
@@ -47,10 +47,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         );
 
 
-        mapping(string => Project) private projects;
+        /* mapping(string => Project) private projects; */
+        Project[] public projects;
 
 
-         function getProjectInfo(string _name) public view returns(
+         /* function getProjectInfo(string _name) public view returns(
              string, uint256, uint256, bool, uint256, uint256
 
          ) {
@@ -63,10 +64,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
                  project.voteCount,
                  project.closingTime
              );
-         }
+         } */
 
          //change _valuation to projectvaluation
-         function pitchProject(string _name, uint capitalRequired, uint _valuation, string _lat, string _lng) public payable {
+         function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
             issueTokensBasedOnPrice(_valuation);
 
              totalValuation = totalValuation.add(_valuation);
@@ -75,7 +76,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
              _extendDoomsDay(90);
 
              // Create project information
-             Project memory newProject = Project({
+             /* Project memory newProject = Project({
                  name: _name,
                  closingTime: now + 86600 * 240,
                  valuation: _valuation,
@@ -85,19 +86,19 @@ contract GNITokenCrowdsale is TimedCrowdsale {
                  capitalReached: false,
                  active: false,
                  voteCount: 0
-             });
+             }); */
 
              // Save project information
-             projects[_name] = newProject;
+             /* projects[_name] = newProject; */
 
-
+             uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, _lat,_lng, 0, false, false)) - 1;
 
              // log the creation of the new project
-             emit LogProject(_name, _valuation, capitalRequired, _lat, _lng, 0, false, false);
+             emit NewProject(id, _name, _valuation, capitalRequired, _lat, _lng, 0, false, false);
          }
 
          function issueTokensBasedOnPrice(uint256 valuation) private {
-           uint tokensToIssue = valuation.div(rate);
+           uint256 tokensToIssue = valuation.div(rate);
 
            //tokens go to the this contract
            //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
@@ -108,7 +109,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          //sender becomes this contract in BasicToken
          //funds from msg.value are allocated to this contract since this function is a payable.
          //later, we can assign funds to the wallet (which is the developer wallet). No second wallet is needed because the contract serves as an escrow wallet.
-         function handleTokenPurchase (string _projectName) public payable {
+         /* function handleTokenPurchase (string _projectName) public payable {
            buyTokens(msg.sender);
            updateProjectVotedFor(_projectName);
          }
@@ -124,16 +125,45 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
          /* Project storage _projectVotedFor = projects[_projectName]; */
 
-         function updateVoteCount(string _projectName) internal {
+         /* function updateVoteCount(string _projectName) internal {
              projects[_projectName].voteCount = projects[_projectName].voteCount.add(1);
          }
 
         function extendProjectClosingTime(string _projectName) internal {
           projects[_projectName].closingTime = projects[_projectName].closingTime.add(43200);
-        }
+        } */
 
         function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
             doomsDay = doomsDay.add(_days.mul(1728000));
         }
+
+        /* function canActivateProject() public view returns (string, uint256){
+        string memory leadingProject;
+        uint256 leadingPercentage;
+        uint256 votePercentage;
+        uint256 secondLeadingPercentage;
+        uint256 projectVoteCount;
+        uint256 leadingProjectIndex;
+        for(uint256 i = 0; i < projectAddresses.length; i = i.add(1)){
+            if (!projectAddresses[i].deployed){
+                projectVoteCount = projects[projectAddresses[i].location].voteCount;
+                if (projectVoteCount > 0){
+                    votePercentage = (projectVoteCount.mul(1000000)).div(totalVoteCount);
+                    if (votePercentage >= leadingPercentage){
+                        secondLeadingPercentage = leadingPercentage;
+                        leadingPercentage = votePercentage;
+                        leadingProjectIndex = i;
+                        leadingProject = projectAddresses[i].location;
+                    }
+                }
+            }
+
+        }
+        if(projects[leadingProject].cost <= weiRaised && leadingPercentage > secondLeadingPercentage){
+            return (leadingProject, leadingProjectIndex);
+        } else {
+            return ("",0);
+        }
+    } */
 
 }
