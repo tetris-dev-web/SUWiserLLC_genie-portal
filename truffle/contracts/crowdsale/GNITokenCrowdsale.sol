@@ -51,11 +51,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         Project[] public projects;
 
 
-         /* function getProjectInfo(string _name) public view returns(
+         function getProjectInfo(uint id) public view returns(
              string, uint256, uint256, bool, uint256, uint256
 
          ) {
-             Project memory project = projects[_name];
+             Project memory project = projects[id];
              return (
                  project.name,
                  project.valuation,
@@ -64,7 +64,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
                  project.voteCount,
                  project.closingTime
              );
-         } */
+         }
 
          //change _valuation to projectvaluation
          function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
