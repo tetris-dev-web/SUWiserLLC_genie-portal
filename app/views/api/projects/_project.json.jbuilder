@@ -20,6 +20,7 @@ json.extract! project,  :id,
                         :longitude,
                         :summary,
                         :capital_required,
-                        :current_capital
+                        :current_capital,
+                        :close_date
 
 json.file asset_path(project.file.url)
