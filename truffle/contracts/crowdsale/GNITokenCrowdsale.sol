@@ -109,32 +109,32 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          //sender becomes this contract in BasicToken
          //funds from msg.value are allocated to this contract since this function is a payable.
          //later, we can assign funds to the wallet (which is the developer wallet). No second wallet is needed because the contract serves as an escrow wallet.
-         /* function handleTokenPurchase (string _projectName) public payable {
+         function handleTokenPurchase (uint256 _projectId) public payable {
            buyTokens(msg.sender);
-           updateProjectVotedFor(_projectName);
+           updateProjectVotedFor(_projectId);
          }
 
          function collectFunds () public {
            wallet.transfer(1);
          }
 
-         function updateProjectVotedFor(string _projectName) {
-           updateVoteCount(_projectName);
-           extendProjectClosingTime(_projectName);
+         function updateProjectVotedFor(uint256 _projectId) {
+           updateVoteCount(_projectId);
+           extendProjectClosingTime(_projectId);
          }
 
-         /* Project storage _projectVotedFor = projects[_projectName]; */
+         /* Project storage _projectVotedFor = projects[_projectId]; */
 
-         /* function updateVoteCount(string _projectName) internal {
-             projects[_projectName].voteCount = projects[_projectName].voteCount.add(1);
-         }
+        function updateVoteCount(uint256 _projectId) internal {
+          projects[_projectId].voteCount = projects[_projectId].voteCount.add(1);
+        }
 
-        function extendProjectClosingTime(string _projectName) internal {
-          projects[_projectName].closingTime = projects[_projectName].closingTime.add(43200);
-        } */
+        function extendProjectClosingTime(uint256 _projectId) internal {
+          projects[_projectId].closingTime = projects[_projectId].closingTime.add(43200);
+        }
 
         function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
-            doomsDay = doomsDay.add(_days.mul(1728000));
+          doomsDay = doomsDay.add(_days.mul(1728000));
         }
 
         /* function canActivateProject() public view returns (string, uint256){
