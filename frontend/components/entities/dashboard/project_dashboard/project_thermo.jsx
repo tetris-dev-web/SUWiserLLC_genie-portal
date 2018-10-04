@@ -3,6 +3,7 @@ import Konva from 'konva';
 import { Stage, Layer, Rect,Line, Text } from 'react-konva';
 
 const ProjectThermo = function( {project} ) {
+  console.log(project.close_date);
   const { current_capital,capital_required } = project;
   const percentCompleted = (current_capital*100) / capital_required;
   const rectWidth = 22;
