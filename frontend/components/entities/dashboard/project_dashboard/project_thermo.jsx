@@ -26,11 +26,10 @@ const ProjectThermo = function( {project} ) {
                    .domain([formattedStartDate,formattedCloseDate])
                    .range([rectStartingX + rectWidth + 60, rectStartingX + 130]).clamp(true);
   const yVoteScale = d3.scaleLinear()
-                   .domain([1,20000])
+                   .domain([1,capital_required])
                    .range([rectHeigth+rectStartingY, filledRectStartingY]).clamp(true);
 
   const daysToCloseLineX = xTimeScale(timeNow);
-
   const voteXScale = d3.scaleTime()
                     .domain([formattedStartDate,formattedCloseDate])
                     .range([rectStartingX+rectWidth+8,daysToCloseLineX]).clamp(true);
@@ -43,7 +42,6 @@ const ProjectThermo = function( {project} ) {
     else if (date1 > date2) return 1;
     else return 0;
   });
-  console.log(sortedVotesByDate);
   return (
     <Stage width={200} height={200}>
       <Layer>
@@ -110,11 +108,12 @@ const ProjectThermo = function( {project} ) {
             context.lineTo(rectStartingX+2, filledRectStartingY);
             context.lineTo(rectStartingX+2, rectHeigth+rectStartingY);
             context.lineTo(rectStartingX+rectWidth+10, rectHeigth+rectStartingY);
-            debugger
+            let sumVotes = 0;
             sortedVotesByDate.forEach(date=>{
               const formattedDate = new Date(date);
               const x = voteXScale(formattedDate);
-              const y = yVoteScale(jsonVotes[date]);
+              sumVotes += jsonVotes[date];
+              const y = yVoteScale(sumVotes);
               context.lineTo(x,y);
             });
             context.closePath();
