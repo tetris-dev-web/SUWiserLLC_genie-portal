@@ -19,6 +19,13 @@ contract GNIToken is MintableToken {
   function inactiveSupply() public view returns (uint256) {
     return inactiveSupply_;
   }
+
+  function mint (address _to, uint256 _amount) public returns (bool) {
+    require(super.mint(_to, _amount));
+
+    inactiveSupply_ = inactiveSupply.add(_amount);
+  }
+
   //for the number of paritipants...
   //find the balance of the participant
   //reduce the balance according to the activation rate
@@ -30,7 +37,7 @@ contract GNIToken is MintableToken {
 
 
 //make inactiveTokenSupply variable
-//override transfer. call super, and then perform logic to map store addresses
+//override transfer. call super, and then perform logic to store addresses (more below)
 //override mint. call super, and then perform logic to update inactiveTokenSupply
 
 //make participantCount variable. It initializes at 1 and increments for every new address during transfers.
