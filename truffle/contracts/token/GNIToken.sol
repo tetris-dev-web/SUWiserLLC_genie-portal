@@ -6,18 +6,24 @@ import '../utility/SafeMath.sol';
 contract GNIToken is MintableToken {
   using SafeMath for uint256;
   uint256 internal inactiveSupply_;
+  uint256 internal participantCount_;
 
 
 
   constructor() public {
   totalSupply_ = 0;
   inactiveSupply_ = 0;
+  participantCount_ = 0;
   balances[msg.sender] = 0;
   }
 
 
   function inactiveSupply() public view returns (uint256) {
     return inactiveSupply_;
+  }
+
+  function participantCount() public view returns (uint256) {
+    return participantCount_;
   }
 
   function mint (address _to, uint256 _amount) public returns (bool) {
@@ -37,9 +43,9 @@ contract GNIToken is MintableToken {
 
 
 //make inactiveTokenSupply variable
-//override transfer. call super, and then perform logic to store addresses (more below)
 //override mint. call super, and then perform logic to update inactiveTokenSupply
 
+//override transfer. call super, and then perform logic to store addresses (more below)
 //make participantCount variable. It initializes at 1 and increments for every new address during transfers.
 //make a mapping from participant id to address, storing the addresses in an array.
 //use this mapping to get the balance of each participant
