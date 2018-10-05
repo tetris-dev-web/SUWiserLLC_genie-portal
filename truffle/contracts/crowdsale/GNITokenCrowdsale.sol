@@ -27,6 +27,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
             uint256 closingTime;
             uint256 valuation;
             uint256 capitalRequired;
+            uint256 tokensIssued;
             string lat;
             string lng;
             uint256 voteCount;
@@ -39,6 +40,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
             string name,
             uint256 valuation,
             uint256 capitalRequired,
+            uint256 tokensIssued,
             string lat,
             string lng,
             uint256 voteCount,
@@ -60,6 +62,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
                  project.name,
                  project.valuation,
                  project.capitalRequired,
+                 project.tokensIssued,
                  project.active,
                  project.voteCount,
                  project.closingTime
@@ -67,8 +70,12 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          }
 
          //change _valuation to projectvaluation
-         function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
-            issueTokensBasedOnPrice(_valuation);
+         function pitchProject(string _name, uint capitalRequired, uint256 tokensToIssue, uint256 _valuation, string _lat, string _lng) public payable {
+           uint256 tokensToIssue = valuation.div(rate);
+
+           //tokens go to the this contract
+           //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
+           GNIToken(token).mint(this, tokensToIssue);
 
              totalValuation = totalValuation.add(_valuation);
 
@@ -94,16 +101,16 @@ contract GNITokenCrowdsale is TimedCrowdsale {
              uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, _lat,_lng, 0, false, false)) - 1;
 
              // log the creation of the new project
-             emit LogProject(id, _name, _valuation, capitalRequired, _lat, _lng, 0, false, false);
+             emit LogProject(id, _name, _valuation, capitalRequired, tokensIssued, _lat, _lng, 0, false, false);
          }
 
-         function issueTokensBasedOnPrice(uint256 valuation) private {
+         /* function issueTokensBasedOnPrice(uint256 valuation) private {
            uint256 tokensToIssue = valuation.div(rate);
 
            //tokens go to the this contract
            //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
            GNIToken(token).mint(this, tokensToIssue);
-         }
+         } */
 
          //sender is always the beneficiary
          //sender becomes this contract in BasicToken
@@ -144,6 +151,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       bool candidateFound = false;
 
       for(uint256 i = 0; i < projects.length; i = i.add(1)) {
+
           if (!projects[i].active &&
               projects[i].voteCount > 0 &&
               projects[i].closingTime > now &&
@@ -164,6 +172,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
         if(canActivate){
             Project storage project = projects[projectId];
+            activateTokens(project);
 
             forwardFundsToDeveloper(project.capitalRequired);
 
@@ -174,6 +183,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
             emit LogProject(projectId, project.name, project.valuation, project.capitalRequired, project.lat, project.lng, project.voteCount, true, true);
     }
   }
+
+  function activateTokens (Project storage project) private {
+    uint256 tokensToActivate = project.tokensIssued;
+    uint256 inactiveTokenCount = GNIToken(token).totalInactiveSupply();
+    uint256 activationRate = tokensToActivate.mul(inactiveTokenCount);
+
+    GNIToken(token).activateTokens(activationRate);
+  }
+
 
 
 }

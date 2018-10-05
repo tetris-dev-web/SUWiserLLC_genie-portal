@@ -17,4 +17,13 @@ contract GNIToken is MintableToken {
   totalSupply_ = INITIAL_SUPPLY;
   balances[msg.sender] = INITIAL_SUPPLY;
   }
+
+  function activateTokens (uint256 activationRate) internal {
+
+  }
 }
+
+
+//make inactiveTokenSupply variable
+//override transfer. call super, and then perform logic to map store addresses
+//override mint. call super, and then perform logic to update inactiveTokenSupply
