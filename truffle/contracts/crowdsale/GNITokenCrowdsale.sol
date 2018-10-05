@@ -139,10 +139,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
 
 
-    function projectToActivate() public view returns (uint256, string) {
+    function projectToActivate() public view returns (uint256, bool) {
       uint256 leadingProjectId;
 
-      for(uint256 i = 0; i < projects.length; i = i.add(1)){
+      for(uint256 i = 0; i < projects.length; i = i.add(1)) {
           if (!projects[i].active &&
               projects[i].voteCount > 0 &&
               projects[i].voteCount >= projects[leadingProjectId].voteCount
@@ -152,27 +152,21 @@ contract GNITokenCrowdsale is TimedCrowdsale {
           }
       }
 
-      if (projects[leadingProjectId].capitalRequired >= weiRaised) {
-        return (leadingProjectId, projects[leadingProjectId].name);
-      } else {
-        return (0, "");
-      }
+      return (leadingProjectId, projects[leadingProjectId].capitalRequired >= weiRaised);
     }
 
     function activateProject() public {
-        var(projectId, projectName) = projectToActivateDetails();
-        if(keccak256(projectName) != keccak256("")){
-            // transfer money from wallet address to projectToDeploy address
+        (uint256 projectId, bool canActivate) = projectToActivateDetails();
+
+        if(canActivate){
             Project project = projects[projectId];
+
             forwardFundsToDeveloper(project.capitalRequired);
 
-            // subtract weiRaised by winningProject.cost
             weiRaised = weiRaised.sub(project.capitalRequired);
 
-            // set project deployment status to true
             winningProject.active = true;
 
-            // log the deployment of the new project
             emit LogProject(id, project.name, project.valuation, project.capitalRequired, project.lat, project.lng, project.voteCount, true, true);
     }
   }
