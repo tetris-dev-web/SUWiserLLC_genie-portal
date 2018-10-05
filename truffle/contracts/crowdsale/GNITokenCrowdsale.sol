@@ -139,35 +139,35 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
 
 
-    function projectToActivate() public view returns (uint256, bool) {
+    function projectToActivateDetails() public view returns (uint256, bool) {
       uint256 leadingProjectId;
 
       for(uint256 i = 0; i < projects.length; i = i.add(1)) {
           if (!projects[i].active &&
               projects[i].voteCount > 0 &&
-              projects[i].voteCount >= projects[leadingProjectId].voteCount
+              (projects[i].voteCount >= projects[leadingProjectId].voteCount || projects[leadingProjectId].active)
              )
           {
             leadingProjectId = i;
           }
       }
 
-      return (leadingProjectId, projects[leadingProjectId].capitalRequired >= weiRaised);
+      return (leadingProjectId, projects[leadingProjectId].capitalRequired <= weiRaised);
     }
 
     function activateProject() public {
         (uint256 projectId, bool canActivate) = projectToActivateDetails();
 
         if(canActivate){
-            Project project = projects[projectId];
+            Project storage project = projects[projectId];
 
             forwardFundsToDeveloper(project.capitalRequired);
 
             weiRaised = weiRaised.sub(project.capitalRequired);
 
-            winningProject.active = true;
+            project.active = true;
 
-            emit LogProject(id, project.name, project.valuation, project.capitalRequired, project.lat, project.lng, project.voteCount, true, true);
+            emit LogProject(projectId, project.name, project.valuation, project.capitalRequired, project.lat, project.lng, project.voteCount, true, true);
     }
   }
 
