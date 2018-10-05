@@ -36,6 +36,14 @@ const ProjectThermo = function( {project} ) {
                     .range([rectStartingX+rectWidth+8,daysToCloseLineX]).clamp(true);
   const jsonVotes = JSON.parse(project.votes);
 
+  const sortedVotesByDate = Object.keys(jsonVotes).sort((a,b)=>{
+    const date1 = new Date(a);
+    const date2 = new Date(b);
+    if(date1 < date2) return -1;
+    else if (date1 > date2) return 1;
+    else return 0;
+  });
+  console.log(sortedVotesByDate);
   return (
     <Stage width={200} height={200}>
       <Layer>
@@ -102,13 +110,13 @@ const ProjectThermo = function( {project} ) {
             context.lineTo(rectStartingX+2, filledRectStartingY);
             context.lineTo(rectStartingX+2, rectHeigth+rectStartingY);
             context.lineTo(rectStartingX+rectWidth+10, rectHeigth+rectStartingY);
-
-            Object.keys(jsonVotes).forEach(date=>{
+            debugger
+            sortedVotesByDate.forEach(date=>{
               const formattedDate = new Date(date);
               const x = voteXScale(formattedDate);
               const y = yVoteScale(jsonVotes[date]);
-              debugger
               context.lineTo(x,y);
+              console.log(jsonVotes[date]);
             });
             context.closePath();
             context.fillStrokeShape(shape);
