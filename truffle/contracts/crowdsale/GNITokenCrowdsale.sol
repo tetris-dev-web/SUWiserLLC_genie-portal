@@ -34,7 +34,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
             bool active;
         }
 
-        event NewProject (
+        event LogProject (
             uint id,
             string name,
             uint256 valuation,
@@ -94,7 +94,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
              uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, _lat,_lng, 0, false, false)) - 1;
 
              // log the creation of the new project
-             emit NewProject(id, _name, _valuation, capitalRequired, _lat, _lng, 0, false, false);
+             emit LogProject(id, _name, _valuation, capitalRequired, _lat, _lng, 0, false, false);
          }
 
          function issueTokensBasedOnPrice(uint256 valuation) private {
@@ -114,8 +114,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
            updateProjectVotedFor(_projectId);
          }
 
-         function collectFunds () public {
-           wallet.transfer(1);
+         function forwardFundsToDeveloper (uint256 amount) internal {
+           wallet.transfer(amount);
          }
 
          function updateProjectVotedFor(uint256 _projectId) {
@@ -137,33 +137,45 @@ contract GNITokenCrowdsale is TimedCrowdsale {
           doomsDay = doomsDay.add(_days.mul(1728000));
         }
 
-        /* function canActivateProject() public view returns (string, uint256){
-        string memory leadingProject;
-        uint256 leadingPercentage;
-        uint256 votePercentage;
-        uint256 secondLeadingPercentage;
-        uint256 projectVoteCount;
-        uint256 leadingProjectIndex;
-        for(uint256 i = 0; i < projectAddresses.length; i = i.add(1)){
-            if (!projectAddresses[i].deployed){
-                projectVoteCount = projects[projectAddresses[i].location].voteCount;
-                if (projectVoteCount > 0){
-                    votePercentage = (projectVoteCount.mul(1000000)).div(totalVoteCount);
-                    if (votePercentage >= leadingPercentage){
-                        secondLeadingPercentage = leadingPercentage;
-                        leadingPercentage = votePercentage;
-                        leadingProjectIndex = i;
-                        leadingProject = projectAddresses[i].location;
-                    }
-                }
-            }
 
-        }
-        if(projects[leadingProject].cost <= weiRaised && leadingPercentage > secondLeadingPercentage){
-            return (leadingProject, leadingProjectIndex);
-        } else {
-            return ("",0);
-        }
-    } */
+
+    function projectToActivate() public view returns (uint256, string) {
+      uint256 leadingProjectId;
+
+      for(uint256 i = 0; i < projects.length; i = i.add(1)){
+          if (!projects[i].active &&
+              projects[i].voteCount > 0 &&
+              projects[i].voteCount >= projects[leadingProjectId].voteCount
+             )
+          {
+            leadingProjectId = i;
+          }
+      }
+
+      if (projects[leadingProjectId].capitalRequired >= weiRaised) {
+        return (leadingProjectId, projects[leadingProjectId].name);
+      } else {
+        return (0, "");
+      }
+    }
+
+    function activateProject() public {
+        var(projectId, projectName) = projectToActivateDetails();
+        if(keccak256(projectName) != keccak256("")){
+            // transfer money from wallet address to projectToDeploy address
+            Project project = projects[projectId];
+            forwardFundsToDeveloper(project.capitalRequired);
+
+            // subtract weiRaised by winningProject.cost
+            weiRaised = weiRaised.sub(project.capitalRequired);
+
+            // set project deployment status to true
+            winningProject.active = true;
+
+            // log the deployment of the new project
+            emit LogProject(id, project.name, project.valuation, project.capitalRequired, project.lat, project.lng, project.voteCount, true, true);
+    }
+  }
+
 
 }
