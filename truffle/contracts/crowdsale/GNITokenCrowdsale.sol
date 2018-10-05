@@ -141,20 +141,24 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
     function projectToActivateDetails() public view returns (uint256, bool) {
       uint256 leadingProjectId;
+      bool candidateFound = false;
 
       for(uint256 i = 0; i < projects.length; i = i.add(1)) {
           if (!projects[i].active &&
               projects[i].voteCount > 0 &&
+              projects[i].closingTime > now &&
               (projects[i].voteCount >= projects[leadingProjectId].voteCount || projects[leadingProjectId].active)
              )
           {
             leadingProjectId = i;
+            candidateFound = true;
           }
       }
 
-      return (leadingProjectId, projects[leadingProjectId].capitalRequired <= weiRaised);
+      return (leadingProjectId, candidateFound && projects[leadingProjectId].capitalRequired <= weiRaised);
     }
 
+    //we can keep track of whether or not a project is activatable on the frontend. If so, this function will be called. No need to check for this on blockchain
     function activateProject() public {
         (uint256 projectId, bool canActivate) = projectToActivateDetails();
 
