@@ -26,7 +26,7 @@ const ProjectThermo = function( {project} ) {
                    .domain([formattedStartDate,formattedCloseDate])
                    .range([rectStartingX + rectWidth + 60, rectStartingX + 130]).clamp(true);
   const yVoteScale = d3.scaleLinear()
-                   .domain([1,200000])
+                   .domain([1,20000])
                    .range([rectHeigth+rectStartingY, filledRectStartingY]).clamp(true);
 
   const daysToCloseLineX = xTimeScale(timeNow);
@@ -116,7 +116,6 @@ const ProjectThermo = function( {project} ) {
               const x = voteXScale(formattedDate);
               const y = yVoteScale(jsonVotes[date]);
               context.lineTo(x,y);
-              console.log(jsonVotes[date]);
             });
             context.closePath();
             context.fillStrokeShape(shape);
