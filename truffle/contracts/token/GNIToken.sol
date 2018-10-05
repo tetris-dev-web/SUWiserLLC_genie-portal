@@ -5,25 +5,26 @@ import '../utility/SafeMath.sol';
 
 contract GNIToken is MintableToken {
   using SafeMath for uint256;
-
-  /* string public name = "GNIToken"; */
-  string public symbol = "GNI";
-  uint256 public decimals = 18;
-  uint public INITIAL_SUPPLY = 0;
+  uint256 internal inactiveSupply_;
 
 
 
   constructor() public {
-  totalSupply_ = INITIAL_SUPPLY;
-  balances[msg.sender] = INITIAL_SUPPLY;
+  totalSupply_ = 0;
+  inactiveSupply_ = 0;
+  balances[msg.sender] = 0;
   }
 
+
+  function inactiveSupply() public view returns (uint256) {
+    return inactiveSupply_;
+  }
   //for the number of paritipants...
   //find the balance of the participant
   //reduce the balance according to the activation rate
   //then, reduce the inactiveSupply according to the activation rate
   function activateTokens (uint256 activationRate) internal {
-    
+
   }
 }
 
