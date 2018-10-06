@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181004183953) do
+ActiveRecord::Schema.define(version: 20181003155517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20181004183953) do
   create_table "projects", force: :cascade do |t|
     t.string "title", null: false
     t.decimal "valuation", null: false
-    t.string "video"
+    t.string "model_id"
     t.string "icon"
     t.text "description"
     t.integer "creator_id", null: false
@@ -42,8 +42,6 @@ ActiveRecord::Schema.define(version: 20181004183953) do
     t.string "summary"
     t.float "capital_required"
     t.float "current_capital"
-    t.datetime "close_date"
-    t.jsonb "votes"
     t.index ["creator_id"], name: "index_projects_on_creator_id"
   end
 

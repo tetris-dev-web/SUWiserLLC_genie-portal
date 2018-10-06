@@ -11,7 +11,7 @@ class ProjectForm extends React.Component {
       title: '',
       revenue: '',
       valuation: '',
-      video: '',
+      model_id: '',
       city: '',
       country: '',
       continent: '',
@@ -22,6 +22,9 @@ class ProjectForm extends React.Component {
       imageUrl: '',
       coins: '****',
       status: 'pitched',
+      latitude: '',
+      longitude: '',
+      summary: 'summary',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -49,7 +52,7 @@ class ProjectForm extends React.Component {
     formData.append("project[title]", this.state.title);
     formData.append("project[revenue]", this.state.revenue);
     formData.append("project[valuation]", this.state.valuation);
-    formData.append("project[video]", this.state.video);
+    formData.append("project[model_id]", this.state.model_id);
     formData.append("project[city]", this.state.city);
     formData.append("project[country]", this.state.country);
     formData.append("project[continent]", this.state.continent);
@@ -57,6 +60,10 @@ class ProjectForm extends React.Component {
     formData.append("project[description]", this.state.description);
     formData.append("project[creator_id]", this.state.creator_id);
     formData.append("project[status]", this.state.status);
+    formData.append("project[latitude]", this.state.latitude);
+    formData.append("project[longitude]", this.state.longitude);
+    formData.append("project[summary]", this.state.summary);
+
 
     this.props.createProject(formData).then( () => {
       const pitchedProject = GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
@@ -167,7 +174,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, revenue, valuation, description, video, city, country, continent, icon } = this.state;
+    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude } = this.state;
 
     return (
       <form className="form-box p-form-box">
@@ -192,6 +199,18 @@ class ProjectForm extends React.Component {
           placeholder="#| city"
           value={city}
           onChange={this.update('city')} />
+        <input className="main-input lat-input"
+          type="number"
+          step="any"
+          placeholder="#| latitude"
+          value={latitude}
+          onChange={this.update('latitude')} />
+        <input className="main-input long-input"
+          type="number"
+          step="any"
+          placeholder="#| longitude"
+          value={longitude}
+          onChange={this.update('longitude')} />
         <input className="main-input revenue-input"
           type="number"
           placeholder="#| revenue"
@@ -247,10 +266,10 @@ class ProjectForm extends React.Component {
 
         <div className="link-upload-cont">
           <input type="text"
-            placeholder="paste video url here"
-            value={video}
+            placeholder="paste model link url here"
+            value={model_id}
             className="link-input"
-            onChange={this.update('video')} />
+            onChange={this.update('model_id')} />
         </div>
 
         <div className="link-upload-cont">

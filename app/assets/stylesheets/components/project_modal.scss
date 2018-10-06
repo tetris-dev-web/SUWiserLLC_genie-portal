@@ -8,7 +8,7 @@
   grid-template-rows: repeat(3,1fr);
   grid-template-areas:
      "f f f f f f f f f f f f"
-     "t t t t d d d d g g g g"
+     "t t t t g g g g d d d d"
      "m m m m m m m m m o o o";
   grid-gap: 4px;
 }
@@ -16,7 +16,14 @@
 .iframe{
   grid-area: f;
   background: white;
-  height: 100px;
+  height: 300px;
+  iframe{
+    width: 100%;
+    height: 100%;
+    a img{
+      visibility: hidden;
+    }
+  }
 }
 .temp{
   grid-area: t;
@@ -24,18 +31,18 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 450px;
+  height: 300px;
 }
 .project-description{
-  grid-area: d;
-  height: 450px;
+  grid-area: g;
+  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 }
 .cashflow-graph{
-  grid-area: g;
-  height: 450px;
+  grid-area: d;
+  height: 300px;
 }
 .project-map{
   grid-area: m;
@@ -44,7 +51,7 @@
 .project-overlays{
   grid-area: o;
   background: green;
-  // height: 300px;
+  height: 300px;
 }
 .leaflet-container{
   height: 300px;
@@ -81,6 +88,7 @@
     stroke-dasharray: 2;
     shape-rendering: crispEdges;
 }
+
 .axis text {
   display: none;
   // font-family: sans-serif;
