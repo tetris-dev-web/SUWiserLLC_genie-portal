@@ -70,7 +70,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          }
 
          //change _valuation to projectvaluation
-         function pitchProject(string _name, uint capitalRequired, uint256 tokensToIssue, uint256 _valuation, string _lat, string _lng) public payable {
+         function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
            uint256 tokensToIssue = valuation.div(rate);
 
            //tokens go to the this contract
@@ -117,6 +117,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          //funds from msg.value are allocated to this contract since this function is a payable.
          //later, we can assign funds to the wallet (which is the developer wallet). No second wallet is needed because the contract serves as an escrow wallet.
          function handleTokenPurchase (uint256 _projectId) public payable {
+           //add require statement that makes sure the projet isnt already active
            buyTokens(msg.sender);
            updateProjectVotedFor(_projectId);
          }

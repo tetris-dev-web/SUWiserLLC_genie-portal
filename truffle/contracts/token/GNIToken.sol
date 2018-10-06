@@ -11,11 +11,13 @@ contract GNIToken is MintableToken {
 
 
   constructor() public {
-  totalSupply_ = 0;
-  inactiveSupply_ = 0;
-  participantCount_ = 0;
-  balances[msg.sender] = 0;
+    totalSupply_ = 0;
+    inactiveSupply_ = 0;
+    participantCount_ = 0;
+    balances[msg.sender] = 0;
   }
+
+  mapping(uint256 => address) internal participants;
 
 
   function inactiveSupply() public view returns (uint256) {
@@ -30,6 +32,22 @@ contract GNIToken is MintableToken {
     require(super.mint(_to, _amount));
 
     inactiveSupply_ = inactiveSupply.add(_amount);
+  }
+
+  function transfer (address _to, uint256 _value) public returns (bool) {
+    require(super.transfer(_to, _value));
+
+    if (!participants[msg.sender]) {
+      participantCount_ = participantCount_.add(1);
+      participants[participantCount_] = msg.sender;
+    }
+
+    if (!participants[_to]) {
+      participantCount_ = participantCount_.add(1);
+      participants[participantCount_] = to_;
+    }
+
+    return true;
   }
 
   //for the number of paritipants...
