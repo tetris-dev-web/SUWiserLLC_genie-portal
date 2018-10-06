@@ -14,6 +14,16 @@ User.destroy_all
 Project.destroy_all
 
 Genesis_start_date = '01/01/2019'
+Genesis_end_date = '09/01/2019'
+Genesis_votes = '{
+  "03/01/2019":5000,
+  "04/01/2019":1000,
+  "05/01/2019":1000,
+  "06/01/2019":1000,
+  "07/01/2019":1000,
+  "08/01/2019":1000,
+  "08/10/2019":5000
+}'
 Genesis_cap_required = 150000
 Genesis_current_cap = 15000
 Genesis_lat = 40.836678
@@ -91,8 +101,20 @@ intensity interval training and calisthenics. The space also hosts a cafe and mu
 
 
 HamInn_start_date = '01/01/2017'
+HamInn_end_date = '09/01/2019'
 HamInn_cap_required = 40000
 HamInn_current_cap = 40000
+HamInn_votes = '{
+  "03/01/2017":2000,
+  "04/01/2017":1000,
+  "05/01/2017":1000,
+  "06/01/2017":1000,
+  "07/01/2018":1000,
+  "08/01/2018":1000,
+  "11/11/2018":20000,
+  "09/09/2018":10000,
+  "08/10/2018":3000
+}'
 HamInn_lat = 40.836370
 HamInn_lng = -73.944585
 HamInn_sketch_link = 'https://drive.google.com/open?id=0B4qHw8trLI_qQ3VkX0RtRndqVTA'
@@ -200,9 +222,11 @@ project0 = Project.create(
   created_at: "14/03/2018",
   status: "deployed",
   cashflow: Genesis_cashflow,
+  votes:Genesis_votes,
   sketch_link: Genesis_sketch_link,
   bus_plan_link: Genesis_bus_link,
   start_date: Genesis_start_date,
+  close_date: Genesis_end_date,
   latitude:HamInn_lat,
   longitude:HamInn_lng,
   summary:Genesis_summary,
@@ -257,7 +281,9 @@ project4 = Project.create(
   sketch_link: HamInn_sketch_link,
   bus_plan_link: HamInn_bus_link,
   start_date: HamInn_start_date,
+  close_date: HamInn_end_date,
   latitude:HamInn_lat,
+  votes:HamInn_votes,
   longitude:HamInn_lng,
   summary:HamInn_summary,
   capital_required:HamInn_cap_required,
