@@ -17,7 +17,14 @@ contract GNIToken is MintableToken {
     balances[msg.sender] = 0;
   }
 
+  /* struct Balance {
+    uint256 active;
+    uint256 inactive;
+  } */
+
   mapping(uint256 => address) internal participants;
+  /* mapping (address => Balance) internal balances; */
+  mapping(address => uint256) internal activeBalances;
 
 
   function inactiveSupply() public view returns (uint256) {
@@ -55,7 +62,15 @@ contract GNIToken is MintableToken {
   //reduce the balance according to the activation rate
   //then, reduce the inactiveSupply according to the activation rate
   function activateTokens (uint256 activationRate) internal {
+    for (uint256 i = 0; i < participantCount_; i.add(1)) {
+      address participant = participants[i];
+      uint256 tokensToActivate = balances[participant].mul(balances[participant].mul(activationRate));
 
+      balances[participant] = inactiveBalance.sub(tokensToActivate);
+      activeBalances[participant] = activeBalances[participant].add(tokensToActivate);
+    }
+
+    inactiveSupply_ = inactiveSupply_.sub(inactiveSupply_.mul(activationRate));
   }
 }
 
