@@ -18,10 +18,8 @@ contract BasicToken is ERC20Basic {
   * @dev Total number of tokens in existence
   */
 
-  event showSupply(uint256 totalSupply);
 
   function totalSupply() public view returns (uint256) {
-    emit showSupply(totalSupply_);
     return totalSupply_;
   }
 
@@ -30,13 +28,14 @@ contract BasicToken is ERC20Basic {
   * @param _to The address to transfer to.
   * @param _value The amount to be transferred.
   */
+  //here, msg.sender is GNITokenCrowdsale contract instance
   function transfer(address _to, uint256 _value) public returns (bool) {
 
     require(_value <= balances[msg.sender]);
     require(_to != address(0));
 
-    balances[msg.sender] = balances[msg.sender].sub(_value);
-    balances[_to] = balances[_to].add(_value);
+    balances[msg.sender] = balances[msg.sender] - _value;
+    balances[_to] = balances[_to] + _value;
     emit Transfer(msg.sender, _to, _value);
     return true;
   }
