@@ -22,7 +22,9 @@ contract GNIToken is MintableToken {
     uint256 inactive;
   } */
 
+
   mapping(uint256 => address) internal participants;
+  mapping(address => uint256) internal participantIds;
   /* mapping (address => Balance) internal balances; */
   mapping(address => uint256) internal activeBalances;
 
@@ -38,20 +40,22 @@ contract GNIToken is MintableToken {
   function mint (address _to, uint256 _amount) public returns (bool) {
     require(super.mint(_to, _amount));
 
-    inactiveSupply_ = inactiveSupply.add(_amount);
+    inactiveSupply_ = inactiveSupply_.add(_amount);
   }
 
   function transfer (address _to, uint256 _value) public returns (bool) {
     require(super.transfer(_to, _value));
 
-    if (!participants[msg.sender]) {
+    if (participantIds[msg.sender] == 0) {
       participantCount_ = participantCount_.add(1);
       participants[participantCount_] = msg.sender;
+      participantIds[msg.sender] = participantCount_;
     }
 
-    if (!participants[_to]) {
+    if (participantIds[_to] == 0) {
       participantCount_ = participantCount_.add(1);
-      participants[participantCount_] = to_;
+      participants[participantCount_] = _to;
+      participantIds[msg.sender] = participantCount_;
     }
 
     return true;
@@ -61,16 +65,20 @@ contract GNIToken is MintableToken {
   //find the balance of the participant
   //reduce the balance according to the activation rate
   //then, reduce the inactiveSupply according to the activation rate
-  function activateTokens (uint256 activationRate) internal {
-    for (uint256 i = 0; i < participantCount_; i.add(1)) {
+  function activateTokens (uint256 tokens) public {
+    uint256 activationRate = tokens.mul(inactiveSupply_);
+
+    inactiveSupply_ = inactiveSupply_.sub(inactiveSupply_.mul(activationRate));
+
+    for (uint256 i = 1; i <= participantCount_; i.add(1)) {
       address participant = participants[i];
+
       uint256 tokensToActivate = balances[participant].mul(balances[participant].mul(activationRate));
 
-      balances[participant] = inactiveBalance.sub(tokensToActivate);
+      balances[participant] = balances[participant].sub(tokensToActivate);
       activeBalances[participant] = activeBalances[participant].add(tokensToActivate);
     }
 
-    inactiveSupply_ = inactiveSupply_.sub(inactiveSupply_.mul(activationRate));
   }
 }
 

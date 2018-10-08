@@ -54,7 +54,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
 
          function getProjectInfo(uint id) public view returns(
-             string, uint256, uint256, bool, uint256, uint256
+             string, uint256, uint256, uint256, bool, uint256, uint256
 
          ) {
              Project memory project = projects[id];
@@ -71,7 +71,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
          //change _valuation to projectvaluation
          function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
-           uint256 tokensToIssue = valuation.div(rate);
+           uint256 tokensToIssue = _valuation.div(rate);
 
            //tokens go to the this contract
            //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
@@ -98,10 +98,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
              // Save project information
              /* projects[_name] = newProject; */
 
-             uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, _lat,_lng, 0, false, false)) - 1;
+             uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, tokensToIssue, _lat,_lng, 0, false, false)) - 1;
 
              // log the creation of the new project
-             emit LogProject(id, _name, _valuation, capitalRequired, tokensIssued, _lat, _lng, 0, false, false);
+             emit LogProject(id, _name, _valuation, capitalRequired, tokensToIssue, _lat, _lng, 0, false, false);
          }
 
          /* function issueTokensBasedOnPrice(uint256 valuation) private {
@@ -173,7 +173,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
         if(canActivate){
             Project storage project = projects[projectId];
-            activateTokens(project);
+
+            GNIToken(token).activateTokens(project.tokensIssued);
 
             forwardFundsToDeveloper(project.capitalRequired);
 
@@ -181,18 +182,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
             project.active = true;
 
-            emit LogProject(projectId, project.name, project.valuation, project.capitalRequired, project.lat, project.lng, project.voteCount, true, true);
+            emit LogProject(projectId, project.name, project.valuation, project.capitalRequired, project.tokensIssued, project.lat, project.lng, project.voteCount, true, true);
     }
   }
-
-  function activateTokens (Project storage project) private {
-    uint256 tokensToActivate = project.tokensIssued;
-    uint256 inactiveTokenCount = GNIToken(token).totalInactiveSupply();
-    uint256 activationRate = tokensToActivate.mul(inactiveTokenCount);
-
-    GNIToken(token).activateTokens(activationRate);
-  }
-
-
 
 }
