@@ -68,16 +68,16 @@ contract GNIToken is MintableToken {
   function activateTokens (uint256 tokens) public {
     uint256 activationRate = tokens.mul(inactiveSupply_);
 
-    inactiveSupply_ = inactiveSupply_.sub(inactiveSupply_.mul(activationRate));
+    inactiveSupply_ = inactiveSupply_.sub(tokens);
 
-    for (uint256 i = 1; i <= participantCount_; i.add(1)) {
+    /* for (uint256 i = 1; i <= participantCount_; i.add(1)) {
       address participant = participants[i];
 
       uint256 tokensToActivate = balances[participant].mul(balances[participant].mul(activationRate));
 
       balances[participant] = balances[participant].sub(tokensToActivate);
       activeBalances[participant] = activeBalances[participant].add(tokensToActivate);
-    }
+    } */
 
   }
 }
