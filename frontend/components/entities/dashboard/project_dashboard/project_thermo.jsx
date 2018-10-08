@@ -141,7 +141,7 @@ const ProjectThermo = function( {project} ) {
             }}
             fill="#00FFFF"
             strokeWidth={4}
-            opacity={0.6}
+            opacity={0.5}
             />
       </Layer>
     </Stage>
