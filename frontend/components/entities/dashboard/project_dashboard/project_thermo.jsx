@@ -42,6 +42,7 @@ const ProjectThermo = function( {project} ) {
     else if (date1 > date2) return 1;
     else return 0;
   });
+
   return (
     <Stage width={200} height={200}>
       <Layer>
@@ -73,6 +74,12 @@ const ProjectThermo = function( {project} ) {
           fontFamily={'open sans condensed'}
           fill={'#008080'}
           strokeWidth={1}
+          onMouseOver={(e)=>{
+            console.log(e);
+          }}
+          onMouseOut={(e)=>{
+            console.log(e);
+          }}
           />
         <Text
           x={15}
