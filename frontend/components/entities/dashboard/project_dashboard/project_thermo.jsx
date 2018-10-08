@@ -102,15 +102,6 @@ const ProjectThermo = function( {project} ) {
           strokeWidth={1}
           />
         <Rect
-          x={ filledRectStartingX }
-          y={ filledRectStartingY }
-          width={ rectWidth-2 }
-          height={ filledRectHeigth }
-          cornerRadius={9}
-          fill={'black'}
-          shadowBlur={5}
-          />
-        <Rect
           x={ rectStartingX }
           y={ rectStartingY }
           width={ rectWidth }
@@ -119,6 +110,16 @@ const ProjectThermo = function( {project} ) {
           stroke={'white'}
           strokeWidth={1}
           shadowBlur={5}
+          />
+        <Rect
+          x={ filledRectStartingX }
+          y={ filledRectStartingY }
+          width={ rectWidth-2 }
+          height={ filledRectHeigth }
+          cornerRadius={9}
+          shadowBlur={5}
+          fill="black"
+          opacity={0.8}
           />
           <Shape
             sceneFunc={(context, shape) => {
@@ -130,19 +131,17 @@ const ProjectThermo = function( {project} ) {
               let sumVotes = 0;
               sortedVotesByDate.forEach(date=>{
                 const formattedDate = new Date(date);
-                debugger
                 const x = voteXScale(formattedDate);
                 sumVotes += jsonVotes[date];
                 const y = yVoteScale(sumVotes);
-                console.log("x:",x);
                 context.lineTo(x,y);
               });
               // context.closePath();
               context.fillStrokeShape(shape);
             }}
-            fill="#008080"
+            fill="#00FFFF"
             strokeWidth={4}
-            opacity={0.8}
+            opacity={0.6}
             />
       </Layer>
     </Stage>
