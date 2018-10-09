@@ -27,7 +27,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
             uint256 closingTime;
             uint256 valuation;
             uint256 capitalRequired;
-            uint256 tokensIssued;
+            uint256 developerTokens;
+            uint256 investorTokens;
             string lat;
             string lng;
             uint256 voteCount;
@@ -54,7 +55,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
 
          function getProjectInfo(uint id) public view returns(
-             string, uint256, uint256, uint256, bool, uint256, uint256
+             string, uint256, uint256, uint256, uint256, bool, uint256, uint256
 
          ) {
              Project memory project = projects[id];
@@ -62,7 +63,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
                  project.name,
                  project.valuation,
                  project.capitalRequired,
-                 project.tokensIssued,
+                 project.developerTokens,
+                 prject.investorTokens,
                  project.active,
                  project.voteCount,
                  project.closingTime
@@ -77,10 +79,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
            //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
            GNIToken(token).mint(this, developerTokens, investorTokens);
 
-             totalValuation = totalValuation.add(_valuation);
+           totalValuation = totalValuation.add(_valuation);
 
              // Increase crowdsale duation by 90 days
-             _extendDoomsDay(90);
+           _extendDoomsDay(90);
 
              // Create project information
              /* Project memory newProject = Project({
@@ -98,13 +100,13 @@ contract GNITokenCrowdsale is TimedCrowdsale {
              // Save project information
              /* projects[_name] = newProject; */
 
-             uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, tokensToIssue, _lat,_lng, 0, false, false)) - 1;
+             uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, developerTokens, investorTokens, _lat,_lng, 0, false, false)) - 1;
 
              // log the creation of the new project
-             emit LogProject(id, _name, _valuation, capitalRequired, tokensToIssue, _lat, _lng, 0, false, false);
+             emit LogProject(id, _name, _valuation, capitalRequired, developerTokens, investorTokens, lat, _lng, 0, false, false);
          }
 
-         function tokensToIssue (uint256 valuation, uint256 investorValue) private returns (uint26, uint256) {
+         function tokensToIssue (uint256 valuation, uint256 investorValue) private returns (uint256, uint256) {
            uint256 developerValue = valuation.sub(investorValue);
 
            return (developerValue.mul(rate), investorValue.mul(rate));
@@ -180,7 +182,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         if(canActivate){
             Project storage project = projects[projectId];
 
-            activateTokens(project);
+            GNIToken(token).activateTokens(project.developerTokens, project.investorTokens, wallet);
 
             forwardFundsToDeveloper(project.capitalRequired);
 
@@ -188,18 +190,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
             project.active = true;
 
-            emit LogProject(projectId, project.name, project.valuation, project.capitalRequired, project.tokensIssued, project.lat, project.lng, project.voteCount, true, true);
+            emit LogProject(projectId, project.name, project.valuation, project.capitalRequired, project.developerTokens, project.investorTokens, project.lat, project.lng, project.voteCount, true, true);
     }
-  }
-
-  function activateTokens(Project storage project) internal {
-    uint256 developerValue = project.valuation.sub(project.capitalRequired);
-    uint256 investorValue = project.capitalRequired;
-
-    uint256 developerTokens = developerValue.mul(rate);
-    uint256 investorTokens = investorValue.mul(rate);
-
-    GNIToken(token).activateTokens(developerTokens, investorTokens, wallet);
   }
 
 }
