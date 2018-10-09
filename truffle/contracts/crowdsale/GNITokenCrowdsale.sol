@@ -71,11 +71,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
          //change _valuation to projectvaluation
          function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
-           uint256 tokensToIssue = _valuation.div(rate);
+           (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
            //tokens go to the this contract
            //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
-           GNIToken(token).mint(this, tokensToIssue);
+           GNIToken(token).mint(this, developerTokens, investorTokens);
 
              totalValuation = totalValuation.add(_valuation);
 
@@ -102,6 +102,12 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
              // log the creation of the new project
              emit LogProject(id, _name, _valuation, capitalRequired, tokensToIssue, _lat, _lng, 0, false, false);
+         }
+
+         function tokensToIssue (uint256 valuation, uint256 investorValue) private returns (uint26, uint256) {
+           uint256 developerValue = valuation.sub(investorValue);
+
+           return (developerValue.mul(rate), investorValue.mul(rate));
          }
 
          /* function issueTokensBasedOnPrice(uint256 valuation) private {
@@ -174,7 +180,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         if(canActivate){
             Project storage project = projects[projectId];
 
-            GNIToken(token).activateTokens(project.tokensIssued);
+            activateTokens(project);
 
             forwardFundsToDeveloper(project.capitalRequired);
 
@@ -184,6 +190,16 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
             emit LogProject(projectId, project.name, project.valuation, project.capitalRequired, project.tokensIssued, project.lat, project.lng, project.voteCount, true, true);
     }
+  }
+
+  function activateTokens(Project storage project) internal {
+    uint256 developerValue = project.valuation.sub(project.capitalRequired);
+    uint256 investorValue = project.capitalRequired;
+
+    uint256 developerTokens = developerValue.mul(rate);
+    uint256 investorTokens = investorValue.mul(rate);
+
+    GNIToken(token).activateTokens(developerTokens, investorTokens, wallet);
   }
 
 }
