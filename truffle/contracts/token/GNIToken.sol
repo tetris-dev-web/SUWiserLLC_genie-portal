@@ -37,6 +37,10 @@ contract GNIToken is MintableToken {
     return participantCount_;
   }
 
+  function participantById(uint256 id) public view returns (address) {
+    return participants[id];
+  }
+
   function mint (address _to, uint256 _amount) public returns (bool) {
     require(super.mint(_to, _amount));
 
@@ -55,7 +59,7 @@ contract GNIToken is MintableToken {
     if (participantIds[_to] == 0) {
       participantCount_ = participantCount_.add(1);
       participants[participantCount_] = _to;
-      participantIds[msg.sender] = participantCount_;
+      participantIds[_to] = participantCount_;
     }
 
     return true;
@@ -66,14 +70,14 @@ contract GNIToken is MintableToken {
   //reduce the balance according to the activation rate
   //then, reduce the inactiveSupply according to the activation rate
   function activateTokens (uint256 tokens) public {
-    uint256 activationRate = tokens.mul(inactiveSupply_);
+    uint256 activationRate = tokens.div(inactiveSupply_);
 
     inactiveSupply_ = inactiveSupply_.sub(tokens);
 
     /* for (uint256 i = 1; i <= participantCount_; i.add(1)) {
       address participant = participants[i];
 
-      uint256 tokensToActivate = balances[participant].mul(balances[participant].mul(activationRate));
+      uint256 tokensToActivate = balances[participant].mul(activationRate);
 
       balances[participant] = balances[participant].sub(tokensToActivate);
       activeBalances[participant] = activeBalances[participant].add(tokensToActivate);
@@ -86,7 +90,7 @@ contract GNIToken is MintableToken {
 //make inactiveTokenSupply variable
 //override mint. call super, and then perform logic to update inactiveTokenSupply
 
-//override transfer. call super, and then perform logic to store addresses (more below)
+//override transfer. call super, nd then perform logic to store addresses (more below)
 //make participantCount variable. It initializes at 1 and increments for every new address during transfers.
 //make a mapping from participant id to address, storing the addresses in an array.
 //use this mapping to get the balance of each participant
