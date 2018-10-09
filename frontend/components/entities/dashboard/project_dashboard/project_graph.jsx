@@ -403,6 +403,6 @@ class ProjectGraph extends React.Component {
 
 ProjectGraph.defaultProps = {
   chart: 'loading'
-}
+};
 
 export default ProjectGraph;

@@ -3,7 +3,7 @@ json.extract! project,  :id,
                         :revenue,
                         :valuation,
                         :cashflow,
-                        :video,
+                        :model_id,
                         :city,
                         :country,
                         :continent,
@@ -15,6 +15,13 @@ json.extract! project,  :id,
                         :status,
                         :sketch_link,
                         :bus_plan_link,
-                        :start_date
+                        :start_date,
+                        :latitude,
+                        :longitude,
+                        :summary,
+                        :capital_required,
+                        :current_capital,
+                        :close_date,
+                        :votes
 
 json.file asset_path(project.file.url)
