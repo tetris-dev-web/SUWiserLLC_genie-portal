@@ -84,6 +84,13 @@ contract GNIToken is MintableToken {
     }
 
   }
+
+  function balanceOf(address _owner) public view returns (uint256, uint256) {
+    return (
+      balances[_owner],
+      activeBalances[_owner]
+      );
+    }
 }
 
 
