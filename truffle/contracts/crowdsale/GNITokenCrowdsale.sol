@@ -41,7 +41,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       string name,
       uint256 valuation,
       uint256 capitalRequired,
-      uint256 tokensIssued,
+      uint256 developerTokens,
+      uint256 investorTokens,
       string lat,
       string lng,
       uint256 voteCount,
@@ -63,7 +64,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          project.valuation,
          project.capitalRequired,
          project.developerTokens,
-         prject.investorTokens,
+         project.investorTokens,
          project.active,
          project.voteCount,
          project.closingTime
@@ -85,7 +86,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
      uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, developerTokens, investorTokens, _lat,_lng, 0, false, false)) - 1;
 
      // log the creation of the new project
-     emit LogProject(id, _name, _valuation, capitalRequired, developerTokens, investorTokens, lat, _lng, 0, false, false);
+     emit LogProject(id, _name, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng, 0, false, false);
  }
 
  function tokensToIssue (uint256 valuation, uint256 investorValue) private returns (uint256, uint256) {
