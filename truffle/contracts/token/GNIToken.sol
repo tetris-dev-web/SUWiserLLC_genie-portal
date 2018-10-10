@@ -54,12 +54,6 @@ contract GNIToken is MintableToken {
   function transfer (address _to, uint256 _value) public returns (bool) {
     require(super.transfer(_to, _value));
 
-    /* if (investorIds[msg.sender] == 0) {
-      investorCount_ = investorCount_.add(1);
-      investors[investorCount_] = msg.sender;
-      investorIds[msg.sender] = investorCount_;
-    } */
-
     if (investorIds[_to] == 0) {
       investorCount_ = investorCount_.add(1);
       investors[investorCount_] = _to;
@@ -84,7 +78,7 @@ contract GNIToken is MintableToken {
   }
 
   function activateInvestorTokens (uint256 tokens) private {
-    uint256 activationDivisor = inactiveSupply_.div(tokens);
+    uint256 activationDivisor = inactiveInvestorSupply_.div(tokens);
 
     for (uint256 i = 1; i <= investorCount_; i = i.add(1)) {
       address investor = investors[i];
