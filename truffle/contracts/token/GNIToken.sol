@@ -68,13 +68,14 @@ contract GNIToken is MintableToken {
   //reduce the balance according to the activation rate
   //then, reduce the inactiveSupply according to the activation rate
   function activateTokens (uint256 developerTokens, uint256 investorTokens, address developer) public {
+    /* activateDeveloperTokens(developerTokens, developer); */
     activateDeveloperTokens(developerTokens, developer);
     activateInvestorTokens(investorTokens);
   }
 
-  function activateDeveloperTokens (uint256 tokens, address developer) private {
-    balances[msg.sender].sub(tokens);
-    activeBalances[developer].add(tokens);
+  function activateDeveloperTokens (uint256 tokens, address developer) public {
+    balances[msg.sender] = balances[msg.sender].sub(tokens);
+    activeBalances[developer] = activeBalances[developer].add(tokens);
     inactiveDeveloperSupply_ = inactiveDeveloperSupply_.sub(tokens);
   }
 
