@@ -79,10 +79,8 @@ contract GNIToken is MintableToken {
   }
 
   function activateDeveloperTokens (uint256 tokens, address developer) private {
-    inactiveSupply_ = inactiveSupply_.sub(tokens);
-
-    balances[developer] = balances[developer].sub(tokens);
-    activeBalances[developer] = activeBalances[developer].add(tokens);
+    transferAccountBalances(tokens, developer);
+    inactiveDeveloperSupply_ = inactiveDeSupply_.sub(tokens);
   }
 
   function activateInvestorTokens (uint256 tokens) private {
@@ -90,14 +88,16 @@ contract GNIToken is MintableToken {
 
     for (uint256 i = 1; i <= investorCount_; i = i.add(1)) {
       address investor = investors[i];
-
       uint256 tokensToActivate = balances[investor].div(activationDivisor);
-
-      balances[investor] = balances[investor].sub(tokensToActivate);
-      activeBalances[investor] = activeBalances[investor].add(tokensToActivate);
+      transderAccountBalances(tokensToActivate, investor);
     }
 
     inactiveSupply_ = inactiveSupply_.sub(tokens);
+  }
+
+  function transferAccountBalances(uint256 tokens, address participant) private {
+    balances[participant] = balances[participant].sub(tokens);
+    activeBalances[participant] = activeBalances[participant].add(tokens);
   }
 
   function balanceOf(address _owner) public view returns (uint256, uint256) {

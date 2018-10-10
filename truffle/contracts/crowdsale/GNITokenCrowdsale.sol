@@ -71,7 +71,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
              );
          }
 
-         //change _valuation to projectvaluation
          function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
            (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
@@ -84,22 +83,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
              // Increase crowdsale duation by 90 days
            _extendDoomsDay(90);
 
-             // Create project information
-             /* Project memory newProject = Project({
-                 name: _name,
-                 closingTime: now + 86600 * 240,
-                 valuation: _valuation,
-                 capitalRequired: capitalRequired,
-                 lat: _lat,
-                 lng: _lng,
-                 capitalReached: false,
-                 active: false,
-                 voteCount: 0
-             }); */
-
-             // Save project information
-             /* projects[_name] = newProject; */
-
              uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, developerTokens, investorTokens, _lat,_lng, 0, false, false)) - 1;
 
              // log the creation of the new project
@@ -111,14 +94,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
            return (developerValue.mul(rate), investorValue.mul(rate));
          }
-
-         /* function issueTokensBasedOnPrice(uint256 valuation) private {
-           uint256 tokensToIssue = valuation.div(rate);
-
-           //tokens go to the this contract
-           //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
-           GNIToken(token).mint(this, tokensToIssue);
-         } */
 
          //sender is always the beneficiary
          //sender becomes this contract in BasicToken
