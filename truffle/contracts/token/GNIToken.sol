@@ -5,15 +5,17 @@ import '../utility/SafeMath.sol';
 
 contract GNIToken is MintableToken {
   using SafeMath for uint256;
-  uint256 internal inactiveSupply_;
-  uint256 internal participantCount_;
+  uint256 internal inactiveInvestorSupply_;
+  uint256 internal inactiveDeveloperSupply_;
+  uint256 internal investorCount_;
 
 
 
   constructor() public {
     totalSupply_ = 0;
-    inactiveSupply_ = 0;
-    participantCount_ = 0;
+    inactiveInvestorSupply_ = 0;
+    inactiveDeveloperSupply_ = 0;
+    investorCount_ = 0;
     balances[msg.sender] = 0;
   }
 
@@ -23,8 +25,8 @@ contract GNIToken is MintableToken {
   } */
 
 
-  mapping(uint256 => address) internal participants;
-  mapping(address => uint256) internal participantIds;
+  mapping(uint256 => address) internal investors;
+  mapping(address => uint256) internal investorIds;
   /* mapping (address => Balance) internal balances; */
   mapping(address => uint256) internal activeBalances;
 
@@ -33,56 +35,63 @@ contract GNIToken is MintableToken {
     return inactiveSupply_;
   }
 
-  function participantCount() public view returns (uint256) {
-    return participantCount_;
+  function investorCount() public view returns (uint256) {
+    return investorCount_;
   }
 
-  function participantById(uint256 id) public view returns (address) {
-    return participants[id];
+  function investorById(uint256 id) public view returns (address) {
+    return investors[id];
   }
 
-  function mint (address _to, uint256 _amount) public returns (bool) {
-    require(super.mint(_to, _amount));
+  function mint (address _to, uint256 _developerAmount, uint256 _investorAmount) public returns (bool) {
+    uint256 _totalAmount = _developerAmount.add(_investorAmount);
+    require(super.mint(_to, _totalAmount));
 
-    inactiveSupply_ = inactiveSupply_.add(_amount);
+    inactiveDeveloperSupply_ = inactiveDeveloperSupply_.add(_developerAmount);
+    inactiveInvestorSupply_ = inactiveInvestorSupply_.add(_investorAmount);
   }
 
   function transfer (address _to, uint256 _value) public returns (bool) {
     require(super.transfer(_to, _value));
 
-    if (participantIds[msg.sender] == 0) {
-      participantCount_ = participantCount_.add(1);
-      participants[participantCount_] = msg.sender;
-      participantIds[msg.sender] = participantCount_;
-    }
-
-    if (participantIds[_to] == 0) {
-      participantCount_ = participantCount_.add(1);
-      participants[participantCount_] = _to;
-      participantIds[_to] = participantCount_;
+    if (investorIds[_to] == 0) {
+      investorCount_ = investorCount_.add(1);
+      investors[investorCount_] = _to;
+      investorIds[_to] = investorCount_;
     }
 
     return true;
   }
 
   //for the number of paritipants...
-  //find the balance of the participant
+  //find the balance of the investor
   //reduce the balance according to the activation rate
   //then, reduce the inactiveSupply according to the activation rate
-  function activateTokens (uint256 tokens) public {
-    uint256 activationRate = tokens.div(inactiveSupply_);
+  function activateTokens (uint256 developerTokens, uint256 investorTokens, address developer) public {
+    activateDeveloperTokens(developerTokens, developer);
+    activateInvestorTokens(investorTokens);
+  }
 
-    inactiveSupply_ = inactiveSupply_.sub(tokens);
+  function activateDeveloperTokens (uint256 tokens, address developer) private {
+    transferAccountBalances(tokens, developer);
+    inactiveDeveloperSupply_ = inactiveDeSupply_.sub(tokens);
+  }
 
-    for (uint256 i = 2; i <= participantCount_; i = i.add(1)) {
-      address participant = participants[i];
+  function activateInvestorTokens (uint256 tokens) private {
+    uint256 activationDivisor = inactiveInvestorSupply_.div(tokens);
 
-      uint256 tokensToActivate = balances[participant].mul(activationRate);
-
-      balances[participant] = balances[participant].sub(tokensToActivate);
-      activeBalances[participant] = activeBalances[participant].add(tokensToActivate);
+    for (uint256 i = 1; i <= investorCount_; i = i.add(1)) {
+      address investor = investors[i];
+      uint256 tokensToActivate = balances[investor].div(activationDivisor);
+      transferAccountBalances(tokensToActivate, investor);
     }
 
+    inactiveInvestorSupply_ = inactiveInvestorSupply_.sub(tokens);
+  }
+
+  function transferAccountBalances(uint256 tokens, address participant) private {
+    balances[participant] = balances[participant].sub(tokens);
+    activeBalances[participant] = activeBalances[participant].add(tokens);
   }
 
   function balanceOf(address _owner) public view returns (uint256, uint256) {
@@ -98,6 +107,6 @@ contract GNIToken is MintableToken {
 //override mint. call super, and then perform logic to update inactiveTokenSupply
 
 //override transfer. call super, nd then perform logic to store addresses (more below)
-//make participantCount variable. It initializes at 1 and increments for every new address during transfers.
-//make a mapping from participant id to address, storing the addresses in an array.
-//use this mapping to get the balance of each participant
+//make investorCount variable. It initializes at 1 and increments for every new address during transfers.
+//make a mapping from investor id to address, storing the addresses in an array.
+//use this mapping to get the balance of each investor
