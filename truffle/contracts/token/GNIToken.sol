@@ -89,10 +89,10 @@ contract GNIToken is MintableToken {
     for (uint256 i = 1; i <= investorCount_; i = i.add(1)) {
       address investor = investors[i];
       uint256 tokensToActivate = balances[investor].div(activationDivisor);
-      transderAccountBalances(tokensToActivate, investor);
+      transferAccountBalances(tokensToActivate, investor);
     }
 
-    inactiveSupply_ = inactiveSupply_.sub(tokens);
+    inactiveInvestorSupply_ = inactiveInvestorSupply_.sub(tokens);
   }
 
   function transferAccountBalances(uint256 tokens, address participant) private {
