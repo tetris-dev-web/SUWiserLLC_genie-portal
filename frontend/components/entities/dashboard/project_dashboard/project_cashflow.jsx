@@ -64,6 +64,7 @@ class CashFlowGraph extends React.Component {
   }
 
   formatCashData() {
+    debugger
     const jsonCashData = JSON.parse(this.props.project.cashflow);
     const expectedNet = jsonCashData.ExpectedNet;
     const quarters = Object.keys(expectedNet);
