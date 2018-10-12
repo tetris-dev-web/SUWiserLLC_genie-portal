@@ -11,17 +11,21 @@ const ProjectThermo = function( {project} ) {
   const rectHeigth = 110;
   const rectStartingX = 45;
   const rectStartingY = 55;
+
   const filledRectHeigth = ( percentCompleted/100 ) * rectHeigth;
   const filledRectStartingX = rectStartingX + 1;
   const filledRectStartingY = ( rectHeigth+rectStartingY ) - ( filledRectHeigth+1 );
+
   const lineStartX = (percentCompleted>90) ? 33 : (20+rectWidth);
   const veticalLineStartX = 190;
   const veticalLineStartY = 45;
+
   const timeNow = new Date();
   const formattedCloseDate = new Date(close_date);
   const formattedStartDate = new Date(start_date);
   const oneDay = 24*60*60*1000;
   const daysToClose = Math.round(Math.abs((formattedCloseDate.getTime() - timeNow.getTime())/(oneDay)));
+
   const jsonVotes = JSON.parse(project.votes);
 
   const xTimeScale = d3.scaleTime()
@@ -74,12 +78,6 @@ const ProjectThermo = function( {project} ) {
           fontFamily={'open sans condensed'}
           fill={'#008080'}
           strokeWidth={1}
-          onMouseOver={(e)=>{
-            console.log(e);
-          }}
-          onMouseOut={(e)=>{
-            console.log(e);
-          }}
           />
         <Text
           x={15}
