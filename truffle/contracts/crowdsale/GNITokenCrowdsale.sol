@@ -100,7 +100,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
    //tokens go to the this contract
    //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
-   Tokens(tokens).mintInactive(this, developerTokens.add(investorTokens));
+   Tokens(tokens).genesis(this, developerTokens.add(investorTokens));
 
    totalValuation = totalValuation.add(_valuation);
 
@@ -125,7 +125,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  //later, we can assign funds to the wallet (which is the developer wallet). No second wallet is needed because the contract serves as an escrow wallet.
  function handleTokenPurchase (uint256 _projectId) public payable {
    //add require statement that makes sure the projet isnt already active
-   buyTokens(msg.sender);
+   buyTokens(msg.sender);\
+   //make these methods on the project class instead
    updateProjectVotedFor(_projectId);
    updateAccountVotes(_projectId);
  }

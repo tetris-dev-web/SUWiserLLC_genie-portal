@@ -1,21 +1,21 @@
-pragma solidity 0.4.24;
+/* pragma solidity 0.4.24; */
 
-import '../token/ERC20/MintableToken.sol';
-import '../utility/SafeMath.sol';
+/* import '../token/ERC20/MintableToken.sol';
+/* import '../utility/SafeMath.sol'; */
 
-contract InactiveToken is MintableToken {
-  using SafeMath for uint256;
+/* contract InactiveToken is MintableToken {
+  using SafeMath for uint256; */ */
   /* uint256 internal inactiveInvestorSupply_;
   uint256 internal inactiveDeveloperSupply_; */
 
 
 
-  constructor() public {
+  /* constructor() public {
     totalSupply_ = 0;
     inactiveInvestorSupply_ = 0;
     inactiveDeveloperSupply_ = 0;
     balances[msg.sender] = 0;
-  }
+  } */
   /* struct Balance {
     uint256 active;
     uint256 inactive;
@@ -23,13 +23,13 @@ contract InactiveToken is MintableToken {
   /* mapping (address => Balance) internal balances; */
 
 
-  function mint (address _to, uint256 _developerAmount, uint256 _investorAmount) public returns (bool) {
+  /* function mint (address _to, uint256 _developerAmount, uint256 _investorAmount) public returns (bool) {
     uint256 _totalAmount = _developerAmount.add(_investorAmount);
-    require(super.mint(_to, _totalAmount));
+    require(super.mint(_to, _totalAmount)); */
 
     /* inactiveDeveloperSupply_ = inactiveDeveloperSupply_.add(_developerAmount);
     inactiveInvestorSupply_ = inactiveInvestorSupply_.add(_investorAmount); */
-  }
+  /* } */
 
   /* function transfer (address _to, uint256 _value) public returns (bool) {
     require(super.transfer(_to, _value));
