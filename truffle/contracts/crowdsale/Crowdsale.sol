@@ -22,7 +22,7 @@ contract Crowdsale {
   using SafeERC20 for ERC20;
 
   // The token being sold
-  ERC20 public token;
+  /* ERC20 public token; */
 
   // Address where funds are collected
   address public wallet;
@@ -75,7 +75,6 @@ contract Crowdsale {
   function () external payable {
     buyTokens(msg.sender);
   }
-
   /**
    * @dev low level token purchase ***DO NOT OVERRIDE***
    * @param _beneficiary Address performing the token purchase
@@ -91,7 +90,8 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    _processPurchase(_beneficiary, tokens);
+    Tokens(tokens).processPurchase(_beneficiary, tokens);
+    
     emit TokenPurchase(
       msg.sender,
       _beneficiary,
@@ -99,10 +99,10 @@ contract Crowdsale {
       tokens
     );
 
-    _updatePurchasingState(_beneficiary, weiAmount);
+    /* _updatePurchasingState(_beneficiary, weiAmount); */
 
     /* _forwardFunds(); */
-    _postValidatePurchase(_beneficiary, weiAmount);
+    /* _postValidatePurchase(_beneficiary, weiAmount); */
   }
 
   // -----------------------------------------
@@ -132,56 +132,56 @@ contract Crowdsale {
    * @param _beneficiary Address performing the token purchase
    * @param _weiAmount Value in wei involved in the purchase
    */
-  function _postValidatePurchase(
+  /* function _postValidatePurchase(
     address _beneficiary,
     uint256 _weiAmount
   )
     internal
   {
     // optional override
-  }
+  } */
 
   /**
    * @dev Source of tokens. Override this method to modify the way in which the crowdsale ultimately gets and sends its tokens.
    * @param _beneficiary Address performing the token purchase
    * @param _tokenAmount Number of tokens to be emitted
    */
-  function _deliverTokens(
+  /* function _deliverTokens(
     address _beneficiary,
     uint256 _tokenAmount
   )
     internal
   {
     token.safeTransfer(_beneficiary, _tokenAmount);
-  }
+  } */
 
   /**
    * @dev Executed when a purchase has been validated and is ready to be executed. Not necessarily emits/sends tokens.
    * @param _beneficiary Address receiving the tokens
    * @param _tokenAmount Number of tokens to be purchased
    */
-  function _processPurchase(
+  /* function _processPurchase(
     address _beneficiary,
     uint256 _tokenAmount
   )
     internal
   {
     _deliverTokens(_beneficiary, _tokenAmount);
-  }
+  } */
 
   /**
    * @dev Override for extensions that require an internal state to check for validity (current user contributions, etc.)
    * @param _beneficiary Address receiving the tokens
    * @param _weiAmount Value in wei involved in the purchase
    */
-  function _updatePurchasingState(
+  /* function _updatePurchasingState(
     address _beneficiary,
     uint256 _weiAmount
   )
     internal
   {
     // optional override
-  }
+  } */
 
   /**
    * @dev Override to extend the way in which ether is converted to tokens.
@@ -209,7 +209,7 @@ contract Crowdsale {
 
    RESOLUTION: remove this function call completely.
     */
-  function _forwardFunds() internal {
+  /* function _forwardFunds() internal {
       wallet.transfer(msg.value);
-  }
+  } */
 }

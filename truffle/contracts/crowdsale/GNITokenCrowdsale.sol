@@ -3,10 +3,12 @@ pragma solidity 0.4.24;
 import '../token/GNIToken.sol';
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
+import '../token/tokens/Tokens.sol'
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   uint256 public totalValuation;
+  Tokens tokens;
 
   constructor
       (
@@ -14,7 +16,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         uint256 _doomsDay,
         uint256 _rate,
         address _wallet,
-        MintableToken _token
+        Tokens _tokens
       )
       public
       Crowdsale(_rate, _wallet, _token)
@@ -22,6 +24,14 @@ contract GNITokenCrowdsale is TimedCrowdsale {
           totalValuation = 0;
   }
 
+  //make a class for escrow
+  //esrow accepts fund and sends out dividends
+
+  //make a class instead
+  //will have a manager account
+  //will have funds
+  //accepts funds
+  //only manager can transfer funds to escrow
   struct Project {
       string name;
       uint256 closingTime;
@@ -50,10 +60,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       bool active
   );
 
+  event LogVotes (
+    address voter,
+    uint256 projectId,
+    uint256 amount
+    );
+
 
   /* mapping(string => Project) private projects; */
   Project[] public projects;
-
 
  function getProjectInfo(uint id) public view returns(
      string, uint256, uint256, uint256, uint256, bool, uint256, uint256
@@ -71,12 +86,21 @@ contract GNITokenCrowdsale is TimedCrowdsale {
      );
  }
 
+ //maps from address to projectIds. projectIds map to
+ mapping(address => mapping(uint256 => uint256)) internal votes;
+
+ function votesByProjectandAddress(address _investor, uint256 _projectId) public returns (uint256) {
+   uint256 result = votes[_investor][_projectId];
+   return result;
+ }
+
+ //should accept a manager address
  function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
    //tokens go to the this contract
    //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
-   GNIToken(token).mint(this, developerTokens, investorTokens);
+   Tokens(tokens).mintInactive(this, developerTokens.add(investorTokens));
 
    totalValuation = totalValuation.add(_valuation);
 
@@ -103,6 +127,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    //add require statement that makes sure the projet isnt already active
    buyTokens(msg.sender);
    updateProjectVotedFor(_projectId);
+   updateAccountVotes(_projectId);
  }
 
  function forwardFundsToDeveloper (uint256 amount) internal {
@@ -114,10 +139,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    extendProjectClosingTime(_projectId);
  }
 
+ function updateAccountVotes(uint256 _projectId) internal {
+   votes[msg.sender][_projectId] = votes[msg.sender][_projectId].add(msg.value);
+   LogVotes(msg.sender, _projectId, msg.value);
+ }
+
    /* Project storage _projectVotedFor = projects[_projectId]; */
 
   function updateVoteCount(uint256 _projectId) internal {
-    projects[_projectId].voteCount = projects[_projectId].voteCount.add(1);
+    projects[_projectId].voteCount = projects[_projectId].voteCount.add(msg.value);
   }
 
   function extendProjectClosingTime(uint256 _projectId) internal {
@@ -155,7 +185,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       if(canActivate){
         Project storage project = projects[projectId];
 
-        GNIToken(token).activateTokens(project.developerTokens, project.investorTokens, wallet);
+        Tokens(tokens).activateTokens(project.developerTokens, project.investorTokens, wallet);
 
         forwardFundsToDeveloper(project.capitalRequired);
 
