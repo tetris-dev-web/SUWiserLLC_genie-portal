@@ -23,7 +23,7 @@ class CashFlowGraph extends React.Component {
     const {xAxis,yAxis,valueLine} = this.createAxesAndLine(cashData);
     svg.append("g")
         .attr('class','axis')
-        .attr("transform", "translate(0," + (this.h - 20) + ")")
+        .attr("transform", "translate(0," + (this.h/2) + ")")
         .call(xAxis);
     svg.append("g")
         .attr('class','axis')
@@ -64,7 +64,6 @@ class CashFlowGraph extends React.Component {
   }
 
   formatCashData() {
-    debugger
     const jsonCashData = JSON.parse(this.props.project.cashflow);
     const expectedNet = jsonCashData.ExpectedNet;
     const quarters = Object.keys(expectedNet);
