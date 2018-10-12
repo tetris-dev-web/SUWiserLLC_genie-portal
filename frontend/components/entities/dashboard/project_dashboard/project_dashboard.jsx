@@ -13,10 +13,16 @@ class ProjectDashboard extends React.Component {
 
     this.state = {
       openModal: false,
-      projectClicked:{}
+      projectClicked:{},
+      showText:false
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.toggleTextShowing = this.toggleTextShowing.bind(this);
+  }
+
+  toggleTextShowing() {
+    this.setState({ showText:!this.state.showText });
   }
 
   openModal(projectClicked) {
@@ -43,7 +49,7 @@ class ProjectDashboard extends React.Component {
   render() {
 
     if (this.props.currentUser) {
-      const projectClicked = this.state.projectClicked;
+      const { projectClicked,showText } = this.state;
       const model_link = "https://poly.google.com/view/" + projectClicked.model_id + "/embed";
       return (
         <div className="graph-container">
@@ -76,7 +82,9 @@ class ProjectDashboard extends React.Component {
                     }
                     <div className="temp">
                       <div className="thermo-canvas-container">
-                        <ProjectThermo project={projectClicked} />
+                        <ProjectThermo project={projectClicked}
+                                        showText={showText}
+                                        toggleTextShowing={this.toggleTextShowing}/>
                       </div>
                     </div>
 
