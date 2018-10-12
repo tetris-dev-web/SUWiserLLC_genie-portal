@@ -55,14 +55,13 @@ contract Crowdsale {
    * @param _wallet Address where collected funds will be forwarded to
    * @param _token Address of the token being sold
    */
-  constructor(uint256 _rate, address _wallet, ERC20 _token) public {
+  constructor(uint256 _rate, address _wallet) public {
     require(_rate > 0);
     require(_wallet != address(0));
     require(_token != address(0));
 
     rate = _rate;
     wallet = _wallet;
-    token = _token;
   }
 
   // -----------------------------------------
@@ -91,7 +90,7 @@ contract Crowdsale {
     weiRaised = weiRaised.add(weiAmount);
 
     Tokens(tokens).processPurchase(_beneficiary, tokens);
-    
+
     emit TokenPurchase(
       msg.sender,
       _beneficiary,

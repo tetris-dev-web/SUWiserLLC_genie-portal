@@ -1,9 +1,8 @@
 pragma solidity 0.4.24;
-
-import '../token/GNIToken.sol';
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
-import '../token/tokens/Tokens.sol'
+import '../token/tokens/Tokens.sol';
+import '../Project.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
@@ -19,9 +18,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         Tokens _tokens
       )
       public
-      Crowdsale(_rate, _wallet, _token)
+      Crowdsale(_rate, _wallet)
       TimedCrowdsale(_openingTime, _doomsDay) {
           totalValuation = 0;
+          tokens = _tokens;
   }
 
   //make a class for escrow
@@ -32,7 +32,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   //will have funds
   //accepts funds
   //only manager can transfer funds to escrow
-  struct Project {
+  /* struct Project {
       string name;
       uint256 closingTime;
       uint256 valuation;
@@ -44,7 +44,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       uint256 voteCount;
       bool capitalReached;
       bool active;
-  }
+  } */
 
   event LogProject (
       uint id,
@@ -107,7 +107,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
      // Increase crowdsale duation by 90 days
    _extendDoomsDay(90);
 
-     uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, developerTokens, investorTokens, _lat,_lng, 0, false, false)) - 1;
+     uint id = projects.push(new Project(_name, now + 86600 * 240, _valuation, capitalRequired, developerTokens, investorTokens, _lat,_lng, 0, false, false)) - 1;
 
      // log the creation of the new project
      emit LogProject(id, _name, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng, 0, false, false);
@@ -125,7 +125,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  //later, we can assign funds to the wallet (which is the developer wallet). No second wallet is needed because the contract serves as an escrow wallet.
  function handleTokenPurchase (uint256 _projectId) public payable {
    //add require statement that makes sure the projet isnt already active
-   buyTokens(msg.sender);\
+   buyTokens(msg.sender);
    //make these methods on the project class instead
    updateProjectVotedFor(_projectId);
    updateAccountVotes(_projectId);
