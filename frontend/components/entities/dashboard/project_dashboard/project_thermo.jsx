@@ -4,7 +4,7 @@ import { Stage, Layer, Rect,Line,Shape, Text } from 'react-konva';
 import * as d3 from 'd3';
 
 
-const ProjectThermo = function( {project} ) {
+const ProjectThermo = function( {project,showText,toggleTextShowing} ) {
   const { current_capital,capital_required,start_date,close_date } = project;
   const percentCompleted = (current_capital*100) / capital_required;
   const rectWidth = 22;
@@ -48,8 +48,17 @@ const ProjectThermo = function( {project} ) {
   });
 
   return (
-    <Stage width={200} height={200}>
+    <Stage width={200} height={200}
+      >
       <Layer>
+        <Rect
+          x={ 0 }
+          y={ 0 }
+          width={ 200 }
+          height={ 200 }
+          onMouseEnter={(e)=>{toggleTextShowing();}}
+          onMouseLeave={(e)=>{toggleTextShowing();}}
+          />
         <Line
           points={[15,55,190,55]}
           stroke={'white'}
@@ -78,6 +87,7 @@ const ProjectThermo = function( {project} ) {
           fontFamily={'open sans condensed'}
           fill={'#008080'}
           strokeWidth={1}
+          visible={showText}
           />
         <Text
           x={15}
@@ -87,6 +97,7 @@ const ProjectThermo = function( {project} ) {
           fontFamily={'open sans condensed'}
           fill={'white'}
           strokeWidth={1}
+          visible={showText}
           />
         <Text
           x={veticalLineStartX-35}
@@ -96,6 +107,7 @@ const ProjectThermo = function( {project} ) {
           fontFamily={'open sans condensed'}
           fill={'white'}
           strokeWidth={1}
+          visible={showText}
           />
         <Text
           x={daysToCloseLineX - 5}
@@ -105,6 +117,7 @@ const ProjectThermo = function( {project} ) {
           fontFamily={'open sans condensed'}
           fill={'#008080'}
           strokeWidth={1}
+          visible={showText}
           />
         <Rect
           x={ rectStartingX }
