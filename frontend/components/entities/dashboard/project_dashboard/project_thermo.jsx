@@ -78,12 +78,6 @@ const ProjectThermo = function( {project} ) {
           fontFamily={'open sans condensed'}
           fill={'#008080'}
           strokeWidth={1}
-          onMouseOver={(e)=>{
-            console.log(e);
-          }}
-          onMouseOut={(e)=>{
-            console.log(e);
-          }}
           />
         <Text
           x={15}
