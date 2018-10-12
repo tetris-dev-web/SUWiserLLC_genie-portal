@@ -1,7 +1,7 @@
 import React from 'react';
 import ProjectGraph from './project_graph';
 import Modal from 'react-modal';
-import ModalStyle from '../../footer/modal_style';
+import ModalStyle from './modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
 import CashFlowGraph from './project_cashflow';
@@ -82,7 +82,9 @@ class ProjectDashboard extends React.Component {
 
                     <div className="project-description">
                       <div className="project-text">
-                        <h1>{projectClicked.title}</h1>
+                        <div className="title-wrapper">
+                          <h1 className="text-hidden">{projectClicked.title}</h1>
+                        </div>
                         <div className="project-summary">
                           {projectClicked.summary}
                         </div>
@@ -103,7 +105,6 @@ class ProjectDashboard extends React.Component {
                     <div className="project-map">
                       <ProjectMap projectClicked={ projectClicked } />
                     </div>
-                    <div className="project-overlays">overlays</div>
                   </div>
                 </React.Fragment>
               }

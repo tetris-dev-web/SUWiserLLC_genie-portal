@@ -88,7 +88,7 @@ class CashFlowGraph extends React.Component {
       .attr("width", this.w)
       .attr("height", this.h);
       svg.append("rect")
-      .attr("width", "100%")
+      .attr("width", "95%")
       .attr("height", "100%")
       .attr("fill", "black");
     return svg;

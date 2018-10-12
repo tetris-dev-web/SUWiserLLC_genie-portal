@@ -22,19 +22,19 @@ const ProjectThermo = function( {project} ) {
   const formattedStartDate = new Date(start_date);
   const oneDay = 24*60*60*1000;
   const daysToClose = Math.round(Math.abs((formattedCloseDate.getTime() - timeNow.getTime())/(oneDay)));
+  const jsonVotes = JSON.parse(project.votes);
+
   const xTimeScale = d3.scaleTime()
                    .domain([formattedStartDate,formattedCloseDate])
                    .range([rectStartingX + rectWidth + 60, rectStartingX + 130]).clamp(true);
   const yVoteScale = d3.scaleLinear()
-                   .domain([1,capital_required])
+                   .domain([ 1,d3.max(Object.values(jsonVotes)) ])
                    .range([rectHeigth+rectStartingY, filledRectStartingY]).clamp(true);
 
   const daysToCloseLineX = xTimeScale(timeNow);
   const voteXScale = d3.scaleTime()
                     .domain([formattedStartDate,formattedCloseDate])
                     .range([rectStartingX+rectWidth,daysToCloseLineX]).clamp(true);
-  const jsonVotes = JSON.parse(project.votes);
-
   const sortedVotesByDate = Object.keys(jsonVotes).sort((a,b)=>{
     const date1 = new Date(a);
     const date2 = new Date(b);
@@ -42,6 +42,7 @@ const ProjectThermo = function( {project} ) {
     else if (date1 > date2) return 1;
     else return 0;
   });
+
   return (
     <Stage width={200} height={200}>
       <Layer>
@@ -73,6 +74,12 @@ const ProjectThermo = function( {project} ) {
           fontFamily={'open sans condensed'}
           fill={'#008080'}
           strokeWidth={1}
+          onMouseOver={(e)=>{
+            console.log(e);
+          }}
+          onMouseOut={(e)=>{
+            console.log(e);
+          }}
           />
         <Text
           x={15}
@@ -93,22 +100,13 @@ const ProjectThermo = function( {project} ) {
           strokeWidth={1}
           />
         <Text
-          x={daysToCloseLineX + 5}
-          y={100}
-          text={ daysToClose + ' days to close' }
-          fontSize={13}
+          x={daysToCloseLineX - 5}
+          y={168}
+          text={ `${daysToClose} days \n till close` }
+          fontSize={12}
           fontFamily={'open sans condensed'}
           fill={'#008080'}
           strokeWidth={1}
-          />
-        <Rect
-          x={ filledRectStartingX }
-          y={ filledRectStartingY }
-          width={ rectWidth-2 }
-          height={ filledRectHeigth }
-          cornerRadius={9}
-          fill={'black'}
-          shadowBlur={5}
           />
         <Rect
           x={ rectStartingX }
@@ -120,12 +118,22 @@ const ProjectThermo = function( {project} ) {
           strokeWidth={1}
           shadowBlur={5}
           />
+        <Rect
+          x={ filledRectStartingX }
+          y={ filledRectStartingY }
+          width={ rectWidth-2 }
+          height={ filledRectHeigth }
+          cornerRadius={9}
+          shadowBlur={5}
+          fill="black"
+          opacity={0.8}
+          />
           <Shape
             sceneFunc={(context, shape) => {
               context.beginPath();
               context.moveTo(daysToCloseLineX, filledRectStartingY);
-              context.lineTo(rectStartingX, filledRectStartingY);
-              context.lineTo(rectStartingX, rectHeigth+rectStartingY);
+              context.lineTo(rectStartingX - 1, filledRectStartingY);
+              context.lineTo(rectStartingX - 1, rectHeigth+rectStartingY);
               context.lineTo(rectStartingX+rectWidth, rectHeigth+rectStartingY);
               let sumVotes = 0;
               sortedVotesByDate.forEach(date=>{
@@ -135,12 +143,12 @@ const ProjectThermo = function( {project} ) {
                 const y = yVoteScale(sumVotes);
                 context.lineTo(x,y);
               });
-              context.closePath();
+              // context.closePath();
               context.fillStrokeShape(shape);
             }}
-            fill="#008080"
+            fill="#00FFFF"
             strokeWidth={4}
-            opacity={0.8}
+            opacity={0.5}
             />
       </Layer>
     </Stage>
