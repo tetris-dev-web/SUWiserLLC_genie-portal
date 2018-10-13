@@ -9,8 +9,8 @@ contract Token {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
   uint256 internal investorCount_;
-  GNIToken inactiveToken_;
-  GNIToken activeToken_;
+  GNIToken public inactiveToken_;
+  GNIToken public activeToken_;
 
   constructor () public {
       inactiveToken_ = new GNIToken();

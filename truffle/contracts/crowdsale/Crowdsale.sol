@@ -24,7 +24,7 @@ contract Crowdsale {
 
   // The token being sold
   /* ERC20 public token; */
-  Token token;
+  Token public token;
   // Address where funds are collected
   address public wallet;
 
