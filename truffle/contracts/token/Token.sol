@@ -55,7 +55,9 @@ contract Token {
   }
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner
   function activateTokens (uint256 developerTokens, uint256 investorTokens, address developer) public {
-    convert(this, developer, developerTokens);
+    /* convert(this, developer, developerTokens); */
+    GNIToken(inactiveToken_).burn(developerTokens);
+    GNIToken(activeToken_).mint(developer, developerTokens);
     activateInvestorTokens(investorTokens);
   }
 

@@ -112,7 +112,7 @@ contract Project {
       !active &&
       voteCount > 0 &&
       closingTime > now &&
-      (voteCount > Project(otherProject).voteCount_()) || Project(otherProject).active_()
+      (voteCount >= Project(otherProject).voteCount_()) || Project(otherProject).active_()
     );
   }
 }
