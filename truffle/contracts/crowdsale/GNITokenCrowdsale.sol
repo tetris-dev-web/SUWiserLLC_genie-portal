@@ -23,28 +23,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
           totalValuation = 0;
   }
 
-  //make a class for escrow
-  //esrow accepts fund and sends out dividends
-
-  //make a class instead
-  //will have a manager account
-  //will have funds
-  //accepts funds
-  //only manager can transfer funds to escrow
-  /* struct Project {
-      string name;
-      uint256 closingTime;
-      uint256 valuation;
-      uint256 capitalRequired;
-      uint256 developerTokens;
-      uint256 investorTokens;
-      string lat;
-      string lng;
-      uint256 voteCount;
-      bool capitalReached;
-      bool active;
-  } */
-
   event LogProject (
       uint id,
       string name,
