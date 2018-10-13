@@ -90,7 +90,7 @@ contract Project {
   function deposit () public payable {
     require(msg.value != 0);
   }
-
+  
   function forwardToEscrow (uint256 _amount, address escrow) public {
     require(msg.sender == manager);
     escrow.transfer(_amount);

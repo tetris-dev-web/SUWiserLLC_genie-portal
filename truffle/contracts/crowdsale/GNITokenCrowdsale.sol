@@ -85,9 +85,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Project(projects[_projectId]).update(msg.value);
  }
 
- function forwardFundsToDeveloper (uint256 amount) internal {
-   wallet.transfer(amount);
- }
 
  function updateAccountVotes(uint256 _projectId) internal {
    votes[msg.sender][_projectId] = votes[msg.sender][_projectId].add(msg.value);
@@ -117,16 +114,17 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     (uint256 projectId, bool canActivate) = projectToActivateDetails();
 
     if(canActivate){
-      address project = projects[projectId];
+      Project project = Project(projects[projectId]);
 
-      Token(token).activateTokens(Project(project).developerTokens_(), Project(project).investorTokens_(), wallet);
-
-      forwardFundsToDeveloper(Project(project).capitalRequired_());
-
-      weiRaised = weiRaised.sub(Project(project).capitalRequired());
-
-      Project(project).activate();
+      Token(token).activateTokens(project.developerTokens_(), project.investorTokens_(), wallet);
+      forwardFunds(project.capitalRequired_());
+      project.activate();
     }
+  }
+
+  function forwardFunds (uint256 amount) internal {
+    wallet.transfer(amount);
+    weiRaised = weiRaised.sub(amount);
   }
 }
 
