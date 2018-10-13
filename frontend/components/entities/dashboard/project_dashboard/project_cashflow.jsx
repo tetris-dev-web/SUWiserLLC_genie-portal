@@ -56,11 +56,11 @@ class CashFlowGraph extends React.Component {
                     .scale(yScale)
                     .ticks(0).tickSizeOuter(0);
 
-    const valueLine = d3.line()
+    const expectedLine = d3.line()
       .x( d=>{return xScale(d.x);})
       .y( d=>{return yScale(d.y);});
 
-    return {xAxis,yAxis,valueLine};
+    return {xAxis,yAxis,expectedLine};
   }
 
   formatCashData() {
