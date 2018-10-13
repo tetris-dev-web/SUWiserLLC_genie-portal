@@ -1,10 +1,15 @@
-/* pragma solidity 0.4.24; */
+pragma solidity 0.4.24;
+import '../token/ERC20/MintableToken.sol';
+import '../token/ERC20/StandardBurnableToken.sol';
 
-/* import '../token/ERC20/MintableToken.sol';
-/* import '../utility/SafeMath.sol'; */
+
+contract GNIToken is MintableToken, StandardBurnableToken {
+  constructor () public {}
+}
+
 
 /* contract InactiveToken is MintableToken {
-  using SafeMath for uint256; */ */
+  using SafeMath for uint256; */
   /* uint256 internal inactiveInvestorSupply_;
   uint256 internal inactiveDeveloperSupply_; */
 
@@ -52,7 +57,7 @@
     /* activateDeveloperTokens(developerTokens, developer); */
     /* activateDeveloperTokens(developerTokens, developer);
     activateInvestorTokens(investorTokens);
-  } */ */
+  /* } */
 
   /* function activateDeveloperTokens (uint256 tokens, address developer) public {
     //use burn instead
@@ -83,7 +88,7 @@
       activeBalances[_owner]
       );
     } */
-}
+/* } */
 
 
 //make inactiveTokenSupply variable

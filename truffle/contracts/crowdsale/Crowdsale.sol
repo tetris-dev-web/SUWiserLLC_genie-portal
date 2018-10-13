@@ -3,6 +3,7 @@ pragma solidity ^0.4.24;
 import "../token/ERC20/ERC20.sol";
 import '../utility/SafeMath.sol';
 import "../token/ERC20/SafeERC20.sol";
+import '../token/Token.sol';
 
 
 /**
@@ -23,7 +24,7 @@ contract Crowdsale {
 
   // The token being sold
   /* ERC20 public token; */
-
+  Token token;
   // Address where funds are collected
   address public wallet;
 
@@ -55,13 +56,14 @@ contract Crowdsale {
    * @param _wallet Address where collected funds will be forwarded to
    * @param _token Address of the token being sold
    */
-  constructor(uint256 _rate, address _wallet) public {
+  constructor(uint256 _rate, address _wallet, Token _token) public {
     require(_rate > 0);
     require(_wallet != address(0));
     require(_token != address(0));
 
     rate = _rate;
     wallet = _wallet;
+    token = _token;
   }
 
   // -----------------------------------------
@@ -89,7 +91,7 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    Tokens(tokens).processPurchase(_beneficiary, tokens);
+    Token(token).processPurchase(_beneficiary, tokens);
 
     emit TokenPurchase(
       msg.sender,

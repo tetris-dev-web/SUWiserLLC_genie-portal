@@ -1,18 +1,17 @@
 pragma solidity ^0.4.23;
 
 contract Project {
-  string name;
-  address manager;
-  uint256 closingTime;
-  uint256 valuation;
-  uint256 capitalRequired;
-  uint256 developerTokens;
-  uint256 investorTokens;
-  string lat;
-  string lng;
-  uint256 voteCount;
-  bool active;
-  address escrow;
+  string public name;
+  address private manager;
+  uint256 public closingTime;
+  uint256 public valuation;
+  uint256 public capitalRequired;
+  uint256 public developerTokens;
+  uint256 public investorTokens;
+  string public lat;
+  string public lng;
+  uint256 public voteCount;
+  bool public active;
 
   constructor (
     string _name,
@@ -44,7 +43,7 @@ contract Project {
     require(msg.value != 0);
   }
 
-  function forwardToEscrow (uint256 _amount) public {
+  function forwardToEscrow (uint256 _amount, address escrow) public {
     require(msg.sender == manager);
     escrow.transfer(_amount);
   }

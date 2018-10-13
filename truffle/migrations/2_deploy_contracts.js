@@ -1,5 +1,5 @@
-const MyStringStore = artifacts.require("MyStringStore");
-const GNIToken = artifacts.require("GNIToken");
+const Escrow = artifacts.require("Escrow");
+const Token = artifacts.require("Token");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 
 module.exports = function (deployer, network, accounts) {
@@ -9,10 +9,10 @@ module.exports = function (deployer, network, accounts) {
 
     return deployer
         .then(() => { // deploy token
-            return deployer.deploy(GNIToken);
+            return deployer.deploy(Token);
         })
         .then(()=>{
-            return deployer.deploy(MyStringStore);
+          return deployer.deploy(Escrow, Token.address);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
@@ -31,18 +31,18 @@ module.exports = function (deployer, network, accounts) {
                 closingTime,
                 rate,
                 wallet,
-                GNIToken.address
+                Token.address
             );
         })
-        .then(() => { // giving the crowdsale ownership over the token
-            return GNITokenCrowdsale.deployed().then(crowdsale => {
-                crowdsale.token().then(tokenAddress => {
-                    const GNITokenInstance = GNIToken.at(tokenAddress);
-                    GNITokenInstance.transferOwnership(crowdsale.address).then(output => {
-                    })
-                })
-            }).catch(err => {
-                console.log(err);
-            })
-        });
+        // .then(() => { // giving the crowdsale ownership over the token
+        //     return GNITokenCrowdsale.deployed().then(crowdsale => {
+        //         crowdsale.token().then(tokenAddress => {
+        //             const GNITokenInstance = GNIToken.at(tokenAddress);
+        //             GNITokenInstance.transferOwnership(crowdsale.address).then(output => {
+        //             })
+        //         })
+        //     }).catch(err => {
+        //         console.log(err);
+        //     })
+        // });
 };

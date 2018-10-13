@@ -1,9 +1,12 @@
 pragma solidity ^0.4.23;
+import './token/Token.sol';
 
 contract Escrow {
-  constructor() public {
+  Token token;
 
+  constructor (Token _token) public {
+    token = _token;
   }
 
-  function 
+
 }
