@@ -23,7 +23,6 @@ contract Token {
   mapping(address => uint256) internal investorIds;
   /* mapping (address => Balance) internal balances; */
 
-
   //we will delete this later....only using for development purposes
   function investorById(uint256 id) public view returns (address) {
     return investors[id];
@@ -61,7 +60,7 @@ contract Token {
   }
 
   function activateInvestorTokens (uint256 tokens) private {
-    uint256 activationDivisor = activationDivisor();
+    uint256 activationDivisor = findActivationDivisor(tokens);
 
     for (uint256 i = 1; i <= investorCount_; i = i.add(1)) {
       address investor = investors[i];
@@ -71,7 +70,7 @@ contract Token {
     }
   }
 
-  function activationDivisor (uint256 tokens) private returns (uint256) {
+  function findActivationDivisor (uint256 tokens) private returns (uint256) {
     uint256 supply = GNIToken(inactiveToken_).totalSupply().sub(GNIToken(inactiveToken_).balanceOf(this));
     return supply.div(tokens);
   }
