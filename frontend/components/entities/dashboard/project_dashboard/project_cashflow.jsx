@@ -8,7 +8,7 @@ class CashFlowGraph extends React.Component {
     this.w = 300;
     this.h = 200;
     this.createSVG = this.createSVG.bind(this);
-    this.createAxesAndLine = this.createAxesAndLine.bind(this);
+    this.createAxesAndLines = this.createAxesAndLines.bind(this);
     this.formatCashData = this.formatCashData.bind(this);
     this.setup = this.setup.bind(this);
   }
@@ -20,7 +20,7 @@ class CashFlowGraph extends React.Component {
   setup(){
     const svg = this.createSVG();
     const cashData = this.formatCashData();
-    const {xAxis,yAxis,valueLine} = this.createAxesAndLine(cashData);
+    const {xAxis,yAxis,expectedLine} = this.createAxesAndLines(cashData);
     svg.append("g")
         .attr('class','axis')
         .attr("transform", "translate(0," + (this.h/2) + ")")
@@ -31,34 +31,38 @@ class CashFlowGraph extends React.Component {
         .call(yAxis);
 
     svg.append("g")
-        .attr('class','value-line')
+        .attr('class','expected-line')
         .append("path")
-        .datum(cashData.valuePoints)
-        .attr('d',valueLine);
+        .datum(cashData.expectedNetPoints)
+        .attr('d',expectedLine);
 
   }
 
 
-  createAxesAndLine( {numQuarters,minValue,maxValue} ) {
-    const xScale = d3.scaleLinear()
+  createAxesAndLines( {numQuarters,minValue,maxValue,expectedNetPoints} ) {
+    const xAxisScale = d3.scaleLinear()
                      .domain([0,numQuarters])
                      .range([20, this.w-20]);
 
     const xAxis = d3.axisBottom()
-                    .scale(xScale)
+                    .scale(xAxisScale)
                     .ticks(0).tickSizeOuter(0);
 
-    const yScale = d3.scaleLinear()
+    const yAxisScale = d3.scaleLinear()
                      .domain([minValue,maxValue])
                      .range([this.h-32,15]);
 
     const yAxis = d3.axisRight()
-                    .scale(yScale)
+                    .scale(yAxisScale)
                     .ticks(0).tickSizeOuter(0);
 
+    const yLinesScale = d3.scaleLinear()
+                     .domain([minValue,maxValue])
+                     .range([ this.h/2+22,this.h/2-22 ]);
+
     const expectedLine = d3.line()
-      .x( d=>{return xScale(d.x);})
-      .y( d=>{return yScale(d.y);});
+      .x( d=>{return xAxisScale(d.x);})
+      .y( d=>{return yLinesScale(d.y);});
 
     return {xAxis,yAxis,expectedLine};
   }
@@ -77,8 +81,6 @@ class CashFlowGraph extends React.Component {
     const actualNetPoints = Object.values(actualNet).map( (val,idx) =>{
       return {x:idx,y:val};
     });
-    debugger
-    console.log(actualNetPoints);
     return {
       numQuarters: quarters.length,
       minValue: minValue,
