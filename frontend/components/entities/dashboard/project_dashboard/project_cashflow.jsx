@@ -66,19 +66,25 @@ class CashFlowGraph extends React.Component {
   formatCashData() {
     const jsonCashData = JSON.parse(this.props.project.cashflow);
     const expectedNet = jsonCashData.ExpectedNet;
+    const actualNet = jsonCashData.Actual;
     const quarters = Object.keys(expectedNet);
     const valuesForQuarters = Object.values(expectedNet);
     const minValue = d3.min(valuesForQuarters);
     const maxValue = d3.max(valuesForQuarters);
-    const valuePoints = Object.values(expectedNet).map( (val,idx) =>{
+    const expectedNetPoints = Object.values(expectedNet).map( (val,idx) =>{
       return {x:idx,y:val};
     });
-
+    const actualNetPoints = Object.values(actualNet).map( (val,idx) =>{
+      return {x:idx,y:val};
+    });
+    debugger
+    console.log(actualNetPoints);
     return {
       numQuarters: quarters.length,
       minValue: minValue,
       maxValue: maxValue,
-      valuePoints: valuePoints,
+      expectedNetPoints: expectedNetPoints,
+      actualNetPoints: actualNetPoints,
     };
   }
   createSVG() {
