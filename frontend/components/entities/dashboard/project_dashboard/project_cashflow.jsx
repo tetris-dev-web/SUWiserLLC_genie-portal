@@ -20,7 +20,7 @@ class CashFlowGraph extends React.Component {
   setup(){
     const svg = this.createSVG();
     const cashData = this.formatCashData();
-    const {xAxis,yAxis,expectedLine} = this.createAxesAndLines(cashData);
+    const {xAxis,yAxis,expectedAndActualLine} = this.createAxesAndLines(cashData);
     svg.append("g")
         .attr('class','axis')
         .attr("transform", "translate(0," + (this.h/2) + ")")
@@ -34,7 +34,13 @@ class CashFlowGraph extends React.Component {
         .attr('class','expected-line')
         .append("path")
         .datum(cashData.expectedNetPoints)
-        .attr('d',expectedLine);
+        .attr('d',expectedAndActualLine);
+
+    svg.append("g")
+        .attr('class','actual-line')
+        .append("path")
+        .datum(cashData.actualNetPoints)
+        .attr('d',expectedAndActualLine);
 
   }
 
@@ -60,11 +66,11 @@ class CashFlowGraph extends React.Component {
                      .domain([minValue,maxValue])
                      .range([ this.h/2+22,this.h/2-22 ]);
 
-    const expectedLine = d3.line()
+    const expectedAndActualLine = d3.line()
       .x( d=>{return xAxisScale(d.x);})
       .y( d=>{return yLinesScale(d.y);});
 
-    return {xAxis,yAxis,expectedLine};
+    return {xAxis,yAxis,expectedAndActualLine};
   }
 
   formatCashData() {
