@@ -1,6 +1,7 @@
 import React from 'react';
 import BylawsModal from './bylaws_modal';
 import StrategyModal from './strategy_modal';
+import WalletModal from './wallet_modal';
 
 class Footer extends React.Component {
 
@@ -15,6 +16,9 @@ class Footer extends React.Component {
         </div>
         <div className="footer-button">
           <div>ABOUT</div>
+        </div>
+        <div className="footer-button">
+          <WalletModal/>
         </div>
       </footer>
     );

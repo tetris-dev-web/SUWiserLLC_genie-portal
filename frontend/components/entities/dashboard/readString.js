@@ -61,8 +61,8 @@ class ReadString extends React.Component {
     //
     //   console.log('readString', totalTokenSupply);
     // }
-    const cap = GNITokenCrowdsale.cap[this.state.stackIdCap];
-    const rate = GNITokenCrowdsale.rate[this.state.stackIdRate];
+    // const cap = GNITokenCrowdsale.cap[this.state.stackIdCap];
+    // const rate = GNITokenCrowdsale.rate[this.state.stackIdRate];
     return (<div>
               <p> My stored string: { myString && myString.value} </p>
               <p> account 0 balance: { balance0Value && balance0Value.value}   </p>
@@ -73,8 +73,7 @@ class ReadString extends React.Component {
               <p> account 2 address: { this.props.drizzleState.accounts[2]}   </p>
 
               <h1> totalTokenSupply : { totalTokenSupply && totalTokenSupply.value} </h1>
-              <h1> cap: { cap && cap.value} </h1>
-              <h1> rate: { rate && rate.value} </h1>
+
 
 
 
@@ -83,5 +82,6 @@ class ReadString extends React.Component {
   )}
 }
 
-
+// <h1> cap: { cap && cap.value} </h1>
+// <h1> rate: { rate && rate.value} </h1>
 export default ReadString;

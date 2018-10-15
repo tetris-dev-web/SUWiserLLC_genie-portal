@@ -8,15 +8,15 @@ export default ({component: Component, props, actions}) => (
     {drizzleContext => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
       // debugger window.web3 === undefined || this.props.web3.status === 'failed'
-      if (window.web3 === undefined) {
-        return(
-          // Display a web3 warning.
-          <div className="warning">
-            <p>This browser has no connection to the Ethereum network. </p>
-            <p>Please use the Chrome/FireFox extension MetaMask, or dedicated Ethereum browsers Mist or Parity.</p>
-          </div>
-        );
-      }
+      // if (window.web3 === undefined) {
+      //   return(
+      //     // Display a web3 warning.
+      //     <div className="warning">
+      //       <p>This browser has no connection to the Ethereum network. </p>
+      //       <p>Please use the Chrome/FireFox extension MetaMask, or dedicated Ethereum browsers Mist or Parity.</p>
+      //     </div>
+      //   );
+      // }
 
       if (!initialized) {
         return "Loading...";
