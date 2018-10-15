@@ -20,7 +20,8 @@ class CashFlowGraph extends React.Component {
   setup(){
     const svg = this.createSVG();
     const cashData = this.formatCashData();
-    const {xAxis,yAxis,expectedAndActualLine} = this.createAxesAndLines(cashData);
+    const {xAxis,yAxis,expectedAndActualLine,accumulatedLine} = this.createAxesAndLines(cashData);
+
     svg.append("g")
         .attr('class','axis')
         .attr("transform", "translate(0," + (this.h/2) + ")")
@@ -29,6 +30,13 @@ class CashFlowGraph extends React.Component {
         .attr('class','axis')
         .attr("transform", "translate(" + 10 + ",0)")
         .call(yAxis);
+    svg.append("text")
+        .attr("x", 17)
+        .attr("y", 18)
+        .style("font-size", "15px")
+        .style("color", "white")
+        .style("fill", "white")
+        .text('Valuation: $' + `${this.props.project.valuation}`);
 
     svg.append("g")
         .attr('class','expected-line')
@@ -42,10 +50,18 @@ class CashFlowGraph extends React.Component {
         .datum(cashData.actualNetPoints)
         .attr('d',expectedAndActualLine);
 
+    svg.append("g")
+        .attr('class','accumulated-line')
+        .append("path")
+        .datum(cashData.accumulatedPoints)
+        .attr('d',accumulatedLine);
+
   }
 
 
-  createAxesAndLines( {numQuarters,minValue,maxValue,expectedNetPoints} ) {
+  createAxesAndLines( {accumulatedPoints,numQuarters,minExpectedValue,
+                      maxExpectedValue,expectedNetPoints,minAccumulated,
+                      maxAccumulated} ) {
     const xAxisScale = d3.scaleLinear()
                      .domain([0,numQuarters])
                      .range([20, this.w-20]);
@@ -55,7 +71,7 @@ class CashFlowGraph extends React.Component {
                     .ticks(0).tickSizeOuter(0);
 
     const yAxisScale = d3.scaleLinear()
-                     .domain([minValue,maxValue])
+                     .domain([minExpectedValue,maxExpectedValue])
                      .range([this.h-32,15]);
 
     const yAxis = d3.axisRight()
@@ -63,36 +79,58 @@ class CashFlowGraph extends React.Component {
                     .ticks(0).tickSizeOuter(0);
 
     const yLinesScale = d3.scaleLinear()
-                     .domain([minValue,maxValue])
+                     .domain([minExpectedValue,maxExpectedValue])
                      .range([ this.h/2+22,this.h/2-22 ]);
+
+    const yAccumulatedScale = d3.scaleLinear()
+                     .domain([minAccumulated,maxAccumulated])
+                     .range([ this.h-22,22 ]).clamp(true);
 
     const expectedAndActualLine = d3.line()
       .x( d=>{return xAxisScale(d.x);})
       .y( d=>{return yLinesScale(d.y);});
 
-    return {xAxis,yAxis,expectedAndActualLine};
+    const accumulatedLine = d3.line()
+      .x( d=>{return xAxisScale(d.x);})
+      .y( d=>{return yAccumulatedScale(d.y);});
+
+    return {xAxis,yAxis,expectedAndActualLine,accumulatedLine};
   }
 
   formatCashData() {
     const jsonCashData = JSON.parse(this.props.project.cashflow);
+
     const expectedNet = jsonCashData.ExpectedNet;
     const actualNet = jsonCashData.Actual;
+    const accumulatedData = jsonCashData.AccumulatedGainorLoss;
+
     const quarters = Object.keys(expectedNet);
     const valuesForQuarters = Object.values(expectedNet);
-    const minValue = d3.min(valuesForQuarters);
-    const maxValue = d3.max(valuesForQuarters);
+    const minExpectedValue = d3.min(valuesForQuarters);
+    const maxExpectedValue = d3.max(valuesForQuarters);
+
+
     const expectedNetPoints = Object.values(expectedNet).map( (val,idx) =>{
       return {x:idx,y:val};
     });
     const actualNetPoints = Object.values(actualNet).map( (val,idx) =>{
       return {x:idx,y:val};
     });
+    const accumulatedPoints = Object.values(accumulatedData).map( (val,idx) =>{
+      return {x:idx,y:val};
+    });
+    const minAccumulated = d3.min(accumulatedPoints,(d)=>{return d.y;});
+    const maxAccumulated = d3.max(accumulatedPoints,(d)=>{return d.y;});
+
     return {
       numQuarters: quarters.length,
-      minValue: minValue,
-      maxValue: maxValue,
+      minExpectedValue: minExpectedValue,
+      maxExpectedValue: maxExpectedValue,
+      minAccumulated: minAccumulated,
+      maxAccumulated: maxAccumulated,
       expectedNetPoints: expectedNetPoints,
       actualNetPoints: actualNetPoints,
+      accumulatedPoints:accumulatedPoints
     };
   }
   createSVG() {
