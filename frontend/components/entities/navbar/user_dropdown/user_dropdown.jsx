@@ -132,7 +132,7 @@ class UserDropdown extends React.Component {
     // }
     // let { tokens, user_tokens, total_tokens } = this.state;
     // let { tokens } = this.props.currentUser;
-debugger
+
 
 
     return (
