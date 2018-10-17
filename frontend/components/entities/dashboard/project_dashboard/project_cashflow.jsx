@@ -63,13 +63,13 @@ class CashFlowGraph extends React.Component {
         .append("path")
         .datum(cashData.actualAccumulatedPoints)
         .attr('d',actualAccumulatedLine);
-
-    svg.on("mouseover", function(d){
+    d3.select('#cash-graph')
+    .on("mouseover", function(d){
         return text.style("visibility", "visible");
       })
-      .on("mouseout", function(d){
-          return text.style("visibility", "hidden");
-        });
+    .on("mouseout", function(d){
+      return text.style("visibility", "hidden");
+    });
 
   }
 
