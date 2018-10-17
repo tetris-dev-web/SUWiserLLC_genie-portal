@@ -20,6 +20,7 @@ class ProjectDashboard extends React.Component {
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.toggleTextShowing = this.toggleTextShowing.bind(this);
+    this.update = this.update.bind(this);
   }
 
   toggleTextShowing() {
@@ -49,6 +50,10 @@ class ProjectDashboard extends React.Component {
     // $(head).append(css);
     //
     // console.log('mounted')
+  }
+
+  update(e) {
+
   }
 
 
@@ -96,7 +101,8 @@ class ProjectDashboard extends React.Component {
 
                     <div className="project-description">
                       <div className="project-text">
-                        <div className="project-summary">
+                        <div className="project-summary"
+                           >
                           {projectClicked.summary}
                         </div>
                       </div>
