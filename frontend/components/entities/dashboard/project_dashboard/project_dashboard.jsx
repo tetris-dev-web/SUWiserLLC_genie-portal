@@ -14,7 +14,8 @@ class ProjectDashboard extends React.Component {
     this.state = {
       openModal: false,
       projectClicked:{},
-      showText:false
+      showText:false,
+      model_link: '',
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -27,6 +28,11 @@ class ProjectDashboard extends React.Component {
 
   openModal(projectClicked) {
     this.setState({ openModal: true, projectClicked });
+    if(projectClicked.model_id.search('-') != -1) {
+      this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id });
+    } else {
+      this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
+    }
   }
 
   closeModal() {
@@ -50,7 +56,7 @@ class ProjectDashboard extends React.Component {
 
     if (this.props.currentUser) {
       const { projectClicked,showText } = this.state;
-      const model_link = "https://poly.google.com/view/" + projectClicked.model_id + "/embed";
+
       return (
         <div className="graph-container">
           <ProjectGraph
@@ -77,7 +83,7 @@ class ProjectDashboard extends React.Component {
                   <div className="project-modal-grid">
                     {!projectClicked.model_id ? <div></div> :
                       <div className="iframe">
-                        <iframe id="iframe" src={ `${model_link}` } frameBorder="0" allowvr="yes" allow="vr; xr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
+                        <iframe id="iframe" src={ `${this.state.model_link}` } frameBorder="0" allowvr="yes" allow="vr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
                       </div>
                     }
                     <div className="temp">
