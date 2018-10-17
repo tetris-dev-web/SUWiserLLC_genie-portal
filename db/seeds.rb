@@ -283,7 +283,7 @@ project2 = Project.create(
   city: "Rio",
   country: "Brazil",
   continent: "South America",
-  model_id: "7syizSLPN60",
+  model_id: "51be9e3e-f32e-4825-a011-eac8a9132a00",
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user2.id,

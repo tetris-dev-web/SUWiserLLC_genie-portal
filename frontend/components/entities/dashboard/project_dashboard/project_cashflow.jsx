@@ -198,7 +198,9 @@ class CashFlowGraph extends React.Component {
   render() {
     return (
       <div id="cash-graph">
-        <h3>cashflow</h3>
+        <div className="title-wrapper">
+          <h3 className="text-hidden">cashflow</h3>
+        </div>
       </div>
     );
   }
