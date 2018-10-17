@@ -97,7 +97,7 @@ class ProjectDashboard extends React.Component {
                       <div className="bus-plan-download">
                         <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
                           <i className="fas fa-file-contract">
-                            business plan
+                            <span>business plan</span>
                           </i>
                         </a>
                       </div>

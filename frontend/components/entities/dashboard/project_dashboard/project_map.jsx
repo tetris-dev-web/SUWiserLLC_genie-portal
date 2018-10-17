@@ -21,7 +21,7 @@ class ProjectMap extends React.Component {
       <Map
           center={position}
           zoom={this.state.zoom}
-          dragging={false}
+          dragging={true}
           scrollWheelZoom={false}
       >
         <TileLayer
