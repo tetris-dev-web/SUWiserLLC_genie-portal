@@ -90,9 +90,6 @@ class ProjectDashboard extends React.Component {
 
                     <div className="project-description">
                       <div className="project-text">
-                        <div className="title-wrapper">
-                          <h1 className="text-hidden">{projectClicked.title}</h1>
-                        </div>
                         <div className="project-summary">
                           {projectClicked.summary}
                         </div>
