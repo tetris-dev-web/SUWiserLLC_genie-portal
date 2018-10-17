@@ -63,12 +63,12 @@ const ProjectThermo = function( {project,showText,toggleTextShowing} ) {
           />
         <Line
           points={[lineStartX,filledRectStartingY,190,filledRectStartingY]}
-          stroke={'#008080'}
+          stroke={'#00FFFF'}
           strokeWidth={1.5}
           />
         <Line
           points={[daysToCloseLineX,55,daysToCloseLineX,160]}
-          stroke={'#008080'}
+          stroke={'#00FFFF'}
           strokeWidth={1.5}
           />
         <Text
@@ -77,7 +77,7 @@ const ProjectThermo = function( {project,showText,toggleTextShowing} ) {
           text={ current_capital + '\n' + 'raised' }
           fontSize={17}
           fontFamily={'open sans condensed'}
-          fill={'#008080'}
+          fill={'#00FFFF'}
           strokeWidth={1}
           visible={showText}
           />
@@ -107,7 +107,7 @@ const ProjectThermo = function( {project,showText,toggleTextShowing} ) {
           text={ `${daysToClose} days \n till close` }
           fontSize={12}
           fontFamily={'open sans condensed'}
-          fill={'#008080'}
+          fill={'#00FFFF'}
           strokeWidth={1}
           visible={showText}
           />
