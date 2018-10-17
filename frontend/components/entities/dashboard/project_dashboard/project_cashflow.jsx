@@ -30,12 +30,14 @@ class CashFlowGraph extends React.Component {
         .attr('class','axis')
         .attr("transform", "translate(" + 10 + ",0)")
         .call(yAxis);
-    svg.append("text")
+
+    const text = svg.append("text")
         .attr("x", 17)
         .attr("y", 18)
         .style("font-size", "15px")
         .style("color", "white")
         .style("fill", "white")
+        .style("visibility", "hidden")
         .text('Valuation: $' + `${this.props.project.valuation}`);
 
     svg.append("g")
@@ -53,13 +55,26 @@ class CashFlowGraph extends React.Component {
     svg.append("g")
         .attr('class','accumulated-line')
         .append("path")
-        .datum(cashData.accumulatedPoints)
+        .datum(cashData.expectedAccumulatedPoints)
         .attr('d',accumulatedLine);
+
+    svg.append("g")
+        .attr('class','accumulated-line actual')
+        .append("path")
+        .datum(cashData.actualAccumulatedPoints)
+        .attr('d',accumulatedLine);
+
+    svg.on("mouseover", function(d){
+        return text.style("visibility", "visible");
+      })
+      .on("mouseout", function(d){
+          return text.style("visibility", "hidden");
+        });
 
   }
 
 
-  createAxesAndLines( {accumulatedPoints,numQuarters,minExpectedValue,
+  createAxesAndLines( {expectedAccumulatedPoints,actualAccumulatedPoints,numQuarters,minExpectedValue,
                       maxExpectedValue,expectedNetPoints,minAccumulated,
                       maxAccumulated} ) {
     const xAxisScale = d3.scaleLinear()
@@ -84,8 +99,8 @@ class CashFlowGraph extends React.Component {
 
     const yAccumulatedScale = d3.scaleLinear()
                      .domain([minAccumulated,maxAccumulated])
-                     .range([ this.h-22,22 ]).clamp(true);
-              debugger
+                     .range([ this.h-33,33 ]).clamp(true);
+
     const expectedAndActualLine = d3.line()
       .x( d=>{return xAxisScale(d.x);})
       .y( d=>{return yLinesScale(d.y);});
@@ -98,18 +113,20 @@ class CashFlowGraph extends React.Component {
   }
 
   formatCashData() {
+    debugger
     const jsonCashData = JSON.parse(this.props.project.cashflow);
 
     const expectedNet = jsonCashData.ExpectedNet;
     const actualNet = jsonCashData.Actual;
-    const accumulatedData = jsonCashData.AccumulatedGainorLoss;
+    const expectedAccumulatedData = jsonCashData.ExpectedAccumulatedGainorLoss;
+    const actualAccumulatedData = jsonCashData.ActualAccumulatedGainorLoss;
 
     const quarters = Object.keys(expectedNet);
     const valuesForQuarters = Object.values(expectedNet);
     const minExpectedValue = d3.min(valuesForQuarters);
     const maxExpectedValue = d3.max(valuesForQuarters);
-    const minAccumulatedValue = d3.min(Object.values(accumulatedData));
-    const maxAccumulatedValue = d3.max(Object.values(accumulatedData));
+    const minAccumulatedValue = d3.min(Object.values(expectedAccumulatedData));
+    const maxAccumulatedValue = d3.max(Object.values(expectedAccumulatedData));
 
     const expectedNetPoints = Object.values(expectedNet).map( (val,idx) =>{
       return {x:idx,y:val};
@@ -117,14 +134,22 @@ class CashFlowGraph extends React.Component {
     const actualNetPoints = Object.values(actualNet).map( (val,idx) =>{
       return {x:idx,y:val};
     });
-    const accumulatedPoints = Object.values(accumulatedData).map( (val,idx) =>{
+    const expectedAccumulatedPoints = Object.values(expectedAccumulatedData).map( (val,idx) =>{
       return {x:idx,y:val};
     });
-    accumulatedPoints.unshift({x:0,y:(maxAccumulatedValue+minAccumulatedValue)/2});
-    accumulatedPoints.push({x:Object.values(accumulatedData).length,y:(maxAccumulatedValue+minAccumulatedValue)/2});
+    const actualAccumulatedPoints = Object.values(actualAccumulatedData).map( (val,idx) =>{
+      return {x:idx,y:val};
+    });
+    // those fake points are just so the graph has a nice start and end points
+    // that fall on the x axis
+    expectedAccumulatedPoints.unshift({x:0,y:(maxAccumulatedValue+minAccumulatedValue)/2});
+    expectedAccumulatedPoints.push({x:Object.values(expectedAccumulatedData).length,y:(maxAccumulatedValue+minAccumulatedValue)/2});
 
-    const minAccumulated = d3.min(accumulatedPoints,(d)=>{return d.y;});
-    const maxAccumulated = d3.max(accumulatedPoints,(d)=>{return d.y;});
+    actualAccumulatedPoints.unshift({x:0,y:(maxAccumulatedValue+minAccumulatedValue)/2});
+    actualAccumulatedPoints.push({x:Object.values(expectedAccumulatedData).length,y:(maxAccumulatedValue+minAccumulatedValue)/2});
+
+    const minAccumulated = d3.min(expectedAccumulatedPoints,(d)=>{return d.y;});
+    const maxAccumulated = d3.max(expectedAccumulatedPoints,(d)=>{return d.y;});
 
     return {
       numQuarters: quarters.length,
@@ -134,7 +159,8 @@ class CashFlowGraph extends React.Component {
       maxAccumulated: maxAccumulated,
       expectedNetPoints: expectedNetPoints,
       actualNetPoints: actualNetPoints,
-      accumulatedPoints:accumulatedPoints
+      expectedAccumulatedPoints:expectedAccumulatedPoints,
+      actualAccumulatedPoints:actualAccumulatedPoints
     };
   }
   createSVG() {
