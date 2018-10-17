@@ -85,7 +85,7 @@ class CashFlowGraph extends React.Component {
     const yAccumulatedScale = d3.scaleLinear()
                      .domain([minAccumulated,maxAccumulated])
                      .range([ this.h-22,22 ]).clamp(true);
-
+              debugger
     const expectedAndActualLine = d3.line()
       .x( d=>{return xAxisScale(d.x);})
       .y( d=>{return yLinesScale(d.y);});
@@ -108,7 +108,8 @@ class CashFlowGraph extends React.Component {
     const valuesForQuarters = Object.values(expectedNet);
     const minExpectedValue = d3.min(valuesForQuarters);
     const maxExpectedValue = d3.max(valuesForQuarters);
-
+    const minAccumulatedValue = d3.min(Object.values(accumulatedData));
+    const maxAccumulatedValue = d3.max(Object.values(accumulatedData));
 
     const expectedNetPoints = Object.values(expectedNet).map( (val,idx) =>{
       return {x:idx,y:val};
@@ -119,6 +120,9 @@ class CashFlowGraph extends React.Component {
     const accumulatedPoints = Object.values(accumulatedData).map( (val,idx) =>{
       return {x:idx,y:val};
     });
+    accumulatedPoints.unshift({x:0,y:(maxAccumulatedValue+minAccumulatedValue)/2});
+    accumulatedPoints.push({x:Object.values(accumulatedData).length,y:(maxAccumulatedValue+minAccumulatedValue)/2});
+
     const minAccumulated = d3.min(accumulatedPoints,(d)=>{return d.y;});
     const maxAccumulated = d3.max(accumulatedPoints,(d)=>{return d.y;});
 
