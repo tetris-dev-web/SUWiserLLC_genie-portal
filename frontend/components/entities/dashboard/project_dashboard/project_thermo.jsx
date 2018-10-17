@@ -51,14 +51,6 @@ const ProjectThermo = function( {project,showText,toggleTextShowing} ) {
     <Stage width={200} height={200}
       >
       <Layer>
-        <Rect
-          x={ 0 }
-          y={ 0 }
-          width={ 200 }
-          height={ 200 }
-          onMouseEnter={(e)=>{toggleTextShowing();}}
-          onMouseLeave={(e)=>{toggleTextShowing();}}
-          />
         <Line
           points={[15,55,190,55]}
           stroke={'white'}
@@ -160,6 +152,14 @@ const ProjectThermo = function( {project,showText,toggleTextShowing} ) {
             fill="#00FFFF"
             strokeWidth={4}
             opacity={0.5}
+            />
+          <Rect
+            x={ 0 }
+            y={ 0 }
+            width={ 200 }
+            height={ 200 }
+            onMouseEnter={(e)=>{toggleTextShowing();}}
+            onMouseLeave={(e)=>{toggleTextShowing();}}
             />
       </Layer>
     </Stage>
