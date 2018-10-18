@@ -87,6 +87,22 @@ contract Project {
     return capitalRequired;
   }
 
+  function getInfo() public view returns(
+      string, uint256, uint256, uint256, uint256, bool, uint256, uint256
+      ) {
+      address project = projects[id];
+      return (
+          name,
+          valuation,
+          capitalRequired,
+          developerTokens,
+          investorTokens,
+          active,
+          voteCount,
+          closingTime
+      );
+  }
+
   function deposit () public payable {
     require(msg.value != 0);
   }
@@ -101,7 +117,7 @@ contract Project {
     voteCount = voteCount.add(votes);
     closingTime = closingTime.add(43200);
   }
-
+  
   function activate () public {
     active = true;
     log();

@@ -31,8 +31,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
   address[] public projects;
 
+
   //move this to projec class
- function getProjectInfo(uint id) public view returns(
+ /* function getProjectInfo(uint id) public view returns(
      string, uint256, uint256, uint256, uint256, bool, uint256, uint256
      ) {
      address project = projects[id];
@@ -46,21 +47,19 @@ contract GNITokenCrowdsale is TimedCrowdsale {
          Project(project).voteCount(),
          Project(project).closingTime()
      );
- }
+ } */
 
- //maps from address to projectIds. projectIds map to
- mapping(address => mapping(uint256 => uint256)) internal votes;
-
- function votesByProjectandAddress(address _investor, uint256 _projectId) public returns (uint256) {
+//modify this function to look up by investor id
+ /* function votesByProjectandAddress(address _investor, uint256 _projectId) public returns (uint256) {
    uint256 result = votes[_investor][_projectId];
    return result;
- }
+ } */
 
  //should accept a manager address
  function pitchProject(string _name, address _manager, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
-   Token(token).genesis(developerTokens.add(investorTokens));
+   Token(token).genesis(wallet, developerTokens.add(investorTokens));
 
    totalValuation = totalValuation.add(_valuation);
 
@@ -79,14 +78,43 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    return (developerValue.mul(rate), investorValue.mul(rate));
  }
 
- function handleTokenPurchase (uint256 _projectId) public payable {
+
+ function buyTokensAndVote (uint256 _projectVotedForId) public payable {
    //add require statement that makes sure the projet isnt already active
    buyTokens(msg.sender);
-   Project(projects[_projectId]).update(msg.value);
+   update();
+   Project(projects[_projectVotedForId]).update(msg.value);
+ }
+
+ struct Investor {
+   address addr;
+   uint256 id;
+   uint256 voteCredit;
+   //maps from projectId to number of votes for that project
+   mapping(uint256 => uint256) votes;
+ }
+
+ Investor[] public investors;
+ mapping(address => uint256) internal investorIds;
+
+ function updateInvestor () private {
+   if (investorIds[msg.sender] == 0) {
+     Investor storage newInvestor;
+
+     newInvestor.addr = msg.sender;
+
+     uint256 id = investors.length;
+     newInvestor.id = id;
+     investorIds[msg.sender] = id;
+
+     investors.push(newInvestor);
+   }
+
+   updadateInvestorVotes();
  }
 
 
- function updateAccountVotes(uint256 _projectId) internal {
+ function updateInvestorVotes(uint256 _projectId) internal {
    votes[msg.sender][_projectId] = votes[msg.sender][_projectId].add(msg.value);
    emit LogVotes(msg.sender, _projectId, msg.value);
  }
@@ -116,14 +144,32 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     if(canActivate){
       Project project = Project(projects[projectId]);
 
-      Token(token).activateTokens(project.developerTokens_(), project.investorTokens_(), wallet);
-      forwardFunds(project.capitalRequired_());
+      Token(token).activate(wallet, project.developerTokens_());
+      updateInvestors(project.investorTokens_());
+
+      forwardFunds(wallet, project.capitalRequired_());
       project.activate();
     }
   }
 
-  function forwardFunds (uint256 amount) internal {
-    wallet.transfer(amount);
+  function updateInvestors (uint256 tokens, uint256 projectId) private {
+    uint256 activationDivisor = Token.findActivationDivisor(tokens, wallet);
+
+    for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
+      Investor storage investor = investors[i];
+
+      uint256 tokensToActivate = Token(tokens).tokensToActivate(investor.addr, activationDivisor);
+      Tokens(token).activate(investor, tokensToActivate);
+
+      uint256 voteCredit = investor.votes[projectId];
+      investor.votes[projectId] = 0;
+      investor.voteCredit = investor.voteCredut.add(voteCredit);
+    }
+
+  }
+
+  function forwardFunds (address _to, uint256 amount) internal {
+    _to.transfer(amount);
     weiRaised = weiRaised.sub(amount);
   }
 }
