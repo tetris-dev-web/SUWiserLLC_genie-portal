@@ -61,7 +61,7 @@ class ProjectDashboard extends React.Component {
 
     if (this.props.currentUser) {
       const { projectClicked,showText } = this.state;
-
+      debugger
       return (
         <div className="graph-container">
           <ProjectGraph
@@ -78,7 +78,7 @@ class ProjectDashboard extends React.Component {
               className="modal-container">
               <div className="black-close-modal-button close-modal-button"
                 onClick={this.closeModal}>&times;</div>
-              {!projectClicked.summary ? <h1>No data available</h1> :
+              {!projectClicked.summary ? <h1 className="nodata-text">No data available</h1> :
                 <React.Fragment>
                   <div className="ft-modal-header-cont">
                     <div className="ft-modal-header bylaws-header">
