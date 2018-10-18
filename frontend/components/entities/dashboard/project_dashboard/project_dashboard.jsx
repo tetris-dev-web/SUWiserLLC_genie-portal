@@ -60,8 +60,8 @@ class ProjectDashboard extends React.Component {
   render() {
 
     if (this.props.currentUser) {
+
       const { projectClicked,showText } = this.state;
-      debugger
       return (
         <div className="graph-container">
           <ProjectGraph
@@ -101,8 +101,7 @@ class ProjectDashboard extends React.Component {
 
                     <div className="project-description">
                       <div className="project-text">
-                        <div className="project-summary"
-                           >
+                        <div contentEditable={!this.props.isInvestor} className="project-summary">
                           {projectClicked.summary}
                         </div>
                       </div>
