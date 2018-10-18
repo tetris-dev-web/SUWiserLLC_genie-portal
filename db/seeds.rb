@@ -12,6 +12,8 @@
 
 User.destroy_all
 Project.destroy_all
+UserAccount.destroy_all
+AccountType.destroy_all
 
 Genesis_start_date = '01/01/2019'
 Genesis_end_date = '09/01/2019'
@@ -287,6 +289,26 @@ user2 = User.create(
   bylaw_agreement: true,
   tokens: 10
 )
+
+#AccountTypes
+admin = AccountType.create(
+  account_type:"Admin"
+)
+developer = AccountType.create(
+  account_type:"Developer"
+)
+
+#UserAccounts
+user_account1 = UserAccount.create(
+  user_id: user1.id,account_id:admin.id
+)
+user_account2 = UserAccount.create(
+  user_id: user1.id,account_id:developer.id
+)
+user_account3 = UserAccount.create(
+  user_id: user2.id,account_id:developer.id
+)
+
 
 # projects
 
