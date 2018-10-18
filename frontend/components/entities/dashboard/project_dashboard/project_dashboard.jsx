@@ -16,6 +16,7 @@ class ProjectDashboard extends React.Component {
       projectClicked:{},
       showText:false,
       model_link: '',
+      summary: ''
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -28,12 +29,13 @@ class ProjectDashboard extends React.Component {
   }
 
   openModal(projectClicked) {
-    this.setState({ openModal: true, projectClicked });
-    if(projectClicked.model_id.search('-') != -1) {
-      this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id });
-    } else {
-      this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
-    }
+    this.setState({ openModal: true, projectClicked,summary:projectClicked.summary }, ()=>{
+      if(projectClicked.model_id.search('-') != -1) {
+        this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id });
+      } else {
+        this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
+      }
+    });
   }
 
   closeModal() {
@@ -42,20 +44,15 @@ class ProjectDashboard extends React.Component {
 
   componentDidMount() {
     this.props.fetchProjects();
-    // var head = $("#document").contents().find("head");
-    // var css = '<style type="text/css">' +
-    // 'a img{visibility:hidden}; ' +
-    // '</style>';
-    //
-    // $(head).append(css);
-    //
-    // console.log('mounted')
   }
 
   update(e) {
 
   }
 
+  handleKeyPress(e) {
+    alert('PRESSED');
+  }
 
   render() {
 
@@ -101,8 +98,8 @@ class ProjectDashboard extends React.Component {
 
                     <div className="project-description">
                       <div className="project-text">
-                        <div contentEditable={!this.props.isInvestor} className="project-summary">
-                          {projectClicked.summary}
+                        <div onKeyPress={this.handleKeyPress} contentEditable={!this.props.isInvestor} className="project-summary">
+                          {this.state.summary}
                         </div>
                       </div>
                       <div className="bus-plan-download">
