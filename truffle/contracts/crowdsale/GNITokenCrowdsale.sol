@@ -6,6 +6,7 @@ import '../Project.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
+  using TokenActivator for 
   uint256 public totalValuation;
   address public _developer;
 
@@ -47,8 +48,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  function pitchProject(string _name, address _manager, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
-   Token(token).genesis(developer, developerTokens.add(investorTokens));
-
+   GNIToken(inactiveToken_).mint(developer, developerTokens.add(investorTokens));
    totalValuation = totalValuation.add(_valuation);
 
      // Increase crowdsale duation by 90 days
@@ -162,7 +162,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     //iterate through each investor.
     //divide the total active tokens by the number of active investor tokens.
     //divide the total wei by the resulting number to find out how much to wei to transfer
-    uint256 activeTokens = Token.totalActive();
+    uint256 activeTokens = GNIToken(activeToken_).totalSupply_();
     uint256 profits = this.balance.sub(weiRaised);
 
     for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
@@ -174,7 +174,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   }
 
   function grantDividend (address investor, uint256 activeTokens, uint256 profits) private {
-    uint256 investorShare = activeTokens.div(Token.activeOf(investor));
+    uint256 investorShare = activeTokens.div(GNIToken(activeToken_).balanceOf(investor));
     uint256 dividend = profits.div(investorShare);
     investor.transfer(dividend);
   }

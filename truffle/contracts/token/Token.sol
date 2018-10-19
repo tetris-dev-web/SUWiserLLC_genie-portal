@@ -33,18 +33,18 @@ contract Token {
     return investorCount_;
   } */
 
-  function genesis (address _to, uint256 _amount) public returns (bool) {
+  /* function genesis (address _to, uint256 _amount) public returns (bool) {
     GNIToken(inactiveToken_).mint(_to, _amount);
-  }
+  } */
 
-  function terminus (address _from, uint256 _amount) public returns (bool) {
+  /* function terminus (address _from, uint256 _amount) public returns (bool) {
     GNIToken(activeToken_).burnFrom(_from, _amount);
-  }
+  } */
 
-  function processPurchase (address _to, address _from, uint256 tokens) public {
+  /* function processPurchase (address _to, address _from, uint256 tokens) public {
     GNIToken(inactiveToken_).transferFrom(_from, _to, tokens);
     /* addInvestor(beneficiary); */
-  }
+  /* }  */
 
   /* function addInvestor (address investor) private {
     if (investorIds[investor] == 0) {
@@ -82,13 +82,13 @@ contract Token {
     return GNIToken(inactiveToken_).balanceOf(investor).div(activationDivisor);
   }
 
-  function totalActive () public returns (uint256) {
+  /* function totalActive () public returns (uint256) {
     return GNIToken(activeToken_).totalSupply_();
-  }
+  } */
 
-  function activeOf (address investor) public returns (uint256) {
+  /* function activeOf (address investor) public returns (uint256) {
     return GNIToken(activeToken_).balanceOf(investor);
-  }
+  } */
 
   function activate (address _investor, uint256 _amount) external {
     GNIToken(inactiveToken_).burnFrom(_investor, _amount);
