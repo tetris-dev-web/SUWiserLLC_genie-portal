@@ -7,6 +7,8 @@ import '../Project.sol';
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   uint256 public totalValuation;
+  address public _developer;
+  uint256 private profits;
 
 
   constructor
@@ -15,6 +17,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         uint256 _doomsDay,
         uint256 _rate,
         address _wallet,
+        address _developer,
         Token _token
       )
       public
@@ -29,25 +32,12 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 amount
     );
 
+  function addToProfits (uint256 amount) returns (uint256) {
+    profits = profits.add(amount);
+    return profits;
+  }
+
   address[] public projects;
-
-
-  //move this to projec class
- /* function getProjectInfo(uint id) public view returns(
-     string, uint256, uint256, uint256, uint256, bool, uint256, uint256
-     ) {
-     address project = projects[id];
-     return (
-         Project(project).name(),
-         Project(project).valuation(),
-         Project(project).capitalRequired(),
-         Project(project).developerTokens(),
-         Project(project).investorTokens(),
-         Project(project).active(),
-         Project(project).voteCount(),
-         Project(project).closingTime()
-     );
- } */
 
 //modify this function to look up by investor id
  /* function votesByProjectandAddress(address _investor, uint256 _projectId) public returns (uint256) {
@@ -55,11 +45,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    return result;
  } */
 
- //should accept a manager address
  function pitchProject(string _name, address _manager, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
-   Token(token).genesis(wallet, developerTokens.add(investorTokens));
+   Token(token).genesis(developer, developerTokens.add(investorTokens));
 
    totalValuation = totalValuation.add(_valuation);
 
@@ -67,7 +56,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
 
     uint256 _id = projects.length;
-    address project = new Project(_id, _name, _manager, now + 86600 * 240, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng, 0, false);
+    address project = new Project(_id, _name, _manager, wallet, now + 86600 * 240, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng, 0, false);
     projects.push(project);
     Project(project).log();
  }
@@ -78,11 +67,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    return (developerValue.mul(rate), investorValue.mul(rate));
  }
 
-
  function buyTokensAndVote (uint256 _projectVotedForId) public payable {
    //add require statement that makes sure the projet isnt already active
    buyTokens(msg.sender);
-   update();
+   updateInvestor();
    Project(projects[_projectVotedForId]).update(msg.value);
  }
 
@@ -113,18 +101,30 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    updadateInvestorVotes();
  }
 
-
  function updateInvestorVotes(uint256 _projectId) internal {
    votes[msg.sender][_projectId] = votes[msg.sender][_projectId].add(msg.value);
    emit LogVotes(msg.sender, _projectId, msg.value);
  }
 
-
   function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
     doomsDay = doomsDay.add(_days.mul(1728000));
   }
 
-  function projectToActivateDetails() public view returns (uint256, bool) {
+  function activateProject() public {
+    (uint256 projectId, bool canActivate) = projectToActivateDetails();
+
+    if(canActivate){
+      Project project = Project(projects[projectId]);
+
+      Token(token).activate(developer, project.developerTokens_());
+      updateInvestors(project.investorTokens_());
+
+      forwardFunds(developer, project.capitalRequired_());
+      project.activate();
+    }
+  }
+
+  function projectToActivateDetails() private returns (uint256, bool) {
     uint256 leadingProjectId;
     bool candidateFound = false;
 
@@ -138,22 +138,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     return (leadingProjectId, candidateFound && Project(projects[leadingProjectId]).capitalRequired_() <= weiRaised);
   }
 
-  function activateProject() public {
-    (uint256 projectId, bool canActivate) = projectToActivateDetails();
-
-    if(canActivate){
-      Project project = Project(projects[projectId]);
-
-      Token(token).activate(wallet, project.developerTokens_());
-      updateInvestors(project.investorTokens_());
-
-      forwardFunds(wallet, project.capitalRequired_());
-      project.activate();
-    }
-  }
-
   function updateInvestors (uint256 tokens, uint256 projectId) private {
-    uint256 activationDivisor = Token.findActivationDivisor(tokens, wallet);
+    uint256 activationDivisor = Token.findActivationDivisor(tokens, developer);
 
     for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
       Investor storage investor = investors[i];
@@ -165,14 +151,39 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       investor.votes[projectId] = 0;
       investor.voteCredit = investor.voteCredut.add(voteCredit);
     }
-
   }
 
   function forwardFunds (address _to, uint256 amount) internal {
     _to.transfer(amount);
     weiRaised = weiRaised.sub(amount);
   }
+
+  function distributeDividends () external onlyDeveloper {
+    //store the total amount of wei in a variable
+    //iterate through each investor.
+    //divide the total active tokens by the number of active investor tokens.
+    //divide the total wei by the resulting number to find out how much to wei to transfer
+    uint256 totalActiveTokens = Token.totalActive();
+
+    for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
+      Investor storage investor = investors[i];
+      grantDividend(investor.addr, totalActiveTokens);
+    }
+
+    grantDividend(developer, totalActiveTokens);
+
+    profits = 0;
+  }
+
+  function grantDividend (address investor, uint256 totalActiveTokens) private {
+    uint256 investorShare = totalActiveTokens.div(Token.activeOf(investor));
+    uint256 dividend = profits.div(investorShare);
+
+    investor.addr.transfer(dividend);
+  }
 }
+
+
 
 
 

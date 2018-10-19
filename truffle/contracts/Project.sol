@@ -8,6 +8,7 @@ contract Project {
   uint256 public id; //this should be public?
   string public name;
   address private manager;
+  address private escrow;
   uint256 public closingTime;
   uint256 public valuation;
   uint256 public capitalRequired;
@@ -22,6 +23,7 @@ contract Project {
     uint256 _id,
     string _name,
     address _manager,
+    address _escrow,
     uint256 _closingTime,
     uint256 _valuation,
     uint256 _capitalRequired,
@@ -35,6 +37,7 @@ contract Project {
       id = _id;
       name = _name;
       manager = _manager;
+      escrow = _escrow;
       closingTime = _closingTime;
       valuation = _valuation;
       capitalRequired = _capitalRequired;
@@ -117,7 +120,7 @@ contract Project {
     voteCount = voteCount.add(votes);
     closingTime = closingTime.add(43200);
   }
-  
+
   function activate () public {
     active = true;
     log();

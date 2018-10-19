@@ -5,10 +5,11 @@ import "../token/ERC20/ERC20.sol";
 import "../token/ERC20/SafeERC20.sol";
 import '../utility/SafeMath.sol';
 
+//maybe this should be a library?
 contract Token {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
-  uint256 internal investorCount_;
+  /* uint256 internal investorCount_; */
   GNIToken public inactiveToken_;
   GNIToken public activeToken_;
 
@@ -79,6 +80,14 @@ contract Token {
 
   function tokensToActivate (address investor, uint256 activationDivisor) external returns (uint256) {
     return GNIToken(inactiveToken_).balanceOf(investor).div(activationDivisor);
+  }
+
+  function totalActive () public returns (uint256) {
+    return GNIToken(activeToken_).totalSupply_();
+  }
+
+  function activeOf (address investor) public returns (uint256) {
+    return GNIToken(activeToken_).balanceOf(investor);
   }
 
   function activate (address _investor, uint256 _amount) external {
