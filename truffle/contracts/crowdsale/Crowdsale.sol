@@ -22,8 +22,6 @@ contract Crowdsale {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
 
-  // The token being sold
-  /* ERC20 public token; */
   GNIToken public inactiveToken_;
   GNIToken public activeToken_;
 
@@ -56,13 +54,13 @@ contract Crowdsale {
    * @param _developer Address where collected funds will be forwarded to
    * @param _token Address of the token being sold
    */
-  constructor(uint256 _rate, address _developer) public {
+  constructor(uint256 _rate, address _developer, GNIToken _token) public {
     require(_rate > 0);
     require(_developer != address(0));
 
     rate = _rate;
     developer = _developer;
-    inactiveToken_ = new GNIToken();
+    inactiveToken_ = _token;
     activeToken_ = new GNIToken();
   }
 

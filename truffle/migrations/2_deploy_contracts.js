@@ -1,4 +1,5 @@
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
+const GNIToken = artifacts.require("GNIToken");
 
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
@@ -6,6 +7,9 @@ module.exports = function (deployer, network, accounts) {
     // const cap = 100;  //dollars
 
     return deployer
+        .then(() => {
+          return deployer.deploy(GNIToken);
+        })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {
@@ -22,7 +26,8 @@ module.exports = function (deployer, network, accounts) {
                 openingTime,
                 doomsDay,
                 rate,
-                developer
+                developer,
+                GNIToken.address
             );
         })
         // .then(() => { // giving the crowdsale ownership over the token

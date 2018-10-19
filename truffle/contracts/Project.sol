@@ -24,29 +24,26 @@ contract Project {
     string _name,
     address _manager,
     address _crowdsale,
-    uint256 _closingTime,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
     uint256 _investorTokens,
     string _lat,
-    string _lng,
-    uint256 _voteCount,
-    bool _active
+    string _lng
     ) public {
       id = _id;
       name = _name;
       manager = _manager;
       crowdsale = _crowdsale;
-      closingTime = _closingTime;
       valuation = _valuation;
       capitalRequired = _capitalRequired;
       developerTokens = _developerTokens;
       investorTokens = _investorTokens;
       lat = _lat;
       lng = _lng;
-      voteCount = _voteCount;
-      active = _active;
+      voteCount = 0;
+      active = false;
+      closingTime = now + 86600 * 240;
   }
 
   event LogProject (

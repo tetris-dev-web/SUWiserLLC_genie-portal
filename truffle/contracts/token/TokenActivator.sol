@@ -2,7 +2,7 @@ pragma solidity ^0.4.24;
 import './GNIToken.sol';
 
 library TokenActivator {
-  function findActivationDivisor (
+  /* function findActivationDivisor (
     GNIToken token,
     uint256 amount,
     address developer
@@ -34,5 +34,5 @@ library TokenActivator {
   {
     inactiveToken.burnFrom(_investor, _amount);
     activeToken.mint(_investor, _amount);
-  }
+  } */
 }
