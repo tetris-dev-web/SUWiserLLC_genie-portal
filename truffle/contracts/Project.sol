@@ -93,7 +93,6 @@ contract Project {
   function getInfo() public view returns(
       string, uint256, uint256, uint256, uint256, bool, uint256, uint256
       ) {
-      address project = projects[id];
       return (
           name,
           valuation,

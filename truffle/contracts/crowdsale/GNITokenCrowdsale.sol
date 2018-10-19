@@ -7,7 +7,6 @@ import '../Project.sol';
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   uint256 public totalValuation;
-  address public _developer;
 
   constructor
       (
