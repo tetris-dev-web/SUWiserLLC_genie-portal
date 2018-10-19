@@ -1,23 +1,23 @@
-pragma solidity 0.4.24;
+/* pragma solidity 0.4.24;
 
 import '../token/GNIToken.sol';
 import "../token/ERC20/ERC20.sol";
 import "../token/ERC20/SafeERC20.sol";
-import '../utility/SafeMath.sol';
+import '../utility/SafeMath.sol'; */
 
 //maybe this should be a library?
-contract Token {
+/* contract Token {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
   /* uint256 internal investorCount_; */
-  GNIToken public inactiveToken_;
-  GNIToken public activeToken_;
+  /* GNIToken public inactiveToken_;
+  GNIToken public activeToken_; */
 
-  constructor () public {
+  /* constructor () public {
       inactiveToken_ = new GNIToken();
       activeToken_ = new GNIToken();
       investorCount_ = 0;
-  }
+  } */
 
   /* mapping(uint256 => address) internal investors;
   mapping(address => uint256) internal investorIds; */
@@ -73,7 +73,7 @@ contract Token {
   } */
 
   //make all of the methods secure by making it owned by the crowdsale and add an only owner modifier.
-  function findActivationDivisor (uint256 tokens, address wallet) external returns (uint256) {
+  /* function findActivationDivisor (uint256 tokens, address wallet) external returns (uint256) {
     uint256 supply = GNIToken(inactiveToken_).totalSupply().sub(GNIToken(inactiveToken_).balanceOf(wallet));
     return supply.div(tokens);
   }
@@ -90,8 +90,8 @@ contract Token {
     return GNIToken(activeToken_).balanceOf(investor);
   } */
 
-  function activate (address _investor, uint256 _amount) external {
+  /* function activate (address _investor, uint256 _amount) external {
     GNIToken(inactiveToken_).burnFrom(_investor, _amount);
     GNIToken(activeToken_).mint(_investor, _amount);
-  }
-}
+  } */
+/* }  */

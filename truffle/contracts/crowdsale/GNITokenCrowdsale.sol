@@ -6,7 +6,6 @@ import '../Project.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
-  using TokenActivator for 
   uint256 public totalValuation;
   address public _developer;
 
@@ -115,7 +114,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     if(canActivate){
       Project project = Project(projects[projectId]);
 
-      Token(token).activate(developer, project.developerTokens_());
+      GNIToken(inactiveToken_).burnFrom(developer, _amount);
+      GNIToken(activeToken_).mint(developer, _amount);
       updateInvestors(project.investorTokens_());
 
       forwardFunds(developer, project.capitalRequired_());
@@ -138,13 +138,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   }
 
   function updateInvestors (uint256 tokens, uint256 projectId) private {
-    uint256 activationDivisor = Token.findActivationDivisor(tokens, developer);
+    uint256 supply = GNIToken(inactiveToken_).totalSupply().sub(GNIToken(inactiveToken_).balanceOf(developer));
+    uint256 activationDivisor = supply.div(tokens);
 
     for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
       Investor storage investor = investors[i];
 
-      uint256 tokensToActivate = Token(tokens).tokensToActivate(investor.addr, activationDivisor);
-      Tokens(token).activate(investor, tokensToActivate);
+      uint256 tokensToActivate = GNIToken(inactiveToken_).balanceOf(investor).div(activationDivisor);
+      GNIToken(inactiveToken_).burnFrom(_investor, _amount);
+      GNIToken(activeToken_).mint(_investor, _amount);
 
       uint256 voteCredit = investor.votes[projectId];
       investor.votes[projectId] = 0;
