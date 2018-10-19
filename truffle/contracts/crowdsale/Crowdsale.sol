@@ -21,7 +21,6 @@ import '../token/GNIToken.sol';
 contract Crowdsale {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
-  using TokenActivator for GNIToken;
 
   // The token being sold
   /* ERC20 public token; */

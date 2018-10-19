@@ -1,7 +1,6 @@
 pragma solidity 0.4.24;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
-import '../token/Token.sol';
 import '../Project.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
@@ -26,11 +25,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 projectId,
     uint256 amount
     );
-
-  function addToProfits (uint256 amount) returns (uint256) {
-    profits = profits.add(amount);
-    return profits;
-  }
 
   address[] public projects;
 
@@ -155,7 +149,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     weiRaised = weiRaised.sub(amount);
   }
 
-  function distributeDividends () external onlyDeveloper {
+  //we want this to be called on intervals
+  function distributeDividends () external {
     //store the total amount of wei in a variable
     //iterate through each investor.
     //divide the total active tokens by the number of active investor tokens.
