@@ -8,7 +8,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   uint256 public totalValuation;
   address public _developer;
-  uint256 private profits;
 
 
   constructor
@@ -56,7 +55,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
 
     uint256 _id = projects.length;
-    address project = new Project(_id, _name, _manager, wallet, now + 86600 * 240, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng, 0, false);
+    address project = new Project(_id, _name, _manager, this, now + 86600 * 240, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng, 0, false);
     projects.push(project);
     Project(project).log();
  }
@@ -163,23 +162,21 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     //iterate through each investor.
     //divide the total active tokens by the number of active investor tokens.
     //divide the total wei by the resulting number to find out how much to wei to transfer
-    uint256 totalActiveTokens = Token.totalActive();
+    uint256 activeTokens = Token.totalActive();
+    uint256 profits = this.balance.sub(weiRaised);
 
     for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
       Investor storage investor = investors[i];
-      grantDividend(investor.addr, totalActiveTokens);
+      grantDividend(investor.addr, activeTokens, profits);
     }
 
-    grantDividend(developer, totalActiveTokens);
-
-    profits = 0;
+    grantDividend(developer, activeTokens, profits);
   }
 
-  function grantDividend (address investor, uint256 totalActiveTokens) private {
-    uint256 investorShare = totalActiveTokens.div(Token.activeOf(investor));
+  function grantDividend (address investor, uint256 activeTokens, uint256 profits) private {
+    uint256 investorShare = activeTokens.div(Token.activeOf(investor));
     uint256 dividend = profits.div(investorShare);
-
-    investor.addr.transfer(dividend);
+    investor.transfer(dividend);
   }
 }
 

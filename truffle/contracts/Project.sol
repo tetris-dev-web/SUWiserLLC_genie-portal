@@ -8,7 +8,7 @@ contract Project {
   uint256 public id; //this should be public?
   string public name;
   address private manager;
-  address private escrow;
+  address private crowdsale;
   uint256 public closingTime;
   uint256 public valuation;
   uint256 public capitalRequired;
@@ -23,7 +23,7 @@ contract Project {
     uint256 _id,
     string _name,
     address _manager,
-    address _escrow,
+    address _crowdsale,
     uint256 _closingTime,
     uint256 _valuation,
     uint256 _capitalRequired,
@@ -37,7 +37,7 @@ contract Project {
       id = _id;
       name = _name;
       manager = _manager;
-      escrow = _escrow;
+      crowdsale = _crowdsale;
       closingTime = _closingTime;
       valuation = _valuation;
       capitalRequired = _capitalRequired;
@@ -106,13 +106,19 @@ contract Project {
       );
   }
 
-  function deposit () public payable {
+  /* function deposit () public payable {
     require(msg.value != 0);
   }
 
   function forwardToEscrow (uint256 _amount, address escrow) public {
     require(msg.sender == manager);
-    escrow.transfer(_amount);
+    .transfer(_amount);
+  } */
+
+  function deposit () public payable {
+    require(msg.value != 0);
+    require(msg.sender == manager);
+    crowdsale.transfer(msg.value);
   }
 
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
