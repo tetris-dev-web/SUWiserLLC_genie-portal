@@ -9,7 +9,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   uint256 public totalValuation;
   address public _developer;
 
-
   constructor
       (
         uint256 _openingTime,
@@ -102,11 +101,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    emit LogVotes(msg.sender, _projectId, msg.value);
  }
 
-  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
+ function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
     doomsDay = doomsDay.add(_days.mul(1728000));
-  }
+ }
 
-  function activateProject() public {
+ function activateProject() public {
     (uint256 projectId, bool canActivate) = projectToActivateDetails();
 
     if(canActivate){
@@ -179,23 +178,3 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     investor.transfer(dividend);
   }
 }
-
-
-
-
-
-/* function updateProjectVotedFor(uint256 _projectId) {
-  updateVoteCount(_projectId);
-  extendProjectClosingTime(_projectId);
-} */
-/* Project storage _projectVotedFor = projects[_projectId]; */
-
-/* function updateVoteCount(uint256 _projectId) internal {
-uint256 count = Project(projects[_projectId]).voteCount();
-Project(projects[_projectId]).voteCount() = count.add(msg.value);
-}
-
-function extendProjectClosingTime(uint256 _projectId) internal {
-uint256 time = Project(projects[_projectId]).closingTime();
-Project(projects[_projectId]).closingTime() = time.add(43200);
-} */
