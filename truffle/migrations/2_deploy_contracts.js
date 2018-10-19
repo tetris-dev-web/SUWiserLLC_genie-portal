@@ -1,5 +1,3 @@
-const Escrow = artifacts.require("Escrow");
-const Token = artifacts.require("Token");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 
 module.exports = function (deployer, network, accounts) {
@@ -10,9 +8,6 @@ module.exports = function (deployer, network, accounts) {
     return deployer
         .then(() => { // deploy token
             return deployer.deploy(Token);
-        })
-        .then(()=>{
-          return deployer.deploy(Escrow, Token.address);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {

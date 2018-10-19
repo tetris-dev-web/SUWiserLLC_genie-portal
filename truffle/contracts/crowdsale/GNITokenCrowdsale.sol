@@ -16,11 +16,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         uint256 _doomsDay,
         uint256 _rate,
         address _wallet,
-        address _developer,
-        Token _token
+        address _developerxw
       )
       public
-      Crowdsale(_rate, _wallet, _token)
+      Crowdsale(_rate, _wallet)
       TimedCrowdsale(_openingTime, _doomsDay) {
           totalValuation = 0;
   }

@@ -57,14 +57,12 @@ contract Crowdsale {
    * @param _developer Address where collected funds will be forwarded to
    * @param _token Address of the token being sold
    */
-  constructor(uint256 _rate, address _developer, Token _token) public {
+  constructor(uint256 _rate, address _developer) public {
     require(_rate > 0);
     require(_developer != address(0));
-    require(_token != address(0));
 
     rate = _rate;
     developer = _developer;
-    token = _token;
     inactiveToken_ = new GNIToken();
     activeToken_ = new GNIToken();
   }
