@@ -87,7 +87,7 @@ contract Project {
     return capitalRequired;
   }
 
-  function getInfo() public view returns(
+  /* function getInfo() public view returns(
       string, uint256, uint256, uint256, uint256, bool, uint256, uint256
       ) {
       return (
@@ -100,15 +100,6 @@ contract Project {
           voteCount,
           closingTime
       );
-  }
-
-  /* function deposit () public payable {
-    require(msg.value != 0);
-  }
-
-  function forwardToEscrow (uint256 _amount, address escrow) public {
-    require(msg.sender == manager);
-    .transfer(_amount);
   } */
 
   function deposit () public payable {

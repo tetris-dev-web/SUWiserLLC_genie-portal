@@ -1,13 +1,13 @@
 pragma solidity ^0.4.24;
 
-import "./MintableToken.sol";
+import "./GNIToken.sol";
 
 
 /**
  * @title Capped token
  * @dev Mintable token with a token cap.
  */
-contract CappedToken is MintableToken {
+contract CappedToken is GNIToken {
 
   uint256 public cap;
 

@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 import '../Project.sol';
-import '../token/GNIToken.sol';
+import '../token/ERC20/GNIToken.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
@@ -30,12 +30,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
   address[] public projects;
 
-//modify this function to look up by investor id
- /* function votesByProjectandAddress(address _investor, uint256 _projectId) public returns (uint256) {
-   uint256 result = votes[_investor][_projectId];
-   return result;
- } */
-
  function pitchProject(string _name, address _manager, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
@@ -46,12 +40,13 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
 
     uint256 _id = projects.length;
-    address project = new Project(_id, _name, _manager, this, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
-    projects.push(project);
-    Project(project).log();
+    //the following line causes a migration error...
+    address projectAddr = new Project(_id, _name, _manager, address(this), _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
+    projects.push(projectAddr);
+    Project(projectAddr).log();
  }
 
- function tokensToIssue (uint256 valuation, uint256 investorValue) private returns (uint256, uint256) {
+ function tokensToIssue (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
    uint256 developerValue = valuation.sub(investorValue);
 
    return (developerValue.mul(rate), investorValue.mul(rate));

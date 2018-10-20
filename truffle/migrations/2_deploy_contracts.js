@@ -1,10 +1,9 @@
-const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const GNIToken = artifacts.require("GNIToken");
+const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
     const developer = accounts[1];
-    // const cap = 100;  //dollars
 
     return deployer
         .then(() => {
