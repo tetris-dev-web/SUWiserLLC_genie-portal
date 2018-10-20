@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 import "../token/ERC20/ERC20.sol";
 import '../utility/SafeMath.sol';
 import "../token/ERC20/SafeERC20.sol";
-import '../token/Token.sol';
+import '../token/ERC20/GNIToken.sol';
 
 
 /**
@@ -22,12 +22,10 @@ contract Crowdsale {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
 
-  // The token being sold
-  /* ERC20 public token; */
-  Token public token;
-  // Address where funds are collected
-  address public wallet;
+  GNIToken public inactiveToken_;
+  GNIToken public activeToken_;
 
+  address public developer;
   // How many token units a buyer gets per wei.
   // The rate is the conversion between wei and the smallest and indivisible token unit.
   // So, if you are using a rate of 1 with a DetailedERC20 token with 3 decimals called TOK
@@ -53,17 +51,17 @@ contract Crowdsale {
 
   /**
    * @param _rate Number of token units a buyer gets per wei
-   * @param _wallet Address where collected funds will be forwarded to
+   * @param _developer Address where collected funds will be forwarded to
    * @param _token Address of the token being sold
    */
-  constructor(uint256 _rate, address _wallet, Token _token) public {
+  constructor(uint256 _rate, address _developer, GNIToken _token) public {
     require(_rate > 0);
-    require(_wallet != address(0));
-    require(_token != address(0));
+    require(_developer != address(0));
 
     rate = _rate;
-    wallet = _wallet;
-    token = _token;
+    developer = _developer;
+    inactiveToken_ = _token;
+    activeToken_ = new GNIToken();
   }
 
   // -----------------------------------------
@@ -91,7 +89,7 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    Token(token).processPurchase(_beneficiary, tokens);
+    GNIToken(inactiveToken_).transferFrom(developer, _beneficiary, tokens);
 
     emit TokenPurchase(
       msg.sender,
@@ -211,6 +209,6 @@ contract Crowdsale {
    RESOLUTION: remove this function call completely.
     */
   /* function _forwardFunds() internal {
-      wallet.transfer(msg.value);
+      developer.transfer(msg.value);
   } */
 }
