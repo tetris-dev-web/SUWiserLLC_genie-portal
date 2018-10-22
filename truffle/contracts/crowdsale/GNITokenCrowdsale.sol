@@ -28,7 +28,24 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 amount
     );
 
+
   address[] public projects;
+
+  function getInfo(uint256 id) public view returns(
+    string, uint256, uint256, uint256, uint256, bool, uint256, uint256
+    ) {
+      address projectAddr = projects[id];
+      return (
+        Project(projectAddr).name(),
+        Project(projectAddr).valuation(),
+        Project(projectAddr).capitalRequired(),
+        Project(projectAddr).developerTokens(),
+        Project(projectAddr).investorTokens(),
+        Project(projectAddr).active(),
+        Project(projectAddr).voteCount(),
+        Project(projectAddr).closingTime()
+        );
+      }
 
  function pitchProject(string _name, address _manager, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
