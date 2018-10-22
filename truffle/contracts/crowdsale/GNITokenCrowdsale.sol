@@ -89,6 +89,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  Investor[] public investors;
  mapping(address => uint256) internal investorIds;
 
+ function investor (uint256 id) public view returns(address) {
+   return investors[id].addr;
+ }
+
  function updateInvestor (uint256 _projectId) private {
    if (investorIds[msg.sender] == 0) {
      Investor memory newInvestor;
@@ -148,17 +152,16 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 supply = GNIToken(inactiveToken_).totalSupply().sub(GNIToken(inactiveToken_).balanceOf(developer));
     uint256 activationDivisor = supply.div(tokens);
 
-    for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
-      Investor memory investor = investors[i];
+    for (uint256 i = 0; i < investors.length; i = i.add(1)) {
 
-      /* uint256 investorBalance = GNIToken(inactiveToken_).balanceOf(investors[i].addr); */
-      /* uint256 tokensToActivate = investorBalance.div(activationDivisor); */
-      /* GNIToken(inactiveToken_).burnFrom(investors[i].addr, tokensToActivate);
+      uint256 investorBalance = GNIToken(inactiveToken_).balanceOf(investors[i].addr);
+      uint256 tokensToActivate = investorBalance.div(activationDivisor);
+      GNIToken(inactiveToken_).burnFrom(investors[i].addr, tokensToActivate);
       GNIToken(activeToken_).mint(investors[i].addr, tokensToActivate);
 
       uint256 voteCredit = investors[i].votes[projectId];
       investors[i].votes[projectId] = 0;
-      investors[i].voteCredit = investors[i].voteCredit.add(voteCredit); */
+      investors[i].voteCredit = investors[i].voteCredit.add(voteCredit);
     }
   }
 
