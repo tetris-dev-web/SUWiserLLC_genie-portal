@@ -105,7 +105,9 @@ contract Project {
   function deposit () public payable {
     require(msg.value != 0);
     require(msg.sender == manager);
-    crowdsale.transfer(msg.value);
+    uint256 weiAmount = msg.value;
+    crowdsale.transfer(weiAmount);
+    /* crowdsale.transfer(msg.value); */
   }
 
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate

@@ -72,7 +72,7 @@ contract Crowdsale {
    * @dev fallback function ***DO NOT OVERRIDE***
    */
   function () external payable {
-    buyTokens(msg.sender);
+    /* buyTokens(msg.sender); */
   }
   /**
    * @dev low level token purchase ***DO NOT OVERRIDE***
