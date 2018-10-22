@@ -12,6 +12,12 @@
  *   },
  */
 
+var HDWalletProvider = require("truffle-hdwallet-provider");
+
+var infura_apikey = "32d629913620458ea1049490da4906b1";
+var mnemonic = "leaf oak make armed infant basic cup music beauty police urban double";
+
+
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
@@ -21,8 +27,14 @@ module.exports = {
       host: "localhost",
       port: 8545,
       network_id: "*" // Match any network id
+    },
+    ropsten: {
+      provider: new HDWalletProvider(mnemonic, "https://ropsten.infura.io/"+infura_apikey),
+      network_id: 3
     }
   }
 
-
 };
+
+
+//4f879311fa96bf6cce1ec675c47a53845b1b8e28 - public address

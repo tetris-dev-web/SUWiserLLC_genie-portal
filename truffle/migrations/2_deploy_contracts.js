@@ -4,8 +4,8 @@ const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
-    const wallet = accounts[1];
-    const developerWallet = accounts[0];
+    const wallet = '0x20ab4Bd40A0eb70ccd1E60c2bF00fACFe37C7Cf6' //accounts[1];
+    const developerWallet = '0x20ab4Bd40A0eb70ccd1E60c2bF00fACFe37C7Cf6' //accounts[0];
     const cap = 100;  //dollars
 
     return deployer
