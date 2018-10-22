@@ -1,5 +1,6 @@
 const GNIToken = artifacts.require("GNIToken");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
+const MyStringStore = artifacts.require("MyStringStore");
 
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
@@ -8,6 +9,9 @@ module.exports = function (deployer, network, accounts) {
     return deployer
         .then(() => {
           return deployer.deploy(GNIToken);
+        })
+        .then(() => {
+          return deployer.deploy(MyStringStore);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
