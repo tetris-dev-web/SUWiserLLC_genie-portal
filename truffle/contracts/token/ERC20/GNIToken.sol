@@ -32,6 +32,7 @@ contract GNIToken is StandardToken, StandardBurnableToken, Ownable {
     require(msg.sender == owner);
     _;
   }
+  /* hasMintPermission */
 
   /**
    * @dev Function to mint tokens
@@ -44,7 +45,6 @@ contract GNIToken is StandardToken, StandardBurnableToken, Ownable {
     uint256 _amount
   )
     public
-    hasMintPermission
     canMint
     returns (bool)
   {
