@@ -1,19 +1,13 @@
-const MyStringStore = artifacts.require("MyStringStore");
 const GNIToken = artifacts.require("GNIToken");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
-    const wallet = '0x20ab4Bd40A0eb70ccd1E60c2bF00fACFe37C7Cf6' //accounts[1];
-    const developerWallet = '0x20ab4Bd40A0eb70ccd1E60c2bF00fACFe37C7Cf6' //accounts[0];
-    const cap = 100;  //dollars
+    const developer = accounts[1];
 
     return deployer
-        .then(() => { // deploy token
-            return deployer.deploy(GNIToken);
-        })
-        .then(()=>{
-            return deployer.deploy(MyStringStore);
+        .then(() => {
+          return deployer.deploy(GNIToken);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
@@ -25,27 +19,25 @@ module.exports = function (deployer, network, accounts) {
             })
         })
         .then((openingTime) => { // deploy the crowdsale (token functionality)
-            const closingTime = openingTime + 86400 * 240; // 240 days
+            const doomsDay = openingTime + 86400 * 240; // 240 days
             return deployer.deploy(
                 GNITokenCrowdsale,
                 openingTime,
-                closingTime,
+                doomsDay,
                 rate,
-                wallet,
-                developerWallet,
-                cap,
+                developer,
                 GNIToken.address
             );
         })
-        .then(() => { // giving the crowdsale ownership over the token
-            return GNITokenCrowdsale.deployed().then(crowdsale => {
-                crowdsale.token().then(tokenAddress => {
-                    const GNITokenInstance = GNIToken.at(tokenAddress);
-                    GNITokenInstance.transferOwnership(crowdsale.address).then(output => {
-                    })
-                })
-            }).catch(err => {
-                console.log(err);
-            })
-        });
+        // .then(() => { // giving the crowdsale ownership over the token
+        //     return GNITokenCrowdsale.deployed().then(crowdsale => {
+        //         crowdsale.token().then(tokenAddress => {
+        //             const GNITokenInstance = GNIToken.at(tokenAddress);
+        //             GNITokenInstance.transferOwnership(crowdsale.address).then(output => {
+        //             })
+        //         })
+        //     }).catch(err => {
+        //         console.log(err);
+        //     })
+        // });
 };

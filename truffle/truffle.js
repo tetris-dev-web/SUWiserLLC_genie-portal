@@ -26,6 +26,7 @@ module.exports = {
     development: {
       host: "localhost",
       port: 8545,
+<<<<<<< HEAD
       network_id: "*" // Match any network id
     },
     ropsten: {
@@ -34,6 +35,18 @@ module.exports = {
     }
   }
 
+=======
+      network_id: "*", // Match any network id
+      gamLimit: 10000000
+    }
+  },
+  solc: {
+    optimizer: {
+      enabled: true,
+      runs: 200
+    }
+  },
+>>>>>>> 4770afa40f9e53847d05de1e6c48ff7f4ceaa589
 };
 
 
