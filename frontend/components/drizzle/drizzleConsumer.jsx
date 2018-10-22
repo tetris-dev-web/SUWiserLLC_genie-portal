@@ -7,6 +7,8 @@ export default ({component: Component, props, actions}) => (
   <DrizzleContext.Consumer>
     {drizzleContext => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
+
+
       if (!initialized) {
         return "Loading...";
       }

@@ -19,11 +19,15 @@
 
 ## Database creation
 
-- `bundle exec rake db:setup`
+- `rails db:setup`
 
 ## Database initialization
 
-- `bundle exec rake db:migrate`   
+- `rails db:migrate`   
+
+## Database seeding
+
+- `rails db:seed`
 
 ## How to run the test suite
 
@@ -34,7 +38,7 @@
 
 ## Truffle
 - start ganache server: `ganache-cli -b 3`
-- start a new truffle project: `truffle init`
+- in a separate terminal cd into the truffle file `cd truffle`
 - compile contracts: `truffle compile`
 - migrate contracts: `truffle migrate`
 
