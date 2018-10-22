@@ -22,31 +22,14 @@ module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
 
-    networks: {
+  networks: {
     development: {
       host: "localhost",
       port: 8545,
-<<<<<<< HEAD
-      network_id: "*" // Match any network id
-    },
-    ropsten: {
-      provider: new HDWalletProvider(mnemonic, "https://ropsten.infura.io/"+infura_apikey),
-      network_id: 3
-    }
-  }
-
-=======
       network_id: "*", // Match any network id
       gamLimit: 10000000
     }
-  },
-  solc: {
-    optimizer: {
-      enabled: true,
-      runs: 200
-    }
-  },
->>>>>>> 4770afa40f9e53847d05de1e6c48ff7f4ceaa589
+  }
 };
 
 
