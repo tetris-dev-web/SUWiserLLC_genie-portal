@@ -1,6 +1,7 @@
 .project-modal-grid{
-  padding: 9px;
   display: grid;
+  // background: black;
+  padding-right: 10px;
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -9,10 +10,13 @@
   grid-template-areas:
      "f f f f f f f f f f f f"
      "t t t t g g g g d d d d"
-     "m m m m m m m m m o o o";
-  grid-gap: 4px;
-}
+     "m m m m m m m m m m m m";
+  // grid-row-gap: 25px;
 
+}
+.nodata-text {
+  color: black;
+}
 .iframe{
   grid-area: f;
   background: white;
@@ -32,6 +36,7 @@
   justify-content: center;
   align-items: center;
   height: 300px;
+  background-color: black;
 }
 .project-description{
   grid-area: g;
@@ -39,18 +44,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  background-color: black;
 }
 .cashflow-graph{
   grid-area: d;
   height: 300px;
+  background-color: black;
 }
 .project-map{
   grid-area: m;
-  height: 300px;
-}
-.project-overlays{
-  grid-area: o;
-  background: green;
   height: 300px;
 }
 .leaflet-container{
@@ -59,23 +61,31 @@
 }
 .fa-file-contract{
   align-self: flex-start;
-  color: #223562;
+  color: #00FFFF;
+  // opacity: 0.6;
   font-size: 19px;
+  margin-right: 10px;
+  span {
+    margin-left: 7px;
+  }
 }
 .bus-plan-download{
   align-self: baseline;
   height: 20%;
   display: flex;
   margin-left: 15px;
+  margin: auto;
 }
 .project-text{
-  height: 70%;
+  height: 60%;
+  padding: 6px;
+  margin-top: 6px;
   overflow:auto;
 }
 #cash-graph {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  background-color: black;
   align-items: center;
   height: 100%;
 }
@@ -95,8 +105,74 @@
   // font-size: 11px;
 }
 
-.value-line path {
+.expected-line path {
   fill: none;
   stroke: white;
-  stroke-width: 2.5px;
+  stroke-dasharray: 7 4;
+  shape-rendering: crispEdges;
+  stroke-width: 1.5px;
+}
+.actual-line path {
+  fill: none;
+  stroke: #00FFFF;
+  shape-rendering: crispEdges;
+  stroke-width: 1.5px;
+}
+.accumulated-line path {
+  fill: grey;
+  opacity: 0.4;
+  // stroke: #00FFFF;
+  shape-rendering: crispEdges;
+  stroke-width: 1.5px;
+}
+.accumulated-line.actual path {
+  fill: #00FFFF;
+  opacity: 0.4;
+  // stroke: #00D4FC;
+  shape-rendering: crispEdges;
+  stroke-width: 1.5px;
+}
+
+.modal-container{
+
+  ::-webkit-scrollbar{
+    background: transparent;
+    width: 17px;
+    border: none;
+  }
+  ::-webkit-track{
+    border: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 4px;
+    border: none;
+  }
+
+}
+.title-wrapper{
+  height: 65px;
+  display: flex;
+  align-items: center;
+}
+.text-hidden{
+  display: none;
+}
+.project-modal-grid{
+
+  .project-text:hover{
+
+    .text-hidden{
+      display: block;
+      margin:0;
+    }
+  }
+
+}
+#cash-graph:hover{
+  .text-hidden {
+    display: block;
+    margin: 0;
+  }
 }
