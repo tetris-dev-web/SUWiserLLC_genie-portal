@@ -47,6 +47,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         );
       }
 
+//after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
  function pitchProject(string _name, address _manager, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
@@ -69,6 +70,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    return (developerValue.mul(rate), investorValue.mul(rate));
  }
 
+ //before this, the investor has to approve this contract to spend the amount of tokens they'll be buying on their behalf. this is needed to activate tokens later.
  function buyTokensAndVote (uint256 _projectVotedForId) public payable {
    //add require statement that makes sure the projet isnt already active
    buyTokens(msg.sender);
@@ -147,15 +149,16 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 activationDivisor = supply.div(tokens);
 
     for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
-      Investor storage investor = investors[i];
+      Investor memory investor = investors[i];
 
-      uint256 tokensToActivate = GNIToken(inactiveToken_).balanceOf(investor.addr).div(activationDivisor);
-      GNIToken(inactiveToken_).burnFrom(investor.addr, tokensToActivate);
-      GNIToken(activeToken_).mint(investor.addr, tokensToActivate);
+      /* uint256 investorBalance = GNIToken(inactiveToken_).balanceOf(investors[i].addr); */
+      /* uint256 tokensToActivate = investorBalance.div(activationDivisor); */
+      /* GNIToken(inactiveToken_).burnFrom(investors[i].addr, tokensToActivate);
+      GNIToken(activeToken_).mint(investors[i].addr, tokensToActivate);
 
-      uint256 voteCredit = investor.votes[projectId];
-      investor.votes[projectId] = 0;
-      investor.voteCredit = investor.voteCredit.add(voteCredit);
+      uint256 voteCredit = investors[i].votes[projectId];
+      investors[i].votes[projectId] = 0;
+      investors[i].voteCredit = investors[i].voteCredit.add(voteCredit); */
     }
   }
 
