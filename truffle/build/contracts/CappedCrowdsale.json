@@ -148,9 +148,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\nimport '../utility/SafeMath.sol';\nimport \"./Crowdsale.sol\";\n\n\n/**\n * @title CappedCrowdsale\n * @dev Crowdsale with a limit for total contributions.\n */\ncontract CappedCrowdsale is Crowdsale {\n  using SafeMath for uint256;\n\n  uint256 public cap;\n\n  /**\n   * @dev Constructor, takes maximum amount of wei accepted in the crowdsale.\n   * @param _cap Max amount of wei to be contributed\n   */\n  constructor(uint256 _cap) public {\n    cap = _cap;\n  }\n\n  /**\n   * @dev Checks whether the cap has been reached.\n   * @return Whether the cap was reached\n   */\n  function capReached() public view returns (bool) {\n    return weiRaised >= cap;\n  }\n\n  /**\n   * @dev Extend parent behavior requiring purchase to respect the funding cap.\n   * @param _beneficiary Token purchaser\n   * @param _weiAmount Amount of wei contributed\n   */\n  function _preValidatePurchase(\n    address _beneficiary,\n    uint256 _weiAmount\n  )\n    internal\n  {\n    super._preValidatePurchase(_beneficiary, _weiAmount);\n    require(weiRaised.add(_weiAmount) <= cap);\n  }\n\n}\n",
-  "sourcePath": "/Users/raquibhossain/Desktop/genus/genie-portal/truffle/contracts/crowdsale/CappedCrowdsale.sol",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/CappedCrowdsale.sol",
   "ast": {
-    "absolutePath": "/Users/raquibhossain/Desktop/genus/genie-portal/truffle/contracts/crowdsale/CappedCrowdsale.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/CappedCrowdsale.sol",
     "exportedSymbols": {
       "CappedCrowdsale": [
         112
@@ -171,23 +171,23 @@
         "src": "0:24:1"
       },
       {
-        "absolutePath": "/Users/raquibhossain/Desktop/genus/genie-portal/truffle/contracts/utility/SafeMath.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/SafeMath.sol",
         "file": "../utility/SafeMath.sol",
         "id": 59,
         "nodeType": "ImportDirective",
         "scope": 113,
-        "sourceUnit": 2666,
+        "sourceUnit": 2464,
         "src": "26:33:1",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/raquibhossain/Desktop/genus/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
         "file": "./Crowdsale.sol",
         "id": 60,
         "nodeType": "ImportDirective",
         "scope": 113,
-        "sourceUnit": 338,
+        "sourceUnit": 341,
         "src": "60:25:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -201,10 +201,10 @@
               "id": 61,
               "name": "Crowdsale",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 337,
+              "referencedDeclaration": 340,
               "src": "206:9:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Crowdsale_$337",
+                "typeIdentifier": "t_contract$_Crowdsale_$340",
                 "typeString": "contract Crowdsale"
               }
             },
@@ -214,7 +214,7 @@
           }
         ],
         "contractDependencies": [
-          337
+          340
         ],
         "contractKind": "contract",
         "documentation": "@title CappedCrowdsale\n@dev Crowdsale with a limit for total contributions.",
@@ -222,7 +222,7 @@
         "id": 112,
         "linearizedBaseContracts": [
           112,
-          337
+          340
         ],
         "name": "CappedCrowdsale",
         "nodeType": "ContractDefinition",
@@ -234,10 +234,10 @@
               "id": 63,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2665,
+              "referencedDeclaration": 2463,
               "src": "226:8:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$2665",
+                "typeIdentifier": "t_contract$_SafeMath_$2463",
                 "typeString": "library SafeMath"
               }
             },
@@ -555,7 +555,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2706,
+                        "referencedDeclaration": 2504,
                         "src": "953:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_CappedCrowdsale_$112",
@@ -569,7 +569,7 @@
                       "lValueRequested": false,
                       "memberName": "_preValidatePurchase",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 268,
+                      "referencedDeclaration": 271,
                       "src": "953:26:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -653,7 +653,7 @@
                             "lValueRequested": false,
                             "memberName": "add",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 2664,
+                            "referencedDeclaration": 2462,
                             "src": "1019:13:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -707,10 +707,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2683,
-                        2684
+                        2481,
+                        2482
                       ],
-                      "referencedDeclaration": 2683,
+                      "referencedDeclaration": 2481,
                       "src": "1011:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -814,7 +814,7 @@
             "scope": 112,
             "src": "848:209:1",
             "stateMutability": "nonpayable",
-            "superFunction": 268,
+            "superFunction": 271,
             "visibility": "internal"
           }
         ],
@@ -825,7 +825,7 @@
     "src": "0:1061:1"
   },
   "legacyAST": {
-    "absolutePath": "/Users/raquibhossain/Desktop/genus/genie-portal/truffle/contracts/crowdsale/CappedCrowdsale.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/CappedCrowdsale.sol",
     "exportedSymbols": {
       "CappedCrowdsale": [
         112
@@ -846,23 +846,23 @@
         "src": "0:24:1"
       },
       {
-        "absolutePath": "/Users/raquibhossain/Desktop/genus/genie-portal/truffle/contracts/utility/SafeMath.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/SafeMath.sol",
         "file": "../utility/SafeMath.sol",
         "id": 59,
         "nodeType": "ImportDirective",
         "scope": 113,
-        "sourceUnit": 2666,
+        "sourceUnit": 2464,
         "src": "26:33:1",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/raquibhossain/Desktop/genus/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
         "file": "./Crowdsale.sol",
         "id": 60,
         "nodeType": "ImportDirective",
         "scope": 113,
-        "sourceUnit": 338,
+        "sourceUnit": 341,
         "src": "60:25:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -876,10 +876,10 @@
               "id": 61,
               "name": "Crowdsale",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 337,
+              "referencedDeclaration": 340,
               "src": "206:9:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Crowdsale_$337",
+                "typeIdentifier": "t_contract$_Crowdsale_$340",
                 "typeString": "contract Crowdsale"
               }
             },
@@ -889,7 +889,7 @@
           }
         ],
         "contractDependencies": [
-          337
+          340
         ],
         "contractKind": "contract",
         "documentation": "@title CappedCrowdsale\n@dev Crowdsale with a limit for total contributions.",
@@ -897,7 +897,7 @@
         "id": 112,
         "linearizedBaseContracts": [
           112,
-          337
+          340
         ],
         "name": "CappedCrowdsale",
         "nodeType": "ContractDefinition",
@@ -909,10 +909,10 @@
               "id": 63,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2665,
+              "referencedDeclaration": 2463,
               "src": "226:8:1",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$2665",
+                "typeIdentifier": "t_contract$_SafeMath_$2463",
                 "typeString": "library SafeMath"
               }
             },
@@ -1230,7 +1230,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2706,
+                        "referencedDeclaration": 2504,
                         "src": "953:5:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_CappedCrowdsale_$112",
@@ -1244,7 +1244,7 @@
                       "lValueRequested": false,
                       "memberName": "_preValidatePurchase",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 268,
+                      "referencedDeclaration": 271,
                       "src": "953:26:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
@@ -1328,7 +1328,7 @@
                             "lValueRequested": false,
                             "memberName": "add",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 2664,
+                            "referencedDeclaration": 2462,
                             "src": "1019:13:1",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_uint256_$bound_to$_t_uint256_$",
@@ -1382,10 +1382,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2683,
-                        2684
+                        2481,
+                        2482
                       ],
-                      "referencedDeclaration": 2683,
+                      "referencedDeclaration": 2481,
                       "src": "1011:7:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1489,7 +1489,7 @@
             "scope": 112,
             "src": "848:209:1",
             "stateMutability": "nonpayable",
-            "superFunction": 268,
+            "superFunction": 271,
             "visibility": "internal"
           }
         ],
@@ -1505,5 +1505,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-10-24T19:14:22.401Z"
+  "updatedAt": "2018-10-06T18:42:21.760Z"
 }

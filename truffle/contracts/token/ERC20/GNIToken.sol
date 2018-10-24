@@ -1,6 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "./StandardToken.sol";
+import './StandardBurnableToken.sol';
 import "../../utility/Ownable.sol";
 
 
@@ -9,7 +10,7 @@ import "../../utility/Ownable.sol";
  * @dev Simple ERC20 Token example, with mintable token creation
  * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/MintableToken.sol
  */
-contract MintableToken is StandardToken, Ownable {
+contract GNIToken is StandardToken, StandardBurnableToken, Ownable {
   event Mint(address indexed to, uint256 amount);
   event MintFinished();
 
@@ -31,6 +32,7 @@ contract MintableToken is StandardToken, Ownable {
     require(msg.sender == owner);
     _;
   }
+  /* hasMintPermission */
 
   /**
    * @dev Function to mint tokens
@@ -43,7 +45,6 @@ contract MintableToken is StandardToken, Ownable {
     uint256 _amount
   )
     public
-    hasMintPermission
     canMint
     returns (bool)
   {

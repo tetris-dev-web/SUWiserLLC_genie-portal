@@ -7,6 +7,7 @@ export default ({component: Component, props, actions}) => (
   <DrizzleContext.Consumer>
     {drizzleContext => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
+<<<<<<< HEAD
       // debugger window.web3 === undefined || this.props.web3.status === 'failed'
       // if (window.web3 === undefined) {
       //   return(
@@ -17,6 +18,9 @@ export default ({component: Component, props, actions}) => (
       //     </div>
       //   );
       // }
+=======
+
+>>>>>>> a369a916a52f4a344302892be936624e2ecfad5f
 
       if (!initialized) {
         return "Loading...";

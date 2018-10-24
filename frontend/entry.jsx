@@ -23,7 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
     store = configureStore();
   }
 
-  const chainOptions = {contracts: [MyStringStore,GNIToken,GNITokenCrowdsale]} ;
+  const chainOptions = {
+    // web3: {
+    //   block: false,
+    //   fallback: {
+    //     type: 'ws',
+    //     url: 'ws://127.0.0.1:8545',
+    //   },
+    // },
+    contracts: [MyStringStore,GNIToken,GNITokenCrowdsale],
+    events: {},
+  } ;
   const drizzleStore = generateStore(chainOptions);
   const drizzle = new Drizzle(chainOptions, drizzleStore);
 

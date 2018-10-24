@@ -16,10 +16,10 @@ contract StandardBurnableToken is BurnableToken, StandardToken {
    * @param _value uint256 The amount of token to be burned
    */
   function burnFrom(address _from, uint256 _value) public {
-    require(_value <= allowed[_from][msg.sender]);
+    /* require(_value <= allowed[_from][msg.sender]); */
     // Should https://github.com/OpenZeppelin/zeppelin-solidity/issues/707 be accepted,
     // this function needs to emit an event with the updated approval.
-    allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
+    /* allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value); */
     _burn(_from, _value);
   }
 }

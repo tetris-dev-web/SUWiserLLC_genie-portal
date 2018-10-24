@@ -59,7 +59,7 @@ class UserDropdown extends React.Component {
     const drizzle = this.props.drizzle;
     const address = drizzle.contracts.GNIToken.address;
     const abi = GNITokenData.abi;
-    debugger
+    
     const web3 = drizzle.web3;
 
     const GNIToken = new web3.eth.Contract(abi, address);

@@ -14,15 +14,22 @@
 const HDWalletProvider = require("truffle-hdwallet-provider");
 require('dotenv').config();
 
+var HDWalletProvider = require("truffle-hdwallet-provider");
+
+var infura_apikey = "32d629913620458ea1049490da4906b1";
+var mnemonic = "leaf oak make armed infant basic cup music beauty police urban double";
+
+
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
 
-    networks: {
+  networks: {
     development: {
       host: "localhost",
       port: 8545,
       network_id: "*", // Match any network id
+<<<<<<< HEAD
       gas: 4600000
     },
     ropsten: {
@@ -32,3 +39,12 @@ module.exports = {
       }
   }
 };
+=======
+      gamLimit: 10000000
+    }
+  }
+};
+
+
+//4f879311fa96bf6cce1ec675c47a53845b1b8e28 - public address
+>>>>>>> a369a916a52f4a344302892be936624e2ecfad5f

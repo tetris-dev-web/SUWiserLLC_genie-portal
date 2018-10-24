@@ -1,189 +1,192 @@
 pragma solidity 0.4.24;
-
-import '../token/GNIToken.sol';
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
+import '../Project.sol';
+import '../token/ERC20/GNIToken.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
-    using SafeMath for uint256;
-    uint256 public totalValuation;
+  using SafeMath for uint256;
+  uint256 public totalValuation;
 
-    constructor
-        (
-          uint256 _openingTime,
-          uint256 _doomsDay,
-          uint256 _rate,
-          address _wallet,
-          MintableToken _token
-        )
-        public
-        Crowdsale(_rate, _wallet, _token)
-        TimedCrowdsale(_openingTime, _doomsDay) {
-            totalValuation = 0;
-        }
+  constructor
+      (
+        uint256 _openingTime,
+        uint256 _doomsDay,
+        uint256 _rate,
+        address _developer,
+        GNIToken _token
+      )
+      public
+      Crowdsale(_rate, _developer, _token)
+      TimedCrowdsale(_openingTime, _doomsDay) {
+          totalValuation = 0;
+  }
 
-        struct Project {
-            string name;
-            uint256 closingTime;
-            uint256 valuation;
-            uint256 capitalRequired;
-            uint256 tokensIssued;
-            string lat;
-            string lng;
-            uint256 voteCount;
-            bool capitalReached;
-            bool active;
-        }
+  event LogVotes (
+    address voter,
+    uint256 projectId,
+    uint256 amount
+    );
 
-        event LogProject (
-            uint id,
-            string name,
-            uint256 valuation,
-            uint256 capitalRequired,
-            uint256 tokensIssued,
-            string lat,
-            string lng,
-            uint256 voteCount,
-            bool capitalReached,
-            bool active
+
+  address[] public projects;
+
+  function getInfo(uint256 id) public view returns(
+    string, uint256, uint256, uint256, uint256, bool, uint256, uint256
+    ) {
+      address projectAddr = projects[id];
+      return (
+        Project(projectAddr).name(),
+        Project(projectAddr).valuation(),
+        Project(projectAddr).capitalRequired(),
+        Project(projectAddr).developerTokens(),
+        Project(projectAddr).investorTokens(),
+        Project(projectAddr).active(),
+        Project(projectAddr).voteCount(),
+        Project(projectAddr).closingTime()
         );
-
-
-        /* mapping(string => Project) private projects; */
-        Project[] public projects;
-
-
-         function getProjectInfo(uint id) public view returns(
-             string, uint256, uint256, uint256, bool, uint256, uint256
-
-         ) {
-             Project memory project = projects[id];
-             return (
-                 project.name,
-                 project.valuation,
-                 project.capitalRequired,
-                 project.tokensIssued,
-                 project.active,
-                 project.voteCount,
-                 project.closingTime
-             );
-         }
-
-         //change _valuation to projectvaluation
-         function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
-           uint256 tokensToIssue = _valuation.div(rate);
-
-           //tokens go to the this contract
-           //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
-           GNIToken(token).mint(this, tokensToIssue);
-
-             totalValuation = totalValuation.add(_valuation);
-
-             // Increase crowdsale duation by 90 days
-             _extendDoomsDay(90);
-
-             // Create project information
-             /* Project memory newProject = Project({
-                 name: _name,
-                 closingTime: now + 86600 * 240,
-                 valuation: _valuation,
-                 capitalRequired: capitalRequired,
-                 lat: _lat,
-                 lng: _lng,
-                 capitalReached: false,
-                 active: false,
-                 voteCount: 0
-             }); */
-
-             // Save project information
-             /* projects[_name] = newProject; */
-
-             uint id = projects.push(Project(_name, now + 86600 * 240, _valuation, capitalRequired, tokensToIssue, _lat,_lng, 0, false, false)) - 1;
-
-             // log the creation of the new project
-             emit LogProject(id, _name, _valuation, capitalRequired, tokensToIssue, _lat, _lng, 0, false, false);
-         }
-
-         /* function issueTokensBasedOnPrice(uint256 valuation) private {
-           uint256 tokensToIssue = valuation.div(rate);
-
-           //tokens go to the this contract
-           //we need to do this because transfer expects to take tokens from msg.sender, which is this contract
-           GNIToken(token).mint(this, tokensToIssue);
-         } */
-
-         //sender is always the beneficiary
-         //sender becomes this contract in BasicToken
-         //funds from msg.value are allocated to this contract since this function is a payable.
-         //later, we can assign funds to the wallet (which is the developer wallet). No second wallet is needed because the contract serves as an escrow wallet.
-         function handleTokenPurchase (uint256 _projectId) public payable {
-           //add require statement that makes sure the projet isnt already active
-           buyTokens(msg.sender);
-           updateProjectVotedFor(_projectId);
-         }
-
-         function forwardFundsToDeveloper (uint256 amount) internal {
-           wallet.transfer(amount);
-         }
-
-         function updateProjectVotedFor(uint256 _projectId) {
-           updateVoteCount(_projectId);
-           extendProjectClosingTime(_projectId);
-         }
-
-         /* Project storage _projectVotedFor = projects[_projectId]; */
-
-        function updateVoteCount(uint256 _projectId) internal {
-          projects[_projectId].voteCount = projects[_projectId].voteCount.add(1);
-        }
-
-        function extendProjectClosingTime(uint256 _projectId) internal {
-          projects[_projectId].closingTime = projects[_projectId].closingTime.add(43200);
-        }
-
-        function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
-          doomsDay = doomsDay.add(_days.mul(1728000));
-        }
-
-
-
-    function projectToActivateDetails() public view returns (uint256, bool) {
-      uint256 leadingProjectId;
-      bool candidateFound = false;
-
-      for(uint256 i = 0; i < projects.length; i = i.add(1)) {
-
-          if (!projects[i].active &&
-              projects[i].voteCount > 0 &&
-              projects[i].closingTime > now &&
-              (projects[i].voteCount >= projects[leadingProjectId].voteCount || projects[leadingProjectId].active)
-             )
-          {
-            leadingProjectId = i;
-            candidateFound = true;
-          }
       }
 
-      return (leadingProjectId, candidateFound && projects[leadingProjectId].capitalRequired <= weiRaised);
-    }
+//after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
+ function pitchProject(string _name, address _manager, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
+   (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
-    //we can keep track of whether or not a project is activatable on the frontend. If so, this function will be called. No need to check for this on blockchain
-    function activateProject() public {
-        (uint256 projectId, bool canActivate) = projectToActivateDetails();
+   GNIToken(inactiveToken_).mint(developer, developerTokens.add(investorTokens));
+   totalValuation = totalValuation.add(_valuation);
 
-        if(canActivate){
-            Project storage project = projects[projectId];
+     // Increase crowdsale duation by 90 days
+   _extendDoomsDay(90);
 
-            GNIToken(token).activateTokens(project.tokensIssued);
+    uint256 _id = projects.length;
+    //the following line causes a migration error...
+    address projectAddr = new Project(_id, _name, _manager, address(this), _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
+    projects.push(projectAddr);
+    Project(projectAddr).log();
+ }
 
-            forwardFundsToDeveloper(project.capitalRequired);
+ function tokensToIssue (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
+   uint256 developerValue = valuation.sub(investorValue);
 
-            weiRaised = weiRaised.sub(project.capitalRequired);
+   return (developerValue.mul(rate), investorValue.mul(rate));
+ }
 
-            project.active = true;
+ //before this, the investor has to approve this contract to spend the amount of tokens they'll be buying on their behalf. this is needed to activate tokens later.
+ function buyTokensAndVote (uint256 _projectVotedForId) public payable {
+   //add require statement that makes sure the projet isnt already active
+   buyTokens(msg.sender);
+   updateInvestor(_projectVotedForId);
+   Project(projects[_projectVotedForId]).update(msg.value);
+ }
 
-            emit LogProject(projectId, project.name, project.valuation, project.capitalRequired, project.tokensIssued, project.lat, project.lng, project.voteCount, true, true);
+ struct Investor {
+   address addr;
+   uint256 id;
+   uint256 voteCredit;
+   //maps from projectId to number of votes for that project
+   mapping(uint256 => uint256) votes;
+ }
+
+ Investor[] public investors;
+ mapping(address => uint256) internal investorIds;
+
+ function updateInvestor (uint256 _projectId) private {
+   if (investorIds[msg.sender] == 0) {
+     Investor memory newInvestor;
+
+     newInvestor.addr = msg.sender;
+
+     uint256 id = investors.length;
+     newInvestor.id = id;
+     investorIds[msg.sender] = id;
+
+     investors.push(newInvestor);
+   }
+
+   updateInvestorVotes(_projectId);
+ }
+
+ function updateInvestorVotes(uint256 _projectId) internal {
+   investors[investorIds[msg.sender]].votes[_projectId] = investors[investorIds[msg.sender]].votes[_projectId].add(msg.value);
+   emit LogVotes(msg.sender, _projectId, msg.value);
+ }
+
+ function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
+    doomsDay = doomsDay.add(_days.mul(1728000));
+ }
+
+ function activateProject() public {
+    (uint256 projectId, bool canActivate) = projectToActivateDetails();
+
+    if(canActivate){
+      Project project = Project(projects[projectId]);
+
+      uint256 developerTokens = project.developerTokens_();
+      GNIToken(inactiveToken_).burnFrom(developer, developerTokens);
+      GNIToken(activeToken_).mint(developer, developerTokens);
+      updateInvestors(project.investorTokens_(), projectId);
+
+      forwardFunds(developer, project.capitalRequired_());
+      project.activate();
     }
   }
 
+  function projectToActivateDetails() private returns (uint256, bool) {
+    uint256 leadingProjectId;
+    bool candidateFound = false;
+
+    for(uint256 i = 0; i < projects.length; i = i.add(1)) {
+      if (Project(projects[i]).beats(projects[leadingProjectId])) {
+        leadingProjectId = i;
+        candidateFound = true;
+      }
+    }
+
+    return (leadingProjectId, candidateFound && Project(projects[leadingProjectId]).capitalRequired_() <= weiRaised);
+  }
+
+  function updateInvestors (uint256 tokens, uint256 projectId) private {
+    uint256 supply = GNIToken(inactiveToken_).totalSupply().sub(GNIToken(inactiveToken_).balanceOf(developer));
+    uint256 activationDivisor = supply.div(tokens);
+
+    for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
+      Investor memory investor = investors[i];
+
+      /* uint256 investorBalance = GNIToken(inactiveToken_).balanceOf(investors[i].addr); */
+      /* uint256 tokensToActivate = investorBalance.div(activationDivisor); */
+      /* GNIToken(inactiveToken_).burnFrom(investors[i].addr, tokensToActivate);
+      GNIToken(activeToken_).mint(investors[i].addr, tokensToActivate);
+
+      uint256 voteCredit = investors[i].votes[projectId];
+      investors[i].votes[projectId] = 0;
+      investors[i].voteCredit = investors[i].voteCredit.add(voteCredit); */
+    }
+  }
+
+  function forwardFunds (address _to, uint256 amount) internal {
+    _to.transfer(amount);
+    weiRaised = weiRaised.sub(amount);
+  }
+
+  //we want this to be called on intervals
+  function distributeDividends () external {
+    //store the total amount of wei in a variable
+    //iterate through each investor.
+    //divide the total active tokens by the number of active investor tokens.
+    //divide the total wei by the resulting number to find out how much to wei to transfer
+    uint256 activeTokens = GNIToken(activeToken_).totalSupply();
+    uint256 profits = address(this).balance.sub(weiRaised);
+
+    for (uint256 i = 0; i <= investors.length; i = i.add(1)) {
+      Investor storage investor = investors[i];
+      grantDividend(investor.addr, activeTokens, profits);
+    }
+
+    grantDividend(developer, activeTokens, profits);
+  }
+
+  function grantDividend (address investor, uint256 activeTokens, uint256 profits) private {
+    uint256 investorShare = activeTokens.div(GNIToken(activeToken_).balanceOf(investor));
+    uint256 dividend = profits.div(investorShare);
+    investor.transfer(dividend);
+  }
 }
