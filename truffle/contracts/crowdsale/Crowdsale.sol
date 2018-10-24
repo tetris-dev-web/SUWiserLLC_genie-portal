@@ -81,7 +81,7 @@ contract Crowdsale {
   function buyTokens(address _beneficiary) public payable {
 
     uint256 weiAmount = msg.value;
-    /* _preValidatePurchase(_beneficiary, weiAmount); */
+    _preValidatePurchase(_beneficiary, weiAmount);
 
     // calculate token amount to be created
     uint256 tokens = _getTokenAmount(weiAmount);
@@ -116,7 +116,7 @@ contract Crowdsale {
    * @param _beneficiary Address performing the token purchase
    * @param _weiAmount Value in wei involved in the purchase
    */
-  /* function _preValidatePurchase(
+  function _preValidatePurchase(
     address _beneficiary,
     uint256 _weiAmount
   )
@@ -124,7 +124,7 @@ contract Crowdsale {
   {
     require(_beneficiary != address(0));
     require(_weiAmount != 0);
-  } */
+  }
 
   /**
    * @dev Validation of an executed purchase. Observe state and use revert statements to undo rollback when valid conditions are not met.
