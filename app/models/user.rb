@@ -35,4 +35,13 @@ class User < ApplicationRecord
   has_many :projects,
     foreign_key: :creator_id,
     class_name: :Project
+
+  has_many :account_types,
+    foreign_key: :user_id,
+    class_name: "UserAccount"
+
+  has_many :accounts,
+    through: :account_types,
+    source: :account
+
 end

@@ -21,12 +21,12 @@ class ProjectMap extends React.Component {
       <Map
           center={position}
           zoom={this.state.zoom}
-          dragging={false}
+          dragging={true}
           scrollWheelZoom={false}
       >
         <TileLayer
-          attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution="Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL."
+          url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
         />
         <Marker position={position}>
           <Popup>
@@ -37,5 +37,10 @@ class ProjectMap extends React.Component {
     );
   }
 }
+
+// <TileLayer
+//   attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+//   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+// />
 
 export default ProjectMap;

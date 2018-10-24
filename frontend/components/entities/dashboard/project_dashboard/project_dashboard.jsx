@@ -1,7 +1,7 @@
 import React from 'react';
 import ProjectGraph from './project_graph';
 import Modal from 'react-modal';
-import ModalStyle from '../../footer/modal_style';
+import ModalStyle from './modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
 import CashFlowGraph from './project_cashflow';
@@ -13,14 +13,29 @@ class ProjectDashboard extends React.Component {
 
     this.state = {
       openModal: false,
-      projectClicked:{}
+      projectClicked:{},
+      showText:false,
+      model_link: '',
+      summary: ''
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.toggleTextShowing = this.toggleTextShowing.bind(this);
+    this.update = this.update.bind(this);
+  }
+
+  toggleTextShowing() {
+    this.setState({ showText:!this.state.showText });
   }
 
   openModal(projectClicked) {
-    this.setState({ openModal: true, projectClicked });
+    this.setState({ openModal: true, projectClicked,summary:projectClicked.summary }, ()=>{
+      if(projectClicked.model_id.search('-') != -1) {
+        this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id });
+      } else {
+        this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
+      }
+    });
   }
 
   closeModal() {
@@ -29,22 +44,21 @@ class ProjectDashboard extends React.Component {
 
   componentDidMount() {
     this.props.fetchProjects();
-    // var head = $("#document").contents().find("head");
-    // var css = '<style type="text/css">' +
-    // 'a img{visibility:hidden}; ' +
-    // '</style>';
-    //
-    // $(head).append(css);
-    //
-    // console.log('mounted')
   }
 
+  update(e) {
+
+  }
+
+  handleKeyPress(e) {
+    alert('PRESSED');
+  }
 
   render() {
 
     if (this.props.currentUser) {
-      const projectClicked = this.state.projectClicked;
-      const model_link = "https://poly.google.com/view/" + projectClicked.model_id + "/embed";
+
+      const { projectClicked,showText } = this.state;
       return (
         <div className="graph-container">
           <ProjectGraph
@@ -61,7 +75,7 @@ class ProjectDashboard extends React.Component {
               className="modal-container">
               <div className="black-close-modal-button close-modal-button"
                 onClick={this.closeModal}>&times;</div>
-              {!projectClicked.summary ? <h1>No data available</h1> :
+              {!projectClicked.summary ? <h1 className="nodata-text">No data available</h1> :
                 <React.Fragment>
                   <div className="ft-modal-header-cont">
                     <div className="ft-modal-header bylaws-header">
@@ -71,26 +85,27 @@ class ProjectDashboard extends React.Component {
                   <div className="project-modal-grid">
                     {!projectClicked.model_id ? <div></div> :
                       <div className="iframe">
-                        <iframe id="iframe" src={ `${model_link}` } frameBorder="0" allowvr="yes" allow="vr; xr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
+                        <iframe id="iframe" src={ `${this.state.model_link}` } frameBorder="0" allowvr="yes" allow="vr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
                       </div>
                     }
                     <div className="temp">
                       <div className="thermo-canvas-container">
-                        <ProjectThermo project={projectClicked} />
+                        <ProjectThermo project={projectClicked}
+                                        showText={showText}
+                                        toggleTextShowing={this.toggleTextShowing}/>
                       </div>
                     </div>
 
                     <div className="project-description">
                       <div className="project-text">
-                        <h1>{projectClicked.title}</h1>
-                        <div className="project-summary">
-                          {projectClicked.summary}
+                        <div onKeyPress={this.handleKeyPress} contentEditable={!this.props.isInvestor} className="project-summary">
+                          {this.state.summary}
                         </div>
                       </div>
                       <div className="bus-plan-download">
                         <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
                           <i className="fas fa-file-contract">
-                            business plan
+                            <span>business plan</span>
                           </i>
                         </a>
                       </div>
@@ -103,7 +118,6 @@ class ProjectDashboard extends React.Component {
                     <div className="project-map">
                       <ProjectMap projectClicked={ projectClicked } />
                     </div>
-                    <div className="project-overlays">overlays</div>
                   </div>
                 </React.Fragment>
               }

@@ -7,8 +7,15 @@ import ProjectGraph from './project_graph';
 import ProjectDashboard from './project_dashboard';
 
 const mapStateToProps = state => {
+  const currUser = state.session.currentUser;
+  let isInvestor = false;
+  currUser.accounts.forEach( account => {
+    if(account.account_type === "Investor") isInvestor = true;
+  });
+
   return {
-    currentUser: state.session.currentUser,
+    currentUser: currUser,
+    isInvestor: isInvestor,
     projects: state.entities.projects
   };
 };
