@@ -18,6 +18,8 @@ contract Dividend {
     investorList = InvestorList(investorList_);
   }
 
+  function () external payable {}
+
   function distributeDividends () external {
     //store the total amount of wei in a variable
     //iterate through each investor.

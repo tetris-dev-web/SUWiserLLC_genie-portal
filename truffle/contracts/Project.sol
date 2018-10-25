@@ -7,8 +7,8 @@ contract Project {
   //we'll make read methods when necessary
   uint256 public id; //this should be public?
   string public name;
-  address developer;
-  address private dividends;
+  address public developer;
+  address public dividends;
   uint256 public closingTime;
   uint256 public valuation;
   uint256 public capitalRequired;
@@ -101,7 +101,7 @@ contract Project {
       );
   } */
   mapping(address => bool) managers;
-  
+
   modifier authorize () {
     require(managers[msg.sender] == true || msg.sender == developer);
     _;
@@ -109,7 +109,6 @@ contract Project {
 
   function deposit () public payable authorize {
     require(msg.value != 0);
-    require(managers[msg.sender] == true || msg.sender == developer);
     uint256 weiAmount = msg.value;
     dividends.transfer(weiAmount);
     /* crowdsale.transfer(msg.value); */
@@ -117,13 +116,11 @@ contract Project {
 
   //will make this only developer
   function addManager (address manager) public authorize {
-    require(msg.sender == developer || msg.sender == developer);
     managers[manager] = true;
   }
 
   //will make this only accessible to managers
   function setDividendWallet (address wallet) public authorize {
-    require(managers[msg.sender] == true || msg.sender == developer);
     dividends = wallet;
   }
 
