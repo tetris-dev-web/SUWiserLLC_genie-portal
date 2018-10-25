@@ -5,11 +5,12 @@ import '../utility/SharedStructs.sol';
 import '../Project.sol';
 import '../token/ERC20/ActiveToken.sol';
 import '../token/InactiveToken.sol';
+import '../InvestorList.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   uint256 public totalValuation;
-  SharedStructs.Investor Investor;
+  InvestorList private investorList;
 
   constructor
       (
@@ -17,19 +18,21 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         uint256 _doomsDay,
         uint256 _rate,
         address _developer,
-        ActiveToken _token
+        ActiveToken _token,
+        InvestorList _investorList
       )
       public
       Crowdsale(_rate, _developer, _token)
       TimedCrowdsale(_openingTime, _doomsDay) {
-          totalValuation = 0;
+        investorList = InvestorList(_investorList);
+        totalValuation = 0;
   }
 
-  event LogVotes (
+  /* event LogVotes (
     address voter,
     uint256 projectId,
     uint256 amount
-    );
+    ); */
 
 
   address[] public projects;
@@ -78,20 +81,20 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  function buyTokensAndVote (uint256 _projectVotedForId) public payable {
    //add require statement that makes sure the projet isnt already active
    buyTokens(msg.sender);
-   updateInvestor(_projectVotedForId);
+   investorList.handleNewPurchase(_projectVotedForId, msg.value, msg.sender);
    Project(projects[_projectVotedForId]).update(msg.value);
  }
 
- Investor[] public investors;
+ SharedStructs.Investor[] public investors;
  mapping(address => uint256) internal investorIds;
 
- function investor (uint256 id) public view returns(address) {
+ /* function investor (uint256 id) public view returns(address) {
    return investors[id].addr;
  }
 
  function updateInvestor (uint256 _projectId) private {
    if (investorIds[msg.sender] == 0) {
-     Investor memory newInvestor;
+     SharedStructs.Investor memory newInvestor;
 
      newInvestor.addr = msg.sender;
 
@@ -103,12 +106,12 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    }
 
    updateInvestorVotes(_projectId);
- }
+ } */
 
- function updateInvestorVotes(uint256 _projectId) internal {
+ /* function updateInvestorVotes(uint256 _projectId) internal {
    investors[investorIds[msg.sender]].votes[_projectId] = investors[investorIds[msg.sender]].votes[_projectId].add(msg.value);
    emit LogVotes(msg.sender, _projectId, msg.value);
- }
+ } */
 
  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
     doomsDay = doomsDay.add(_days.mul(1728000));
@@ -121,8 +124,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       Project project = Project(projects[projectId]);
 
       uint256 developerTokens = project.developerTokens_();
+
       InactiveToken(inactiveToken_).burnFrom(developer, developerTokens);
       ActiveToken(activeToken_).mint(developer, developerTokens);
+
       updateInvestors(project.investorTokens_(), projectId);
 
       forwardFunds(developer, project.capitalRequired_());
@@ -145,19 +150,17 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   }
 
   function updateInvestors (uint256 tokens, uint256 projectId) private {
-    uint256 supply = InactiveToken(inactiveToken_).totalSupply().sub(ActiveToken(inactiveToken_).balanceOf(developer));
+    uint256 supply = InactiveToken(inactiveToken_).totalSupply().sub(InactiveToken(inactiveToken_).balanceOf(developer));
     uint256 activationDivisor = supply.div(tokens);
 
-    for (uint256 i = 0; i < investors.length; i = i.add(1)) {
-
-      uint256 investorBalance = InactiveToken(inactiveToken_).balanceOf(investors[i].addr);
+    for (uint256 i = 0; i < investorList.investorCount(); i = i.add(1)) {
+      address investor = investorList.addrById(i);
+      uint256 investorBalance = InactiveToken(inactiveToken_).balanceOf(investor);
       uint256 tokensToActivate = investorBalance.div(activationDivisor);
-      InactiveToken(inactiveToken_).burnFrom(investors[i].addr, tokensToActivate);
-      ActiveToken(activeToken_).mint(investors[i].addr, tokensToActivate);
 
-      uint256 voteCredit = investors[i].votes[projectId];
-      investors[i].votes[projectId] = 0;
-      investors[i].voteCredit = investors[i].voteCredit.add(voteCredit);
+      InactiveToken(inactiveToken_).burnFrom(investor, tokensToActivate);
+      ActiveToken(activeToken_).mint(investor, tokensToActivate);
+      investorList.transferVoteCredit(i, projectId);
     }
   }
 

@@ -10,11 +10,10 @@ contract Dividend {
   ActiveToken token;
   GNITokenCrowdsale crowdsale;
   address developer;
-  SharedStructs.Investor Investor;
 
   constructor (ActiveToken token_, GNITokenCrowdsale crowdsale_, address developer_) {
     token = token_;
-    crowdsale = crowdsale_;
+    crowdsale = GNITokenCrowdsale(crowdsale_);
     developer = developer_;
   }
 
@@ -26,7 +25,7 @@ contract Dividend {
 
     uint256 activeTokens = ActiveToken(token).totalSupply();
     uint256 profits = address(this).balance;
-    Investor[] investors = GNITokenCrowdsale(crowdsale).investors();
+    
 
     for (uint256 i = 0; i < investors.length; i = i.add(1)) {
       grantDividend(investors[i].addr, activeTokens, profits);
