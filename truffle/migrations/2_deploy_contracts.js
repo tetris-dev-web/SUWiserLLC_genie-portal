@@ -1,5 +1,5 @@
 const ActiveToken = artifacts.require("ActiveToken");
-const InvestorList = 
+const InvestorList = artifacts.require("InvestorList");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const MyStringStore = artifacts.require("MyStringStore");
 const Dividend = artifacts.require("Dividend");
@@ -14,6 +14,9 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(() => {
           return deployer.deploy(MyStringStore);
+        })
+        .then(() => {
+          return deployer.deploy(InvestorList);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
@@ -32,7 +35,8 @@ module.exports = function (deployer, network, accounts) {
                 doomsDay,
                 rate,
                 developer,
-                ActiveToken.address
+                ActiveToken.address,
+                InvestorList.address
             );
         })
         // .then(() => { // giving the crowdsale ownership over the token
@@ -51,7 +55,8 @@ module.exports = function (deployer, network, accounts) {
             Dividend,
             ActiveToken.address,
             GNITokenCrowdsale.address,
-            developer
+            developer,
+            InvestorList.address
           );
         })
 };
