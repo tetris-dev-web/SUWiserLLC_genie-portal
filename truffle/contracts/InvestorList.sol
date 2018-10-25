@@ -22,12 +22,14 @@ contract InvestorList {
     return investors[id].addr;
   }
 
+  //make this function only accessible by crowdsale for security
   function transferVoteCredit (uint256 id, uint256 projectId) external {
     uint256 voteCredit = investors[id].votes[projectId];
     investors[id].votes[projectId] = 0;
     investors[id].voteCredit = investors[id].voteCredit.add(voteCredit);
   }
-
+  
+  //make this function only accessible by crowdsale for security
   function handleNewPurchase(uint256 projectId, uint256 votes, address investor) external {
     if (investorIds[investor] == 0) {
       addInvestor(investor);

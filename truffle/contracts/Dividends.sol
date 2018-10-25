@@ -9,12 +9,14 @@ contract Dividend {
   using SafeMath for uint256;
   ActiveToken token;
   GNITokenCrowdsale crowdsale;
+  InvestorList investorList;
   address developer;
 
-  constructor (ActiveToken token_, GNITokenCrowdsale crowdsale_, address developer_) {
+  constructor (ActiveToken token_, GNITokenCrowdsale crowdsale_, address developer_, InvestorList investorList_) public {
     token = token_;
     crowdsale = GNITokenCrowdsale(crowdsale_);
     developer = developer_;
+    investorList = InvestorList(investorList_);
   }
 
   function distributeDividends () external {
@@ -25,10 +27,10 @@ contract Dividend {
 
     uint256 activeTokens = ActiveToken(token).totalSupply();
     uint256 profits = address(this).balance;
-    
 
-    for (uint256 i = 0; i < investors.length; i = i.add(1)) {
-      grantDividend(investors[i].addr, activeTokens, profits);
+
+    for (uint256 i = 0; i < investorList.investorCount(); i = i.add(1)) {
+      grantDividend(investorList.addrById(i), activeTokens, profits);
     }
 
     grantDividend(developer, activeTokens, profits);
