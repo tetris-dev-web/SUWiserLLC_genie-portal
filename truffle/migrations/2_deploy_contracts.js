@@ -1,4 +1,5 @@
 const ActiveToken = artifacts.require("ActiveToken");
+const InvestorList = 
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const MyStringStore = artifacts.require("MyStringStore");
 const Dividend = artifacts.require("Dividend");
