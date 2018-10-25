@@ -1,7 +1,6 @@
 pragma solidity 0.4.24;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
-import '../utility/SharedStructs.sol';
 import '../Project.sol';
 import '../token/ERC20/ActiveToken.sol';
 import '../token/InactiveToken.sol';
@@ -85,8 +84,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Project(projects[_projectVotedForId]).update(msg.value);
  }
 
- SharedStructs.Investor[] public investors;
- mapping(address => uint256) internal investorIds;
+ /* SharedStructs.Investor[] public investors;
+ mapping(address => uint256) internal investorIds; */
 
  /* function investor (uint256 id) public view returns(address) {
    return investors[id].addr;

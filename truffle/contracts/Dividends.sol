@@ -2,7 +2,6 @@ pragma solidity 0.4.24;
 import './utility/SafeMath.sol';
 import './token/ERC20/ActiveToken.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
-import './utility/SharedStructs.sol';
 
 
 contract Dividend {

@@ -1,10 +1,18 @@
 pragma solidity ^0.4.23;
-import './utility/SharedStructs.sol';
 import './utility/SafeMath.sol';
 
 contract InvestorList {
   using SafeMath for uint256;
-  SharedStructs.Investor[] public investors;
+
+  struct Investor {
+    address addr;
+    uint256 id;
+    uint256 voteCredit;
+    //maps from projectId to number of votes for that project
+    mapping(uint256 => uint256) votes;
+  }
+
+  Investor[] public investors;
   mapping(address => uint256) internal investorIds;
 
   event LogVotes (
@@ -28,7 +36,7 @@ contract InvestorList {
     investors[id].votes[projectId] = 0;
     investors[id].voteCredit = investors[id].voteCredit.add(voteCredit);
   }
-  
+
   //make this function only accessible by crowdsale for security
   function handleNewPurchase(uint256 projectId, uint256 votes, address investor) external {
     if (investorIds[investor] == 0) {
@@ -39,7 +47,7 @@ contract InvestorList {
   }
 
   function addInvestor(address investor) private {
-    SharedStructs.Investor memory newInvestor;
+    Investor memory newInvestor;
 
     newInvestor.addr = investor;
 
