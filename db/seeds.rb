@@ -435,3 +435,18 @@ project6 = Project.create(
   created_at: "14/03/2018",
   status: "pitched"
 )
+
+project7 = Project.create(
+  title: "Genesis Sans 3d",
+  revenue: 27000,
+  valuation: 210000,
+  city: "New York",
+  country: "United States",
+  continent: "North America",
+  model_id: "7syizSLPN60",
+  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+  description: "BNB/ Business Incubator",
+  creator_id: user2.id,
+  created_at: "26/10/18",
+  status: "pitched"
+)
