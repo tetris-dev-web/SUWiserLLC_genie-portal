@@ -107,7 +107,7 @@ contract Project {
     _;
   }
 
-  function deposit () public payable authorize {
+  function deposit () public payable {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
     dividends.transfer(weiAmount);

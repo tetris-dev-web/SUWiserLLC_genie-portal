@@ -54,7 +54,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       }
 
 //after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
- function pitchProject(string _name, address _manager, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
+ function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
    InactiveToken(inactiveToken_).mint(developer, developerTokens.add(investorTokens));
@@ -134,7 +134,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     }
   }
 
-  function projectToActivateDetails() private returns (uint256, bool) {
+  function projectToActivateDetails() private view returns (uint256, bool) {
     uint256 leadingProjectId;
     bool candidateFound = false;
 

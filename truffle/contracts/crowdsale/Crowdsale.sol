@@ -122,6 +122,7 @@ contract Crowdsale {
     uint256 _weiAmount
   )
     internal
+    pure
   {
     require(_beneficiary != address(0));
     require(_weiAmount != 0);
