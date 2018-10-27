@@ -74,9 +74,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  function buyTokensAndVote (uint256 _projectVotedForId) public payable {
    //add require statement that makes sure the projet isnt already active
    require(Project(projects[_projectVotedForId]).open() == true);
-   buyTokens(msg.sender);
-   investorList.handleNewPurchase(_projectVotedForId, msg.value, msg.sender);
-   Project(projects[_projectVotedForId]).update(msg.value);
+   uint256 tokens = buyTokens(msg.sender);
+   investorList.handleNewPurchase(_projectVotedForId, tokens, msg.sender);
+   Project(projects[_projectVotedForId]).update(tokens);
  }
 
  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {

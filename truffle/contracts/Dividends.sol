@@ -25,7 +25,6 @@ contract Dividend {
     //iterate through each investor.
     //divide the total active tokens by the number of active investor tokens.
     //divide the total wei by the resulting number to find out how much to wei to transfer
-
     uint256 activeTokens = Token(token).totalActiveSupply();
     uint256 profits = address(this).balance;
 
