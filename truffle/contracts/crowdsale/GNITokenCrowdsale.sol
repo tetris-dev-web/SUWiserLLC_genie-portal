@@ -26,13 +26,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         totalValuation = 0;
   }
 
-  /* event LogVotes (
-    address voter,
-    uint256 projectId,
-    uint256 amount
-    ); */
-
-
   address[] public projects;
 
   function getInfo(uint256 id) public view returns(
@@ -58,6 +51,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
    Token(token).mint(developer, developerTokens);
    Token(token).mint(this, investorTokens);
+
    totalValuation = totalValuation.add(_valuation);
 
      // Increase crowdsale duation by 90 days
@@ -85,34 +79,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Project(projects[_projectVotedForId]).update(msg.value);
  }
 
- /* SharedStructs.Investor[] public investors;
- mapping(address => uint256) internal investorIds; */
-
- /* function investor (uint256 id) public view returns(address) {
-   return investors[id].addr;
- }
-
- function updateInvestor (uint256 _projectId) private {
-   if (investorIds[msg.sender] == 0) {
-     SharedStructs.Investor memory newInvestor;
-
-     newInvestor.addr = msg.sender;
-
-     uint256 id = investors.length;
-     newInvestor.id = id;
-     investorIds[msg.sender] = id;
-
-     investors.push(newInvestor);
-   }
-
-   updateInvestorVotes(_projectId);
- } */
-
- /* function updateInvestorVotes(uint256 _projectId) internal {
-   investors[investorIds[msg.sender]].votes[_projectId] = investors[investorIds[msg.sender]].votes[_projectId].add(msg.value);
-   emit LogVotes(msg.sender, _projectId, msg.value);
- } */
-
  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
     doomsDay = doomsDay.add(_days.mul(1728000));
  }
@@ -125,8 +91,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
       uint256 developerTokens = project.developerTokens_();
 
-      /* InactiveToken(inactiveToken_).burnFrom(developer, developerTokens);
-      ActiveToken(activeToken_).mint(developer, developerTokens); */
       Token(token).activate(developer, developerTokens);
 
       updateInvestors(project.investorTokens_(), projectId);
@@ -159,9 +123,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       uint256 investorBalance = Token(token).balanceOf(investor);
       uint256 tokensToActivate = investorBalance.div(activationDivisor);
 
-      /* InactiveToken(inactiveToken_).burnFrom(investor, tokensToActivate);
-      ActiveToken(activeToken_).mint(investor, tokensToActivate); */
-
       Token(token).activate(investor,tokensToActivate);
 
       investorList.transferVoteCredit(i, projectId);
@@ -172,27 +133,4 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     _to.transfer(amount);
     weiRaised = weiRaised.sub(amount);
   }
-
-  //we want this to be called on an interval
-  /* function distributeDividends () external {
-    //store the total amount of wei in a variable
-    //iterate through each investor.
-    //divide the total active tokens by the number of active investor tokens.
-    //divide the total wei by the resulting number to find out how much to wei to transfer
-    uint256 activeTokens = ActiveToken(activeToken_).totalSupply();
-    uint256 profits = address(this).balance.sub(weiRaised);
-
-    for (uint256 i = 0; i < investors.length; i = i.add(1)) {
-      grantDividend(investors[i].addr, activeTokens, profits);
-    }
-
-    grantDividend(developer, activeTokens, profits);
-  }
-
-  function grantDividend (address investor, uint256 activeTokens, uint256 profits) private {
-    uint256 investorActive = ActiveToken(activeToken_).balanceOf(investor);
-    uint256 investorShare = activeTokens.div(investorActive);
-    uint256 dividend = profits.div(investorShare);
-    investor.transfer(dividend);
-  } */
 }
