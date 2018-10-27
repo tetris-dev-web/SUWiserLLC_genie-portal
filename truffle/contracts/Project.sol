@@ -62,6 +62,10 @@ contract Project {
     emit LogProject(id, name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, voteCount, active);
   }
 
+  function open () public view returns (bool) {
+    return closingTime < now;
+  }
+
   function active_ () public view returns (bool) {
     return active;
   }
@@ -139,7 +143,7 @@ contract Project {
     return (
       !active &&
       voteCount > 0 &&
-      closingTime > now &&
+      open() &&
       (voteCount >= Project(otherProject).voteCount_()) || Project(otherProject).active_()
     );
   }

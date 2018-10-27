@@ -13,6 +13,7 @@ contract InvestorList {
   }
 
   Investor[] public investors;
+  /* mapping(uint256 => Investor) internal investors; */
   mapping(address => uint256) internal investorIds;
 
   event LogVotes (
@@ -27,14 +28,16 @@ contract InvestorList {
 
   //make this function only accessible by crowdsale for security
   function addrById (uint256 id) external view returns(address) {
-    return investors[id].addr;
+    uint256 investorIdx = id.sub(1);
+    return investors[investorIdx].addr;
   }
 
   //make this function only accessible by crowdsale for security
   function transferVoteCredit (uint256 id, uint256 projectId) external {
-    uint256 voteCredit = investors[id].votes[projectId];
-    investors[id].votes[projectId] = 0;
-    investors[id].voteCredit = investors[id].voteCredit.add(voteCredit);
+    uint256 investorIdx = id.sub(1);
+    uint256 voteCredit = investors[investorIdx].votes[projectId];
+    investors[investorIdx].votes[projectId] = 0;
+    investors[investorIdx].voteCredit = investors[investorIdx].voteCredit.add(voteCredit);
   }
 
   //make this function only accessible by crowdsale for security
@@ -51,7 +54,7 @@ contract InvestorList {
 
     newInvestor.addr = investor;
 
-    uint256 id = investors.length;
+    uint256 id = investors.length.add(1);
     newInvestor.id = id;
     investorIds[investor] = id;
 

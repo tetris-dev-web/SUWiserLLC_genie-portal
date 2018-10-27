@@ -1,4 +1,4 @@
-const ActiveToken = artifacts.require("ActiveToken");
+const Token = artifacts.require("Token");
 const InvestorList = artifacts.require("InvestorList");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const MyStringStore = artifacts.require("MyStringStore");
@@ -10,7 +10,7 @@ module.exports = function (deployer, network, accounts) {
 
     return deployer
         .then(() => {
-          return deployer.deploy(ActiveToken);
+          return deployer.deploy(Token);
         })
         .then(() => {
           return deployer.deploy(MyStringStore);
@@ -35,7 +35,7 @@ module.exports = function (deployer, network, accounts) {
                 doomsDay,
                 rate,
                 developer,
-                ActiveToken.address,
+                Token.address,
                 InvestorList.address
             );
         })
@@ -53,7 +53,7 @@ module.exports = function (deployer, network, accounts) {
         .then(() => {
           return deployer.deploy(
             Dividend,
-            ActiveToken.address,
+            Token.address,
             GNITokenCrowdsale.address,
             developer,
             InvestorList.address

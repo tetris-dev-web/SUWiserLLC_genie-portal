@@ -1,17 +1,17 @@
 pragma solidity 0.4.24;
 import './utility/SafeMath.sol';
-import './token/ERC20/ActiveToken.sol';
+import './token/ERC20/Token.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
 
 
 contract Dividend {
   using SafeMath for uint256;
-  ActiveToken token;
+  Token token;
   GNITokenCrowdsale crowdsale;
   InvestorList investorList;
   address developer;
 
-  constructor (ActiveToken token_, GNITokenCrowdsale crowdsale_, address developer_, InvestorList investorList_) public {
+  constructor (Token token_, GNITokenCrowdsale crowdsale_, address developer_, InvestorList investorList_) public {
     token = token_;
     crowdsale = GNITokenCrowdsale(crowdsale_);
     developer = developer_;
@@ -26,11 +26,11 @@ contract Dividend {
     //divide the total active tokens by the number of active investor tokens.
     //divide the total wei by the resulting number to find out how much to wei to transfer
 
-    uint256 activeTokens = ActiveToken(token).totalSupply();
+    uint256 activeTokens = Token(token).totalActiveSupply();
     uint256 profits = address(this).balance;
 
 
-    for (uint256 i = 0; i < investorList.investorCount(); i = i.add(1)) {
+    for (uint256 i = 1; i <= investorList.investorCount(); i = i.add(1)) {
       grantDividend(investorList.addrById(i), activeTokens, profits);
     }
 
@@ -38,7 +38,7 @@ contract Dividend {
   }
 
   function grantDividend (address investor, uint256 activeTokens, uint256 profits) private {
-    uint256 investorActive = ActiveToken(token).balanceOf(investor);
+    uint256 investorActive = Token(token).activeBalanceOf(investor);
     uint256 investorShare = activeTokens.div(investorActive);
     uint256 dividend = profits.div(investorShare);
     investor.transfer(dividend);

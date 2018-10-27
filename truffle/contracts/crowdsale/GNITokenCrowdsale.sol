@@ -2,8 +2,7 @@ pragma solidity 0.4.24;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 import '../Project.sol';
-import '../token/ERC20/ActiveToken.sol';
-import '../token/InactiveToken.sol';
+import '../token/ERC20/Token.sol';
 import '../InvestorList.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
@@ -17,7 +16,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         uint256 _doomsDay,
         uint256 _rate,
         address _developer,
-        ActiveToken _token,
+        Token _token,
         InvestorList _investorList
       )
       public
@@ -57,7 +56,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
-   InactiveToken(inactiveToken_).mint(developer, developerTokens.add(investorTokens));
+   Token(token).mint(developer, developerTokens.add(investorTokens));
    totalValuation = totalValuation.add(_valuation);
 
      // Increase crowdsale duation by 90 days
@@ -79,6 +78,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  //before this, the investor has to approve this contract to spend the amount of tokens they'll be buying on their behalf. this is needed to activate tokens later.
  function buyTokensAndVote (uint256 _projectVotedForId) public payable {
    //add require statement that makes sure the projet isnt already active
+   require(Project(projects[_projectVotedForId]).open() == true);
    buyTokens(msg.sender);
    investorList.handleNewPurchase(_projectVotedForId, msg.value, msg.sender);
    Project(projects[_projectVotedForId]).update(msg.value);
@@ -124,8 +124,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
       uint256 developerTokens = project.developerTokens_();
 
-      InactiveToken(inactiveToken_).burnFrom(developer, developerTokens);
-      ActiveToken(activeToken_).mint(developer, developerTokens);
+      /* InactiveToken(inactiveToken_).burnFrom(developer, developerTokens);
+      ActiveToken(activeToken_).mint(developer, developerTokens); */
+      Token(token).activate(developer, developerTokens);
 
       updateInvestors(project.investorTokens_(), projectId);
 
@@ -149,16 +150,19 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   }
 
   function updateInvestors (uint256 tokens, uint256 projectId) private {
-    uint256 supply = InactiveToken(inactiveToken_).totalSupply().sub(InactiveToken(inactiveToken_).balanceOf(developer));
+    uint256 supply = Token(token).totalInactiveSupply().sub(Token(token).inactiveBalanceOf(developer));
     uint256 activationDivisor = supply.div(tokens);
 
-    for (uint256 i = 0; i < investorList.investorCount(); i = i.add(1)) {
+    for (uint256 i = 1; i <= investorList.investorCount(); i = i.add(1)) {
       address investor = investorList.addrById(i);
-      uint256 investorBalance = InactiveToken(inactiveToken_).balanceOf(investor);
+      uint256 investorBalance = Token(token).balanceOf(investor);
       uint256 tokensToActivate = investorBalance.div(activationDivisor);
 
-      InactiveToken(inactiveToken_).burnFrom(investor, tokensToActivate);
-      ActiveToken(activeToken_).mint(investor, tokensToActivate);
+      /* InactiveToken(inactiveToken_).burnFrom(investor, tokensToActivate);
+      ActiveToken(activeToken_).mint(investor, tokensToActivate); */
+
+      Token(token).activate(investor,tokensToActivate);
+
       investorList.transferVoteCredit(i, projectId);
     }
   }
