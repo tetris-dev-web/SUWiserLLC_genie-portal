@@ -56,7 +56,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
 
-   Token(token).mint(developer, developerTokens.add(investorTokens));
+   Token(token).mint(developer, developerTokens);
+   Token(token).mint(this, investorTokens);
    totalValuation = totalValuation.add(_valuation);
 
      // Increase crowdsale duation by 90 days
