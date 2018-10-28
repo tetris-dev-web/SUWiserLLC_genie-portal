@@ -26,20 +26,16 @@ contract InvestorList {
     return investors.length;
   }
 
-  function getInvestorIdx (uint256 id) internal returns(uint256) {
-    return id.sub(1);
-  }
-
   //make this function only accessible by crowdsale for security
-  function addrById (uint256 id) external view returns(address) {
-    uint256 investorIdx = investorIdx(id);
+  function addrById (uint256 id) public view returns(address) {
+    uint256 investorIdx = getInvestorIdx(id);
     return investors[investorIdx].addr;
   }
 
   function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
       uint256 investorIdx = getInvestorIdx(investorIds[msg.sender]);
-      require(investors[investorIdx][fromProjectId].votes <= votes);
-      investors[investorIdx][fromProjectId].votes = investors[investorIdx][fromProjectId].votes.sub(votes);
+      require(investors[investorIdx].votes[fromProjectId] <= votes);
+      investors[investorIdx].votes[fromProjectId] = investors[investorIdx].votes[fromProjectId].sub(votes);
       applyVotes(investorIdx, toProjectId, votes);
   }
 
@@ -51,25 +47,29 @@ contract InvestorList {
   }
 
   //make this function only accessible by crowdsale for security
-  function transferVoteCredit (uint256 id, uint256 projectId) external {
-    uint256 investorIdx = getInvestorIdx(id);
+  function transferVoteCredit (uint256 investorId, uint256 projectId) external {
+    uint256 investorIdx = getInvestorIdx(investorId);
     uint256 voteCredit = investors[investorIdx].votes[projectId];
     investors[investorIdx].votes[projectId] = 0;
     investors[investorIdx].voteCredit = investors[investorIdx].voteCredit.add(voteCredit);
   }
 
   //make this function only accessible by crowdsale for security
-  function handleNewPurchase(uint256 projectId, uint256 votes, address investor) external {
-    if (investorIds[investor] == 0) {
-      addInvestor(investor);
+  function handleNewPurchase(uint256 projectId, uint256 votes, address investorId) external {
+    if (investorIds[investorId] == 0) {
+      addInvestor(investorId);
     }
-    uint256 investorIdx = getInvestorIdx(investorIds[investor]);
+    uint256 investorIdx = getInvestorIdx(investorIds[investorId]);
     applyVotes(investorIdx, projectId, votes);
+  }
+
+  function getInvestorIdx (uint256 id) private pure returns(uint256) {
+    return id.sub(1);
   }
 
   function applyVotes (uint256 investorIdx, uint256 projectId, uint256 votes) private {
     investors[investorIdx].votes[projectId] = investors[investorIdx].votes[projectId].add(votes);
-    emit LogVotes(investorIdx.add(1), projectId, votes);
+    emit LogVotes(addrById(investorIdx.add(1)), projectId, votes);
   }
 
   function addInvestor(address investor) private {
