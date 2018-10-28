@@ -47,7 +47,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
 //after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
  function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
-   (uint256 developerTokens, uint256 investorTokens) = tokensToIssue(_valuation, capitalRequired);
+   (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);
    Token(token).mint(this, investorTokens);
@@ -64,19 +64,23 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     Project(projectAddr).log();
  }
 
- function tokensToIssue (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
+ function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
    uint256 developerValue = valuation.sub(investorValue);
 
    return (developerValue.mul(rate), investorValue.mul(rate));
  }
 
- //before this, the investor has to approve this contract to spend the amount of tokens they'll be buying on their behalf. this is needed to activate tokens later.
  function buyTokensAndVote (uint256 _projectVotedForId) public payable {
    //add require statement that makes sure the projet isnt already active
    require(Project(projects[_projectVotedForId]).open() == true);
    uint256 tokens = buyTokens(msg.sender);
    investorList.handleNewPurchase(_projectVotedForId, tokens, msg.sender);
    Project(projects[_projectVotedForId]).update(tokens);
+ }
+
+ function sellTo (address to, uint256 tokens) external {
+   Token(token).transferActiveTokens(msg.sender, to, tokens);
+   investorList.addVoteCredit(to, tokens);
  }
 
  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {

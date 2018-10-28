@@ -13,7 +13,6 @@ contract InvestorList {
   }
 
   Investor[] public investors;
-  /* mapping(uint256 => Investor) internal investors; */
   mapping(address => uint256) internal investorIds;
 
   event LogVotes (
@@ -22,7 +21,7 @@ contract InvestorList {
     uint256 votes
     );
 
-  function investorCount() external view returns(uint256) {
+  function investorCount () external view returns(uint256) {
     return investors.length;
   }
 
@@ -33,10 +32,10 @@ contract InvestorList {
   }
 
   function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
-      uint256 investorIdx = getInvestorIdx(investorIds[msg.sender]);
-      require(investors[investorIdx].votes[fromProjectId] <= votes);
-      investors[investorIdx].votes[fromProjectId] = investors[investorIdx].votes[fromProjectId].sub(votes);
-      applyVotes(investorIdx, toProjectId, votes);
+    uint256 investorIdx = getInvestorIdx(investorIds[msg.sender]);
+    require(investors[investorIdx].votes[fromProjectId] <= votes);
+    investors[investorIdx].votes[fromProjectId] = investors[investorIdx].votes[fromProjectId].sub(votes);
+    applyVotes(investorIdx, toProjectId, votes);
   }
 
   function applyVoteCredit (uint256 projectId, uint256 votes) external {
@@ -55,7 +54,13 @@ contract InvestorList {
   }
 
   //make this function only accessible by crowdsale for security
-  function handleNewPurchase(uint256 projectId, uint256 votes, address investorId) external {
+  function addVoteCredit (address investor, uint256 votes) external {
+    uint256 investorIdx = getInvestorIdx(investorIds[investor]);
+    investors[investorIdx].voteCredit = investors[investorIdx].voteCredit.add(votes);
+  }
+
+  //make this function only accessible by crowdsale for security
+  function handleNewPurchase (uint256 projectId, uint256 votes, address investorId) external {
     if (investorIds[investorId] == 0) {
       addInvestor(investorId);
     }
@@ -72,7 +77,8 @@ contract InvestorList {
     emit LogVotes(addrById(investorIdx.add(1)), projectId, votes);
   }
 
-  function addInvestor(address investor) private {
+
+  function addInvestor (address investor) private {
     Investor memory newInvestor;
 
     newInvestor.addr = investor;

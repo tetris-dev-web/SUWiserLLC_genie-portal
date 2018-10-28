@@ -4,7 +4,7 @@ import './token/ERC20/Token.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
 
 
-contract Dividend {
+contract Dividends {
   using SafeMath for uint256;
   Token token;
   GNITokenCrowdsale crowdsale;
@@ -20,14 +20,13 @@ contract Dividend {
 
   function () external payable {}
 
-  function distributeDividends () external {
     //store the total amount of wei in a variable
     //iterate through each investor.
     //divide the total active tokens by the number of active investor tokens.
     //divide the total wei by the resulting number to find out how much to wei to transfer
+  function distributeDividends () external {
     uint256 activeTokens = Token(token).totalActiveSupply();
     uint256 profits = address(this).balance;
-
 
     for (uint256 i = 1; i <= investorList.investorCount(); i = i.add(1)) {
       grantDividend(investorList.addrById(i), activeTokens, profits);

@@ -8,11 +8,6 @@ contract Token is MintableToken {
 
   uint256 internal totalActiveSupply_;
 
-  /**
-  * @dev Total number of tokens in existence
-  */
-
-
   function totalActiveSupply() public view returns (uint256) {
     return totalActiveSupply_;
   }
@@ -29,8 +24,14 @@ contract Token is MintableToken {
     return balances[addr].sub(activeBalances[addr]);
   }
 
+  //make this only accessible by crowdsale or this contract
   function activate(address investor, uint256 amount) public {
     activeBalances[investor] = activeBalances[investor].add(amount);
     totalActiveSupply_ = totalActiveSupply_.add(amount);
+  }
+
+  function transferActiveTokens(address from, address to, uint256 tokens) external {
+    transferFrom(from, to, tokens);
+    activate(to, tokens);
   }
 }

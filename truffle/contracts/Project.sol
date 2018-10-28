@@ -115,15 +115,12 @@ contract Project {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
     dividends.transfer(weiAmount);
-    /* crowdsale.transfer(msg.value); */
   }
 
-  //will make this only developer
   function addManager (address manager) public authorize {
     managers[manager] = true;
   }
 
-  //will make this only accessible to managers
   function setDividendWallet (address wallet) public authorize {
     dividends = wallet;
   }
