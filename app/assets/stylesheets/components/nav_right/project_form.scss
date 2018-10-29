@@ -1,5 +1,5 @@
 @import "../../util/variables";
-
+$cornerSize: 5px;
 .main-input {
   background-color: $white;
   margin-bottom: 8px;
@@ -45,7 +45,83 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+.form-box {
+  height: 85%;
+  justify-content: space-between;
+  .lat-input,.long-input{
+    font-size: 10px;
+    width: 55px;
+  }
+  .flexed {
+    width: 90%;
+    justify-content: space-between;
+    input[type=file]{
+      width: 50%;
+    }
+  }
+  .description-area{
+    width: 90%;
+    max-width: 95%;
+    height: 150px;
+    max-height: 200px;
+  }
+  input[type=submit]{
+    background: white;
+    color: grey;
+    width: 120px;
+    height: 30px;
+    font-size: 20px;
+  }
+}
+.cornered-container{
+  width:78px;
+  .cornered-div {
+    position: relative;
+    .top-corner-div{
+      position: absolute;
+      display: flex;
+      top: 0px;
+      .top-corner{
+        display: inline-block;
+        border-top: solid 1px white;
+        border-left: solid 1px white;
+        height: $cornerSize;
+        width: $cornerSize;
+      }
+    }
+    .bottom-corner-div{
+      position: absolute;
+      display: flex;
+      bottom: 0px;
 
+      .bottom-corner{
+        display: inline-block;
+        border-bottom: solid 1px white;
+        border-left: solid 1px white;
+        height: $cornerSize;
+        width: $cornerSize;
+      }
+    }
+    .right{
+      text-align: right;
+      right: 0px;
+      .top-corner{
+        border-right: solid 1px white;
+        border-left: none;
+      }
+      .bottom-corner{
+        border-right: solid 1px white;
+        border-left: none;
+      }
+    }
+  }
+
+  .text {
+    justify-content: center;
+    display: flex;
+  }
+
+}
 .geo-container {
   display: grid;
   grid-row-gap: 1px;

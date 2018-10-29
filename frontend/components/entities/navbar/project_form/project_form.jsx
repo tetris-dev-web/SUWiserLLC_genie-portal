@@ -1,6 +1,7 @@
 import React from 'react';
 import { totalData } from '../../../../util/token_data_util';
 import { roundToTwo } from '../../../../util/function_util';
+import DivWithCorners from './withCorners';
 
 class ProjectForm extends React.Component {
 
@@ -180,122 +181,55 @@ class ProjectForm extends React.Component {
       <form className="form-box p-form-box">
         <input className="main-input project-title-input"
           type="text"
-          placeholder="#| project title"
+          placeholder="#| project name"
           value={title}
           onChange={this.update('title')} />
-        <select className="main-input continent-input"
-          value={continent}
-          onChange={this.update('continent')}>
-            <option value="" disabled>Continent</option>
-            <option value="North America">North America</option>
-            <option value="South America">South America</option>
-            <option value="Europe">Europe</option>
-            <option value="Africa">Africa</option>
-            <option value="Asia">Asia</option>
-            <option value="Australia">Australia</option>
-        </select>
-        <input className="main-input city-input"
-          type="text"
-          placeholder="#| city"
-          value={city}
-          onChange={this.update('city')} />
-        <input className="main-input lat-input"
-          type="number"
-          step="any"
-          placeholder="#| latitude"
-          value={latitude}
-          onChange={this.update('latitude')} />
-        <input className="main-input long-input"
-          type="number"
-          step="any"
-          placeholder="#| longitude"
-          value={longitude}
-          onChange={this.update('longitude')} />
-        <input className="main-input revenue-input"
-          type="number"
-          placeholder="#| revenue"
-          value={revenue}
-          onChange={this.update('revenue')} />
-        <div className="valuation-container">
-          <input className="valuation-input"
+
+        <div className="flexed">
+          <input className="main-input lat-input"
             type="number"
-            placeholder="#| valuation"
-            value={valuation}
-            onChange={this.update('valuation')} />
-          <div className="coin-count">{this.state.coins}</div>
-          <div className="coin-text">coins to be issued</div>
+            step="any"
+            placeholder="#| lat"
+            value={latitude}
+            onChange={this.update('latitude')} />
+          <input className="main-input long-input"
+            type="number"
+            step="any"
+            placeholder="#| long"
+            value={longitude}
+            onChange={this.update('longitude')} />
+          <DivWithCorners>
+            <span className="text">Drop Pin</span>
+          </DivWithCorners>
+        </div>
+        <div className="flexed">
+          <input className="main-input"
+            type="file"/>
+
+          <DivWithCorners>
+            <span className="text">Cashflows</span>
+          </DivWithCorners>
         </div>
 
-        <hr className="project-divider" />
+        <div className="flexed">
+          <input className="main-input"
+            type="file"/>
 
-        <div className="geo-container">
-          <header className="geo-row-container">
-            <h5>spatial overlays</h5>
-            <h5>hierarchy</h5>
-            <h5>opacity</h5>
-          </header>
-          {geojsons}
+          <DivWithCorners>
+            <span className="text">plan</span>
+          </DivWithCorners>
+        </div>
+        <div className="flexed">
+          <input className="main-input"
+            type="file"/>
+
+          <DivWithCorners>
+            <span className="text">Poly Model</span>
+          </DivWithCorners>
         </div>
 
-        <hr className="project-divider" />
-
-        <div className="fin-plan-container">
-          <div className="file-container">
-            <input id="fin-file"
-              name="fin-file"
-              className="file-input"
-              type="file" />
-            <label htmlFor="fin-file">
-              <span>choose csv</span>
-            </label>
-          </div>
-          <h5>financials</h5>
-          <div className="file-container">
-            <input id="plan-file"
-              name="plan-file"
-              className="file-input"
-              type="file"
-              multiple
-              onChange={this.updateFile} />
-            <label htmlFor="plan-file">
-              <span>choose a pdf</span>
-            </label>
-          </div>
-          <h5>plan</h5>
-        </div>
-
-        <div className="link-upload-cont">
-          <input type="text"
-            placeholder="paste model link url here"
-            value={model_id}
-            className="link-input"
-            onChange={this.update('model_id')} />
-        </div>
-
-        <div className="link-upload-cont">
-          <input type="text"
-            placeholder="paste icon image url here"
-            value={icon}
-            className="link-input"
-            onChange={this.update('icon')} />
-        </div>
-
-        <hr className="project-divider" />
-
-        <label className="p-form-label">
-          description
-          <textarea
-            value={ description }
-            className="p-form-description"
-            onChange={this.update('description')} />
-        </label>
-        <div className="pitch-button-cont">
-          <input
-            className="pitch-button"
-            type="submit"
-            value="pitch"
-            onClick={this.handleSubmit} />
-        </div>
+        <textarea className="description-area" value="description" />
+        <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
@@ -306,3 +240,118 @@ class ProjectForm extends React.Component {
 }
 
 export default ProjectForm;
+//
+// <select className="main-input continent-input"
+//   value={continent}
+//   onChange={this.update('continent')}>
+//     <option value="" disabled>Continent</option>
+//     <option value="North America">North America</option>
+//     <option value="South America">South America</option>
+//     <option value="Europe">Europe</option>
+//     <option value="Africa">Africa</option>
+//     <option value="Asia">Asia</option>
+//     <option value="Australia">Australia</option>
+// </select>
+// <input className="main-input city-input"
+//   type="text"
+//   placeholder="#| city"
+//   value={city}
+//   onChange={this.update('city')} />
+// <input className="main-input lat-input"
+//   type="number"
+//   step="any"
+//   placeholder="#| latitude"
+//   value={latitude}
+//   onChange={this.update('latitude')} />
+// <input className="main-input long-input"
+//   type="number"
+//   step="any"
+//   placeholder="#| longitude"
+//   value={longitude}
+//   onChange={this.update('longitude')} />
+// <input className="main-input revenue-input"
+//   type="number"
+//   placeholder="#| revenue"
+//   value={revenue}
+//   onChange={this.update('revenue')} />
+// <div className="valuation-container">
+//   <input className="valuation-input"
+//     type="number"
+//     placeholder="#| valuation"
+//     value={valuation}
+//     onChange={this.update('valuation')} />
+//   <div className="coin-count">{this.state.coins}</div>
+//   <div className="coin-text">coins to be issued</div>
+// </div>
+//
+// <hr className="project-divider" />
+//
+// <div className="geo-container">
+//   <header className="geo-row-container">
+//     <h5>spatial overlays</h5>
+//     <h5>hierarchy</h5>
+//     <h5>opacity</h5>
+//   </header>
+//   {geojsons}
+// </div>
+//
+// <hr className="project-divider" />
+//
+// <div className="fin-plan-container">
+//   <div className="file-container">
+//     <input id="fin-file"
+//       name="fin-file"
+//       className="file-input"
+//       type="file" />
+//     <label htmlFor="fin-file">
+//       <span>choose csv</span>
+//     </label>
+//   </div>
+//   <h5>financials</h5>
+//   <div className="file-container">
+//     <input id="plan-file"
+//       name="plan-file"
+//       className="file-input"
+//       type="file"
+//       multiple
+//       onChange={this.updateFile} />
+//     <label htmlFor="plan-file">
+//       <span>choose a pdf</span>
+//     </label>
+//   </div>
+//   <h5>plan</h5>
+// </div>
+//
+// <div className="link-upload-cont">
+//   <input type="text"
+//     placeholder="paste model link url here"
+//     value={model_id}
+//     className="link-input"
+//     onChange={this.update('model_id')} />
+// </div>
+//
+// <div className="link-upload-cont">
+//   <input type="text"
+//     placeholder="paste icon image url here"
+//     value={icon}
+//     className="link-input"
+//     onChange={this.update('icon')} />
+// </div>
+//
+// <hr className="project-divider" />
+//
+// <label className="p-form-label">
+//   description
+//   <textarea
+//     value={ description }
+//     className="p-form-description"
+//     onChange={this.update('description')} />
+// </label>
+// <div className="pitch-button-cont">
+//   <input
+//     className="pitch-button"
+//     type="submit"
+//     value="pitch"
+//     onClick={this.handleSubmit} />
+// </div>
+//

@@ -10,12 +10,15 @@ module.exports = {
   },
   content : {
     position        : 'fixed',
-    right           : 0,
+    width           : '320px',
     padding         : '10px',
     paddingBottom   : 0,
+    right           : 0,
     borderRadius    : '0 0 0 15px',
     backgroundColor : 'rgba(56, 71, 120, 0.7)',
-    zIndex          : 101,
-    color           : 'white'
+    // zIndex          : 101,
+    color           : 'white',
+    minHeight       : '480px',
+    height          : '90%',
   },
 };
