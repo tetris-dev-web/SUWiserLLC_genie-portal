@@ -53,7 +53,7 @@ class ProjectDashboard extends React.Component {
   }
 
   handleKeyPress(e) {
-    alert('PRESSED');
+    // alert('PRESSED');
   }
 
   render() {

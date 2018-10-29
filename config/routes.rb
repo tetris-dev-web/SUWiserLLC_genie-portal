@@ -20,6 +20,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, defaults: {format: :json}, only: [:create, :show, :index]
+    resources :projects, defaults: {format: :json}, only: [:create, :show, :index, :edit, :update]
   end
 end
