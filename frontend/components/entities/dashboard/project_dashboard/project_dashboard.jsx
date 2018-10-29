@@ -84,7 +84,7 @@ class ProjectDashboard extends React.Component {
                       {projectClicked.title}
                     </div>
                   </div>
-                  <div className="project-modal-grid">
+                  <div className="project-modal-grid" style={!projectClicked.model_id ? {"grid-template-rows":"30px 300px 400px"} : {"grid-template-rows":"350px 300px 400px"} }>
                     {!projectClicked.model_id ? <div></div> :
                       <div className="iframe">
                         <iframe id="iframe" src={ `${this.state.model_link}` } frameBorder="0" allowvr="yes" allow="vr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
