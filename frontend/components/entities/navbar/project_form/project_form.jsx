@@ -203,8 +203,9 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input"
+          <input className="main-input inputfile" id="file"
             type="file"/>
+          <label for="file"> #| choose json</label>
 
           <DivWithCorners>
             <span className="text">Cashflows</span>
@@ -236,16 +237,18 @@ class ProjectForm extends React.Component {
         </div>
 
         <div className="flexed">
-          <input className="main-input"
+          <input className="main-input inputfile" id="file"
             type="file"/>
+          <label for="file">#|choose pdf</label>
 
           <DivWithCorners>
             <span className="text">plan</span>
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input"
+          <input className="main-input inputfile" id="file"
             type="file"/>
+          <label for="file">#|model id</label>
 
           <DivWithCorners>
             <span className="text">Poly Model</span>
