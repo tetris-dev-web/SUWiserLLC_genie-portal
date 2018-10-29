@@ -211,6 +211,30 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
 
+        <div className="rates-box">
+          <div className="discounts-box">
+            discount rate
+            <div className="amount-box">
+              15%
+            </div>
+          </div>
+
+          <div className="cap-row">
+            <span>valuation</span>
+            <div className="style2">$830,000</div>
+            <div className="style2">$130,000</div>
+            <span>capital <br />  required</span>
+          </div>
+
+          <div className="coins">
+            <div className="style2">
+              10,000
+            </div>
+            coins to be issued
+          </div>
+
+        </div>
+
         <div className="flexed">
           <input className="main-input"
             type="file"/>
