@@ -31,7 +31,7 @@ class ProjectDashboard extends React.Component {
   openModal(projectClicked) {
     this.setState({ openModal: true, projectClicked,summary:projectClicked.summary }, ()=>{
       if(projectClicked.model_id.search('-') != -1) {
-        this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id });
+        this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id + "&noEmbedWatermark=true"});
       } else {
         this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
       }
