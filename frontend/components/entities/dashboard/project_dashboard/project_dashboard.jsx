@@ -56,6 +56,11 @@ class ProjectDashboard extends React.Component {
     // alert('PRESSED');
   }
 
+  // componentDidMount(){
+  //   console.log(this.props.currentUser);
+  //   console.log(this.props.currentUser.user_admin);
+  // }
+
   render() {
 
     if (this.props.currentUser) {
@@ -104,6 +109,11 @@ class ProjectDashboard extends React.Component {
                           {this.state.summary}
                         </div>
                       </div>
+                      { this.props.currentUser.user_admin ?
+                      <button className="edit-summary-button"
+                        style={{background: "white", color: "black", width: "60%"}} >
+                        Edit!</button> : <button style={{display: 'none'}}></button>
+                    }
                       <div className="bus-plan-download">
                         <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
                           <i className="fas fa-file-contract">
