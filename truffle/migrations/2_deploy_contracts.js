@@ -1,6 +1,8 @@
-const GNIToken = artifacts.require("GNIToken");
+const Token = artifacts.require("Token");
+const InvestorList = artifacts.require("InvestorList");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const MyStringStore = artifacts.require("MyStringStore");
+const Dividends = artifacts.require("Dividends");
 
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
@@ -8,10 +10,13 @@ module.exports = function (deployer, network, accounts) {
 
     return deployer
         .then(() => {
-          return deployer.deploy(GNIToken);
+          return deployer.deploy(Token);
         })
         .then(() => {
           return deployer.deploy(MyStringStore);
+        })
+        .then(() => {
+          return deployer.deploy(InvestorList);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
@@ -30,7 +35,8 @@ module.exports = function (deployer, network, accounts) {
                 doomsDay,
                 rate,
                 developer,
-                GNIToken.address
+                Token.address,
+                InvestorList.address
             );
         })
         // .then(() => { // giving the crowdsale ownership over the token
@@ -55,4 +61,13 @@ module.exports = function (deployer, network, accounts) {
         //         console.log(err);
         //     })
         // });
+        .then(() => {
+          return deployer.deploy(
+            Dividends,
+            Token.address,
+            GNITokenCrowdsale.address,
+            developer,
+            InvestorList.address
+          );
+        })
 };

@@ -38,6 +38,7 @@
 ## Truffle
 - start ganache server: `ganache-cli -b 3`
 - in a separate terminal cd into the truffle file `cd truffle`
+- npm install / update
 - compile contracts: `truffle compile`
 - migrate contracts: `truffle migrate`
 
