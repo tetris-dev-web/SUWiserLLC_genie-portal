@@ -59,3 +59,14 @@ export const createProject = (project) => {
     });
   };
 };
+
+export const editProject = (project) => {
+  return dispatch => {
+    return APIUtil.editProject(project).then(project => {
+      dispatch(receiveProject(project));
+      return project;
+    }, err => {
+    return dispatch(receiveProjectErrors(err.responseJSON));
+    });
+  };
+};

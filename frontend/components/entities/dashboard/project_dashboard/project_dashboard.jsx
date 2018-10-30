@@ -22,6 +22,8 @@ class ProjectDashboard extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.toggleTextShowing = this.toggleTextShowing.bind(this);
     this.update = this.update.bind(this);
+    this.submitEditedSummary = this.submitEditedSummary.bind(this);
+    // this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   toggleTextShowing() {
@@ -54,12 +56,13 @@ class ProjectDashboard extends React.Component {
 
   handleKeyPress(e) {
     // alert('PRESSED');
+    console.log(this.state.summary);
   }
 
-  // componentDidMount(){
-  //   console.log(this.props.currentUser);
-  //   console.log(this.props.currentUser.user_admin);
-  // }
+  submitEditedSummary(){
+    
+  }
+  //change to submitEditedChanges, submit everything? Once everything is set up
 
   render() {
 
@@ -111,8 +114,8 @@ class ProjectDashboard extends React.Component {
                       </div>
                       { this.props.currentUser.user_admin ?
                       <button className="edit-summary-button"
-                        style={{background: "white", color: "black", width: "60%"}} >
-                        Edit!</button> : <button style={{display: 'none'}}></button>
+                        style={{background: "white", color: "black", width: "60%", margin: "10px auto", padding: "0px", borderRadius: "10px", fontFamily: "'Open Sans Condensed', sans-serif"}} >
+                        Edit As Admin</button> : <button style={{display: 'none'}}></button>
                     }
                       <div className="bus-plan-download">
                         <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
