@@ -32,7 +32,7 @@ contract Token is MintableToken {
 
   function transferActiveTokens(address from, address to, uint256 tokens) external {
     transferFrom(from, to, tokens);
-    activate(to, tokens);
     activeBalances[from] = activeBalances[from].sub(amount);
+    activate(to, tokens);
   }
 }
