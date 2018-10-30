@@ -41,9 +41,20 @@ module.exports = function (deployer, network, accounts) {
         })
         // .then(() => { // giving the crowdsale ownership over the token
         //     return GNITokenCrowdsale.deployed().then(crowdsale => {
-        //         crowdsale.token().then(tokenAddress => {
-        //             const GNITokenInstance = GNIToken.at(tokenAddress);
-        //             GNITokenInstance.transferOwnership(crowdsale.address).then(output => {
+        //         crowdsale.inactiveToken_().then(inactiveAddress => {
+        //             const InactiveTokenInstance = GNIToken.at(inactiveAddress);
+        //             InactiveTokenInstance.transferOwnership(crowdsale.address).then(output => {
+        //             })
+        //         })
+        //     }).catch(err => {
+        //         console.log(err);
+        //     })
+        // })
+        // .then(() => { // giving the crowdsale ownership over the token
+        //     return GNITokenCrowdsale.deployed().then(crowdsale => {
+        //         crowdsale.activeToken_().then(activeAddress => {
+        //             const activeTokenInstance = GNIToken.at(activeAddress);
+        //             activeTokenInstance.transferOwnership(crowdsale.address).then(output => {
         //             })
         //         })
         //     }).catch(err => {

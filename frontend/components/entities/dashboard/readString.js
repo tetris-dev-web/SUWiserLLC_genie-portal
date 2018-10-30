@@ -83,5 +83,6 @@ class ReadString extends React.Component {
 }
 // <h1> cap: { cap && cap.value} </h1>
 
-
+// <h1> cap: { cap && cap.value} </h1>
+// <h1> rate: { rate && rate.value} </h1>
 export default ReadString;

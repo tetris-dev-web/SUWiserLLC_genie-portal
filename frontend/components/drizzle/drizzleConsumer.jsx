@@ -8,7 +8,6 @@ export default ({component: Component, props, actions}) => (
     {drizzleContext => {
       const { drizzle, drizzleState, initialized } = drizzleContext;
 
-
       if (!initialized) {
         return "Loading...";
       }

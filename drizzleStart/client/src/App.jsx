@@ -12,6 +12,7 @@ class App extends Component {
 
   componentDidMount(){
     const {drizzle} = this.props;
+    const web3 = new Web3(window.web3.currentProvider);
 
     this.unsubscribe = drizzle.store.subscribe(()=> {
       const drizzleState = drizzle.store.getState();
