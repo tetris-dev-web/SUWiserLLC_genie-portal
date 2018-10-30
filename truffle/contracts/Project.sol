@@ -7,8 +7,8 @@ contract Project {
   //we'll make read methods when necessary
   uint256 public id; //this should be public?
   string public name;
-  address private manager;
-  address private crowdsale;
+  address developer;
+  address private dividends;
   uint256 public closingTime;
   uint256 public valuation;
   uint256 public capitalRequired;
@@ -22,8 +22,7 @@ contract Project {
   constructor (
     uint256 _id,
     string _name,
-    address _manager,
-    address _crowdsale,
+    address _developer,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
@@ -33,8 +32,7 @@ contract Project {
     ) public {
       id = _id;
       name = _name;
-      manager = _manager;
-      crowdsale = _crowdsale;
+      developer = _developer;
       valuation = _valuation;
       capitalRequired = _capitalRequired;
       developerTokens = _developerTokens;
@@ -45,6 +43,7 @@ contract Project {
       active = false;
       closingTime = now + 86600 * 240;
   }
+
 
   event LogProject (
       uint id,
@@ -101,11 +100,31 @@ contract Project {
           closingTime
       );
   } */
+  mapping(address => bool) managers;
+  
+  modifier authorize () {
+    require(managers[msg.sender] == true || msg.sender == developer);
+    _;
+  }
 
-  function deposit () public payable {
+  function deposit () public payable authorize {
     require(msg.value != 0);
-    require(msg.sender == manager);
-    crowdsale.transfer(msg.value);
+    require(managers[msg.sender] == true || msg.sender == developer);
+    uint256 weiAmount = msg.value;
+    dividends.transfer(weiAmount);
+    /* crowdsale.transfer(msg.value); */
+  }
+
+  //will make this only developer
+  function addManager (address manager) public authorize {
+    require(msg.sender == developer || msg.sender == developer);
+    managers[manager] = true;
+  }
+
+  //will make this only accessible to managers
+  function setDividendWallet (address wallet) public authorize {
+    require(managers[msg.sender] == true || msg.sender == developer);
+    dividends = wallet;
   }
 
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate

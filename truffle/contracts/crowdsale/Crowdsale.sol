@@ -3,7 +3,8 @@ pragma solidity ^0.4.24;
 import "../token/ERC20/ERC20.sol";
 import '../utility/SafeMath.sol';
 import "../token/ERC20/SafeERC20.sol";
-import '../token/ERC20/GNIToken.sol';
+import '../token/ERC20/ActiveToken.sol';
+import '../token/InactiveToken.sol';
 
 
 /**
@@ -22,8 +23,8 @@ contract Crowdsale {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
 
-  GNIToken public inactiveToken_;
-  GNIToken public activeToken_;
+  InactiveToken public inactiveToken_;
+  ActiveToken public activeToken_;
 
   address public developer;
   // How many token units a buyer gets per wei.
@@ -54,14 +55,14 @@ contract Crowdsale {
    * @param _developer Address where collected funds will be forwarded to
    * @param _token Address of the token being sold
    */
-  constructor(uint256 _rate, address _developer, GNIToken _token) public {
+  constructor(uint256 _rate, address _developer, ActiveToken _token) public {
     require(_rate > 0);
     require(_developer != address(0));
 
     rate = _rate;
     developer = _developer;
-    inactiveToken_ = _token;
-    activeToken_ = new GNIToken();
+    inactiveToken_ = new InactiveToken();
+    activeToken_ = _token;
   }
 
   // -----------------------------------------
@@ -72,7 +73,7 @@ contract Crowdsale {
    * @dev fallback function ***DO NOT OVERRIDE***
    */
   function () external payable {
-    buyTokens(msg.sender);
+    /* buyTokens(msg.sender); */
   }
   /**
    * @dev low level token purchase ***DO NOT OVERRIDE***
@@ -89,7 +90,7 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    GNIToken(inactiveToken_).transferFrom(developer, _beneficiary, tokens);
+    ActiveToken(inactiveToken_).transferFrom(developer, _beneficiary, tokens);
 
     emit TokenPurchase(
       msg.sender,
