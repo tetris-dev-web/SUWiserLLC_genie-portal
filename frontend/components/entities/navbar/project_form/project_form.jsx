@@ -2,6 +2,9 @@ import React from 'react';
 import { totalData } from '../../../../util/token_data_util';
 import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
+import Modal from 'react-modal';
+import MapModalStyle from './map_modal_style';
+import ProjectMap from '../../dashboard/project_dashboard/project_map.jsx';
 
 class ProjectForm extends React.Component {
 
@@ -26,6 +29,7 @@ class ProjectForm extends React.Component {
       latitude: '',
       longitude: '',
       summary: 'summary',
+      openModal: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
