@@ -2,7 +2,7 @@ const Token = artifacts.require("Token");
 const InvestorList = artifacts.require("InvestorList");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const MyStringStore = artifacts.require("MyStringStore");
-const Dividend = artifacts.require("Dividend");
+const Dividends = artifacts.require("Dividends");
 
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
@@ -41,9 +41,20 @@ module.exports = function (deployer, network, accounts) {
         })
         // .then(() => { // giving the crowdsale ownership over the token
         //     return GNITokenCrowdsale.deployed().then(crowdsale => {
-        //         crowdsale.token().then(tokenAddress => {
-        //             const GNITokenInstance = GNIToken.at(tokenAddress);
-        //             GNITokenInstance.transferOwnership(crowdsale.address).then(output => {
+        //         crowdsale.inactiveToken_().then(inactiveAddress => {
+        //             const InactiveTokenInstance = GNIToken.at(inactiveAddress);
+        //             InactiveTokenInstance.transferOwnership(crowdsale.address).then(output => {
+        //             })
+        //         })
+        //     }).catch(err => {
+        //         console.log(err);
+        //     })
+        // })
+        // .then(() => { // giving the crowdsale ownership over the token
+        //     return GNITokenCrowdsale.deployed().then(crowdsale => {
+        //         crowdsale.activeToken_().then(activeAddress => {
+        //             const activeTokenInstance = GNIToken.at(activeAddress);
+        //             activeTokenInstance.transferOwnership(crowdsale.address).then(output => {
         //             })
         //         })
         //     }).catch(err => {
@@ -52,7 +63,7 @@ module.exports = function (deployer, network, accounts) {
         // });
         .then(() => {
           return deployer.deploy(
-            Dividend,
+            Dividends,
             Token.address,
             GNITokenCrowdsale.address,
             developer,

@@ -127,7 +127,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       uint256 investorBalance = Token(token).balanceOf(investor);
       uint256 tokensToActivate = investorBalance.div(activationDivisor);
 
-      Token(token).activate(investor,tokensToActivate);
+      Token(token).activate(investor, tokensToActivate);
 
       investorList.transferVoteCredit(i, projectId);
     }

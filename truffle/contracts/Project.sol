@@ -1,6 +1,5 @@
 pragma solidity ^0.4.23;
 import './utility/SafeMath.sol';
-
 contract Project {
   using SafeMath for uint256;
   //these will all need to be private so they cannot be set arbitrarily
@@ -18,7 +17,6 @@ contract Project {
   string public lng;
   uint256 public voteCount;
   bool public active;
-
   constructor (
     uint256 _id,
     string _name,
@@ -43,8 +41,6 @@ contract Project {
       active = false;
       closingTime = now + 86600 * 240;
   }
-
-
   event LogProject (
       uint id,
       string name,
@@ -57,39 +53,30 @@ contract Project {
       uint256 voteCount,
       bool active
   );
-
   function log () public {
     emit LogProject(id, name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, voteCount, active);
   }
-
   function open () public view returns (bool) {
     return closingTime < now;
   }
-
   function active_ () public view returns (bool) {
     return active;
   }
-
   function voteCount_ () public view returns (uint256) {
     return voteCount;
   }
-
   function closingTime_ () public view returns (uint256) {
     return closingTime;
   }
-
   function developerTokens_ () public view returns (uint256) {
     return developerTokens;
   }
-
   function investorTokens_ () public view returns (uint256) {
     return investorTokens;
   }
-
   function capitalRequired_ () public view returns (uint256) {
     return capitalRequired;
   }
-
   /* function getInfo() public view returns(
       string, uint256, uint256, uint256, uint256, bool, uint256, uint256
       ) {
@@ -105,37 +92,30 @@ contract Project {
       );
   } */
   mapping(address => bool) managers;
-
   modifier authorize () {
     require(managers[msg.sender] == true || msg.sender == developer);
     _;
   }
-
   function deposit () public payable {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
     dividends.transfer(weiAmount);
   }
-
   function addManager (address manager) public authorize {
     managers[manager] = true;
   }
-
   function setDividendWallet (address wallet) public authorize {
     dividends = wallet;
   }
-
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
   function update (uint256 votes) public {
     voteCount = voteCount.add(votes);
     closingTime = closingTime.add(43200);
   }
-
   function activate () public {
     active = true;
     log();
   }
-
   function beats (address otherProject) public view returns (bool) {
     return (
       !active &&
