@@ -25,8 +25,12 @@ const ProjectThermo = function( {project,showText,toggleTextShowing} ) {
   const formattedStartDate = new Date(start_date);
   const oneDay = 24*60*60*1000;
   const daysToClose = Math.round(Math.abs((formattedCloseDate.getTime() - timeNow.getTime())/(oneDay)));
-
-  const jsonVotes = JSON.parse(project.votes);
+  let jsonVotes;
+  if(project.votest) {
+    jsonVotes = JSON.parse(project.votes);
+  }else{
+    jsonVotes = {};
+  }
 
   const xTimeScale = d3.scaleTime()
                    .domain([formattedStartDate,formattedCloseDate])

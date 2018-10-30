@@ -13,21 +13,22 @@ class ProjectForm extends React.Component {
 
     this.state = {
       title: '',
+      latitude: '',
+      longitude: '',
+      cashflow: '',
+
+
       revenue: '',
-      valuation: '',
-      model_id: '',
-      city: '',
-      country: '',
-      continent: '',
+      valuation: '1',
+      model_id: '7syizSLPN60',
+      city: 'New York',
+      country: 'USA',
+      continent: 'North America',
       icon: '',
       description: '',
-      creator_id: props.currentUser.id,
-      imageFile: '',
       imageUrl: '',
       coins: '****',
       status: 'pitched',
-      latitude: '',
-      longitude: '',
       summary: 'summary',
       openModal: false,
     };
@@ -48,32 +49,37 @@ class ProjectForm extends React.Component {
     e.preventDefault();
 
     const file = this.state.imageFile;
-    const formData = new FormData();
+    const data = new FormData();
     const {drizzle, drizzleState} = this.props;
     const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
-    if (file) formData.append("project[file]", file);
+    if (file) data.append("project[file]", file);
+    data.append("project[title]", this.state.title);
 
-    formData.append("project[title]", this.state.title);
-    formData.append("project[revenue]", this.state.revenue);
-    formData.append("project[valuation]", this.state.valuation);
-    formData.append("project[model_id]", this.state.model_id);
-    formData.append("project[city]", this.state.city);
-    formData.append("project[country]", this.state.country);
-    formData.append("project[continent]", this.state.continent);
-    formData.append("project[icon]", this.state.icon);
-    formData.append("project[description]", this.state.description);
-    formData.append("project[creator_id]", this.state.creator_id);
-    formData.append("project[status]", this.state.status);
-    formData.append("project[latitude]", this.state.latitude);
-    formData.append("project[longitude]", this.state.longitude);
-    formData.append("project[summary]", this.state.summary);
+    data.append("project[latitude]", this.state.latitude);
+    data.append("project[longitude]", this.state.longitude);
+
+    data.append("project[city]", this.state.city);
+    data.append("project[country]", this.state.country);
+    data.append("project[continent]", this.state.continent);
+
+    data.append("project[valuation]", this.state.valuation);
+    data.append("project[cashflow]", this.state.cashflow);
+    data.append("project[creator_id]", this.props.currentUser.id);
+
+    data.append("project[model_id]", this.state.model_id);
+    data.append("project[summary]", this.state.summary);
 
 
-    this.props.createProject(formData).then( () => {
+    // data.append("project[revenue]", this.state.revenue);
+    // formData.append("project[icon]", this.state.icon);
+    // formData.append("project[description]", this.state.description);
+    // formData.append("project[status]", this.state.status);
+
+
+    this.props.createProject(data).then( () => {
       const pitchedProject = GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
       this.props.closeModal();
-      location.reload();
     });
 
   }
@@ -82,30 +88,23 @@ class ProjectForm extends React.Component {
     return (e) => {
       this.setState({ [property]: e.currentTarget.value });
 
-      const { revenue } = this.state;
-      const price = 70;
-      const coins = roundToTwo(revenue / price);
-
-      if (revenue || revenue > 0) {
-        this.setState({ coins });
-      } else {
-        this.setState({ coins: '****' });
-      }
+      // const { revenue } = this.state;
+      // const price = 70;
+      // const coins = roundToTwo(revenue / price);
+      //
+      // if (revenue || revenue > 0) {
+      //   this.setState({ coins });
+      // } else {
+      //   this.setState({ coins: '****' });
+      // }
     };
   }
 
   updateFile(e) {
-    const reader = new FileReader();
     const file = e.currentTarget.files[0];
 
-    reader.onloadend = () =>
-      this.setState({ imageUrl: reader.result, imageFile: file});
+    this.setState({cashflow: file});
 
-    if (file) {
-      reader.readAsDataURL(file);
-    } else {
-      this.setState({ imageUrl: '', imageFile: null });
-    }
   }
 
   renderErrors() {
@@ -182,7 +181,7 @@ class ProjectForm extends React.Component {
     let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude } = this.state;
 
     return (
-      <form className="form-box p-form-box">
+      <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
         <input className="main-input project-title-input"
           type="text"
           placeholder="#| project name"
@@ -208,7 +207,8 @@ class ProjectForm extends React.Component {
         </div>
         <div className="flexed">
           <input className="main-input inputfile" id="file"
-            type="file"/>
+            type="file"
+            onChange={this.updateFile}/>
           <label for="file"> #| choose json</label>
 
           <DivWithCorners>
