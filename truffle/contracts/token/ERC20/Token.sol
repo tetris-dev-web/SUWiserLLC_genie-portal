@@ -1,6 +1,5 @@
 pragma solidity ^0.4.24;
 
-import './StandardBurnableToken.sol';
 import './MintableToken.sol';
 
 contract Token is MintableToken {
@@ -33,6 +32,6 @@ contract Token is MintableToken {
   function transferActiveTokens(address from, address to, uint256 tokens) external {
     transferFrom(from, to, tokens);
     activate(to, tokens);
-    activeBalances[from] = activeBalances[from].sub(amount);
+    activeBalances[from] = activeBalances[from].sub(tokens);
   }
 }
