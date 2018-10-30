@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import Wallet from './wallet/wallet';
 import ProfileContainer from './profile/profile_container';
-import GNITokenData from '../../../../contract_data/GNIToken';
+import TokenData from '../../../../contract_data/Token';
 
 class UserDropdown extends React.Component {
   constructor(props) {
@@ -22,7 +22,7 @@ class UserDropdown extends React.Component {
 
     const userType = fName && lName ? `${fName} ${lName}` : parsedUsername;
 
-    // this.totalSupplyIdx = this.props.drizzle.contracts.GNIToken.methods.totalSupply.cacheCall();
+    // this.totalSupplyIdx = this.props.drizzle.contracts.Token.methods.totalSupply.cacheCall();
     /*
     We initially set the state of the displayName to either the user's
     first and last name (if they have updated their profile with this information)
@@ -57,14 +57,14 @@ class UserDropdown extends React.Component {
 
   componentDidMount () {
     const drizzle = this.props.drizzle;
-    const address = drizzle.contracts.GNIToken.address;
-    const abi = GNITokenData.abi;
-    
+    const address = drizzle.contracts.Token.address;
+    const abi = TokenData.abi;
+
     const web3 = drizzle.web3;
 
-    const GNIToken = new web3.eth.Contract(abi, address);
+    const Token = new web3.eth.Contract(abi, address);
     this.interval = setInterval(() => {
-      GNIToken.methods.totalSupply().call().then(totalSupply => {
+      Token.methods.totalSupply().call().then(totalSupply => {
 
         this.setState({totalSupply})
       })
@@ -79,10 +79,10 @@ class UserDropdown extends React.Component {
 
   tick () {
     return new Promise ((resolve,reject) => {
-        const index = this.props.drizzle.contracts.GNIToken.methods.totalSupply.cacheCall()
+        const index = this.props.drizzle.contracts.Token.methods.totalSupply.cacheCall()
         resolve(index);
       }).then((totalSupplyIdx) => {
-      const totalSupply = this.props.drizzleState.contracts.GNIToken.totalSupply[this.state.totalSupplyIdx]
+      const totalSupply = this.props.drizzleState.contracts.Token.totalSupply[this.state.totalSupplyIdx]
       this.setState({totalSupply});
     })
   }
@@ -123,8 +123,8 @@ class UserDropdown extends React.Component {
 
   render() {
 
-    // const tokens = this.props.drizzleState.contracts.GNIToken.totalSupply[this.state.totalSupplyIdx];
-    // console.log('UserDropdown', this.props.drizzleState.contracts.GNIToken);
+    // const tokens = this.props.drizzleState.contracts.Token.totalSupply[this.state.totalSupplyIdx];
+    // console.log('UserDropdown', this.props.drizzleState.contracts.Token);
 
     // if(tokens){
     //
