@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 import "../token/ERC20/ERC20.sol";
 import '../utility/SafeMath.sol';
 import "../token/ERC20/SafeERC20.sol";
-import '../token/ERC20/GNIToken.sol';
+import '../token/ERC20/Token.sol';
 
 
 /**
@@ -22,8 +22,8 @@ contract Crowdsale {
   using SafeMath for uint256;
   using SafeERC20 for ERC20;
 
-  GNIToken public inactiveToken_;
-  GNIToken public activeToken_;
+
+  Token public token;
 
   address public developer;
   // How many token units a buyer gets per wei.
@@ -54,14 +54,13 @@ contract Crowdsale {
    * @param _developer Address where collected funds will be forwarded to
    * @param _token Address of the token being sold
    */
-  constructor(uint256 _rate, address _developer, GNIToken _token) public {
+  constructor(uint256 _rate, address _developer, Token _token) public {
     require(_rate > 0);
     require(_developer != address(0));
 
     rate = _rate;
     developer = _developer;
-    inactiveToken_ = _token;
-    activeToken_ = new GNIToken();
+    token = _token;
   }
 
   // -----------------------------------------
@@ -78,7 +77,7 @@ contract Crowdsale {
    * @dev low level token purchase ***DO NOT OVERRIDE***
    * @param _beneficiary Address performing the token purchase
    */
-  function buyTokens(address _beneficiary) public payable {
+  function buyTokens(address _beneficiary) public payable returns (uint256) {
 
     uint256 weiAmount = msg.value;
     _preValidatePurchase(_beneficiary, weiAmount);
@@ -89,14 +88,17 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    GNIToken(inactiveToken_).transferFrom(developer, _beneficiary, tokens);
-
+    /* Token(token).transfer(_beneficiary, tokens); */
+    _processPurchase(_beneficiary, tokens);
+    
     emit TokenPurchase(
       msg.sender,
       _beneficiary,
       weiAmount,
       tokens
     );
+
+    return tokens;
 
     /* _updatePurchasingState(_beneficiary, weiAmount); */
 
@@ -145,28 +147,28 @@ contract Crowdsale {
    * @param _beneficiary Address performing the token purchase
    * @param _tokenAmount Number of tokens to be emitted
    */
-  /* function _deliverTokens(
+  function _deliverTokens(
     address _beneficiary,
     uint256 _tokenAmount
   )
     internal
   {
     token.safeTransfer(_beneficiary, _tokenAmount);
-  } */
+  }
 
   /**
    * @dev Executed when a purchase has been validated and is ready to be executed. Not necessarily emits/sends tokens.
    * @param _beneficiary Address receiving the tokens
    * @param _tokenAmount Number of tokens to be purchased
    */
-  /* function _processPurchase(
+  function _processPurchase(
     address _beneficiary,
     uint256 _tokenAmount
   )
     internal
   {
     _deliverTokens(_beneficiary, _tokenAmount);
-  } */
+  }
 
   /**
    * @dev Override for extensions that require an internal state to check for validity (current user contributions, etc.)

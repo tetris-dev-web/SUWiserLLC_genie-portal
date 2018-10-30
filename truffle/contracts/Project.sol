@@ -7,8 +7,8 @@ contract Project {
   //we'll make read methods when necessary
   uint256 public id; //this should be public?
   string public name;
-  address private manager;
-  address private crowdsale;
+  address public developer;
+  address public dividends;
   uint256 public closingTime;
   uint256 public valuation;
   uint256 public capitalRequired;
@@ -22,8 +22,7 @@ contract Project {
   constructor (
     uint256 _id,
     string _name,
-    address _manager,
-    address _crowdsale,
+    address _developer,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
@@ -33,8 +32,7 @@ contract Project {
     ) public {
       id = _id;
       name = _name;
-      manager = _manager;
-      crowdsale = _crowdsale;
+      developer = _developer;
       valuation = _valuation;
       capitalRequired = _capitalRequired;
       developerTokens = _developerTokens;
@@ -45,6 +43,7 @@ contract Project {
       active = false;
       closingTime = now + 86600 * 240;
   }
+
 
   event LogProject (
       uint id,
@@ -61,6 +60,10 @@ contract Project {
 
   function log () public {
     emit LogProject(id, name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, voteCount, active);
+  }
+
+  function open () public view returns (bool) {
+    return closingTime < now;
   }
 
   function active_ () public view returns (bool) {
@@ -101,13 +104,25 @@ contract Project {
           closingTime
       );
   } */
+  mapping(address => bool) managers;
+
+  modifier authorize () {
+    require(managers[msg.sender] == true || msg.sender == developer);
+    _;
+  }
 
   function deposit () public payable {
     require(msg.value != 0);
-    require(msg.sender == manager);
     uint256 weiAmount = msg.value;
-    crowdsale.transfer(weiAmount);
-    /* crowdsale.transfer(msg.value); */
+    dividends.transfer(weiAmount);
+  }
+
+  function addManager (address manager) public authorize {
+    managers[manager] = true;
+  }
+
+  function setDividendWallet (address wallet) public authorize {
+    dividends = wallet;
   }
 
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
@@ -125,7 +140,7 @@ contract Project {
     return (
       !active &&
       voteCount > 0 &&
-      closingTime > now &&
+      open() &&
       (voteCount >= Project(otherProject).voteCount_()) || Project(otherProject).active_()
     );
   }
