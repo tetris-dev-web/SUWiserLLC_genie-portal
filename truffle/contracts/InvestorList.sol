@@ -77,7 +77,6 @@ contract InvestorList {
     emit LogVotes(addrById(investorIdx.add(1)), projectId, votes);
   }
 
-
   function addInvestor (address investor) private {
     Investor memory newInvestor;
 
