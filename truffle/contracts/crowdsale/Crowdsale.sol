@@ -20,7 +20,7 @@ import '../token/ERC20/Token.sol';
  */
 contract Crowdsale {
   using SafeMath for uint256;
-  using SafeERC20 for ERC20;
+  using SafeERC20 for Token;
 
 
   Token public token;
@@ -90,7 +90,7 @@ contract Crowdsale {
 
     /* Token(token).transfer(_beneficiary, tokens); */
     _processPurchase(_beneficiary, tokens);
-    
+
     emit TokenPurchase(
       msg.sender,
       _beneficiary,

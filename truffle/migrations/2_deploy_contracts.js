@@ -2,7 +2,7 @@ const Token = artifacts.require("Token");
 const InvestorList = artifacts.require("InvestorList");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const MyStringStore = artifacts.require("MyStringStore");
-const Dividend = artifacts.require("Dividend");
+const Dividends = artifacts.require("Dividends");
 
 module.exports = function (deployer, network, accounts) {
     const rate = new web3.BigNumber(50);
@@ -63,7 +63,7 @@ module.exports = function (deployer, network, accounts) {
         // });
         .then(() => {
           return deployer.deploy(
-            Dividend,
+            Dividends,
             Token.address,
             GNITokenCrowdsale.address,
             developer,
