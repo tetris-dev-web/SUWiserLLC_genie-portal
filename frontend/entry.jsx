@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // },
     contracts: [MyStringStore,GNIToken,GNITokenCrowdsale],
     events: {},
-  } ;
+  };
+
+
   const drizzleStore = generateStore(chainOptions);
   const drizzle = new Drizzle(chainOptions, drizzleStore);
 
