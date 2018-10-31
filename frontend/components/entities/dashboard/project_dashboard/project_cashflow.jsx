@@ -126,7 +126,6 @@ class CashFlowGraph extends React.Component {
   }
 
   formatCashData() {
-    debugger
     let jsonCashData;
     if(this.props.project.cashflow.tempfile){
       jsonCashData = JSON.parse(this.props.project.cashflow.tempfile.join(""));

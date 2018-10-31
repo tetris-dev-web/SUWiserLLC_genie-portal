@@ -4,7 +4,7 @@ import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import Modal from 'react-modal';
 import MapModalStyle from './map_modal_style';
-import ProjectMap from '../../dashboard/project_dashboard/project_map.jsx';
+import DropPinMap from './drop_pin_map';
 
 class ProjectForm extends React.Component {
 
@@ -35,6 +35,8 @@ class ProjectForm extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateFile = this.updateFile.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -82,6 +84,14 @@ class ProjectForm extends React.Component {
       this.props.closeModal();
     });
 
+  }
+
+  openModal() {
+    this.setState({openModal: true});
+  }
+
+  closeModal() {
+    this.setState({openModal: false});
   }
 
   update(property) {
@@ -202,7 +212,7 @@ class ProjectForm extends React.Component {
             value={longitude}
             onChange={this.update('longitude')} />
           <DivWithCorners>
-            <span className="text">Drop Pin</span>
+            <span onClick={this.openModal} className="text">Drop Pin</span>
           </DivWithCorners>
         </div>
         <div className="flexed">
@@ -214,6 +224,16 @@ class ProjectForm extends React.Component {
           <DivWithCorners>
             <span className="text">Cashflows</span>
           </DivWithCorners>
+          <Modal
+            isOpen={this.state.openModal}
+            onRequestClose={this.closeModal}
+            style={MapModalStyle}
+            contentLabel="Drop Pin Modal"
+            className="modal-container">
+            <div className='drop-pin-container'>
+              <DropPinMap />
+            </div>
+          </Modal>
         </div>
 
         <div className="rates-box">
