@@ -6,6 +6,7 @@ import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
 import CashFlowGraph from './project_cashflow';
 import $ from 'jquery';
+import { editProject } from '../../../../actions/project_actions'
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -23,7 +24,7 @@ class ProjectDashboard extends React.Component {
     this.toggleTextShowing = this.toggleTextShowing.bind(this);
     this.update = this.update.bind(this);
     this.submitEditedSummary = this.submitEditedSummary.bind(this);
-    // this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   toggleTextShowing() {
@@ -55,12 +56,13 @@ class ProjectDashboard extends React.Component {
   }
 
   handleKeyPress(e) {
-    // alert('PRESSED');
-    console.log(this.state.summary);
+    e.preventDefault()
+    this.setState({summary: e.currentTarget.value})
+
   }
 
   submitEditedSummary(){
-    
+    editProject({project: {id: this.state.projectClicked.id, summary: this.state.summary}})
   }
   //change to submitEditedChanges, submit everything? Once everything is set up
 
@@ -108,14 +110,13 @@ class ProjectDashboard extends React.Component {
 
                     <div className="project-description">
                       <div className="project-text">
-                        <div onKeyPress={this.handleKeyPress} contentEditable={!this.props.isInvestor} className="project-summary">
-                          {this.state.summary}
-                        </div>
+                        <textarea onChange={this.handleKeyPress} disabled={this.props.isInvestor} className="project-summary" value={this.state.summary}/>
                       </div>
                       { this.props.currentUser.user_admin ?
                       <button className="edit-summary-button"
+                        onClick={this.submitEditedSummary}
                         style={{background: "white", color: "black", width: "60%", margin: "10px auto", padding: "0px", borderRadius: "10px", fontFamily: "'Open Sans Condensed', sans-serif"}} >
-                        Edit As Admin</button> : <button style={{display: 'none'}}></button>
+                        Edit Summary As Admin</button> : <button style={{display: 'none'}}></button>
                     }
                       <div className="bus-plan-download">
                         <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
