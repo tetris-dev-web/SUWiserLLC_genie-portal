@@ -62,7 +62,9 @@ class ProjectDashboard extends React.Component {
   }
 
   submitEditedSummary(){
-    editProject({project: {id: this.state.projectClicked.id, summary: this.state.summary}})
+    console.log("Clicked");
+    this.props.editProject({id: this.state.projectClicked.id, summary: this.state.summary})
+    this.setState({openModal: false})
   }
   //change to submitEditedChanges, submit everything? Once everything is set up
 
@@ -112,7 +114,7 @@ class ProjectDashboard extends React.Component {
                       <div className="project-text">
                         <textarea onChange={this.handleKeyPress} disabled={this.props.isInvestor} className="project-summary" value={this.state.summary}/>
                       </div>
-                      { this.props.currentUser.user_admin ?
+                      { !this.props.currentUser.isInvestor ?
                       <button className="edit-summary-button"
                         onClick={this.submitEditedSummary}
                         style={{background: "white", color: "black", width: "60%", margin: "10px auto", padding: "0px", borderRadius: "10px", fontFamily: "'Open Sans Condensed', sans-serif"}} >
