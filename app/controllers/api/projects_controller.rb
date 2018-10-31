@@ -11,7 +11,6 @@ class Api::ProjectsController < ApplicationController
 
   def create
     @project = Project.new(project_params)
-
     if @project.save
       render json: @project
     else
@@ -31,7 +30,7 @@ class Api::ProjectsController < ApplicationController
   private
   def project_params
     params.require(:project).permit(
-      :id, :title, :revenue, :valuation, :model_id,
+      :id, :title, :cashflow, :revenue, :valuation, :model_id,
       :file, :icon, :description, :creator_id, :created_at,
       :city, :country, :continent, :status, :latitude, :longitude, :summary
     )
