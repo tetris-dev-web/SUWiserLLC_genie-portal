@@ -1,5 +1,5 @@
 @import "../../util/variables";
-
+$cornerSize: 5px;
 .main-input {
   background-color: $white;
   margin-bottom: 8px;
@@ -45,7 +45,83 @@
   margin-top: 10px;
   margin-bottom: 10px;
 }
+.form-box {
+  height: 100%;
+  justify-content: space-between;
+  .lat-input,.long-input{
+    font-size: 10px;
+    width: 55px;
+  }
+  .flexed {
+    width: 90%;
+    justify-content: space-between;
+    input[type=file]{
+      width: 50%;
+    }
+  }
+  .description-area{
+    width: 90%;
+    max-width: 95%;
+    height: 120px;
+    max-height: 200px;
+  }
+  input[type=submit]{
+    background: white;
+    color: grey;
+    width: 120px;
+    height: 30px;
+    font-size: 20px;
+  }
+}
+.cornered-container{
+  width:78px;
+  .cornered-div {
+    position: relative;
+    .top-corner-div{
+      position: absolute;
+      display: flex;
+      top: 0px;
+      .top-corner{
+        display: inline-block;
+        border-top: solid 1px white;
+        border-left: solid 1px white;
+        height: $cornerSize;
+        width: $cornerSize;
+      }
+    }
+    .bottom-corner-div{
+      position: absolute;
+      display: flex;
+      bottom: 0px;
 
+      .bottom-corner{
+        display: inline-block;
+        border-bottom: solid 1px white;
+        border-left: solid 1px white;
+        height: $cornerSize;
+        width: $cornerSize;
+      }
+    }
+    .right{
+      text-align: right;
+      right: 0px;
+      .top-corner{
+        border-right: solid 1px white;
+        border-left: none;
+      }
+      .bottom-corner{
+        border-right: solid 1px white;
+        border-left: none;
+      }
+    }
+  }
+
+  .text {
+    justify-content: center;
+    display: flex;
+  }
+
+}
 .geo-container {
   display: grid;
   grid-row-gap: 1px;
@@ -175,4 +251,75 @@
   text-align: center;
   background-color: $lightblue;
   color: $error-color;
+}
+
+.rates-box div {
+  margin-bottom: 6px;
+}
+
+.rates-box{
+  width: 90%;
+  padding: 5px;
+  .coins{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .amount-box{
+    width: 25px;
+    height: 25px;
+    background: white;
+    color: grey;
+    text-align: center;
+  }
+
+  .discounts-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cap-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .style2 {
+    background: none;
+    border: 1px solid #939DA6;
+    width: 50px;
+    height: 25px;
+    min-width: 30px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+    font-weight: 700;
+    color: white;
+    background-color: white;
+    color: gray;
+    width: 114px;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    // background-color: red;
 }
