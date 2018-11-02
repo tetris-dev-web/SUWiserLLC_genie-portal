@@ -4,7 +4,6 @@ import {
   fetchProject,
   editProject
 } from '../../../../actions/project_actions';
-import ProjectGraph from './project_graph';
 import ProjectDashboard from './project_dashboard';
 
 const mapStateToProps = state => {
