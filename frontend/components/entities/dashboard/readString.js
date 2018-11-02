@@ -24,18 +24,18 @@ class ReadString extends React.Component {
     const dataKey = stringContract.methods["myString"].cacheCall();
     this.setState({dataKey});
 
-    const GNIToken = drizzle.contracts.GNIToken;
+    const Token = drizzle.contracts.Token;
     const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
 
     // var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-    // const coinBaseBalanceDataKey = GNIToken.methods.sendTransaction.cacheSend(drizzleState.accounts[0],2, {from: drizzleState.accounts[0],value: web3.toWei("1","ether")})
-    const stackId0Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[0]);
-    const stackId1Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[1]);
-    const stackId2Balance = GNIToken.methods.balanceOf.cacheCall(drizzleState.accounts[2]);
-    // const stackIdCap = GNITokenCrowdsale.methods.cap.cacheCall();
+    // const coinBaseBalanceDataKey = Token.methods.sendTransaction.cacheSend(drizzleState.accounts[0],2, {from: drizzleState.accounts[0],value: web3.toWei("1","ether")})
+    const stackId0Balance = Token.methods.balanceOf.cacheCall(drizzleState.accounts[0]);
+    const stackId1Balance = Token.methods.balanceOf.cacheCall(drizzleState.accounts[1]);
+    const stackId2Balance = Token.methods.balanceOf.cacheCall(drizzleState.accounts[2]);
+    // const stackIdCap = TokenCrowdsale.methods.cap.cacheCall();
     const stackIdRate = GNITokenCrowdsale.methods.rate.cacheCall();
-    const stackIdSupply = GNIToken.methods.totalSupply.cacheCall();
+    const stackIdSupply = Token.methods.totalSupply.cacheCall();
     console.log('stackId =', stackIdSupply)
     this.setState({stackId0Balance,stackId1Balance,stackId2Balance,stackIdRate,stackIdSupply});
     // this.setState({coinBaseBalanceDataKey})
@@ -50,18 +50,18 @@ class ReadString extends React.Component {
   }
 
   render() {
-    const { MyStringStore, GNIToken,GNITokenCrowdsale } = this.props.drizzleState.contracts;
+    const { MyStringStore, Token,GNITokenCrowdsale } = this.props.drizzleState.contracts;
     const myString = MyStringStore.myString[this.state.dataKey];
 
-    const balance0Value = GNIToken.balanceOf[this.state.stackId0Balance];
-    const balance1Value = GNIToken.balanceOf[this.state.stackId1Balance];
-    const balance2Value = GNIToken.balanceOf[this.state.stackId2Balance];
-    const totalTokenSupply = GNIToken.totalSupply[this.state.stackIdSupply];
+    const balance0Value = Token.balanceOf[this.state.stackId0Balance];
+    const balance1Value = Token.balanceOf[this.state.stackId1Balance];
+    const balance2Value = Token.balanceOf[this.state.stackId2Balance];
+    const totalTokenSupply = Token.totalSupply[this.state.stackIdSupply];
     // if (totalTokenSupply) {
     //
     //   console.log('readString', totalTokenSupply);
     // }
-    // const cap = GNITokenCrowdsale.cap[this.state.stackIdCap];
+    // const cap = TokenCrowdsale.cap[this.state.stackIdCap];
     const rate = GNITokenCrowdsale.rate[this.state.stackIdRate];
     return (<div>
               <p> My stored string: { myString && myString.value} </p>
