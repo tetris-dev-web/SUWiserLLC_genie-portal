@@ -2,6 +2,7 @@ import React from 'react';
 import { totalData } from '../../../../util/token_data_util';
 import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
+import CashFlowModal from './cashflow/cashflow_modal';
 
 class ProjectForm extends React.Component {
 
@@ -14,7 +15,6 @@ class ProjectForm extends React.Component {
       longitude: '',
       cashflow: '',
 
-
       revenue: '',
       valuation: '1',
       model_id: '7syizSLPN60',
@@ -26,7 +26,7 @@ class ProjectForm extends React.Component {
       imageUrl: '',
       coins: '****',
       status: 'pitched',
-      summary: 'summary',
+      summary: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -66,15 +66,13 @@ class ProjectForm extends React.Component {
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
 
-
     // data.append("project[revenue]", this.state.revenue);
     // formData.append("project[icon]", this.state.icon);
     // formData.append("project[description]", this.state.description);
     // formData.append("project[status]", this.state.status);
 
-
     this.props.createProject(data).then( () => {
-      const pitchedProject = GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
+      GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
       this.props.closeModal();
     });
 
@@ -174,7 +172,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude } = this.state;
+    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude, summary } = this.state;
 
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
@@ -202,13 +200,15 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input inputfile" id="file"
+          <input className="main-input inputfile" id="json-file"
             type="file"
             onChange={this.updateFile}/>
-          <label for="file"> #| choose json</label>
+          <label htmlFor="json-file"> #| choose json</label>
 
           <DivWithCorners>
-            <span className="text">Cashflows</span>
+            <span className="text">
+              <CashFlowModal />
+            </span>
           </DivWithCorners>
         </div>
 
@@ -237,25 +237,28 @@ class ProjectForm extends React.Component {
         </div>
 
         <div className="flexed">
-          <input className="main-input inputfile" id="file"
+          <input className="main-input inputfile" id="pdf-file"
             type="file"/>
-          <label for="file">#|choose pdf</label>
+          <label htmlFor="pdf-file">#|choose pdf</label>
 
           <DivWithCorners>
             <span className="text">plan</span>
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input inputfile" id="file"
+          <input className="main-input inputfile" id="model-file"
             type="file"/>
-          <label for="file">#|model id</label>
+          <label htmlFor="model-file">#|model id</label>
 
           <DivWithCorners>
             <span className="text">Poly Model</span>
           </DivWithCorners>
         </div>
 
-        <textarea className="description-area" value="description" />
+        <textarea
+          className="description-area"
+          value={summary}
+          onChange={this.update('summary')} />
         <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"

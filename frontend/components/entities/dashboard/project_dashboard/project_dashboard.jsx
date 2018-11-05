@@ -5,7 +5,6 @@ import ModalStyle from './modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
 import CashFlowGraph from './project_cashflow';
-import $ from 'jquery';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -103,7 +102,7 @@ class ProjectDashboard extends React.Component {
                         </div>
                       </div>
                       <div className="bus-plan-download">
-                        <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
+                        <a target="_blank" rel="noopener noreferrer" href={ `${projectClicked.bus_plan_link}` }>
                           <i className="fas fa-file-contract">
                             <span>business plan</span>
                           </i>
