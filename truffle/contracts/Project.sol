@@ -96,26 +96,37 @@ contract Project {
     require(managers[msg.sender] == true || msg.sender == developer);
     _;
   }
+
   function deposit () public payable {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
     dividends.transfer(weiAmount);
   }
+
   function addManager (address manager) public authorize {
     managers[manager] = true;
   }
+
   function setDividendWallet (address wallet) public authorize {
     dividends = wallet;
   }
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
-  function update (uint256 votes) external {
+  function vote (uint256 votes) external {
     voteCount = voteCount.add(votes);
     closingTime = closingTime.add(43200);
   }
+
+  //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
+  function removeVotes (uint256 votes) external {
+    require(votes <= voteCount);
+    voteCount = voteCount.sub(votes);
+  }
+
   function activate () external {
     active = true;
     log();
   }
+
   function beats (address otherProject) external view returns (bool) {
     return (
       !active &&

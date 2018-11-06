@@ -35,15 +35,15 @@ contract InvestorList {
     return investors[id].addr;
   }
 
-  function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
+  function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes, address investorAddr) external {
     /* uint256 id = getInvestorIdx(investorIds[msg.sender]); */
-    uint256 investorId = investorIds[msg.sender];
+    uint256 investorId = investorIds[investorAddr];
     require(investors[investorId].votes[fromProjectId] <= votes);
     investors[investorId].votes[fromProjectId] = investors[investorId].votes[fromProjectId].sub(votes);
     applyVotes(investorId, toProjectId, votes);
   }
 
-  function applyVoteCredit (uint256 projectId, uint256 votes) external {
+  function applyVotes (uint256 projectId, uint256 votes) external {
     /* uint256 id = getId(investorIds[msg.sender]); */
     uint256 investorId = investorIds[msg.sender];
     require(investors[investorId].voteCredit <= votes);
@@ -52,7 +52,7 @@ contract InvestorList {
   }
 
   //make this function only accessible by crowdsale for security
-  function recordVoteCredit (uint256 investorId, uint256 projectId) external {
+  function cacheVoteCredit (uint256 investorId, uint256 projectId) external {
     /* uint256 id = getId(investorId); */
     uint256 voteCredit = investors[investorId].votes[projectId];
     investors[investorId].votes[projectId] = 0;
