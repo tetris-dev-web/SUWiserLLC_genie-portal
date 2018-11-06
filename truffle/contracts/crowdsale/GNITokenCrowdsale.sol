@@ -72,7 +72,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  function buyTokensAndVote (uint256 _projectVotedForId) public payable {
    //add require statement that makes sure the projet isnt already active
-   require(Project(projects[_projectVotedForId]).open() == true);
+   /* require(Project(projects[_projectVotedForId]).open() == true); */
    uint256 tokens = buyTokens(msg.sender);
    investorList.handleNewPurchase(_projectVotedForId, tokens, msg.sender);
    Project(projects[_projectVotedForId]).update(tokens);
@@ -99,7 +99,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
       updateInvestors(project.investorTokens_(), projectId);
 
-      forwardFunds(developer, project.capitalRequired_());
+      uint256 capital = project.capitalRequired_();
+
+      forwardFunds(developer, capital);
+      weiRaised = weiRaised.sub(capital);
+      
       project.activate();
     }
   }
@@ -120,12 +124,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
   function updateInvestors (uint256 tokens, uint256 projectId) private {
     uint256 supply = Token(token).totalInactiveSupply().sub(Token(token).inactiveBalanceOf(developer));
-    uint256 activationDivisor = supply.div(tokens);
 
     for (uint256 i = 1; i <= investorList.investorCount(); i = i.add(1)) {
       address investor = investorList.addrById(i);
-      uint256 investorBalance = Token(token).balanceOf(investor);
-      uint256 tokensToActivate = investorBalance.div(activationDivisor);
+      uint256 investorBalance = Token(token).inactiveBalanceOf(investor);
+      uint256 tokensToActivate = investorBalance.mul(tokens).div(supply);
 
       Token(token).activate(investor, tokensToActivate);
 

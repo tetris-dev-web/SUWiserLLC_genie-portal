@@ -37,8 +37,9 @@ contract Dividends {
 
   function grantDividend (address investor, uint256 activeTokens, uint256 profits) private {
     uint256 investorActive = Token(token).activeBalanceOf(investor);
-    uint256 investorShare = activeTokens.div(investorActive);
-    uint256 dividend = profits.div(investorShare);
+    uint256 dividend = profits.mul(investorActive).div(activeTokens);
     investor.transfer(dividend);
+    /* uint256 investorShare = activeTokens.div(investorActive);
+    uint256 dividend = profits.div(investorShare); */
   }
 }

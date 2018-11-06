@@ -57,7 +57,7 @@ contract Project {
     emit LogProject(id, name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, voteCount, active);
   }
   function open () public view returns (bool) {
-    return closingTime < now;
+    return closingTime > now;
   }
   function active_ () public view returns (bool) {
     return active;
@@ -108,15 +108,15 @@ contract Project {
     dividends = wallet;
   }
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
-  function update (uint256 votes) public {
+  function update (uint256 votes) external {
     voteCount = voteCount.add(votes);
     closingTime = closingTime.add(43200);
   }
-  function activate () public {
+  function activate () external {
     active = true;
     log();
   }
-  function beats (address otherProject) public view returns (bool) {
+  function beats (address otherProject) external view returns (bool) {
     return (
       !active &&
       voteCount > 0 &&
