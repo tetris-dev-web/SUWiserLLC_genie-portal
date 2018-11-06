@@ -27,6 +27,15 @@ class Api::ProjectsController < ApplicationController
     end
   end
 
+  def deployed_project_revenue
+    @deployed_project_revenue = Project.where('current_capital >= capital_required').sum(:current_capital)
+    if @deployed_project_revenue
+      render json: @deployed_project_revenue
+    else
+      nil
+    end
+  end
+
   private
   def project_params
     params.require(:project).permit(
