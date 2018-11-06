@@ -1,14 +1,27 @@
 import React from 'react';
 import { keys } from 'lodash';
-import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_cashflow';
+import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_cashflow_graph';
 import ThumbsUp from '../thumbs_up_svg';
 
 class CashFlow extends React.Component {
   constructor(props) {
     super(props);
+    // Because the cashFlowGraph requires cashflow to be a string that is parsed into JSON,
+    // setting up an example file is difficult. All the cashflow data has to be placed on
+    // one line in test.json to work. Currently it stands at around 1300 characters long.
+    // Suggested project refactoring in the future for easier user input.
+
+    // const { cashflowData } = this.props;
+    // const project = cashflowData === '' ? sampleProject : cashflowData;
+    // If json files cannot be uploaded and read the above lines will return undefined
+    const project = sampleProject;
+    this.state = {
+      project
+    };
 
     this.defaultCashValue = this.defaultCashValue.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.processJSONForGraph = this.processJSONForGraph.bind(this);
   }
 
   defaultCashValue(value) {
@@ -19,9 +32,14 @@ class CashFlow extends React.Component {
 
   }
 
+  processJSONForGraph(project) {
+    project.cashflow = JSON.stringify(project.cashflow);
+    return project;
+  }
+
   render() {
     // 7 years of data is the standard, translating to 28 quarters
-    const { ExpectedNet, Actual } = sampleProject.cashflow;
+    const { ExpectedNet, Actual } = this.state.project.cashflow;
     const quarters = keys(ExpectedNet);
     return(
       <form onSubmit={this.handleSubmit}>
@@ -29,7 +47,7 @@ class CashFlow extends React.Component {
         <h3>Expected</h3>
         <h3>Actual</h3>
         <div>
-          {quarters.forEach((quarter, idx) => {
+          {quarters.map((quarter, idx) => {
             return(
               <React.Fragment key={idx}>
                 <p>{`${quarter}`}</p>
@@ -40,8 +58,10 @@ class CashFlow extends React.Component {
           })}
         </div>
         <button>Download Json Sample</button>
-        <CashFlowGraph project={sampleProject} />
+        <CashFlowGraph project={this.processJSONForGraph(this.state.project)} />
         <input type="submit" value="Submit" />
+        <div className="blue-close-modal-button close-modal-button"
+          onClick={this.props.closeModal}>&times;</div>
         <ThumbsUp />
       </form>
     );

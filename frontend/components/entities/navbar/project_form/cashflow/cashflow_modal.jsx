@@ -33,17 +33,18 @@ class CashFlowModal extends React.Component {
   }
 
   render() {
-
     return (
-      <div onClick={this.openModal}>
-        Cashflows
+      <div>
+        <div onClick={this.openModal}>Cashflows</div>
         <Modal
           isOpen={this.state.openModal}
           onRequestClose={this.closeModal}
           style={ModalStyle}
           contentLabel="Manage Modal"
           className="modal-container">
-          <CashFlow closeModal={this.closeModal} />
+          <CashFlow
+            closeModal={this.closeModal}
+            cashflowData={this.props.cashflowData} />
         </Modal>
       </div>
     );

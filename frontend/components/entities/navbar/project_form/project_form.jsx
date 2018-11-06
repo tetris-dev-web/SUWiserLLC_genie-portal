@@ -95,15 +95,24 @@ class ProjectForm extends React.Component {
   }
 
   updateFile(e) {
+    // Update to handle other file types eventually.
     let file = e.currentTarget.files[0];
+    const jsonHolder = [];
+    // Uploaded file contents cannot be read directly in the browser; not sure
+    // this workaround will work for uploading json data.
     if (file.type === "application/json") {
       const reader = new FileReader();
       reader.onload = () => {
-        file = reader.result;
+        jsonHolder.push(reader.result);
       };
       reader.readAsText(file);
+      file = jsonHolder[0];
     }
-    this.setState({cashflow: file});
+    if (jsonHolder.length == 0) {
+      this.setState({cashflow: file});
+    } else {
+      this.setState({cashflow: jsonHolder[0]});
+    }
   }
 
   renderErrors() {
