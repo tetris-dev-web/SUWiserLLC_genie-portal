@@ -1,5 +1,6 @@
 pragma solidity ^0.4.23;
 import './utility/SafeMath.sol';
+import './Project.sol';
 
 contract InvestorList {
   using SafeMath for uint256;
@@ -51,7 +52,7 @@ contract InvestorList {
   }
 
   //make this function only accessible by crowdsale for security
-  function transferVoteCredit (uint256 investorId, uint256 projectId) external {
+  function recordVoteCredit (uint256 investorId, uint256 projectId) external {
     /* uint256 id = getId(investorId); */
     uint256 voteCredit = investors[investorId].votes[projectId];
     investors[investorId].votes[projectId] = 0;
@@ -59,9 +60,14 @@ contract InvestorList {
   }
 
   //make this function only accessible by crowdsale for security
-  function addVoteCredit (address investor, uint256 votes) external {
+  function addVoteCredit (address investorAddr, uint256 votes) external {
     /* uint256 id = getId(investorIds[investor]); */
-    investors[investorIds[investor]].voteCredit =   investors[investorIds[investor]].voteCredit.add(votes);
+    investors[investorIds[investorAddr]].voteCredit = investors[investorIds[investorAddr]].voteCredit.add(votes);
+  }
+
+  function removeVoteCredit (address investorAddr, uint256 votes) external {
+    require(investors[investorIds[investorAddr]].voteCredit >= votes);
+    investors[investorIds[investorAddr]].voteCredit = investors[investorIds[investorAddr]].voteCredit.sub(votes);
   }
 
   //make this function only accessible by crowdsale for security
@@ -70,7 +76,7 @@ contract InvestorList {
       addInvestor(investorAddr);
     }
     /* uint256 id = getId(investorIds[investorId]); */
-    applyVotes(investorAddr, projectId, votes);
+    applyVotes(investorIds[investorAddr], projectId, votes);
   }
 
   /* function getId (uint256 id) private pure returns(uint256) {

@@ -80,6 +80,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  function sellTokens (address to, uint256 tokens) external {
    Token(token).transferActiveTokens(msg.sender, to, tokens);
+   //before adding vote credit, we should remove the same amount of credit from the seller. they may need to take back their vote to do this.
+   investorList.removeVoteCredit(msg.sender, tokens);
    investorList.addVoteCredit(to, tokens);
  }
 
@@ -103,7 +105,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
       forwardFunds(developer, capital);
       weiRaised = weiRaised.sub(capital);
-      
+
       project.activate();
     }
   }
@@ -132,7 +134,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
       Token(token).activate(investor, tokensToActivate);
 
-      investorList.transferVoteCredit(i, projectId);
+      investorList.recordVoteCredit(i, projectId);
     }
   }
 
