@@ -28,9 +28,12 @@ class Api::ProjectsController < ApplicationController
   end
 
   def deployed_project_revenue
-    @deployed_project_revenue = Project.where('current_capital >= capital_required').sum(:current_capital)
+    @deployed_projects = Project.where('current_capital >= capital_required')
+    @deployed_projects_cashflow = @deployed_projects.map{|project| p JSON.parse(project.cashflow)["ExpectedNet"].values.reduce(:+)}.reduce(:+)
+
+    @deployed_project_revenue = @deployed_projects.sum(:current_capital)
     if @deployed_project_revenue
-      render json: @deployed_project_revenue
+      render json: @deployed_project_revenue + @deployed_projects_cashflow
     else
       nil
     end
