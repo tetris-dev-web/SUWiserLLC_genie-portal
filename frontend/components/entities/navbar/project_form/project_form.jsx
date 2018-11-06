@@ -1,6 +1,6 @@
 import React from 'react';
-import { totalData } from '../../../../util/token_data_util';
-import { roundToTwo } from '../../../../util/function_util';
+// import { totalData } from '../../../../util/token_data_util';
+// import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow/cashflow_modal';
 
@@ -95,10 +95,15 @@ class ProjectForm extends React.Component {
   }
 
   updateFile(e) {
-    const file = e.currentTarget.files[0];
-
+    let file = e.currentTarget.files[0];
+    if (file.type === "application/json") {
+      const reader = new FileReader();
+      reader.onload = () => {
+        file = reader.result;
+      };
+      reader.readAsText(file);
+    }
     this.setState({cashflow: file});
-
   }
 
   renderErrors() {
@@ -172,8 +177,9 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude, summary } = this.state;
-
+    let { title, latitude, longitude, summary,
+      // revenue, valuation, description, model_id, city, country, continent, icon
+    } = this.state;
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
         <input className="main-input project-title-input"
@@ -202,12 +208,12 @@ class ProjectForm extends React.Component {
         <div className="flexed">
           <input className="main-input inputfile" id="json-file"
             type="file"
-            onChange={this.updateFile}/>
+            onChange={this.updateFile} />
           <label htmlFor="json-file"> #| choose json</label>
 
           <DivWithCorners>
             <span className="text">
-              <CashFlowModal />
+              <CashFlowModal cashflowData={this.state.cashflow} />
             </span>
           </DivWithCorners>
         </div>
@@ -238,7 +244,8 @@ class ProjectForm extends React.Component {
 
         <div className="flexed">
           <input className="main-input inputfile" id="pdf-file"
-            type="file"/>
+            type="file"
+            onChange={this.updateFile} />
           <label htmlFor="pdf-file">#|choose pdf</label>
 
           <DivWithCorners>
@@ -247,11 +254,12 @@ class ProjectForm extends React.Component {
         </div>
         <div className="flexed">
           <input className="main-input inputfile" id="model-file"
-            type="file"/>
+            type="file"
+            onChange={this.updateFile} />
           <label htmlFor="model-file">#|model id</label>
 
           <DivWithCorners>
-            <span className="text">Poly Model</span>
+            <a href="https://poly.google.com" target ="_blank" rel="noopener noreferrer" className="text">Poly Model</a>
           </DivWithCorners>
         </div>
 
