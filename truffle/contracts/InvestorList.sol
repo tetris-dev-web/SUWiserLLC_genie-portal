@@ -35,7 +35,7 @@ contract InvestorList {
     return investors[id].addr;
   }
 
-  function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes, address investorAddr) external {
+  function transferVotes (address investorAddr, uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
     /* uint256 id = getInvestorIdx(investorIds[msg.sender]); */
     uint256 investorId = investorIds[investorAddr];
     require(investors[investorId].votes[fromProjectId] <= votes);
@@ -43,20 +43,22 @@ contract InvestorList {
     applyVotes(investorId, toProjectId, votes);
   }
 
-  function applyVotes (uint256 projectId, uint256 votes) external {
+  function applyVotes (address investorAddr, uint256 projectId, uint256 votes) external {
     /* uint256 id = getId(investorIds[msg.sender]); */
-    uint256 investorId = investorIds[msg.sender];
+    uint256 investorId = investorIds[investorAddr];
     require(investors[investorId].voteCredit <= votes);
     investors[investorId].voteCredit = investors[investorId].voteCredit.sub(votes);
     applyVotes(investorId, projectId, votes);
   }
 
   //make this function only accessible by crowdsale for security
-  function cacheVoteCredit (uint256 investorId, uint256 projectId) external {
+  function cacheVoteCredit (address investorAddr, uint256 projectId, uint256 votes) external {
     /* uint256 id = getId(investorId); */
-    uint256 voteCredit = investors[investorId].votes[projectId];
-    investors[investorId].votes[projectId] = 0;
-    investors[investorId].voteCredit = investors[investorId].voteCredit.add(voteCredit);
+    /* uint256 voteCredit = investors[investorId].votes[projectId]; */
+    uint256 investorId = investorIds[investorAddr];
+    require(investors[investorId].votes[projectId] >= votes);
+    investors[investorId].votes[projectId] = investors[investorId].votes[projectId].sub(votes);
+    investors[investorId].voteCredit = investors[investorId].voteCredit.add(votes);
   }
 
   //make this function only accessible by crowdsale for security
