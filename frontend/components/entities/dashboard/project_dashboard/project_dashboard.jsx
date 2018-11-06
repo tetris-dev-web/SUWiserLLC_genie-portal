@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
-import CashFlowGraph from './project_cashflow';
+import CashFlowGraph from './project_cashflow_graph';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
