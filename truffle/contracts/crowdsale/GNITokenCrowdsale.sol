@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity ^0.4.25;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 import '../Project.sol';

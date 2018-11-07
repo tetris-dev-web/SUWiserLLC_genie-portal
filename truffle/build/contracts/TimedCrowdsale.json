@@ -171,9 +171,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\nimport '../utility/SafeMath.sol';\nimport \"./Crowdsale.sol\";\n\n\n/**\n * @title TimedCrowdsale\n * @dev Crowdsale accepting contributions only within a time frame.\n */\ncontract TimedCrowdsale is Crowdsale {\n  using SafeMath for uint256;\n\n  uint256 public openingTime;\n  uint256 public doomsDay;\n\n  /**\n   * @dev Reverts if not in crowdsale time range.\n   */\n  modifier onlyWhileOpen {\n    // solium-disable-next-line security/no-block-members\n    uint timestamp = block.timestamp;\n    uint time1 = openingTime;\n    uint time2 = doomsDay;\n    require(block.timestamp >= openingTime && block.timestamp <= doomsDay);\n    _;\n  }\n\n  /**\n   * @dev Constructor, takes crowdsale opening and closing times.\n   * @param _openingTime Crowdsale opening time\n   * @param _doomsDay Crowdsale closing time\n   */\n  constructor(uint256 _openingTime, uint256 _doomsDay) public {\n    // solium-disable-next-line security/no-block-members\n    require(_openingTime >= block.timestamp);\n    require(_doomsDay >= _openingTime);\n\n    openingTime = _openingTime;\n    doomsDay = _doomsDay;\n  }\n\n  /**\n   * @dev Checks whether the period in which the crowdsale is open has already elapsed.\n   * @return Whether crowdsale period has elapsed\n   */\n  function hasClosed() public view returns (bool) {\n    // solium-disable-next-line security/no-block-members\n    return block.timestamp > doomsDay;\n  }\n\n  /**\n   * @dev Extend parent behavior requiring to be within contributing period\n   * @param _beneficiary Token purchaser\n   * @param _weiAmount Amount of wei contributed\n   */\n  function _preValidatePurchase(\n    address _beneficiary,\n    uint256 _weiAmount\n  )\n    internal\n    onlyWhileOpen\n  {\n    super._preValidatePurchase(_beneficiary, _weiAmount);\n  }\n\n}\n",
-  "sourcePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/TimedCrowdsale.sol",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/TimedCrowdsale.sol",
   "ast": {
-    "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/TimedCrowdsale.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/TimedCrowdsale.sol",
     "exportedSymbols": {
       "TimedCrowdsale": [
         1733
@@ -194,18 +194,18 @@
         "src": "0:24:6"
       },
       {
-        "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/utility/SafeMath.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/SafeMath.sol",
         "file": "../utility/SafeMath.sol",
         "id": 1636,
         "nodeType": "ImportDirective",
         "scope": 1734,
-        "sourceUnit": 2644,
+        "sourceUnit": 3147,
         "src": "26:33:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
         "file": "./Crowdsale.sol",
         "id": 1637,
         "nodeType": "ImportDirective",
@@ -257,10 +257,10 @@
               "id": 1640,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2643,
+              "referencedDeclaration": 3146,
               "src": "236:8:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$2643",
+                "typeIdentifier": "t_contract$_SafeMath_$3146",
                 "typeString": "library SafeMath"
               }
             },
@@ -376,7 +376,7 @@
                       "name": "block",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2648,
+                      "referencedDeclaration": 3151,
                       "src": "485:5:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_magic_block",
@@ -532,7 +532,7 @@
                               "name": "block",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2648,
+                              "referencedDeclaration": 3151,
                               "src": "571:5:6",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_block",
@@ -595,7 +595,7 @@
                               "name": "block",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2648,
+                              "referencedDeclaration": 3151,
                               "src": "605:5:6",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_block",
@@ -655,10 +655,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2661,
-                        2662
+                        3164,
+                        3165
                       ],
-                      "referencedDeclaration": 2661,
+                      "referencedDeclaration": 3164,
                       "src": "563:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -747,7 +747,7 @@
                             "name": "block",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2648,
+                            "referencedDeclaration": 3151,
                             "src": "968:5:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_block",
@@ -786,10 +786,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2661,
-                        2662
+                        3164,
+                        3165
                       ],
-                      "referencedDeclaration": 2661,
+                      "referencedDeclaration": 3164,
                       "src": "944:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -875,10 +875,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2661,
-                        2662
+                        3164,
+                        3165
                       ],
-                      "referencedDeclaration": 2661,
+                      "referencedDeclaration": 3164,
                       "src": "990:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1103,7 +1103,7 @@
                         "name": "block",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2648,
+                        "referencedDeclaration": 3151,
                         "src": "1361:5:6",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_block",
@@ -1260,7 +1260,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2692,
+                        "referencedDeclaration": 3195,
                         "src": "1697:5:6",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_TimedCrowdsale_$1733",
@@ -1409,7 +1409,7 @@
     "src": "0:1758:6"
   },
   "legacyAST": {
-    "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/TimedCrowdsale.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/TimedCrowdsale.sol",
     "exportedSymbols": {
       "TimedCrowdsale": [
         1733
@@ -1430,18 +1430,18 @@
         "src": "0:24:6"
       },
       {
-        "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/utility/SafeMath.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/SafeMath.sol",
         "file": "../utility/SafeMath.sol",
         "id": 1636,
         "nodeType": "ImportDirective",
         "scope": 1734,
-        "sourceUnit": 2644,
+        "sourceUnit": 3147,
         "src": "26:33:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/admin/Desktop/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/crowdsale/Crowdsale.sol",
         "file": "./Crowdsale.sol",
         "id": 1637,
         "nodeType": "ImportDirective",
@@ -1493,10 +1493,10 @@
               "id": 1640,
               "name": "SafeMath",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2643,
+              "referencedDeclaration": 3146,
               "src": "236:8:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SafeMath_$2643",
+                "typeIdentifier": "t_contract$_SafeMath_$3146",
                 "typeString": "library SafeMath"
               }
             },
@@ -1612,7 +1612,7 @@
                       "name": "block",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2648,
+                      "referencedDeclaration": 3151,
                       "src": "485:5:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_magic_block",
@@ -1768,7 +1768,7 @@
                               "name": "block",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2648,
+                              "referencedDeclaration": 3151,
                               "src": "571:5:6",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_block",
@@ -1831,7 +1831,7 @@
                               "name": "block",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2648,
+                              "referencedDeclaration": 3151,
                               "src": "605:5:6",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_block",
@@ -1891,10 +1891,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2661,
-                        2662
+                        3164,
+                        3165
                       ],
-                      "referencedDeclaration": 2661,
+                      "referencedDeclaration": 3164,
                       "src": "563:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1983,7 +1983,7 @@
                             "name": "block",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2648,
+                            "referencedDeclaration": 3151,
                             "src": "968:5:6",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_block",
@@ -2022,10 +2022,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2661,
-                        2662
+                        3164,
+                        3165
                       ],
-                      "referencedDeclaration": 2661,
+                      "referencedDeclaration": 3164,
                       "src": "944:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2111,10 +2111,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2661,
-                        2662
+                        3164,
+                        3165
                       ],
-                      "referencedDeclaration": 2661,
+                      "referencedDeclaration": 3164,
                       "src": "990:7:6",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2339,7 +2339,7 @@
                         "name": "block",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2648,
+                        "referencedDeclaration": 3151,
                         "src": "1361:5:6",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_block",
@@ -2496,7 +2496,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2692,
+                        "referencedDeclaration": 3195,
                         "src": "1697:5:6",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_TimedCrowdsale_$1733",
@@ -2646,9 +2646,9 @@
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+    "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-10-30T19:28:33.100Z"
+  "schemaVersion": "3.0.0-beta.1",
+  "updatedAt": "2018-11-07T21:01:08.891Z"
 }
