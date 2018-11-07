@@ -128,8 +128,10 @@ contract Project {
   function removeVotes (address voter, uint256 voteAmount) external {
     require(voteAmount <= totalVotes);
     require(voteAmount<= votes[voter] );
+    
     votes[voter] = votes[voter].sub(voteAmount);
     totalVotes = totalVotes.sub(voteAmount);
+    closingTime = closingTime.sub(43200);
   }
 
   function activate () external {

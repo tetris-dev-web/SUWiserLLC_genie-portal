@@ -39,7 +39,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         Project(projectAddr).developerTokens(),
         Project(projectAddr).investorTokens(),
         Project(projectAddr).active(),
-        Project(projectAddr).voteCount(),
+        Project(projectAddr).totalVotes(),
         Project(projectAddr).closingTime(),
         projectAddr
         );
@@ -87,13 +87,13 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  }
 
  function addVoteCredit (uint256 fromProjectId, uint256 votes) external {
-   Project(projects[projectId]).removeVotes(msg.sender, votes);
+   Project(projects[fromProjectId]).removeVotes(msg.sender, votes);
    investorList.addVoteCredit(msg.sender, votes);
  }
 
  function voteWithCredit (uint256 toProjectId, uint256 votes) external {
    investorList.removeVoteCredit(msg.sender, votes);
-   Project(projects[projectId]).vote(msg.sender, votes);
+   Project(projects[toProjectId]).vote(msg.sender, votes);
  }
 
  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {

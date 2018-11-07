@@ -4,13 +4,24 @@ import './InvestorList.sol';
 
 contract InvestorListMock is InvestorList {
   function addTestInvestor (
-      address investorAddr
-
+      address investorAddr,
+      uint256 voteCredit
     ) external {
-    addInvestor(investorAddr);
+      Investor memory newInvestor;
+
+      newInvestor.addr = investorAddr;
+
+      investorCount_ = investorCount_.add(1);
+
+      uint256 id = investorCount_;
+      newInvestor.id = id;
+      newInvestor.voteCredit = voteCredit;
+      investorIds[investorAddr] = id;
+
+      investors[id] = newInvestor;
   }
 
-  function addTestInvestorVotes (uint256 investorId, uint256 voteCredit, uint256 projectId1, uint256 projectId2) external {
-
+  function getVoteCredit (address investor) public view returns (uint256) {
+    return investors[investorIds[investor]].voteCredit;
   }
 }

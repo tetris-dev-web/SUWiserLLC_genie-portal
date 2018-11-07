@@ -1,5 +1,6 @@
 const Token = artifacts.require("Token");
 const InvestorList = artifacts.require("InvestorList");
+const InvestorListMock = artifacts.require("InvestorListMock");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const MyStringStore = artifacts.require("MyStringStore");
 const Dividends = artifacts.require("Dividends");
@@ -17,6 +18,9 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(() => {
           return deployer.deploy(InvestorList);
+        })
+        .then(() => {
+          return deployer.deploy(InvestorListMock);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
