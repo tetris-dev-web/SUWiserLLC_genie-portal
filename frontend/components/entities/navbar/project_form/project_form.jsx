@@ -1,8 +1,10 @@
 import React from 'react';
-// import { totalData } from '../../../../util/token_data_util';
-// import { roundToTwo } from '../../../../util/function_util';
+import { totalData } from '../../../../util/token_data_util';
+import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
-import CashFlowModal from './cashflow/cashflow_modal';
+import Modal from 'react-modal';
+import MapModalStyle from './map_modal_style';
+import DropPinMap from './drop_pin_map';
 
 class ProjectForm extends React.Component {
 
@@ -14,9 +16,12 @@ class ProjectForm extends React.Component {
       latitude: '',
       longitude: '',
       cashflow: '',
+      latlngpresence: false,
+      droppinclicked: false,
 
       revenue: '',
       valuation: '1',
+      capitalRequired: '',
       model_id: '7syizSLPN60',
       city: 'New York',
       country: 'USA',
@@ -26,11 +31,17 @@ class ProjectForm extends React.Component {
       imageUrl: '',
       coins: '****',
       status: 'pitched',
-      summary: '',
+      summary: 'summary',
+      openModal: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateFile = this.updateFile.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.dropPinClick = this.dropPinClick.bind(this);
+    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
+    this.updateLatLng = this.updateLatLng.bind(this);
   }
 
   componentDidMount() {
@@ -55,9 +66,9 @@ class ProjectForm extends React.Component {
     data.append("project[latitude]", this.state.latitude);
     data.append("project[longitude]", this.state.longitude);
 
-    data.append("project[city]", this.state.city);
-    data.append("project[country]", this.state.country);
-    data.append("project[continent]", this.state.continent);
+    // data.append("project[city]", this.state.city);
+    // data.append("project[country]", this.state.country);
+    // data.append("project[continent]", this.state.continent);
 
     data.append("project[valuation]", this.state.valuation);
     data.append("project[cashflow]", this.state.cashflow);
@@ -66,16 +77,50 @@ class ProjectForm extends React.Component {
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
 
+
     // data.append("project[revenue]", this.state.revenue);
     // formData.append("project[icon]", this.state.icon);
     // formData.append("project[description]", this.state.description);
     // formData.append("project[status]", this.state.status);
 
-    this.props.createProject(data).then( () => {
-      GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
-      this.props.closeModal();
-    });
 
+    this.props.closeModal();
+  }
+  // Moved until data is properly structured
+  // this.props.createProject(data)
+  // .then( () => {
+  //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
+  // });
+
+  dropPinClick() {
+    if(this.state.latitude != '' && this.state.longitude != '') {
+      this.setState({latlngpresence: true});
+      this.openModal();
+    } else {
+      this.setState({droppinclicked: true});
+    }
+  }
+
+  openModal() {
+    this.setState({openModal: true});
+  }
+
+  closeModal() {
+    this.setState({openModal: false});
+  }
+
+  renderLatLngErrors(presence, clicked) {
+    if (!presence && clicked) {
+      return (
+        <ul className="project-errors">
+          <li>Latitude and Longitude can't be blank</li>
+        </ul>
+      );
+    }
+  }
+
+  updateLatLng(pos) {
+    this.setState({latitude: pos.lat, longitude: pos.lng});
   }
 
   update(property) {
@@ -95,24 +140,10 @@ class ProjectForm extends React.Component {
   }
 
   updateFile(e) {
-    // Update to handle other file types eventually.
-    let file = e.currentTarget.files[0];
-    const jsonHolder = [];
-    // Uploaded file contents cannot be read directly in the browser; not sure
-    // this workaround will work for uploading json data.
-    if (file.type === "application/json") {
-      const reader = new FileReader();
-      reader.onload = () => {
-        jsonHolder.push(reader.result);
-      };
-      reader.readAsText(file);
-      file = jsonHolder[0];
-    }
-    if (jsonHolder.length == 0) {
-      this.setState({cashflow: file});
-    } else {
-      this.setState({cashflow: jsonHolder[0]});
-    }
+    const file = e.currentTarget.files[0];
+
+    this.setState({cashflow: file});
+
   }
 
   renderErrors() {
@@ -156,44 +187,43 @@ class ProjectForm extends React.Component {
 
   render() {
 
-    // const geojsons = [];
-    // const fileId = ["file1", "file2", "file3", "file4", "file5"];
-    // for (let i = 0; i < 5; i++) {
-    //   geojsons.push(
-    //     <div className="geo-row-container" key={i}>
-    //       <div className="file-container">
-    //         <input id={fileId[i]}
-    //           name={fileId[i]}
-    //           className="file-input"
-    //           type="file" />
-    //         <label htmlFor={fileId[i]}>
-    //           <span>choose geojson</span>
-    //         </label>
-    //       </div>
-    //       <select className="heir-input">
-    //         <option>1</option>
-    //         <option>2</option>
-    //         <option>3</option>
-    //         <option>4</option>
-    //         <option>5</option>
-    //       </select>
-    //       <input className="opacity-input"
-    //         type="number"
-    //         min="0"
-    //         max="1"
-    //         placeholder="0.5" />
-    //     </div>
-    //   );
-    // }
+    const geojsons = [];
+    const fileId = ["file1", "file2", "file3", "file4", "file5"];
+    for (let i = 0; i < 5; i++) {
+      geojsons.push(
+        <div className="geo-row-container" key={i}>
+          <div className="file-container">
+            <input id={fileId[i]}
+              name={fileId[i]}
+              className="file-input"
+              type="file" />
+            <label htmlFor={fileId[i]}>
+              <span>choose geojson</span>
+            </label>
+          </div>
+          <select className="heir-input">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+          <input className="opacity-input"
+            type="number"
+            min="0"
+            max="1"
+            placeholder="0.5" />
+        </div>
+      );
+    }
 
-    let { title, latitude, longitude, summary,
-      // revenue, valuation, description, model_id, city, country, continent, icon
-    } = this.state;
+    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude, latlng } = this.state;
+
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
         <input className="main-input project-title-input"
           type="text"
-          placeholder="&nbsp;&nbsp;_&nbsp;&nbsp;|&nbsp;&nbsp; project name"
+          placeholder="#| project name"
           value={title}
           onChange={this.update('title')} />
 
@@ -201,29 +231,49 @@ class ProjectForm extends React.Component {
           <input className="main-input lat-input"
             type="number"
             step="any"
-            placeholder="&nbsp; @ &nbsp| &nbsplat"
+            placeholder="#| lat"
             value={latitude}
             onChange={this.update('latitude')} />
           <input className="main-input long-input"
             type="number"
             step="any"
-            placeholder=" &nbsp; @ &nbsp; |&nbsp long"
+            placeholder="#| long"
             value={longitude}
             onChange={this.update('longitude')} />
           <DivWithCorners>
-            <span className="text">Drop Pin</span>
+            <span onClick={this.dropPinClick} className="text">Drop Pin</span>
           </DivWithCorners>
+          <Modal
+            isOpen={this.state.openModal}
+            onRequestClose={this.closeModal}
+            style={MapModalStyle}
+            contentLabel="Drop Pin Modal"
+            className="modal-container">
+            <div className="drop-pin-flex">
+              <div className="address">
+                <div>Street</div>
+                <div>City</div>
+                <div>Continent</div>
+              </div>
+              <div className='drop-pin-container'>
+                <DropPinMap
+                  updateLatLng={this.updateLatLng}
+                  lat={this.state.latitude}
+                  lng={this.state.longitude}
+                  />
+              </div>
+            </div>
+          </Modal>
         </div>
+        {this.renderLatLngErrors(this.state.latlngpresence, this.state.droppinclicked)}
         <div className="flexed">
-          <input className="main-input inputfile" id="json-file"
+          <input className="main-input inputfile" id="file"
             type="file"
-            onChange={this.updateFile} />
-          <label htmlFor="json-file"> &nbsp;&nbsp; # &nbsp;&nbsp;   | &nbsp;&nbsp;choose json</label>
+            onChange={this.updateFile}/>
+          <label for="file"> #| choose json</label>
 
           <DivWithCorners>
-            <span className="text">
-              <CashFlowModal cashflowData={this.state.cashflow} />
-            </span>
+            <span className="text">Cashflows</span>
           </DivWithCorners>
         </div>
 
@@ -252,31 +302,26 @@ class ProjectForm extends React.Component {
         </div>
 
         <div className="flexed">
-          <input className="main-input inputfile" id="pdf-file"
-            type="file"
-            onChange={this.updateFile} />
-          <label htmlFor="pdf-file">&nbsp;&nbsp; # &nbsp;&nbsp;   | &nbsp;&nbsp;choose pdf</label>
+          <input className="main-input inputfile" id="file"
+            type="file"/>
+          <label for="file">#|choose pdf</label>
 
           <DivWithCorners>
             <span className="text">plan</span>
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input inputfile" id="model-file"
-            type="file"
-            onChange={this.updateFile} />
-          <label htmlFor="model-file">&nbsp;&nbsp; # &nbsp;&nbsp;   | &nbsp;&nbsp;model id</label>
+          <input className="main-input inputfile" id="file"
+            type="file"/>
+          <label for="file">#|model id</label>
 
           <DivWithCorners>
-            <a href="https://poly.google.com" target ="_blank" rel="noopener noreferrer" className="text">Poly Model</a>
+            <span className="text">Poly Model</span>
           </DivWithCorners>
         </div>
 
-        <textarea
-          className="description-area"
-          value={summary}
-          onChange={this.update('summary')} />
-        <input type="submit" value="PITCH"/>
+        <textarea className="description-area" value="description" />
+        <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
