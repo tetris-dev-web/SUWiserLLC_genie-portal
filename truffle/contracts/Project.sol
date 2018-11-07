@@ -15,7 +15,7 @@ contract Project {
   uint256 public investorTokens;
   string public lat;
   string public lng;
-  uint256 public voteCount;
+  uint256 public totalVotes;
   bool public active;
   constructor (
     uint256 _id,
@@ -37,7 +37,7 @@ contract Project {
       investorTokens = _investorTokens;
       lat = _lat;
       lng = _lng;
-      voteCount = 0;
+      totalVotes = 0;
       active = false;
       closingTime = now + 86600 * 240;
   }
@@ -50,11 +50,18 @@ contract Project {
       uint256 investorTokens,
       string lat,
       string lng,
-      uint256 voteCount,
+      uint256 totalVotes,
       bool active
   );
+
+  mapping(address => uint256) private votes;
+
+  function votesOf(address voter) public view returns (uint256) {
+    return votes[voter];
+  }
+
   function log () public {
-    emit LogProject(id, name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, voteCount, active);
+    emit LogProject(id, name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, totalVotes, active);
   }
   function open () public view returns (bool) {
     return closingTime > now;
@@ -62,8 +69,8 @@ contract Project {
   function active_ () public view returns (bool) {
     return active;
   }
-  function voteCount_ () public view returns (uint256) {
-    return voteCount;
+  function totalVotes_ () public view returns (uint256) {
+    return totalVotes;
   }
   function closingTime_ () public view returns (uint256) {
     return closingTime;
@@ -87,7 +94,7 @@ contract Project {
           developerTokens,
           investorTokens,
           active,
-          voteCount,
+          totalVotes,
           closingTime
       );
   } */
@@ -111,15 +118,18 @@ contract Project {
     dividends = wallet;
   }
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
-  function vote (uint256 votes) external {
-    voteCount = voteCount.add(votes);
+  function vote (address voter, uint256 voteAmount) external {
+    votes[voter] = votes[voter].add(voteAmount);
+    totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
   }
 
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
-  function removeVotes (uint256 votes) external {
-    require(votes <= voteCount);
-    voteCount = voteCount.sub(votes);
+  function removeVotes (address voter, uint256 voteAmount) external {
+    require(voteAmount <= totalVotes);
+    require(voteAmount<= votes[voter] );
+    votes[voter] = votes[voter].sub(voteAmount);
+    totalVotes = totalVotes.sub(voteAmount);
   }
 
   function activate () external {
@@ -130,9 +140,9 @@ contract Project {
   function beats (address otherProject) external view returns (bool) {
     return (
       !active &&
-      voteCount > 0 &&
+      totalVotes > 0 &&
       open() &&
-      (voteCount >= Project(otherProject).voteCount_()) || Project(otherProject).active_()
+      (totalVotes >= Project(otherProject).totalVotes_()) || Project(otherProject).active_()
     );
   }
 }

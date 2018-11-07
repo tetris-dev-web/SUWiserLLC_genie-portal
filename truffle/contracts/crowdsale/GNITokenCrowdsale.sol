@@ -58,7 +58,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
 
     uint256 _id = projects.length;
-    //the following line causes a migration error...
     address projectAddr = new Project(_id, _name, developer, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
     projects.push(projectAddr);
     Project(projectAddr).log();
@@ -71,34 +70,30 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  }
 
  function buyTokensAndVote (uint256 _projectVotedForId) public payable {
-   //add require statement that makes sure the projet isnt already active
-   /* require(Project(projects[_projectVotedForId]).open() == true); */
    uint256 tokens = buyTokens(msg.sender);
-   investorList.handleNewPurchase(_projectVotedForId, tokens, msg.sender);
-   Project(projects[_projectVotedForId]).vote(tokens);
+   investorList.addInvestor(msg.sender);
+   Project(projects[_projectVotedForId]).vote(msg.sender, tokens);
  }
 
  function sellTokens (address to, uint256 tokens) external {
    Token(token).transferActiveTokens(msg.sender, to, tokens);
-   //before adding vote credit, we should remove the same amount of credit from the seller. they may need to take back their vote to do this.
    investorList.removeVoteCredit(msg.sender, tokens);
    investorList.addVoteCredit(to, tokens);
  }
 
  function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
-   investorList.transferVotes(msg.sender, fromProjectId, toProjectId, votes);
-   Project(projects[fromProjectId]).removeVotes(votes);
-   Project(projects[toProjectId]).vote(votes);
+   Project(projects[fromProjectId]).removeVotes(msg.sender, votes);
+   Project(projects[toProjectId]).vote(msg.sender, votes);
  }
 
- function cacheVoteCredit (uint256 fromProjectId, uint256 votes) external {
-   investorList.cacheVoteCredit(msg.sender, fromProjectId, votes);
-   Project(projects[projectId]).removeVotes(votes);
+ function addVoteCredit (uint256 fromProjectId, uint256 votes) external {
+   Project(projects[projectId]).removeVotes(msg.sender, votes);
+   investorList.addVoteCredit(msg.sender, votes);
  }
 
- function applyVotes (uint256 toProjectId, uint256 votes) external {
-   investorList.applyVotes(msg.sender, toProjectId, votes);
-   Project(projects[projectId]).votes(votes);
+ function voteWithCredit (uint256 toProjectId, uint256 votes) external {
+   investorList.removeVoteCredit(msg.sender, votes);
+   Project(projects[projectId]).vote(msg.sender, votes);
  }
 
  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
@@ -150,7 +145,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
       Token(token).activate(investor, tokensToActivate);
 
-      investorList.cacheVoteCredit(investor, projectId, tokensToActivate);
+      /* investorList.cacheVoteCredit(investor, projectId, tokensToActivate); */
+      Project(projects[projectId]).removeVotes(investor, tokensToActivate);
+      investorList.addVoteCredit(investor, tokensToActivate);
     }
   }
 

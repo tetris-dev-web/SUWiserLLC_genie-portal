@@ -10,14 +10,14 @@ contract InvestorList {
     uint256 id;
     uint256 voteCredit;
     //maps from projectId to number of votes for that project
-    mapping(uint256 => uint256) votes;
+    /* mapping(uint256 => uint256) votes; */
   }
 
   //maps and id to an investor
   mapping(uint256 => Investor) investors;
   //maps an address to an investor id
   mapping(address => uint256) internal investorIds;
-  uint256 private investorCount_;
+  uint256 internal investorCount_;
 
   event LogVotes (
     address voter,
@@ -31,76 +31,72 @@ contract InvestorList {
 
   //make this function only accessible by crowdsale for security
   function addrById (uint256 id) public view returns(address) {
-    /* uint256 id = getId(id); */
     return investors[id].addr;
   }
+  //make only accessible by crowdsale
+  function addInvestor (address investorAddr) external {
+    if (investorIds[investorAddr] == 0) {
+      Investor memory newInvestor;
 
-  function transferVotes (address investorAddr, uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
-    /* uint256 id = getInvestorIdx(investorIds[msg.sender]); */
-    uint256 investorId = investorIds[investorAddr];
-    require(investors[investorId].votes[fromProjectId] <= votes);
-    investors[investorId].votes[fromProjectId] = investors[investorId].votes[fromProjectId].sub(votes);
-    applyVotes(investorId, toProjectId, votes);
+      newInvestor.addr = investorAddr;
+
+      investorCount_ = investorCount_.add(1);
+
+      uint256 id = investorCount_;
+      newInvestor.id = id;
+      investorIds[investorAddr] = id;
+
+      investors[id] = newInvestor;
+    }
   }
-
-  function applyVotes (address investorAddr, uint256 projectId, uint256 votes) external {
-    /* uint256 id = getId(investorIds[msg.sender]); */
-    uint256 investorId = investorIds[investorAddr];
-    require(investors[investorId].voteCredit <= votes);
-    investors[investorId].voteCredit = investors[investorId].voteCredit.sub(votes);
-    applyVotes(investorId, projectId, votes);
-  }
-
   //make this function only accessible by crowdsale for security
-  function cacheVoteCredit (address investorAddr, uint256 projectId, uint256 votes) external {
-    /* uint256 id = getId(investorId); */
-    /* uint256 voteCredit = investors[investorId].votes[projectId]; */
-    uint256 investorId = investorIds[investorAddr];
-    require(investors[investorId].votes[projectId] >= votes);
-    investors[investorId].votes[projectId] = investors[investorId].votes[projectId].sub(votes);
-    investors[investorId].voteCredit = investors[investorId].voteCredit.add(votes);
-  }
-
-  //make this function only accessible by crowdsale for security
-  function addVoteCredit (address investorAddr, uint256 votes) external {
-    /* uint256 id = getId(investorIds[investor]); */
+  function addVoteCredit (address investorAddr, uint256 votes) public {
     investors[investorIds[investorAddr]].voteCredit = investors[investorIds[investorAddr]].voteCredit.add(votes);
   }
-
-  function removeVoteCredit (address investorAddr, uint256 votes) external {
+  //make only accessible by corwdsale
+  function removeVoteCredit (address investorAddr, uint256 votes) public {
     require(investors[investorIds[investorAddr]].voteCredit >= votes);
     investors[investorIds[investorAddr]].voteCredit = investors[investorIds[investorAddr]].voteCredit.sub(votes);
   }
-
-  //make this function only accessible by crowdsale for security
-  function handleNewPurchase (uint256 projectId, uint256 votes, address investorAddr) external {
-    if (investorIds[investorAddr] == 0) {
-      addInvestor(investorAddr);
-    }
-    /* uint256 id = getId(investorIds[investorId]); */
-    applyVotes(investorIds[investorAddr], projectId, votes);
-  }
-
-  /* function getId (uint256 id) private pure returns(uint256) {
-    return id.sub(1);
-  } */
-
-  function applyVotes (uint256 id, uint256 projectId, uint256 votes) private {
-    investors[id].votes[projectId] = investors[id].votes[projectId].add(votes);
-    emit LogVotes(addrById(id.add(1)), projectId, votes);
-  }
-
-  function addInvestor (address investorAddr) private {
-    Investor memory newInvestor;
-
-    newInvestor.addr = investorAddr;
-
-    investorCount_ = investorCount_.add(1);
-
-    uint256 id = investorCount_;
-    newInvestor.id = id;
-    investorIds[investorAddr] = id;
-
-    investors[id] = newInvestor;
-  }
 }
+
+
+//one project to another
+/* function transferVotes (address investorAddr, uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
+uint256 investorId = investorIds[investorAddr];
+removeVotes(investorId, fromProjectId, votes);
+addVotes(investorId, toProjectId, votes);
+} */
+//creidt to project
+/* function applyVotes (address investorAddr, uint256 projectId, uint256 votes) external {
+uint256 investorId = investorIds[investorAddr];
+removeVoteCredit(investorAddr, votes);
+addVotes(investorId, projectId, votes);
+} */
+
+//project to credit
+//make this function only accessible by crowdsale for security
+/* function cacheVoteCredit (address investorAddr, uint256 projectId, uint256 votes) external {
+uint256 investorId = investorIds[investorAddr];
+removeVotes(investorId, projectId, votes);
+addVoteCredit(investorAddr, votes);
+} */
+
+/* function addVotes (uint256 id, uint256 projectId, uint256 votes) internal {
+investors[id].votes[projectId] = investors[id].votes[projectId].add(votes);
+emit LogVotes(id, projectId, votes);
+} */
+
+/* function removeVotes (uint256 id, uint256 projectId, uint256 votes) internal {
+require(investors[id].votes[projectId] >= votes);
+investors[id].votes[projectId] = investors[id].votes[projectId].sub(votes);
+emit LogVotes(id, projectId, votes);
+} */
+
+//make this function only accessible by crowdsale for security
+/* function handleNewPurchase (uint256 projectId, uint256 votes, address investorAddr) external {
+if (investorIds[investorAddr] == 0) {
+addInvestor(investorAddr);
+}
+applyVotes(investorIds[investorAddr], projectId, votes);
+} */
