@@ -16,10 +16,12 @@ class ProjectForm extends React.Component {
       latitude: '',
       longitude: '',
       cashflow: '',
-
+      latlngpresence: false,
+      droppinclicked: false,
 
       revenue: '',
       valuation: '1',
+      capitalRequired: '',
       model_id: '7syizSLPN60',
       city: 'New York',
       country: 'USA',
@@ -37,6 +39,9 @@ class ProjectForm extends React.Component {
     this.updateFile = this.updateFile.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.dropPinClick = this.dropPinClick.bind(this);
+    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
+    this.updateLatLng = this.updateLatLng.bind(this);
   }
 
   componentDidMount() {
@@ -61,9 +66,9 @@ class ProjectForm extends React.Component {
     data.append("project[latitude]", this.state.latitude);
     data.append("project[longitude]", this.state.longitude);
 
-    data.append("project[city]", this.state.city);
-    data.append("project[country]", this.state.country);
-    data.append("project[continent]", this.state.continent);
+    // data.append("project[city]", this.state.city);
+    // data.append("project[country]", this.state.country);
+    // data.append("project[continent]", this.state.continent);
 
     data.append("project[valuation]", this.state.valuation);
     data.append("project[cashflow]", this.state.cashflow);
@@ -79,11 +84,21 @@ class ProjectForm extends React.Component {
     // formData.append("project[status]", this.state.status);
 
 
-    this.props.createProject(data).then( () => {
-      const pitchedProject = GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
-      this.props.closeModal();
-    });
+    this.props.closeModal();
+  }
+  // Moved until data is properly structured
+  // this.props.createProject(data)
+  // .then( () => {
+  //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
+  // });
 
+  dropPinClick() {
+    if(this.state.latitude != '' && this.state.longitude != '') {
+      this.setState({latlngpresence: true});
+      this.openModal();
+    } else {
+      this.setState({droppinclicked: true});
+    }
   }
 
   openModal() {
@@ -92,6 +107,20 @@ class ProjectForm extends React.Component {
 
   closeModal() {
     this.setState({openModal: false});
+  }
+
+  renderLatLngErrors(presence, clicked) {
+    if (!presence && clicked) {
+      return (
+        <ul className="project-errors">
+          <li>Latitude and Longitude can't be blank</li>
+        </ul>
+      );
+    }
+  }
+
+  updateLatLng(pos) {
+    this.setState({latitude: pos.lat, longitude: pos.lng});
   }
 
   update(property) {
@@ -188,7 +217,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude } = this.state;
+    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude, latlng } = this.state;
 
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
@@ -212,9 +241,31 @@ class ProjectForm extends React.Component {
             value={longitude}
             onChange={this.update('longitude')} />
           <DivWithCorners>
-            <span onClick={this.openModal} className="text">Drop Pin</span>
+            <span onClick={this.dropPinClick} className="text">Drop Pin</span>
           </DivWithCorners>
+          <Modal
+            isOpen={this.state.openModal}
+            onRequestClose={this.closeModal}
+            style={MapModalStyle}
+            contentLabel="Drop Pin Modal"
+            className="modal-container">
+            <div className="drop-pin-flex">
+              <div className="address">
+                <div>Street</div>
+                <div>City</div>
+                <div>Continent</div>
+              </div>
+              <div className='drop-pin-container'>
+                <DropPinMap
+                  updateLatLng={this.updateLatLng}
+                  lat={this.state.latitude}
+                  lng={this.state.longitude}
+                  />
+              </div>
+            </div>
+          </Modal>
         </div>
+        {this.renderLatLngErrors(this.state.latlngpresence, this.state.droppinclicked)}
         <div className="flexed">
           <input className="main-input inputfile" id="file"
             type="file"
@@ -224,16 +275,6 @@ class ProjectForm extends React.Component {
           <DivWithCorners>
             <span className="text">Cashflows</span>
           </DivWithCorners>
-          <Modal
-            isOpen={this.state.openModal}
-            onRequestClose={this.closeModal}
-            style={MapModalStyle}
-            contentLabel="Drop Pin Modal"
-            className="modal-container">
-            <div className='drop-pin-container'>
-              <DropPinMap />
-            </div>
-          </Modal>
         </div>
 
         <div className="rates-box">
