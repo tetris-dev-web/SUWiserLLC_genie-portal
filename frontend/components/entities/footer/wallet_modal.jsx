@@ -42,13 +42,12 @@ class WalletModal extends React.Component{
           } else {
             resolve(result);
             }
-        })
-      })
+        });
+      });
     }
 
 
   getBalances(provider) {
-    debugger
     // var ethWeb3 = new Web3(provider);
     let arr = [];
     web3.eth.getAccounts(function (err, accounts) {
@@ -56,7 +55,7 @@ class WalletModal extends React.Component{
         var account = accounts[i];
         web3.eth.getBalance(account, function(err, balance) {
           arr.push([account, web3.fromWei(balance, 'ether')]);
-        })
+        });
       }
     });
     return arr;
@@ -71,9 +70,9 @@ class WalletModal extends React.Component{
           <p>This browser has no connection to the Ethereum network. </p>
           <p>Please use the Chrome/FireFox extension MetaMask, or dedicated Ethereum browsers Mist or Parity.</p>
         </div>
-      )
+      );
     }
-    return (<p>hello</p>)
+    return (<p>hello</p>);
     // debugger
     // web3 = new Web3(window.web3.currentProvider);
     // // let account = web3.eth.accounts[0];
@@ -158,7 +157,7 @@ class WalletModal extends React.Component{
           </div>
         </Modal>
       </div>
-    )
+    );
   }
 
 }

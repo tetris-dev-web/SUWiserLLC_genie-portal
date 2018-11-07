@@ -64,10 +64,10 @@ class CashFlowGraph extends React.Component {
         .datum(cashData.actualAccumulatedPoints)
         .attr('d',actualAccumulatedLine);
     d3.select('#cash-graph')
-    .on("mouseover", function(d){
+    .on("mouseover", function(){
         return text.style("visibility", "visible");
       })
-    .on("mouseout", function(d){
+    .on("mouseout", function(){
       return text.style("visibility", "hidden");
     });
 
@@ -75,7 +75,9 @@ class CashFlowGraph extends React.Component {
 
 
   createAxesAndLines( {expectedAccumulatedPoints,actualAccumulatedPoints,numQuarters,minExpectedValue,
-                      maxExpectedValue,expectedNetPoints,minAccumulated,
+                      maxExpectedValue,
+                      // expectedNetPoints,
+                      minAccumulated,
                       maxAccumulated,minAccumulatedActualValue,maxAccumulatedActualValue} ) {
 
 
@@ -126,7 +128,12 @@ class CashFlowGraph extends React.Component {
   }
 
   formatCashData() {
-    const jsonCashData = JSON.parse(this.props.project.cashflow);
+    let jsonCashData;
+    if(this.props.project.cashflow.tempfile){
+      jsonCashData = JSON.parse(this.props.project.cashflow.tempfile.join(""));
+    }else{
+      jsonCashData = JSON.parse(this.props.project.cashflow);
+    }
 
     const expectedNet = jsonCashData.ExpectedNet;
     const actualNet = jsonCashData.Actual;
@@ -138,8 +145,8 @@ class CashFlowGraph extends React.Component {
 
     const minExpectedValue = d3.min(valuesForQuarters);
     const maxExpectedValue = d3.max(valuesForQuarters);
-    const minAccumulatedValue = d3.min(Object.values(expectedAccumulatedData));
-    const maxAccumulatedValue = d3.max(Object.values(expectedAccumulatedData));
+    // const minAccumulatedValue = d3.min(Object.values(expectedAccumulatedData));
+    // const maxAccumulatedValue = d3.max(Object.values(expectedAccumulatedData));
     const minAccumulatedActualValue = d3.min(Object.values(actualAccumulatedData));
     const maxAccumulatedActualValue = d3.max(Object.values(actualAccumulatedData));
 
