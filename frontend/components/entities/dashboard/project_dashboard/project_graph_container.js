@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import {
   fetchProjects,
-  fetchProject
+  fetchProject,
+  editProject
 } from '../../../../actions/project_actions';
 import ProjectDashboard from './project_dashboard';
 
@@ -23,6 +24,7 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchProjects: () => dispatch(fetchProjects()),
     fetchProject: project => dispatch(fetchProject(project)),
+    editProject: project => dispatch(editProject(project))
   };
 };
 

@@ -18,6 +18,27 @@ class Api::ProjectsController < ApplicationController
     end
   end
 
+  def update
+    @project = Project.find(params[:id])
+    if @project.update(project_params)
+      render json: @project
+    else
+      render json: @project.errors.full_messages, status: 422
+    end
+  end
+
+  def deployed_project_revenue
+    @deployed_projects = Project.where('current_capital >= capital_required')
+    @deployed_projects_cashflow = @deployed_projects.map{|project| p JSON.parse(project.cashflow)["ExpectedNet"].values.reduce(:+)}.reduce(:+)
+
+    @deployed_project_revenue = @deployed_projects.sum(:current_capital)
+    if @deployed_project_revenue
+      render json: @deployed_project_revenue + @deployed_projects_cashflow
+    else
+      nil
+    end
+  end
+
   private
   def project_params
     params.require(:project).permit(

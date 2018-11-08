@@ -1,7 +1,5 @@
 # Genie-Portal
 
-Revolutionizing real estate with blockchain
-
 ## Setting Up Your Branch OR How to Git Gud
 
 - Enter the directory in which you want genie portal to be placed

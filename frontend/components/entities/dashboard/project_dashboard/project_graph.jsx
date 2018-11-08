@@ -20,6 +20,9 @@ const darkGrey = "#A59A91";
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
+    this.state={
+      projects:{}
+    }
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     this.formatData = this.formatData.bind(this);
@@ -33,6 +36,7 @@ class ProjectGraph extends React.Component {
       this.setUp();
     });
   }
+
 
   formatData(projectKeys) {
     const listData = (data) => {
