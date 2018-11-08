@@ -23,6 +23,7 @@ class ProjectForm extends React.Component {
       valuation: '1',
       capitalRequired: '',
       model_id: '7syizSLPN60',
+      street: '',
       city: 'New York',
       country: 'USA',
       continent: 'North America',
@@ -42,6 +43,7 @@ class ProjectForm extends React.Component {
     this.dropPinClick = this.dropPinClick.bind(this);
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
+    this.updateAddress = this.updateAddress.bind(this);
   }
 
   componentDidMount() {
@@ -121,6 +123,13 @@ class ProjectForm extends React.Component {
 
   updateLatLng(pos) {
     this.setState({latitude: pos.lat, longitude: pos.lng});
+  }
+
+  updateAddress(address) {
+    if(address) {
+      let addr = address.split(',');
+      this.setState({street: addr[0], city: addr[1], continent: addr[3]});
+    }
   }
 
   update(property) {
@@ -251,13 +260,15 @@ class ProjectForm extends React.Component {
             className="modal-container">
             <div className="drop-pin-flex">
               <div className="address">
-                <div>Street</div>
-                <div>City</div>
-                <div>Continent</div>
+                <div>{this.state.street}</div>
+                <div>{this.state.city}</div>
+                <div>{this.state.continent}</div>
+                <input type="button" value="Done" onClick={this.closeModal}></input>
               </div>
               <div className='drop-pin-container'>
                 <DropPinMap
                   updateLatLng={this.updateLatLng}
+                  updateAddress={this.updateAddress}
                   lat={this.state.latitude}
                   lng={this.state.longitude}
                   />
