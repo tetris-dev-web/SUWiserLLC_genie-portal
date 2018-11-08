@@ -5,6 +5,7 @@ import ModalStyle from './modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
 import CashFlowGraph from './project_cashflow_graph';
+import planIconTeal from '../../../../images/icons/planIconTeal.png';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -103,7 +104,9 @@ class ProjectDashboard extends React.Component {
                       </div>
                       <div className="bus-plan-download">
                         <a target="_blank" rel="noopener noreferrer" href={ `${projectClicked.bus_plan_link}` }>
+                          <img className="planIconTeal" src={planIconTeal} width="40" alt="planIconTeal"/> 
                           <i className="fas fa-file-contract">
+
                             <span>business plan</span>
                           </i>
                         </a>
