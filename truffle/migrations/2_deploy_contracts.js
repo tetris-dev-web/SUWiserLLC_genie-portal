@@ -5,8 +5,10 @@ const MyStringStore = artifacts.require("MyStringStore");
 const Dividends = artifacts.require("Dividends");
 
 module.exports = function (deployer, network, accounts) {
-    const rate = new web3.BigNumber(50);
-    const developer = accounts[1];
+    const rate = 500000000;
+    const developer = accounts[0];
+    console.log(accounts)
+    console.log(developer)
 
     return deployer
         .then(() => {
@@ -22,13 +24,17 @@ module.exports = function (deployer, network, accounts) {
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {
                     if (err) reject();
-                    const openingTime = time.timestamp + 5;
+                    const openingTime = time.timestamp + 1000000;
                     resolve(openingTime);
                 })
             })
         })
         .then((openingTime) => { // deploy the crowdsale (token functionality)
+            console.log(openingTime);
             const doomsDay = openingTime + 86400 * 240; // 240 days
+            console.log(Token.address);
+            console.log(InvestorList.address);
+            console.log(developer);
             return deployer.deploy(
                 GNITokenCrowdsale,
                 openingTime,
