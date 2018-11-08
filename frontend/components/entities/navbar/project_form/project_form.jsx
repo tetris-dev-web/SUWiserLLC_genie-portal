@@ -14,6 +14,7 @@ class ProjectForm extends React.Component {
       latitude: '',
       longitude: '',
       cashflow: '',
+      currentQtr: '',
 
       revenue: '',
       valuation: '1',
@@ -219,10 +220,14 @@ class ProjectForm extends React.Component {
             type="file"
             onChange={this.updateFile} />
           <label htmlFor="json-file"> #| choose json</label>
+          <input id="current-quarter"
+            type="number"
+            onChange={this.update('currentQtr')} />
+          <label htmlFor="current-quarter"> current qtr</label>
 
           <DivWithCorners>
             <span className="text">
-              <CashFlowModal cashflowData={this.state.cashflow} />
+              <CashFlowModal quarter={this.state.currentQtr} cashflowData={this.state.cashflow} />
             </span>
           </DivWithCorners>
         </div>
