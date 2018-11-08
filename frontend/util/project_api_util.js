@@ -22,3 +22,11 @@ export const createProject = formData => {
     data: formData,
   });
 };
+
+export const editProject = project => {
+  return $.ajax({
+    method: 'PATCH',
+    url: `api/projects/${project.id}`,
+    data: { project }
+  });
+};

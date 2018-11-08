@@ -10,7 +10,6 @@
 ## System dependencies
 
 ## Development Tools
-- webpack --watch
 - `npm install`
 - `bundle install`
 

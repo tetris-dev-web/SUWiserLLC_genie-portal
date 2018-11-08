@@ -435,3 +435,37 @@ project6 = Project.create(
   created_at: "14/03/2018",
   status: "pitched"
 )
+
+# project7 = Project.create(
+#   title: "Genesis Sans 3d",
+#   revenue: 27000,
+#   valuation: 210000,
+#   city: "New York",
+#   country: "United States",
+#   continent: "North America",
+#   model_id: "7syizSLPN60",
+#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#   description: "BNB/ Business Incubator",
+#   creator_id: user2.id,
+#   created_at: "26/10/18",
+#   status: "pitched"
+# )
+
+project7 = Project.create(
+ title: "Genesis Sans 3d",
+ valuation: 210000,
+ model_id: nil,
+ icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+ description: "BNB/ Business Incubator",
+ creator_id: 4,
+ revenue: 27000,
+ city: "New York",
+ country: "United States",
+ continent: "North America",
+ status: "pitched",
+ cashflow: Genesis_cashflow,
+ latitude: 0.4083637e2,
+ longitude: -0.73944585e2,
+ summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
+ votes: HamInn_votes
+)
