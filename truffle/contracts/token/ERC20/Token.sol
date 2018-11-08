@@ -1,8 +1,15 @@
 pragma solidity ^0.4.24;
 
 import './MintableToken.sol';
+import '../../InvestorList.sol';
 
 contract Token is MintableToken {
+  InvestorList private investorList;
+
+  constructor (InvestorList _investorList) public {
+    investorList = InvestorList(_investorList);
+  }
+
   mapping(address => uint256) internal activeBalances;
 
   uint256 internal totalActiveSupply_;
@@ -29,9 +36,20 @@ contract Token is MintableToken {
     totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
 
-  function transferActiveTokens(address from, address to, uint256 tokens) external {
-    transferFrom(from, to, tokens);
-    activate(to, tokens);
-    activeBalances[from] = activeBalances[from].sub(tokens);
+  function transfer(address _to, uint256 _value) public returns (bool) {
+    require(activeBalances[msg.sender] >= _value);
+
+    super.transfer(_to, _value);
+    activate(_to, _value);
+    activeBalances[msg.sender] = activeBalances[msg.sender].sub(_value);
+    investorList.removeVoteCredit(msg.sender, _value);
+    investorList.addVoteCredit(_to, _value);
+    return true;
+  }
+
+  //make this only callable by crowdsale
+  function transferInactive(address _to, uint256 _value) external {
+    require(inactiveBalanceOf(msg.sender) >= _value);
+    super.transfer(_to, _value);
   }
 }

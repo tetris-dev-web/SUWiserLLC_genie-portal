@@ -75,11 +75,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Project(projects[_projectVotedForId]).vote(msg.sender, tokens);
  }
 
- function sellTokens (address to, uint256 tokens) external {
+ /* function sellTokens (address to, uint256 tokens) external {
    Token(token).transferActiveTokens(msg.sender, to, tokens);
    investorList.removeVoteCredit(msg.sender, tokens);
    investorList.addVoteCredit(to, tokens);
- }
+ } */
 
  function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
    Project(projects[fromProjectId]).removeVotes(msg.sender, votes);

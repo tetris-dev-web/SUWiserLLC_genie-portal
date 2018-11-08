@@ -88,8 +88,8 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    /* Token(token).transfer(_beneficiary, tokens); */
-    _processPurchase(_beneficiary, tokens);
+    Token(token).transferInactive(_beneficiary, tokens);
+    /* _processPurchase(_beneficiary, tokens); */
 
     emit TokenPurchase(
       msg.sender,
@@ -147,28 +147,28 @@ contract Crowdsale {
    * @param _beneficiary Address performing the token purchase
    * @param _tokenAmount Number of tokens to be emitted
    */
-  function _deliverTokens(
+  /* function _deliverTokens(
     address _beneficiary,
     uint256 _tokenAmount
   )
     internal
   {
     token.safeTransfer(_beneficiary, _tokenAmount);
-  }
+  } */
 
   /**
    * @dev Executed when a purchase has been validated and is ready to be executed. Not necessarily emits/sends tokens.
    * @param _beneficiary Address receiving the tokens
    * @param _tokenAmount Number of tokens to be purchased
    */
-  function _processPurchase(
+  /* function _processPurchase(
     address _beneficiary,
     uint256 _tokenAmount
   )
     internal
   {
     _deliverTokens(_beneficiary, _tokenAmount);
-  }
+  } */
 
   /**
    * @dev Override for extensions that require an internal state to check for validity (current user contributions, etc.)

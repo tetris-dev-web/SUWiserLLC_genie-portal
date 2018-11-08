@@ -11,9 +11,6 @@ module.exports = function (deployer, network, accounts) {
 
     return deployer
         .then(() => {
-          return deployer.deploy(Token);
-        })
-        .then(() => {
           return deployer.deploy(MyStringStore);
         })
         .then(() => {
@@ -21,6 +18,9 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(() => {
           return deployer.deploy(InvestorListMock);
+        })
+        .then(() => {
+          return deployer.deploy(Token, InvestorList.address);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
