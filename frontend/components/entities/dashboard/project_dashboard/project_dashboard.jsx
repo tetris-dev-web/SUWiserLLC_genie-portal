@@ -108,39 +108,45 @@ class ProjectDashboard extends React.Component {
                         <iframe id="iframe" src={ `${this.state.model_link}` } frameBorder="0" allowvr="yes" allow="vr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
                       </div>
                     }
-                    <div className="temp">
-                      <div className="thermo-canvas-container">
-                        <ProjectThermo project={projectClicked}
-                                        showText={showText}
-                                        toggleTextShowing={this.toggleTextShowing}/>
+
+                      <div className="temp" >
+                        <div className="thermo-canvas-container">
+                          <ProjectThermo project={projectClicked}
+                                          showText={showText}
+                                          toggleTextShowing={this.toggleTextShowing}/>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="project-description">
-                      <div className="project-text">
-                        <textarea onChange={this.handleKeyPress} disabled={this.props.isInvestor} className="project-summary" value={this.state.summary}/>
+                      <div className="project-description">
+                        <div className="project-text">
+                          <textarea onChange={this.handleKeyPress} disabled={this.props.isInvestor} className="project-summary" value={this.state.summary}/>
+                        </div>
+
+                        { !this.props.currentUser.isInvestor ?
+                          <button className="edit-summary-button"
+                            onClick={this.submitEditedSummary}
+                            style={{background: "white", color: "black", width: "60%", margin: "10px auto", padding: "0px", borderRadius: "10px", fontFamily: "'Open Sans Condensed', sans-serif"}} >
+                            Edit Summary As Admin</button> : <button style={{display: 'none'}}></button>
+                        }
+
+                        <div className="bus-plan-download">
+                          <a target="_blank" rel="noopener noreferrer" href={ `${projectClicked.bus_plan_link}` }>
+                            <img className="planIconTeal" src={planIconTeal} width="40" alt="planIconTeal"/>
+                            <i className="fas fa-file-contract">
+                              <span>business plan</span>
+                            </i>
+                          </a>
+                        </div>
 
                       </div>
-                      { !this.props.currentUser.isInvestor ?
-                      <button className="edit-summary-button"
-                        onClick={this.submitEditedSummary}
-                        style={{background: "white", color: "black", width: "60%", margin: "10px auto", padding: "0px", borderRadius: "10px", fontFamily: "'Open Sans Condensed', sans-serif"}} >
-                        Edit Summary As Admin</button> : <button style={{display: 'none'}}></button>
-                    }
-                      <div className="bus-plan-download">
-                        <a target="_blank" rel="noopener noreferrer" href={ `${projectClicked.bus_plan_link}` }>
-                          <img className="planIconTeal" src={planIconTeal} width="40" alt="planIconTeal"/>
-                          <i className="fas fa-file-contract">
 
-                            <span>business plan</span>
-                          </i>
-                        </a>
+                      <div className="cashflow-graph">
+                        <CashFlowGraph project={projectClicked} />
                       </div>
-                    </div>
 
-                    <div className="cashflow-graph">
-                      <CashFlowGraph project={projectClicked} />
-                    </div>
+
+    
+
 
                     <div className="project-map">
                       <ProjectMap projectClicked={ projectClicked } />
