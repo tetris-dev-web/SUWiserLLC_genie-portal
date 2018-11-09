@@ -1,6 +1,6 @@
 const PREFIX = "VM Exception while processing transaction: ";
 
-catcher = async (promise, message) {
+const testException = async (promise, message) {
     try {
         await promise;
         throw null;
@@ -12,11 +12,11 @@ catcher = async (promise, message) {
 };
 
 export default {
-    catchRevert            : async function(promise) {await tryCatch(promise, "revert"             );},
-    catchOutOfGas          : async function(promise) {await tryCatch(promise, "out of gas"         );},
-    catchInvalidJump       : async function(promise) {await tryCatch(promise, "invalid JUMP"       );},
-    catchInvalidOpcode     : async function(promise) {await tryCatch(promise, "invalid opcode"     );},
-    catchStackOverflow     : async function(promise) {await tryCatch(promise, "stack overflow"     );},
-    catchStackUnderflow    : async function(promise) {await tryCatch(promise, "stack underflow"    );},
-    catchStaticStateChange : async function(promise) {await tryCatch(promise, "static state change");},
+    catchRevert            : async function(promise) {await testException(promise, "revert"             );},
+    catchOutOfGas          : async function(promise) {await testException(promise, "out of gas"         );},
+    catchInvalidJump       : async function(promise) {await testException(promise, "invalid JUMP"       );},
+    catchInvalidOpcode     : async function(promise) {await testException(promise, "invalid opcode"     );},
+    catchStackOverflow     : async function(promise) {await testException(promise, "stack overflow"     );},
+    catchStackUnderflow    : async function(promise) {await testException(promise, "stack underflow"    );},
+    catchStaticStateChange : async function(promise) {await testException(promise, "static state change");},
 };
