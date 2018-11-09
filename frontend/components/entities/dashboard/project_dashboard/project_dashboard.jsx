@@ -4,9 +4,10 @@ import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
-import CashFlowGraph from './project_cashflow';
+import CashFlowGraph from './project_cashflow_graph';
 import $ from 'jquery';
 import DashboardModal from './dashboard_modal';
+import planIconTeal from '../../../../images/icons/planIconTeal.png';
 // import { editProject } from '../../../../actions/project_actions'
 
 class ProjectDashboard extends React.Component {
@@ -37,7 +38,7 @@ class ProjectDashboard extends React.Component {
     this.setState({ openModal: true, projectClicked,summary:projectClicked.summary }, ()=>{
     if (projectClicked.model_id) {
       if(projectClicked.model_id.search('-') != -1) {
-        this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id });
+        this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id + "&noEmbedWatermark=true"});
       } else {
         this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
       }
@@ -127,8 +128,10 @@ class ProjectDashboard extends React.Component {
                         Edit Summary As Admin</button> : <button style={{display: 'none'}}></button>
                     }
                       <div className="bus-plan-download">
-                        <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
+                        <a target="_blank" rel="noopener noreferrer" href={ `${projectClicked.bus_plan_link}` }>
+                          <img className="planIconTeal" src={planIconTeal} width="40" alt="planIconTeal"/>
                           <i className="fas fa-file-contract">
+
                             <span>business plan</span>
                           </i>
                         </a>

@@ -2,6 +2,9 @@ import React from 'react';
 import { totalData } from '../../../../util/token_data_util';
 import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
+import Modal from 'react-modal';
+import MapModalStyle from './map_modal_style';
+import DropPinMap from './drop_pin_map';
 
 class ProjectForm extends React.Component {
 
@@ -13,11 +16,14 @@ class ProjectForm extends React.Component {
       latitude: '',
       longitude: '',
       cashflow: '',
-
+      latlngpresence: false,
+      droppinclicked: false,
 
       revenue: '',
       valuation: '1',
+      capitalRequired: '',
       model_id: '7syizSLPN60',
+      street: '',
       city: 'New York',
       country: 'USA',
       continent: 'North America',
@@ -27,10 +33,17 @@ class ProjectForm extends React.Component {
       coins: '****',
       status: 'pitched',
       summary: 'summary',
+      openModal: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateFile = this.updateFile.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.dropPinClick = this.dropPinClick.bind(this);
+    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
+    this.updateLatLng = this.updateLatLng.bind(this);
+    this.updateAddress = this.updateAddress.bind(this);
   }
 
   componentDidMount() {
@@ -55,9 +68,9 @@ class ProjectForm extends React.Component {
     data.append("project[latitude]", this.state.latitude);
     data.append("project[longitude]", this.state.longitude);
 
-    data.append("project[city]", this.state.city);
-    data.append("project[country]", this.state.country);
-    data.append("project[continent]", this.state.continent);
+    // data.append("project[city]", this.state.city);
+    // data.append("project[country]", this.state.country);
+    // data.append("project[continent]", this.state.continent);
 
     data.append("project[valuation]", this.state.valuation);
     data.append("project[cashflow]", this.state.cashflow);
@@ -73,11 +86,50 @@ class ProjectForm extends React.Component {
     // formData.append("project[status]", this.state.status);
 
 
-    this.props.createProject(data).then( () => {
-      const pitchedProject = GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
-      this.props.closeModal();
-    });
+    this.props.closeModal();
+  }
+  // Moved until data is properly structured
+  // this.props.createProject(data)
+  // .then( () => {
+  //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
+  // });
 
+  dropPinClick() {
+    if(this.state.latitude != '' && this.state.longitude != '') {
+      this.setState({latlngpresence: true});
+      this.openModal();
+    } else {
+      this.setState({droppinclicked: true});
+    }
+  }
+
+  openModal() {
+    this.setState({openModal: true});
+  }
+
+  closeModal() {
+    this.setState({openModal: false});
+  }
+
+  renderLatLngErrors(presence, clicked) {
+    if (!presence && clicked) {
+      return (
+        <ul className="project-errors">
+          <li>Latitude and Longitude can't be blank</li>
+        </ul>
+      );
+    }
+  }
+
+  updateLatLng(pos) {
+    this.setState({latitude: pos.lat, longitude: pos.lng});
+  }
+
+  updateAddress(address) {
+    if(address) {
+      let addr = address.split(',');
+      this.setState({street: addr[0], city: addr[1], continent: addr[3]});
+    }
   }
 
   update(property) {
@@ -174,7 +226,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude } = this.state;
+    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude, latlng } = this.state;
 
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
@@ -198,9 +250,33 @@ class ProjectForm extends React.Component {
             value={longitude}
             onChange={this.update('longitude')} />
           <DivWithCorners>
-            <span className="text">Drop Pin</span>
+            <span onClick={this.dropPinClick} className="text">Drop Pin</span>
           </DivWithCorners>
+          <Modal
+            isOpen={this.state.openModal}
+            onRequestClose={this.closeModal}
+            style={MapModalStyle}
+            contentLabel="Drop Pin Modal"
+            className="modal-container">
+            <div className="drop-pin-flex">
+              <div className="address">
+                <div>{this.state.street}</div>
+                <div>{this.state.city}</div>
+                <div>{this.state.continent}</div>
+                <input type="button" value="Done" onClick={this.closeModal}></input>
+              </div>
+              <div className='drop-pin-container'>
+                <DropPinMap
+                  updateLatLng={this.updateLatLng}
+                  updateAddress={this.updateAddress}
+                  lat={this.state.latitude}
+                  lng={this.state.longitude}
+                  />
+              </div>
+            </div>
+          </Modal>
         </div>
+        {this.renderLatLngErrors(this.state.latlngpresence, this.state.droppinclicked)}
         <div className="flexed">
           <input className="main-input inputfile" id="file"
             type="file"
