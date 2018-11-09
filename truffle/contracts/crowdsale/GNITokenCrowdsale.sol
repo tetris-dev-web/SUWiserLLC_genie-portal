@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.4.25;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 import '../Project.sol';
@@ -46,7 +46,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       }
 
 //after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
- function pitchProject(string _name, uint capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
+ function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);

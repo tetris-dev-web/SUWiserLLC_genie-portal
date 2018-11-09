@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
 import './MintableToken.sol';
 import '../../InvestorList.sol';
@@ -32,6 +32,7 @@ contract Token is MintableToken {
 
   //make this only accessible by crowdsale or this contract
   function activate(address investor, uint256 amount) public {
+    require(inactiveBalanceOf(investor) >= amount);
     activeBalances[investor] = activeBalances[investor].add(amount);
     totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
