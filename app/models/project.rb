@@ -19,7 +19,7 @@
 #
 
 class Project < ApplicationRecord
-  validates :title, :revenue, :valuation, :creator_id, :city, :continent, :latitude, :longitude, presence: true
+  validates :title, :revenue, :valuation, :creator_id, :city, :continent, presence: true
   validates :title, uniqueness: true
 
   # has_attached_file :file, default_url: "missing.png"
