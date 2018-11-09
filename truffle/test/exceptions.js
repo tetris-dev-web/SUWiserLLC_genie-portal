@@ -1,6 +1,6 @@
-const PREFIX = "VM Exception while processing transaction: ";
+const PREFIX = "Returned error: VM Exception while processing transaction: ";
 
-const testException = async (promise, message) {
+const testException = async (promise, message) => {
     try {
         await promise;
         throw null;
@@ -11,7 +11,7 @@ const testException = async (promise, message) {
     }
 };
 
-export default {
+module.exports = {
     catchRevert            : async function(promise) {await testException(promise, "revert"             );},
     catchOutOfGas          : async function(promise) {await testException(promise, "out of gas"         );},
     catchInvalidJump       : async function(promise) {await testException(promise, "invalid JUMP"       );},

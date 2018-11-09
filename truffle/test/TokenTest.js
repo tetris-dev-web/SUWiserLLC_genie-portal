@@ -1,6 +1,6 @@
 const TokenMock = artifacts.require("TokenMock");
 const InvestorListStub = artifacts.require("InvestorListStub");
-import './exceptions';
+const exceptions = require('./exceptions');
 let iL;
 
 contract('Token', async (accounts) => {
@@ -63,106 +63,115 @@ contract('Token', async (accounts) => {
 
   describe('activate', async () => {
     it('increases the investors active balance by the amount', async () => {
-      let {initialB1, initialB2, finalB1, finalB2} = await testAndRecordBalances(accounts, activateTest, getActiveBalance);
+      let {initialB1, initialB2, finalB1, finalB2} = await testAndRecordBalances(accounts, activateTest, getActiveBalance, {a1Amount: 1000, a2Amount: 2000});
       assert.equal(finalB1, initialB1 + 1000, 'account[1] active balance not increased by the correct amount');
       assert.equal(finalB2, initialB2 + 2000, 'account[2] active balance not increased by the correct amount');
     })
 
     it('decreases the investors inactive balance by the amount', async () => {
-      let {initialB1, initialB2, finalB1, finalB2} = await testAndRecordBalances(accounts, activateTest, getInactiveBalance);
+      let {initialB1, initialB2, finalB1, finalB2} = await testAndRecordBalances(accounts, activateTest, getInactiveBalance, {a1Amount: 1000, a2Amount: 2000});
       assert.equal(finalB1, initialB1 - 1000, 'account[1] inactive balance not decreased by the correct amount');
       assert.equal(finalB2, initialB2 - 2000, 'account[2] inactive balance not decreased by the correct amount');
     })
 
     it('does not change the investors total balance', async () => {
-      let {initialB1, initialB2, finalB1, finalB2} = await testAndRecordBalances(accounts, activateTest, getTotalBalance);
+      let {initialB1, initialB2, finalB1, finalB2} = await testAndRecordBalances(accounts, activateTest, getTotalBalance, {a1Amount: 1000, a2Amount: 2000});
       assert.equal(finalB1, initialB1, 'overall balance should not change');
       assert.equal(finalB2, initialB2, 'overall balance should not change');
     })
 
-    //handle the revert case
+    it('reverts if the value is greater than the investors inactive balance', async () => {
+        let mT = await mockT(accounts);
+        await exceptions.catchRevert(activateTest(mT, accounts, {a1Amount: 5000, a2Amount: 8000}));
+    })
   })
 
   describe('transfer', async () => {
     it('removes the token value from the senders total balance', async () => {
-      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferTest, getTotalBalance);
+      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferTest, getTotalBalance, {value: 3000});
       assert.equal(finalB1, initialB1 - 3000, 'sender total balance should decrease by the value');
     })
 
     it('removes the token value from the senders active balance', async () => {
-      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferTest, getActiveBalance);
+      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferTest, getActiveBalance, {value: 3000});
       assert.equal(finalB1, initialB1 - 3000, 'sender active balance should decrease by the value');
     })
 
     it('does not change the senders inactive balance', async () => {
-      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferTest, getInactiveBalance);
+      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferTest, getInactiveBalance, {value: 3000});
       assert.equal(finalB1, initialB1, 'sender inactive balance should not change');
     })
 
     it('adds the token value to the recipients total balance', async () => {
-      let {initialB2, finalB2,} = await testAndRecordBalances(accounts, transferTest, getTotalBalance);
+      let {initialB2, finalB2,} = await testAndRecordBalances(accounts, transferTest, getTotalBalance, {value: 3000});
       assert.equal(finalB2, initialB2 + 3000, 'recipient total balance should increase by the value');
     })
 
     it('adds the token value to the recipients active balance', async () => {
-      let {initialB2, finalB2} = await testAndRecordBalances(accounts, transferTest, getActiveBalance);
+      let {initialB2, finalB2} = await testAndRecordBalances(accounts, transferTest, getActiveBalance, {value: 3000});
       assert.equal(finalB2, initialB2 + 3000, 'recipient active balance should increase by the value');
     })
 
     it('does not change the recipients inactive balance', async () => {
-      let {initialB2, finalB2,} = await testAndRecordBalances(accounts, transferTest, getInactiveBalance);
+      let {initialB2, finalB2,} = await testAndRecordBalances(accounts, transferTest, getInactiveBalance, {value: 3000});
       assert.equal(finalB2, initialB2, 'recipient inactive balance should not change');
     })
 
     it('calls removeVoteCredit with the sender and the value', async () => {
       let mT = await mockT(accounts);
-      let { voter, votes } = await testStub(mT, 'removeVoteCredit', accounts);
+      let { voter, votes } = await testStub(mT, 'removeVoteCredit', accounts, {value: 3000});
       assert.equal(voter, accounts[1], 'vote credit should be removed from the sender');
       assert.equal(votes, 3000, 'votes should reflect the token value');
     })
 
     it('calls addVoteCredit with the receiver and the value', async () => {
       let mT = await mockT(accounts);
-      let { voter, votes } = await testStub(mT, 'addVoteCredit', accounts);
+      let { voter, votes } = await testStub(mT, 'addVoteCredit', accounts, {value: 3000});
       assert.equal(voter, accounts[2], 'vote credit sent to the receiver');
       assert.equal(votes, 3000, 'votes should reflect the token value');
     })
 
-    //handle the revert case
+    it('reverts if the value is greater than the active balance of the sender', async () => {
+      let mT = await mockT(accounts);
+      await exceptions.catchRevert(transferTest(mT, accounts, {value: 5000}));
+    })
   })
 
   describe('transferInactive', async () => {
     it('removes the token value from the senders total balance', async () => {
-      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferInactiveTest, getTotalBalance);
+      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferInactiveTest, getTotalBalance, {value: 3000});
       assert.equal(finalB1, initialB1 - 3000, 'sender total balance should decrease by the value');
     })
 
     it('removes the token value from the senders inactive balance', async () => {
-      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferInactiveTest, getInactiveBalance);
+      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferInactiveTest, getInactiveBalance, {value: 3000});
       assert.equal(finalB1, initialB1 - 3000, 'sender inactive balance should decrease by the value');
     })
 
     it('does not change the senders active balance', async () => {
-      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferInactiveTest, getActiveBalance);
+      let {initialB1, finalB1,} = await testAndRecordBalances(accounts, transferInactiveTest, getActiveBalance, {value: 3000});
       assert.equal(finalB1, initialB1, 'sender active balance should not change');
     })
 
     it('adds the token value to the recipients total balance', async () => {
-      let {initialB2, finalB2,} = await testAndRecordBalances(accounts, transferInactiveTest, getTotalBalance);
+      let {initialB2, finalB2,} = await testAndRecordBalances(accounts, transferInactiveTest, getTotalBalance, {value: 3000});
       assert.equal(finalB2, initialB2 + 3000, 'recipient total balance should increase by the value');
     })
 
     it('adds the token value to the recipients inactive balance', async () => {
-      let {initialB2, finalB2} = await testAndRecordBalances(accounts, transferInactiveTest, getInactiveBalance);
+      let {initialB2, finalB2} = await testAndRecordBalances(accounts, transferInactiveTest, getInactiveBalance, {value: 3000});
       assert.equal(finalB2, initialB2 + 3000, 'recipient inactive balance should increase by the value');
     })
 
     it('does not change the recipients active balance', async () => {
-      let {initialB2, finalB2,} = await testAndRecordBalances(accounts, transferInactiveTest, getActiveBalance);
+      let {initialB2, finalB2,} = await testAndRecordBalances(accounts, transferInactiveTest, getActiveBalance, {value: 3000});
       assert.equal(finalB2, initialB2, 'recipient active balance should not change');
     })
 
-    //handle revert case
+    it('reverts if the value is greater than the inactive balance of the sender', async () => {
+      let mT = await mockT(accounts);
+      await exceptions.catchRevert(transferInactiveTest(mT, accounts, {value: 5000}));
+    })
   })
 })
 
@@ -176,13 +185,13 @@ const mockT = async (accounts) => {
   return inst;
 }
 
-const testAndRecordBalances = async (accounts, test, getBalance) => {
+const testAndRecordBalances = async (accounts, test, getBalance, args) => {
   let mT = await mockT(accounts);
 
   let initialB1 = await parseBalance(mT, getBalance, accounts[1]);
   let initialB2 = await parseBalance(mT, getBalance, accounts[2]);
 
-  await test(mT, accounts);
+  await test(mT, accounts, args);
 
   let finalB1 = await parseBalance(mT, getBalance, accounts[1]);
   let finalB2 = await parseBalance(mT, getBalance, accounts[2]);
@@ -195,9 +204,9 @@ const testAndRecordBalances = async (accounts, test, getBalance) => {
   }
 }
 
-const testStub = async (mT, methodName, accounts) => {
+const testStub = async (mT, methodName, accounts, args) => {
   await addStubMethod(methodName);
-  await transferTest(mT, accounts);
+  await transferTest(mT, accounts, args);
   return await stubCallHistory(methodName);
 }
 
@@ -216,17 +225,17 @@ const stubCallHistory = async (methodName) => {
   }
 }
 
-const activateTest = async (mT, accounts) => {
-  await mT.activate(accounts[1], 1000);
-  await mT.activate(accounts[2], 2000);
+const activateTest = async (mT, accounts, args) => {
+  await mT.activate(accounts[1], args.a1Amount);
+  await mT.activate(accounts[2], args.a2Amount);
 }
 
-const transferTest = async (mT, accounts) => {
-  await mT.transfer(accounts[2], 3000, {from: accounts[1]})
+const transferTest = async (mT, accounts, args) => {
+  await mT.transfer(accounts[2], args.value, {from: accounts[1]})
 }
 
-const transferInactiveTest = async (mT, accounts) => {
-  await mT.transferInactive(accounts[2], 3000, {from: accounts[1]})
+const transferInactiveTest = async (mT, accounts, args) => {
+  await mT.transferInactive(accounts[2], args.value, {from: accounts[1]})
 }
 
 const parseBN = (bigNumber) => {
