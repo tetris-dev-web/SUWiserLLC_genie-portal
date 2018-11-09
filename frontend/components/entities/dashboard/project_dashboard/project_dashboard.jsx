@@ -111,7 +111,9 @@ class ProjectDashboard extends React.Component {
                     </div>
 
                     <div className="cashflow-graph">
-                      <CashFlowGraph project={projectClicked} />
+                      <CashFlowGraph
+                        cashflow={projectClicked.cashflow}
+                        valuation={projectClicked.valuation} />
                     </div>
 
                     <div className="project-map">
@@ -132,6 +134,12 @@ class ProjectDashboard extends React.Component {
   }
 }
 
+// Add this in after fullstack refactoring of cashflow
+// <CashFlowGraph
+//   cashflow={projectClicked.cashflow}
+//   valuation={projectClicked.valuation}
+//   currentQuarter={projectClicked.currentQuarter}
+//   accumulatedRevenue={projectClicked.accumulatedRevenue} />
 
 //
 // <div className="ft-modal-body bylaws-body">

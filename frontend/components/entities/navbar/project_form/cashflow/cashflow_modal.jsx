@@ -45,7 +45,7 @@ class CashFlowModal extends React.Component {
           <CashFlow
             closeModal={this.closeModal}
             cashflowData={this.props.cashflowData}
-            quarter={this.props.currentQtr} />
+            quarter={this.props.currentQuarter} />
         </Modal>
       </div>
     );

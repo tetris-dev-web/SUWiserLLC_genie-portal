@@ -8,13 +8,13 @@ class CashFlow extends React.Component {
     super(props);
     // Uploading local JSON files may not be possible. May have to refactor
     // ProjectForm later to account for that.
-    let { cashflowData, currentQtr  } = this.props;
+    let { cashflowData, currentQuarter  } = this.props;
     const project = cashflowData ? cashflowData : sampleProject;
-    currentQtr = currentQtr ? currentQtr : 28;
+    currentQuarter = currentQuarter ? currentQuarter : 28;
     this.state = {
       project,
       accumulatedRevenue: this.calculateAccumulatedRevenue(project),
-      currentQtr
+      currentQuarter
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -33,7 +33,8 @@ class CashFlow extends React.Component {
     return e => {
       let project = Object.assign({}, this.state.project);
       project[quarter] = e.currentTarget.value;
-      this.setState({ project });
+      const accumulatedRevenue = this.calculateAccumulatedRevenue(project);
+      this.setState({ project, accumulatedRevenue });
     };
   }
 
@@ -49,8 +50,7 @@ class CashFlow extends React.Component {
   }
 
   processJSONForGraph(project) {
-    project.cashflow = JSON.stringify(project.cashflow);
-    return project;
+    return JSON.stringify(project);
   }
 
   renderColor(currentQuarter, quarter) {
@@ -63,7 +63,9 @@ class CashFlow extends React.Component {
 
   render() {
     // 7 years of data is the standard, translating to 28 quarters
-    const { project } = this.state;
+    const { project,
+      // accumulatedRevenue, // Add in when incorporating cashflowgraph
+      currentQuarter } = this.state;
     const quarters = keys(project);
     return(
       <form onSubmit={this.handleSubmit}>
@@ -74,7 +76,7 @@ class CashFlow extends React.Component {
             return(
               <React.Fragment key={idx}>
                 <label htmlFor={`quarter-${quarter}`}>{`${quarter}`}</label>
-                <input className={this.renderColor(this.state.currentQtr, quarter)}
+                <input className={this.renderColor(currentQuarter, quarter)}
                   id={`quarter-${quarter}`}
                   type="number"
                   placeholder="10,000"
@@ -85,7 +87,7 @@ class CashFlow extends React.Component {
           })}
         </div>
         <button>Download Json Sample</button>
-        <CashFlowGraph project={this.processJSONForGraph(this.state.project)} />
+
         <input type="submit" value="Submit" />
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
@@ -96,6 +98,14 @@ class CashFlow extends React.Component {
 }
 
 export default CashFlow;
+
+// Add graph later, after refactor is complete
+// <CashFlowGraph
+// cashflow={this.processJSONForGraph(project)}
+// valuation={"?"}
+// currrentQuarter={currentQuarter}
+// accumulatedRevenue={this.processJSONForGraph(accumulatedRevenue)} />
+
 // cashflow represented as single string for graph
 const sampleProject = {
   "1": -36974,
