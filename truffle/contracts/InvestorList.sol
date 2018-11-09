@@ -9,12 +9,10 @@ contract InvestorList {
     address addr;
     uint256 id;
     uint256 voteCredit;
-    //maps from projectId to number of votes for that project
-    /* mapping(uint256 => uint256) votes; */
   }
 
   //maps and id to an investor
-  mapping(uint256 => Investor) investors;
+  mapping(uint256 => Investor) internal investors;
   //maps an address to an investor id
   mapping(address => uint256) internal investorIds;
   uint256 internal investorCount_;
@@ -37,16 +35,15 @@ contract InvestorList {
   function addInvestor (address investorAddr) external {
     if (investorIds[investorAddr] == 0) {
       Investor memory newInvestor;
-
-      newInvestor.addr = investorAddr;
-
       investorCount_ = investorCount_.add(1);
 
       uint256 id = investorCount_;
       newInvestor.id = id;
+      newInvestor.addr = investorAddr;
+      
       investorIds[investorAddr] = id;
-
       investors[id] = newInvestor;
+
     }
   }
   //make this function only accessible by crowdsale for security

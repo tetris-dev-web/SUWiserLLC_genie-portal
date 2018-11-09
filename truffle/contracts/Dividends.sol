@@ -13,8 +13,8 @@ contract Dividends {
 
   constructor (Token token_, GNITokenCrowdsale crowdsale_, address developer_, InvestorList investorList_) public {
     token = token_;
-    crowdsale = GNITokenCrowdsale(crowdsale_);
     developer = developer_;
+    crowdsale = GNITokenCrowdsale(crowdsale_);
     investorList = InvestorList(investorList_);
   }
 
@@ -39,7 +39,5 @@ contract Dividends {
     uint256 investorActive = Token(token).activeBalanceOf(investor);
     uint256 dividend = profits.mul(investorActive).div(activeTokens);
     investor.transfer(dividend);
-    /* uint256 investorShare = activeTokens.div(investorActive);
-    uint256 dividend = profits.div(investorShare); */
   }
 }

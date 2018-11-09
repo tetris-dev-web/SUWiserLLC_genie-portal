@@ -8,16 +8,14 @@ contract InvestorListMock is InvestorList {
       uint256 voteCredit
     ) external {
       Investor memory newInvestor;
-
-      newInvestor.addr = investorAddr;
-
       investorCount_ = investorCount_.add(1);
-
       uint256 id = investorCount_;
-      newInvestor.id = id;
-      newInvestor.voteCredit = voteCredit;
-      investorIds[investorAddr] = id;
 
+      newInvestor.id = id;
+      newInvestor.addr = investorAddr;
+      newInvestor.voteCredit = voteCredit;
+
+      investorIds[investorAddr] = id;
       investors[id] = newInvestor;
   }
 

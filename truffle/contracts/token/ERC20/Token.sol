@@ -39,10 +39,11 @@ contract Token is MintableToken {
 
   function transfer(address _to, uint256 _value) public returns (bool) {
     require(activeBalances[msg.sender] >= _value);
-
     super.transfer(_to, _value);
+
     activate(_to, _value);
     activeBalances[msg.sender] = activeBalances[msg.sender].sub(_value);
+
     investorList.removeVoteCredit(msg.sender, _value);
     investorList.addVoteCredit(_to, _value);
     return true;

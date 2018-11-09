@@ -65,7 +65,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
    uint256 developerValue = valuation.sub(investorValue);
-
    return (developerValue.mul(rate), investorValue.mul(rate));
  }
 
@@ -141,11 +140,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     for (uint256 i = 1; i <= investorList.investorCount(); i = i.add(1)) {
       address investor = investorList.addrById(i);
       uint256 investorBalance = Token(token).inactiveBalanceOf(investor);
-      uint256 tokensToActivate = investorBalance.mul(tokens).div(supply);
 
+      uint256 tokensToActivate = investorBalance.mul(tokens).div(supply);
       Token(token).activate(investor, tokensToActivate);
 
-      /* investorList.cacheVoteCredit(investor, projectId, tokensToActivate); */
       Project(projects[projectId]).removeVotes(investor, tokensToActivate);
       investorList.addVoteCredit(investor, tokensToActivate);
     }
