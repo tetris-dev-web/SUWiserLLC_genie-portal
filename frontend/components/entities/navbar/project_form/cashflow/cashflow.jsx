@@ -13,17 +13,39 @@ class CashFlow extends React.Component {
     currentQtr = currentQtr ? currentQtr : 28;
     this.state = {
       project,
+      accumulatedRevenue: this.calculateAccumulatedRevenue(project),
       currentQtr
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.processJSONForGraph = this.processJSONForGraph.bind(this);
     this.renderColor = this.renderColor.bind(this);
+    this.update = this.update.bind(this);
+    this.calculateAccumulatedRevenue = this.calculateAccumulatedRevenue.bind(this);
   }
 
 
   handleSubmit() {
 
+  }
+
+  update(quarter) {
+    return e => {
+      let project = Object.assign({}, this.state.project);
+      project[quarter] = e.currentTarget.value;
+      this.setState({ project });
+    };
+  }
+
+  calculateAccumulatedRevenue(project) {
+    const accumulatedRevenue = {};
+    let accumulatedSum = 0;
+    const quarters = keys(project);
+    quarters.forEach(quarter => {
+      accumulatedSum += project[quarter];
+      accumulatedRevenue[quarter] = accumulatedSum;
+    });
+    return accumulatedRevenue;
   }
 
   processJSONForGraph(project) {
@@ -51,11 +73,13 @@ class CashFlow extends React.Component {
           {quarters.map((quarter, idx) => {
             return(
               <React.Fragment key={idx}>
-                <p>{`${quarter}`}</p>
+                <label htmlFor={`quarter-${quarter}`}>{`${quarter}`}</label>
                 <input className={this.renderColor(this.state.currentQtr, quarter)}
+                  id={`quarter-${quarter}`}
                   type="number"
                   placeholder="10,000"
-                  value={this.defaultCashValue(project[quarter])} />
+                  onChange={this.update(quarter)}
+                  value={project[quarter]} />
               </React.Fragment>
             );
           })}
