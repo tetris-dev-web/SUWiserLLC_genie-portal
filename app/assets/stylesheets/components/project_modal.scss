@@ -1,108 +1,74 @@
-@import "../util/variables";
-
 .project-modal-grid{
   display: grid;
   // background: black;
-  //background: linear-gradient(to right, black 0%, black 97.35%, white 50%, white 100%);
   padding-right: 10px;
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
   grid-template-columns: repeat(12,1fr);
-  grid-template-rows: 350px 400px 400px;
+  grid-template-rows: repeat(3,1fr);
   grid-template-areas:
      "f f f f f f f f f f f f"
-     "t t t t g g g g d d d d" //"i i i i i i i i i i i i"
+     "t t t t g g g g d d d d"
      "m m m m m m m m m m m m";
   // grid-row-gap: 25px;
 
-
-  .iframe{
-    grid-area: f;
-    background: white;
-    height: 100%;
-    iframe{
-      width: 100%;
-      height: 100%;
-      a img{
-        visibility: hidden;
-      }
-    }
-  }
-
-  // #infoDiv{
-  //   grid-area: i;
-  //   display: flex;
-  //   flex-direction: column;
-  //   justify-content: center;
-  //   background-color: blue;
-  //   grid-template-columns: repeat(12,1fr);
-  //   grid-template-areas:
-  //      "t t t t g g g g d d d d";
-
-    .temp{
-      grid-area: t;
-      align-items: center;
-      height: 100%;
-      background-color: black;
-    }
-
-    .project-description{
-      grid-area: g;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      background-color: black;
-      .project-text{
-        margin-top: 50px;
-        .project-summary{
-          background: transparent;
-          color: white;
-          resize: none;
-          width: 100%;
-          height: 100%;
-          border: none;
-        }
-        .project-summary:active, .project-summary:focus{
-          border: none;
-        }
-      }
-    }
-
-    .cashflow-graph{
-      grid-area: d;
-      height: 100%;
-      background-color: black;
-    }
-
-  // }
-
-  .project-map{
-    grid-area: m;
-    height: 300px;
-  }
-  .leaflet-container{
-    height: 100%;
-    width: 100%;
-  }
-  .fa-file-contract{
-    align-self: flex-start;
-    color: #00FFFF;
-    // opacity: 0.6;
-    font-size: 19px;
-    margin-right: 10px;
-    span {
-      margin-left: 7px;
-    }
-  }
 }
-
 .nodata-text {
   color: black;
 }
-
-
+.iframe{
+  grid-area: f;
+  background: white;
+  height: 300px;
+  iframe{
+    width: 100%;
+    height: 100%;
+    a img{
+      visibility: hidden;
+    }
+  }
+}
+.temp{
+  grid-area: t;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  background-color: black;
+}
+.project-description{
+  grid-area: g;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: black;
+}
+.cashflow-graph{
+  grid-area: d;
+  height: 300px;
+  background-color: black;
+}
+.project-map{
+  grid-area: m;
+  height: 300px;
+}
+.leaflet-container{
+  height: 300px;
+  width: 100%;
+}
+.fa-file-contract{
+  align-self: flex-start;
+  color: #00FFFF;
+  // opacity: 0.6;
+  font-size: 19px;
+  margin-right: 10px;
+  span {
+    margin-left: 7px;
+  }
+}
 .bus-plan-download{
   align-self: baseline;
   height: 20%;
