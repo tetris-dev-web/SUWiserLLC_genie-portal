@@ -43,6 +43,7 @@ contract Token is MintableToken {
 
     activate(_to, _value);
     activeBalances[msg.sender] = activeBalances[msg.sender].sub(_value);
+    totalActiveSupply_ = totalActiveSupply_.sub(_value);
 
     investorList.removeVoteCredit(msg.sender, _value);
     investorList.addVoteCredit(_to, _value);
