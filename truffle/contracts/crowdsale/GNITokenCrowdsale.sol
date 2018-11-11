@@ -27,7 +27,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   }
 
   address[] public projects;
-
+/*
   function getInfo(uint256 id) public view returns(
     string, uint256, uint256, uint256, uint256, bool, uint256, uint256, address
     ) {
@@ -43,7 +43,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         Project(projectAddr).closingTime(),
         projectAddr
         );
-      }
+      } */
 
 //after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
@@ -120,6 +120,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     }
   }
 
+  //we need some functionality for granting vote credit for closed projects/removing votes from closed projects
   function projectToActivateDetails() private view returns (uint256, bool) {
     uint256 leadingProjectId;
     bool candidateFound = false;

@@ -4,19 +4,19 @@ contract Project {
   using SafeMath for uint256;
   //these will all need to be private so they cannot be set arbitrarily
   //we'll make read methods when necessary
-  uint256 public id; //this should be public?
-  string public name;
-  address public developer;
-  address public dividends;
-  uint256 public closingTime;
-  uint256 public valuation;
-  uint256 public capitalRequired;
-  uint256 public developerTokens;
-  uint256 public investorTokens;
+  uint256 private id; //this should be public?
+  string private name;
+  address private developer;
+  address internal dividends;
+  uint256 internal closingTime;
+  uint256 private valuation;
+  uint256 private capitalRequired;
+  uint256 private developerTokens;
+  uint256 private investorTokens;
   string public lat;
-  string public lng;
-  uint256 public totalVotes;
-  bool public active;
+  string private lng;
+  uint256 internal totalVotes;
+  bool private active;
   constructor (
     uint256 _id,
     string _name,
@@ -54,7 +54,7 @@ contract Project {
       bool active
   );
 
-  mapping(address => uint256) private votes;
+  mapping(address => uint256) internal votes;
 
   function votesOf(address voter) public view returns (uint256) {
     return votes[voter];
@@ -63,27 +63,35 @@ contract Project {
   function log () public {
     emit LogProject(id, name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, totalVotes, active);
   }
+
   function open () public view returns (bool) {
     return closingTime > now;
   }
+
   function active_ () public view returns (bool) {
     return active;
   }
+
   function totalVotes_ () public view returns (uint256) {
     return totalVotes;
   }
+
   function closingTime_ () public view returns (uint256) {
     return closingTime;
   }
+
   function developerTokens_ () public view returns (uint256) {
     return developerTokens;
   }
+
   function investorTokens_ () public view returns (uint256) {
     return investorTokens;
   }
+
   function capitalRequired_ () public view returns (uint256) {
     return capitalRequired;
   }
+
   /* function getInfo() public view returns(
       string, uint256, uint256, uint256, uint256, bool, uint256, uint256
       ) {
@@ -98,7 +106,9 @@ contract Project {
           closingTime
       );
   } */
-  mapping(address => bool) managers;
+
+  mapping(address => bool) internal managers;
+
   modifier authorize () {
     require(managers[msg.sender] == true || msg.sender == developer);
     _;
@@ -119,6 +129,7 @@ contract Project {
   }
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
   function vote (address voter, uint256 voteAmount) external {
+    //maybe require that its open and not active
     votes[voter] = votes[voter].add(voteAmount);
     totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
@@ -127,8 +138,8 @@ contract Project {
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
   function removeVotes (address voter, uint256 voteAmount) external {
     require(voteAmount <= totalVotes);
-    require(voteAmount<= votes[voter] );
-    
+    require(voteAmount <= votes[voter]);
+
     votes[voter] = votes[voter].sub(voteAmount);
     totalVotes = totalVotes.sub(voteAmount);
     closingTime = closingTime.sub(43200);
@@ -143,8 +154,9 @@ contract Project {
     return (
       !active &&
       totalVotes > 0 &&
-      open() &&
-      (totalVotes >= Project(otherProject).totalVotes_()) || Project(otherProject).active_()
+      /* open() && *///we dont need this if we remove all votes for projects that are closed
+      totalVotes >= Project(otherProject).totalVotes_()
+      //we dont need to check if the competitor is active because an active project always has 0 votes
     );
   }
 }
