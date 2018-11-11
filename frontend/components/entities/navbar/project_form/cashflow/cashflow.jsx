@@ -10,7 +10,7 @@ class CashFlow extends React.Component {
     // ProjectForm later to account for that.
     let { cashflowData, currentQuarter  } = this.props;
     const project = cashflowData ? cashflowData : sampleProject;
-    currentQuarter = currentQuarter ? currentQuarter : 28;
+    currentQuarter = currentQuarter ? currentQuarter : sampleCurrentQuarter;
     this.state = {
       project,
       accumulatedRevenue: this.calculateAccumulatedRevenue(project),
@@ -41,7 +41,7 @@ class CashFlow extends React.Component {
   calculateAccumulatedRevenue(project) {
     const accumulatedRevenue = {};
     let accumulatedSum = 0;
-    const quarters = keys(project);
+    const quarters = keys(project).sort();
     quarters.forEach(quarter => {
       accumulatedSum += project[quarter];
       accumulatedRevenue[quarter] = accumulatedSum;
@@ -107,16 +107,17 @@ export default CashFlow;
 // accumulatedRevenue={this.processJSONForGraph(accumulatedRevenue)} />
 
 // cashflow represented as single string for graph
+
 const sampleProject = {
-  "1": -36974,
-  "2": -40018,
-  "3": -16857,
-  "4": -2915,
-  "5": -20325,
-  "6": 7864,
-  "7": 25360,
-  "8": 28107,
-  "9": 28942,
+  "01": -36974,
+  "02": -40018,
+  "03": -16857,
+  "04": -2915,
+  "05": -20325,
+  "06": 7864,
+  "07": 25360,
+  "08": 28107,
+  "09": 28942,
   "10": 28696,
   "11": 29356,
   "12": 28854,
@@ -137,3 +138,5 @@ const sampleProject = {
   "27": 33509,
   "28": 33928,
 };
+
+const sampleCurrentQuarter = 18;

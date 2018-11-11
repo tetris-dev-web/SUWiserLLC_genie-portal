@@ -160,6 +160,7 @@ class CashFlowGraph extends React.Component {
 
   processCashData() {
     // Dealing with tempfiles
+    debugger
     if (this.props.cashflow.tempfile) {
       return JSON.parse(this.props.cashflow.tempfile.join(""));
     } else {

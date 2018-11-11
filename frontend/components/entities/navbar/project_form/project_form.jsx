@@ -95,25 +95,12 @@ class ProjectForm extends React.Component {
     };
   }
 
-  updateFile(e) {
+  updateFile(fileType) {
     // Update to handle other file types eventually.
-    let file = e.currentTarget.files[0];
-    const jsonHolder = [];
-    // Uploaded file contents cannot be read directly in the browser; not sure
-    // this workaround will work for uploading json data.
-    if (file.type === "application/json") {
-      const reader = new FileReader();
-      reader.onload = () => {
-        jsonHolder.push(reader.result);
-      };
-      reader.readAsText(file);
-      file = jsonHolder[0];
-    }
-    if (jsonHolder.length == 0) {
-      this.setState({cashflow: file});
-    } else {
-      this.setState({cashflow: jsonHolder[0]});
-    }
+    return e => {
+      let file = e.currentTarget.files[0];
+      this.setState({ [fileType]: file });
+    };
   }
 
   renderErrors() {
@@ -218,7 +205,7 @@ class ProjectForm extends React.Component {
         <div className="flexed">
           <input className="main-input inputfile" id="json-file"
             type="file"
-            onChange={this.updateFile} />
+            onChange={this.updateFile('cashflow')} />
           <label htmlFor="json-file"> #| choose json</label>
           <input id="current-quarter"
             type="number"
