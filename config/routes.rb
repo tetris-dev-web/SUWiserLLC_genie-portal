@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       # resources :project_summary, defaults: {format: :json}, only: [:show]
       collection do
         get 'deployed_project_revenue'
+        get 'discount_factor'
       end
     end
   end

@@ -37,6 +37,12 @@ class Api::ProjectsController < ApplicationController
     # render json: JSON.parse(@cashProject.cashflow)["ExpectedAccumulatedGainorLoss"].values.min
   end
 
+  def discount_factor
+    capital_deployed = JSON.parse(Project.first.cashflow)["Actual"].values.reduce(:+)
+    discount_factor = 50 - ((capital_deployed / 190000.0) + (Project.where('close_date < ?', Time.current).count) * 6)
+    render json: discount_factor > 10 ? discount_factor : 10
+  end
+
 
   private
   def project_params
