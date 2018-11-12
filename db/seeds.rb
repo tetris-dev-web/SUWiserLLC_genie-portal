@@ -1,23 +1,19 @@
-
-
-
-
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 #
 # Examples:
 #
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+#   movies = Movie.create!([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
+#   Character.create!(name: 'Luke', movie: movies.first)
 
 User.destroy_all
 Project.destroy_all
 UserAccount.destroy_all
 AccountType.destroy_all
 
-Genesis_start_date = '01/01/2019'
-Genesis_end_date = '09/01/2019'
-Genesis_votes = '{
+genesis_start_date = '01/01/2019'
+genesis_end_date = '09/01/2019'
+genesis_votes = '{
   "03/01/2019":5000,
   "04/01/2019":1000,
   "05/01/2019":1000,
@@ -26,129 +22,57 @@ Genesis_votes = '{
   "08/01/2019":1000,
   "08/10/2019":5000
 }'
-Genesis_cap_required = 150000
-Genesis_current_cap = 15000
-Genesis_lat = 40.836678
-Genesis_lng = -73.943083
-Genesis_sketch_link = 'https://drive.google.com/open?id=1o15Si2ON0X1Cb0QApl7LH6WXeY6JQ9CE'
-Genesis_bus_link = 'https://drive.google.com/open?id=1tuqRBAYHB_26JzoFy2xMzgePI1qTrpwL'
+genesis_cap_required = 150000
+genesis_current_cap = 15000
+genesis_lat = 40.836678
+genesis_lng = -73.943083
+genesis_sketch_link = 'https://drive.google.com/open?id=1o15Si2ON0X1Cb0QApl7LH6WXeY6JQ9CE'
+genesis_bus_link = 'https://drive.google.com/open?id=1tuqRBAYHB_26JzoFy2xMzgePI1qTrpwL'
 
-Genesis_cashflow= '{
-    "ExpectedNet":{
-    "1": -35673,
-    "2": -39513,
-    "3": -16726,
-    "4": -2851,
-    "5": -20019,
-    "6": 7389,
-    "7": 23906,
-    "8": 26108,
-    "9": 27480,
-    "10": 28224,
-    "11": 28409,
-    "12": 27812,
-    "13": 28160,
-    "14": 28512,
-    "15": 28868,
-    "16": 29229,
-    "17": 29595,
-    "18": 29965,
-    "19": 30339,
-    "20": 30718,
-    "21": 31102,
-    "22": 31491,
-    "23": 31885,
-    "24": 32283,
-    "25": 32687,
-    "26": 33096,
-    "27": 33509,
-    "28": 33928
-  },
-    "Actual":{
-    "1": -36974,
-    "2": -40018,
-    "3": -16857,
-    "4": -2915,
-    "5": -20325,
-    "6": 7864,
-    "7": 25360,
-    "8": 28107,
-    "9": 28942,
-    "10": 28696,
-    "11": 29356,
-    "12": 28854,
-    "13": 28588,
-    "14": 30781,
-    "15": 29081,
-    "16": 31887,
-    "17": 51887,
-    "18": 71887
-  },
-    "ExpectedAccumulatedGainorLoss":{
-    "1": -77678,
-    "2": -183498,
-    "3": -250476,
-    "4": -261938,
-    "5": -266505,
-    "6": -187214,
-    "7": -19324,
-    "8": 207228,
-    "9": 487017,
-    "10": 808317,
-    "11": 1137949,
-    "12": 1473943,
-    "13": 1492367,
-    "14": 1511022,
-    "15": 1529910,
-    "16": 1549033,
-    "17": 1568396,
-    "18": 1588001,
-    "19": 1607851,
-    "20": 1627949,
-    "21": 1648299,
-    "22": 1668903,
-    "23": 1689764,
-    "24": 1710886,
-    "25": 1732272,
-    "26": 1753925,
-    "27": 1775849,
-    "28": 1798048
-  },
-    "ActualAccumulatedGainorLoss":{
-    "1": -38839,
-    "2": -91749,
-    "3": -125238,
-    "4": -130969,
-    "5": -133252,
-    "6": -93607,
-    "7": -9662,
-    "8": 103614,
-    "9": 243508,
-    "10": 404158,
-    "11": 568974,
-    "12": 736971,
-    "13": 846183,
-    "14": 955511,
-    "15": 1000000,
-    "16": 1100000,
-    "17": 1200000,
-    "18": 1300000
-  }
+genesis_cashflow= '{
+  "01A": -36974,
+  "02A": -40018,
+  "03A": -16857,
+  "04A": -2915,
+  "05A": -20325,
+  "06A": 7864,
+  "07A": 25360,
+  "08A": 28107,
+  "09A": 28942,
+  "10A": 28696,
+  "11A": 29356,
+  "12A": 28854,
+  "13A": 28588,
+  "14A": 30781,
+  "15A": 29081,
+  "16A": 31887,
+  "17A": 51887,
+  "18A": 71887,
+  "19P": 30339,
+  "20P": 30718,
+  "21P": 31102,
+  "22P": 31491,
+  "23P": 31885,
+  "24P": 32283,
+  "25P": 32687,
+  "26P": 33096,
+  "27P": 33509,
+  "28P": 33928
 }'
 
-Genesis_summary = "Genesis is a boutique gym, similar in structure to a CrossFit, but differentiated by a Co-op
-business structure, a holistic* approach to fitness, and the aesthetics of the space itself. Genesis
+genesis_summary = "Genesis is a boutique gym, similar in structure to a CrossFit, but differentiated by a Co-op
+business structure, a holistic* approach to fitness, and the aesthetics of the space itself. genesis
 evolved from a group of fitness enthusiasts, techies and finance professionals in Upper Manhat-
 tan working out and training together regularly. Our aspiration has been to start our own hub
 for fitness and health for the area by taking a space on 146th to host workouts focused on high
 intensity interval training and calisthenics. The space also hosts a cafe and multiple backrooms."
 
 
-HamInn_start_date = '01/01/2017'
-HamInn_end_date = '09/01/2019'
-HamInn_cap_required = 40000
-HamInn_current_cap = 40000
-HamInn_votes = '{
+hamInn_start_date = '01/01/2017'
+hamInn_end_date = '09/01/2019'
+hamInn_cap_required = 40000
+hamInn_current_cap = 40000
+hamInn_votes = '{
   "03/01/2017":2000,
   "04/01/2017":1000,
   "05/01/2017":1000,
@@ -159,113 +83,41 @@ HamInn_votes = '{
   "09/09/2018":10000,
   "08/10/2018":3000
 }'
-HamInn_lat = 40.836370
-HamInn_lng = -73.944585
-HamInn_sketch_link = 'https://drive.google.com/open?id=0B4qHw8trLI_qQ3VkX0RtRndqVTA'
-HamInn_bus_link = 'https://drive.google.com/open?id=1zxY4cZcdaAMpinQpdZmTb8Zy2i9dh2iZ'
-HamInn_cashflow = '{
-    "ExpectedNet":{
-      "1": -35673,
-      "2": -39513,
-      "3": -16726,
-      "4": -2851,
-      "5": -20019,
-      "6": 7389,
-      "7": 23906,
-      "8": 26108,
-      "9": 27480,
-      "10": 28224,
-      "11": 28409,
-      "12": 27812,
-      "13": 28160,
-      "14": 28512,
-      "15": 28868,
-      "16": 29229,
-      "17": 29595,
-      "18": 29965,
-      "19": 30339,
-      "20": 30718,
-      "21": 31102,
-      "22": 31491,
-      "23": 31885,
-      "24": 32283,
-      "25": 32687,
-      "26": 33096,
-      "27": 33509,
-      "28": 33928
-    },
-    "Actual":{
-      "1": -36974,
-      "2": -40018,
-      "3": -16857,
-      "4": -2915,
-      "5": -20325,
-      "6": 7864,
-      "7": 25360,
-      "8": 28107,
-      "9": 28942,
-      "10": 28696,
-      "11": 29356,
-      "12": 28854,
-      "13": 28588,
-      "14": 30781,
-      "15": 29081,
-      "16": 31887,
-      "17": 51887,
-      "18": 71887
-    },
-    "ExpectedAccumulatedGainorLoss":{
-      "1": -77678,
-      "2": -183498,
-      "3": -250476,
-      "4": -261938,
-      "5": -266505,
-      "6": -187214,
-      "7": -19324,
-      "8": 207228,
-      "9": 487017,
-      "10": 808317,
-      "11": 1137949,
-      "12": 1473943,
-      "13": 1492367,
-      "14": 1511022,
-      "15": 1529910,
-      "16": 1549033,
-      "17": 1568396,
-      "18": 1588001,
-      "19": 1607851,
-      "20": 1627949,
-      "21": 1648299,
-      "22": 1668903,
-      "23": 1689764,
-      "24": 1710886,
-      "25": 1732272,
-      "26": 1753925,
-      "27": 1775849,
-      "28": 1798048
-    },
-    "ActualAccumulatedGainorLoss":{
-      "1": -38839,
-      "2": -91749,
-      "3": -125238,
-      "4": -130969,
-      "5": -133252,
-      "6": -93607,
-      "7": -9662,
-      "8": 103614,
-      "9": 243508,
-      "10": 404158,
-      "11": 568974,
-      "12": 736971,
-      "13": 846183,
-      "14": 955511,
-      "15": 1000000,
-      "16": 1100000,
-      "17": 1200000,
-      "18": 1300000
-  }
+hamInn_lat = 40.836370
+hamInn_lng = -73.944585
+hamInn_sketch_link = 'https://drive.google.com/open?id=0B4qHw8trLI_qQ3VkX0RtRndqVTA'
+hamInn_bus_link = 'https://drive.google.com/open?id=1zxY4cZcdaAMpinQpdZmTb8Zy2i9dh2iZ'
+hamInn_cashflow = '{
+  "01A": -36974,
+  "02A": -40018,
+  "03A": -16857,
+  "04A": -2915,
+  "05A": -20325,
+  "06A": 7864,
+  "07A": 25360,
+  "08A": 28107,
+  "09A": 28942,
+  "10A": 28696,
+  "11A": 29356,
+  "12A": 28854,
+  "13A": 28588,
+  "14A": 30781,
+  "15A": 29081,
+  "16A": 31887,
+  "17A": 51887,
+  "18A": 71887,
+  "19P": 30339,
+  "20P": 30718,
+  "21P": 31102,
+  "22P": 31491,
+  "23P": 31885,
+  "24P": 32283,
+  "25P": 32687,
+  "26P": 33096,
+  "27P": 33509,
+  "28P": 33928
 }'
-HamInn_summary = "We work hard to set accurate expectations in our listings of our unique experience, and we
+hamInn_summary = "We work hard to set accurate expectations in our listings of our unique experience, and we
 work hard to meet or exceed those expectations. However, we have no control over such
 things as our location and the level of street noise around us, and we urge you to consider
 the implications of reflecting these sorts of things in the number of stars you award us.
@@ -276,14 +128,14 @@ our performance as hosts."
 
 
 # users
-user1 = User.create(
+user1 = User.create!(
   email: "johnjrudell@gmail.com",
   password: "password",
   bylaw_agreement: true,
   tokens: 20
 )
 
-user2 = User.create(
+user2 = User.create!(
   email: "matsteele@gmail.com",
   password: "password",
   bylaw_agreement: true,
@@ -291,28 +143,28 @@ user2 = User.create(
 )
 
 #AccountTypes
-admin = AccountType.create(
+admin = AccountType.create!(
   account_type:"Admin"
 )
-developer = AccountType.create(
+developer = AccountType.create!(
   account_type:"Developer"
 )
 
 #UserAccounts
-user_account1 = UserAccount.create(
+user_account1 = UserAccount.create!(
   user_id: user1.id,account_id:admin.id
 )
-user_account2 = UserAccount.create(
+user_account2 = UserAccount.create!(
   user_id: user1.id,account_id:developer.id
 )
-user_account3 = UserAccount.create(
+user_account3 = UserAccount.create!(
   user_id: user2.id,account_id:developer.id
 )
 
 
 # projects
 
-project0 = Project.create(
+project0 = Project.create!(
   title: "Genesis",
   revenue: 250000,
   valuation: 10000000,
@@ -325,20 +177,20 @@ project0 = Project.create(
   creator_id: user2.id,
   created_at: "14/03/2018",
   status: "deployed",
-  cashflow: Genesis_cashflow,
-  votes:Genesis_votes,
-  sketch_link: Genesis_sketch_link,
-  bus_plan_link: Genesis_bus_link,
-  start_date: Genesis_start_date,
-  close_date: Genesis_end_date,
-  latitude:HamInn_lat,
-  longitude:HamInn_lng,
-  summary:Genesis_summary,
-  capital_required:Genesis_cap_required,
-  current_capital:Genesis_current_cap
+  cashflow: genesis_cashflow,
+  votes:genesis_votes,
+  sketch_link: genesis_sketch_link,
+  bus_plan_link: genesis_bus_link,
+  start_date: genesis_start_date,
+  close_date: genesis_end_date,
+  latitude:hamInn_lat,
+  longitude:hamInn_lng,
+  summary:genesis_summary,
+  capital_required:genesis_cap_required,
+  current_capital:genesis_current_cap
 )
 
-project2 = Project.create(
+project2 = Project.create!(
   title: "Fitness Complex",
   revenue: 250,
   valuation: 400000,
@@ -353,7 +205,7 @@ project2 = Project.create(
   status: "inDevelopment"
 )
 
-project3 = Project.create(
+project3 = Project.create!(
   title: "Sleepless Nights",
   revenue: 5060,
   valuation: 4788800,
@@ -368,7 +220,7 @@ project3 = Project.create(
   status: "pitched"
 )
 
-project4 = Project.create(
+project4 = Project.create!(
   title: "HamInn",
   revenue: 8000,
   valuation: 57000,
@@ -381,19 +233,19 @@ project4 = Project.create(
   creator_id: user2.id,
   created_at: "14/03/2018",
   status: "deployed",
-  cashflow: HamInn_cashflow,
-  sketch_link: HamInn_sketch_link,
-  bus_plan_link: HamInn_bus_link,
-  start_date: HamInn_start_date,
-  close_date: HamInn_end_date,
-  latitude:HamInn_lat,
-  votes:HamInn_votes,
-  longitude:HamInn_lng,
-  summary:HamInn_summary,
-  capital_required:HamInn_cap_required,
-  current_capital:HamInn_current_cap
+  cashflow: hamInn_cashflow,
+  sketch_link: hamInn_sketch_link,
+  bus_plan_link: hamInn_bus_link,
+  start_date: hamInn_start_date,
+  close_date: hamInn_end_date,
+  latitude:hamInn_lat,
+  votes:hamInn_votes,
+  longitude:hamInn_lng,
+  summary:hamInn_summary,
+  capital_required:hamInn_cap_required,
+  current_capital:hamInn_current_cap
 )
-project5 = Project.create(
+project5 = Project.create!(
   title: "Penn Generator",
   revenue: 6000,
   valuation: 72000,
@@ -407,7 +259,7 @@ project5 = Project.create(
   created_at: "14/03/2018",
   status: "deployed"
 )
-project6 = Project.create(
+project6 = Project.create!(
   title: "BeefInn",
   revenue: 9000,
   valuation: 10000,
@@ -421,7 +273,7 @@ project6 = Project.create(
   created_at: "14/03/2018",
   status: "pitched"
 )
-project6 = Project.create(
+project6 = Project.create!(
   title: "ChickInn",
   revenue: 27000,
   valuation: 200000,
