@@ -4,7 +4,7 @@ import configureStore from './store/store';
 import Root from './components/root';
 import {Drizzle, generateStore} from "drizzle";
 // import MyStringStore from "./contracts/MyStringStore.json"
-import MyStringStore from '../truffle/build/contracts/MyStringStore.json';
+// import MyStringStore from '../truffle/build/contracts/MyStringStore.json';
 import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';
 import Token from '../truffle/build/contracts/Token.json';
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //     url: 'ws://127.0.0.1:8545',
     //   },
     // },
-    contracts: [MyStringStore,Token,GNITokenCrowdsale],
+    contracts: [Token,GNITokenCrowdsale],
     events: {},
   };
 

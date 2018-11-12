@@ -20,25 +20,32 @@ class ReadString extends React.Component {
 
   componentDidMount(){
     const {drizzle, drizzleState} = this.props;
-    const stringContract = drizzle.contracts.MyStringStore;
-    const dataKey = stringContract.methods["myString"].cacheCall();
-    this.setState({dataKey});
+    // const stringContract = drizzle.contracts.MyStringStore;
+    // const dataKey = stringContract.methods["myString"].cacheCall();
+    // this.setState({dataKey});
 
     const Token = drizzle.contracts.Token;
     const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
+    var that = this;
+    web3.eth.getCoinbase(function (err, account) {
+            if (err === null) {
+                // App.account = account;
+                // $("#account").text(account);
+                web3.eth.getBalance(account, function (err, balance) {
+                    if (err === null) {
+                        console.log((web3.fromWei(balance, "ether") + " ETH"));
+                        debugger;
+                        that.setState({stackId0Balance: (web3.fromWei(balance, "ether") + " ETH")})
+                    }
+                });
+            }
+        });
 
-    // var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-    // const coinBaseBalanceDataKey = Token.methods.sendTransaction.cacheSend(drizzleState.accounts[0],2, {from: drizzleState.accounts[0],value: web3.toWei("1","ether")})
-    const stackId0Balance = Token.methods.balanceOf.cacheCall(drizzleState.accounts[0]);
-    const stackId1Balance = Token.methods.balanceOf.cacheCall(drizzleState.accounts[1]);
-    const stackId2Balance = Token.methods.balanceOf.cacheCall(drizzleState.accounts[2]);
-    // const stackIdCap = TokenCrowdsale.methods.cap.cacheCall();
     const stackIdRate = GNITokenCrowdsale.methods.rate.cacheCall();
     const stackIdSupply = Token.methods.totalSupply.cacheCall();
     console.log('stackId =', stackIdSupply)
-    this.setState({stackId0Balance,stackId1Balance,stackId2Balance,stackIdRate,stackIdSupply});
-    // this.setState({coinBaseBalanceDataKey})
+    this.setState({stackIdRate,stackIdSupply});
 
   }
   getTxStatus () {
@@ -50,34 +57,13 @@ class ReadString extends React.Component {
   }
 
   render() {
-    const { MyStringStore, Token,GNITokenCrowdsale } = this.props.drizzleState.contracts;
-    const myString = MyStringStore.myString[this.state.dataKey];
+    const {Token,GNITokenCrowdsale } = this.props.drizzleState.contracts;
 
-    const balance0Value = Token.balanceOf[this.state.stackId0Balance];
-    const balance1Value = Token.balanceOf[this.state.stackId1Balance];
-    const balance2Value = Token.balanceOf[this.state.stackId2Balance];
-    const totalTokenSupply = Token.totalSupply[this.state.stackIdSupply];
-    // if (totalTokenSupply) {
-    //
-    //   console.log('readString', totalTokenSupply);
-    // }
-    // const cap = TokenCrowdsale.cap[this.state.stackIdCap];
     const rate = GNITokenCrowdsale.rate[this.state.stackIdRate];
     return (<div>
-              <p> My stored string: { myString && myString.value} </p>
-              <p> account 0 balance: { balance0Value && balance0Value.value}   </p>
-              <p> account 0 address: { this.props.drizzleState.accounts[0]}   </p>
-              <p> account 1 balance: { balance1Value && balance1Value.value}   </p>
-              <p> account 1 address: { this.props.drizzleState.accounts[1]}   </p>
-              <p> account 2 balance: { balance2Value && balance2Value.value}   </p>
-              <p> account 2 address: { this.props.drizzleState.accounts[2]}   </p>
+              <p> account balance: {this.state.stackId0Balance}   </p>
+              <p> account address: { this.props.drizzleState.accounts[0]}   </p>
 
-              <h1> totalTokenSupply : { totalTokenSupply && totalTokenSupply.value} </h1>
-              <h1> rate: { rate && rate.value} </h1>
-
-
-
-              <div>{this.getTxStatus()}</div>
           </div>
   )}
 }
@@ -86,3 +72,19 @@ class ReadString extends React.Component {
 // <h1> cap: { cap && cap.value} </h1>
 // <h1> rate: { rate && rate.value} </h1>
 export default ReadString;
+
+
+          // <p> My stored string: { myString && myString.value} </p>
+// <p> account 1 balance: { balance1Value && balance1Value.value}   </p>
+// <p> account 1 address: { this.props.drizzleState.accounts[1]}   </p>
+// <p> account 2 balance: { balance2Value && balance2Value.value}   </p>
+// <p> account 2 address: { this.props.drizzleState.accounts[2]}   </p>
+
+// <h1> totalTokenSupply : { totalTokenSupply && totalTokenSupply.value} </h1>
+// <h1> rate: { rate && rate.value} </h1
+//
+//
+//
+//
+//
+//                 <div>{this.getTxStatus()}</div>
