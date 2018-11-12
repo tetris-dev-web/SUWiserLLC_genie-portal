@@ -42,10 +42,10 @@ class CashFlowModal extends React.Component {
           style={ModalStyle}
           contentLabel="Manage Modal"
           className="modal-container">
-          <CashFlow
-            closeModal={this.closeModal}
+          <CashFlow closeModal={this.closeModal}
             cashflowData={this.props.cashflowData}
-            quarter={this.props.currentQuarter} />
+            quarter={this.props.currentQuarter}
+            updateCashflow={this.updateCashflow} />
         </Modal>
       </div>
     );

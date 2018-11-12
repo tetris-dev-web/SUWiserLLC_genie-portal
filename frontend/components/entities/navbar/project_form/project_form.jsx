@@ -32,6 +32,7 @@ class ProjectForm extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateFile = this.updateFile.bind(this);
+    this.updateCashflow = this.updateCashflow.bind(this);
   }
 
   componentDidMount() {
@@ -92,6 +93,14 @@ class ProjectForm extends React.Component {
       // } else {
       //   this.setState({ coins: '****' });
       // }
+    };
+  }
+
+  updateCashflow(cashflow) {
+    // Needed to update project state with cashflow state
+    return e => {
+      e.preventDefault();
+      this.setState({ 'cashflow': cashflow });
     };
   }
 
@@ -214,9 +223,9 @@ class ProjectForm extends React.Component {
 
           <DivWithCorners>
             <span className="text">
-              <CashFlowModal
-                quarter={this.state.currentQuarter}
-                cashflowData={this.state.cashflow} />
+              <CashFlowModal quarter={this.state.currentQuarter}
+                cashflowData={this.state.cashflow}
+                updateCashflow={this.updateCashflow} />
             </span>
           </DivWithCorners>
         </div>

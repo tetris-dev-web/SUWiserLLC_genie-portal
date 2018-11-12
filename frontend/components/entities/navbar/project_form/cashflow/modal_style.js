@@ -5,7 +5,7 @@ module.exports = {
     left            : 0,
     right           : 0,
     bottom          : 0,
-    backgroundColor : 'rgba(255, 255, 255, 0.75)',
+    backgroundColor : 'rgba(192, 192, 192, 0.75)',
     zIndex          : 10
   },
   content : {
@@ -13,7 +13,7 @@ module.exports = {
     width           : '480px',
     padding         : '10px',
     borderRadius    : '15px 15px 15px 15px',
-    backgroundColor : 'rgba(53, 53, 53, 0.7)',
+    backgroundColor : 'rgba(0, 0, 0, 0.7)',
     color           : 'white',
     minHeight       : '480px',
     height          : '80%',
