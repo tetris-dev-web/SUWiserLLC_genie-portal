@@ -2,6 +2,7 @@ import React from 'react';
 import { keys } from 'lodash';
 import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_cashflow_graph';
 import ThumbsUp from '../thumbs_up_svg';
+import { calculateAccumulatedRevenue,  processCashData } from '../../../../../util/project_api_util';
 
 class CashFlow extends React.Component {
   constructor(props) {
@@ -9,11 +10,11 @@ class CashFlow extends React.Component {
     // Uploading local JSON files may not be possible. May have to refactor
     // ProjectForm later to account for that.
     let { cashflowData, currentQuarter  } = this.props;
-    const project = cashflowData ? cashflowData : sampleProject;
+    const project = cashflowData ? processCashData(cashflowData) : sampleProject;
     currentQuarter = currentQuarter ? currentQuarter : sampleCurrentQuarter;
     this.state = {
       project,
-      accumulatedRevenue: this.calculateAccumulatedRevenue(project),
+      accumulatedRevenue: calculateAccumulatedRevenue(project),
       currentQuarter
     };
 
@@ -21,7 +22,6 @@ class CashFlow extends React.Component {
     this.processJSONForGraph = this.processJSONForGraph.bind(this);
     this.renderColor = this.renderColor.bind(this);
     this.update = this.update.bind(this);
-    this.calculateAccumulatedRevenue = this.calculateAccumulatedRevenue.bind(this);
   }
 
 
@@ -31,26 +31,12 @@ class CashFlow extends React.Component {
 
   update(quarter) {
     return e => {
+      e.preventDefault();
       let project = Object.assign({}, this.state.project);
       project[quarter] = e.currentTarget.value;
-      const accumulatedRevenue = this.calculateAccumulatedRevenue(project);
+      const accumulatedRevenue = calculateAccumulatedRevenue(project);
       this.setState({ project, accumulatedRevenue });
     };
-  }
-
-  calculateAccumulatedRevenue(project) {
-    const accumulatedRevenue = {};
-    let accumulatedSum = 0;
-    const quarters = keys(project).sort();
-    quarters.forEach(quarter => {
-      accumulatedSum += project[quarter];
-      accumulatedRevenue[quarter] = accumulatedSum;
-    });
-    return accumulatedRevenue;
-  }
-
-  processJSONForGraph(project) {
-    return JSON.stringify(project);
   }
 
   renderColor(currentQuarter, quarter) {
@@ -64,7 +50,7 @@ class CashFlow extends React.Component {
   render() {
     // 7 years of data is the standard, translating to 28 quarters
     const { project,
-      // accumulatedRevenue, // Add in when incorporating cashflowgraph
+      accumulatedRevenue,
       currentQuarter } = this.state;
     const quarters = keys(project);
     return(
@@ -87,11 +73,15 @@ class CashFlow extends React.Component {
           })}
         </div>
         <button>Download Json Sample</button>
-
-        <input type="submit" value="Submit" />
+        <CashFlowGraph
+          cashflow={project}
+          valuation={"?"}
+          accumulatedRevenue={accumulatedRevenue} />
+        <input type="submit" value="Submit">
+          <ThumbsUp />
+        </input>
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
-        <ThumbsUp />
       </form>
     );
   }
@@ -99,44 +89,36 @@ class CashFlow extends React.Component {
 
 export default CashFlow;
 
-// Add graph later, after refactor is complete
-// <CashFlowGraph
-// cashflow={this.processJSONForGraph(project)}
-// valuation={"?"}
-// currrentQuarter={currentQuarter}
-// accumulatedRevenue={this.processJSONForGraph(accumulatedRevenue)} />
-
 // cashflow represented as single string for graph
-
 const sampleProject = {
-  "01": -36974,
-  "02": -40018,
-  "03": -16857,
-  "04": -2915,
-  "05": -20325,
-  "06": 7864,
-  "07": 25360,
-  "08": 28107,
-  "09": 28942,
-  "10": 28696,
-  "11": 29356,
-  "12": 28854,
-  "13": 28588,
-  "14": 30781,
-  "15": 29081,
-  "16": 31887,
-  "17": 51887,
-  "18": 71887,
-  "19": 30339,
-  "20": 30718,
-  "21": 31102,
-  "22": 31491,
-  "23": 31885,
-  "24": 32283,
-  "25": 32687,
-  "26": 33096,
-  "27": 33509,
-  "28": 33928,
+  "01A": -36974,
+  "02A": -40018,
+  "03A": -16857,
+  "04A": -2915,
+  "05A": -20325,
+  "06A": 7864,
+  "07A": 25360,
+  "08A": 28107,
+  "09A": 28942,
+  "10A": 28696,
+  "11A": 29356,
+  "12A": 28854,
+  "13A": 28588,
+  "14A": 30781,
+  "15A": 29081,
+  "16A": 31887,
+  "17A": 51887,
+  "18A": 71887,
+  "19P": 30339,
+  "20P": 30718,
+  "21P": 31102,
+  "22P": 31491,
+  "23P": 31885,
+  "24P": 32283,
+  "25P": 32687,
+  "26P": 33096,
+  "27P": 33509,
+  "28P": 33928,
 };
 
 const sampleCurrentQuarter = 18;

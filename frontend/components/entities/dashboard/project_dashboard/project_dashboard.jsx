@@ -5,6 +5,7 @@ import ModalStyle from './modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
 import CashFlowGraph from './project_cashflow_graph';
+import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -90,8 +91,8 @@ class ProjectDashboard extends React.Component {
                     <div className="temp">
                       <div className="thermo-canvas-container">
                         <ProjectThermo project={projectClicked}
-                                        showText={showText}
-                                        toggleTextShowing={this.toggleTextShowing}/>
+                                       showText={showText}
+                                       toggleTextShowing={this.toggleTextShowing}/>
                       </div>
                     </div>
 
@@ -112,8 +113,13 @@ class ProjectDashboard extends React.Component {
 
                     <div className="cashflow-graph">
                       <CashFlowGraph
-                        cashflow={projectClicked.cashflow}
-                        valuation={projectClicked.valuation} />
+                        cashflow={processCashData(projectClicked.cashflow)}
+                        valuation={projectClicked.valuation}
+                        accumuluatedRevenue={
+                          calculateAccumulatedRevenue(
+                            processCashData(projectClicked.cashflow)
+                          )
+                        } />
                     </div>
 
                     <div className="project-map">

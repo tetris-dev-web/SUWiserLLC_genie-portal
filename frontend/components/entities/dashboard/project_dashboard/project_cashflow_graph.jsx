@@ -1,5 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
+import { processCashData } from '../../../../util/project_api_util';
 
 class CashFlowGraph extends React.Component {
   constructor(props) {
@@ -11,7 +12,6 @@ class CashFlowGraph extends React.Component {
     this.formatCashData = this.formatCashData.bind(this);
     this.createAxesAndLines = this.createAxesAndLines.bind(this);
     // formatCashData helper Methods
-    this.processCashData = this.processCashData.bind(this);
     this.calculateMinAndMax = this.calculateMinAndMax.bind(this);
     this.generatePoints = this.generatePoints.bind(this);
     // createAxesAndLines helper methods
@@ -24,8 +24,8 @@ class CashFlowGraph extends React.Component {
     this.addText = this.addText.bind(this);
   }
 
-  componentDidMount(){
-    this.setup();
+  componentDidMount() {
+    // this.setup();
   }
 
   setup() {
@@ -125,7 +125,7 @@ class CashFlowGraph extends React.Component {
 
   formatCashData() {
     // Retrieve cashflow data from props
-    let jsonCashData = this.processCashData();
+    let jsonCashData = processCashData(this.props.cashflow);
     const expectedNet = jsonCashData.ExpectedNet;
     const actualNet = jsonCashData.Actual;
     const expectedAccumulatedData = jsonCashData.ExpectedAccumulatedGainorLoss;
@@ -158,15 +158,6 @@ class CashFlowGraph extends React.Component {
     };
   }
 
-  processCashData() {
-    // Dealing with tempfiles
-    if (this.props.cashflow.tempfile) {
-      return JSON.parse(this.props.cashflow.tempfile.join(""));
-    } else {
-      return JSON.parse(this.props.cashflow);
-    }
-  }
-
   calculateMinAndMax(values) {
     return [d3.min(values), d3.max(values)];
   }
@@ -189,6 +180,7 @@ class CashFlowGraph extends React.Component {
   }
 
   render() {
+    this.setup();
     return (
       <div id="cash-graph">
         <div className="title-wrapper">
