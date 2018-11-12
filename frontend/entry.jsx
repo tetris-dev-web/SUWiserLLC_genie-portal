@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import configureStore from './store/store';
 import Root from './components/root';
-import {Drizzle, generateStore} from "drizzle";
+import { Drizzle, generateStore } from "drizzle";
 // import MyStringStore from "./contracts/MyStringStore.json"
 import MyStringStore from '../truffle/build/contracts/MyStringStore.json';
 import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';

@@ -1,10 +1,9 @@
 import React from 'react';
 import Modal from 'react-modal';
-import ProjectForm from './project_form_container';
+import CashFlow from './cashflow';
 import ModalStyle from './modal_style';
-import DrizzleConsumer from '../../../drizzle/drizzleConsumer';
 
-class ProjectFormModal extends React.Component {
+class CashFlowModal extends React.Component {
   constructor(props) {
     super(props);
 
@@ -34,26 +33,23 @@ class ProjectFormModal extends React.Component {
   }
 
   render() {
-
     return (
-      <div className="modal-button-cont">
-        <div className="modal-button" onClick={this.openModal}>Manage</div>
-
+      <div>
+        <div onClick={this.openModal}>Cashflows</div>
         <Modal
           isOpen={this.state.openModal}
           onRequestClose={this.closeModal}
           style={ModalStyle}
           contentLabel="Manage Modal"
           className="modal-container">
-        <ProjectForm
-          closeModal={this.closeModal}
-          drizzle={this.props.drizzle}
-          drizzleState={this.props.drizzleState}
-          />
+          <CashFlow
+            closeModal={this.closeModal}
+            cashflowData={this.props.cashflowData}
+            quarter={this.props.currentQuarter} />
         </Modal>
       </div>
     );
   }
 }
 
-export default ProjectFormModal;
+export default CashFlowModal;

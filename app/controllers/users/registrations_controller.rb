@@ -27,25 +27,20 @@
 #   # first_name_changed = @user.first_name != params[:user][:first_name]
 #   # last_name_changed = @user.last_name != params[:user][:last_name]
 #   #
-#   # debugger
 #   #
 #   # if email_changed || password_changed || username_changed || first_name_changed || last_name_changed
-#   #   debugger
 #   #   # @user.update_with_password(params[:user])
 #   #   update_resource(@user, params[:user])
 #   # else
-#   #   debugger
 #   #   @user.update_without_password(params[:user])
 #   # end
 #   #
-#   # debugger
 #   # if successfully_updated
 #   #   # bypass validation and sign in user
 #   #   # original from StackOverFlow
 #   #   # sign_in @user, :bypass => true
 #   #
 #   #   # send to show page
-#   #   debugger
 #   #   sign_in :user, @resource, :bypass => true
 #   #   render "api/users/show"
 #   # else

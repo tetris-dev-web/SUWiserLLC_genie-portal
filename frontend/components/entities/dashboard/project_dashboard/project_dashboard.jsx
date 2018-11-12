@@ -4,10 +4,7 @@ import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
-import CashFlowGraph from './project_cashflow';
-import $ from 'jquery';
-import DashboardModal from './dashboard_modal';
-// import { editProject } from '../../../../actions/project_actions'
+import CashFlowGraph from './project_cashflow_graph';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -24,24 +21,19 @@ class ProjectDashboard extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.toggleTextShowing = this.toggleTextShowing.bind(this);
     this.update = this.update.bind(this);
-    this.submitEditedSummary = this.submitEditedSummary.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   toggleTextShowing() {
     this.setState({ showText:!this.state.showText });
   }
 
-  openModal(project) {
-    let projectClicked = this.props.projects[project.id];
+  openModal(projectClicked) {
     this.setState({ openModal: true, projectClicked,summary:projectClicked.summary }, ()=>{
-    if (projectClicked.model_id) {
       if(projectClicked.model_id.search('-') != -1) {
         this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id });
       } else {
         this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
       }
-    }
     });
   }
 
@@ -58,25 +50,14 @@ class ProjectDashboard extends React.Component {
   }
 
   handleKeyPress(e) {
-    e.preventDefault()
-    this.setState({summary: e.currentTarget.value})
-
+    alert('PRESSED');
   }
-
-  submitEditedSummary(){
-    this.props.editProject({id: this.state.projectClicked.id, summary: this.state.summary});
-    this.setState({openModal: false});
-    this.setState({summary: " " + (this.state.summary) });
-
-  }
-  //change to submitEditedChanges, submit everything? Once everything is set up
 
   render() {
 
     if (this.props.currentUser) {
 
       const { projectClicked,showText } = this.state;
-
       return (
         <div className="graph-container">
           <ProjectGraph
@@ -84,7 +65,6 @@ class ProjectDashboard extends React.Component {
             closeModal={this.closeModal}
             currentUser={this.props.currentUser}
             fetchProjects={this.props.fetchProjects}
-            projects={this.props.projects}
             data={this.props.projects} />
             <Modal
               isOpen={this.state.openModal}
@@ -101,7 +81,7 @@ class ProjectDashboard extends React.Component {
                       {projectClicked.title}
                     </div>
                   </div>
-                  <div className="project-modal-grid" style={!projectClicked.model_id ? {"gridTemplateRows":"30px 300px 400px"} : {"gridTemplateRows":"350px 300px 400px"} }>
+                  <div className="project-modal-grid">
                     {!projectClicked.model_id ? <div></div> :
                       <div className="iframe">
                         <iframe id="iframe" src={ `${this.state.model_link}` } frameBorder="0" allowvr="yes" allow="vr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
@@ -117,17 +97,12 @@ class ProjectDashboard extends React.Component {
 
                     <div className="project-description">
                       <div className="project-text">
-                        <textarea onChange={this.handleKeyPress} disabled={this.props.isInvestor} className="project-summary" value={this.state.summary}/>
-
+                        <div onKeyPress={this.handleKeyPress} contentEditable={!this.props.isInvestor} className="project-summary">
+                          {this.state.summary}
+                        </div>
                       </div>
-                      { !this.props.currentUser.isInvestor ?
-                      <button className="edit-summary-button"
-                        onClick={this.submitEditedSummary}
-                        style={{background: "white", color: "black", width: "60%", margin: "10px auto", padding: "0px", borderRadius: "10px", fontFamily: "'Open Sans Condensed', sans-serif"}} >
-                        Edit Summary As Admin</button> : <button style={{display: 'none'}}></button>
-                    }
                       <div className="bus-plan-download">
-                        <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
+                        <a target="_blank" rel="noopener noreferrer" href={ `${projectClicked.bus_plan_link}` }>
                           <i className="fas fa-file-contract">
                             <span>business plan</span>
                           </i>
@@ -136,7 +111,9 @@ class ProjectDashboard extends React.Component {
                     </div>
 
                     <div className="cashflow-graph">
-                      <CashFlowGraph project={projectClicked} />
+                      <CashFlowGraph
+                        cashflow={projectClicked.cashflow}
+                        valuation={projectClicked.valuation} />
                     </div>
 
                     <div className="project-map">
@@ -146,7 +123,6 @@ class ProjectDashboard extends React.Component {
                 </React.Fragment>
               }
             </Modal>
-
         </div>
       );
     } else {
@@ -158,6 +134,12 @@ class ProjectDashboard extends React.Component {
   }
 }
 
+// Add this in after fullstack refactoring of cashflow
+// <CashFlowGraph
+//   cashflow={projectClicked.cashflow}
+//   valuation={projectClicked.valuation}
+//   currentQuarter={projectClicked.currentQuarter}
+//   accumulatedRevenue={projectClicked.accumulatedRevenue} />
 
 //
 // <div className="ft-modal-body bylaws-body">
