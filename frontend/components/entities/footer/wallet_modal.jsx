@@ -73,28 +73,23 @@ class WalletModal extends React.Component{
       );
     }
     return (<p>hello</p>);
-    // debugger
     // web3 = new Web3(window.web3.currentProvider);
     // // let account = web3.eth.accounts[0];
     // if (!web3.currentProvider) {
-    //     debugger
     //     web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     //   }
 
     // else{
     //   // const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    //   // debugger
     //   return(
     //     <div className="warning">
     //     <p> ....</p>
     //     </div>
     // )
     //   // const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    //   // debugger
     //   // let arr = this.getBalances(web3);
     // }
     // // check if account is locked
-    // debugger
     // web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     //
     //
