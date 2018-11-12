@@ -25,6 +25,14 @@ export const createProject = formData => {
   });
 };
 
+export const editProject = project => {
+  return $.ajax({
+    method: 'PATCH',
+    url: `api/projects/${project.id}`,
+    data: { project }
+  });
+};
+
 export const calculateAccumulatedRevenue = (project) => {
   const accumulatedRevenue = {};
   let accumulatedSum = 0;
