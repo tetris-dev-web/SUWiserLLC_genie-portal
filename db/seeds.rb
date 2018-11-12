@@ -29,7 +29,7 @@ genesis_lng = -73.943083
 genesis_sketch_link = 'https://drive.google.com/open?id=1o15Si2ON0X1Cb0QApl7LH6WXeY6JQ9CE'
 genesis_bus_link = 'https://drive.google.com/open?id=1tuqRBAYHB_26JzoFy2xMzgePI1qTrpwL'
 
-genesis_cashflow= '{
+genesis_cashflow = '{
   "01A": -36974,
   "02A": -40018,
   "03A": -16857,
@@ -315,7 +315,7 @@ project7 = Project.create(
  country: "United States",
  continent: "North America",
  status: "pitched",
- cashflow: Genesis_cashflow,
+ cashflow: genesis_cashflow,
  latitude: 0.4083637e2,
  longitude: -0.73944585e2,
  summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
