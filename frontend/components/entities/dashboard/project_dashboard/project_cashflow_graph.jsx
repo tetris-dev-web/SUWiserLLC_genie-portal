@@ -1,6 +1,5 @@
 import React from 'react';
 import * as d3 from 'd3';
-import { processCashData } from '../../../../util/project_api_util';
 
 class CashFlowGraph extends React.Component {
   constructor(props) {
@@ -12,6 +11,7 @@ class CashFlowGraph extends React.Component {
     this.formatCashData = this.formatCashData.bind(this);
     this.createAxesAndLines = this.createAxesAndLines.bind(this);
     // formatCashData helper Methods
+    this.findCurrentQuarter = this.findCurrentQuarter.bind(this);
     this.calculateMinAndMax = this.calculateMinAndMax.bind(this);
     this.generatePoints = this.generatePoints.bind(this);
     // createAxesAndLines helper methods
@@ -25,7 +25,7 @@ class CashFlowGraph extends React.Component {
   }
 
   componentDidMount() {
-    // this.setup();
+    this.setup();
   }
 
   setup() {
@@ -125,17 +125,14 @@ class CashFlowGraph extends React.Component {
 
   formatCashData() {
     // Retrieve cashflow data from props
-    let jsonCashData = processCashData(this.props.cashflow);
-    const expectedNet = jsonCashData.ExpectedNet;
-    const actualNet = jsonCashData.Actual;
-    const expectedAccumulatedData = jsonCashData.ExpectedAccumulatedGainorLoss;
-    const actualAccumulatedData = jsonCashData.ActualAccumulatedGainorLoss;
+    const { cashflow, accumulatedRevenue } = this.props;
     // Process data for D3
-    const quarters = Object.keys(expectedNet);
-    const valuesForQuarters = Object.values(expectedNet);
-    const valuesForActualQuarters = Object.values(actualNet);
-    const valuesForExpectedAccumulated = Object.values(expectedAccumulatedData);
-    const valuesForActualAccumulated = Object.values(actualAccumulatedData);
+    const quarters = Object.keys(cashflow).sort();
+    const currentQuarter = this.findCurrentQuarter(quarters);
+    const valuesForQuarters = Object.values(cashflow);
+    const valuesForActualQuarters = valuesForQuarters.slice(0, currentQuarter + 1);
+    const valuesForExpectedAccumulated = Object.values(accumulatedRevenue);
+    const valuesForActualAccumulated = valuesForExpectedAccumulated.slice(0, currentQuarter + 1);
     // Define D3 ranges
     const [minExpectedValue,
       maxExpectedValue] = this.calculateMinAndMax(valuesForQuarters);
@@ -156,6 +153,16 @@ class CashFlowGraph extends React.Component {
       expectedNetPoints, actualNetPoints,
       expectedAccumulatedPoints, actualAccumulatedPoints
     };
+  }
+
+  findCurrentQuarter(quarters) {
+    let currentQuarter = 29;
+    quarters.forEach((quarter, idx) => {
+      if (quarter[2] === "A") {
+        currentQuarter = idx + 1;
+      }
+    });
+    return currentQuarter;
   }
 
   calculateMinAndMax(values) {
@@ -180,7 +187,6 @@ class CashFlowGraph extends React.Component {
   }
 
   render() {
-    this.setup();
     return (
       <div id="cash-graph">
         <div className="title-wrapper">

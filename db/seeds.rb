@@ -1,9 +1,5 @@
-
-
-
-
 # This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or create!d alongside the database with db:setup).
+# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 #
 # Examples:
 #
@@ -179,7 +175,7 @@ project0 = Project.create!(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
-  create!d_at: "14/03/2018",
+  created_at: "14/03/2018",
   status: "deployed",
   cashflow: genesis_cashflow,
   votes:genesis_votes,
@@ -205,7 +201,7 @@ project2 = Project.create!(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user2.id,
-  create!d_at: "12/02/2018",
+  created_at: "12/02/2018",
   status: "inDevelopment"
 )
 
@@ -220,7 +216,7 @@ project3 = Project.create!(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user1.id,
-  create!d_at: "14/03/2018",
+  created_at: "14/03/2018",
   status: "pitched"
 )
 
@@ -235,7 +231,7 @@ project4 = Project.create!(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
-  create!d_at: "14/03/2018",
+  created_at: "14/03/2018",
   status: "deployed",
   cashflow: hamInn_cashflow,
   sketch_link: hamInn_sketch_link,
@@ -260,7 +256,7 @@ project5 = Project.create!(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
-  create!d_at: "14/03/2018",
+  created_at: "14/03/2018",
   status: "deployed"
 )
 project6 = Project.create!(
@@ -274,7 +270,7 @@ project6 = Project.create!(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
-  create!d_at: "14/03/2018",
+  created_at: "14/03/2018",
   status: "pitched"
 )
 project6 = Project.create!(
@@ -288,6 +284,6 @@ project6 = Project.create!(
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
-  create!d_at: "14/03/2018",
+  created_at: "14/03/2018",
   status: "pitched"
 )

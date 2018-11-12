@@ -115,7 +115,7 @@ class ProjectDashboard extends React.Component {
                       <CashFlowGraph
                         cashflow={processCashData(projectClicked.cashflow)}
                         valuation={projectClicked.valuation}
-                        accumuluatedRevenue={
+                        accumulatedRevenue={
                           calculateAccumulatedRevenue(
                             processCashData(projectClicked.cashflow)
                           )
