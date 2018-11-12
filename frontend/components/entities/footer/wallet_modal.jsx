@@ -73,10 +73,6 @@ class WalletModal extends React.Component{
       );
     }
     return (<p>hello</p>);
-<<<<<<< HEAD
-=======
-    // debugger
->>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
     // web3 = new Web3(window.web3.currentProvider);
     // // let account = web3.eth.accounts[0];
     // if (!web3.currentProvider) {

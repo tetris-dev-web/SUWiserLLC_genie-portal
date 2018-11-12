@@ -2,13 +2,10 @@ import React from 'react';
 // import { totalData } from '../../../../util/token_data_util';
 // import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
-<<<<<<< HEAD
 import CashFlowModal from './cashflow/cashflow_modal';
-=======
 import Modal from 'react-modal';
 import MapModalStyle from './map_modal_style';
 import DropPinMap from './drop_pin_map';
->>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
 
 class ProjectForm extends React.Component {
 
@@ -20,12 +17,9 @@ class ProjectForm extends React.Component {
       latitude: '',
       longitude: '',
       cashflow: '',
-<<<<<<< HEAD
       currentQuarter: '',
-=======
       latlngpresence: false,
       droppinclicked: false,
->>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
 
       revenue: '',
       valuation: '1',
@@ -40,12 +34,9 @@ class ProjectForm extends React.Component {
       imageUrl: '',
       coins: '****',
       status: 'pitched',
-<<<<<<< HEAD
       summary: '',
-=======
       summary: 'summary',
       openModal: false,
->>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -96,12 +87,10 @@ class ProjectForm extends React.Component {
     // formData.append("project[description]", this.state.description);
     // formData.append("project[status]", this.state.status);
 
-<<<<<<< HEAD
     this.props.createProject(data).then( () => {
       GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
       this.props.closeModal();
     });
-=======
 
     this.props.closeModal();
   }
@@ -137,7 +126,6 @@ class ProjectForm extends React.Component {
       );
     }
   }
->>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
 
   updateLatLng(pos) {
     this.setState({latitude: pos.lat, longitude: pos.lng});
@@ -245,14 +233,11 @@ class ProjectForm extends React.Component {
       );
     }
 
-<<<<<<< HEAD
-    let { title, latitude, longitude, summary,
-      // revenue, valuation, description, model_id, city, country, continent, icon
-    } = this.state;
-=======
-    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude, latlng } = this.state;
+    // let { title, latitude, longitude, summary,
+    //   // revenue, valuation, description, model_id, city, country, continent, icon
+    // } = this.state;
+    // let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude, latlng } = this.state;
 
->>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
         <input className="main-input project-title-input"

@@ -44,12 +44,8 @@ class CashFlowModal extends React.Component {
           className="modal-container">
           <CashFlow
             closeModal={this.closeModal}
-<<<<<<< HEAD
             cashflowData={this.props.cashflowData}
             quarter={this.props.currentQuarter} />
-=======
-            cashflowData={this.props.cashflowData} />
->>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
         </Modal>
       </div>
     );

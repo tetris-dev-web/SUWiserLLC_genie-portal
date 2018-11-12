@@ -1,10 +1,7 @@
 # Genie-Portal
 
-<<<<<<< HEAD
 Revolutionizing real estate with blockchain
 
-=======
->>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
 ## Setting Up Your Branch OR How to Git Gud
 
 - Enter the directory in which you want genie portal to be placed

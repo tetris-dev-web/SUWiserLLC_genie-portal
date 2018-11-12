@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 pragma solidity ^0.4.24.;
-=======
-pragma solidity ^0.4.24;
->>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 import '../Project.sol';
