@@ -273,7 +273,11 @@ project6 = Project.create!(
   created_at: "14/03/2018",
   status: "pitched"
 )
+<<<<<<< HEAD
 project6 = Project.create!(
+=======
+project7 = Project.create(
+>>>>>>> f234ed41bb42670a8bc8a619df390d9b466b0410
   title: "ChickInn",
   revenue: 27000,
   valuation: 200000,
@@ -303,7 +307,7 @@ project6 = Project.create!(
 #   status: "pitched"
 # )
 
-project7 = Project.create(
+project8 = Project.create(
  title: "Genesis Sans 3d",
  valuation: 210000,
  model_id: nil,
