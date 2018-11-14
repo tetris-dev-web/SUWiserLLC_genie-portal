@@ -7,79 +7,101 @@ import { calculateAccumulatedRevenue,  processCashData } from '../../../../../ut
 class CashFlow extends React.Component {
   constructor(props) {
     super(props);
-    // Uploading local JSON files may not be possible. May have to refactor
-    // ProjectForm later to account for that.
     let { cashflowData, currentQuarter  } = this.props;
-    const project = cashflowData ? processCashData(cashflowData) : sampleProject;
     currentQuarter = currentQuarter ? currentQuarter : sampleCurrentQuarter;
+    let cashflow = cashflowData ? processCashData(cashflowData) : sampleProject;
+    cashflow = this.setupCashflow(cashflow, currentQuarter);
     this.state = {
-      project,
-      accumulatedRevenue: calculateAccumulatedRevenue(project),
-      currentQuarter
+      cashflow,
+      accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.processJSONForGraph = this.processJSONForGraph.bind(this);
     this.renderColor = this.renderColor.bind(this);
     this.update = this.update.bind(this);
+    this.downloadJSONSample = this.downloadJSONSample.bind(this);
   }
 
-
   handleSubmit() {
-
+    const { cashflow } = this.state;
+    this.props.updateCashflow(cashflow);
   }
 
   update(quarter) {
     return e => {
       e.preventDefault();
-      let project = Object.assign({}, this.state.project);
-      project[quarter] = e.currentTarget.value;
-      const accumulatedRevenue = calculateAccumulatedRevenue(project);
-      this.setState({ project, accumulatedRevenue });
+      let cashflow = Object.assign({}, this.state.cashflow);
+      cashflow[quarter] = e.currentTarget.value;
+      const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
+      this.setState({ cashflow, accumulatedRevenue });
     };
   }
 
-  renderColor(currentQuarter, quarter) {
-    if (quarter <= currentQuarter) {
-      return "actual-quarter-blue";
-    } else {
-      return "expected-quarter-black";
+  renderColor(quarter) {
+    return quarter[2] === "A" ? "actual-quarter-blue" : "expected-quarter-black";
+  }
+
+  setupCashflow(cashflow, currentQuarter) {
+    // Formats cashflow keys from "##" to "##A" or "##P". If keys already formatted
+    // this way, no need to update the JSON.
+    const cashflowKeys= keys(cashflow).sort();
+    if (cashflowKeys[0][2] === "A" || cashflowKeys[0][2] === "P") {
+      return cashflow;
     }
+    const newCashflow = {};
+    cashflowKeys.forEach(quarter => {
+      let letter = parseInt(quarter) <= currentQuarter ? "A" : "P";
+      newCashflow[`${quarter}${letter}`] = cashflow[quarter];
+    });
+    return newCashflow;
+  }
+
+  downloadJSONSample() {
+    let jsonFile = "data:text/json;charset=utf-8,";
+    jsonFile += encodeURIComponent(JSON.stringify(sampleProject));
+    return <a href={jsonFile} download="example.json">Download Sample JSON</a>;
   }
 
   render() {
     // 7 years of data is the standard, translating to 28 quarters
-    const { project,
-      accumulatedRevenue,
-      currentQuarter } = this.state;
-    const quarters = keys(project);
+    const { cashflow, accumulatedRevenue } = this.state;
+    const quarters = keys(cashflow);
     return(
-      <form onSubmit={this.handleSubmit}>
-        <h3>Quarter</h3>
-        <h3>Cashflow</h3>
-        <div>
+      <form onSubmit={this.handleSubmit} className="cashflow-upload">
+        <div className="flex-display">
+          <h3>Quarter</h3>
+          <h3>Cashflow</h3>
+        </div>
+        <ul className="scrollable">
           {quarters.map((quarter, idx) => {
             return(
-              <React.Fragment key={idx}>
-                <label htmlFor={`quarter-${quarter}`}>{`${quarter}`}</label>
-                <input className={this.renderColor(currentQuarter, quarter)}
+              <li className="flex-display" key={idx}>
+                <label htmlFor={`quarter-${quarter}`}>{`${quarter.substring(0, 2)}`}</label>
+                <input className={this.renderColor(quarter)}
                   id={`quarter-${quarter}`}
                   type="number"
                   placeholder="10,000"
                   onChange={this.update(quarter)}
-                  value={project[quarter]} />
-              </React.Fragment>
+                  value={cashflow[quarter]} />
+              </li>
             );
           })}
+        </ul>
+        <div>
+          <p>
+            The cashflow JSON should reflect 7 years of financial data, actual and expected.
+            Projections should be based in deep economic research, showcased in the uploaded business plan.
+          </p>
+          {this.downloadJSONSample()}
         </div>
-        <button>Download Json Sample</button>
         <CashFlowGraph
-          cashflow={project}
+          cashflow={cashflow}
           valuation={"?"}
           accumulatedRevenue={accumulatedRevenue} />
-        <input type="submit" value="Submit">
+        <label>
+          <input type="submit" value="Submit" />
           <ThumbsUp />
-        </input>
+        </label>
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
       </form>
@@ -91,34 +113,34 @@ export default CashFlow;
 
 // cashflow represented as single string for graph
 const sampleProject = {
-  "01A": -36974,
-  "02A": -40018,
-  "03A": -16857,
-  "04A": -2915,
-  "05A": -20325,
-  "06A": 7864,
-  "07A": 25360,
-  "08A": 28107,
-  "09A": 28942,
-  "10A": 28696,
-  "11A": 29356,
-  "12A": 28854,
-  "13A": 28588,
-  "14A": 30781,
-  "15A": 29081,
-  "16A": 31887,
-  "17A": 51887,
-  "18A": 71887,
-  "19P": 30339,
-  "20P": 30718,
-  "21P": 31102,
-  "22P": 31491,
-  "23P": 31885,
-  "24P": 32283,
-  "25P": 32687,
-  "26P": 33096,
-  "27P": 33509,
-  "28P": 33928,
+  "01": -36974,
+  "02": -40018,
+  "03": -16857,
+  "04": -2915,
+  "05": -20325,
+  "06": 7864,
+  "07": 25360,
+  "08": 28107,
+  "09": 28942,
+  "10": 28696,
+  "11": 29356,
+  "12": 28854,
+  "13": 28588,
+  "14": 30781,
+  "15": 29081,
+  "16": 31887,
+  "17": 51887,
+  "18": 71887,
+  "19": 30339,
+  "20": 30718,
+  "21": 31102,
+  "22": 31491,
+  "23": 31885,
+  "24": 32283,
+  "25": 32687,
+  "26": 33096,
+  "27": 33509,
+  "28": 33928,
 };
 
 const sampleCurrentQuarter = 18;
