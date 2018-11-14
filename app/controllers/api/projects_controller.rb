@@ -11,7 +11,6 @@ class Api::ProjectsController < ApplicationController
 
   def create
     @project = Project.new(project_params)
-
     if @project.save
       render json: @project
     else
@@ -19,10 +18,36 @@ class Api::ProjectsController < ApplicationController
     end
   end
 
+  def update
+    @project = Project.find(params[:id])
+    if @project.update(project_params)
+      render json: @project
+    else
+      render json: @project.errors.full_messages, status: 422
+    end
+  end
+
+  def deployed_project_revenue
+    @accuCashflows = Project.all.map do |project|
+      JSON.parse(project.cashflow)["Actual"].values.reduce(:+) if project.cashflow
+    end
+    render json: @accuCashflows.compact.reduce(:+)
+    # nadir of cashflows
+    # @cashProject = Project.where(status: "deployed")[0]
+    # render json: JSON.parse(@cashProject.cashflow)["ExpectedAccumulatedGainorLoss"].values.min
+  end
+
+  def discount_factor
+    capital_deployed = JSON.parse(Project.first.cashflow)["Actual"].values.reduce(:+)
+    discount_factor = 50 - ((capital_deployed / 190000.0) + (Project.where('close_date < ?', Time.current).count) * 6)
+    render json: discount_factor > 10 ? discount_factor : 10
+  end
+
+
   private
   def project_params
     params.require(:project).permit(
-      :id, :title, :revenue, :valuation, :model_id,
+      :id, :title, :cashflow, :revenue, :valuation, :model_id,
       :file, :icon, :description, :creator_id, :created_at,
       :city, :country, :continent, :status, :latitude, :longitude, :summary
     )

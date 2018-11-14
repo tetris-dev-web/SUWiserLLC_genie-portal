@@ -4,8 +4,8 @@ import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import ProjectMap from './project_map';
 import ProjectThermo from './project_thermo';
-import CashFlowGraph from './project_cashflow';
-import $ from 'jquery';
+import CashFlowGraph from './project_cashflow_graph';
+import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 
 class ProjectDashboard extends React.Component {
   constructor(props){
@@ -31,7 +31,7 @@ class ProjectDashboard extends React.Component {
   openModal(projectClicked) {
     this.setState({ openModal: true, projectClicked,summary:projectClicked.summary }, ()=>{
       if(projectClicked.model_id.search('-') != -1) {
-        this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id });
+        this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id + "&noEmbedWatermark=true"});
       } else {
         this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
       }
@@ -91,8 +91,8 @@ class ProjectDashboard extends React.Component {
                     <div className="temp">
                       <div className="thermo-canvas-container">
                         <ProjectThermo project={projectClicked}
-                                        showText={showText}
-                                        toggleTextShowing={this.toggleTextShowing}/>
+                                       showText={showText}
+                                       toggleTextShowing={this.toggleTextShowing}/>
                       </div>
                     </div>
 
@@ -103,8 +103,9 @@ class ProjectDashboard extends React.Component {
                         </div>
                       </div>
                       <div className="bus-plan-download">
-                        <a target="_blank" href={ `${projectClicked.bus_plan_link}` }>
+                        <a target="_blank" rel="noopener noreferrer" href={ `${projectClicked.bus_plan_link}` }>
                           <i className="fas fa-file-contract">
+
                             <span>business plan</span>
                           </i>
                         </a>
@@ -112,7 +113,14 @@ class ProjectDashboard extends React.Component {
                     </div>
 
                     <div className="cashflow-graph">
-                      <CashFlowGraph project={projectClicked} />
+                      <CashFlowGraph
+                        cashflow={processCashData(projectClicked.cashflow)}
+                        valuation={projectClicked.valuation}
+                        accumulatedRevenue={
+                          calculateAccumulatedRevenue(
+                            processCashData(projectClicked.cashflow)
+                          )
+                        } />
                     </div>
 
                     <div className="project-map">
@@ -133,6 +141,12 @@ class ProjectDashboard extends React.Component {
   }
 }
 
+// Add this in after fullstack refactoring of cashflow
+// <CashFlowGraph
+//   cashflow={projectClicked.cashflow}
+//   valuation={projectClicked.valuation}
+//   currentQuarter={projectClicked.currentQuarter}
+//   accumulatedRevenue={projectClicked.accumulatedRevenue} />
 
 //
 // <div className="ft-modal-body bylaws-body">
