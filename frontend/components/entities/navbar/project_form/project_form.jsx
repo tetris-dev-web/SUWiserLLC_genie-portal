@@ -3,6 +3,8 @@ import React from 'react';
 // import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow/cashflow_modal';
+import { getFailedProjects } from '../../../../util/project_api_util';
+import Finance from 'financejs';
 
 class ProjectForm extends React.Component {
 
@@ -33,6 +35,8 @@ class ProjectForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateFile = this.updateFile.bind(this);
     this.updateCashflow = this.updateCashflow.bind(this);
+    this.calculateDiscountFactor = this.calculateDiscountFactor.bind(this);
+    this.getFailedProjects = this.getFailedProjects.bind(this);
   }
 
   componentDidMount() {
@@ -78,6 +82,17 @@ class ProjectForm extends React.Component {
       this.props.closeModal();
     });
 
+  }
+
+  getFailedProjects(){
+    console.log("Props are", this.props);
+    return 2;
+    // return getFailedProjects();
+  }
+
+  calculateDiscountFactor(){
+    console.log(this.getFailedProjects());
+    return (50 - ((190000/190000.0) + (this.getFailedProjects() * 6)));
   }
 
   update(property) {
@@ -152,6 +167,8 @@ class ProjectForm extends React.Component {
   }
 
   render() {
+    console.log("Discount factor is :");
+    console.log(this.calculateDiscountFactor());
 
     const geojsons = [];
     const fileId = ["file1", "file2", "file3", "file4", "file5"];

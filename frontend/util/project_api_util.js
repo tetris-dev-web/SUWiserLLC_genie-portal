@@ -33,6 +33,13 @@ export const editProject = project => {
   });
 };
 
+export const getFailedProjects = () => {
+  return $.ajax({
+    method: 'GET',
+    url: 'api/projects/failed_projects_count'
+  });
+};
+
 export const calculateAccumulatedRevenue = (project) => {
   const accumulatedRevenue = {};
   let accumulatedSum = 0;
