@@ -15,7 +15,34 @@ contract InvestorListStub is InvestorList {
     bool called;
   }
 
+  address mockInvestorA;
+  address mockInvestorB;
+  address mockInvestorC;
+
   mapping(string => CallData) private method;
+
+  function initMockInvestors (address investorA, address investorB) public {
+    mockInvestorA = investorA;
+    mockInvestorB = investorB;
+  }
+
+  function addrById (uint256 id) public view returns (address) {
+    address a;
+
+    if (id == 1) {
+      a = mockInvestorA;
+    }
+
+    if (id == 2) {
+      a = mockInvestorB;
+    }
+
+    return a;
+  }
+
+  function investorCount () external view returns(uint256) {
+    return 2;
+  }
 
   function addMethod (string methodName) public {
     CallData memory newCallData;

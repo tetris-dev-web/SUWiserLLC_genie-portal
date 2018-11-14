@@ -150,13 +150,10 @@ contract Project {
     log();
   }
 
-  function beats (address otherProject) external view returns (bool) {
-    return (
-      !active &&
-      totalVotes > 0 &&
+  function beats (address otherProject) public view returns (bool) {
+    return totalVotes > 0 && totalVotes >= Project(otherProject).totalVotes_();
       /* open() && *///we dont need this if we remove all votes for projects that are closed
-      totalVotes >= Project(otherProject).totalVotes_()
+      /* totalVotes >= Project(otherProject).totalVotes_() */
       //we dont need to check if the competitor is active because an active project always has 0 votes
-    );
   }
 }

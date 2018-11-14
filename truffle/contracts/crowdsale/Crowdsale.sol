@@ -78,7 +78,6 @@ contract Crowdsale {
    * @param _beneficiary Address performing the token purchase
    */
   function buyTokens(address _beneficiary) public payable returns (uint256) {
-
     uint256 weiAmount = msg.value;
     _preValidatePurchase(_beneficiary, weiAmount);
 

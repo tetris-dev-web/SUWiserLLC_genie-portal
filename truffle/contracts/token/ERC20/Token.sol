@@ -37,6 +37,7 @@ contract Token is MintableToken {
     totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
 
+  //we can remove the reference to investor list by requiring that the sender is the corwdsale. crowdsale can handle the logic for adding and removing credit instead.
   function transfer(address _to, uint256 _value) public returns (bool) {
     require(activeBalances[msg.sender] >= _value);
     super.transfer(_to, _value);

@@ -197,11 +197,11 @@ contract('Project', async (_accounts) => {
   })
 
   describe('beats', async () => {
-    it('returns false is the project is active', async () => {
-      await mP.activate();
-      let result = await mP.beats(accounts[2]);
-      assert.equal(result, false, 'an active project should not be able to win');
-    })
+    // it('returns false is the project is active', async () => {
+    //   await mP.activate();
+    //   let result = await mP.beats(accounts[2]);
+    //   assert.equal(result, false, 'an active project should not be able to win');
+    // })
 
     it('returns false if the project has not been voted for yet', async () => {
       mP = await mockP({
