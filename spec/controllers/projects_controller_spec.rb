@@ -5,7 +5,7 @@ RSpec.describe Api::ProjectsController, type: :controller do
   describe 'GET #deployed_project_revenue' do
 
     load "#{Rails.root}/db/seeds.rb"
-    
+
     before do
       @expected = -266505
       get :deployed_project_revenue, format: :json
