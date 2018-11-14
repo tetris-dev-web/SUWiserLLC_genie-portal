@@ -52,11 +52,26 @@
     "webpack": "npx webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "jTest": "jest",
-    "test-watch": "jest --watch"
+    "jTest-watch": "jest --watch"
   },
   "jest": {
     "roots": [
       "test/javascripts"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "moduleNameMapper": {
+      "^Entities(.*)$": "<rootDir>/frontend/components/entities$1"
+    },
+    "setupFiles": [
+      "./test/javascripts/setupTests.js"
+    ]
+  },
+  "babel": {
+    "presets": [
+        "env",
+        "react"
     ]
   },
   "repository": {
@@ -71,11 +86,16 @@
   },
   "homepage": "https://github.com/GenusDev/genie-portal#readme",
   "devDependencies": {
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.7.0",
+    "enzyme-to-json": "^3.3.4",
     "eslint": "^4.19.1",
     "eslint-plugin-react": "^7.11.1",
     "ganache-cli": "^6.1.8",
     "jest": "^23.6.0",
+    "jest-enzyme": "^7.0.1",
     "mocha": "^5.2.0",
+    "react-test-renderer": "^16.6.1",
     "webpack-cli": "^3.1.1"
   }
 }
