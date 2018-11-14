@@ -85,14 +85,27 @@ class ProjectForm extends React.Component {
   }
 
   getFailedProjects(){
-    console.log("Props are", this.props);
-    return 2;
-    // return getFailedProjects();
+    let failedProjectCount = 0;
+    // currentDate = new Date
+    Object.values(this.props.projects).map((project) => {
+      if (project.close_date < new Date().toISOString()){
+        failedProjectCount += 1;
+      }
+    });
+    // console.log("Failed Project count is ", failedProjectCount);
+    return failedProjectCount;
   }
 
   calculateDiscountFactor(){
-    console.log(this.getFailedProjects());
-    return (50 - ((190000/190000.0) + (this.getFailedProjects() * 6)));
+    // console.log(this.getFailedProjects());
+    let discountFactor = (50 - ((190000/190000.0) + (this.getFailedProjects() * 6)));
+    if (discountFactor > 10 && discountFactor < 50) {
+      return discountFactor;
+    } else if (discountFactor < 10) {
+      return 10;
+    } else {
+      return 50;
+    }
   }
 
   update(property) {
@@ -251,7 +264,7 @@ class ProjectForm extends React.Component {
           <div className="discounts-box">
             discount rate
             <div className="amount-box">
-              15%
+              { this.calculateDiscountFactor() }
             </div>
           </div>
 
