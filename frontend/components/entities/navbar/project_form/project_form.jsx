@@ -3,8 +3,9 @@ import React from 'react';
 // import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow/cashflow_modal';
-import { getFailedProjects } from '../../../../util/project_api_util';
+// import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
+import { processCashData } from '../../../../util/project_api_util';
 
 class ProjectForm extends React.Component {
 
@@ -37,6 +38,8 @@ class ProjectForm extends React.Component {
     this.updateCashflow = this.updateCashflow.bind(this);
     this.calculateDiscountFactor = this.calculateDiscountFactor.bind(this);
     this.getFailedProjects = this.getFailedProjects.bind(this);
+    this.findCurrentQuarter = this.findCurrentQuarter.bind(this);
+    this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
   }
 
   componentDidMount() {
@@ -96,9 +99,34 @@ class ProjectForm extends React.Component {
     return failedProjectCount;
   }
 
+  findCurrentQuarter(quarters) {
+    let currentQuarter = 29;
+    quarters.forEach((quarter, idx) => {
+      if (quarter[2] === "A") {
+        currentQuarter = idx + 1;
+      }
+    });
+    return currentQuarter;
+  }
+
+  calculateTotalCapitalDeployed(){
+    let capital = 0;
+    Object.values(this.props.projects).forEach((project) => {
+      if(project.cashflow){
+        let jsonProjectCashflow = processCashData(project.cashflow);
+        let quarters = Object.keys(jsonProjectCashflow).sort();
+        let currentQuarter = this.findCurrentQuarter(quarters);
+        let valuesForActualQuarters = Object.values(jsonProjectCashflow).slice(0, currentQuarter + 1);
+        capital += valuesForActualQuarters.reduce((acc, el) => acc + el);
+      }
+    });
+    return capital;
+  }
+
   calculateDiscountFactor(){
     // console.log(this.getFailedProjects());
-    let discountFactor = (50 - ((190000/190000.0) + (this.getFailedProjects() * 6)));
+    let capitalDeployed = this.calculateTotalCapitalDeployed();
+    let discountFactor = (50 - ((capitalDeployed/190000.0) + (this.getFailedProjects() * 6)));
     if (discountFactor > 10 && discountFactor < 50) {
       return discountFactor;
     } else if (discountFactor < 10) {
@@ -180,8 +208,9 @@ class ProjectForm extends React.Component {
   }
 
   render() {
-    console.log("Discount factor is :");
-    console.log(this.calculateDiscountFactor());
+    // console.log("Discount factor is :");
+    console.log("Discount factor is: ", this.calculateDiscountFactor());
+    console.log("Capital is: ", this.calculateTotalCapitalDeployed());
 
     const geojsons = [];
     const fileId = ["file1", "file2", "file3", "file4", "file5"];
