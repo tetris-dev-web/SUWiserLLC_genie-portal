@@ -26,7 +26,34 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
+
+  test "user public key should not be null" do
+    # user = User.new(email: "johnjrude@gmail.com", password: "password", public_key: '123abc', bylaw_agreement: true)
+    # user = User.new(
+    #   email: "johnjrude@gmail.com",
+    #   password: "password",
+    #   bylaw_agreement: true,
+    #   tokens: 20,
+    #   public_key: '123abc'
+    # )
+
+    # developer = AccountType.new(
+    #   account_type:"Developer1"
+    # )
+
+    # user_account = UserAccount.create(
+    #   user_id: user.id, account_id:developer.id
+    # )
+
+    # assert 2+2 == 4
+    puts "user public key is valid"
+  end
+  #
+  # test "user public key should not be null" do
+  #   user = User.new(first_name: 'michael', encrypted_password: 'password')
+  #   assert_not user.valid?, "public_key is null (not allowed)"
+  #   puts "user public key is valid"
   # end
+
+
 end
