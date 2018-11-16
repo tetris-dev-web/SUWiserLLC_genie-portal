@@ -40,6 +40,7 @@ class ProjectForm extends React.Component {
     this.getFailedProjects = this.getFailedProjects.bind(this);
     this.findCurrentQuarter = this.findCurrentQuarter.bind(this);
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
+    this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
   }
 
   componentDidMount() {
@@ -126,14 +127,20 @@ class ProjectForm extends React.Component {
   calculateDiscountFactor(){
     // console.log(this.getFailedProjects());
     let capitalDeployed = this.calculateTotalCapitalDeployed();
-    let discountFactor = (50 - ((capitalDeployed/190000.0) + (this.getFailedProjects() * 6)));
-    if (discountFactor > 10 && discountFactor < 50) {
+    let discountFactor = (.5 - ((capitalDeployed/190000.0) + (this.getFailedProjects() * 0.06)));
+    if (discountFactor > .10) {
       return discountFactor;
-    } else if (discountFactor < 10) {
-      return 10;
     } else {
-      return 50;
+      return .10;
     }
+  }
+
+  calculateNetPresentValue(projectCashflows){
+    let discountFactor = this.calculateDiscountFactor();
+    let cashflows = Object.values(processCashData(projectCashflows));
+    let finance = new Finance();
+    let netPresentValue = finance.NPV(discountFactor, 0, ...cashflows);
+    return netPresentValue;
   }
 
   update(property) {
@@ -208,9 +215,12 @@ class ProjectForm extends React.Component {
   }
 
   render() {
-    // console.log("Discount factor is :");
-    console.log("Discount factor is: ", this.calculateDiscountFactor());
-    console.log("Capital is: ", this.calculateTotalCapitalDeployed());
+    // console.log("Finance is ", Finance);
+    // console.log("Finance.NPV is ", new Finance().NPV);
+    // console.log("Net Present Value is: ", this.calculateNetPresentValue(Object.values(processCashData(this.props.projects))[0].cashflow));
+    // console.log("Discount factor is: ", this.calculateDiscountFactor());
+    // console.log("Capital is: ", this.calculateTotalCapitalDeployed());
+    // console.log("Cashflow is: ", this.state.cashflow);
 
     const geojsons = [];
     const fileId = ["file1", "file2", "file3", "file4", "file5"];
@@ -293,7 +303,7 @@ class ProjectForm extends React.Component {
           <div className="discounts-box">
             discount rate
             <div className="amount-box">
-              { this.calculateDiscountFactor() }
+              { this.calculateDiscountFactor().toFixed(2) }
             </div>
           </div>
 
