@@ -32,7 +32,7 @@ contract ProjectQueue {
     heapifyDown(start);
     return toRemove;
   }
-
+  //add a parameter that indicates the direction. the crowdsale will always know which direction. redo the tests for this to reflect the change
   function heapify (address projectAddr) public {
     uint256 startPosition = position[projectAddr];
     heapifyUp(startPosition);

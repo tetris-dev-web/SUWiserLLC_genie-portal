@@ -1,8 +1,9 @@
 pragma solidity 0.4.25;
 import './token/ERC20/Token.sol';
 import './InvestorList.sol';
+import './ContractStub.sol';
 
-contract TokenStub is Token {
+contract TokenStub is Token, ContractStub {
   constructor(InvestorList _investorList) public
   Token(_investorList) {}
 
@@ -40,5 +41,31 @@ contract TokenStub is Token {
     }
 
     return b;
+  }
+
+  function mint(
+    address _to,
+    uint256 _amount
+  )
+    public
+    canMint
+    returns (bool)
+  {
+    CallData storage methodState = method['mint'];
+    methodState.called = true;
+
+    if (methodState.firstAddress == address(0)) {
+      methodState.firstAddress = _to;
+    } else {
+      methodState.secondAddress = _to;
+    }
+
+    if (methodState.firstUint == 0) {
+      methodState.firstUint = _amount;
+    } else {
+      methodState.secondUint = _amount;
+    }
+    
+    return true;
   }
 }

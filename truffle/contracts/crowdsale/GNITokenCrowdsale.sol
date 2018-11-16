@@ -1,7 +1,7 @@
 pragma solidity 0.4.25;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
-import './ProjectQueue.sol';
+import '../ProjectQueue.sol';
 import '../Project.sol';
 import '../token/ERC20/Token.sol';
 import '../InvestorList.sol';
@@ -10,6 +10,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   uint256 public totalValuation;
   InvestorList private investorList;
+  ProjectQueue private projectQueue;
 
   constructor
       (
@@ -18,12 +19,14 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         uint256 _rate,
         address _developer,
         Token _token,
-        InvestorList _investorList
+        InvestorList _investorList,
+        ProjectQueue _projectQueue
       )
       public
       Crowdsale(_rate, _developer, _token)
       TimedCrowdsale(_openingTime, _doomsDay) {
         investorList = InvestorList(_investorList);
+        projectQueue = ProjectQueue(_projectQueue);
         totalValuation = 0;
   }
 
@@ -47,7 +50,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       } */
 
 //after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
- function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public payable {
+ function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public {
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);//test if this is called
@@ -126,29 +129,29 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  function tryActivateProject () internal {
    Project leadingProject = Project(projectQueue.leadingProjectAddr());//in stub, we return an address
-   bool stillOpen = leadingProject.open_(); //we set up an open status in the stub
+   bool stillOpen = leadingProject.open(); //we set up an open status in the stub
    uint256 capitalRequired = leadingProject.capitalRequired_(); //we return a capital amount
 
    if (capitalRequired <= weiRaised || !stillOpen) {
      projectQueue.dequeue();//check that this was called
 
      if (stillOpen) {
-       uint256 developerTokens = project.developerTokens_();//return arbitrary amount in the stub
-       uint256 investorTokens = project.investorTokens_();//return arbitrary amount in the stub
+       uint256 developerTokens = leadingProject.developerTokens_();//return arbitrary amount in the stub
+       uint256 investorTokens = leadingProject.investorTokens_();//return arbitrary amount in the stub
+       /* uint256 projectId = leadingProject.id_(); */
 
-       Token(token).activate(developer, developerTokens);//test that this was called
-       updateInvestors(investorTokens, projectId);
+       Token(token).activate(developer, developerTokens);//test that this was called w/ correct shit
+       updateInvestors(investorTokens);//make sure investors are gucci
 
        forwardFunds(developer, capitalRequired);//test that the funds are transfered
        weiRaised = weiRaised.sub(capitalRequired);//test that the weiRaised decreases
 
-       project.activate();//test that this is called
+       leadingProject.activate();//test that this is called
      }
 
      tryActivateProject();//test that this is called again
    }
  }
-
  /* function activateProject() public {
     (uint256 projectId, bool canActivate) = projectToActivateDetails();
 
@@ -185,7 +188,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     return (leadingProjectId, candidateFound && Project(projectAddrs[leadingProjectId]).capitalRequired_() <= weiRaised);
   } */
 
-  function updateInvestors (uint256 tokens, uint256 projectId) private {
+  function updateInvestors (uint256 tokens) private {
     uint256 supply = Token(token).totalInactiveSupply().sub(Token(token).inactiveBalanceOf(developer));
 
     for (uint256 i = 1; i <= investorList.investorCount(); i = i.add(1)) {

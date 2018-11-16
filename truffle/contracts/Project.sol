@@ -68,6 +68,10 @@ contract Project {
     return closingTime > now;
   }
 
+  function id_ () public view returns (uint256) {
+    return id;
+  }
+
   function active_ () public view returns (bool) {
     return active;
   }
