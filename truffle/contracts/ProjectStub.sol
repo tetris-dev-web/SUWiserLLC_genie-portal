@@ -1,7 +1,8 @@
 pragma solidity ^0.4.23;
 import './Project.sol';
+import './ContractStub.sol';
 
-contract ProjectStub is Project {
+contract ProjectStub is Project, ContractStub {
   constructor (
     uint256 _id,
     string _name,
@@ -28,5 +29,17 @@ contract ProjectStub is Project {
       )
       {
     totalVotes = _mockVotes;
+  }
+
+  function vote (address voter, uint256 voteAmount) external {
+    CallData storage methodState = method['vote'];
+    methodState.firstAddress = voter;
+    methodState.firstUint = voteAmount;
+  }
+
+  function removeVotes (address voter, uint256 voteAmount) external {
+    CallData storage methodState = method['removeVotes'];
+    methodState.firstAddress = voter;
+    methodState.firstUint = voteAmount;
   }
 }

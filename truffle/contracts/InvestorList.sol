@@ -40,7 +40,7 @@ contract InvestorList {
       uint256 id = investorCount_;
       newInvestor.id = id;
       newInvestor.addr = investorAddr;
-      
+
       investorIds[investorAddr] = id;
       investors[id] = newInvestor;
 
@@ -56,44 +56,3 @@ contract InvestorList {
     investors[investorIds[investorAddr]].voteCredit = investors[investorIds[investorAddr]].voteCredit.sub(votes);
   }
 }
-
-
-//one project to another
-/* function transferVotes (address investorAddr, uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
-uint256 investorId = investorIds[investorAddr];
-removeVotes(investorId, fromProjectId, votes);
-addVotes(investorId, toProjectId, votes);
-} */
-//creidt to project
-/* function applyVotes (address investorAddr, uint256 projectId, uint256 votes) external {
-uint256 investorId = investorIds[investorAddr];
-removeVoteCredit(investorAddr, votes);
-addVotes(investorId, projectId, votes);
-} */
-
-//project to credit
-//make this function only accessible by crowdsale for security
-/* function cacheVoteCredit (address investorAddr, uint256 projectId, uint256 votes) external {
-uint256 investorId = investorIds[investorAddr];
-removeVotes(investorId, projectId, votes);
-addVoteCredit(investorAddr, votes);
-} */
-
-/* function addVotes (uint256 id, uint256 projectId, uint256 votes) internal {
-investors[id].votes[projectId] = investors[id].votes[projectId].add(votes);
-emit LogVotes(id, projectId, votes);
-} */
-
-/* function removeVotes (uint256 id, uint256 projectId, uint256 votes) internal {
-require(investors[id].votes[projectId] >= votes);
-investors[id].votes[projectId] = investors[id].votes[projectId].sub(votes);
-emit LogVotes(id, projectId, votes);
-} */
-
-//make this function only accessible by crowdsale for security
-/* function handleNewPurchase (uint256 projectId, uint256 votes, address investorAddr) external {
-if (investorIds[investorAddr] == 0) {
-addInvestor(investorAddr);
-}
-applyVotes(investorIds[investorAddr], projectId, votes);
-} */

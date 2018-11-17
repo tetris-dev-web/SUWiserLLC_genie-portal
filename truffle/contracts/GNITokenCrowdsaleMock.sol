@@ -7,8 +7,9 @@ import './crowdsale/GNITokenCrowdsale.sol';
 import './TokenStub.sol';
 import './InvestorListStub.sol';
 import './ProjectQueueStub.sol';
+import './ContractStub.sol';
 
-contract GNITokenCrowdsaleMock is GNITokenCrowdsale {
+contract GNITokenCrowdsaleMock is GNITokenCrowdsale, ContractStub {
 constructor
   (
     uint256 _openingTime,
@@ -44,5 +45,14 @@ constructor
 
   function decreaseMockDoomsDay (uint256 doomDivisor) public {
     doomsDay = doomsDay.div(doomDivisor);
+  }
+
+  function addMockProject (address projAddr) public {
+    projectAddrs.push(projAddr);
+  }
+
+  function tryActivateProject () internal {
+    CallData storage methodState = method["tryActivateProject"];
+    methodState.called = true;
   }
 }

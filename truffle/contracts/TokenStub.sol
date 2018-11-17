@@ -65,7 +65,13 @@ contract TokenStub is Token, ContractStub {
     } else {
       methodState.secondUint = _amount;
     }
-    
+
     return true;
+  }
+
+  function transferInactive (address _to, uint256 _value) external {
+    CallData storage methodState = method['transferInactive'];
+    methodState.firstAddress = _to;
+    methodState.firstUint = _value;
   }
 }

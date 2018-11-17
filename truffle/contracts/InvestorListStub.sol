@@ -32,7 +32,7 @@ contract InvestorListStub is InvestorList, ContractStub {
   }
 
   function addInvestor (address investorAddr) external {
-    CallData storage methodState = method['investorAddr'];
+    CallData storage methodState = method['addInvestor'];
     methodState.called = true;
     methodState.firstAddress = investorAddr;
   }

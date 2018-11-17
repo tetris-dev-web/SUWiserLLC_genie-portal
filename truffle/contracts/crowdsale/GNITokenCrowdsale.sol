@@ -3,6 +3,7 @@ import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 import '../ProjectQueue.sol';
 import '../Project.sol';
+import '../ProjectStub.sol';
 import '../token/ERC20/Token.sol';
 import '../InvestorList.sol';
 
