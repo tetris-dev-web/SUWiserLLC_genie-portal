@@ -135,6 +135,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
    if (capitalRequired <= weiRaised || !stillOpen) {
      projectQueue.dequeue();//check that this was called
+     updateInvestorVotesAndTokens(investorTokens, leadingProject, stillOpen);
 
      if (stillOpen) {
        uint256 developerTokens = leadingProject.developerTokens_();//return arbitrary amount in the stub
@@ -142,7 +143,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
        /* uint256 projectId = leadingProject.id_(); */
 
        Token(token).activate(developer, developerTokens);//test that this was called w/ correct shit
-       updateInvestors(investorTokens);//make sure investors are gucci
+       /* updateInvestorVotesAndTokens(investorTokens, leadingProject);//make sure investors are gucci */
 
        forwardFunds(developer, capitalRequired);//test that the funds are transfered
        weiRaised = weiRaised.sub(capitalRequired);//test that the weiRaised decreases
@@ -189,18 +190,21 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     return (leadingProjectId, candidateFound && Project(projectAddrs[leadingProjectId]).capitalRequired_() <= weiRaised);
   } */
 
-  function updateInvestors (uint256 tokens) private {
+  function updateInvestorVotesAndTokens (uint256 tokens, Project storage project, bool canActivateTokens) private {
     uint256 supply = Token(token).totalInactiveSupply().sub(Token(token).inactiveBalanceOf(developer));
 
     for (uint256 i = 1; i <= investorList.investorCount(); i = i.add(1)) {
       address investor = investorList.addrById(i);
-      uint256 investorBalance = Token(token).inactiveBalanceOf(investor);
 
-      uint256 tokensToActivate = investorBalance.mul(tokens).div(supply);
-      Token(token).activate(investor, tokensToActivate);
+      if (canActivateTokens) {
+        uint256 investorBalance = Token(token).inactiveBalanceOf(investor);
+        uint256 tokensToActivate = investorBalance.mul(tokens).div(supply);
+        Token(token).activate(investor, tokensToActivate);
+      }
 
-      /* Project(projectAddrs[projectId]).removeVotes(investor, tokensToActivate); */ //not needed if theyre removed from the queue
-      investorList.addVoteCredit(investor, tokensToActivate);
+      uint256 voteCredit = project.votesOf(investor);
+      project.removeVotes(investor, voteCredit); //not needed if theyre removed from the queue
+      investorList.addVoteCredit(investor, voteCredit);
     }
   }
 

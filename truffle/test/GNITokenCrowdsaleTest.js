@@ -245,29 +245,38 @@ contract('GNITokenCrowdsale', async (_accounts) => {
     })
   })
   //
-  // describe('tryActivateProject', async () => {//we should pass the project in instead.
-  //   //when the projet has enough funds
-  //     //when the project is still open
-  //       //dequeue
-  //       //activation logic:
-  //         //token.activate is called for the number of investors + one for the developer
-  //         //funds are forwarded
-  //         //weiRaised is decremented
-  //         //project.activate is called
-  //       //function is called again
-  //     //when the project is not open
-  //       //dequeue
-  //       //function called again
-  //   //when the project doesnt have enough funds
-  //     //when the project is still open
-  //       //nothing
-  //     //when the project is not open
-  //       //dequeue
-  //       //function called again
-  //   describe('when the project has enough funds', async () => {
-  //     it('')
-  //   })
-  // })
+  describe('tryActivateProject', async () => {//we should pass the project in instead.
+    //when the projet has enough funds
+      //when the project is still open
+        //dequeue
+        //activation logic:
+          //token.activate is called for the number of investors + one for the developer
+          //funds are forwarded
+          //weiRaised is decremented
+          //project.activate is called
+        //function is called again
+      //when the project is not open
+        //dequeue
+        //function called again
+    //when the project doesnt have enough funds
+      //when the project is still open
+        //nothing
+      //when the project is not open
+        //dequeue
+        //function called again
+    describe('when the leading project has enough funds', async () => {
+      beforeEach(async () => {
+        
+      })
+
+      describe('when the leading project is still open', async () => {
+
+      })
+      describe('when the leading project has closed', async () => {
+
+      })
+    })
+  })
 })
 
 const setUp = async () => {

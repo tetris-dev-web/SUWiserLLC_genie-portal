@@ -11,9 +11,9 @@ contract TokenStub is Token, ContractStub {
   address mockInvestorB;
   address mockInvestorC;
 
-  uint256 activeBalanceA = 12000000;
-  uint256 activeBalanceB = 48000000;
-  uint256 activeBalanceC = 30000000;
+  uint256 balanceA = 12000000;
+  uint256 balanceB = 48000000;
+  uint256 balanceC = 30000000;
 
   function init(address investorA, address investorB, address investorC) public {
     mockInvestorA = investorA;
@@ -22,22 +22,44 @@ contract TokenStub is Token, ContractStub {
   }
 
   function totalActiveSupply () public view returns (uint256) {
-    return activeBalanceA.add(activeBalanceB).add(activeBalanceC);
+    return balanceA.add(balanceB).add(balanceC);
   }
 
   function activeBalanceOf (address addr) public view returns (uint256) {
     uint256 b;
 
     if (addr == mockInvestorA) {
-      b = activeBalanceA;
+      b = balanceA;
     }
 
     if (addr == mockInvestorB) {
-      b = activeBalanceB;
+      b = balanceB;
     }
 
     if (addr == mockInvestorC) {
-      b = activeBalanceC;
+      b = balanceC;
+    }
+
+    return b;
+  }
+
+  function totalInactiveSupply () public view returns (uint256) {
+    return balanceA.add(balanceB).add(balanceC);
+  }
+
+  function inactiveBalanceOf (address addr) public view returns (uint256) {
+    uint256 b;
+
+    if (addr == mockInvestorA) {
+      b = balanceA;
+    }
+
+    if (addr == mockInvestorB) {
+      b = balanceB;
+    }
+
+    if (addr == mockInvestorC) {
+      b = balanceC;
     }
 
     return b;
@@ -73,5 +95,20 @@ contract TokenStub is Token, ContractStub {
     CallData storage methodState = method['transferInactive'];
     methodState.firstAddress = _to;
     methodState.firstUint = _value;
+  }
+
+  function activate (address investor, uint256 amount) public {
+    CallData storage methodState = method['activate'];
+
+    if (methodState.firstAddress == address(0)) {
+      methodState.firstAddress = investor;
+      methodState.firstUint = amount;
+    } else if (methodState.secondAddress == address(0)) {
+      methodState.secondAddress = investor;
+      methodState.secondUint = amount;
+    } else {
+      methodState.thirdAddress = investor;
+      methodState.thirdUint = amount;
+    }
   }
 }

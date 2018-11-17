@@ -10,7 +10,9 @@ contract ContractStub {
     string thirdString;
     address firstAddress;
     address secondAddress;
+    address thirdAddress;
     bool called;
+    uint256 callCount;
   }
 
   mapping(string => CallData) internal method;
@@ -41,7 +43,9 @@ contract ContractStub {
       data.thirdString,
       data.firstAddress,
       data.secondAddress,
-      data.called
+      data.thirdAddress,
+      data.called,
+      data.callCount
     );
   }
 }

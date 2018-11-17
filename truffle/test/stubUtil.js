@@ -16,7 +16,9 @@ const callHistory = async (stub, methodName) => {
     thirdString: data[5],
     firstAddress: data[6],
     secondAddress: data[7],
-    called: data[8]
+    thirdAddress: data[8],
+    called: data[9],
+    callCount: data[10]
   }
 }
 

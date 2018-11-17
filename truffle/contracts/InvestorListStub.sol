@@ -40,8 +40,17 @@ contract InvestorListStub is InvestorList, ContractStub {
   function addVoteCredit (address investorAddr, uint256 votes) public {
     CallData storage methodState = method['addVoteCredit'];
     methodState.called = true;
-    methodState.firstAddress = investorAddr;
-    methodState.firstUint = votes;
+
+    if (methodState.firstAddress == address(0)) {
+      methodState.firstAddress = investorAddr;
+      methodState.firstUint = votes;
+    } else if (methodState.secondAddress == address(0)) {
+      methodState.secondAddress = investorAddr;
+      methodState.secondUint = votes;
+    } else {
+      methodState.thirdAddress = investorAddr;
+      methodState.thirdUint = votes;
+    }
   }
 
   function removeVoteCredit (address investorAddr, uint256 votes) public {

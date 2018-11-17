@@ -23,6 +23,10 @@ constructor
   public
   GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _investorList, _projectQueue) {}
 
+  function setMockWeiRaised (uint256 mockRasied_) public {
+    weiRaised = mockRaised_;
+  }
+
   function mockProjectCount () public returns (uint256) {
     return projectAddrs.length;
   }
@@ -54,5 +58,11 @@ constructor
   function tryActivateProject () internal {
     CallData storage methodState = method["tryActivateProject"];
     methodState.called = true;
+    methodState.callCount = methodState.callCount.add(1);
+  }
+
+  function tryActivateProject_ () public {
+    tryActivateProject();
+    super.tryActivateProject();
   }
 }
