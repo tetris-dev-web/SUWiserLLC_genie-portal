@@ -1,6 +1,6 @@
 # Genie-Portal
 
-Revolutionizing real estate with blockchain
+Real estate blockchain token portal engine
 
 ## Setting Up Your Branch OR How to Git Gud
 
