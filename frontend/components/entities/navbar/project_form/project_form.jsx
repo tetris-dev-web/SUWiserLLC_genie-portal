@@ -1,6 +1,6 @@
 import React from 'react';
-// import { totalData } from '../../../../util/token_data_util';
-// import { roundToTwo } from '../../../../util/function_util';
+import { totalData } from '../../../../util/token_data_util';
+import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow/cashflow_modal';
 
@@ -15,7 +15,6 @@ class ProjectForm extends React.Component {
       longitude: '',
       cashflow: '',
       currentQuarter: '',
-
       revenue: '',
       valuation: '1',
       model_id: '7syizSLPN60',
@@ -27,7 +26,8 @@ class ProjectForm extends React.Component {
       imageUrl: '',
       coins: '****',
       status: 'pitched',
-      summary: '',
+      summary: 'summary',
+      openModal: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -67,16 +67,57 @@ class ProjectForm extends React.Component {
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
 
+
     // data.append("project[revenue]", this.state.revenue);
     // formData.append("project[icon]", this.state.icon);
     // formData.append("project[description]", this.state.description);
     // formData.append("project[status]", this.state.status);
 
-    this.props.createProject(data).then( () => {
-      GNITokenCrowdsale.methods.pitchProjectandRaiseCap.cacheSend(this.state.valuation, { from: drizzleState.accounts[0] });
-      this.props.closeModal();
-    });
 
+    this.props.closeModal();
+  }
+  // Moved until data is properly structured
+  // this.props.createProject(data)
+  // .then( () => {
+  //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
+  // });
+
+  dropPinClick() {
+    if(this.state.latitude != '' && this.state.longitude != '') {
+      this.setState({latlngpresence: true});
+      this.openModal();
+    } else {
+      this.setState({droppinclicked: true});
+    }
+  }
+
+  openModal() {
+    this.setState({openModal: true});
+  }
+
+  closeModal() {
+    this.setState({openModal: false});
+  }
+
+  renderLatLngErrors(presence, clicked) {
+    if (!presence && clicked) {
+      return (
+        <ul className="project-errors">
+          <li>Latitude and Longitude can't be blank</li>
+        </ul>
+      );
+    }
+  }
+
+  updateLatLng(pos) {
+    this.setState({latitude: pos.lat, longitude: pos.lng});
+  }
+
+  updateAddress(address) {
+    if(address) {
+      let addr = address.split(',');
+      this.setState({street: addr[0], city: addr[1], continent: addr[3]});
+    }
   }
 
   update(property) {
@@ -203,7 +244,7 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input inputfile" id="json-file"
+          <input className="main-input inputfile" id="file"
             type="file"
             onChange={this.updateFile('cashflow')} />
           <label htmlFor="json-file"> #| choose json</label>
@@ -246,30 +287,25 @@ class ProjectForm extends React.Component {
         </div>
 
         <div className="flexed">
-          <input className="main-input inputfile" id="pdf-file"
-            type="file"
-            onChange={this.updateFile} />
-          <label htmlFor="pdf-file">#|choose pdf</label>
+          <input className="main-input inputfile" id="file"
+            type="file"/>
+          <label for="file">#|choose pdf</label>
 
           <DivWithCorners>
             <span className="text">plan</span>
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input inputfile" id="model-file"
-            type="file"
-            onChange={this.updateFile} />
-          <label htmlFor="model-file">#|model id</label>
+          <input className="main-input inputfile" id="file"
+            type="file"/>
+          <label for="file">#|model id</label>
 
           <DivWithCorners>
-            <a href="https://poly.google.com" target ="_blank" rel="noopener noreferrer" className="text">Poly Model</a>
+            <span className="text">Poly Model</span>
           </DivWithCorners>
         </div>
 
-        <textarea
-          className="description-area"
-          value={summary}
-          onChange={this.update('summary')} />
+        <textarea className="description-area" value="description" />
         <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"

@@ -1,4 +1,7 @@
 import React from 'react';
+import ProjectModules from './project_modules';
+
+
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
 
@@ -8,7 +11,7 @@ const height = 500 - margin.top - margin.bottom;
 const citySquareSide = 15;
 const continentSquareSide = 5;
 
-//colors
+//colors - should import from util
 const midNightBlue = "#073444";
 const lightBlue = "#5EABAA";
 const midNightBlack = "#061E24";
@@ -21,7 +24,12 @@ class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-      projects:{}
+      projects:{},
+      openModal: false,
+      projectClicked:{},
+      showText: this.props.showText,
+      model_link: '',
+      summary: ''
     }
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
@@ -29,6 +37,8 @@ class ProjectGraph extends React.Component {
     this.addDragHandlers = this.addDragHandlers.bind(this);
     this.createSVG = this.createSVG.bind(this);
     this.tickActions = this.tickActions.bind(this);
+    this.openModalonClick = this.openModalonClick.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount(){
@@ -36,6 +46,20 @@ class ProjectGraph extends React.Component {
       this.setUp();
     });
   }
+
+  openModalonClick(projectClicked) {
+    this.setState({ openModal: true, projectClicked,summary:projectClicked.summary }, ()=>{
+      if(projectClicked.model_id.search('-') != -1) {
+        this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id + "&noEmbedWatermark=true"});
+      } else {
+        this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
+      }
+    });
+  }
+
+    closeModal() {
+      this.setState({ openModal: false });
+    }
 
 
   formatData(projectKeys) {
@@ -141,7 +165,7 @@ class ProjectGraph extends React.Component {
         return colorScale(0);
       }
     }).on('click',(d)=>{
-      that.props.openModal(d);
+      that.openModalonClick(d);
     }).on('mouseover', (d) => that.handleMouseOver(d,link,continentSquares,citySquares,circle))
     .on('mouseout',(d)=> that.handleMouseOut(d,link,continentSquares,citySquares,circle));
 
@@ -386,6 +410,8 @@ class ProjectGraph extends React.Component {
   }
 
   render() {
+
+
     let data = '';
     if (this.props.data) {
       data = Object.keys(this.props.data).map(key => {
@@ -393,16 +419,32 @@ class ProjectGraph extends React.Component {
         return <li key={project.id}>{project.title} {project.created_at}</li>;
       });
     }
+    console.log("graph state", this.state)
 
-    return (
-      <div className='graph-container'>
-        <div className="series content graph" id='project'>
-          <div id="graph"></div>
-
-        </div>
-      </div>
-    );
-  }
+    // if (this.state.openModal === false) {
+    //   return (
+    //     <div className='graph-container'>
+    //       <div className="series content graph" id='project'>
+    //         <div id="graph"></div>
+    //       </div>
+    //     </div>
+    //   );
+    // } else {
+      return (
+        <div className='graph-container'>
+          <div className="series content graph" id='project'>
+            <div id="graph"></div>
+          </div>
+                <ProjectModules
+                  projectClicked={this.state.projectClicked}
+                  closeModal = {this.closeModal}
+                  showText = {this.state.showText}
+                  model_link = {this.state.model_link}
+                  summary = {this.state.summary}
+                  openModal = {this.state.openModal}
+                  />
+        </div>)
+    }
 }
 
 ProjectGraph.defaultProps = {

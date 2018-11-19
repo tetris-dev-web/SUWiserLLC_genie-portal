@@ -1,6 +1,6 @@
 import React from 'react';
 import { keys } from 'lodash';
-import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_cashflow_graph';
+import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_modules_cashflow';
 import ThumbsUp from '../thumbs_up_svg';
 import { calculateAccumulatedRevenue,  processCashData } from '../../../../../util/project_api_util';
 
