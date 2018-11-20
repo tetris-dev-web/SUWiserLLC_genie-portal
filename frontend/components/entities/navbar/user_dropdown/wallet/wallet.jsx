@@ -7,7 +7,7 @@ class Wallet extends React.Component {
     this.state = {
       newWalletID: ''
     };
-
+    console.log(this.props);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -25,13 +25,15 @@ class Wallet extends React.Component {
   }
 
   render() {
+    // let { publicKey } = this.props.currentUser.public_key;
 
     let { newWalletID } = this.state;
+    let { publicKey } = this.props;
     return(
       <form className="wallet-form">
         <div className="wallet current-wallet">
           <p className="wallet-label current-wallet-label">current wallet</p>
-          <div className="wallet-id current-wallet-id">#889341hdaf7g759g0440g</div>
+          <div className="wallet-id current-wallet-id">{publicKey}</div>
         </div>
         <div className="wallet integrate-wallet">
           <p className="wallet-label integrate wallet-label">integrate new wallet</p>

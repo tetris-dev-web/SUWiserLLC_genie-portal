@@ -45,3 +45,6 @@
 
 
 ## links to key documents
+
+- Testing with minitest and rspec
+https://medium.com/@ethanryan/getting-started-with-testing-in-rails-using-minitest-and-rspec-113fe1f866a

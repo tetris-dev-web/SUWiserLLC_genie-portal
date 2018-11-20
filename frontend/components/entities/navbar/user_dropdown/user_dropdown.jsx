@@ -50,6 +50,8 @@ class UserDropdown extends React.Component {
     this.updateUsernameDisplay = this.updateUsernameDisplay.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
     this.tick = this.tick.bind(this);
+
+    this.handlePublicKeyUpdate = this.handlePublicKeyUpdate.bind(this);
     // this.address = null;
     // this.abi = null;
     // this.web3 = null;
@@ -121,6 +123,10 @@ class UserDropdown extends React.Component {
     this.props.logout();
   }
 
+  handlePublicKeyUpdate(){
+
+  }
+
   render() {
 
     // const tokens = this.props.drizzleState.contracts.Token.totalSupply[this.state.totalSupplyIdx];
@@ -134,7 +140,7 @@ class UserDropdown extends React.Component {
     // let { tokens } = this.props.currentUser;
 
 
-
+    let publicKey = this.props.currentUser.public_key;
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
@@ -156,7 +162,7 @@ class UserDropdown extends React.Component {
                 <div className="button-text">wallet#</div>
               </a>
               <ul className="dropdown-menu dropdown-item">
-                <Wallet />
+                <Wallet publicKey={publicKey} handlePublicKeyUpdate={this.handlePublicKeyUpdate}  />
               </ul>
             </li>
             <li className="dropdown-submenu profile-menu">
