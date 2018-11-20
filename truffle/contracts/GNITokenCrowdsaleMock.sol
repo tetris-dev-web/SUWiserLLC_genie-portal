@@ -23,7 +23,11 @@ constructor
   public
   GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _investorList, _projectQueue) {}
 
-  function setMockWeiRaised (uint256 mockRasied_) public {
+  function receiveMockWei () external payable {
+
+  }
+
+  function setMockWeiRaised (uint256 mockRaised_) public {
     weiRaised = mockRaised_;
   }
 
@@ -43,17 +47,23 @@ constructor
     return projectAddrs[projectAddrs.length - 1];
   }
 
-  function increaseMockOpening (uint256 openMultiplier) public {
-    openingTime = openingTime.mul(openMultiplier);
+  function setMockOpening (uint256 _openingTime) public {
+    /* openingTime = openingTime.mul(openMultiplier); */
+    openingTime = _openingTime;
   }
 
-  function decreaseMockDoomsDay (uint256 doomDivisor) public {
-    doomsDay = doomsDay.div(doomDivisor);
+  function setMockDoomsDay (uint256 _doomsDay) public {
+    /* doomsDay = doomsDay.div(doomDivisor); */
+    doomsDay = _doomsDay;
   }
 
   function addMockProject (address projAddr) public {
     projectAddrs.push(projAddr);
   }
+
+  /* function resetProjectAddrs () public {
+    delete projectAddrs;
+  } */
 
   function tryActivateProject () internal {
     CallData storage methodState = method["tryActivateProject"];

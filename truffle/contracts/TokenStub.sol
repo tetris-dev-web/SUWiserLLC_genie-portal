@@ -99,6 +99,7 @@ contract TokenStub is Token, ContractStub {
 
   function activate (address investor, uint256 amount) public {
     CallData storage methodState = method['activate'];
+    methodState.called = true;
 
     if (methodState.firstAddress == address(0)) {
       methodState.firstAddress = investor;

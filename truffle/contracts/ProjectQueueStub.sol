@@ -3,10 +3,14 @@ import './ContractStub.sol';
 import './ProjectQueue.sol';
 
 contract ProjectQueueStub is ProjectQueue, ContractStub {
-  address mockLeader;
+  address stubLeader;
 
-  function addStubLeader (address _mockLeader) public {
-    mockLeader = _mockLeader;
+  function addStubLeader (address _stubLeader) public {
+    stubLeader = _stubLeader;
+  }
+
+  function leadingProjectAddr () public view returns (address) {
+    return stubLeader;
   }
 
   function enqueue (address projectAddr) public {
@@ -15,7 +19,7 @@ contract ProjectQueueStub is ProjectQueue, ContractStub {
   }
 
   function dequeue () public returns (address) {
-    CallData storage methodState = method['enqueue'];
+    CallData storage methodState = method['dequeue'];
     methodState.called = true;
   }
 

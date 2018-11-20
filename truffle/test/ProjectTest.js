@@ -6,7 +6,7 @@ let mP;
 contract('Project', async (_accounts) => {
   accounts = _accounts;
 
-  beforeEach(async () => {
+  before(async () => {
     await basicSetup();
   })
 
@@ -230,6 +230,7 @@ contract('Project', async (_accounts) => {
         valuation: 5000000, capitalRequired: 1000000, developerTokens: 40000000,
         investorTokens: 10000000, lat: '340', lng: '340'
       });
+      await mP.initMockVoter(accounts[2], 2000000);
       await competitor.initMockVoter(accounts[2], 1000000);
       let result = await mP.beats(competitor.address);
       assert.equal(result, true, 'project should beat its competitor when the conditions are met');

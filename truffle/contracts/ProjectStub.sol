@@ -72,11 +72,11 @@ contract ProjectStub is Project, ContractStub {
   }
 
   function developerTokens_ () public view returns (uint256) {
-    return 1000000;
+    return 10000000;
   }
 
   function investorTokens_ () public view returns (uint256) {
-    return 1000000;
+    return 10000000;
   }
 
   function activate () external {
