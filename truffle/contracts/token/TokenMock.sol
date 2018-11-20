@@ -9,6 +9,7 @@ contract TokenMock is Token {
 
   function resetSupply () public {
     totalSupply_ = 0;
+    totalActiveSupply_ = 0;
   }
 
   function initMockBalance (address addr, uint256 active, uint256 inactive) public {

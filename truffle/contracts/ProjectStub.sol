@@ -31,6 +31,10 @@ contract ProjectStub is Project, ContractStub {
     totalVotes = _mockVotes;
   }
 
+  function setMockVotes (uint256 mockVotes) public {
+    totalVotes = mockVotes;
+  }
+
   function vote (address voter, uint256 voteAmount) external {
     CallData storage methodState = method['vote'];
     methodState.firstAddress = voter;
