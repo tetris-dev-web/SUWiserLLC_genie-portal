@@ -1,6 +1,6 @@
 import React from 'react';
 import ProjectForm from 'Entities/navbar/project_form/project_form';
-import { shallow, mount, render } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 
 function setUp(){
   const props = {
