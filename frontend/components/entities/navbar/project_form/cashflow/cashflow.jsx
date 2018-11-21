@@ -9,7 +9,16 @@ class CashFlow extends React.Component {
     super(props);
     let { cashflowData, currentQuarter  } = this.props;
     currentQuarter = currentQuarter ? currentQuarter : sampleCurrentQuarter;
+    // if (cashflowData instanceof File) {
+    //   //file reader to read file, parse json, substitute json in for cashflow below
+    //   let cashflowData = this.handleFile(cashflowData);
+    //   console.log("Cashflow Text is: ", cashflowData);
+    //   return cashflowData;
+    // }
+    console.log("Cashflowdata is: ", cashflowData);
+    console.log("Cashflowdata is a file?: ",  cashflowData instanceof File);
     let cashflow = cashflowData ? processCashData(cashflowData) : sampleProject;
+    console.log(cashflow);
     cashflow = this.setupCashflow(cashflow, currentQuarter);
     this.state = {
       cashflow,
@@ -20,6 +29,7 @@ class CashFlow extends React.Component {
     this.renderColor = this.renderColor.bind(this);
     this.update = this.update.bind(this);
     this.downloadJSONSample = this.downloadJSONSample.bind(this);
+    this.handleFile = this.handleFile.bind(this);
   }
 
   handleSubmit() {
@@ -39,6 +49,18 @@ class CashFlow extends React.Component {
 
   renderColor(quarter) {
     return quarter[2] === "A" ? "actual-quarter-blue" : "expected-quarter-black";
+  }
+
+  handleFile(file){
+    let fileReader = new FileReader();
+    fileReader.onloadend = () => {
+      let content = fileReader.result;
+      console.log("fileReader is: ", fileReader);
+      console.log(content);
+      fileReader.readAsText(file)
+      return content;
+    };
+    return content;
   }
 
   setupCashflow(cashflow, currentQuarter) {
