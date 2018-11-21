@@ -125,7 +125,7 @@ class CashFlowGraph extends React.Component {
 
   formatCashData() {
     // Retrieve cashflow data from props
-    const { cashflow, accumulatedRevenue } = this.props;
+    const { cashflow, accumulatedRevenue } = this.props.cashflow;
     // Process data for D3
     const quarters = Object.keys(cashflow).sort();
     const currentQuarter = this.findCurrentQuarter(quarters);
@@ -185,12 +185,14 @@ class CashFlowGraph extends React.Component {
       .attr("fill", "black");
     return graphBase;
   }
-
+  // too many divs
   render() {
     return (
-      <div id="cash-graph">
-        <div className="title-wrapper">
-          <h3 className="text-hidden">cashflow</h3>
+      <div className="cashflow-graph">
+        <div id="cash-graph">
+          <div className="title-wrapper">
+            <h3 className="text-hidden">cashflow</h3>
+          </div>
         </div>
       </div>
     );

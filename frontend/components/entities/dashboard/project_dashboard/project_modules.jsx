@@ -3,99 +3,80 @@ import ProjectGraph from './project_graph';
 import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import ProjectMap from './project_modules_map';
-import ProjectThermo from './project_thermo';
+import ProjectThermo from './project_modules_thermo';
 import CashFlowGraph from './project_modules_cashflow';
-import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
+import {Title, IframeFor3dModel, CloseButton, SummaryAndPlan } from './project_modules_subcomponents';
+import {calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 import $ from 'jquery';
+
 
 class ProjectModules extends React.Component {
   constructor(props){
     super(props);
-
     this.state = {
-      // openModal: this.props.openModal,
-      showText: false,
-      model_link: this.props.model_link,
-      summary: this.props.summary,
+      projectClicked: {},
+      model_link: "",
     };
-
-
-    this.toggleTextShowing = this.toggleTextShowing.bind(this);
-
   }
 
-  toggleTextShowing() {
-    this.setState({ showText:!this.state.showText });
+  componentWillUpdate (prevProps, prevState) {
+    const { projectClicked } = this.props
+
+    const convert3dModelIDtoLink = () => {
+      if(projectClicked.model_id && !this.state.model_link) {
+          console.log("reredering update")
+        if(projectClicked.model_id.search('-') != -1) {
+          this.setState({ model_link: "https://3dwarehouse.sketchup.com/embed.html?autostart=1&mid=" + projectClicked.model_id + "&noEmbedWatermark=true"});
+        } else {
+          this.setState({ model_link: "https://poly.google.com/view/" + projectClicked.model_id + "/embed" });
+        }
+      }
+    }
+    convert3dModelIDtoLink()
   }
 
-
-  // handleKeyPress(e) {
-  //   alert('PRESSED'); //if enter key pressed, save to database
-  // }
 
   render() {
-      const { projectClicked,showText,} = this.props;
-      console.log("Module state: ",this.state, "module props : ", this.props)
+
+      const { projectClicked, isInvestor, isModalOpen, closeModalOnClick, doIHaveData} = this.props
+      const {model_link,showText} = this.state
+      const noDataComponent = <h1 className="nodata-text">No data available</h1>
+
       return (
             <Modal
-              isOpen={this.props.openModal}
-              onRequestClose={this.props.closeModal}
+              isOpen={isModalOpen}
+              onRequestClose={closeModalOnClick}
               contentLabel="Project Graph Modal"
               style={ModalStyle}
               className="modal-container">
-              <div className="black-close-modal-button close-modal-button"
-                onClick={this.props.closeModal}>&times;</div>
-              {!projectClicked.summary ? <h1 className="nodata-text">No data available</h1> :
+
+              <CloseButton closeModal = {closeModalOnClick} />
+
+              { !doIHaveData? noDataComponent :
+
                 <React.Fragment>
-                  <div className="ft-modal-header-cont">
-                    <div className="ft-modal-header bylaws-header">
-                      {projectClicked.title}
-                    </div>
-                  </div>
+                  <Title nameOfProject={projectClicked.title}/>
                   <div className="project-modal-grid">
-                    {!projectClicked.model_id ? <div></div> :
-                      <div className="iframe">
-                        <iframe id="iframe" src={ `${this.state.model_link}` } frameBorder="0" allowvr="yes" allow="vr; accelerometer; magnetometer; gyroscope;" allowFullScreen mozallowfullscreen="true" webkitallowfullscreen="true" ></iframe>
-                      </div>
-                    }
-                    <div className="temp">
-                      <div className="thermo-canvas-container">
-                        <ProjectThermo project={projectClicked}
-                                       showText={showText}
-                                       toggleTextShowing={this.toggleTextShowing}/>
-                      </div>
-                    </div>
 
-                    <div className="project-description">
-                      <div className="project-text">
-                        <div onKeyPress={this.handleKeyPress} contentEditable={!this.props.isInvestor} className="project-summary"  suppressContentEditableWarning={true}>
-                          {this.state.summary}
-                        </div>
-                      </div>
-                      <div className="bus-plan-download">
-                        <a target="_blank" rel="noopener noreferrer" href={ `${projectClicked.bus_plan_link}` }>
-                          <i className="fas fa-file-contract">
+                    <IframeFor3dModel projectClicked={projectClicked}
+                                      model_link ={model_link}/>
+                    <ProjectThermo    project={projectClicked}/>
 
-                            <span>business plan</span>
-                          </i>
-                        </a>
-                      </div>
-                    </div>
+                    <SummaryAndPlan
+                                      handleKeyPress = {null}
+                                      isInvestor = {isInvestor}
+                                      summary = {projectClicked.summary}
+                                      bus_plan_link = {projectClicked.bus_plan_link} />
+                    <CashFlowGraph
+                                      cashflow={processCashData(projectClicked.cashflow)}
+                                      valuation={projectClicked.valuation}
+                                      accumulatedRevenue={
+                                        calculateAccumulatedRevenue(
+                                        processCashData(projectClicked.cashflow)
+                                        )
+                                      }/>
+                    <ProjectMap projectClicked={ projectClicked } />
 
-                    <div className="cashflow-graph">
-                      <CashFlowGraph
-                        cashflow={processCashData(projectClicked.cashflow)}
-                        valuation={projectClicked.valuation}
-                        accumulatedRevenue={
-                          calculateAccumulatedRevenue(
-                            processCashData(projectClicked.cashflow)
-                          )
-                        } />
-                    </div>
-
-                    <div className="project-map">
-                      <ProjectMap projectClicked={ projectClicked } />
-                    </div>
                   </div>
                 </React.Fragment>
               }

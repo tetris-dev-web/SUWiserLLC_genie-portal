@@ -35,45 +35,43 @@ describe('Project Graph Component', () => {
  //    expect(eWrapper).toMatchSnapshot();
  // })
 
-
-
-   let node,
-   Component;
-
-   beforeEach(() => {
-     node = document.createElement('svg');
-   })
-
-   afterEach(() => {
-     unmountComponentAtNode(node);
-   })
-
-
-   it('d3 should create a render', () => {
-
-     let nodeLoader = ReactFauxDOM.createElement('div');
-
-     function divElement() {
-       return d3.select(nodeLoader).append('svg')
-              .classed('project-svg', true)
-              .attr("preserveAspectRatio", "xMinYMin meet")
-              .attr("viewBox", "0 0 700 500")
-              .attr("width", width + margin.left + margin.right)
-              .attr("height", height + margin.top + margin.bottom);
-     }
-
-    divElement = mount(nodeLoader)
-
-    expect(divWrapper.find('svg')).to.have.length(1);
-
-     //
-     // const { eWrapper} = componentSetup()
-
-     var data = [4, 8, 15, 16, 23, 42]
-
-
-   })
-
+   // let node,
+   // Component;
+   //
+   // beforeEach(() => {
+   //   node = document.createElement('svg');
+   // })
+   //
+   // afterEach(() => {
+   //   unmountComponentAtNode(node);
+   // })
+   //
+   //
+   // it('d3 should create a render', () => {
+   //
+   //   let nodeLoader = ReactFauxDOM.createElement('div');
+   //
+   //   function divElement() {
+   //     return d3.select(nodeLoader).append('svg')
+   //            .classed('project-svg', true)
+   //            .attr("preserveAspectRatio", "xMinYMin meet")
+   //            .attr("viewBox", "0 0 700 500")
+   //            .attr("width", width + margin.left + margin.right)
+   //            .attr("height", height + margin.top + margin.bottom);
+   //   }
+   //
+   //  divElement = mount(nodeLoader)
+   //
+   //  expect(divWrapper.find('svg')).to.have.length(1);
+   //
+   //   //
+   //   // const { eWrapper} = componentSetup()
+   //
+   //   var data = [4, 8, 15, 16, 23, 42]
+   //
+   //
+   // })
+   //
 
    it('should match snapshot', () => {
      const { eWrapper} = componentSetup()
