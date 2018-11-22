@@ -18,6 +18,7 @@ const mapDispatchToProps = dispatch => {
   return {
     actions: {
       fetchUser: id => dispatch(fetchUser(id)),
+      updateUser: user => dispatch(updateUser(user)),
       logout: () => dispatch(logout())
     }
   };

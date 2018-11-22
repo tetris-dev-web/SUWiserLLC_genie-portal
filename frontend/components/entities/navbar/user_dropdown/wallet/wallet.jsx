@@ -8,6 +8,7 @@ class Wallet extends React.Component {
       newWalletID: ''
     };
     console.log(this.props);
+    this.update = this.update.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -20,13 +21,29 @@ class Wallet extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
-    console.log('New Wallet ID', this.state.newWalletID);
+    debugger;
+    // $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
+    // console.log('New Wallet ID', this.state.newWalletID);
+    let updatedUser = {
+      id: this.props.currentUser.id,
+      email: this.props.currentUser.email,
+      // password: (this.state.password.length > 6) ? this.state.password : "",
+      password: this.props.currentUser.password,
+      zipcode: this.props.currentUser.zipcode,
+      first_name: this.props.currentUser.first_name,
+      last_name: this.props.currentUser.last_name,
+      public_key: this.state.newWalletID
+    };
+
+    this.props.updateUser(updatedUser).then(() => {
+      // this.props.updateUsernameDisplay(updatedUser);
+      // $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
+    });
   }
 
   render() {
     // let { publicKey } = this.props.currentUser.public_key;
-
+    debugger;
     let { newWalletID } = this.state;
     let { publicKey } = this.props;
     return(

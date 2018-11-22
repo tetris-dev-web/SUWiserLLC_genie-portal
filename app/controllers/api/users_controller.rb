@@ -14,6 +14,7 @@ class Api::UsersController < ApplicationController
 
 
   def update_info
+    debugger;
     @resource = current_user
 
     if @resource.update(user_params)
@@ -31,7 +32,7 @@ class Api::UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:email, :password, :username, :first_name, :last_name, :id, :zipcode, :tokens)
+    params.require(:user).permit(:email, :password, :username, :first_name, :last_name, :id, :zipcode, :tokens, :public_key)
   end
 
 end
