@@ -6,6 +6,7 @@ const ProjectStub = artifacts.require("ProjectStub");
 const Project = artifacts.require("Project");
 const exceptions = require('./exceptions');
 const stubUtil = require('./stubUtil');
+const { parseBN, parseMethod, weiBalanceOf } = require('./parseUtil');
 
 let accounts;
 let mockGTC;
@@ -35,7 +36,6 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       let mintCallData;
 
       before(async () => {
-        // await setUp();
         initialProjectCount = await parseMethod(getProjectCount);
         initialTotalValuation = await parseMethod(getTotalValuation);
         initialDoomsDay = await parseMethod(getDoomsDay);
@@ -46,15 +46,13 @@ contract('GNITokenCrowdsale', async (_accounts) => {
         await mockGTC.pitchProject('mockProject', 1000000, 3000000, '345', '345');
         mintCallData = await stubUtil.callHistory(tokenStub, 'mint');
       })
-      //
-      //after we need to remove the project address from the array
 
       it('mints developer tokens to the developer as a function of (rate * (valuation - capitalRequired)', async () => {
         let { firstAddress, firstUint } = mintCallData;
         assert.equal(firstAddress, accounts[1], 'developer tokens not minted to contract');
         assert.equal(firstUint, 100000000, 'incorrect number of developer tokens minted');
       })
-      //
+
       it('mints investor tokens to the contract as a function of (rate * capitalRequired)', async () => {
         let { secondAddress, secondUint } = mintCallData;
         assert.equal(secondAddress, mockGTC.address, 'investor tokens not minted to contract');
@@ -100,7 +98,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       })
     })
   })
-  //
+
   describe('buyTokensAndVote', async () => {
     let initialWeiRaised;
 
@@ -295,10 +293,10 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           await mockGTC.setMockWeiRaised(3000);
 
           beforeWeiRaised = await parseMethod(getWeiRaised);
-          initialDeveloperWei = await getWeiAmount(accounts[1]);
+          initialDeveloperWei = await weiBalanceOf(accounts[1]);
           await projStub3.setStubOpenStatus(true);
           await mockGTC.tryActivateProject_();
-          finalDeveloperWei = await getWeiAmount(accounts[1]);
+          finalDeveloperWei = await weiBalanceOf(accounts[1]);
         })
 
         after(async () => {
@@ -356,10 +354,10 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           await mockGTC.setMockWeiRaised(3000);
 
           beforeWeiRaised = await parseMethod(getWeiRaised);
-          initialDeveloperWei = await getWeiAmount(accounts[1]);
+          initialDeveloperWei = await weiBalanceOf(accounts[1]);
           await projStub3.setStubOpenStatus(false);
           await mockGTC.tryActivateProject_();
-          finalDeveloperWei = await getWeiAmount(accounts[1]);
+          finalDeveloperWei = await weiBalanceOf(accounts[1]);
         })
 
         after(async () => {
@@ -411,10 +409,10 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           await mockGTC.setMockWeiRaised(1000);
 
           beforeWeiRaised = await parseMethod(getWeiRaised);
-          initialDeveloperWei = await getWeiAmount(accounts[1]);
+          initialDeveloperWei = await weiBalanceOf(accounts[1]);
           await projStub3.setStubOpenStatus(true);
           await mockGTC.tryActivateProject_();
-          finalDeveloperWei = await getWeiAmount(accounts[1]);
+          finalDeveloperWei = await weiBalanceOf(accounts[1]);
         })
 
         after(async () => {
@@ -459,10 +457,10 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       describe('when the leading project has closed', async () => {
         before(async () => {
           beforeWeiRaised = await parseMethod(getWeiRaised);
-          initialDeveloperWei = await getWeiAmount(accounts[1]);
+          initialDeveloperWei = await weiBalanceOf(accounts[1]);
           await projStub3.setStubOpenStatus(false);
           await mockGTC.tryActivateProject_();
-          finalDeveloperWei = await getWeiAmount(accounts[1]);
+          finalDeveloperWei = await weiBalanceOf(accounts[1]);
         })
 
         it('does not forwards funds to the developer', async () => {
@@ -594,18 +592,4 @@ const getWeiRaised = async () => {
 const getLatestBlockTime = async () => {
   let time = await web3.eth.getBlock('latest');
   return time.timestamp;
-}
-
-const getWeiAmount = async (account) => {
-  let wei = await web3.eth.getBalance(account);
-  return Number(wei);
-}
-
-const parseMethod = async (method) => {
-  let result = await method();
-  return parseBN(result);
-}
-
-const parseBN = (bigNumber) => {
-  return bigNumber.toNumber();
 }

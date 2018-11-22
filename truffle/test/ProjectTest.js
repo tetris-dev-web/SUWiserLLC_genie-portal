@@ -1,13 +1,20 @@
 const ProjectMock = artifacts.require("ProjectMock");
+
 const exceptions = require('./exceptions');
+const { parseBN } = require('./parseUtil');
+
 let accounts;
 let mP;
+
+let beforeVotes;
+let beforeTotalVotes;
+let beforeClosingTime;
 
 contract('Project', async (_accounts) => {
   accounts = _accounts;
 
   before(async () => {
-    await basicSetup();
+    await setUp();
   })
 
   describe('votesOf', async () => {
@@ -18,6 +25,10 @@ contract('Project', async (_accounts) => {
   })
 
   describe('open', async () => {
+    after(async () => {
+      await mP.changeClosingTime(beforeClosingTime);
+    })
+
     it('returns true when open', async () => {
       let open = await mP.open();
       assert.equal(open, true, 'should return true when the project is open');
@@ -31,6 +42,10 @@ contract('Project', async (_accounts) => {
   })
 
   describe('totalVotes_', async () => {
+    after(async () => {
+      await removeMockVoter(accounts[2]);
+    })
+
     it('returns the total number of votes for the project', async () => {
       await addMockVoter(accounts[2], 1000000);
       let votes = await mP.totalVotes_();
@@ -39,6 +54,10 @@ contract('Project', async (_accounts) => {
   })
 
   describe('closingTime_', async () => {
+    after(async () => {
+      await mP.changeClosingTime(beforeClosingTime);
+    })
+
     it('returns the projects closing time', async () => {
       await mP.changeClosingTime(2000);
       let closingTime = await mP.closingTime_();
@@ -119,60 +138,56 @@ contract('Project', async (_accounts) => {
   })
 
   describe('vote', async () => {
-    it('adds the voters votes by the vote amount', async () => {
-      let bN1 = await mP.checkVoteAmount(accounts[1]);
-      let before = parseBN(bN1);
+    before(async () => {
       await mP.vote(accounts[1], 1000000);
-      let bN2 = await mP.checkVoteAmount(accounts[1]);
-      let after = parseBN(bN2);
-      assert.equal(after, before + 1000000, 'votes not added to the voter');
+    })
+
+    after(async () => {
+      await mP.removeMockVoter(accounts[1]);
+      await mP.changeClosingTime(beforeClosingTime);
+    })
+
+    it('adds the voters votes by the vote amount', async () => {
+      let bN = await mP.checkVoteAmount(accounts[1]);
+      let afterVotes = parseBN(bN);
+      assert.equal(afterVotes, beforeVotes + 1000000, 'votes not added to the voter');
     })
 
     it('adds the totalVotes by the vote amount', async () => {
-      let bN1 = await mP.totalVotes_();
-      let before = parseBN(bN1);
-      await mP.vote(accounts[1], 1000000);
-      let bN2 = await mP.totalVotes_();
-      let after = parseBN(bN2);
-      assert.equal(after, before + 1000000, 'votes not added to totalVotes');
+      let bN = await mP.totalVotes_();
+      let afterTotalVotes = parseBN(bN);
+      assert.equal(afterTotalVotes, beforeTotalVotes + 1000000, 'votes not added to totalVotes');
     })
 
     it('extends the closing time by 43200', async () => {
-      let bN1 = await mP.closingTime_();
-      let before = parseBN(bN1);
-      await mP.vote(accounts[1], 1000000);
-      let bN2 = await mP.closingTime_();
-      let after = parseBN(bN2);
-      assert.equal(after, before + 43200, 'closingTime not extended');
+      let bN = await mP.closingTime_();
+      let afterClosingTime = parseBN(bN);
+      assert.equal(afterClosingTime, beforeClosingTime + 43200, 'closingTime not extended');
     })
   })
 
   describe('removeVotes', async () => {
-    it('decreases the voters votes by the vote amount', async () => {
-      let bN1 = await mP.checkVoteAmount(accounts[1]);
-      let before = parseBN(bN1);
+    before(async () => {
+      await addMockVoter(accounts[1], 2000000);
       await mP.removeVotes(accounts[1], 1000000);
-      let bN2 = await mP.checkVoteAmount(accounts[1]);
-      let after = parseBN(bN2);
-      assert.equal(after, before - 1000000, 'votes not removed from the voter');
+    })
+
+    it('decreases the voters votes by the vote amount', async () => {
+      let bN = await mP.checkVoteAmount(accounts[1]);
+      let afterVotes = parseBN(bN);
+      assert.equal(afterVotes, beforeVotes - 1000000, 'votes not removed from the voter');
     })
 
     it('decreases the totalVotes by the vote amount', async () => {
-      let bN1 = await mP.totalVotes_();
-      let before = parseBN(bN1);
-      await mP.removeVotes(accounts[1], 1000000);
       let bN2 = await mP.totalVotes_();
-      let after = parseBN(bN2);
-      assert.equal(after, before - 1000000, 'votes not removed from totalVotes');
+      let afterTotalVotes = parseBN(bN2);
+      assert.equal(afterTotalVotes, beforeTotalVotes - 1000000, 'votes not removed from totalVotes');
     })
 
     it('diminishes the closing time by 43200', async () => {
-      let bN1 = await mP.closingTime_();
-      let before = parseBN(bN1);
-      await mP.removeVotes(accounts[1], 1000000);
       let bN2 = await mP.closingTime_();
-      let after = parseBN(bN2);
-      assert.equal(after, before - 43200, 'closingTime not diminished');
+      let afterClosingTime = parseBN(bN2);
+      assert.equal(afterClosingTime, beforeClosingTime - 43200, 'closingTime not diminished');
     })
 
     it('reverts if the voteAmount is greater than the totalVotes', async () => {
@@ -188,21 +203,15 @@ contract('Project', async (_accounts) => {
 
   describe('activate', async () => {
     it('activates the project', async () => {
-      let before = await mP.active_();
+      let beforeOpenStatus = await mP.active_();
       await mP.activate();
-      let after = await mP.active_();
-      assert.equal(before, false, 'project should not be active before activation');
-      assert.equal(after, true, 'project was not activated');
+      let afterOpenStatus = await mP.active_();
+      assert.equal(beforeOpenStatus, false, 'project should not be active before activation');
+      assert.equal(afterOpenStatus, true, 'project was not activated');
     })
   })
 
   describe('beats', async () => {
-    // it('returns false is the project is active', async () => {
-    //   await mP.activate();
-    //   let result = await mP.beats(accounts[2]);
-    //   assert.equal(result, false, 'an active project should not be able to win');
-    // })
-
     it('returns false if the project has not been voted for yet', async () => {
       mP = await mockP({
         id: 0, name: 'project2', developer: accounts[0],
@@ -238,13 +247,25 @@ contract('Project', async (_accounts) => {
   })
 })
 
-const basicSetup = async () => {
+const setUp = async () => {
   mP = await mockP({
     id: 0, name: 'project1', developer: accounts[0],
     valuation: 5000000, capitalRequired: 1000000, developerTokens: 40000000,
     investorTokens: 10000000, lat: '340', lng: '340'
   });
   await addMockVoter(accounts[1], 2000000);
+  await recordVoteValues();
+}
+
+const recordVoteValues = async () => {
+  let votesBN = await mP.checkVoteAmount(accounts[1]);
+  beforeVotes = parseBN(votesBN);
+
+  let totalVotesBN = await mP.totalVotes_();
+  beforeTotalVotes = parseBN(totalVotesBN);
+
+  let closingBN = await mP.closingTime_();
+  beforeClosingTime = parseBN(closingBN);
 }
 
 const mockP = async (params) => {
@@ -261,10 +282,10 @@ const mockP = async (params) => {
   );
 }
 
-const addMockVoter = async (account, votes) => {
-  await mP.initMockVoter(account, votes);
+const removeMockVoter = async (account) => {
+  await mP.removeMockVoter(account);
 }
 
-const parseBN = (bigNumber) => {
-  return bigNumber.toNumber();
+const addMockVoter = async (account, votes) => {
+  await mP.initMockVoter(account, votes);
 }

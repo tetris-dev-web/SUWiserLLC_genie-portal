@@ -25,6 +25,11 @@ contract ProjectMock is Project {
       _lng
       ) {}
 
+  function removeMockVoter (address addr) public {
+    totalVotes = totalVotes.sub(votes[addr]);
+    votes[addr] = 0;
+  }
+
   function initMockVoter (address addr, uint256 voteAmount) public {
     votes[addr] = voteAmount;
     totalVotes = totalVotes.add(voteAmount);

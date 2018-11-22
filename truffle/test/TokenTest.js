@@ -1,7 +1,10 @@
 const TokenMock = artifacts.require("TokenMock");
 const InvestorListStub = artifacts.require("InvestorListStub");
+
 const exceptions = require('./exceptions');
 const stubUtil = require('./stubUtil');
+const { parseBN, parseMethod, parseWithArg } = require('./parseUtil');
+
 let accounts;
 let mT;
 let iL;
@@ -87,17 +90,17 @@ contract('Token', async (_accounts) => {
       })
 
       it('increases the senders active balance by the amount', async () => {
-        let senderActiveBalanceT2 = await parseBalance(getActiveBalance, accounts[1]);
+        let senderActiveBalanceT2 = await parseWithArg(getActiveBalance, accounts[1]);
         assert.equal(senderActiveBalanceT2, senderActiveBalanceT1 + 1000, 'active balance not increased by the correct amount');
       })
 
       it('decreases the senders inactive balance by the amount', async () => {
-        let senderInactiveBalanceT2 = await parseBalance(getInactiveBalance, accounts[1]);
+        let senderInactiveBalanceT2 = await parseWithArg(getInactiveBalance, accounts[1]);
         assert.equal(senderInactiveBalanceT2, senderInactiveBalanceT1 - 1000, 'inactive balance not decreased by the correct amount');
       })
 
       it('does not change the senders total balance', async () => {
-        let senderTotalBalanceT2 = await parseBalance(getTotalBalance, accounts[1]);
+        let senderTotalBalanceT2 = await parseWithArg(getTotalBalance, accounts[1]);
         assert.equal(senderTotalBalanceT2, senderTotalBalanceT1, 'overall balance should not change');
       })
 
@@ -137,32 +140,32 @@ contract('Token', async (_accounts) => {
       })
 
       it('removes the token value from the senders total balance', async () => {
-        let senderTotalBalanceT2 = await parseBalance(getTotalBalance, accounts[1]);
+        let senderTotalBalanceT2 = await parseWithArg(getTotalBalance, accounts[1]);
         assert.equal(senderTotalBalanceT2, senderTotalBalanceT1 - 3000, 'sender total balance should decrease by the value');
       })
 
       it('removes the token value from the senders active balance', async () => {
-        let senderActiveBalanceT2 = await parseBalance(getActiveBalance, accounts[1]);
+        let senderActiveBalanceT2 = await parseWithArg(getActiveBalance, accounts[1]);
         assert.equal(senderActiveBalanceT2, senderActiveBalanceT1 - 3000, 'sender active balance should decrease by the value');
       })
 
       it('does not change the senders inactive balance', async () => {
-        let senderInactiveBalanceT2 = await parseBalance(getInactiveBalance, accounts[1]);
+        let senderInactiveBalanceT2 = await parseWithArg(getInactiveBalance, accounts[1]);
         assert.equal(senderInactiveBalanceT2, senderInactiveBalanceT1, 'sender inactive balance should not change');
       })
 
       it('adds the token value to the recipients total balance', async () => {
-        let receiverTotalBalanceT2 = await parseBalance(getTotalBalance, accounts[2]);
+        let receiverTotalBalanceT2 = await parseWithArg(getTotalBalance, accounts[2]);
         assert.equal(receiverTotalBalanceT2, receiverTotalBalanceT1 + 3000, 'recipient total balance should increase by the value');
       })
 
       it('adds the token value to the recipients active balance', async () => {
-        let receiverActiveBalanceT2 = await parseBalance(getActiveBalance, accounts[2]);
+        let receiverActiveBalanceT2 = await parseWithArg(getActiveBalance, accounts[2]);
         assert.equal(receiverActiveBalanceT2, receiverActiveBalanceT1 + 3000, 'recipient active balance should increase by the value');
       })
 
       it('does not change the recipients inactive balance', async () => {
-        let receiverInactiveBalanceT2 = await parseBalance(getInactiveBalance, accounts[2]);
+        let receiverInactiveBalanceT2 = await parseWithArg(getInactiveBalance, accounts[2]);
         assert.equal(receiverInactiveBalanceT2, receiverInactiveBalanceT1, 'recipient inactive balance should not change');
       })
 
@@ -218,32 +221,32 @@ contract('Token', async (_accounts) => {
       })
 
       it('removes the token value from the senders total balance', async () => {
-        let senderTotalBalanceT2 = await parseBalance(getTotalBalance, accounts[1]);
+        let senderTotalBalanceT2 = await parseWithArg(getTotalBalance, accounts[1]);
         assert.equal(senderTotalBalanceT2, senderTotalBalanceT1 - 3000, 'sender total balance should decrease by the value');
       })
 
       it('removes the token value from the senders inactive balance', async () => {
-        let senderInactiveBalanceT2 = await parseBalance(getInactiveBalance, accounts[1]);
+        let senderInactiveBalanceT2 = await parseWithArg(getInactiveBalance, accounts[1]);
         assert.equal(senderInactiveBalanceT2, senderInactiveBalanceT1 - 3000, 'sender inactive balance should decrease by the value');
       })
 
       it('does not change the senders active balance', async () => {
-        let senderActiveBalanceT2 = await parseBalance(getActiveBalance, accounts[1]);
+        let senderActiveBalanceT2 = await parseWithArg(getActiveBalance, accounts[1]);
         assert.equal(senderActiveBalanceT2, senderActiveBalanceT1, 'sender active balance should not change');
       })
 
       it('adds the token value to the recipients total balance', async () => {
-        let receiverTotalBalanceT2 = await parseBalance(getTotalBalance, accounts[2]);
+        let receiverTotalBalanceT2 = await parseWithArg(getTotalBalance, accounts[2]);
         assert.equal(receiverTotalBalanceT2, receiverTotalBalanceT1 + 3000, 'recipient total balance should increase by the value');
       })
 
       it('adds the token value to the recipients inactive balance', async () => {
-        let receiverInactiveBalanceT2 = await parseBalance(getInactiveBalance, accounts[2]);
+        let receiverInactiveBalanceT2 = await parseWithArg(getInactiveBalance, accounts[2]);
         assert.equal(receiverInactiveBalanceT2, receiverInactiveBalanceT1 + 3000, 'recipient inactive balance should increase by the value');
       })
 
       it('does not change the recipients active balance', async () => {
-        let receiverActiveBalanceT2 = await parseBalance(getActiveBalance, accounts[2]);
+        let receiverActiveBalanceT2 = await parseWithArg(getActiveBalance, accounts[2]);
         assert.equal(receiverActiveBalanceT2, receiverActiveBalanceT1, 'recipient active balance should not change');
       })
 
@@ -295,18 +298,18 @@ contract('Token', async (_accounts) => {
     })
 
     it('increases the receivers total balance by the amount', async () => {
-      let receiverTotalBalanceT2 = await parseBalance(getTotalBalance, accounts[2]);
+      let receiverTotalBalanceT2 = await parseWithArg(getTotalBalance, accounts[2]);
       assert.equal(receiverTotalBalanceT2, receiverTotalBalanceT1 + 3000, 'receiver balance should increase by the amount');
     })
 
 
     it('increases the receivers inactive balance by the amount', async () => {
-      let receiverInactiveBalanceT2 = await parseBalance(getInactiveBalance, accounts[2]);
+      let receiverInactiveBalanceT2 = await parseWithArg(getInactiveBalance, accounts[2]);
       assert.equal(receiverInactiveBalanceT2, receiverInactiveBalanceT1 + 3000, 'receiver inactive balance should increase by the amount');
     })
 
     it('does not change the receivers active balanace', async () => {
-      let receiverActiveBalanceT2 = await parseBalance(getActiveBalance, accounts[2]);
+      let receiverActiveBalanceT2 = await parseWithArg(getActiveBalance, accounts[2]);
       assert.equal(receiverActiveBalanceT2, receiverActiveBalanceT1, 'receiver active balance should not change');
     })
   })
@@ -339,13 +342,13 @@ const setValues = async () => {
   totalActiveSupplyT1 = await parseMethod(getTotalActiveSupply);
   totalInactiveSupplyT1 = await parseMethod(getTotalInactiveSupply);
 
-  senderTotalBalanceT1 = await parseBalance(getTotalBalance, accounts[1]);
-  senderActiveBalanceT1 = await parseBalance(getActiveBalance, accounts[1]);
-  senderInactiveBalanceT1 = await parseBalance(getInactiveBalance, accounts[1]);
+  senderTotalBalanceT1 = await parseWithArg(getTotalBalance, accounts[1]);
+  senderActiveBalanceT1 = await parseWithArg(getActiveBalance, accounts[1]);
+  senderInactiveBalanceT1 = await parseWithArg(getInactiveBalance, accounts[1]);
 
-  receiverTotalBalanceT1 = await parseBalance(getTotalBalance, accounts[2]);
-  receiverActiveBalanceT1 = await parseBalance(getActiveBalance, accounts[2]);
-  receiverInactiveBalanceT1 = await parseBalance(getInactiveBalance, accounts[2]);
+  receiverTotalBalanceT1 = await parseWithArg(getTotalBalance, accounts[2]);
+  receiverActiveBalanceT1 = await parseWithArg(getActiveBalance, accounts[2]);
+  receiverInactiveBalanceT1 = await parseWithArg(getInactiveBalance, accounts[2]);
 }
 
 const getTotalBalance = async (account) => {
@@ -370,18 +373,4 @@ const getTotalActiveSupply = async () => {
 
 const getTotalInactiveSupply = async () => {
   return await mT.totalInactiveSupply();
-}
-
-const parseBalance = async (method, account) => {
-  let balance = await method(account);
-  return parseBN(balance);
-}
-
-const parseMethod = async (method) => {
-  let bN = await method();
-  return parseBN(bN);
-}
-
-const parseBN = (bigNumber) => {
-  return bigNumber.toNumber();
 }

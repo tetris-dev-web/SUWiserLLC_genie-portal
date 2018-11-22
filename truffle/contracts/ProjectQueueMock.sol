@@ -25,6 +25,22 @@ contract ProjectQueueMock is ProjectQueue {
     end = 5;
   }
 
+  function clearQueue () public {
+    position[addr[1]] = 0;
+    position[addr[2]] = 0;
+    position[addr[3]] = 0;
+    position[addr[4]] = 0;
+    position[addr[5]] = 0;
+
+    addr[1] = address(0);
+    addr[2] = address(0);
+    addr[3] = address(0);
+    addr[4] = address(0);
+    addr[5] = address(0);
+
+    end = 0;
+  }
+
   function len () public returns (uint256) {
     return end;
   }
