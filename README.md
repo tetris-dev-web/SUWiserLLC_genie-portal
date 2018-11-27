@@ -1,46 +1,74 @@
-# README
+# Genie-Portal
+
+Real estate blockchain token portal engine
 
 ## Setting Up Your Branch OR How to Git Gud
 
-- cd into the directory in which you want genie portal to be placed
-- `git clone https://github.com/GenusDev/genie-portal.git`
-- create a branch, named in according with the [GenusDev Programming Conventions](https://docs.google.com/document/d/1-PGffrw-B1d9P5A_zfo5gJrW8dK28kqx5j-xxKOMPLY) e.g. `git checkout -b JohnR-readme-edit-0903`
+- Enter the directory in which you want genie portal to be placed
+    ```bash
+    git clone https://github.com/GenusDev/genie-portal.git
+    ```
+- Create a branch, named in according with the [GenusDev Programming Conventions](https://docs.google.com/document/d/1-PGffrw-B1d9P5A_zfo5gJrW8dK28kqx5j-xxKOMPLY) e.g. `git checkout -b JohnR-readme-edit-0903`
 
+## System Dependencies
 
-## System dependencies
+### Backend
 
-## Development Tools
-- `npm install`
-- `bundle install`
+- Rails 5.1.4
 
-## Development Tools
-- `webpack --watch`
+### Frontend
 
-## Database creation
+- D3 ^5.7.0
+- Drizzle ^1.2.3
+- JQuery ^3.3.1
+- Konva ^2.4.0
+- React ^16.5.2
+- Redux ^3.7.2
+- Truffle ^4.1.14
 
-- `rails db:setup`
+## Setup
 
-## Database initialization
+1. Install packages
+    ```bash
+    bundle install
+    npm install
+    ```
+2. Setup backend
+    ```bash
+    rails db:setup
+    rails db:seed
+    ```
+    `rails db:migrate` to run future migrations with
 
-- `rails db:migrate`   
+## Running the Project
 
-## Database seeding
+Have the following sets of commands running in separate terminals:
 
-- `rails db:seed`
+- In the truffle directory:
+  - Start the ganache server
+    ```bash
+    ganache-cli -b 3
+    ```
+  - Run `truffle console` and build the contracts:
+    ```bash
+    compile
+    migrate
+    ```
+- Then from the root directory:
+  - Start the server
+    ```bash
+    rails s
+    ```
+  - Run webpack
+    ```bash
+    npm webpack
+    ```
+Remember to compile and migrate truffle contracts before running Webpack!
 
-## How to run the test suite
+## Running the Testsuite
 
-- to be built
+(coming soon!)
 
-## Start Server
-- `rails s`
+## Links to Key Documents
 
-## Truffle
-- start ganache server: `ganache-cli -b 3`
-- in a separate terminal cd into the truffle file `cd truffle`
-- npm install / update
-- compile contracts: `truffle compile`
-- migrate contracts: `truffle migrate`
-
-
-## links to key documents
+(coming soon!)

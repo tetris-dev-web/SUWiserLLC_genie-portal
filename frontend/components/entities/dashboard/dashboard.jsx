@@ -1,6 +1,6 @@
 import React from 'react';
 import TokenDashboardContainer from './token_dashboard/token_dashboard_container';
-import ProjectDashboardContainer from './project_dashboard/project_graph_container';
+import ProjectDashboardContainer from './project_dashboard/project_dashboard_container';
 import DrizzleConsumer from '../../drizzle/drizzleConsumer';
 import ReadString from './readString';
 import ReadStringContainer from './readStringContainer';

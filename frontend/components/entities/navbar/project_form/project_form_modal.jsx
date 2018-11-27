@@ -21,7 +21,7 @@ class ProjectFormModal extends React.Component {
   }
 
   // solves 'Warning: react-modal: App element is not defined'
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     Modal.setAppElement('body');
   }
 

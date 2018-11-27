@@ -2,9 +2,7 @@ import React from 'react';
 import { totalData } from '../../../../util/token_data_util';
 import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
-import Modal from 'react-modal';
-import MapModalStyle from './map_modal_style';
-import DropPinMap from './drop_pin_map';
+import CashFlowModal from './cashflow/cashflow_modal';
 
 class ProjectForm extends React.Component {
 
@@ -16,14 +14,10 @@ class ProjectForm extends React.Component {
       latitude: '',
       longitude: '',
       cashflow: '',
-      latlngpresence: false,
-      droppinclicked: false,
-
+      currentQuarter: '',
       revenue: '',
       valuation: '1',
-      capitalRequired: '',
       model_id: '7syizSLPN60',
-      street: '',
       city: 'New York',
       country: 'USA',
       continent: 'North America',
@@ -38,12 +32,6 @@ class ProjectForm extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.updateFile = this.updateFile.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.dropPinClick = this.dropPinClick.bind(this);
-    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
-    this.updateLatLng = this.updateLatLng.bind(this);
-    this.updateAddress = this.updateAddress.bind(this);
   }
 
   componentDidMount() {
@@ -68,9 +56,9 @@ class ProjectForm extends React.Component {
     data.append("project[latitude]", this.state.latitude);
     data.append("project[longitude]", this.state.longitude);
 
-    // data.append("project[city]", this.state.city);
-    // data.append("project[country]", this.state.country);
-    // data.append("project[continent]", this.state.continent);
+    data.append("project[city]", this.state.city);
+    data.append("project[country]", this.state.country);
+    data.append("project[continent]", this.state.continent);
 
     data.append("project[valuation]", this.state.valuation);
     data.append("project[cashflow]", this.state.cashflow);
@@ -148,11 +136,12 @@ class ProjectForm extends React.Component {
     };
   }
 
-  updateFile(e) {
-    const file = e.currentTarget.files[0];
-
-    this.setState({cashflow: file});
-
+  updateFile(fileType) {
+    // Update to handle other file types eventually.
+    return e => {
+      let file = e.currentTarget.files[0];
+      this.setState({ [fileType]: file });
+    };
   }
 
   renderErrors() {
@@ -226,8 +215,9 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, revenue, valuation, description, model_id, city, country, continent, icon, latitude, longitude, latlng } = this.state;
-
+    let { title, latitude, longitude, summary,
+      // revenue, valuation, description, model_id, city, country, continent, icon
+    } = this.state;
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
         <input className="main-input project-title-input"
@@ -250,41 +240,25 @@ class ProjectForm extends React.Component {
             value={longitude}
             onChange={this.update('longitude')} />
           <DivWithCorners>
-            <span onClick={this.dropPinClick} className="text">Drop Pin</span>
+            <span className="text">Drop Pin</span>
           </DivWithCorners>
-          <Modal
-            isOpen={this.state.openModal}
-            onRequestClose={this.closeModal}
-            style={MapModalStyle}
-            contentLabel="Drop Pin Modal"
-            className="modal-container">
-            <div className="drop-pin-flex">
-              <div className="address">
-                <div>{this.state.street}</div>
-                <div>{this.state.city}</div>
-                <div>{this.state.continent}</div>
-                <input type="button" value="Done" onClick={this.closeModal}></input>
-              </div>
-              <div className='drop-pin-container'>
-                <DropPinMap
-                  updateLatLng={this.updateLatLng}
-                  updateAddress={this.updateAddress}
-                  lat={this.state.latitude}
-                  lng={this.state.longitude}
-                  />
-              </div>
-            </div>
-          </Modal>
         </div>
-        {this.renderLatLngErrors(this.state.latlngpresence, this.state.droppinclicked)}
         <div className="flexed">
           <input className="main-input inputfile" id="file"
             type="file"
-            onChange={this.updateFile}/>
-          <label for="file"> #| choose json</label>
+            onChange={this.updateFile('cashflow')} />
+          <label htmlFor="json-file"> #| choose json</label>
+          <input id="current-quarter"
+            type="number"
+            onChange={this.update('currentQuarter')} />
+          <label htmlFor="current-quarter"> current qtr</label>
 
           <DivWithCorners>
-            <span className="text">Cashflows</span>
+            <span className="text">
+              <CashFlowModal
+                quarter={this.state.currentQuarter}
+                cashflowData={this.state.cashflow} />
+            </span>
           </DivWithCorners>
         </div>
 
@@ -343,7 +317,7 @@ class ProjectForm extends React.Component {
 }
 
 export default ProjectForm;
-//
+
 // <select className="main-input continent-input"
 //   value={continent}
 //   onChange={this.update('continent')}>

@@ -28,30 +28,20 @@ class Api::ProjectsController < ApplicationController
   end
 
   def deployed_project_revenue
-    # @deployed_projects = Project.where('current_capital >= capital_required')
-    # @deployed_projects_cashflow = @deployed_projects.map{|project| p JSON.parse(project.cashflow)["ExpectedNet"].values.reduce(:+)}.reduce(:+)
-    #
-    # @deployed_project_revenue = @deployed_projects.sum(:current_capital)
-    # if @deployed_project_revenue
-    #   render json: @deployed_project_revenue + @deployed_projects_cashflow
-    # else
-    #   nil
-    # end
     @accuCashflows = Project.all.map do |project|
       JSON.parse(project.cashflow)["Actual"].values.reduce(:+) if project.cashflow
     end
-
-    @cashProject = Project.where(title: "HamInn")[0]
-    render json: JSON.parse(@cashProject.cashflow)["ExpectedAccumulatedGainorLoss"].values.min
-    # render json: @accuCashflows.compact.reduce(:+)
+    render json: @accuCashflows.compact.reduce(:+)
+    # nadir of cashflows
+    # @cashProject = Project.where(status: "deployed")[0]
+    # render json: JSON.parse(@cashProject.cashflow)["ExpectedAccumulatedGainorLoss"].values.min
   end
 
-# AccuCashflows = {}
-# for (i in range()):
-#   quaterlyCashflow = Project.Table.cashflow[i]
-#   quaterlyCashflowAccumulated = AccuCashflows[i-1] + quaterlyCashflow
-#   AccuCashflows.push(quaterlyCashflowAccumulated)
-
+  def discount_factor
+    capital_deployed = JSON.parse(Project.first.cashflow)["Actual"].values.reduce(:+)
+    discount_factor = 50 - ((capital_deployed / 190000.0) + (Project.where('close_date < ?', Time.current).count) * 6)
+    render json: discount_factor > 10 ? discount_factor : 10
+  end
 
 
   private

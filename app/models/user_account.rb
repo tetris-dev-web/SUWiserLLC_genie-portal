@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: user_accounts
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer          not null
+#  account_id :integer          not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class UserAccount < ApplicationRecord
   validates :user_id,:account_id, presence: true
 

@@ -5,7 +5,7 @@
 #  id                :integer          not null, primary key
 #  title             :string           not null
 #  valuation         :decimal(, )      not null
-#  model_id             :string
+#  model_id          :string
 #  icon              :string
 #  description       :text
 #  creator_id        :integer          not null
@@ -15,14 +15,28 @@
 #  file_content_type :string
 #  file_file_size    :integer
 #  file_updated_at   :datetime
-#  revenue              :decimal(, )
+#  revenue           :decimal(, )
+#  city              :string
+#  country           :string
+#  continent         :string
+#  status            :string
+#  bus_plan_link     :string
+#  sketch_link       :string
+#  cashflow          :jsonb
+#  start_date        :date
+#  latitude          :decimal(10, 6)
+#  longitude         :decimal(10, 6)
+#  summary           :string
+#  capital_required  :float
+#  current_capital   :float
+#  close_date        :datetime
+#  votes             :jsonb
 #
 
 class Project < ApplicationRecord
-  validates :title, :revenue, :valuation, :creator_id, :city, :continent, :latitude, :longitude, presence: true
+  validates :title, :revenue, :valuation, :creator_id, :city, :continent, presence: true
   validates :title, uniqueness: true
 
-  # has_attached_file :file, default_url: "missing.png"
   # # validates_attachment_content_type :file, content_type: /\Aimage\/.*\Z/
   # validates_attachment_content_type :file, content_type: ["image/jpeg", "image/png", "application/pdf","application/vnd.ms-excel",
   #            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -36,5 +50,4 @@ class Project < ApplicationRecord
   belongs_to :creator,
     foreign_key: :creator_id,
     class_name: :User
-
 end

@@ -73,7 +73,6 @@ class UserDropdown extends React.Component {
 
   // tick () {
   //   const totalSupplyIdx = this.props.drizzle.contracts.GNIToken.methods.totalSupply.cacheCall();
-  //   debugger
   //   this.setState({totalSupplyIdx});
   // }
 
