@@ -17,11 +17,17 @@ export function Title (props){
 
 
 export function SummaryAndPlan (props){
-  //need to make data persist
+  // TODO figure out how to submit div text based on which key is pressed (Enter)
+  // TODO create indication of text being edited by highlighting outline of div and flashing save in small text in same color
 
-  // handleKeyPress(e) {
-  //   alert('PRESSED'); //if enter key pressed, save to database
+  // handleKeyPress(event) {
+  //   event.preventDefault()
+  //   console.log("event value: ", event.value)
+  //   if(event.key == 'Enter'){
+  //     props.editProject({id: this.state.projectClicked.id, summary: event.value});
+  //   }
   // }
+
   return (
     <div className="project-description">
 
@@ -29,10 +35,8 @@ export function SummaryAndPlan (props){
         <div  onKeyPress={null}
               contentEditable={!props.isInvestor}
               className="project-summary"
-              suppressContentEditableWarning={true}>
-
-              {props.summary}
-
+              suppressContentEditableWarning={true}
+              value = {props.summary}>
         </div>
       </div>
 

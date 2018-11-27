@@ -6,8 +6,6 @@ import ProjectMap from './project_modules_map';
 import ProjectThermo from './project_modules_thermo';
 import CashFlowGraph from './project_modules_cashflow';
 import {Title, IframeFor3dModel, CloseButton, SummaryAndPlan } from './project_modules_subcomponents';
-import {calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
-import $ from 'jquery';
 
 
 class ProjectModules extends React.Component {
@@ -41,6 +39,7 @@ class ProjectModules extends React.Component {
       const { projectClicked, isInvestor, isModalOpen, closeModalOnClick, doIHaveData} = this.props
       const {model_link,showText} = this.state
       const noDataComponent = <h1 className="nodata-text">No data available</h1>
+      console.log("projectClicked: ", projectClicked)
 
       return (
             <Modal
@@ -62,19 +61,19 @@ class ProjectModules extends React.Component {
                                       model_link ={model_link}/>
                     <ProjectThermo    project={projectClicked}/>
 
+                    <CashFlowGraph
+                                      actual_cashflow = {projectClicked.actual_cashflow}
+                                      accum_actual_cashflow = {projectClicked.accum_actual_cashflow}
+                                      projected_cashflow = {projectClicked.projected_cashflow}
+                                      accum_projected_cashflow ={projectClicked.accum_projected_cashflow}
+                                      height={200}
+                                      width={300}/>
+
                     <SummaryAndPlan
                                       handleKeyPress = {null}
                                       isInvestor = {isInvestor}
                                       summary = {projectClicked.summary}
                                       bus_plan_link = {projectClicked.bus_plan_link} />
-                    <CashFlowGraph
-                                      cashflow={processCashData(projectClicked.cashflow)}
-                                      valuation={projectClicked.valuation}
-                                      accumulatedRevenue={
-                                        calculateAccumulatedRevenue(
-                                        processCashData(projectClicked.cashflow)
-                                        )
-                                      }/>
                     <ProjectMap projectClicked={ projectClicked } />
 
                   </div>
@@ -84,5 +83,6 @@ class ProjectModules extends React.Component {
       );
     }
 }
+
 
 export default ProjectModules;
