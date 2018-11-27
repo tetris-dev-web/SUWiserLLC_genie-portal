@@ -9,21 +9,10 @@ class CashFlow extends React.Component {
     super(props);
     let { cashflowData, currentQuarter  } = this.props;
     currentQuarter = currentQuarter ? currentQuarter : sampleCurrentQuarter;
-    // if (cashflowData instanceof File) {
-    //   //file reader to read file, parse json, substitute json in for cashflow below
-    //   let cashflowData = this.handleFile(cashflowData);
-    //   console.log("Cashflow Text is: ", cashflowData);
-    //   return cashflowData;
-    // }
-    console.log("Cashflowdata is: ", cashflowData);
-    console.log("Cashflowdata is a file?: ",  cashflowData instanceof File);
-    let cashflow = cashflowData ? processCashData(cashflowData) : sampleProject;
-    console.log(cashflow);
-    cashflow = this.setupCashflow(cashflow, currentQuarter);
     this.state = {
-      cashflow,
-      accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
-    };
+      cashflow: ''
+    }
+
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.renderColor = this.renderColor.bind(this);
@@ -40,10 +29,12 @@ class CashFlow extends React.Component {
   update(quarter) {
     return e => {
       e.preventDefault();
+      console.log("State from update function", this.state);
       let cashflow = Object.assign({}, this.state.cashflow);
       cashflow[quarter] = e.currentTarget.value;
       const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
       this.setState({ cashflow, accumulatedRevenue });
+      console.log(this.state.cashflow);
     };
   }
 
@@ -51,16 +42,14 @@ class CashFlow extends React.Component {
     return quarter[2] === "A" ? "actual-quarter-blue" : "expected-quarter-black";
   }
 
-  handleFile(file){
+  handleFile(file, content){
     let fileReader = new FileReader();
-    fileReader.onloadend = () => {
-      let content = fileReader.result;
-      console.log("fileReader is: ", fileReader);
+    fileReader.onload = () => {
+      content = fileReader.result;
       console.log(content);
-      fileReader.readAsText(file)
-      return content;
     };
-    return content;
+    fileReader.readAsText(file);
+    // return content;
   }
 
   setupCashflow(cashflow, currentQuarter) {
@@ -84,13 +73,66 @@ class CashFlow extends React.Component {
     return <a href={jsonFile} download="example.json">Download Sample JSON</a>;
   }
 
+  componentDidMount(){
+    let { cashflowData, currentQuarter  } = this.props;
+    let promise;
+    if (cashflowData instanceof File) {
+      //file reader to read file, parse json, substitute json in for cashflow below
+      //doesnt work when you pass file into function, file in function is undefined
+      let content;
+      promise = new Promise(function(resolve, reject){
+        let fileReader = new FileReader();
+        fileReader.onload = () => {
+          console.log("Promise is running");
+          content = fileReader.result;
+          cashflowData = content;
+          resolve(cashflowData)
+        };
+        // console.log("Resolve return",fileReader.readAsText(cashflowData));
+        fileReader.readAsText(cashflowData);
+
+
+        fileReader.onerror = () => {
+          fileReader.abort();
+          reject(new DOMException("Problem parsing input file."));
+        };
+
+      })
+      promise.then((cashflowData)=> {
+        // console.log("Cashflowdata is: ", cashflowData);
+        // console.log("Promise resolved");
+        // console.log("Content is: ", content);
+        let cashflow = processCashData(cashflowData);
+        cashflow = this.setupCashflow(cashflow, currentQuarter);
+        this.setState({
+          cashflow,
+          accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
+        });
+        console.log(this.state);
+        // console.log("Keys is ", keys);
+      })
+
+    } else {
+      let cashflow = sampleProject;
+      cashflow = this.setupCashflow(cashflow, currentQuarter);
+      this.setState({
+        cashflow,
+        accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
+      });
+    }
+  }
+
   render() {
     // 7 years of data is the standard, translating to 28 quarters
+    console.log("Is this working?");
     const { cashflow, accumulatedRevenue } = this.state;
+    // console.log(cashflow);
+    console.log("AccRev is: ", accumulatedRevenue);
+    console.log("Rendered state is: ", this.state);
     const quarters = keys(cashflow);
     return(
       <form onSubmit={this.handleSubmit} className="cashflow-upload">
-        <div className="flex-display">
+        <div className="cashflow-title-flex">
           <h3>Quarter</h3>
           <h3>Cashflow</h3>
         </div>
@@ -116,14 +158,16 @@ class CashFlow extends React.Component {
           </p>
           {this.downloadJSONSample()}
         </div>
-        <CashFlowGraph
+        <div className="cashflow-submit">
+          <input type="submit" value="SUBMIT" />
+        </div>
+        {
+          !accumulatedRevenue ?  <p>Loading...</p> :
+          <CashFlowGraph
           cashflow={cashflow}
           valuation={"?"}
           accumulatedRevenue={accumulatedRevenue} />
-        <label>
-          <input type="submit" value="Submit" />
-          <ThumbsUp />
-        </label>
+      }
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
       </form>
@@ -135,7 +179,7 @@ export default CashFlow;
 
 // cashflow represented as single string for graph
 const sampleProject = {
-  "01": -36974,
+  "01": -50000,
   "02": -40018,
   "03": -16857,
   "04": -2915,
