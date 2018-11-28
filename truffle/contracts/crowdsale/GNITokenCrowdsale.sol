@@ -51,7 +51,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         /* Project(projectAddr).closingTime(), */
         /* projectAddr */
         /* ); */
-      } */
+      /* }  */
 
 //after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public {
@@ -84,8 +84,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    address projAddr = projectAddrs[_projectVotedForId];
    Project(projAddr).vote(msg.sender, tokens);//test that this is called
 
-   updateProjectQueue(projAddr);
-   tryActivateProject();
+   /* updateProjectQueue(projAddr);
+   tryActivateProject(); */
  }
 
  /* function sellTokens (address to, uint256 tokens) external {
@@ -100,9 +100,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Project(fromAddr).removeVotes(msg.sender, votes);//test that this is called
    Project(toAddr).vote(msg.sender, votes);//test that this is called
 
-   updateProjectQueue(fromAddr);
+   /* updateProjectQueue(fromAddr);
    updateProjectQueue(toAddr);
-   tryActivateProject();
+   tryActivateProject(); */
  }
 
  function addVoteCredit (uint256 fromProjectId, uint256 votes) external {
@@ -110,28 +110,28 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Project(projAddr).removeVotes(msg.sender, votes);//test that this is called
    investorList.addVoteCredit(msg.sender, votes);//test that this is called
 
-   updateProjectQueue(projAddr);
-   tryActivateProject();
+   /* updateProjectQueue(projAddr);
+   tryActivateProject(); */
  }
 
  function voteWithCredit (uint256 toProjectId, uint256 votes) external {
    address projAddr = projectAddrs[toProjectId];
    investorList.removeVoteCredit(msg.sender, votes);//test that this is called
    Project(projAddr).vote(msg.sender, votes);//test that this is called
-
+/*
    updateProjectQueue(projAddr);
-   tryActivateProject();
+   tryActivateProject(); */
  }
 
  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
     doomsDay = doomsDay.add(_days.mul(1728000));
  }
 
- function updateProjectQueue (address projectAddress) internal {
+ /* function updateProjectQueue (address projectAddress) internal {
    projectQueue.heapify(projectAddress);
- }
+ } */
 
- function tryActivateProject () internal {
+ /* function tryActivateProject () internal {
    address leadingProjectAddr = projectQueue.leadingProjectAddr();
    Project leadingProject = Project(leadingProjectAddr);//in stub, we return an address
    bool stillOpen = leadingProject.open(); //we set up an open status in the stub
@@ -149,15 +149,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
        Token(token).activate(developer, developerTokens);//test that this was called w/ correct shit
        /* updateInvestorVotesAndTokens(investorTokens, leadingProject, stillOpen);//make sure investors are gucci */
 
-       forwardFunds(developer, capitalRequired);//test that the funds are transfered
+       /* forwardFunds(developer, capitalRequired);//test that the funds are transfered
        weiRaised = weiRaised.sub(capitalRequired);//test that the weiRaised decreases
 
-       leadingProject.activate();//test that this is called
-     }
+       leadingProject.activate();//test that this is called */
+     /* } */
 
-     tryActivateProject();//test that this is called again
-   }
- }
+     /* tryActivateProject();//test that this is called again */
+   /* } */
+ /* } */
  /* function activateProject() public {
     (uint256 projectId, bool canActivate) = projectToActivateDetails();
 
@@ -194,7 +194,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     return (leadingProjectId, candidateFound && Project(projectAddrs[leadingProjectId]).capitalRequired_() <= weiRaised);
   } */
 
-  function updateInvestorVotesAndTokens (uint256 tokens, address projectAddress, bool canActivateTokens) private {
+  /* function updateInvestorVotesAndTokens (uint256 tokens, address projectAddress, bool canActivateTokens) private {
     uint256 supply = Token(token).totalInactiveSupply().sub(Token(token).inactiveBalanceOf(developer));
 
     for (uint256 i = 1; i <= investorList.investorCount(); i = i.add(1)) {
@@ -210,7 +210,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       Project(projectAddress).removeVotes(investor, voteCredit); //not needed if theyre removed from the queue
       investorList.addVoteCredit(investor, voteCredit);
     }
-  }
+  } */
 
   function forwardFunds (address _to, uint256 amount) internal {
     _to.transfer(amount);

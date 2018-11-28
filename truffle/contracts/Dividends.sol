@@ -16,8 +16,9 @@ contract Dividends {
     investorList = InvestorList(investorList_);
   }
 
+  //this function needs to update 
   function () external payable {}
-
+/*
   function distributeDividends () external {
     uint256 activeTokens = Token(token).totalActiveSupply();
     uint256 profits = address(this).balance; //give this an arbitrary profit in the test file
@@ -35,5 +36,7 @@ contract Dividends {
     uint256 investorActive = Token(token).activeBalanceOf(investor); //we return an arbitrary amount less that total in the stub
     uint256 dividend = profits.mul(investorActive).div(activeTokens);
     investor.transfer(dividend);
-  }
+  } */
+
+
 }
