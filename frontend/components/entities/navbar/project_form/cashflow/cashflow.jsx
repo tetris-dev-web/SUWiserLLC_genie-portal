@@ -80,6 +80,7 @@ class CashFlow extends React.Component {
       //file reader to read file, parse json, substitute json in for cashflow below
       //doesnt work when you pass file into function, file in function is undefined
       let content;
+
       promise = new Promise(function(resolve, reject){
         let fileReader = new FileReader();
         fileReader.onload = () => {
@@ -99,21 +100,17 @@ class CashFlow extends React.Component {
 
       })
       promise.then((cashflowData)=> {
-        // console.log("Cashflowdata is: ", cashflowData);
-        // console.log("Promise resolved");
-        // console.log("Content is: ", content);
         let cashflow = processCashData(cashflowData);
         cashflow = this.setupCashflow(cashflow, currentQuarter);
         this.setState({
           cashflow,
           accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
         });
-        console.log(this.state);
-        // console.log("Keys is ", keys);
       })
 
     } else {
-      let cashflow = sampleProject;
+      let cashflow;
+      cashflowData ? cashflow = cashflowData :  cashflow = sampleProject;
       cashflow = this.setupCashflow(cashflow, currentQuarter);
       this.setState({
         cashflow,
@@ -124,12 +121,21 @@ class CashFlow extends React.Component {
 
   render() {
     // 7 years of data is the standard, translating to 28 quarters
-    console.log("Is this working?");
     const { cashflow, accumulatedRevenue } = this.state;
-    // console.log(cashflow);
-    console.log("AccRev is: ", accumulatedRevenue);
-    console.log("Rendered state is: ", this.state);
     const quarters = keys(cashflow);
+    let quartersList = quarters.map((quarter, idx) => {
+      return(
+        <li className="flex-display" key={idx}>
+          <label htmlFor={`quarter-${quarter}`}>{`${quarter.substring(0, 2)}`}</label>
+          <input className={this.renderColor(quarter)}
+            id={`quarter-${quarter}`}
+            type="number"
+            placeholder="10,000"
+            onChange={this.update(quarter)}
+            value={cashflow[quarter]} />
+        </li>
+      );
+    })
     return(
       <form onSubmit={this.handleSubmit} className="cashflow-upload">
         <div className="cashflow-title-flex">
@@ -137,19 +143,7 @@ class CashFlow extends React.Component {
           <h3>Cashflow</h3>
         </div>
         <ul className="scrollable">
-          {quarters.map((quarter, idx) => {
-            return(
-              <li className="flex-display" key={idx}>
-                <label htmlFor={`quarter-${quarter}`}>{`${quarter.substring(0, 2)}`}</label>
-                <input className={this.renderColor(quarter)}
-                  id={`quarter-${quarter}`}
-                  type="number"
-                  placeholder="10,000"
-                  onChange={this.update(quarter)}
-                  value={cashflow[quarter]} />
-              </li>
-            );
-          })}
+          { quartersList }
         </ul>
         <div>
           <p>
@@ -179,34 +173,34 @@ export default CashFlow;
 
 // cashflow represented as single string for graph
 const sampleProject = {
-  "01": -50000,
-  "02": -40018,
-  "03": -16857,
-  "04": -2915,
-  "05": -20325,
-  "06": 7864,
-  "07": 25360,
-  "08": 28107,
-  "09": 28942,
-  "10": 28696,
-  "11": 29356,
-  "12": 28854,
-  "13": 28588,
-  "14": 30781,
-  "15": 29081,
-  "16": 31887,
-  "17": 51887,
-  "18": 71887,
-  "19": 30339,
-  "20": 30718,
-  "21": 31102,
-  "22": 31491,
-  "23": 31885,
-  "24": 32283,
-  "25": 32687,
-  "26": 33096,
-  "27": 33509,
-  "28": 33928,
+  "01A": -50000,
+  "02A": -40018,
+  "03A": -16857,
+  "04A": -2915,
+  "05A": -20325,
+  "06A": 7864,
+  "07A": 25360,
+  "08A": 28107,
+  "09A": 28942,
+  "10A": 28696,
+  "11P": 29356,
+  "12P": 28854,
+  "13P": 28588,
+  "14P": 30781,
+  "15P": 29081,
+  "16P": 31887,
+  "17P": 51887,
+  "18P": 71887,
+  "19P": 30339,
+  "20P": 30718,
+  "21P": 31102,
+  "22P": 31491,
+  "23P": 31885,
+  "24P": 32283,
+  "25P": 32687,
+  "26P": 33096,
+  "27P": 33509,
+  "28P": 33928,
 };
 
 const sampleCurrentQuarter = 18;
