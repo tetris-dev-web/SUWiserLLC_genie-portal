@@ -16,8 +16,32 @@ contract Dividends {
     investorList = InvestorList(investorList_);
   }
 
-  //this function needs to update 
-  function () external payable {}
+  mapping(address => uint256) lastDividendPoints;
+
+  uint256 totalDividendPoints;
+  uint256 private pointMultiplier = 10e18;
+
+  function dividendOwedTo(address account) internal view returns (uint256) {
+    uint256 owedDividendPoints = totalDividendPoints.sub(lastDividendPoints[account]);
+    uint256 accountTokens = Token(token).activeBalanceOf(account);
+    return accountTokens.mul(owedDividendPoints).div(pointMultiplier);
+  }
+
+  function grantDividend(address account) internal returns (bool) {
+    uint256 dividend = dividendOwedTo(account);
+    account.transfer(dividend);
+    lastDividendPoints[account] = totalDividendPoints;
+    return true;
+  }
+
+  //this function needs to update
+  function () external payable {
+    uint256 totalTokens = Token(token).totalActiveSupply();
+    uint256 weiAmount = msg.value;
+
+    uint256 newDividendPoints = weiAmount.mul(pointMultiplier).div(totalTokens);
+    totalDividendPoints = totalDividendPoints.add(newDividendPoints);
+  }
 /*
   function distributeDividends () external {
     uint256 activeTokens = Token(token).totalActiveSupply();

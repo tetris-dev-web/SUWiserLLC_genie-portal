@@ -77,7 +77,12 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    return (developerValue.mul(rate), investorValue.mul(rate));
  }
 
- function buyTokensAndVote (uint256 _projectVotedForId) public payable {
+ modifier activatePendingTokens_() {
+   require(activateTokens(msg.sender));
+   _;
+ }
+ //before this, we need to execute any pending token activations for the sender account. We need to do this so that the correct number of tokens are activated
+ function buyTokensAndVote (uint256 _projectVotedForId) public payable activatePendingTokens_ {
    uint256 tokens = buyTokens(msg.sender);
    investorList.addInvestor(msg.sender);//test that this is called
 
@@ -86,6 +91,43 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
    /* updateProjectQueue(projAddr);
    tryActivateProject(); */
+ }
+
+
+ address leadingProjectAddr;
+
+ mapping(address => uint256) lastActivationPoints;
+ uint256 totalActivationPoints;
+ uint256 private activationMultiplier = 10e18;
+
+ function pendingActivations(address account) internal {
+   uint256 pendingActivationPoints = totalActivationPoints.sub(lastActivationPoints[account]);
+   uint256 inactiveAccountTokens = Token(token).inactiveBalanceOf(account);
+   return inactiveAccountTokens.mul(pendingActivationPoints).div(activationMultiplier);
+ }
+
+ modifier distributePendingDividends() {
+   require(Dividends(dividendWallet).grantDividend(msg.sender));
+   _;
+ }
+
+ //before this, we need to make sure that any pending dividends are distributed to the account. we need to do this to the correct dividend amount is distributed
+ function activateTokens (address account) external distributePendingDividends returns (bool) {
+   uint256 tokens = pendingActivations(account);
+   Token(token).activate(investor, tokensToActivate);
+   lastActivationPoints[account] = totalActivationPoints;
+   return true;
+ }
+
+ function activateProject () external {
+   uint256 totalInactive = Token(token).totalInactiveSupply();
+
+   Project project = Project(leadingProjectAddr);
+   uint526 projectTokens = project.developerTokens().add(project.investorTokens());
+
+   uint256 newActivationPoints = projectTokens.mul(tokenMultiplier).div(totalInactive);
+   totalActivationPoints = totalDividendPoints.add(newActivationPoints);
+   project.activate();
  }
 
  /* function sellTokens (address to, uint256 tokens) external {
@@ -106,12 +148,24 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  }
 
  function addVoteCredit (uint256 fromProjectId, uint256 votes) external {
-   address projAddr = projectAddrs[fromProjectId];
+   /* address projAddr = projectAddrs[fromProjectId];
    Project(projAddr).removeVotes(msg.sender, votes);//test that this is called
-   investorList.addVoteCredit(msg.sender, votes);//test that this is called
-
+   investorList.addVoteCredit(msg.sender, votes);//test that this is called */
+   addVoteCredit_(msg.sender, fromProjectId, votes);
    /* updateProjectQueue(projAddr);
    tryActivateProject(); */
+ }
+
+ function addVoteCreditTo (address to, uint256 fromProjectId, uint256 votes) external {
+   Project memory project = Project(projectAddrs[fromProjectId]);
+   require(!project.open() || project.active());
+   addVoteCredit_(to, fromProjectId, votes);
+ }
+
+ function addVoteCredit_ (address account, uint256 fromProjectId, uint256 votes) internal {
+   address projAddr = projectAddrs[fromProjectId];
+   Project(projAddr).removeVotes(account, votes);//test that this is called
+   investorList.addVoteCredit(account, votes);
  }
 
  function voteWithCredit (uint256 toProjectId, uint256 votes) external {
