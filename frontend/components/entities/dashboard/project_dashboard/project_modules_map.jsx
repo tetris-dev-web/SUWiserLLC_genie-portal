@@ -14,26 +14,27 @@ class ProjectMap extends React.Component {
     };
   }
 
-
   render() {
     const position = [this.state.lat, this.state.lng];
     return (
-      <Map
-          center={position}
-          zoom={this.state.zoom}
-          dragging={true}
-          scrollWheelZoom={false}
-      >
-        <TileLayer
-          attribution="Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL."
-          url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
-        />
-        <Marker position={position}>
-          <Popup>
-            {this.state.project.title}
-          </Popup>
-        </Marker>
-      </Map>
+      <div className="project-map">
+        <Map
+            center={position}
+            zoom={this.state.zoom}
+            dragging={true}
+            scrollWheelZoom={false}
+        >
+          <TileLayer
+            attribution="Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL."
+            url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
+          />
+          <Marker position={position}>
+            <Popup>
+              {this.state.project.title}
+            </Popup>
+          </Marker>
+        </Map>
+      </div>
     );
   }
 }

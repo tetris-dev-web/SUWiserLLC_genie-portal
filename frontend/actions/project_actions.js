@@ -1,6 +1,6 @@
 import * as APIUtil from '../util/project_api_util';
 
-export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS';
+export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS'; //seems redundant
 export const RECEIVE_PROJECT = 'RECEIVE_PROJECT';
 
 export const RECEIVE_PROJECT_ERRORS = 'RECEIVE_PROJECT_ERRORS';
