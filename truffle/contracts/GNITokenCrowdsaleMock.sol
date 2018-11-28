@@ -16,12 +16,13 @@ constructor
     uint256 _doomsDay,
     uint256 _rate,
     address _developer,
+    address _dividendWallet,
     TokenStub _token,
     InvestorListStub _investorList,
     ProjectQueueStub _projectQueue
   )
   public
-  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _investorList, _projectQueue) {}
+  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _investorList, _projectQueue) {}
 
   function receiveMockWei () external payable {
 

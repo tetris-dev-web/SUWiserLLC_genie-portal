@@ -7,7 +7,7 @@ contract Project {
   uint256 private id; //this should be public?
   string private name;
   address private developer;
-  address internal dividends;
+  address public dividendWallet;
   uint256 internal closingTime;
   uint256 private valuation;
   uint256 private capitalRequired;
@@ -21,6 +21,7 @@ contract Project {
     uint256 _id,
     string _name,
     address _developer,
+    address _dividendWallet,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
@@ -31,6 +32,7 @@ contract Project {
       id = _id;
       name = _name;
       developer = _developer;
+      dividendWallet = _dividendWallet;
       valuation = _valuation;
       capitalRequired = _capitalRequired;
       developerTokens = _developerTokens;
@@ -121,7 +123,7 @@ contract Project {
   function deposit () public payable {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
-    dividends.transfer(weiAmount);
+    dividendWallet.transfer(weiAmount);
   }
 
   function addManager (address manager) public authorize {
@@ -129,7 +131,7 @@ contract Project {
   }
 
   function setDividendWallet (address wallet) public authorize {
-    dividends = wallet;
+    dividendWallet = wallet;
   }
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
   function vote (address voter, uint256 voteAmount) external {

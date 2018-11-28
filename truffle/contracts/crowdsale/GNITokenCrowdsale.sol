@@ -1,4 +1,4 @@
-pragma solidity 0.4.25;
+pragma solidity 0.4.24;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 import '../ProjectQueue.sol';
@@ -10,8 +10,9 @@ import '../InvestorList.sol';
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   uint256 public totalValuation;
-  InvestorList private investorList;
-  ProjectQueue private projectQueue;
+  InvestorList public investorList;
+  ProjectQueue public projectQueue;
+  address public dividendWallet;
 
   constructor
       (
@@ -19,6 +20,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         uint256 _doomsDay,
         uint256 _rate,
         address _developer,
+        address _dividendWallet,
         Token _token,
         InvestorList _investorList,
         ProjectQueue _projectQueue
@@ -29,25 +31,26 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         investorList = InvestorList(_investorList);
         projectQueue = ProjectQueue(_projectQueue);
         totalValuation = 0;
+        dividendWallet = _dividendWallet;
   }
 
   address[] public projectAddrs;
-/*
-  function getInfo(uint256 id) public view returns(
-    string, uint256, uint256, uint256, uint256, bool, uint256, uint256, address
-    ) {
-      address projectAddr = projectAddrs[id];
-      return (
-        Project(projectAddr).name(),
+
+  /* function getInfo(uint256 id) public view returns(address) {
+      /* string, uint256, uint256, uint256, uint256, bool, uint256, uint256, address */
+      /* address projectAddr = projectAddrs[id]; */
+      /* return ( */
+        /* return Project(projectAddr).dividendWallet(); */
+        /* Project(projectAddr).name(),
         Project(projectAddr).valuation(),
         Project(projectAddr).capitalRequired(),
         Project(projectAddr).developerTokens(),
         Project(projectAddr).investorTokens(),
         Project(projectAddr).active(),
         Project(projectAddr).totalVotes(),
-        Project(projectAddr).closingTime(),
-        projectAddr
-        );
+        /* Project(projectAddr).closingTime(), */
+        /* projectAddr */
+        /* ); */
       } */
 
 //after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
@@ -63,7 +66,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
 
     uint256 _id = projectAddrs.length;
-    address projectAddr = new Project(_id, _name, developer, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
+    address projectAddr = new Project(_id, _name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
     projectAddrs.push(projectAddr);
     projectQueue.enqueue(projectAddr);//we want to test if this is called
     Project(projectAddr).log();
@@ -211,6 +214,5 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
   function forwardFunds (address _to, uint256 amount) internal {
     _to.transfer(amount);
-    /* weiRaised = weiRaised.sub(amount); */
   }
 }

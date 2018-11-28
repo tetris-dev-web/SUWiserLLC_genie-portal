@@ -7,6 +7,7 @@ contract ProjectStub is Project, ContractStub {
     uint256 _id,
     string _name,
     address _developer,
+    address _dividendWallet,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
@@ -20,6 +21,7 @@ contract ProjectStub is Project, ContractStub {
       _id,
       _name,
       _developer,
+      _dividendWallet,
       _valuation,
       _capitalRequired,
       _developerTokens,
@@ -86,5 +88,9 @@ contract ProjectStub is Project, ContractStub {
   function activate () external {
     CallData storage methodState = method['activate'];
     methodState.called = true;
+  }
+
+  function setMockVotesOf (address voter, uint256 amount) public {
+    votes[voter] = amount;
   }
 }

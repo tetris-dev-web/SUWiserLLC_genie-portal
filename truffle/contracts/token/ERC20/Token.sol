@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^0.4.24;
 
 import './MintableToken.sol';
 import '../../InvestorList.sol';
@@ -30,30 +30,42 @@ contract Token is MintableToken {
     return balances[addr].sub(activeBalances[addr]);
   }
 
-  //make this only accessible by crowdsale or this contract
-  function activate(address investor, uint256 amount) public {
+  function activate(address investor, uint256 amount) public onlyOwner {
     require(inactiveBalanceOf(investor) >= amount);
+
     activeBalances[investor] = activeBalances[investor].add(amount);
     totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
 
-  //we can remove the reference to investor list by requiring that the sender is the corwdsale. crowdsale can handle the logic for adding and removing credit instead.
   function transfer(address _to, uint256 _value) public returns (bool) {
     require(activeBalances[msg.sender] >= _value);
+
     super.transfer(_to, _value);
+    transferActive(msg.sender, _to, _value);
 
-    activate(_to, _value);
-    activeBalances[msg.sender] = activeBalances[msg.sender].sub(_value);
-    totalActiveSupply_ = totalActiveSupply_.sub(_value);
-
-    investorList.removeVoteCredit(msg.sender, _value);
-    investorList.addVoteCredit(_to, _value);
     return true;
   }
 
-  //make this only callable by crowdsale
-  function transferInactive(address _to, uint256 _value) external {
+  function transferFrom (address _from, address _to, uint256 _value) public returns (bool) {
+    require(_value <= activeBalances[_from]);
+
+    super.transferFrom(_from, _to, _value);
+    transferActive(_from, _to, _value);
+
+    return true;
+  }
+
+  function transferInactive(address _to, uint256 _value) external onlyOwner {
     require(inactiveBalanceOf(msg.sender) >= _value);
     super.transfer(_to, _value);
+  }
+
+  function transferActive(address _from, address _to, uint256 _value) internal {
+    activeBalances[_to] = activeBalances[_to].add(_value);
+    activeBalances[_from] = activeBalances[_from].sub(_value);
+
+    investorList.addInvestor(_to);
+    investorList.removeVoteCredit(_from, _value);
+    investorList.addVoteCredit(_to, _value);
   }
 }

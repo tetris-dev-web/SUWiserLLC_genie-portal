@@ -1,4 +1,4 @@
-pragma solidity 0.4.25;
+pragma solidity 0.4.24;
 
 import './Project.sol';
 
@@ -7,6 +7,7 @@ contract ProjectMock is Project {
     uint256 _id,
     string _name,
     address _developer,
+    address _dividendWallet,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
@@ -17,6 +18,7 @@ contract ProjectMock is Project {
       _id,
       _name,
       _developer,
+      _dividendWallet,
       _valuation,
       _capitalRequired,
       _developerTokens,
@@ -40,7 +42,7 @@ contract ProjectMock is Project {
   }
 
   function checkDividendWallet () public view returns (address) {
-    return dividends;
+    return dividendWallet;
   }
 
   function checkManagerStatus (address account) public view returns (bool) {

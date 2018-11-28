@@ -38,6 +38,14 @@ module.exports = function (deployer, network, accounts) {
         .then(() => {
           return deployer.deploy(Token, InvestorList.address);
         })
+        .then(() => {
+          return deployer.deploy(
+            Dividends,
+            Token.address,
+            developer,
+            InvestorList.address
+          );
+        })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {
@@ -55,40 +63,37 @@ module.exports = function (deployer, network, accounts) {
                 doomsDay,
                 rate,
                 developer,
+                Dividends.address,
                 Token.address,
                 InvestorList.address,
                 ProjectQueue.address
             );
         })
-        // .then(() => { // giving the crowdsale ownership over the token
-        //     return GNITokenCrowdsale.deployed().then(crowdsale => {
-        //         crowdsale.inactiveToken_().then(inactiveAddress => {
-        //             const InactiveTokenInstance = GNIToken.at(inactiveAddress);
-        //             InactiveTokenInstance.transferOwnership(crowdsale.address).then(output => {
-        //             })
-        //         })
-        //     }).catch(err => {
-        //         console.log(err);
-        //     })
-        // })
-        // .then(() => { // giving the crowdsale ownership over the token
-        //     return GNITokenCrowdsale.deployed().then(crowdsale => {
-        //         crowdsale.activeToken_().then(activeAddress => {
-        //             const activeTokenInstance = GNIToken.at(activeAddress);
-        //             activeTokenInstance.transferOwnership(crowdsale.address).then(output => {
-        //             })
-        //         })
-        //     }).catch(err => {
-        //         console.log(err);
-        //     })
-        // });
         .then(() => {
-          return deployer.deploy(
-            Dividends,
-            Token.address,
-            developer,
-            InvestorList.address
-          );
+            return GNITokenCrowdsale.deployed().then(crowdsale => {
+                crowdsale.token().then(tokenAddr => {
+                  const tokenInstance = Token.at(tokenAddr);
+                  tokenInstance.transferOwnership(crowdsale.address);
+                  return crowdsale;
+                })
+                .then(crowdsale => {
+                  crowdsale.investorList().then(iLAddr => {
+                    const investorListInst = InvestorList.at(iLAddr);
+                    investorListInst.transferOwnership(crowdsale.address);
+                    return crowdsale;
+                  })
+                  .then(crowdsale => {
+                    crowdsale.projectQueue().then(pQAddr => {
+                    const pQInst = ProjectQueue.at(pQAddr);
+                    pQInst.transferOwnership(crowdsale.address);
+                    return crowdsale;
+                  })
+                })
+              })
+            })
+          .catch(err => {
+            console.log(err);
+          })
         })
         // .then(() => {
         //   return deployer.deploy(TokenStub, InvestorListStub.address);

@@ -196,7 +196,7 @@ const enqueue = async () => {
 }
 
 const addProject = async (value) => {
- return await ProjectStub.new(value, 'p1', accounts[0], 1000000, 2000000, 100, 100, '300', '300', value);
+ return await ProjectStub.new(value, 'p1', accounts[0], accounts[1], 1000000, 2000000, 100, 100, '300', '300', value);
 }
 
 const getLength = async () => {

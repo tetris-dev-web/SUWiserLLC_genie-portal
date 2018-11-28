@@ -289,13 +289,19 @@ contract('GNITokenCrowdsale', async (_accounts) => {
 
         before(async () => {
           await mockGTC.receiveMockWei({value: 2000, from: accounts[2]});
-          await projStub3.setStubCapRequired(2000);
           await mockGTC.setMockWeiRaised(3000);
+
+          await projStub3.setMockVotesOf(accounts[2], 500);
+          await projStub3.setMockVotesOf(accounts[3], 1000);
+
+          await projStub3.setStubCapRequired(2000);
+          await projStub3.setStubOpenStatus(true);
 
           beforeWeiRaised = await parseMethod(getWeiRaised);
           initialDeveloperWei = await weiBalanceOf(accounts[1]);
-          await projStub3.setStubOpenStatus(true);
+
           await mockGTC.tryActivateProject_();
+
           finalDeveloperWei = await weiBalanceOf(accounts[1]);
         })
 
@@ -304,6 +310,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           await stubUtil.resetMethod(tokenStub, 'activate');
           await stubUtil.resetMethod(projStub3, 'removeVotes');
           await stubUtil.resetMethod(iLStub, 'removeVoteCredit');
+          await stubUtil.resetMethod(iLStub, 'addVoteCredit');
           await stubUtil.resetMethod(mockGTC, 'tryActivateProject');
           await stubUtil.resetMethod(pQStub, 'dequeue');
         })
@@ -325,6 +332,22 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           let { thirdAddress, thirdUint } = await stubUtil.callHistory(tokenStub, 'activate');
           assert.equal(thirdAddress, accounts[1], 'tokens not activated for the correct developer');
           assert.equal(thirdUint, 10000000, 'incorrect number of tokens activated for developer');
+        })
+
+        it('removes votes from the project for each investor that voted for the project', async () => {
+          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(projStub3, 'removeVotes');
+          assert.equal(firstAddress, accounts[2], 'votes not removed for correct address');
+          assert.equal(firstUint, 500, 'incorrect number of votes removed');
+          assert.equal(secondAddress, accounts[3], 'votes not removed for correct address');
+          assert.equal(secondUint, 1000, 'incorrect number of votes removed');
+        })
+
+        it('adds vote credit to each investor that voted for the project', async () => {
+          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
+          assert.equal(firstAddress, accounts[2], 'votes credit not added for correct address');
+          assert.equal(firstUint, 500, 'incorrect vote credit amount assigned');
+          assert.equal(secondAddress, accounts[3], 'votes credit not added for correct address');
+          assert.equal(secondUint, 1000, 'iincorrect vote credit amount assigned');
         })
 
         it('forwards funds to the developer', async () => {
@@ -353,6 +376,9 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           await projStub3.setStubCapRequired(2000);
           await mockGTC.setMockWeiRaised(3000);
 
+          await projStub3.setMockVotesOf(accounts[2], 500);
+          await projStub3.setMockVotesOf(accounts[3], 1000);
+
           beforeWeiRaised = await parseMethod(getWeiRaised);
           initialDeveloperWei = await weiBalanceOf(accounts[1]);
           await projStub3.setStubOpenStatus(false);
@@ -365,6 +391,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           await stubUtil.resetMethod(tokenStub, 'activate');
           await stubUtil.resetMethod(projStub3, 'removeVotes');
           await stubUtil.resetMethod(iLStub, 'removeVoteCredit');
+          await stubUtil.resetMethod(iLStub, 'addVoteCredit');
           await stubUtil.resetMethod(mockGTC, 'tryActivateProject');
           await stubUtil.resetMethod(pQStub, 'dequeue');
         })
@@ -388,6 +415,22 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           assert.equal(afterWei, beforeWeiRaised, 'weiRaised not reduced by capitalRequired');
         })
 
+        it('removes votes from the project for each investor that voted for the project', async () => {
+          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(projStub3, 'removeVotes');
+          assert.equal(firstAddress, accounts[2], 'votes not removed for correct address');
+          assert.equal(firstUint, 500, 'incorrect number of votes removed');
+          assert.equal(secondAddress, accounts[3], 'votes not removed for correct address');
+          assert.equal(secondUint, 1000, 'incorrect number of votes removed');
+        })
+
+        it('adds vote credit to each investor that voted for the project', async () => {
+          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
+          assert.equal(firstAddress, accounts[2], 'vote credit not added for correct address');
+          assert.equal(firstUint, 500, 'incorrect vote credit amount assigned');
+          assert.equal(secondAddress, accounts[3], 'votes credit not added for correct address');
+          assert.equal(secondUint, 1000, 'iincorrect vote credit amount assigned');
+        })
+
         it('dequeues the leading project from the projectQueue', async () => {
           let { called } = await stubUtil.callHistory(pQStub, 'dequeue');
           assert.equal(called, true, 'leading project was not dequeued');
@@ -408,6 +451,9 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           await projStub3.setStubCapRequired(2000);
           await mockGTC.setMockWeiRaised(1000);
 
+          await projStub3.setMockVotesOf(accounts[2], 500);
+          await projStub3.setMockVotesOf(accounts[3], 1000);
+
           beforeWeiRaised = await parseMethod(getWeiRaised);
           initialDeveloperWei = await weiBalanceOf(accounts[1]);
           await projStub3.setStubOpenStatus(true);
@@ -420,6 +466,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           await stubUtil.resetMethod(tokenStub, 'activate');
           await stubUtil.resetMethod(projStub3, 'removeVotes');
           await stubUtil.resetMethod(iLStub, 'removeVoteCredit');
+          await stubUtil.resetMethod(iLStub, 'addVoteCredit');
           await stubUtil.resetMethod(mockGTC, 'tryActivateProject');
           await stubUtil.resetMethod(pQStub, 'dequeue');
         })
@@ -443,6 +490,16 @@ contract('GNITokenCrowdsale', async (_accounts) => {
           assert.equal(afterWei, beforeWeiRaised, 'weiRaised should not change');
         })
 
+        it('does not remove any votes', async () => {
+          let { called } = await stubUtil.callHistory(projStub3, 'removeVotes');
+          assert.equal(called, false, 'votes should not have been removed');
+        })
+
+        it('does not add vote credit', async () => {
+          let { called } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
+          assert.equal(called, false, 'votes credit not added for correct address');
+        })
+
         it('leaves the project in the projectQueue', async () => {
           let { called } = await stubUtil.callHistory(pQStub, 'dequeue');
           assert.equal(called, false, 'leading project should remain in the queue');
@@ -456,6 +513,9 @@ contract('GNITokenCrowdsale', async (_accounts) => {
 
       describe('when the leading project has closed', async () => {
         before(async () => {
+          await projStub3.setMockVotesOf(accounts[2], 500);
+          await projStub3.setMockVotesOf(accounts[3], 1000);
+
           beforeWeiRaised = await parseMethod(getWeiRaised);
           initialDeveloperWei = await weiBalanceOf(accounts[1]);
           await projStub3.setStubOpenStatus(false);
@@ -480,6 +540,22 @@ contract('GNITokenCrowdsale', async (_accounts) => {
         it('does not affect weiRaised', async () => {
           let afterWei = await parseMethod(getWeiRaised);
           assert.equal(afterWei, beforeWeiRaised, 'weiRaised not reduced by capitalRequired');
+        })
+
+        it('removes votes from the project for each investor that voted for the project', async () => {
+          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(projStub3, 'removeVotes');
+          assert.equal(firstAddress, accounts[2], 'votes not removed for correct address');
+          assert.equal(firstUint, 500, 'incorrect number of votes removed');
+          assert.equal(secondAddress, accounts[3], 'votes not removed for correct address');
+          assert.equal(secondUint, 1000, 'incorrect number of votes removed');
+        })
+
+        it('adds vote credit to each investor that voted for the project', async () => {
+          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
+          assert.equal(firstAddress, accounts[2], 'votes credit not added for correct address');
+          assert.equal(firstUint, 500, 'incorrect vote credit amount assigned');
+          assert.equal(secondAddress, accounts[3], 'votes credit not added for correct address');
+          assert.equal(secondUint, 1000, 'iincorrect vote credit amount assigned');
         })
 
         it('dequeues the leading project from the projectQueue', async () => {
@@ -506,7 +582,7 @@ const setUp = async () => {
 const initMock = async () => {
   defaultOpeningTime = await getLatestBlockTime();
   defaultDoomsDay = defaultOpeningTime + 86400 * 240;
-  mockGTC = await GNITokenCrowdsaleMock.new(defaultOpeningTime, defaultDoomsDay, 50, accounts[1], tokenStub.address, iLStub.address, pQStub.address);
+  mockGTC = await GNITokenCrowdsaleMock.new(defaultOpeningTime, defaultDoomsDay, 50, accounts[1], accounts[2], tokenStub.address, iLStub.address, pQStub.address);
 }
 
 const initIL = async () => {
@@ -523,7 +599,7 @@ const initProjectQ = async () => {
 
 const initProjectStubs = async () => {
   projStub1 = await createProjectStub({
-    id: 0, name: 'project1', developer: accounts[1],
+    id: 0, name: 'project1', developer: accounts[1], dividendWallet: accounts[2],
     valuation: 4000000, capitalRequired: 2000000, developerTokens: 200000000,
     investorTokens: 100000000, lat: '340', lng: '340', mockVotes: 75000000
   })
@@ -531,7 +607,7 @@ const initProjectStubs = async () => {
   await mockGTC.addMockProject(projStub1.address);
 
   projStub2 = await createProjectStub({
-    id: 1, name: 'project2', developer: accounts[1],
+    id: 1, name: 'project2', developer: accounts[1], dividendWallet: accounts[2],
     valuation: 3000000, capitalRequired: 1000000, developerTokens: 150000000,
     investorTokens: 50000000, lat: '340', lng: '340', mockVotes: 50000000
   })
@@ -541,13 +617,13 @@ const initProjectStubs = async () => {
 
 const createProjectStub = async (params) => {
   let {
-    id, name, developer,
+    id, name, developer, dividendWallet,
     valuation, capitalRequired, developerTokens,
     investorTokens, lat, lng, mockVotes
   } = params;
 
   return await ProjectStub.new(
-    id, name, developer,
+    id, name, developer, dividendWallet,
     valuation, capitalRequired, developerTokens,
     investorTokens, lat, lng, mockVotes
   );
@@ -557,7 +633,7 @@ const tryActivateProjectSetup = async () => {
   await setUp();
 
   projStub3 = await createProjectStub({
-    id: 0, name: 'project3', developer: accounts[1],
+    id: 0, name: 'project3', developer: accounts[1], dividendWallet: accounts[2],
     valuation: 4000000, capitalRequired: 2000000, developerTokens: 200000000,
     investorTokens: 100000000, lat: '340', lng: '340', mockVotes: 75000000
   });

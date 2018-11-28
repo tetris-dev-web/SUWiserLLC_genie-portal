@@ -1,8 +1,9 @@
-pragma solidity 0.4.25;
+pragma solidity 0.4.24;
 import './utility/SafeMath.sol';
 import './Project.sol';
+import './utility/Ownable.sol';
 
-contract ProjectQueue {
+contract ProjectQueue is Ownable {
   using SafeMath for uint256;
   uint256 internal start = 1;
   uint256 internal end;

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.25;
+pragma solidity ^0.4.24;
 
 import "../token/ERC20/ERC20.sol";
 import '../utility/SafeMath.sol';
@@ -23,7 +23,7 @@ contract Crowdsale {
   using SafeERC20 for Token;
 
 
-  Token internal token;
+  Token public token;
 
   address internal developer;
   // How many token units a buyer gets per wei.

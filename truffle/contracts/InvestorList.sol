@@ -1,8 +1,9 @@
-pragma solidity ^0.4.25;
+pragma solidity 0.4.24;
 import './utility/SafeMath.sol';
 import './Project.sol';
+import './utility/Ownable.sol';
 
-contract InvestorList {
+contract InvestorList is Ownable {
   using SafeMath for uint256;
 
   struct Investor {
