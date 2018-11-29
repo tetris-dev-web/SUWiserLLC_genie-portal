@@ -124,15 +124,20 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    tentativeLeaderConfirmed = tentativeLeaderConfirmed && tentativeLeaderClosingTime > now;
 
    if (!tentativeLeaderConfirmed) {
-     ProjectsChecked memory newProjectsChecked;
-     projectsChecked = newProjectsChecked;
-     recordCheck(tentativeLeaderAddr);
+     resetProjectsChecked();
    }
 
    tentativeLeaderAddr = newLeaderAddr;
    tentativeLeaderVotes = newLeader.totalVotes_();
    tentativeLeaderClosingTime = newLeader.closingTime_();
    tentativeLeaderCapRequired = newLeader.capitalRequired_();
+
+ }
+
+ function resetProjectsChecked() internal {
+   ProjectsChecked memory newProjectsChecked;
+   projectsChecked = newProjectsChecked;
+   recordCheck(tentativeLeaderAddr);
  }
 
  function attemptProjectActivation () public {
