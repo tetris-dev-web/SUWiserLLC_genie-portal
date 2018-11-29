@@ -87,6 +87,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
    address projAddr = projectAddrs[_projectVotedForId];
    Project(projAddr).vote(msg.sender, tokens);//test that this is called
+   considerTentativeLeaderShip(_projectVotedForId);
+   attemptProjectActivation();
  }
 
  function considerTentativeLeaderShip (uint256 _projectId) public {
@@ -161,7 +163,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    return true;
  }
 
- function activateProject () external {
+ function activateProject () public {
    uint256 totalInactive = Token(token).totalInactiveSupply();
 
    Project project = Project(tentativeLeaderAddr);
