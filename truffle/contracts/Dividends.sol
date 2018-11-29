@@ -7,38 +7,60 @@ import './crowdsale/GNITokenCrowdsale.sol';
 contract Dividends {
   using SafeMath for uint256;
   Token token;
-  GNITokenCrowdsale crowdsale;
   InvestorList investorList;
   address developer;
 
-  constructor (Token token_, GNITokenCrowdsale crowdsale_, address developer_, InvestorList investorList_) public {
+  constructor (Token token_, address developer_, InvestorList investorList_) public {
     token = token_;
-    crowdsale = GNITokenCrowdsale(crowdsale_);
     developer = developer_;
     investorList = InvestorList(investorList_);
   }
 
-  function () external payable {}
+  mapping(address => uint256) lastDividendPoints;
 
-    //store the total amount of wei in a variable
-    //iterate through each investor.
-    //divide the total active tokens by the number of active investor tokens.
-    //divide the total wei by the resulting number to find out how much to wei to transfer
+  uint256 totalDividendPoints;
+  uint256 private pointMultiplier = 10e18;
+
+  function dividendOwedTo(address account) internal view returns (uint256) {
+    uint256 owedDividendPoints = totalDividendPoints.sub(lastDividendPoints[account]);
+    uint256 accountTokens = Token(token).activeBalanceOf(account);
+    return accountTokens.mul(owedDividendPoints).div(pointMultiplier);
+  }
+
+  function grantDividend(address account) internal returns (bool) {
+    uint256 dividend = dividendOwedTo(account);
+    account.transfer(dividend);
+    lastDividendPoints[account] = totalDividendPoints;
+    return true;
+  }
+
+  //this function needs to update
+  function () external payable {
+    uint256 totalTokens = Token(token).totalActiveSupply();
+    uint256 weiAmount = msg.value;
+
+    uint256 newDividendPoints = weiAmount.mul(pointMultiplier).div(totalTokens);
+    totalDividendPoints = totalDividendPoints.add(newDividendPoints);
+  }
+/*
   function distributeDividends () external {
     uint256 activeTokens = Token(token).totalActiveSupply();
-    uint256 profits = address(this).balance;
+    uint256 profits = address(this).balance; //give this an arbitrary profit in the test file
 
     for (uint256 i = 1; i <= investorList.investorCount(); i = i.add(1)) {
       grantDividend(investorList.addrById(i), activeTokens, profits);
+      //addr by id can return mock addresses that we set in the stub
     }
 
     grantDividend(developer, activeTokens, profits);
+    //we set an arbitrary developer in the mock
   }
 
   function grantDividend (address investor, uint256 activeTokens, uint256 profits) private {
-    uint256 investorActive = Token(token).activeBalanceOf(investor);
-    uint256 investorShare = activeTokens.div(investorActive);
-    uint256 dividend = profits.div(investorShare);
+    uint256 investorActive = Token(token).activeBalanceOf(investor); //we return an arbitrary amount less that total in the stub
+    uint256 dividend = profits.mul(investorActive).div(activeTokens);
     investor.transfer(dividend);
-  }
+  } */
+
+
 }

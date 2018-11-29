@@ -1,37 +1,45 @@
 pragma solidity ^0.4.24;
 
-import './MintableToken.sol';
+import '../ActivatableToken.sol';
+import '../../InvestorList.sol';
 
-contract Token is MintableToken {
-  mapping(address => uint256) internal activeBalances;
+contract Token is ActivatableToken {
+  InvestorList private investorList;
 
-  uint256 internal totalActiveSupply_;
 
-  function totalActiveSupply() public view returns (uint256) {
-    return totalActiveSupply_;
+  constructor (InvestorList _investorList) public {
+    investorList = InvestorList(_investorList);
   }
 
-  function totalInactiveSupply() public view returns (uint256) {
-    return totalSupply_.sub(totalActiveSupply_);
+  function transfer(address _to, uint256 _value) public returns (bool) {
+    require(activeBalances[msg.sender] >= _value);
+
+    super.transfer(_to, _value);
+    transferActive(msg.sender, _to, _value);
+
+    return true;
   }
 
-  function activeBalanceOf(address addr) public view returns (uint256) {
-    return activeBalances[addr];
+  function transferFrom (address _from, address _to, uint256 _value) public returns (bool) {
+    require(_value <= activeBalances[_from]);
+
+    super.transferFrom(_from, _to, _value);
+    transferActive(_from, _to, _value);
+
+    return true;
   }
 
-  function inactiveBalanceOf(address addr) public view returns (uint256) {
-    return balances[addr].sub(activeBalances[addr]);
+  function transferInactive(address _to, uint256 _value) external onlyOwner {
+    require(inactiveBalanceOf(msg.sender) >= _value);
+    super.transfer(_to, _value);
   }
 
-  //make this only accessible by crowdsale or this contract
-  function activate(address investor, uint256 amount) public {
-    activeBalances[investor] = activeBalances[investor].add(amount);
-    totalActiveSupply_ = totalActiveSupply_.add(amount);
-  }
+  function transferActive(address _from, address _to, uint256 _value) internal {
+    activeBalances[_to] = activeBalances[_to].add(_value);
+    activeBalances[_from] = activeBalances[_from].sub(_value);
 
-  function transferActiveTokens(address from, address to, uint256 tokens) external {
-    transferFrom(from, to, tokens);
-    activate(to, tokens);
-    activeBalances[from] = activeBalances[from].sub(tokens);
+    investorList.addInvestor(_to);
+    investorList.removeVoteCredit(_from, _value);
+    investorList.addVoteCredit(_to, _value);
   }
 }
