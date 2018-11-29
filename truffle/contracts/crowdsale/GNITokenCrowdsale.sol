@@ -62,7 +62,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  }
 
  modifier activatePendingTokens_() {
-   require(activateTokens(msg.sender));
+   require(Token(token).activatePending(msg.sender));
    _;
  }
 
@@ -96,7 +96,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
    if (
      tentativeLeaderAddr == address(0) ||
-     Project(projectAddr).totalVotes_ > tentativeLeaderVotes ||
+     Project(projectAddr).totalVotes_() > tentativeLeaderVotes ||
      tentativeLeaderClosingTime < now
      )
    {
@@ -120,24 +120,26 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  }
 
  function updateTentativeLeader (address newLeaderAddr) internal {
-   Project memory newLeader = Project(newLeaderAddr);
-   tentativeLeaderConfirmed = tentativeLeaderConfirmed && tentativeLeaderClosingTime > now;
-
-   if (!tentativeLeaderConfirmed) {
+   if (tentativeLeaderClosingTime < now || tentativeLeaderAddr == address(0)) {
      resetProjectsChecked();
    }
-
-   tentativeLeaderAddr = newLeaderAddr;
-   tentativeLeaderVotes = newLeader.totalVotes_();
-   tentativeLeaderClosingTime = newLeader.closingTime_();
-   tentativeLeaderCapRequired = newLeader.capitalRequired_();
-
+   setTentativeLeader(newLeaderAddr);
  }
 
  function resetProjectsChecked() internal {
    ProjectsChecked memory newProjectsChecked;
    projectsChecked = newProjectsChecked;
    recordCheck(tentativeLeaderAddr);
+ }
+
+ function setTentativeLeader(address newLeaderAddr) internal {
+   Project newLeader = Project(newLeaderAddr);
+
+   tentativeLeaderAddr = newLeaderAddr;
+   tentativeLeaderVotes = newLeader.totalVotes_();
+   tentativeLeaderClosingTime = newLeader.closingTime_();
+   tentativeLeaderCapRequired = newLeader.capitalRequired_();
+   tentativeLeaderConfirmed = false;
  }
 
  function attemptProjectActivation () public {
@@ -150,40 +152,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    }
  }
 
- address leadingProjectAddr;
-
- mapping(address => uint256) lastActivationPoints;
- uint256 totalActivationPoints;
- uint256 private activationMultiplier = 10e18;
-
- function pendingActivations(address account) internal {
-   uint256 pendingActivationPoints = totalActivationPoints.sub(lastActivationPoints[account]);
-   uint256 inactiveAccountTokens = Token(token).inactiveBalanceOf(account);
-   return inactiveAccountTokens.mul(pendingActivationPoints).div(activationMultiplier);
- }
-
- modifier distributePendingDividends() {
-   require(Dividends(dividendWallet).grantDividend(msg.sender));
-   _;
- }
-
- //before this, we need to make sure that any pending dividends are distributed to the account. we need to do this to the correct dividend amount is distributed
- function activateTokens (address account) external distributePendingDividends returns (bool) {
-   uint256 tokens = pendingActivations(account);
-   Token(token).activate(investor, tokensToActivate);
-   lastActivationPoints[account] = totalActivationPoints;
-   return true;
- }
-
  function activateProject () public {
-   uint256 totalInactive = Token(token).totalInactiveSupply();
-
    Project project = Project(tentativeLeaderAddr);
-   uint526 projectTokens = project.developerTokens().add(project.investorTokens());
-
-   uint256 newActivationPoints = projectTokens.mul(tokenMultiplier).div(totalInactive);
-   totalActivationPoints = totalDividendPoints.add(newActivationPoints);
    project.activate();
+   Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
  }
 
  function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
@@ -198,8 +170,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  }
 
  function addVoteCreditTo (address to, uint256 fromProjectId, uint256 votes) external {
-   Project memory project = Project(projectAddrs[fromProjectId]);
-   require(!project.open() || project.active());
+   Project project = Project(projectAddrs[fromProjectId]);
+   require(!project.open() || project.active_());
    addVoteCredit_(to, fromProjectId, votes);
  }
 

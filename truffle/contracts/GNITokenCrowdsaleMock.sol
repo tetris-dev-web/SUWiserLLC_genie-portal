@@ -66,7 +66,7 @@ constructor
     delete projectAddrs;
   } */
 
-  function tryActivateProject () internal {
+  /* function tryActivateProject () internal {
     CallData storage methodState = method["tryActivateProject"];
     methodState.called = true;
     methodState.callCount = methodState.callCount.add(1);
@@ -75,5 +75,5 @@ constructor
   function tryActivateProject_ () public {
     tryActivateProject();
     super.tryActivateProject();
-  }
+  } */
 }

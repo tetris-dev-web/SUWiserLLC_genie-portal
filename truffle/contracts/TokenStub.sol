@@ -97,7 +97,7 @@ contract TokenStub is Token, ContractStub {
     methodState.firstUint = _value;
   }
 
-  function activate (address investor, uint256 amount) public {
+  /* function activate (address investor, uint256 amount) public {
     CallData storage methodState = method['activate'];
     methodState.called = true;
 
@@ -111,5 +111,5 @@ contract TokenStub is Token, ContractStub {
       methodState.thirdAddress = investor;
       methodState.thirdUint = amount;
     }
-  }
+  } */
 }

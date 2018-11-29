@@ -1,40 +1,14 @@
 pragma solidity ^0.4.24;
 
-import './MintableToken.sol';
+import '../ActivatableToken.sol';
 import '../../InvestorList.sol';
 
-contract Token is MintableToken {
+contract Token is ActivatableToken {
   InvestorList private investorList;
+
 
   constructor (InvestorList _investorList) public {
     investorList = InvestorList(_investorList);
-  }
-
-  mapping(address => uint256) internal activeBalances;
-
-  uint256 internal totalActiveSupply_;
-
-  function totalActiveSupply() public view returns (uint256) {
-    return totalActiveSupply_;
-  }
-
-  function totalInactiveSupply() public view returns (uint256) {
-    return totalSupply_.sub(totalActiveSupply_);
-  }
-
-  function activeBalanceOf(address addr) public view returns (uint256) {
-    return activeBalances[addr];
-  }
-
-  function inactiveBalanceOf(address addr) public view returns (uint256) {
-    return balances[addr].sub(activeBalances[addr]);
-  }
-
-  function activate(address investor, uint256 amount) public onlyOwner {
-    require(inactiveBalanceOf(investor) >= amount);
-
-    activeBalances[investor] = activeBalances[investor].add(amount);
-    totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
 
   function transfer(address _to, uint256 _value) public returns (bool) {
