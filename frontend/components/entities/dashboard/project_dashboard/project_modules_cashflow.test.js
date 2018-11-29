@@ -41,16 +41,16 @@ describe('Project Module Component', () => {
    })
 
 
+
+
    it('scales should default to the min/max of projected or actual cashflows', () => {
      const {props, eWrapper} = componentSetup()
      const [xAxisScale, yAxisScale, yLinesScale] = eWrapper.instance().defineScales()
 
      expect(xAxisScale(2)).toEqual(props.width/Object.keys(props.actual_cashflow).length*2)
-     //make min of projected and or actual
-     // minOfProjCashFlow = 
-     // minOfActCashFlow
+     expect(yAxisScale(20)).toEqual(-342)
+     expect(yLinesScale(20)).toEqual(-24.666666666666686)
 
-     //expect(yAxisScale(2)).toEqual(10)
    })
 
 })

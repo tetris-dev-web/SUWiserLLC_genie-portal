@@ -9,17 +9,10 @@ class CashFlowGraph extends React.Component {
 
     this.setup = this.setup.bind(this);
     this.startGraph = this.startGraph.bind(this);
-    // this.formatCashData = this.formatCashData.bind(this);
-    this.createAxesAndLines = this.createAxesAndLines.bind(this);
-    // formatCashData helper Methods
-    // this.findCurrentQuarter = this.findCurrentQuarter.bind(this);
-    // this.calculateMinAndMax = this.calculateMinAndMax.bind(this);
-    // this.generatePoints = this.generatePoints.bind(this);
-    // createAxesAndLines helper methods
+    // this.createLines = this.createLines.bind(this);
+    this.createAxes = this.createAxes.bind(this);
     this.defineScales = this.defineScales.bind(this);
-    this.createLine = this.createLine.bind(this);
-    this.roundOffGraphEnds = this.roundOffGraphEnds.bind(this);
-    // Setup graph helper methods
+    // this.roundOffGraphEnds = this.roundOffGraphEnds.bind(this);
     this.addAxis = this.addAxis.bind(this);
     this.addData = this.addData.bind(this);
     this.addText = this.addText.bind(this);
@@ -31,31 +24,20 @@ class CashFlowGraph extends React.Component {
 
   setup() {
     // const {actual_cashflow, accum_actual_cashflow, projected_cashflow, accum_projected_cashflow} = this.props;
-    // console.log("ActCashflow: ",this.props.actual_cashflow)
-    //
-    // const cashflowVariables = [
-    //   actual_cashflow,
-    //   accum_actual_cashflow,
-    //   projected_cashflow,
-    //   accum_projected_cashflow
-    // ]
-    //
-    // console.log("variables: ",cashflowVariables)
+
+    const graph = this.startGraph();
 
     const [xAxisScale, yAxisScale, yLinesScale] = this.defineScales()
 
-    const {xAxis,
-            yAxis,
-            expectedAndActualLine,
-            expectedAccumulatedLine,
-            actualAccumulatedLine } = this.createAxesAndLines(xAxisScale,
-                                                              yAxisScale,
-                                                              yLinesScale);
-    //
-    // const graph = this.startGraph();
-    // // Add axes
-    // this.addAxis(graph, '0,', (this.h/2), '', xAxis);
-    // this.addAxis(graph, '', 10, ',0', yAxis);
+    this.createAxes(graph, xAxisScale, yAxisScale);
+
+
+
+    //const [xAxis,yAxis] = this.createLines(xAxisScale, yAxisScale,yLinesScale);
+
+
+
+
     // // Add display text
     // const text = this.addText(graph);
     // // Add data
@@ -99,7 +81,6 @@ class CashFlowGraph extends React.Component {
 
 
   defineScales() { //make this a method
-
       const getGraphParameters = () => {
         const numQuarters = d3.max(Object.keys(this.props.actual_cashflow))
         const minExpectedValueAct = d3.min(Object.values(this.props.actual_cashflow))
@@ -111,7 +92,7 @@ class CashFlowGraph extends React.Component {
         minExpectedValueAct < minExpectedValueProj? minExpectedValue = minExpectedValueAct
           : minExpectedValue = minExpectedValueProj
         maxExpectedValueAct > maxExpectedValueProj? maxExpectedValue = maxExpectedValueAct
-          : minExpectedValue = maxExpectedValueProj
+          : maxExpectedValue = maxExpectedValueProj
 
         return [numQuarters, minExpectedValue, maxExpectedValue]
       }
@@ -122,69 +103,68 @@ class CashFlowGraph extends React.Component {
         return d3.scaleLinear().domain([inputsMin, inputsMax]).range([outputsMin, outputsMax]);
       }
 
+
+
       const xAxisScale = defineScale(0, numQuarters, 20, this.w-20);
-      const yAxisScale = defineScale(minExpectedValue, maxExpectedValue, this.h-32, 15);
+      const yAxisScale = defineScale(minExpectedValue, maxExpectedValue, this.h-32, 15); //add clamp?
       const yLinesScale = defineScale(minExpectedValue, maxExpectedValue, this.h/2+22, this.h/2-22); // why is this different?
+
 
       return [xAxisScale, yAxisScale, yLinesScale]
     }
 
 
+  createAxes(graph, xAxisScale, yAxisScale){
+    const xAxis = d3.axisBottom().scale(xAxisScale).ticks(0).tickSizeOuter(0);
+    const yAxis = d3.axisRight().scale(yAxisScale).ticks(0).tickSizeOuter(0);
 
+    const addAxis = (graph, start, dimension, end, axis) => {
+      graph.append("g")
+        .attr('class', 'axis')
+        .attr("transform", `translate(${start}` + dimension + `${end})`)
+        .call(axis);
+    }
 
+    addAxis(graph, '0,', (this.h/2), '', xAxis);
+    addAxis(graph, '', 10, ',0', yAxis);
+  }
 
-  createAxesAndLines(xAxisScale,
-                        yAxisScale,
-                        yLinesScale) {
+  //
+  // createLines(xAxisScale, yAxisScale) {
+  //   const createLine = (xScale, yScale) => {
+  //     return d3.line().x(d=>{ return xScale(d.x); }).y(d=>{ return yScale(d.y); });
+  //   }
+  //
+  //   const expectedAndActualLine = createLine(xAxisScale, yLinesScale);
+  //   // const expectedAccumulatedLine = createLine(xAxisScale, accumulatedYScale);
+  //   // const actualAccumulatedLine = createLine(xAxisScale, accumulatedYScale);
+  //   //
+  //   // return [expectedAndActualLine, expectedAccumulatedLine,actualAccumulatedLine]
+  //
+  //   return [
+  //     expectedAndActualLine,
+  //     expectedAccumulatedLine,
+  //     actualAccumulatedLine
+  //   ];
+  // }
 
-
-
-
-    // const least = d3.min([minAccumulatedValue, minAccumulatedActualValue]);
-    // const most = d3.max([maxAccumulatedValue, maxAccumulatedActualValue]);
-    // const accumulatedYScale = this.defineScale(least, most, this.h-33, 33).clamp(true);
-
+    // [expectedAndActualLine, expectedAccumulatedLine, actualAccumulatedLine] = createLines()
 
     //
-    // // Define axes
-    // const xAxis = d3.axisBottom().scale(xAxisScale).ticks(0).tickSizeOuter(0);
-    // const yAxis = d3.axisRight().scale(yAxisScale).ticks(0).tickSizeOuter(0);
-    // // Create lines
-    // const expectedAndActualLine = this.createLine(xAxisScale, yLinesScale);
-    // const expectedAccumulatedLine = this.createLine(xAxisScale, accumulatedYScale);
-    // const actualAccumulatedLine = this.createLine(xAxisScale, accumulatedYScale);
-    // // I don't know why values are being added to these arrays, much less why here.
     // const averageAccumulatedValue = (least + most) / 2;
     // this.roundOffGraphEnds(averageAccumulatedValue, expectedAccumulatedPoints);
     // this.roundOffGraphEnds(averageAccumulatedValue, actualAccumulatedPoints);
 
-    const xAxis = null,
-          yAxis = null,
-          expectedAndActualLine = null,
-          expectedAccumulatedLine = null,
-          actualAccumulatedLine = null
-
-    return {
-      xAxis,
-      yAxis,
-      expectedAndActualLine,
-      expectedAccumulatedLine,
-      actualAccumulatedLine
-    };
-  }
-
-  roundOffGraphEnds(averageAccumulatedValue, accumulatedPoints) {
-    // prevents a "trailing garbage error from arising in the graph"
-    const totalAccumulatedPoints = Object.values(accumulatedPoints).length;
-    accumulatedPoints.unshift({ x: 0, y: averageAccumulatedValue });
-    accumulatedPoints.push({ x: totalAccumulatedPoints, y: averageAccumulatedValue });
-  }
+  // roundOffGraphEnds(averageAccumulatedValue, accumulatedPoints) {
+  //   // prevents a "trailing garbage error from arising in the graph"
+  //   const totalAccumulatedPoints = Object.values(accumulatedPoints).length;
+  //   accumulatedPoints.unshift({ x: 0, y: averageAccumulatedValue });
+  //   accumulatedPoints.push({ x: totalAccumulatedPoints, y: averageAccumulatedValue });
+  // }
 
 
 
-  createLine(xScale, yScale) {
-    return d3.line().x(d=>{ return xScale(d.x); }).y(d=>{ return yScale(d.y); });
-  }
+
 
   // formatCashData() {
   //   // Retrieve cashflow data from props
