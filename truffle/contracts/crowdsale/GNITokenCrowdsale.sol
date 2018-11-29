@@ -93,6 +93,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  function considerTentativeLeaderShip (uint256 _projectId) public {
    address projectAddr = projectAddrs[_projectId];
+
    if (
      tentativeLeaderAddr == address(0) ||
      Project(projectAddr).totalVotes_ > tentativeLeaderVotes ||
@@ -120,20 +121,26 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  function updateTentativeLeader (address newLeaderAddr) internal {
    Project memory newLeader = Project(newLeaderAddr);
+   tentativeLeaderConfirmed = tentativeLeaderConfirmed && tentativeLeaderClosingTime > now;
 
-   ProjectsChecked memory newProjectsChecked;
-   projectsChecked = newProjectsChecked;
-   recordCheck(tentativeLeaderAddr);
+   if (!tentativeLeaderConfirmed) {
+     ProjectsChecked memory newProjectsChecked;
+     projectsChecked = newProjectsChecked;
+     recordCheck(tentativeLeaderAddr);
+   }
 
    tentativeLeaderAddr = newLeaderAddr;
    tentativeLeaderVotes = newLeader.totalVotes_();
    tentativeLeaderClosingTime = newLeader.closingTime_();
    tentativeLeaderCapRequired = newLeader.capitalRequired_();
-   tentativeLeaderConfirmed = false;
  }
 
  function attemptProjectActivation () public {
-   if (tentativeLeaderCapRequired >= weiRaised && tentativeLeaderConfirmed) {
+   if (
+     tentativeLeaderCapRequired >= weiRaised &&
+     tentativeLeaderConfirmed &&
+     tentativeLeaderClosingTime > now
+     ) {
      activateProject();
    }
  }
