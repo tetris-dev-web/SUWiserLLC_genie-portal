@@ -29,7 +29,6 @@ contract ActivatableToken is MintableToken {
     return balances[account].sub(activeBalances[account]);
   }
 
-
   mapping(address => uint256) lastActivationPoints;
   uint256 totalActivationPoints;
   uint256 totalPendingActivations;
@@ -42,10 +41,10 @@ contract ActivatableToken is MintableToken {
     totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
 
-  /* modifier distributePendingDividends() {
-    require(Dividends(dividendWallet).grantDividend());
+  modifier distributePendingDividends(address account) {
+    require(Dividends(dividendWallet).grantDividend(account));
     _;
-  } */
+  }
 
   function pendingActivations(address account) internal returns (uint256) {
     uint256 pendingActivationPoints = totalActivationPoints.sub(lastActivationPoints[account]);
@@ -54,7 +53,7 @@ contract ActivatableToken is MintableToken {
   }
 
   //before this, we need to make sure that any pending dividends are distributed to the account. we need to do this to the correct dividend amount is distributed
-  function activatePending (address account) external returns (bool) {
+  function activatePending (address account) external distributePendingDividends(account) returns (bool) {
     uint256 tokens = pendingActivations(account);
     activate(account, tokens);
     lastActivationPoints[account] = totalActivationPoints;

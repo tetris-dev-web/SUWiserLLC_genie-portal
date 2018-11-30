@@ -66,20 +66,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _;
  }
 
-   address tentativeLeaderAddr;
-   uint256 tentativeLeaderVotes;
-   uint256 tentativeLeaderCapRequired;
-   uint256 tentativeLeaderClosingTime;
-   bool tentativeLeaderConfirmed;
-
-
-   struct ProjectsChecked {
-     mapping(address => bool) isChecked;
-     uint256 totalChecked;
-   }
-
-   ProjectsChecked projectsChecked;
-
  //before this, we need to execute any pending token activations for the sender account. We need to do this so that the correct number of tokens are activated
  function buyTokensAndVote (uint256 _projectVotedForId) public payable activatePendingTokens_ {
    uint256 tokens = buyTokens(msg.sender);
@@ -90,6 +76,20 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    considerTentativeLeaderShip(_projectVotedForId);
    attemptProjectActivation();
  }
+
+ address tentativeLeaderAddr;
+ uint256 tentativeLeaderVotes;
+ uint256 tentativeLeaderCapRequired;
+ uint256 tentativeLeaderClosingTime;
+ bool tentativeLeaderConfirmed;
+
+
+ struct ProjectsChecked {
+   mapping(address => bool) isChecked;
+   uint256 totalChecked;
+ }
+
+ ProjectsChecked projectsChecked;
 
  function considerTentativeLeaderShip (uint256 _projectId) public {
    address projectAddr = projectAddrs[_projectId];

@@ -12,6 +12,8 @@ const GNITokenCrowdsaleMock = artifacts.require("GNITokenCrowdsaleMock");
 const TokenStub = artifacts.require("TokenStub");
 const ProjectQueueStub = artifacts.require("ProjectQueueStub");
 
+let tokenInstance;
+
 module.exports = function (deployer, network, accounts) {
     const rate = 10000;
     const developer = accounts[1];
@@ -70,56 +72,18 @@ module.exports = function (deployer, network, accounts) {
             );
         })
         .then(() => {
-            return GNITokenCrowdsale.deployed().then(crowdsale => {
-                crowdsale.token().then(tokenAddr => {
-                  const tokenInstance = Token.at(tokenAddr);
-                  tokenInstance.transferOwnership(crowdsale.address);
-                  return crowdsale;
-                })
-                .then(crowdsale => {
-                  crowdsale.investorList().then(iLAddr => {
-                    const investorListInst = InvestorList.at(iLAddr);
-                    investorListInst.transferOwnership(crowdsale.address);
-                    return crowdsale;
-                  })
-                  .then(crowdsale => {
-                    crowdsale.projectQueue().then(pQAddr => {
-                    const pQInst = ProjectQueue.at(pQAddr);
-                    pQInst.transferOwnership(crowdsale.address);
-                    return crowdsale;
-                  })
-                })
-              })
-            })
-          .catch(err => {
-            console.log(err);
-          })
+          tokenInstance = Token.at(Token.address);
+          return tokenInstance.initializeDividendWallet(Dividends.address);
         })
-        // .then(() => {
-        //   return deployer.deploy(TokenStub, InvestorListStub.address);
-        // })
-        // .then(() => {
-        //   return deployer.deploy(ProjectQueueStub);
-        // })
-        // .then(() => { // establish start time variable
-        //     return new Promise((resolve, reject) => {
-        //         web3.eth.getBlock('latest', (err, time) => {
-        //             if (err) reject();
-        //             const openingTime = time.timestamp + 5;
-        //             resolve(openingTime);
-        //         })
-        //     })
-        // })
-        // .then((openingTime) => {
-        //   const doomsDay = openingTime + 86400 * 240;
-        //   return deployer.deploy(
-        //     GNITokenCrowdsaleMock,
-        //     openingTime,
-        //     doomsDay,
-        //     rate,
-        //     developer,
-        //     TokenStub.address,
-        //     InvestorListStub.address,
-        //     ProjectQueueStub.address);
-        // })
+        .then(() => {
+          const investorListInst = InvestorList.at(InvestorList.address);
+          return investorListInst.transferOwnership(GNITokenCrowdsale.address);
+        })
+        .then(() => {
+          const pQInst = ProjectQueue.at(ProjectQueue.address);
+          return pQInst.transferOwnership(GNITokenCrowdsale.address);
+        })
+        .then(() => {
+          tokenInstance.transferOwnership(GNITokenCrowdsale.address);
+        })
 };
