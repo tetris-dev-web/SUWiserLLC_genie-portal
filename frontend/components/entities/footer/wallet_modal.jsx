@@ -48,7 +48,6 @@ class WalletModal extends React.Component{
 
 
   getBalances(provider) {
-    debugger
     // var ethWeb3 = new Web3(provider);
     let arr = [];
     web3.eth.getAccounts(function (err, accounts) {

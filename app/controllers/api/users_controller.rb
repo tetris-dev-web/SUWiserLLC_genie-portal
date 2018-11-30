@@ -14,7 +14,6 @@ class Api::UsersController < ApplicationController
 
 
   def update_info
-    debugger;
     @resource = current_user
 
     if @resource.update(user_params)

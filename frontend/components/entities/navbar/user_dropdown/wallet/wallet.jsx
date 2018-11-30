@@ -7,7 +7,6 @@ class Wallet extends React.Component {
     this.state = {
       newWalletID: ''
     };
-    console.log(this.props);
     this.update = this.update.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -21,7 +20,6 @@ class Wallet extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    debugger;
     // $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
     // console.log('New Wallet ID', this.state.newWalletID);
     let updatedUser = {
@@ -36,6 +34,7 @@ class Wallet extends React.Component {
     };
 
     this.props.updateUser(updatedUser).then(() => {
+      this.setState({newWalletID: ''})
       // this.props.updateUsernameDisplay(updatedUser);
       // $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
     });
@@ -43,7 +42,6 @@ class Wallet extends React.Component {
 
   render() {
     // let { publicKey } = this.props.currentUser.public_key;
-    debugger;
     let { newWalletID } = this.state;
     let { publicKey } = this.props;
     return(
