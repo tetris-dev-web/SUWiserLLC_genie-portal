@@ -197,18 +197,19 @@ class ProjectForm extends React.Component {
   }
 
   receiveCashflowData(cashflowVars){
-      const {actual_cashflow,
-      accum_actual_cashflow,
-      projected_cashflow,
-      accum_projected_cashflow,
-      cashflow} = cashflowVars
-    this.setState({
-      actual_cashflow,
-      accum_actual_cashflow,
-      projected_cashflow,
-      accum_projected_cashflow,
-      cashflow
-    })
+    cashflowVars;
+    //   const {actual_cashflow,
+    //   accum_actual_cashflow,
+    //   projected_cashflow,
+    //   accum_projected_cashflow,
+    //   cashflow} = cashflowVars
+    // this.setState({
+    //   actual_cashflow,
+    //   accum_actual_cashflow,
+    //   projected_cashflow,
+    //   accum_projected_cashflow,
+    //   cashflow
+    // })
   }
 
   update(property) {
@@ -464,7 +465,7 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input inputfile" id="file"
+          <input className="main-input inputfile" id="file2"
             type="file"/>
           <label htmlFor="file">#|model id</label>
 
@@ -473,7 +474,7 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
 
-        <textarea className="description-area" value="description" />
+        <textarea className="description-area" value="description" onChange={this.update('description')} />
         <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"
