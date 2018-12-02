@@ -1,13 +1,16 @@
 import React from 'react';
 import Modal from 'react-modal';
-import CashFlow from './cashflow';
+import CashFlowInputSheet from './cashflow_input_sheet';
+import CashFlowGraph from '../../../dashboard/project_dashboard/project_cashflow_graph.jsx';
 import ModalStyle from './modal_style';
 
 class CashFlowModal extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { openModal: false };
+    this.state = {
+      openModal: false
+    };
 
     window.SessionOpenModal = () => {
       this.setState({openModal: true});
@@ -30,6 +33,7 @@ class CashFlowModal extends React.Component {
 
   closeModal() {
     this.setState({openModal: false});
+    this.props.receiveCashflowData();
   }
 
   render() {
@@ -37,19 +41,20 @@ class CashFlowModal extends React.Component {
       <div>
         <div onClick={this.openModal}>Cashflows</div>
         <Modal
-          isOpen={this.state.openModal}
-          onRequestClose={this.closeModal}
-          style={ModalStyle}
-          contentLabel="Manage Modal"
-          className="modal-container">
-          <CashFlow closeModal={this.closeModal}
-            cashflowData={this.props.cashflowData}
-            quarter={this.props.currentQuarter}
-            updateCashflow={this.updateCashflow} />
+        isOpen={this.state.openModal}
+        onRequestClose={this.closeModal}
+        style={ModalStyle}
+        contentLabel="Manage Modal"
+        className="modal-container">
+          <CashFlowInputSheet closeModal={this.closeModal}
+          cashflow={this.props.cashflow}
+          quarter={this.props.quarter}
+          updateCashflow={this.props.updateCashflow} />
         </Modal>
       </div>
     );
   }
 }
+// <CashFlowGraph />
 
 export default CashFlowModal;

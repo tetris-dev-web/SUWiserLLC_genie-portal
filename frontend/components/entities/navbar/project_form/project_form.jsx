@@ -2,10 +2,11 @@ import React from 'react';
 import { totalData } from '../../../../util/token_data_util';
 import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
-import CashFlowModal from './cashflow/cashflow_modal';
+import CashFlowModal from './cashflow_modal/cashflow_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
-import { processCashData } from '../../../../util/project_api_util';
+import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
+
 
 class ProjectForm extends React.Component {
 
@@ -16,8 +17,6 @@ class ProjectForm extends React.Component {
       title: '',
       latitude: '',
       longitude: '',
-      cashflow: '',
-      currentQuarter: '',
       revenue: '',
       valuation: '1',
       model_id: '7syizSLPN60',
@@ -31,6 +30,13 @@ class ProjectForm extends React.Component {
       status: 'pitched',
       summary: 'summary',
       openModal: false,
+      currentQuarter: '',
+      actual_cashflow: '',
+      accum_actual_cashflow: '',
+      projected_cashflow: '',
+      accum_projected_cashflow: '',
+      cashflow: '',
+      accumulatedRevenue: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -41,6 +47,8 @@ class ProjectForm extends React.Component {
     this.findCurrentQuarter = this.findCurrentQuarter.bind(this);
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
+    this.receiveCashflowData = this.receiveCashflowData.bind(this);
+    this.parseCashflowData = this.parseCashflowData.bind(this);
   }
 
   componentDidMount() {
@@ -141,13 +149,16 @@ class ProjectForm extends React.Component {
     return failedProjectCount;
   }
 
-  findCurrentQuarter(quarters) {
-    let currentQuarter = 29;
-    quarters.forEach((quarter, idx) => {
-      if (quarter[2] === "A") {
-        currentQuarter = idx + 1;
+  findCurrentQuarter(quarters, cashflow = this.state.cashflow) {
+    // const { cashflow } = this.state
+    let currentQuarter;
+    console.log("Cashflow from function is: ", cashflow);
+    quarters.some(quarter => {
+      if (!cashflow[quarter.toString()]["isActuals"]) {
+        currentQuarter = quarter;
+        return !cashflow[quarter.toString()]["isActuals"];
       }
-    });
+    })
     return currentQuarter;
   }
 
@@ -179,9 +190,25 @@ class ProjectForm extends React.Component {
   calculateNetPresentValue(projectCashflows){
     let discountFactor = this.calculateDiscountFactor();
     let cashflows = Object.values(processCashData(projectCashflows));
+    //change above line to account for new structure
     let finance = new Finance();
     let netPresentValue = finance.NPV(discountFactor, 0, ...cashflows);
     return netPresentValue;
+  }
+
+  receiveCashflowData(cashflowVars){
+      const {actual_cashflow,
+      accum_actual_cashflow,
+      projected_cashflow,
+      accum_projected_cashflow,
+      cashflow} = cashflowVars
+    this.setState({
+      actual_cashflow,
+      accum_actual_cashflow,
+      projected_cashflow,
+      accum_projected_cashflow,
+      cashflow
+    })
   }
 
   update(property) {
@@ -210,10 +237,72 @@ class ProjectForm extends React.Component {
 
   updateFile(fileType) {
     // Update to handle other file types eventually.
+    // this.parseCashflowData();
+    console.log('Cashflow state is', this.state.cashflow);
     return e => {
       let file = e.currentTarget.files[0];
       this.setState({ [fileType]: file });
+      this.setState({cashflow: this.parseCashflowData(file)})
     };
+  }
+
+  parseCashflowData(cashflowData) {
+    // let cashflowData = this.state.cashflow;
+    let promise;
+    let quarters;
+    if (cashflowData && cashflowData instanceof File) {
+      //file reader to read file, parse json, substitute json in for cashflow below
+      //doesnt work when you pass file into function, file in function is undefined
+      let content;
+      let cashflow;
+      promise = new Promise(function(resolve, reject){
+        let fileReader = new FileReader();
+        fileReader.onload = () => {
+          console.log("Promise is running");
+          content = fileReader.result;
+          cashflowData = content;
+          resolve(cashflowData)
+        };
+        // console.log("Resolve return",fileReader.readAsText(cashflowData));
+        fileReader.readAsText(cashflowData);
+
+
+        fileReader.onerror = () => {
+          fileReader.abort();
+          console.log("Promise aborted!!");
+          reject(new DOMException("Problem parsing input file."));
+        };
+
+      })
+
+      promise.then((cashflowData) => {
+        cashflow = processCashData(cashflowData);
+        // cashflow = this.setupCashflow(cashflow, currentQuarter)
+        quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
+        // console.log('quarters is:', quarters);
+        // console.log('Cashflow is:', cashflow);
+        this.setState({
+          cashflow,
+          accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
+          currentQuarter: this.findCurrentQuarter(quarters, cashflow),
+        });
+        // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
+        console.log("currquar: ", this.state.currentQuarter);
+      })
+    } else {
+      let cashflow;
+      console.log(cashflowData);
+      cashflowData ? cashflow = cashflowData :  cashflow = sampleProject;
+      quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
+      // cashflow = this.setupCashflow(cashflow, currentQuarter);
+      console.log("Else clause is running");
+      this.setState({
+        cashflow,
+        accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
+        currentQuarter: this.findCurrentQuarter(quarters, cashflow)
+      });
+      console.log("currquar: ", this.state.currentQuarter);
+    }
   }
 
   renderErrors() {
@@ -322,7 +411,7 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input inputfile" id="file"
+          <input className="main-input inputfile" id="json-file"
             type="file"
             onChange={this.updateFile('cashflow')} />
           <label htmlFor="json-file"> #| choose json</label>
@@ -333,9 +422,10 @@ class ProjectForm extends React.Component {
 
           <DivWithCorners>
             <span className="text">
-              <CashFlowModal quarter={this.state.currentQuarter}
-                cashflowData={this.state.cashflow}
-                updateCashflow={this.updateCashflow} />
+              <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
+                cashflow={this.state.cashflow ? this.state.cashflow : sampleProject}
+                updateCashflow={this.updateCashflow}
+                receiveCashflowData={this.receiveCashflowData} />
             </span>
           </DivWithCorners>
         </div>
@@ -344,7 +434,7 @@ class ProjectForm extends React.Component {
           <div className="discounts-box">
             discount rate
             <div className="amount-box">
-              { this.calculateDiscountFactor().toFixed(2) }
+              12
             </div>
           </div>
 
@@ -367,7 +457,7 @@ class ProjectForm extends React.Component {
         <div className="flexed">
           <input className="main-input inputfile" id="file"
             type="file"/>
-          <label for="file">#|choose pdf</label>
+          <label htmlFor="file">#|choose pdf</label>
 
           <DivWithCorners>
             <span className="text">plan</span>
@@ -376,7 +466,7 @@ class ProjectForm extends React.Component {
         <div className="flexed">
           <input className="main-input inputfile" id="file"
             type="file"/>
-          <label for="file">#|model id</label>
+          <label htmlFor="file">#|model id</label>
 
           <DivWithCorners>
             <span className="text">Poly Model</span>
@@ -510,3 +600,118 @@ export default ProjectForm;
 //     onClick={this.handleSubmit} />
 // </div>
 //
+const sampleProject = {
+  "1": {
+    "cashFlow": 50000,
+    "isActuals": true
+  },
+  "2": {
+    "cashFlow": 40018,
+    "isActuals": true
+  },
+  "3": {
+    "cashFlow": 16857,
+    "isActuals": true
+  },
+  "4": {
+    "cashFlow": -2915,
+    "isActuals": true
+  },
+  "5": {
+    "cashFlow": 20325,
+    "isActuals": true
+  },
+  "6": {
+    "cashFlow": 7864,
+    "isActuals": true
+  },
+  "7": {
+    "cashFlow": 25360,
+    "isActuals": true
+  },
+  "8": {
+    "cashFlow": 28107,
+    "isActuals": true
+  },
+  "9": {
+    "cashFlow": 28942,
+    "isActuals": false
+  },
+  "10": {
+    "cashFlow": 28696,
+    "isActuals": false
+  },
+  "11": {
+    "cashFlow": 29356,
+    "isActuals": false
+  },
+  "12": {
+    "cashFlow": 28854,
+    "isActuals": false
+  },
+  "13": {
+    "cashFlow": 28588,
+    "isActuals": false
+  },
+  "14": {
+    "cashFlow": 30781,
+    "isActuals": false
+  },
+  "15": {
+    "cashFlow": 29081,
+    "isActuals": false
+  },
+  "16": {
+    "cashFlow": 31887,
+    "isActuals": false
+  },
+  "17": {
+    "cashFlow": 51887,
+    "isActuals": false
+  },
+  "18": {
+    "cashFlow": 71887,
+    "isActuals": false
+  },
+  "19": {
+    "cashFlow": 30339,
+    "isActuals": false
+  },
+  "20": {
+    "cashFlow": 30718,
+    "isActuals": false
+  },
+  "21": {
+    "cashFlow": 31102,
+    "isActuals": false
+  },
+  "22": {
+    "cashFlow": 31491,
+    "isActuals": false
+  },
+  "23": {
+    "cashFlow": 31885,
+    "isActuals": false
+  },
+  "24": {
+    "cashFlow": 32283,
+    "isActuals": false
+  },
+  "25": {
+    "cashFlow": 32687,
+    "isActuals": false
+  },
+  "26": {
+    "cashFlow": 33096,
+    "isActuals": false
+  },
+  "27": {
+    "cashFlow": 33509,
+    "isActuals": false
+  },
+  "28": {
+    "cashFlow": 33928,
+    "isActuals": false
+  }
+}
+;
