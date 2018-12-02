@@ -2,7 +2,7 @@ pragma solidity 0.4.24;
 import './utility/SafeMath.sol';
 import './token/ERC20/Token.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
-
+import './InvestorList.sol';
 
 contract Dividends {
   using SafeMath for uint256;
@@ -18,8 +18,8 @@ contract Dividends {
 
   mapping(address => uint256) lastDividendPoints;
 
-  uint256 totalDividendPoints;
-  uint256 private pointMultiplier = 10e18;
+  uint256 public totalDividendPoints;
+  uint256 internal pointMultiplier = 10e30;
 
   function dividendOwedTo(address account) internal view returns (uint256) {
     uint256 owedDividendPoints = totalDividendPoints.sub(lastDividendPoints[account]);
@@ -27,7 +27,7 @@ contract Dividends {
     return accountTokens.mul(owedDividendPoints).div(pointMultiplier);
   }
 
-  function grantDividend(address account) public returns (bool) {
+  function distributeDividend(address account) public returns (bool) {
     uint256 dividend = dividendOwedTo(account);
     account.transfer(dividend);
     lastDividendPoints[account] = totalDividendPoints;

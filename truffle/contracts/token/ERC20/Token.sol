@@ -6,7 +6,6 @@ import '../../InvestorList.sol';
 contract Token is ActivatableToken {
   InvestorList private investorList;
 
-
   constructor (InvestorList _investorList) public {
     investorList = InvestorList(_investorList);
   }
