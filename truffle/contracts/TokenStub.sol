@@ -91,25 +91,17 @@ contract TokenStub is Token, ContractStub {
     return true;
   }
 
+  function activatePending (address account) external returns (bool) {
+    CallData storage methodState = method['activatePending'];
+    methodState.firstAddress = account;
+    methodState.called = true;
+  }
+
   function transferInactive (address _to, uint256 _value) external {
     CallData storage methodState = method['transferInactive'];
     methodState.firstAddress = _to;
     methodState.firstUint = _value;
+
+    methodState.correctCallOrder = method['activatePending'].called == true;
   }
-
-  /* function activate (address investor, uint256 amount) public {
-    CallData storage methodState = method['activate'];
-    methodState.called = true;
-
-    if (methodState.firstAddress == address(0)) {
-      methodState.firstAddress = investor;
-      methodState.firstUint = amount;
-    } else if (methodState.secondAddress == address(0)) {
-      methodState.secondAddress = investor;
-      methodState.secondUint = amount;
-    } else {
-      methodState.thirdAddress = investor;
-      methodState.thirdUint = amount;
-    }
-  } */
 }

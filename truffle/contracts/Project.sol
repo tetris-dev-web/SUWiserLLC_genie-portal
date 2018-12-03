@@ -16,7 +16,7 @@ contract Project {
   string public lat;
   string private lng;
   uint256 internal totalVotes;
-  bool private active;
+  bool public active;
   constructor (
     uint256 _id,
     string _name,

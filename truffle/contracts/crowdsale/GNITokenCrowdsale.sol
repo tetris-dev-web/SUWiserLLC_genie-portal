@@ -61,13 +61,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    return (developerValue.mul(rate), investorValue.mul(rate));
  }
 
- modifier activatePendingTokens() {
+ /* modifier activatePendingTokens() {
    require(Token(token).activatePending(msg.sender));
    _;
- }
+ } */
 
- //before this, we need to execute any pending token activations for the sender account. We need to do this so that the correct number of tokens are activated
- function buyTokensAndVote (uint256 _projectVotedForId) public payable activatePendingTokens {
+ //before this, we need to execute any pending token activations with the modifier above for the sender account. We need to do this so that the correct number of tokens are activated
+ function buyTokensAndVote (uint256 _projectVotedForId) public payable {
+   Token(token).activatePending(msg.sender);
+
    uint256 tokens = buyTokens(msg.sender);
    investorList.addInvestor(msg.sender);//test that this is called
 
@@ -169,10 +171,12 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    addVoteCredit_(msg.sender, fromProjectId, votes);
  }
 
- function addVoteCreditTo (address to, uint256 fromProjectId, uint256 votes) external {
+ //this is for adding vote credit for each investor from the frontend after a project has been activated
+ function addVoteCreditTo (address account, uint256 fromProjectId) external {
    Project project = Project(projectAddrs[fromProjectId]);
    require(!project.open() || project.active_());
-   addVoteCredit_(to, fromProjectId, votes);
+   uint256 votes = project.votesOf(account);
+   addVoteCredit_(account, fromProjectId, votes);
  }
 
  function addVoteCredit_ (address account, uint256 fromProjectId, uint256 votes) internal {

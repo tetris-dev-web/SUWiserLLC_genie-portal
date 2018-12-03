@@ -57,6 +57,12 @@ contract ProjectStub is Project, ContractStub {
     }
   }
 
+  bool stubActiveStatus;
+
+  function setStubActiveStatus (bool status) public {
+    active = status;
+  }
+
   bool stubOpenStatus;
 
   function setStubOpenStatus (bool status) public {

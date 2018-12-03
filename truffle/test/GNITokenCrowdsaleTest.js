@@ -73,12 +73,6 @@ contract('GNITokenCrowdsale', async (_accounts) => {
         let finalProjectCount = await parseMethod(getProjectCount);
         assert.equal(finalProjectCount, initialProjectCount + 1, 'project address not added to projectAddrs array');
       })
-
-      it('enqueues the projectQueue with the project address', async () => {
-        let projectAddr = await mockGTC.lastAddedAddr.call();
-        let { firstAddress } = await stubUtil.callHistory(pQStub, 'enqueue');
-        assert.equal(firstAddress, projectAddr, 'projectQueue not enqueued with the projcet address');
-      })
     })
 
     describe('when the crowdsale is not open', async () => {
@@ -105,26 +99,29 @@ contract('GNITokenCrowdsale', async (_accounts) => {
     before(async () => {
       initialWeiRaised = await parseMethod(getWeiRaised);
 
+      await stubUtil.addMethod(tokenStub, 'activatePending');
       await stubUtil.addMethod(iLStub, 'addInvestor');
       await stubUtil.addMethod(tokenStub, 'transferInactive');
-      await stubUtil.addMethod(pQStub, 'heapify');
       await stubUtil.addMethod(projStub1, 'vote');
-      await stubUtil.addMethod(mockGTC, 'tryActivateProject');
 
       await mockGTC.buyTokensAndVote(0, {from: accounts[2], value: 500000});
     })
 
     after(async () => {
+      await stubUtil.resetMethod(tokenStub, 'activatePending');
       await stubUtil.resetMethod(iLStub, 'addInvestor');
       await stubUtil.resetMethod(tokenStub, 'transferInactive');
-      await stubUtil.resetMethod(pQStub, 'heapify');
       await stubUtil.resetMethod(projStub1, 'vote');
-      await stubUtil.resetMethod(mockGTC, 'tryActivateProject');
     })
 
-    it('increases weiRaised by the purchase value', async () => {
-      let finalWeiRaised = await parseMethod(getWeiRaised);
-      assert.equal(finalWeiRaised, initialWeiRaised + 500000, 'purchase value not added to weiRaised');
+    it('activates the buyers pending activations', async () => {
+      let { firstAddress } = await stubUtil.callHistory(tokenStub, 'activatePending');
+      assert.equal(firstAddress, accounts[2], 'pending activations not activated for the sender');
+    })
+
+    it('activates pending activations before transfering active tokens to the sender', async () => {
+      let { correctCallOrder } = await stubUtil.callHistory(tokenStub, 'transferInactive');
+      assert(correctCallOrder, 'pending activations not handled before more tokens are transferred');
     })
 
     it('transfers inactive tokens from the contract to the beneficiary as a function of value * rate', async () => {
@@ -133,20 +130,15 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       assert.equal(firstUint, 25000000, 'incorrect token amount transfered');
     })
 
+    it('increases weiRaised by the purchase value', async () => {
+      let finalWeiRaised = await parseMethod(getWeiRaised);
+      assert.equal(finalWeiRaised, initialWeiRaised + 500000, 'purchase value not added to weiRaised');
+    })
+
     it('votes for the project indicated', async () => {
       let { firstAddress, firstUint } = await stubUtil.callHistory(projStub1, 'vote');
       assert.equal(firstAddress, accounts[2], 'the corrent project was not voted for');
       assert.equal(firstUint, 25000000, 'incorrect vote amount assigned to project');
-    })
-
-    it('updates the projectQueue', async () => {
-      let { firstAddress } = await stubUtil.callHistory(pQStub, 'heapify');
-      assert.equal(firstAddress, projStub1.address, 'project queue not updated with the proper address');
-    })
-
-    it('trys to activate a project', async () => {
-      let { called } = await stubUtil.callHistory(mockGTC, 'tryActivateProject');
-      assert.equal(called, true, 'project activation not attempted');
     })
   })
 
@@ -178,38 +170,21 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       assert.equal(firstAddress, accounts[2], 'votes not assigned for correct voter');
       assert.equal(firstUint, 20000000, 'incorrect vote amount transfered to project');
     })
-
-    it('updates the position of the from project in the projectQueue', async () => {
-      let { firstAddress } = await stubUtil.callHistory(pQStub, 'heapify');
-      assert.equal(firstAddress, projStub1.address, 'project queue not updated with the proper address');
-    })
-
-    it('updates the position of the from project in the projectQueue', async () => {
-      let { secondAddress } = await stubUtil.callHistory(pQStub, 'heapify');
-      assert.equal(secondAddress, projStub2.address, 'project queue not updated with the proper address');
-    })
-
-    it('trys to activate a project', async () => {
-      let { called } = await stubUtil.callHistory(mockGTC, 'tryActivateProject');
-      assert.equal(called, true, 'project activation not attempted');
-    })
   })
 
-  describe('addVoteCredit', async () => {
+  describe('addVoteCredit_', async () => {
     before(async () => {
       await stubUtil.addMethod(projStub1, 'removeVotes');
       await stubUtil.addMethod(iLStub, 'addVoteCredit');
-      await stubUtil.addMethod(pQStub, 'heapify');
-      await stubUtil.addMethod(mockGTC, 'tryActivateProject');
+      await stubUtil.addMethod(mockGTC, 'addVoteCredit_');
 
-      await mockGTC.addVoteCredit(0, 20000000, {from: accounts[2]});
+      await mockGTC._addVoteCredit_(accounts[2], 0, 20000000);
     })
 
     after(async () => {
       await stubUtil.resetMethod(projStub1, 'removeVotes');
       await stubUtil.resetMethod(iLStub, 'addVoteCredit');
-      await stubUtil.resetMethod(pQStub, 'heapify');
-      await stubUtil.resetMethod(mockGTC, 'tryActivateProject');
+      await stubUtil.resetMethod(mockGTC, 'addVoteCredit_');
     })
 
     it('removes the indicated amount of votes from a project', async () => {
@@ -223,15 +198,63 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       assert.equal(firstAddress, accounts[2], 'votes not assigned for correct voter');
       assert.equal(firstUint, 20000000, 'incorrect vote credit amount assigned');
     })
+  })
 
-    it('updates the projectQueue', async () => {
-      let { firstAddress } = await stubUtil.callHistory(pQStub, 'heapify');
-      assert.equal(firstAddress, projStub1.address, 'project queue not updated with the proper address');
+  describe('addVoteCreditTo', async () => {
+    describe('when the project is not open', async () => {
+      before(async () => {
+        await stubUtil.addMethod(mockGTC, 'addVoteCredit_');
+        await projStub1.setMockVotesOf(accounts[2], 5000);
+        await projStub1.setStubOpenStatus(false);
+        await mockGTC.addVoteCreditTo(accounts[2], 0);
+      })
+
+      after(async () => {
+        await stubUtil.resetMethod(mockGTC, 'addVoteCredit_');
+      })
+
+      it('adds all votes that the account dedicated to the project to the accounts vote credit', async () => {
+        let { firstAddress, firstUint, secondUint } = await stubUtil.callHistory(mockGTC, 'addVoteCredit_');
+        assert.equal(firstAddress, accounts[2], 'vote credit not added to the correct account');
+        assert.equal(firstUint, 0, 'votes not removed from the correct project');
+        assert.equal(secondUint, 5000, 'incorrect vote credit amount assigned');
+      })
     })
 
-    it('trys to activate a project', async () => {
-      let { called } = await stubUtil.callHistory(mockGTC, 'tryActivateProject');
-      assert.equal(called, true, 'project activation not attempted');
+    describe('when the project is active', async () => {
+      before(async () => {
+        await stubUtil.addMethod(mockGTC, 'addVoteCredit_');
+        await projStub1.setMockVotesOf(accounts[2], 5000);
+        await projStub1.setStubOpenStatus(true);
+        await projStub1.setStubActiveStatus(true);
+        await mockGTC.addVoteCreditTo(accounts[2], 0);
+      })
+
+      after(async () => {
+        await stubUtil.resetMethod(mockGTC, 'addVoteCredit_');
+      })
+
+      it('adds all votes that the account dedicated to the project to the accounts vote credit', async () => {
+        let { firstAddress, firstUint, secondUint } = await stubUtil.callHistory(mockGTC, 'addVoteCredit_');
+        assert.equal(firstAddress, accounts[2], 'vote credit not added to the correct account');
+        assert.equal(firstUint, 0, 'votes not removed from the correct project');
+        assert.equal(secondUint, 5000, 'incorrect vote credit amount assigned');
+      })
+    })
+
+    describe('when the project is open and not active', async () => {
+      before(async () => {
+        await projStub1.setStubOpenStatus(true);
+        await projStub1.setStubActiveStatus(false);
+      })
+
+      after(async () => {
+        await stubUtil.resetMethod(mockGTC, 'addVoteCredit_');
+      })
+
+      it('reverts', async () => {
+        await exceptions.catchRevert(mockGTC.addVoteCreditTo(accounts[2], 0));
+      })
     })
   })
 
@@ -262,312 +285,6 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       let { firstAddress, firstUint } = await stubUtil.callHistory(projStub1, 'vote');
       assert.equal(firstAddress, accounts[2], 'the corrent project was not voted for');
       assert.equal(firstUint, 20000000, 'incorrect vote amount assigned to project');
-    })
-
-    it('updates the projectQueue', async () => {
-      let { firstAddress } = await stubUtil.callHistory(pQStub, 'heapify');
-      assert.equal(firstAddress, projStub1.address, 'project queue not updated with the proper address');
-    })
-
-    it('trys to activate a project', async () => {
-      let { called } = await stubUtil.callHistory(mockGTC, 'tryActivateProject');
-      assert.equal(called, true, 'project activation not attempted');
-    })
-  })
-
-  describe('tryActivateProject', async () => {
-    let initialDeveloperWei;
-    let beforeWeiRaised;
-
-    before(async () => {
-      await tryActivateProjectSetup();
-    })
-
-    describe('when enough funds have been raised to activate the leading project', async () => {
-      describe('when the leading project is still open', async () => {
-        let finalDeveloperWei;
-
-        before(async () => {
-          await mockGTC.receiveMockWei({value: 2000, from: accounts[2]});
-          await mockGTC.setMockWeiRaised(3000);
-
-          await projStub3.setMockVotesOf(accounts[2], 500);
-          await projStub3.setMockVotesOf(accounts[3], 1000);
-
-          await projStub3.setStubCapRequired(2000);
-          await projStub3.setStubOpenStatus(true);
-
-          beforeWeiRaised = await parseMethod(getWeiRaised);
-          initialDeveloperWei = await weiBalanceOf(accounts[1]);
-
-          await mockGTC.tryActivateProject_();
-
-          finalDeveloperWei = await weiBalanceOf(accounts[1]);
-        })
-
-        after(async () => {
-          await stubUtil.resetMethod(projStub3, 'activate');
-          await stubUtil.resetMethod(tokenStub, 'activate');
-          await stubUtil.resetMethod(projStub3, 'removeVotes');
-          await stubUtil.resetMethod(iLStub, 'removeVoteCredit');
-          await stubUtil.resetMethod(iLStub, 'addVoteCredit');
-          await stubUtil.resetMethod(mockGTC, 'tryActivateProject');
-          await stubUtil.resetMethod(pQStub, 'dequeue');
-        })
-
-        it('activates the leading project', async () => {
-          let { called } = await stubUtil.callHistory(projStub3, 'activate');
-          assert.equal(called, true, 'project not activated');
-        })
-
-        it('activates the projects invesor tokens', async () => {
-          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(tokenStub, 'activate');
-          assert.equal(firstAddress, accounts[2], 'tokens not activated for the correct investor');
-          assert.equal(firstUint, 6153846, 'incorrect number of tokens activated for investor');
-          assert.equal(secondAddress, accounts[3], 'tokens not activated for the correct investor');
-          assert.equal(secondUint, 3846153, 'incorrect number of tokens activated for investor');
-        })
-
-        it('activates the projects developer tokens', async () => {
-          let { thirdAddress, thirdUint } = await stubUtil.callHistory(tokenStub, 'activate');
-          assert.equal(thirdAddress, accounts[1], 'tokens not activated for the correct developer');
-          assert.equal(thirdUint, 10000000, 'incorrect number of tokens activated for developer');
-        })
-
-        it('removes votes from the project for each investor that voted for the project', async () => {
-          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(projStub3, 'removeVotes');
-          assert.equal(firstAddress, accounts[2], 'votes not removed for correct address');
-          assert.equal(firstUint, 500, 'incorrect number of votes removed');
-          assert.equal(secondAddress, accounts[3], 'votes not removed for correct address');
-          assert.equal(secondUint, 1000, 'incorrect number of votes removed');
-        })
-
-        it('adds vote credit to each investor that voted for the project', async () => {
-          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
-          assert.equal(firstAddress, accounts[2], 'votes credit not added for correct address');
-          assert.equal(firstUint, 500, 'incorrect vote credit amount assigned');
-          assert.equal(secondAddress, accounts[3], 'votes credit not added for correct address');
-          assert.equal(secondUint, 1000, 'iincorrect vote credit amount assigned');
-        })
-
-        it('forwards funds to the developer', async () => {
-          assert.equal(finalDeveloperWei, initialDeveloperWei + 2000, 'funds not forwarded to developer');
-        })
-
-        it('reduces the weiRaised by the capitalRequired of the leading project', async () => {
-          let afterWei = await parseMethod(getWeiRaised);
-          assert.equal(afterWei, beforeWeiRaised - 2000, 'weiRaised not reduced by capitalRequired');
-        })
-
-        it('dequeues the leading project from the projectQueue', async () => {
-          let { called } = await stubUtil.callHistory(pQStub, 'dequeue');
-          assert.equal(called, true, 'leading project was not dequeued');
-        })
-
-        it('resursively calls itself', async () => {
-          let { callCount } = await stubUtil.callHistory(mockGTC, 'tryActivateProject');
-          assert.equal(callCount, 2, 'function was not called recusively');
-        })
-      })
-
-      describe('when the leading project has closed', async () => {
-        before(async () => {
-          await mockGTC.receiveMockWei({value: 2000, from: accounts[2]});
-          await projStub3.setStubCapRequired(2000);
-          await mockGTC.setMockWeiRaised(3000);
-
-          await projStub3.setMockVotesOf(accounts[2], 500);
-          await projStub3.setMockVotesOf(accounts[3], 1000);
-
-          beforeWeiRaised = await parseMethod(getWeiRaised);
-          initialDeveloperWei = await weiBalanceOf(accounts[1]);
-          await projStub3.setStubOpenStatus(false);
-          await mockGTC.tryActivateProject_();
-          finalDeveloperWei = await weiBalanceOf(accounts[1]);
-        })
-
-        after(async () => {
-          await stubUtil.resetMethod(projStub3, 'activate');
-          await stubUtil.resetMethod(tokenStub, 'activate');
-          await stubUtil.resetMethod(projStub3, 'removeVotes');
-          await stubUtil.resetMethod(iLStub, 'removeVoteCredit');
-          await stubUtil.resetMethod(iLStub, 'addVoteCredit');
-          await stubUtil.resetMethod(mockGTC, 'tryActivateProject');
-          await stubUtil.resetMethod(pQStub, 'dequeue');
-        })
-
-        it('does not forwards funds to the developer', async () => {
-          assert.equal(finalDeveloperWei, initialDeveloperWei, 'funds were transferred to developer but shoud not have been');
-        })
-
-        it('does not activate the leading project', async () => {
-          let { called } = await stubUtil.callHistory(projStub3, 'activate');
-          assert.equal(called, false, 'project should not have been activated');
-        })
-
-        it('does not activate any tokens', async () => {
-          let { called } = await stubUtil.callHistory(tokenStub, 'activate');
-          assert.equal(called, false, 'tokens should not have been activated');
-        })
-
-        it('does not affect weiRaised', async () => {
-          let afterWei = await parseMethod(getWeiRaised);
-          assert.equal(afterWei, beforeWeiRaised, 'weiRaised not reduced by capitalRequired');
-        })
-
-        it('removes votes from the project for each investor that voted for the project', async () => {
-          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(projStub3, 'removeVotes');
-          assert.equal(firstAddress, accounts[2], 'votes not removed for correct address');
-          assert.equal(firstUint, 500, 'incorrect number of votes removed');
-          assert.equal(secondAddress, accounts[3], 'votes not removed for correct address');
-          assert.equal(secondUint, 1000, 'incorrect number of votes removed');
-        })
-
-        it('adds vote credit to each investor that voted for the project', async () => {
-          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
-          assert.equal(firstAddress, accounts[2], 'vote credit not added for correct address');
-          assert.equal(firstUint, 500, 'incorrect vote credit amount assigned');
-          assert.equal(secondAddress, accounts[3], 'votes credit not added for correct address');
-          assert.equal(secondUint, 1000, 'iincorrect vote credit amount assigned');
-        })
-
-        it('dequeues the leading project from the projectQueue', async () => {
-          let { called } = await stubUtil.callHistory(pQStub, 'dequeue');
-          assert.equal(called, true, 'leading project was not dequeued');
-        })
-
-        it('resursively calls itself', async () => {
-          let { callCount } = await stubUtil.callHistory(mockGTC, 'tryActivateProject');
-          assert.equal(callCount, 2, 'function was not called recusively');
-        })
-      })
-    })
-
-    describe('when there is not enough funds to activate the leading project', async () => {
-      describe('when the leading project is still open', async () => {
-        let finalDeveloperWei;
-
-        before(async () => {
-          await projStub3.setStubCapRequired(2000);
-          await mockGTC.setMockWeiRaised(1000);
-
-          await projStub3.setMockVotesOf(accounts[2], 500);
-          await projStub3.setMockVotesOf(accounts[3], 1000);
-
-          beforeWeiRaised = await parseMethod(getWeiRaised);
-          initialDeveloperWei = await weiBalanceOf(accounts[1]);
-          await projStub3.setStubOpenStatus(true);
-          await mockGTC.tryActivateProject_();
-          finalDeveloperWei = await weiBalanceOf(accounts[1]);
-        })
-
-        after(async () => {
-          await stubUtil.resetMethod(projStub3, 'activate');
-          await stubUtil.resetMethod(tokenStub, 'activate');
-          await stubUtil.resetMethod(projStub3, 'removeVotes');
-          await stubUtil.resetMethod(iLStub, 'removeVoteCredit');
-          await stubUtil.resetMethod(iLStub, 'addVoteCredit');
-          await stubUtil.resetMethod(mockGTC, 'tryActivateProject');
-          await stubUtil.resetMethod(pQStub, 'dequeue');
-        })
-
-        it('does not forwards funds to the developer', async () => {
-          assert.equal(finalDeveloperWei, initialDeveloperWei, 'funds were transferred to developer but shoud not have been');
-        })
-
-        it('does not activate the leading project', async () => {
-          let { called } = await stubUtil.callHistory(projStub3, 'activate');
-          assert.equal(called, false, 'project should not have been activated');
-        })
-
-        it('does not activate any tokens', async () => {
-          let { called } = await stubUtil.callHistory(tokenStub, 'activate');
-          assert.equal(called, false, 'tokens should not have been activated');
-        })
-
-        it('does not affect weiRaised', async () => {
-          let afterWei = await parseMethod(getWeiRaised);
-          assert.equal(afterWei, beforeWeiRaised, 'weiRaised should not change');
-        })
-
-        it('does not remove any votes', async () => {
-          let { called } = await stubUtil.callHistory(projStub3, 'removeVotes');
-          assert.equal(called, false, 'votes should not have been removed');
-        })
-
-        it('does not add vote credit', async () => {
-          let { called } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
-          assert.equal(called, false, 'votes credit not added for correct address');
-        })
-
-        it('leaves the project in the projectQueue', async () => {
-          let { called } = await stubUtil.callHistory(pQStub, 'dequeue');
-          assert.equal(called, false, 'leading project should remain in the queue');
-        })
-
-        it('does not resursively call itself', async () => {
-          let { callCount } = await stubUtil.callHistory(mockGTC, 'tryActivateProject');
-          assert.equal(callCount, 1, 'function should not have been called recusively');
-        })
-      })
-
-      describe('when the leading project has closed', async () => {
-        before(async () => {
-          await projStub3.setMockVotesOf(accounts[2], 500);
-          await projStub3.setMockVotesOf(accounts[3], 1000);
-
-          beforeWeiRaised = await parseMethod(getWeiRaised);
-          initialDeveloperWei = await weiBalanceOf(accounts[1]);
-          await projStub3.setStubOpenStatus(false);
-          await mockGTC.tryActivateProject_();
-          finalDeveloperWei = await weiBalanceOf(accounts[1]);
-        })
-
-        it('does not forwards funds to the developer', async () => {
-          assert.equal(finalDeveloperWei, initialDeveloperWei, 'funds were transferred to developer but shoud not have been');
-        })
-
-        it('does not activate the leading project', async () => {
-          let { called } = await stubUtil.callHistory(projStub3, 'activate');
-          assert.equal(called, false, 'project should not have been activated');
-        })
-
-        it('does not activate any tokens', async () => {
-          let { called } = await stubUtil.callHistory(tokenStub, 'activate');
-          assert.equal(called, false, 'tokens should not have been activated');
-        })
-
-        it('does not affect weiRaised', async () => {
-          let afterWei = await parseMethod(getWeiRaised);
-          assert.equal(afterWei, beforeWeiRaised, 'weiRaised not reduced by capitalRequired');
-        })
-
-        it('removes votes from the project for each investor that voted for the project', async () => {
-          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(projStub3, 'removeVotes');
-          assert.equal(firstAddress, accounts[2], 'votes not removed for correct address');
-          assert.equal(firstUint, 500, 'incorrect number of votes removed');
-          assert.equal(secondAddress, accounts[3], 'votes not removed for correct address');
-          assert.equal(secondUint, 1000, 'incorrect number of votes removed');
-        })
-
-        it('adds vote credit to each investor that voted for the project', async () => {
-          let { firstAddress, secondAddress, firstUint, secondUint } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
-          assert.equal(firstAddress, accounts[2], 'votes credit not added for correct address');
-          assert.equal(firstUint, 500, 'incorrect vote credit amount assigned');
-          assert.equal(secondAddress, accounts[3], 'votes credit not added for correct address');
-          assert.equal(secondUint, 1000, 'iincorrect vote credit amount assigned');
-        })
-
-        it('dequeues the leading project from the projectQueue', async () => {
-          let { called } = await stubUtil.callHistory(pQStub, 'dequeue');
-          assert.equal(called, true, 'leading project was not dequeued');
-        })
-
-        it('resursively calls itself', async () => {
-          let { callCount } = await stubUtil.callHistory(mockGTC, 'tryActivateProject');
-          assert.equal(callCount, 2, 'function was not called recusively');
-        })
-      })
     })
   })
 })

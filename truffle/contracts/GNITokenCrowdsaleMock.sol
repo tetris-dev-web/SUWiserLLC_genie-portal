@@ -32,19 +32,19 @@ constructor
     weiRaised = mockRaised_;
   }
 
-  function mockProjectCount () public returns (uint256) {
+  function mockProjectCount () public view returns (uint256) {
     return projectAddrs.length;
   }
 
-  function mockDoomsDay () public returns (uint256) {
+  function mockDoomsDay () public view returns (uint256) {
     return doomsDay;
   }
 
-  function mockValuation () public returns (uint256) {
+  function mockValuation () public view returns (uint256) {
     return totalValuation;
   }
 
-  function lastAddedAddr () public returns (address) {
+  function lastAddedAddr () public view returns (address) {
     return projectAddrs[projectAddrs.length - 1];
   }
 
@@ -62,18 +62,14 @@ constructor
     projectAddrs.push(projAddr);
   }
 
-  /* function resetProjectAddrs () public {
-    delete projectAddrs;
-  } */
-
-  /* function tryActivateProject () internal {
-    CallData storage methodState = method["tryActivateProject"];
-    methodState.called = true;
-    methodState.callCount = methodState.callCount.add(1);
+  function _addVoteCredit_ (address account, uint256 fromProjectId, uint256 votes) public {
+    super.addVoteCredit_(account, fromProjectId, votes);
   }
-
-  function tryActivateProject_ () public {
-    tryActivateProject();
-    super.tryActivateProject();
-  } */
+  
+  function addVoteCredit_ (address account, uint256 fromProjectId, uint256 votes) internal {
+    CallData storage methodState = method['addVoteCredit_'];
+    methodState.firstAddress = account;
+    methodState.firstUint = fromProjectId;
+    methodState.secondUint = votes;
+  }
 }
