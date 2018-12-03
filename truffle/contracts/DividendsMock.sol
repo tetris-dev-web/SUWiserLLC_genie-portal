@@ -13,6 +13,10 @@ contract DividendsMock is Dividends {
     developer = dev;
   }
 
+  function lastDividendPointsOf(address account) public view returns(uint256) {
+    return lastDividendPoints[account];
+  }
+
   function addMockTotalDividendPonts(uint256 eth, uint256 tokens) public {
     totalDividendPoints = eth.mul(1e18).mul(pointMultiplier).div(tokens);
   }

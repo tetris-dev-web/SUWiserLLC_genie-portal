@@ -16,7 +16,7 @@ contract Dividends {
     investorList = InvestorList(investorList_);
   }
 
-  mapping(address => uint256) lastDividendPoints;
+  mapping(address => uint256) public lastDividendPoints;
 
   uint256 public totalDividendPoints;
   uint256 internal pointMultiplier = 10e30;

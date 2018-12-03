@@ -1,9 +1,16 @@
 pragma solidity ^0.4.24;
 import './ERC20/MintableToken.sol';
 import '../Dividends.sol';
+import '../InvestorList.sol';
+import '../ContractStub.sol';
 
 contract ActivatableToken is MintableToken {
   address public dividendWallet;
+  InvestorList private investorList;
+
+  constructor (InvestorList _investorList) public {
+    investorList = InvestorList(_investorList);
+  }
 
   function initializeDividendWallet(address _dividendWallet) public onlyOwner {
     dividendWallet = _dividendWallet;
@@ -29,21 +36,21 @@ contract ActivatableToken is MintableToken {
     return balances[account].sub(activeBalances[account]);
   }
 
-  mapping(address => uint256) lastActivationPoints;
-  uint256 totalActivationPoints;
-  uint256 totalPendingActivations;
-  uint256 private activationMultiplier = 10e30;
+  mapping(address => uint256) internal lastActivationPoints;
+  uint256 public totalActivationPoints;
+  uint256 public totalPendingActivations;
+  uint256 internal activationMultiplier = 10e30;
+
+  function distributeOwedDividend(address account) internal {
+    Dividends(dividendWallet).distributeDividend(account);
+  }
 
   function activate(address account, uint256 amount) internal {
     require(inactiveBalanceOf(account) >= amount);
+    distributeOwedDividend(account);
 
     activeBalances[account] = activeBalances[account].add(amount);
     totalActiveSupply_ = totalActiveSupply_.add(amount);
-  }
-
-  modifier distributeOwedDividend(address account) {
-    require(Dividends(dividendWallet).distributeDividend(account));
-    _;
   }
 
   function pendingActivations(address account) internal returns (uint256) {
@@ -52,8 +59,7 @@ contract ActivatableToken is MintableToken {
     return inactiveAccountTokens.mul(pendingActivationPoints).div(activationMultiplier);
   }
 
-  //before this, we need to make sure that any pending dividends are distributed to the account. we need to do this to the correct dividend amount is distributed
-  function activatePending (address account) external distributeOwedDividend(account) returns (bool) {
+  function activatePending (address account) external returns (bool) {
     uint256 tokens = pendingActivations(account);
     activate(account, tokens);
     lastActivationPoints[account] = totalActivationPoints;
@@ -66,5 +72,19 @@ contract ActivatableToken is MintableToken {
     uint256 newActivationPoints = amount.mul(activationMultiplier).div(inactiveSupply);
     totalActivationPoints = totalActivationPoints.add(newActivationPoints);
     totalPendingActivations = totalPendingActivations.add(amount);
+  }
+
+  function transferInactive(address _to, uint256 _value) external onlyOwner {
+    require(inactiveBalanceOf(msg.sender) >= _value);
+    super.transfer(_to, _value);
+  }
+
+  function transferActive(address _from, address _to, uint256 _value) internal {
+    activeBalances[_to] = activeBalances[_to].add(_value);
+    activeBalances[_from] = activeBalances[_from].sub(_value);
+
+    investorList.addInvestor(_to);
+    investorList.removeVoteCredit(_from, _value);
+    investorList.addVoteCredit(_to, _value);
   }
 }

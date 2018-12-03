@@ -1,5 +1,8 @@
 const TokenMock = artifacts.require("TokenMock");
+const DividendsStub = artifacts.require("DividendsStub");
 const InvestorListStub = artifacts.require("InvestorListStub");
+const BigNumber = require('bignumber.js');
+const multiplier = new BigNumber('10e30');
 
 const exceptions = require('./exceptions');
 const stubUtil = require('./stubUtil');
@@ -7,6 +10,7 @@ const { parseBN, parseMethod, parseWithArg } = require('./parseUtil');
 
 let accounts;
 let mT;
+let d;
 let iL;
 
 let totalSupplyT1;
@@ -80,62 +84,123 @@ contract('Token', async (_accounts) => {
   })
 
   describe('activate', async () => {
-    describe('when called by the owner', async () => {
-      describe('when the sender has enough tokens to activate', async () => {
-        before(async () => {
-          await mT.activate(accounts[1], 1000, {from: accounts[1]});
-        })
-
-        after(async () => {
-          await resetBalances();
-        })
-
-        it('increases the senders active balance by the amount', async () => {
-          let senderActiveBalanceT2 = await parseWithArg(getActiveBalance, accounts[1]);
-          assert.equal(senderActiveBalanceT2, senderActiveBalanceT1 + 1000, 'active balance not increased by the correct amount');
-        })
-
-        it('decreases the senders inactive balance by the amount', async () => {
-          let senderInactiveBalanceT2 = await parseWithArg(getInactiveBalance, accounts[1]);
-          assert.equal(senderInactiveBalanceT2, senderInactiveBalanceT1 - 1000, 'inactive balance not decreased by the correct amount');
-        })
-
-        it('does not change the senders total balance', async () => {
-          let senderTotalBalanceT2 = await parseWithArg(getTotalBalance, accounts[1]);
-          assert.equal(senderTotalBalanceT2, senderTotalBalanceT1, 'overall balance should not change');
-        })
-
-        it('increases the totalActiveSupply by the amount', async () => {
-          let totalActiveSupplyT2 = await parseMethod(getTotalActiveSupply);
-          assert.equal(totalActiveSupplyT2, totalActiveSupplyT1 + 1000, 'totalActiveSupply should increase by the amount');
-        })
-
-        it('decreases the totalInactiveSupply by the amount', async () => {
-          let totalInactiveSupplyT2 = await parseMethod(getTotalInactiveSupply);
-          assert.equal(totalInactiveSupplyT2, totalInactiveSupplyT1 - 1000, 'totalInactiveSupply should decrease by the amount');
-        })
-
-        it('does not change totalSupply', async () => {
-          let totalSupplyT2 = await parseMethod(getTotalSupply);
-          assert.equal(totalSupplyT2, totalSupplyT1, 'totalSupply should not change');
-        })
+    describe('when the sender has enough tokens to activate', async () => {
+      before(async () => {
+        await stubUtil.addMethod(d, 'distributeDividend');
+        await mT.activate_(accounts[1], 1000, {from: accounts[1]});
       })
 
-      describe('when the sender does not have enough tokens to activate', async () => {
-        after(async () => {
-          await resetBalances();
-        })
-        
-        it('reverts', async () => {
-          await exceptions.catchRevert(mT.activate(accounts[1], 5000));
-        })
+      after(async () => {
+        await resetBalances();
+      })
+
+      it('distributes a dividend to the account', async () => {
+        let { firstAddress, called } = await stubUtil.callHistory(d, 'distributeDividend');
+        assert.equal(firstAddress, accounts[1], 'dividend not distributed to the correct address');
+      })
+
+      it('increases the senders active balance by the amount', async () => {
+        let senderActiveBalanceT2 = await parseWithArg(getActiveBalance, accounts[1]);
+        assert.equal(senderActiveBalanceT2, senderActiveBalanceT1 + 1000, 'active balance not increased by the correct amount');
+      })
+
+      it('decreases the senders inactive balance by the amount', async () => {
+        let senderInactiveBalanceT2 = await parseWithArg(getInactiveBalance, accounts[1]);
+        assert.equal(senderInactiveBalanceT2, senderInactiveBalanceT1 - 1000, 'inactive balance not decreased by the correct amount');
+      })
+
+      it('does not change the senders total balance', async () => {
+        let senderTotalBalanceT2 = await parseWithArg(getTotalBalance, accounts[1]);
+        assert.equal(senderTotalBalanceT2, senderTotalBalanceT1, 'overall balance should not change');
+      })
+
+      it('increases the totalActiveSupply by the amount', async () => {
+        let totalActiveSupplyT2 = await parseMethod(getTotalActiveSupply);
+        assert.equal(totalActiveSupplyT2, totalActiveSupplyT1 + 1000, 'totalActiveSupply should increase by the amount');
+      })
+
+      it('decreases the totalInactiveSupply by the amount', async () => {
+        let totalInactiveSupplyT2 = await parseMethod(getTotalInactiveSupply);
+        assert.equal(totalInactiveSupplyT2, totalInactiveSupplyT1 - 1000, 'totalInactiveSupply should decrease by the amount');
+      })
+
+      it('does not change totalSupply', async () => {
+        let totalSupplyT2 = await parseMethod(getTotalSupply);
+        assert.equal(totalSupplyT2, totalSupplyT1, 'totalSupply should not change');
       })
     })
 
-    describe('when called by an account other than the owner', async () => {
-      it('reverts', async () => {
-        await exceptions.catchRevert(mT.activate(accounts[1], 1000, {from: accounts[0]}));
+    describe('when the sender does not have enough tokens to activate', async () => {
+      after(async () => {
+        await resetBalances();
       })
+
+      it('reverts', async () => {
+        await exceptions.catchRevert(mT.activate_(accounts[1], 5000));
+      })
+    })
+  })
+
+  describe('increasePendingActivations', async () => {
+    let initialPendingActivations;
+    let initialPoints;
+
+    before(async () => {
+      initialPendingActivations = await parseMethod(mT.totalPendingActivations);
+      let points = await mT.totalActivationPoints();
+      initialPoints = new BigNumber(points.toString());
+      await mT.increasePendingActivations(5000000);
+    })
+
+    after(async () => {
+      await resetBalances();
+    })
+
+    it('should increase the totalPendingActivations by the amount', async () => {
+      let finalPendingActivations = await parseMethod(mT.totalPendingActivations);
+      assert.equal(finalPendingActivations, initialPendingActivations + 5000000, 'totalPendingActivations not increased by the amount');
+    })
+
+    it('should increase totaActivationPoints as a function of (wei value * multiplier) / totalTokens', async () => {
+      let points = await mT.totalActivationPoints();
+      let finalPoints = new BigNumber(points.toString());
+      let expected = initialPoints.plus('5000000').times(multiplier).dividedBy('10000').decimalPlaces(0);
+      assert(finalPoints.isEqualTo(expected), 'totalActivationPoints not increased by the proper amount');
+    })
+  })
+
+  describe('activatePending', async () => {
+    let initialPendingActivationPoints;
+    before(async () => {
+      await mT.setMockTotalPendingActivations(5000);
+      await mT.setMockTotalActivationPonts(9000, 10000);
+      await mT.setMockLastActivationPoints(3000, 4000, accounts[2]);
+      await stubUtil.addMethod(mT, 'activate');
+      initialPendingActivationPoints = await mT.totalPendingActivations();
+      await mT.activatePending(accounts[2]);
+    })
+
+    after(async () => {
+      await resetBalances();
+    })
+
+    it('activates tokens as a function of (totalActivationPoints - lastActivationPoints) * inactiveAccountTokens', async () => {
+      let { firstAddress, firstUint } = await stubUtil.callHistory(mT, 'activate');
+      assert.equal(firstAddress, accounts[2], 'tokens not activated for the correct account');
+      assert.equal(firstUint, 1050, 'incorrect number of tokens activated');
+    })
+
+    it('sets the accounts lastActivationPoints to the totallActivationPoints', async () => {
+      let lastPoints = await mT.lastActivationPointsOf(accounts[2]);
+      lastPoints = new BigNumber(lastPoints.toString());
+      let totalPoints = await mT.totalActivationPoints();
+      totalPoints = new BigNumber(totalPoints.toString());
+      assert(lastPoints.isEqualTo(totalPoints), 'lastActivation for account should be set to totalActivationPoints');
+    })
+
+    it('reduces the totalPendingActivations by the number of tokens activated', async () => {
+      let finalPendingActivations = await mT.totalPendingActivations();
+      assert.equal(finalPendingActivations, 3950, 'totalPendingActivations not reduced by the number of tokens activated');
     })
   })
 
@@ -507,12 +572,18 @@ const iLStub = async () => {
   iL = await InvestorListStub.new();
 }
 
+const dStub = async () => {
+  d = await DividendsStub.new(mT.address, accounts[0], iL.address);
+}
+
 const setUp = async () => {
   await iLStub();
   await mockT();
+  await dStub();
   await resetBalances();
   await setValues();
   await mT.transferOwnership(accounts[1], {from: accounts[0]});
+  await mT.initializeDividendWallet(d.address, {from: accounts[1]});
 }
 
 const resetBalances = async () => {

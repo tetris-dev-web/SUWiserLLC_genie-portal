@@ -61,13 +61,13 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    return (developerValue.mul(rate), investorValue.mul(rate));
  }
 
- modifier activatePendingTokens_() {
+ modifier activatePendingTokens() {
    require(Token(token).activatePending(msg.sender));
    _;
  }
 
  //before this, we need to execute any pending token activations for the sender account. We need to do this so that the correct number of tokens are activated
- function buyTokensAndVote (uint256 _projectVotedForId) public payable activatePendingTokens_ {
+ function buyTokensAndVote (uint256 _projectVotedForId) public payable activatePendingTokens {
    uint256 tokens = buyTokens(msg.sender);
    investorList.addInvestor(msg.sender);//test that this is called
 

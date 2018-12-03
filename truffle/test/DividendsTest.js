@@ -7,7 +7,6 @@ const { parseBN, parseMethod, weiBalanceOf } = require('./parseUtil');
 let accounts;
 let mD;
 const multiplier = new BigNumber('10e30');
-console.log('multiplier:', multiplier);
 
 contract('Dividends', async (_accounts) => {
   accounts = _accounts;
@@ -18,6 +17,7 @@ contract('Dividends', async (_accounts) => {
 
   describe('payable', async () => {
     let initialBalance;
+    let initialPoints;
     let addedEther;
 
     before(async () => {
@@ -58,7 +58,7 @@ contract('Dividends', async (_accounts) => {
 
       let accountBalance = await web3.eth.getBalance(accounts[3]);
       initialAccountEth = await web3.fromWei(accountBalance.toNumber(), 'ether');
-      await mD.grantDividend(accounts[3]);
+      await mD.distributeDividend(accounts[3]);
     })
 
     it('distributes a dividend based on the amount owed', async () => {
@@ -73,6 +73,14 @@ contract('Dividends', async (_accounts) => {
 
       assert.equal(accountAddition.toFixed(10), .1666666667, 'incorrect ether amount transferred');
       assert.equal(contractLoss.toFixed(10), accountAddition.toFixed(10), 'ether removed from contract not equal to ether received by account');
+    })
+
+    it('sets the accounts lastDividendPoints to the totallDividendPoints', async () => {
+      let lastPoints = await mD.lastDividendPointsOf(accounts[3]);
+      lastPoints = new BigNumber(lastPoints.toString());
+      let totalPoints = await mD.totalDividendPoints();
+      totalPoints = new BigNumber(totalPoints.toString());
+      assert(lastPoints.isEqualTo(totalPoints), 'lastDividend for account should be set to totalDividendPoints');
     })
   })
 })
