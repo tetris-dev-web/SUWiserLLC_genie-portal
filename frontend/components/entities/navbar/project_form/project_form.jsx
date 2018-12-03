@@ -37,6 +37,7 @@ class ProjectForm extends React.Component {
       accum_projected_cashflow: '',
       cashflow: '',
       accumulatedRevenue: '',
+      capital_required: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -83,6 +84,7 @@ class ProjectForm extends React.Component {
 
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
+    data.append("project[capital_required]", this.state.capital_required);
 
 
     // data.append("project[revenue]", this.state.revenue);
@@ -174,6 +176,10 @@ class ProjectForm extends React.Component {
       }
     });
     return capital;
+  }
+
+  calculateCapitalRequired() {
+    setState({capital_required: this.state.accumulatedRevenue.min()});
   }
 
   calculateDiscountFactor(){

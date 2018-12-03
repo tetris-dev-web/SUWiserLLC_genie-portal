@@ -41,13 +41,13 @@ class CashFlowInputSheet extends React.Component {
     return e => {
       e.preventDefault();
       let cashflow = merge({}, this.state.cashflow);
-      cashflow[quarter]['cashFlow'] = parseInt(e.currentTarget.value);
+      cashflow[quarter].cashFlow = parseInt(e.currentTarget.value);
       const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
       this.setState({ cashflow, accumulatedRevenue });
     };
   }
 
-    renderColor(quarter) {
+  renderColor(quarter) {
     return quarter < this.state.currentQuarter ? "actual-quarter-blue" : "expected-quarter-black";
   }
 
@@ -191,7 +191,8 @@ class CashFlowInputSheet extends React.Component {
           {this.downloadJSONSample()}
         </div>
         <div className="cashflow-submit">
-          <input type="submit" value="SUBMIT" />
+          <input type="submit" value="SUBMIT"
+            onClick={this.closeModalAndSendCashflowDataToPitchForm} />
         </div>
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.closeModalAndSendCashflowDataToPitchForm}>&times;</div>
