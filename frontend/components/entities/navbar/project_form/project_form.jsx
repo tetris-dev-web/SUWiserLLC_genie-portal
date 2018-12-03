@@ -179,11 +179,11 @@ class ProjectForm extends React.Component {
   calculateDiscountFactor(){
     // console.log(this.getFailedProjects());
     let capitalDeployed = this.calculateTotalCapitalDeployed();
-    let discountFactor = (.5 - ((capitalDeployed/190000.0) + (this.getFailedProjects() * 0.06)));
-    if (discountFactor > .10) {
+    let discountFactor = (50 - ((capitalDeployed/190000.0) + (this.getFailedProjects() * 6)));
+    if (discountFactor > 10) {
       return discountFactor;
     } else {
-      return .10;
+      return 10;
     }
   }
 
@@ -198,6 +198,7 @@ class ProjectForm extends React.Component {
 
   receiveCashflowData(cashflowVars){
     cashflowVars;
+    console.log(this);
     //   const {actual_cashflow,
     //   accum_actual_cashflow,
     //   projected_cashflow,
@@ -230,7 +231,9 @@ class ProjectForm extends React.Component {
 
   updateCashflow(cashflow) {
     // Needed to update project state with cashflow state
+    console.log("Updating cashflow with Project Form's function: ", this);
     return e => {
+      console.log("This from updateCashflow function: ", this);
       e.preventDefault();
       this.setState({ 'cashflow': cashflow });
     };
@@ -239,7 +242,7 @@ class ProjectForm extends React.Component {
   updateFile(fileType) {
     // Update to handle other file types eventually.
     // this.parseCashflowData();
-    console.log('Cashflow state is', this.state.cashflow);
+    // console.log('Cashflow state is', this.state.cashflow);
     return e => {
       let file = e.currentTarget.files[0];
       this.setState({ [fileType]: file });

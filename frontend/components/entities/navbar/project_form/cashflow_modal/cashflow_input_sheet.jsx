@@ -1,5 +1,5 @@
 import React from 'react';
-import { keys } from 'lodash';
+import { keys, merge } from 'lodash';
 import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_modules_cashflow';
 import ThumbsUp from '../thumbs_up_svg';
 import { calculateAccumulatedRevenue,  processCashData } from '../../../../../util/project_api_util';
@@ -29,20 +29,20 @@ class CashFlowInputSheet extends React.Component {
     // this.findCurrentQuarter = this.findCurrentQuarter.bind(this);
   }
 
-  handleSubmit() {
+  handleSubmit(e) {
     const { cashflow } = this.state;
-    this.props.updateCashflow(cashflow);
+    console.log("Cashflow from inputsheet is: ", cashflow);
+    this.props.updateCashflow(cashflow)(e);
   }
 
   update(quarter) {
+    // console.log("Type of quarter is: ", typeof quarter);
     return e => {
       e.preventDefault();
-      console.log("State from update function", this.state);
-      let cashflow = Object.assign({}, this.state.cashflow);
-      cashflow[quarter] = e.currentTarget.value;
+      let cashflow = merge({}, this.state.cashflow);
+      cashflow[quarter]['cashFlow'] = parseInt(e.currentTarget.value);
       const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
       this.setState({ cashflow, accumulatedRevenue });
-      console.log(this.state.cashflow);
     };
   }
 
@@ -60,8 +60,9 @@ class CashFlowInputSheet extends React.Component {
     // return content;
   }
 
-  closeModalAndSendCashflowDataToPitchForm(){
-    this.props.closeModal()
+  closeModalAndSendCashflowDataToPitchForm(e){
+    this.handleSubmit(e);
+    this.props.closeModal();
     // this.props.receiveCashflowData(this.state)
   }
 
@@ -192,7 +193,7 @@ class CashFlowInputSheet extends React.Component {
           <input type="submit" value="SUBMIT" />
         </div>
         <div className="blue-close-modal-button close-modal-button"
-          onClick={this.props.closeModal}>&times;</div>
+          onClick={this.closeModalAndSendCashflowDataToPitchForm}>&times;</div>
       </div>
     );
   }
