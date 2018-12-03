@@ -27,11 +27,21 @@ class CashFlowModal extends React.Component {
     Modal.setAppElement('body');
   }
 
-  openModal() {
-    this.setState({openModal: true});
+  componentWillUnmount(){
   }
 
-  closeModal() {
+  openModal() {
+    this.setState({openModal: true});
+    console.log();
+  }
+
+  closeModal(e) {
+    // console.log("this is: ", this);
+    // const { cashflow } = this.cashflowInputSheet.state.cashflow
+    // console.log("refs are: ", this.refs);
+    // console.log("Cashflow from inputsheet is: ", cashflow);
+    // console.log("E is: ", e);
+    // this.props.updateCashflow(cashflow)(e);
     this.setState({openModal: false});
     this.props.receiveCashflowData();
   }
@@ -49,7 +59,8 @@ class CashFlowModal extends React.Component {
           <CashFlowInputSheet closeModal={this.closeModal}
           cashflow={this.props.cashflow}
           quarter={this.props.quarter}
-          updateCashflow={this.props.updateCashflow} />
+          updateCashflow={this.props.updateCashflow}
+          ref={(cashflowInputSheet) => {this.cashflowInputSheet = cashflowInputSheet;}} />
         </Modal>
       </div>
     );

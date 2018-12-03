@@ -32,6 +32,7 @@ class CashFlowInputSheet extends React.Component {
   handleSubmit(e) {
     const { cashflow } = this.state;
     console.log("Cashflow from inputsheet is: ", cashflow);
+    e.preventDefault();
     this.props.updateCashflow(cashflow)(e);
   }
 

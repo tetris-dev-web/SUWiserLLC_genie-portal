@@ -233,6 +233,7 @@ class ProjectForm extends React.Component {
     // Needed to update project state with cashflow state
     console.log("Updating cashflow with Project Form's function: ", this);
     return e => {
+      console.log("Event is: ", e);
       console.log("This from updateCashflow function: ", this);
       e.preventDefault();
       this.setState({ 'cashflow': cashflow });
