@@ -74,7 +74,8 @@ class ProjectModules extends React.Component {
                                       isInvestor = {isInvestor}
                                       summary = {projectClicked.summary}
                                       bus_plan_link = {projectClicked.bus_plan_link} />
-                    <ProjectMap projectClicked={ projectClicked } />
+
+                    <ProjectMap       projectClicked={ projectClicked } />
 
                   </div>
                 </React.Fragment>

@@ -38,14 +38,22 @@ export const editProject = project => {
   });
 };
 
-export const calculateAccumulatedRevenue = (project) => {
+export const getFailedProjects = () => {
+  return $.ajax({
+    method: 'GET',
+    url: 'api/projects/failed_projects_count'
+  });
+};
+
+export const calculateAccumulatedRevenue = (cashflow) => {
   const accumulatedRevenue = {};
   let accumulatedSum = 0;
-  const quarters = keys(project).sort();
+  const quarters = keys(cashflow).map(Number).sort((a, b) => (a - b));
   quarters.forEach(quarter => {
-    accumulatedSum += project[quarter];
-    accumulatedRevenue[quarter] = accumulatedSum;
+    accumulatedSum += cashflow[quarter.toString()]['cashFlow'];
+    accumulatedRevenue[quarter.toString()] = accumulatedSum;
   });
+  console.log('accrev:', accumulatedRevenue)
   return accumulatedRevenue;
 };
 
