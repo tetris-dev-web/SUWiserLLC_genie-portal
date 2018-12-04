@@ -3,6 +3,7 @@ import { totalData } from '../../../../util/token_data_util';
 import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow_modal/cashflow_modal';
+import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
@@ -332,15 +333,12 @@ class ProjectForm extends React.Component {
       let promise = new Promise(function (resolve, reject) {
         let fileReader = new FileReader();
         fileReader.onload = () => {
-          console.log("file reader is loaded");
           resolve(fileReader.result);
         };
         fileReader.readAsDataURL(planPDF);
 
-
         fileReader.onerror = () => {
           fileReader.abort();
-          console.log("Promise aborted!!");
           reject(new DOMException("Problem parsing input file."));
         };
       });
@@ -500,23 +498,17 @@ class ProjectForm extends React.Component {
 
         </div>
 
-        <div className="flexed column">
-          <div className="flexed">
+        <div className="flexed">
             <input className="main-input inputfile" id="file"
               type="file"
               onChange={this.updateFile('planFilePDF')}/>
             <label htmlFor="file">#|choose pdf</label>
 
             <DivWithCorners>
-              <span className="text">plan</span>
+              <span className="text">
+                <PDFModal planFilePDF={this.state.planFilePDF}/>
+              </span>
             </DivWithCorners>
-          </div>
-          {
-            this.state.planFilePDF &&
-            <div>
-              <iframe src={`${this.state.planFilePDF}`} />
-            </div>
-          }
         </div>
         <div className="flexed">
           <input className="main-input inputfile" id="file2"
