@@ -33,7 +33,7 @@ class PDFModal extends React.Component {
 	}
 
 	render() {
-		const { planFilePDF } = this.props;
+		const { planFilePDFDataURL } = this.props;
 		return (
 			<div>
 				<div onClick={this.openModal}>Plan</div>
@@ -41,7 +41,7 @@ class PDFModal extends React.Component {
 					isOpen={this.state.openModal}
 					onRequestClose={this.closeModal}
 					style={ModalStyle}>
-					<iframe className='pdf-upload' src={planFilePDF} />
+					<iframe className='pdf-upload' src={planFilePDFDataURL} />
 				</Modal>
 			</div>
 		);

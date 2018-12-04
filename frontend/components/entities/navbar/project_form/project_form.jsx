@@ -39,7 +39,8 @@ class ProjectForm extends React.Component {
       cashflow: '',
       accumulatedRevenue: '',
       capital_required: '',
-      planFilePDF: null
+      planFilePDFDataURL: null,
+      planFilePDFName: ''
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -261,7 +262,12 @@ class ProjectForm extends React.Component {
           this.setState({cashflow: this.parseCashflowData(file)});
           break;
         case "planFilePDF":
-          this.setState({planFilePDF: this.parsePDF(file)});
+          this.parsePDF(file).then(planFilePDFDataURL => {
+            this.setState({
+              planFilePDFDataURL,
+              planFilePDFName: file.name
+            });
+          });
           break;
         default:
           break;
@@ -343,9 +349,7 @@ class ProjectForm extends React.Component {
         };
       });
 
-      promise.then(planPDF => {
-        this.setState({planFilePDF: planPDF});
-      });
+      return promise;
     }
   }
 
@@ -502,11 +506,11 @@ class ProjectForm extends React.Component {
             <input className="main-input inputfile" id="file"
               type="file"
               onChange={this.updateFile('planFilePDF')}/>
-            <label htmlFor="file">#|choose pdf</label>
+            <label htmlFor="file">{this.state.planFilePDFName || "#|choose pdf"}</label>
 
             <DivWithCorners>
               <span className="text">
-                <PDFModal planFilePDF={this.state.planFilePDF}/>
+                <PDFModal planFilePDFDataURL={this.state.planFilePDFDataURL}/>
               </span>
             </DivWithCorners>
         </div>
