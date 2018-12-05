@@ -56,6 +56,7 @@ class ProjectForm extends React.Component {
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
     this.updateAddress = this.updateAddress.bind(this);
+    this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this)
   }
 
   componentDidMount() {
@@ -174,7 +175,7 @@ class ProjectForm extends React.Component {
   }
 
   calculateCapitalRequired() {
-    setState({capital_required: this.state.accumulatedRevenue.min()});
+    this.setState({capital_required: this.state.accumulatedRevenue.min()});
   }
 
   calculateDiscountFactor(){
@@ -285,19 +286,18 @@ class ProjectForm extends React.Component {
         cashflow = processCashData(cashflowData);
         // cashflow = this.setupCashflow(cashflow, currentQuarter)
         quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
-        // console.log('quarters is:', quarters);
-        // console.log('Cashflow is:', cashflow);
         this.setState({
           cashflow,
           accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
           currentQuarter: this.findCurrentQuarter(quarters, cashflow),
+          // capital_required: this.calculateCapitalRequired(cashflow),
         });
         // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
         console.log("currquar: ", this.state.currentQuarter);
       })
     } else {
       let cashflow;
-      console.log(cashflowData);
+      // console.log(cashflowData);
       cashflowData ? cashflow = cashflowData :  cashflow = sampleProject;
       quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
       // cashflow = this.setupCashflow(cashflow, currentQuarter);
@@ -307,7 +307,6 @@ class ProjectForm extends React.Component {
         accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
         currentQuarter: this.findCurrentQuarter(quarters, cashflow)
       });
-      console.log("currquar: ", this.state.currentQuarter);
     }
   }
 
@@ -489,7 +488,7 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
 
-        <textarea className="description-area" value="description" onChange={this.update('description')} />
+        <textarea className="description-area" value={this.state.value} onChange={this.update('description')} ></textarea>
         <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"
@@ -618,15 +617,15 @@ export default ProjectForm;
 //
 const sampleProject = {
   "1": {
-    "cashFlow": 50000,
+    "cashFlow": -50000,
     "isActuals": true
   },
   "2": {
-    "cashFlow": 40018,
+    "cashFlow": -40018,
     "isActuals": true
   },
   "3": {
-    "cashFlow": 16857,
+    "cashFlow": -16857,
     "isActuals": true
   },
   "4": {
@@ -634,7 +633,7 @@ const sampleProject = {
     "isActuals": true
   },
   "5": {
-    "cashFlow": 20325,
+    "cashFlow": -20325,
     "isActuals": true
   },
   "6": {

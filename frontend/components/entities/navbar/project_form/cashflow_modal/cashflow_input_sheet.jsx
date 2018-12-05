@@ -213,15 +213,15 @@ export default CashFlowInputSheet;
 // cashflow represented as single string for graph
 const sampleProject = {
   "1": {
-    "cashFlow": 30000,
+    "cashFlow": -30000,
     "isActuals": true
   },
   "2": {
-    "cashFlow": 40018,
+    "cashFlow": -40018,
     "isActuals": true
   },
   "3": {
-    "cashFlow": 16857,
+    "cashFlow": -16857,
     "isActuals": true
   },
   "4": {
@@ -229,7 +229,7 @@ const sampleProject = {
     "isActuals": true
   },
   "5": {
-    "cashFlow": 20325,
+    "cashFlow": -20325,
     "isActuals": true
   },
   "6": {
