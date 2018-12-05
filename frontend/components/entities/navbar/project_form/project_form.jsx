@@ -3,6 +3,7 @@ import { totalData } from '../../../../util/token_data_util';
 import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow_modal/cashflow_modal';
+import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
@@ -39,7 +40,8 @@ class ProjectForm extends React.Component {
       cashflow: '',
       accumulatedRevenue: '',
       capital_required: '',
-      drop_pin_clicked: false,
+      planFilePDFDataURL: null,
+      planFilePDFName: ''
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -57,6 +59,7 @@ class ProjectForm extends React.Component {
     this.updateLatLng = this.updateLatLng.bind(this);
     this.updateAddress = this.updateAddress.bind(this);
     this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this)
+    this.parsePDF = this.parsePDF.bind(this);
   }
 
   componentDidMount() {
@@ -248,8 +251,22 @@ class ProjectForm extends React.Component {
     // console.log('Cashflow state is', this.state.cashflow);
     return e => {
       let file = e.currentTarget.files[0];
-      this.setState({ [fileType]: file });
-      this.setState({cashflow: this.parseCashflowData(file)})
+      // this.setState({ [fileType]: file });
+      switch (fileType) {
+        case "cashflow":
+          this.setState({cashflow: this.parseCashflowData(file)});
+          break;
+        case "planFilePDF":
+          this.parsePDF(file).then(planFilePDFDataURL => {
+            this.setState({
+              planFilePDFDataURL,
+              planFilePDFName: file.name
+            });
+          });
+          break;
+        default:
+          break;
+      }
     };
   }
 
@@ -307,6 +324,25 @@ class ProjectForm extends React.Component {
         accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
         currentQuarter: this.findCurrentQuarter(quarters, cashflow)
       });
+    }
+  }
+
+  parsePDF(planPDF) {
+    if (planPDF && planPDF instanceof File) {
+      let promise = new Promise(function (resolve, reject) {
+        let fileReader = new FileReader();
+        fileReader.onload = () => {
+          resolve(fileReader.result);
+        };
+        fileReader.readAsDataURL(planPDF);
+
+        fileReader.onerror = () => {
+          fileReader.abort();
+          reject(new DOMException("Problem parsing input file."));
+        };
+      });
+
+      return promise;
     }
   }
 
@@ -470,13 +506,16 @@ class ProjectForm extends React.Component {
         </div>
 
         <div className="flexed">
-          <input className="main-input inputfile" id="file"
-            type="file"/>
-          <label htmlFor="file">#|choose pdf</label>
+            <input className="main-input inputfile" id="file"
+              type="file"
+              onChange={this.updateFile('planFilePDF')}/>
+            <label htmlFor="file">{this.state.planFilePDFName || "#|choose pdf"}</label>
 
-          <DivWithCorners>
-            <span className="text">plan</span>
-          </DivWithCorners>
+            <DivWithCorners>
+              <span className="text">
+                <PDFModal planFilePDFDataURL={this.state.planFilePDFDataURL}/>
+              </span>
+            </DivWithCorners>
         </div>
         <div className="flexed">
           <input className="main-input inputfile" id="file2"
