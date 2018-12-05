@@ -6,7 +6,6 @@ import './InvestorList.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
 import './TokenStub.sol';
 import './InvestorListStub.sol';
-import './ProjectQueueStub.sol';
 import './ContractStub.sol';
 
 contract GNITokenCrowdsaleMock is GNITokenCrowdsale, ContractStub {
@@ -18,11 +17,10 @@ constructor
     address _developer,
     address _dividendWallet,
     TokenStub _token,
-    InvestorListStub _investorList,
-    ProjectQueueStub _projectQueue
+    InvestorListStub _investorList
   )
   public
-  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _investorList, _projectQueue) {}
+  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _investorList) {}
 
   function receiveMockWei () external payable {
 
@@ -65,11 +63,72 @@ constructor
   function _addVoteCredit_ (address account, uint256 fromProjectId, uint256 votes) public {
     super.addVoteCredit_(account, fromProjectId, votes);
   }
-  
+
   function addVoteCredit_ (address account, uint256 fromProjectId, uint256 votes) internal {
     CallData storage methodState = method['addVoteCredit_'];
     methodState.firstAddress = account;
     methodState.firstUint = fromProjectId;
     methodState.secondUint = votes;
+  }
+
+  function totalChecked () public view returns(uint256) {
+    return checkCycle[currentCheckCycle].totalChecked;
+  }
+
+  function checkedStatusOf(address projectAddr) public view returns (bool) {
+    return checkCycle[currentCheckCycle].isChecked[projectAddr];
+  }
+
+  function setStubProjectCount (uint256 count) public {
+    inactiveProjectCount = count;
+  }
+
+  function setMockTotalChecked(uint256 num) public {
+    checkCycle[currentCheckCycle].totalChecked = num;
+  }
+
+  function setMockConfirmedLeaderStatus (bool status) public {
+    tentativeLeaderConfirmed = status;
+  }
+
+  function setMockTentativeLeader (address mockAddr, uint256 mockCap) public {
+    tentativeLeaderAddr = mockAddr;
+    tentativeLeaderCapRequired = mockCap;
+  }
+
+  function resetMockTentativeProject () public {
+    tentativeLeaderAddr = address(0);
+    tentativeLeaderCapRequired = 0;
+    tentativeLeaderConfirmed = false;
+
+    ProjectsChecked memory newProjectsChecked;
+    currentCheckCycle = currentCheckCycle.add(1);
+    checkCycle[currentCheckCycle] = newProjectsChecked;
+  }
+
+  function considerTentativeLeaderShip (uint256 _projectId) public {
+    CallData storage methodState = method['considerTentativeLeaderShip'];
+    methodState.firstUint = _projectId;
+  }
+
+  function considerTentativeLeaderShip_ (uint256 _projectId) public {
+    super.considerTentativeLeaderShip(_projectId);
+  }
+
+  function attemptProjectActivation () public {
+    CallData storage methodState = method['attemptProjectActivation'];
+    methodState.called = true;
+  }
+
+  function attemptProjectActivation_ () public {
+    super.attemptProjectActivation();
+  }
+
+  function setMockWeiToReimburse (uint256 amount) public {
+    weiToReimburse = amount;
+  }
+
+  function setMockInactiveTokensAtClosing (uint256 amount) public {
+    inactiveTokensAtClosing = amount;
   }
 }

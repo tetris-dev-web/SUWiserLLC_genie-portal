@@ -25,9 +25,9 @@ module.exports = function (deployer, network, accounts) {
         .then(() => {
           return deployer.deploy(TokenMock, InvestorListStub.address);
         })
-        .then(() => {
-          return deployer.deploy(ProjectQueue);
-        })
+        // .then(() => {
+        //   return deployer.deploy(ProjectQueue);
+        // })
         .then(() => {
           return deployer.deploy(MyStringStore);
         })
@@ -68,7 +68,6 @@ module.exports = function (deployer, network, accounts) {
                 Dividends.address,
                 Token.address,
                 InvestorList.address,
-                ProjectQueue.address
             );
         })
         .then(() => {
@@ -79,10 +78,10 @@ module.exports = function (deployer, network, accounts) {
           const investorListInst = InvestorList.at(InvestorList.address);
           return investorListInst.transferOwnership(GNITokenCrowdsale.address);
         })
-        .then(() => {
-          const pQInst = ProjectQueue.at(ProjectQueue.address);
-          return pQInst.transferOwnership(GNITokenCrowdsale.address);
-        })
+        // .then(() => {
+        //   const pQInst = ProjectQueue.at(ProjectQueue.address);
+        //   return pQInst.transferOwnership(GNITokenCrowdsale.address);
+        // })
         .then(() => {
           tokenInstance.transferOwnership(GNITokenCrowdsale.address);
         })

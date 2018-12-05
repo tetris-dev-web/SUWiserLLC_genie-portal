@@ -47,6 +47,20 @@ contract TokenStub is Token, ContractStub {
     return balanceA.add(balanceB).add(balanceC);
   }
 
+  function setStubTotalPendingActivations (uint256 amount) public returns(uint256) {
+    totalPendingActivations = amount;
+  }
+
+  mapping(address => uint256) stubPending;
+
+  function pendingActivations(address account) public returns(uint256) {
+    return stubPending[account];
+  }
+
+  function setStubPendingActivations(address account, uint256 amount) public {
+    stubPending[account] = amount;
+  }
+
   function inactiveBalanceOf (address addr) public view returns (uint256) {
     uint256 b;
 
@@ -95,6 +109,12 @@ contract TokenStub is Token, ContractStub {
     CallData storage methodState = method['activatePending'];
     methodState.firstAddress = account;
     methodState.called = true;
+  }
+
+  function increasePendingActivations(uint256 amount) external {
+    CallData storage methodState = method['increasePendingActivations'];
+    methodState.called = true;
+    methodState.firstUint = amount;
   }
 
   function transferInactive (address _to, uint256 _value) external {

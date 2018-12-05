@@ -53,7 +53,7 @@ contract ActivatableToken is MintableToken {
     totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
 
-  function pendingActivations(address account) internal returns (uint256) {
+  function pendingActivations(address account) public returns (uint256) {
     uint256 pendingActivationPoints = totalActivationPoints.sub(lastActivationPoints[account]);
     uint256 inactiveAccountTokens = inactiveBalanceOf(account);
     return inactiveAccountTokens.mul(pendingActivationPoints).div(activationMultiplier);
