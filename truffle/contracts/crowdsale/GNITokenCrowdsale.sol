@@ -164,19 +164,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    weiToReimburse = weiRaised;
  }
 
- uint256 public calculatedInactive;
- uint256 public calculatedPending;
- uint256 public calculatedDifference;
- uint256 public calculatedR;
  function claimReimbursement (address account) public {//need tests
    uint256 inactiveTokens = Token(token).inactiveBalanceOf(account);
-   calculatedInactive = inactiveTokens;
    uint256 pendingActivations = Token(token).pendingActivations(account);
-   calculatedPending = pendingActivations;
    uint256 accountTokens = inactiveTokens.sub(pendingActivations);
-   calculatedDifference = accountTokens;
    uint256 reimbursement = weiToReimburse.mul(accountTokens).div(inactiveTokensAtClosing);
-   calculatedR = reimbursement;
    account.transfer(reimbursement);
  }
 
