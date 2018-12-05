@@ -1,14 +1,52 @@
 @import "../../util/variables";
 $cornerSize: 5px;
-.main-input {
+.text-input-container {
+  display: flex;
+  align-items: center;
   background-color: $white;
-  margin-bottom: 8px;
   border-radius: 5px;
-  padding: 2px 3px 2px 8px;
+  margin-bottom: 8px;
+
+  &:before {
+    content: "";
+    border-right: 2px solid $db-fade3;
+    color: $db-fade3
+  }
+}
+
+.text-input {
+  width: 100%;
+  padding: 2px 3px;
   color: $black;
-  width: 80%;
   &::-webkit-input-placeholder {
     color: $db-fade3;
+  }
+}
+
+.file-input-container {
+  display: flex;
+}
+
+.file-input {
+  overflow: hidden;
+  position: relative;
+  width: 20px;
+  height: 20px;
+
+  input {
+    filter: alpha(opacity=1);
+    -moz-opacity: 0.01;
+    opacity: 0.01;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+// for now
+
+  svg {
+    width: 100%;
+    fill: #fff;
   }
 }
 
@@ -49,15 +87,27 @@ $cornerSize: 5px;
 .form-box {
   height: 100%;
   justify-content: space-between;
-  .lat-input,.long-input{
+  .project-title-input-container {
+    width: 80%;
+    &:before {
+      width: 25px;
+      height: 14px;
+    }
+  }
+  .lat-input-container,
+  .long-input-container {
     font-size: 10px;
     width: 55px;
+    &:before {
+      width: 20px;
+      height: 14px;
+    }
   }
   .flexed {
     width: 90%;
     justify-content: space-between;
     input[type=file]{
-      width: 50%;
+      width: 100%;
     }
   }
   .description-area{
@@ -308,12 +358,8 @@ $cornerSize: 5px;
 }
 
 .inputfile {
-	width: 0.1px;
-	height: 0.1px;
 	opacity: 0;
-	overflow: hidden;
 	position: absolute;
-	z-index: -1;
 }
 
 .inputfile + label {
