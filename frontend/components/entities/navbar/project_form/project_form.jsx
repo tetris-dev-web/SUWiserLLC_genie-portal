@@ -1,6 +1,6 @@
 import React from 'react';
 import { totalData } from '../../../../util/token_data_util';
-import { roundToTwo } from '../../../../util/function_util';
+import { roundToTwo, getFileExtension } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow_modal/cashflow_modal';
 import PDFModal from './pdf_modal/pdf_modal';
@@ -37,9 +37,10 @@ class ProjectForm extends React.Component {
       projected_cashflow: '',
       accum_projected_cashflow: '',
       cashflow: '',
+      cashflowJSONName: '',
       accumulatedRevenue: '',
       capital_required: '',
-      planFilePDFDataURL: null,
+      planFilePDFDataURL: '',
       planFilePDFName: ''
     };
 
@@ -52,8 +53,6 @@ class ProjectForm extends React.Component {
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
-    this.parseCashflowData = this.parseCashflowData.bind(this);
-    this.parsePDF = this.parsePDF.bind(this);
   }
 
   componentDidMount() {
@@ -251,18 +250,31 @@ class ProjectForm extends React.Component {
   }
 
   updateFile(fileType) {
-    // Update to handle other file types eventually.
+    // Update to handle other file types eventually. (now handles JSON and PDF)
     // this.parseCashflowData();
     // console.log('Cashflow state is', this.state.cashflow);
     return e => {
       let file = e.currentTarget.files[0];
-      // this.setState({ [fileType]: file });
+      
       switch (fileType) {
-        case "cashflow":
-          this.setState({cashflow: this.parseCashflowData(file)});
+        case "cashflowJSON":
+          this.parseInputFile(file).then(cashflowData => {
+            let cashflow = processCashData(cashflowData);
+            // cashflow = this.setupCashflow(cashflow, currentQuarter)
+            let quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
+            // console.log('quarters is:', quarters);
+            // console.log('Cashflow is:', cashflow);
+            this.setState({
+              cashflow,
+              cashflowJSONName: file.name,
+              accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
+              currentQuarter: this.findCurrentQuarter(quarters, cashflow),
+            });
+            // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
+          });
           break;
         case "planFilePDF":
-          this.parsePDF(file).then(planFilePDFDataURL => {
+          this.parseInputFile(file).then(planFilePDFDataURL => {
             this.setState({
               planFilePDFDataURL,
               planFilePDFName: file.name
@@ -275,73 +287,24 @@ class ProjectForm extends React.Component {
     };
   }
 
-  parseCashflowData(cashflowData) {
-    // let cashflowData = this.state.cashflow;
-    let promise;
-    let quarters;
-    if (cashflowData && cashflowData instanceof File) {
-      //file reader to read file, parse json, substitute json in for cashflow below
-      //doesnt work when you pass file into function, file in function is undefined
-      let content;
-      let cashflow;
-      promise = new Promise(function(resolve, reject){
-        let fileReader = new FileReader();
-        fileReader.onload = () => {
-          console.log("Promise is running");
-          content = fileReader.result;
-          cashflowData = content;
-          resolve(cashflowData)
-        };
-        // console.log("Resolve return",fileReader.readAsText(cashflowData));
-        fileReader.readAsText(cashflowData);
-
-
-        fileReader.onerror = () => {
-          fileReader.abort();
-          console.log("Promise aborted!!");
-          reject(new DOMException("Problem parsing input file."));
-        };
-
-      })
-
-      promise.then((cashflowData) => {
-        cashflow = processCashData(cashflowData);
-        // cashflow = this.setupCashflow(cashflow, currentQuarter)
-        quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
-        // console.log('quarters is:', quarters);
-        // console.log('Cashflow is:', cashflow);
-        this.setState({
-          cashflow,
-          accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
-          currentQuarter: this.findCurrentQuarter(quarters, cashflow),
-        });
-        // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
-        console.log("currquar: ", this.state.currentQuarter);
-      })
-    } else {
-      let cashflow;
-      console.log(cashflowData);
-      cashflowData ? cashflow = cashflowData :  cashflow = sampleProject;
-      quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
-      // cashflow = this.setupCashflow(cashflow, currentQuarter);
-      console.log("Else clause is running");
-      this.setState({
-        cashflow,
-        accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
-        currentQuarter: this.findCurrentQuarter(quarters, cashflow)
-      });
-      console.log("currquar: ", this.state.currentQuarter);
-    }
-  }
-
-  parsePDF(planPDF) {
-    if (planPDF && planPDF instanceof File) {
+  parseInputFile(file) {
+    if (file && file instanceof File) {
       let promise = new Promise(function (resolve, reject) {
         let fileReader = new FileReader();
         fileReader.onload = () => {
           resolve(fileReader.result);
         };
-        fileReader.readAsDataURL(planPDF);
+
+        switch (getFileExtension(file.name)) {
+          case "json":
+            fileReader.readAsText(file);
+            break;
+          case "pdf":
+            fileReader.readAsDataURL(file);
+            break;
+          default:
+            break;
+        }
 
         fileReader.onerror = () => {
           fileReader.abort();
@@ -461,8 +424,8 @@ class ProjectForm extends React.Component {
         <div className="flexed">
           <input className="main-input inputfile" id="json-file"
             type="file"
-            onChange={this.updateFile('cashflow')} />
-          <label htmlFor="json-file"> #| choose json</label>
+            onChange={this.updateFile('cashflowJSON')} />
+          <label htmlFor="json-file">{this.state.cashflowJSONName || " #| choose json"}</label>
           <input id="current-quarter"
             type="number"
             onChange={this.update('currentQuarter')} />
@@ -506,7 +469,7 @@ class ProjectForm extends React.Component {
             <input className="main-input inputfile" id="file"
               type="file"
               onChange={this.updateFile('planFilePDF')}/>
-            <label htmlFor="file">{this.state.planFilePDFName || "#|choose pdf"}</label>
+            <label htmlFor="file">{this.state.planFilePDFName || " #|choose pdf"}</label>
 
             <DivWithCorners>
               <span className="text">
