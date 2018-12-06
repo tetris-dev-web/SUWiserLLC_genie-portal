@@ -26,6 +26,7 @@ class DropPinMap extends React.Component {
 
   updateMarker(e) {
     this.props.updateLatLng(e.latlng);
+    this.props.displayLatLng(e.latlng);
     this.setState({marker: e.latlng});
     Geocode.setApiKey('AIzaSyBdh7dx8oKj5iDtCAzBBCLNOEA94nf8Cl8');
     Geocode.fromLatLng(this.state.marker.lat, this.state.marker.lng).then(
