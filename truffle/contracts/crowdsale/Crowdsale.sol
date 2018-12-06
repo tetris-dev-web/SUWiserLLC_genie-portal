@@ -25,15 +25,15 @@ contract Crowdsale {
 
   Token public token;
 
-  address public developer;
+  address internal developer;
   // How many token units a buyer gets per wei.
   // The rate is the conversion between wei and the smallest and indivisible token unit.
   // So, if you are using a rate of 1 with a DetailedERC20 token with 3 decimals called TOK
   // 1 wei will give you 1 unit, or 0.001 TOK.
-  uint256 public rate;
+  uint256 internal rate;
 
   // Amount of wei raised
-  uint256 public weiRaised;
+  uint256 internal weiRaised;
 
   /**
    * Event for token purchase logging
@@ -70,7 +70,7 @@ contract Crowdsale {
   /**
    * @dev fallback function ***DO NOT OVERRIDE***
    */
-  function () external payable {
+  function () public payable {
     /* buyTokens(msg.sender); */
   }
   /**
@@ -78,7 +78,6 @@ contract Crowdsale {
    * @param _beneficiary Address performing the token purchase
    */
   function buyTokens(address _beneficiary) public payable returns (uint256) {
-
     uint256 weiAmount = msg.value;
     _preValidatePurchase(_beneficiary, weiAmount);
 
@@ -88,8 +87,8 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    /* Token(token).transfer(_beneficiary, tokens); */
-    _processPurchase(_beneficiary, tokens);
+    Token(token).transferInactive(_beneficiary, tokens);
+    /* _processPurchase(_beneficiary, tokens); */
 
     emit TokenPurchase(
       msg.sender,
@@ -104,6 +103,10 @@ contract Crowdsale {
 
     /* _forwardFunds(); */
     /* _postValidatePurchase(_beneficiary, weiAmount); */
+  }
+
+  function weiRaised_() public returns(uint256) {
+    return weiRaised;
   }
 
   // -----------------------------------------
@@ -147,28 +150,28 @@ contract Crowdsale {
    * @param _beneficiary Address performing the token purchase
    * @param _tokenAmount Number of tokens to be emitted
    */
-  function _deliverTokens(
+  /* function _deliverTokens(
     address _beneficiary,
     uint256 _tokenAmount
   )
     internal
   {
     token.safeTransfer(_beneficiary, _tokenAmount);
-  }
+  } */
 
   /**
    * @dev Executed when a purchase has been validated and is ready to be executed. Not necessarily emits/sends tokens.
    * @param _beneficiary Address receiving the tokens
    * @param _tokenAmount Number of tokens to be purchased
    */
-  function _processPurchase(
+  /* function _processPurchase(
     address _beneficiary,
     uint256 _tokenAmount
   )
     internal
   {
     _deliverTokens(_beneficiary, _tokenAmount);
-  }
+  } */
 
   /**
    * @dev Override for extensions that require an internal state to check for validity (current user contributions, etc.)

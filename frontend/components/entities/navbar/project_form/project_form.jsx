@@ -1,11 +1,12 @@
 import React from 'react';
 import { totalData } from '../../../../util/token_data_util';
-import { roundToTwo } from '../../../../util/function_util';
+import { roundToTwo, getFileExtension } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow_modal/cashflow_modal';
+import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
-import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
+import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal';
 
 
@@ -37,9 +38,11 @@ class ProjectForm extends React.Component {
       projected_cashflow: '',
       accum_projected_cashflow: '',
       cashflow: '',
+      cashflowJSONName: '',
       accumulatedRevenue: '',
       capital_required: '',
-      drop_pin_clicked: false,
+      planFilePDFDataURL: '',
+      planFilePDFName: ''
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -51,11 +54,13 @@ class ProjectForm extends React.Component {
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
-    this.parseCashflowData = this.parseCashflowData.bind(this);
+    // this.parseCashflowData = this.parseCashflowData.bind(this);
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
     this.updateAddress = this.updateAddress.bind(this);
+    this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this);
+    this.parseInputFile = this.parseInputFile.bind(this);
   }
 
   componentDidMount() {
@@ -85,13 +90,20 @@ class ProjectForm extends React.Component {
     data.append("project[continent]", this.state.continent);
 
     data.append("project[valuation]", this.state.valuation);
-    data.append("project[cashflow]", this.state.cashflow);
+    data.append("project[cashflow]", JSON.stringify(this.state.cashflow));
     data.append("project[creator_id]", this.props.currentUser.id);
 
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
     data.append("project[capital_required]", this.state.capital_required);
-
+    data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow))
+    data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow))
+    data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow))
+    data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow))
+    // data.append("project[planFilePDFDataURL]", this.state.planFilePDFDataURL)
+    //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
+    //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving
+    //Object in frontend with JSON.parse
 
     data.append("project[revenue]", this.state.revenue);
     // formData.append("project[icon]", this.state.icon);
@@ -174,7 +186,7 @@ class ProjectForm extends React.Component {
   }
 
   calculateCapitalRequired() {
-    setState({capital_required: this.state.accumulatedRevenue.min()});
+    this.setState({capital_required: this.state.accumulatedRevenue.min()});
   }
 
   calculateDiscountFactor(){
@@ -196,6 +208,15 @@ class ProjectForm extends React.Component {
     let netPresentValue = finance.NPV(discountFactor, 0, ...cashflows);
     return netPresentValue;
   }
+
+  // calculateCashflowData(){
+  //   if(this.state.cashflow){
+  //     let actual_cashflow
+  //     let accum_actual_cashflow
+  //     let accum_projected_cashflow
+  //     let projected_cashflow
+  //   }
+  // }
 
   receiveCashflowData(cashflowVars){
     cashflowVars;
@@ -242,72 +263,69 @@ class ProjectForm extends React.Component {
   }
 
   updateFile(fileType) {
-    // Update to handle other file types eventually.
+    // Update to handle other file types eventually. (now handles JSON and PDF)
     // this.parseCashflowData();
     // console.log('Cashflow state is', this.state.cashflow);
     return e => {
       let file = e.currentTarget.files[0];
-      this.setState({ [fileType]: file });
-      this.setState({cashflow: this.parseCashflowData(file)})
+
+      switch (fileType) {
+        case "cashflowJSON":
+          this.parseInputFile(file).then(cashflowData => {
+            let cashflow = processCashData(cashflowData);
+            // cashflow = this.setupCashflow(cashflow, currentQuarter)
+            let quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
+            // console.log('quarters is:', quarters);
+            // console.log('Cashflow is:', cashflow);
+            this.setState({
+              cashflow,
+              cashflowJSONName: file.name,
+              accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
+              currentQuarter: this.findCurrentQuarter(quarters, cashflow),
+            });
+            // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
+          });
+          break;
+        case "planFilePDF":
+          this.parseInputFile(file).then(planFilePDFDataURL => {
+            this.setState({
+              planFilePDFDataURL,
+              planFilePDFName: file.name
+            });
+          });
+          break;
+        default:
+          break;
+      }
     };
   }
 
-  parseCashflowData(cashflowData) {
-    // let cashflowData = this.state.cashflow;
-    let promise;
-    let quarters;
-    if (cashflowData && cashflowData instanceof File) {
-      //file reader to read file, parse json, substitute json in for cashflow below
-      //doesnt work when you pass file into function, file in function is undefined
-      let content;
-      let cashflow;
-      promise = new Promise(function(resolve, reject){
+  parseInputFile(file) {
+    if (file && file instanceof File) {
+      let promise = new Promise(function (resolve, reject) {
         let fileReader = new FileReader();
         fileReader.onload = () => {
-          console.log("Promise is running");
-          content = fileReader.result;
-          cashflowData = content;
-          resolve(cashflowData)
+          resolve(fileReader.result);
         };
-        // console.log("Resolve return",fileReader.readAsText(cashflowData));
-        fileReader.readAsText(cashflowData);
 
+        switch (getFileExtension(file.name)) {
+          case "json":
+            fileReader.readAsText(file);
+            break;
+          case "pdf":
+            fileReader.readAsDataURL(file);
+            break;
+          default:
+            break;
+        }
 
         fileReader.onerror = () => {
           fileReader.abort();
-          console.log("Promise aborted!!");
           reject(new DOMException("Problem parsing input file."));
         };
-
-      })
-
-      promise.then((cashflowData) => {
-        cashflow = processCashData(cashflowData);
-        // cashflow = this.setupCashflow(cashflow, currentQuarter)
-        quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
-        // console.log('quarters is:', quarters);
-        // console.log('Cashflow is:', cashflow);
-        this.setState({
-          cashflow,
-          accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
-          currentQuarter: this.findCurrentQuarter(quarters, cashflow),
-        });
-        // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
-        console.log("currquar: ", this.state.currentQuarter);
-      })
-    } else {
-      let cashflow;
-      console.log(cashflowData);
-      cashflowData ? cashflow = cashflowData :  cashflow = sampleProject;
-      quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
-      // cashflow = this.setupCashflow(cashflow, currentQuarter);
-      console.log("Else clause is running");
-      this.setState({
-        cashflow,
-        accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
-        currentQuarter: this.findCurrentQuarter(quarters, cashflow)
       });
-      console.log("currquar: ", this.state.currentQuarter);
+
+      return promise;
     }
   }
 
@@ -393,25 +411,31 @@ class ProjectForm extends React.Component {
     } = this.state;
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
-        <input className="main-input project-title-input"
-          type="text"
-          placeholder="#| project name"
-          value={title}
-          onChange={this.update('title')} />
+        <div className="text-input-container project-title-input-container">
+          <input className="text-input project-title-input"
+            type="text"
+            placeholder="project name"
+            value={title}
+            onChange={this.update('title')} />
+        </div>
 
         <div className="flexed">
-          <input className="main-input lat-input"
-            type="number"
-            step="any"
-            placeholder="#| lat"
-            value={latitude}
-            onChange={this.update('latitude')} />
-          <input className="main-input long-input"
-            type="number"
-            step="any"
-            placeholder="#| long"
-            value={longitude}
-            onChange={this.update('longitude')} />
+          <div className="text-input-container lat-input-container">
+            <input className="text-input lat-input"
+              type="number"
+              step="any"
+              placeholder="lat"
+              value={latitude}
+              onChange={this.update('latitude')} />
+          </div>
+          <div className="text-input-container long-input-container">
+            <input className="text-input long-input"
+              type="number"
+              step="any"
+              placeholder="long"
+              value={longitude}
+              onChange={this.update('longitude')} />
+          </div>
           <DivWithCorners>
             <span className="text">
               <DropPinModal
@@ -427,14 +451,25 @@ class ProjectForm extends React.Component {
         </div>
         {this.renderLatLngErrors(this.state.drop_pin_clicked)}
         <div className="flexed">
-          <input className="main-input inputfile" id="json-file"
-            type="file"
-            onChange={this.updateFile('cashflow')} />
-          <label htmlFor="json-file"> #| choose json</label>
-          <input id="current-quarter"
-            type="number"
-            onChange={this.update('currentQuarter')} />
-          <label htmlFor="current-quarter"> current qtr</label>
+          <div>
+
+            <div className="file-input-container">
+              <div className="file-input">
+                <input
+                  type="file"
+                  onChange={this.updateFile('cashflowJSON')} />
+                <svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg"><path d="m456 176h-52c-.847656-2.175781-1.777344-4.390625-2.785156-6.679688l36.800781-36.800781c9.378906-9.375 9.378906-24.578125 0-33.953125l-56.558594-56.558594c-9.375-9.378906-24.578125-9.378906-33.953125 0l-36.800781 36.800782c-2.289063-1.007813-4.503906-1.9375-6.679687-2.785156v-52.023438c0-13.253906-10.746094-24-24-24h-80.023438c-13.253906 0-24 10.746094-24 24v52c-2.175781.847656-4.390625 1.777344-6.679688 2.785156l-36.800781-36.800781c-9.375-9.378906-24.578125-9.378906-33.953125 0l-56.566406 56.558594c-9.359375 9.382812-9.359375 24.570312 0 33.953125l36.800781 36.800781c-1.007812 2.289063-1.9375 4.503906-2.785156 6.679687h-52.015625c-13.253906 0-24 10.746094-24 24v80.023438c0 13.253906 10.746094 24 24 24h52c.847656 2.175781 1.777344 4.390625 2.785156 6.679688l-36.800781 36.800781c-9.378906 9.375-9.378906 24.578125 0 33.953125l56.558594 56.558594c9.382812 9.359374 24.570312 9.359374 33.953125 0l36.800781-36.800782c2.289063 1.007813 4.503906 1.9375 6.679687 2.785156v52.023438c0 13.253906 10.746094 24 24 24h80.023438c13.253906 0 24-10.746094 24-24v-52c2.175781-.847656 4.390625-1.777344 6.679688-2.785156l36.800781 36.800781c9.382812 9.359375 24.570312 9.359375 33.953125 0l56.566406-56.558594c9.359375-9.382812 9.359375-24.570312 0-33.953125l-36.800781-36.800781c1.007812-2.289063 1.9375-4.503906 2.785156-6.679687h52.015625c13.253906 0 24-10.746094 24-24v-80.023438c0-13.253906-10.746094-24-24-24zm8 104c0 4.417969-3.582031 8-8 8h-57.601562c-3.417969 0-6.457032 2.171875-7.566407 5.40625-1.847656 5.300781-4.003906 10.492188-6.449219 15.546875-1.449218 3.066406-.808593 6.714844 1.601563 9.101563l40.71875 40.722656c1.503906 1.5 2.351563 3.539062 2.351563 5.664062s-.847657 4.160156-2.351563 5.664063l-56.558594 56.558593c-3.171875 3.019532-8.15625 3.019532-11.328125 0l-40.71875-40.71875c-2.390625-2.410156-6.039062-3.050781-9.105468-1.601562-5.054688 2.445312-10.242188 4.597656-15.542969 6.449219-3.265625 1.097656-5.460938 4.164062-5.449219 7.605469v57.601562c0 4.417969-3.582031 8-8 8h-80c-4.417969 0-8-3.582031-8-8v-57.601562c0-3.417969-2.171875-6.457032-5.40625-7.566407-5.300781-1.847656-10.492188-4.003906-15.546875-6.449219-3.066406-1.449218-6.714844-.808593-9.101563 1.601563l-40.722656 40.71875c-3.171875 3.019531-8.152344 3.019531-11.328125 0l-56.558593-56.558594c-1.503907-1.5-2.351563-3.539062-2.351563-5.664062s.847656-4.164063 2.351563-5.664063l40.71875-40.71875c2.410156-2.390625 3.050781-6.039062 1.601562-9.105468-2.445312-5.054688-4.597656-10.242188-6.449219-15.542969-1.097656-3.265625-4.164062-5.460938-7.605469-5.449219h-57.601562c-4.417969 0-8-3.582031-8-8v-80c0-4.417969 3.582031-8 8-8h57.601562c3.417969 0 6.457032-2.171875 7.566407-5.40625 1.847656-5.300781 4.003906-10.492188 6.449219-15.546875 1.449218-3.066406.808593-6.714844-1.601563-9.101563l-40.71875-40.722656c-1.503906-1.5-2.351563-3.539062-2.351563-5.664062s.847657-4.160156 2.351563-5.664063l56.558594-56.558593c3.167969-3.027344 8.160156-3.027344 11.328125 0l40.71875 40.71875c2.390625 2.410156 6.039062 3.050781 9.105468 1.601562 5.054688-2.445312 10.242188-4.597656 15.542969-6.449219 3.265625-1.097656 5.460938-4.164062 5.449219-7.605469v-57.601562c0-4.417969 3.582031-8 8-8h80c4.417969 0 8 3.582031 8 8v57.601562c0 3.417969 2.171875 6.457032 5.40625 7.566407 5.300781 1.847656 10.492188 4.003906 15.546875 6.449219 3.066406 1.449218 6.714844.808593 9.101563-1.601563l40.722656-40.71875c3.171875-3.019531 8.152344-3.019531 11.328125 0l56.558593 56.558594c1.503907 1.5 2.351563 3.539062 2.351563 5.664062s-.847656 4.164063-2.351563 5.664063l-40.71875 40.71875c-2.410156 2.390625-3.050781 6.039062-1.601562 9.105468 2.445312 5.054688 4.597656 10.242188 6.449219 15.542969 1.097656 3.265625 4.164062 5.460938 7.605469 5.449219h57.601562c4.417969 0 8 3.582031 8 8zm0 0" /><path d="m240 136c-57.4375 0-104 46.5625-104 104s46.5625 104 104 104 104-46.5625 104-104c-.066406-57.410156-46.589844-103.933594-104-104zm0 192c-48.601562 0-88-39.398438-88-88s39.398438-88 88-88 88 39.398438 88 88c-.058594 48.578125-39.421875 87.941406-88 88zm0 0" /></svg>
+              </div>
+                <label htmlFor="json-file">{this.state.cashflowJSONName || " #| choose json"}</label>
+            </div>
+
+
+            <input id="current-quarter"
+              type="number"
+              onChange={this.update('currentQuarter')} />
+            <label htmlFor="current-quarter"> current qtr</label>
+
+          </div>
 
           <DivWithCorners>
             <span className="text">
@@ -471,16 +506,25 @@ class ProjectForm extends React.Component {
         </div>
 
         <div className="flexed">
-          <input className="main-input inputfile" id="file"
-            type="file"/>
-          <label htmlFor="file">#|choose pdf</label>
+          <div className="file-input-container">
+            <div className="file-input">
+              <input
+                id="file"
+                type="file"
+                onChange={this.updateFile('planFilePDF')} />
+              <svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg"><path d="m456 176h-52c-.847656-2.175781-1.777344-4.390625-2.785156-6.679688l36.800781-36.800781c9.378906-9.375 9.378906-24.578125 0-33.953125l-56.558594-56.558594c-9.375-9.378906-24.578125-9.378906-33.953125 0l-36.800781 36.800782c-2.289063-1.007813-4.503906-1.9375-6.679687-2.785156v-52.023438c0-13.253906-10.746094-24-24-24h-80.023438c-13.253906 0-24 10.746094-24 24v52c-2.175781.847656-4.390625 1.777344-6.679688 2.785156l-36.800781-36.800781c-9.375-9.378906-24.578125-9.378906-33.953125 0l-56.566406 56.558594c-9.359375 9.382812-9.359375 24.570312 0 33.953125l36.800781 36.800781c-1.007812 2.289063-1.9375 4.503906-2.785156 6.679687h-52.015625c-13.253906 0-24 10.746094-24 24v80.023438c0 13.253906 10.746094 24 24 24h52c.847656 2.175781 1.777344 4.390625 2.785156 6.679688l-36.800781 36.800781c-9.378906 9.375-9.378906 24.578125 0 33.953125l56.558594 56.558594c9.382812 9.359374 24.570312 9.359374 33.953125 0l36.800781-36.800782c2.289063 1.007813 4.503906 1.9375 6.679687 2.785156v52.023438c0 13.253906 10.746094 24 24 24h80.023438c13.253906 0 24-10.746094 24-24v-52c2.175781-.847656 4.390625-1.777344 6.679688-2.785156l36.800781 36.800781c9.382812 9.359375 24.570312 9.359375 33.953125 0l56.566406-56.558594c9.359375-9.382812 9.359375-24.570312 0-33.953125l-36.800781-36.800781c1.007812-2.289063 1.9375-4.503906 2.785156-6.679687h52.015625c13.253906 0 24-10.746094 24-24v-80.023438c0-13.253906-10.746094-24-24-24zm8 104c0 4.417969-3.582031 8-8 8h-57.601562c-3.417969 0-6.457032 2.171875-7.566407 5.40625-1.847656 5.300781-4.003906 10.492188-6.449219 15.546875-1.449218 3.066406-.808593 6.714844 1.601563 9.101563l40.71875 40.722656c1.503906 1.5 2.351563 3.539062 2.351563 5.664062s-.847657 4.160156-2.351563 5.664063l-56.558594 56.558593c-3.171875 3.019532-8.15625 3.019532-11.328125 0l-40.71875-40.71875c-2.390625-2.410156-6.039062-3.050781-9.105468-1.601562-5.054688 2.445312-10.242188 4.597656-15.542969 6.449219-3.265625 1.097656-5.460938 4.164062-5.449219 7.605469v57.601562c0 4.417969-3.582031 8-8 8h-80c-4.417969 0-8-3.582031-8-8v-57.601562c0-3.417969-2.171875-6.457032-5.40625-7.566407-5.300781-1.847656-10.492188-4.003906-15.546875-6.449219-3.066406-1.449218-6.714844-.808593-9.101563 1.601563l-40.722656 40.71875c-3.171875 3.019531-8.152344 3.019531-11.328125 0l-56.558593-56.558594c-1.503907-1.5-2.351563-3.539062-2.351563-5.664062s.847656-4.164063 2.351563-5.664063l40.71875-40.71875c2.410156-2.390625 3.050781-6.039062 1.601562-9.105468-2.445312-5.054688-4.597656-10.242188-6.449219-15.542969-1.097656-3.265625-4.164062-5.460938-7.605469-5.449219h-57.601562c-4.417969 0-8-3.582031-8-8v-80c0-4.417969 3.582031-8 8-8h57.601562c3.417969 0 6.457032-2.171875 7.566407-5.40625 1.847656-5.300781 4.003906-10.492188 6.449219-15.546875 1.449218-3.066406.808593-6.714844-1.601563-9.101563l-40.71875-40.722656c-1.503906-1.5-2.351563-3.539062-2.351563-5.664062s.847657-4.160156 2.351563-5.664063l56.558594-56.558593c3.167969-3.027344 8.160156-3.027344 11.328125 0l40.71875 40.71875c2.390625 2.410156 6.039062 3.050781 9.105468 1.601562 5.054688-2.445312 10.242188-4.597656 15.542969-6.449219 3.265625-1.097656 5.460938-4.164062 5.449219-7.605469v-57.601562c0-4.417969 3.582031-8 8-8h80c4.417969 0 8 3.582031 8 8v57.601562c0 3.417969 2.171875 6.457032 5.40625 7.566407 5.300781 1.847656 10.492188 4.003906 15.546875 6.449219 3.066406 1.449218 6.714844.808593 9.101563-1.601563l40.722656-40.71875c3.171875-3.019531 8.152344-3.019531 11.328125 0l56.558593 56.558594c1.503907 1.5 2.351563 3.539062 2.351563 5.664062s-.847656 4.164063-2.351563 5.664063l-40.71875 40.71875c-2.410156 2.390625-3.050781 6.039062-1.601562 9.105468 2.445312 5.054688 4.597656 10.242188 6.449219 15.542969 1.097656 3.265625 4.164062 5.460938 7.605469 5.449219h57.601562c4.417969 0 8 3.582031 8 8zm0 0" /><path d="m240 136c-57.4375 0-104 46.5625-104 104s46.5625 104 104 104 104-46.5625 104-104c-.066406-57.410156-46.589844-103.933594-104-104zm0 192c-48.601562 0-88-39.398438-88-88s39.398438-88 88-88 88 39.398438 88 88c-.058594 48.578125-39.421875 87.941406-88 88zm0 0" /></svg>
+            </div>
+            <label htmlFor="file">{this.state.planFilePDFName || " #|choose pdf"}</label>
+          </div>
 
           <DivWithCorners>
-            <span className="text">plan</span>
+            <span className="text">
+              <PDFModal planFilePDFDataURL={this.state.planFilePDFDataURL}/>
+            </span>
           </DivWithCorners>
         </div>
         <div className="flexed">
-          <input className="main-input inputfile" id="file2"
+          <input className="text-input inputfile" id="file2"
             type="file"/>
           <label htmlFor="file">#|model id</label>
 
@@ -489,7 +533,7 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
 
-        <textarea className="description-area" value="description" onChange={this.update('description')} />
+        <textarea className="summary-area" value={this.state.value} onChange={this.update('summary')} ></textarea>
         <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"
@@ -502,7 +546,7 @@ class ProjectForm extends React.Component {
 
 export default ProjectForm;
 
-// <select className="main-input continent-input"
+// <select className="text-input continent-input"
 //   value={continent}
 //   onChange={this.update('continent')}>
 //     <option value="" disabled>Continent</option>
@@ -513,24 +557,24 @@ export default ProjectForm;
 //     <option value="Asia">Asia</option>
 //     <option value="Australia">Australia</option>
 // </select>
-// <input className="main-input city-input"
+// <input className="text-input city-input"
 //   type="text"
 //   placeholder="#| city"
 //   value={city}
 //   onChange={this.update('city')} />
-// <input className="main-input lat-input"
+// <input className="text-input lat-input"
 //   type="number"
 //   step="any"
 //   placeholder="#| latitude"
 //   value={latitude}
 //   onChange={this.update('latitude')} />
-// <input className="main-input long-input"
+// <input className="text-input long-input"
 //   type="number"
 //   step="any"
 //   placeholder="#| longitude"
 //   value={longitude}
 //   onChange={this.update('longitude')} />
-// <input className="main-input revenue-input"
+// <input className="text-input revenue-input"
 //   type="number"
 //   placeholder="#| revenue"
 //   value={revenue}
@@ -618,15 +662,15 @@ export default ProjectForm;
 //
 const sampleProject = {
   "1": {
-    "cashFlow": 50000,
+    "cashFlow": -50000,
     "isActuals": true
   },
   "2": {
-    "cashFlow": 40018,
+    "cashFlow": -40018,
     "isActuals": true
   },
   "3": {
-    "cashFlow": 16857,
+    "cashFlow": -16857,
     "isActuals": true
   },
   "4": {
@@ -634,7 +678,7 @@ const sampleProject = {
     "isActuals": true
   },
   "5": {
-    "cashFlow": 20325,
+    "cashFlow": -20325,
     "isActuals": true
   },
   "6": {

@@ -46,7 +46,13 @@ class ProjectGraph extends React.Component {
   }
 
   toggleModalonClickandPassProject(projectClicked) {
-
+    if (typeof projectClicked.cashflow === "string"){
+      projectClicked.cashflow = JSON.parse(projectClicked.cashflow)
+      projectClicked.actual_cashflow = JSON.parse(projectClicked.actual_cashflow)
+      projectClicked.accum_projected_cashflow = JSON.parse(projectClicked.accum_projected_cashflow)
+      projectClicked.accum_actual_cashflow = JSON.parse(projectClicked.accum_actual_cashflow)
+      projectClicked.projected_cashflow = JSON.parse(projectClicked.projected_cashflow)
+    }
     this.state.isModalOpen === false ? (this.setState({ isModalOpen: true, projectClicked}))
       : (this.setState({ isModalOpen: false}))
 

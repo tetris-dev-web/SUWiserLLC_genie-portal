@@ -51,16 +51,17 @@ class CashFlowModal extends React.Component {
       <div>
         <div onClick={this.openModal}>Cashflows</div>
         <Modal
-        isOpen={this.state.openModal}
-        onRequestClose={this.closeModal}
-        style={ModalStyle}
-        contentLabel="Manage Modal"
-        className="modal-container">
-          <CashFlowInputSheet closeModal={this.closeModal}
-          cashflow={this.props.cashflow}
-          quarter={this.props.quarter}
-          updateCashflow={this.props.updateCashflow}
-          ref={(cashflowInputSheet) => {this.cashflowInputSheet = cashflowInputSheet;}} />
+          isOpen={this.state.openModal}
+          onRequestClose={this.closeModal}
+          style={ModalStyle}
+          contentLabel="Manage Modal"
+          className="modal-container">
+          <CashFlowInputSheet 
+            closeModal={this.closeModal}
+            cashflow={this.props.cashflow}
+            quarter={this.props.quarter}
+            updateCashflow={this.props.updateCashflow}
+            ref={(cashflowInputSheet) => {this.cashflowInputSheet = cashflowInputSheet;}} />
         </Modal>
       </div>
     );

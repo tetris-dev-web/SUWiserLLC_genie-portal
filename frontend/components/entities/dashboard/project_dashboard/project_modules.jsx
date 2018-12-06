@@ -39,7 +39,6 @@ class ProjectModules extends React.Component {
       const { projectClicked, isInvestor, isModalOpen, closeModalOnClick, doIHaveData} = this.props
       const {model_link,showText} = this.state
       const noDataComponent = <h1 className="nodata-text">No data available</h1>
-      console.log("projectClicked: ", projectClicked)
 
       return (
             <Modal

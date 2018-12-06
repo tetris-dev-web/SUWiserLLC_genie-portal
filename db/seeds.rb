@@ -31,15 +31,15 @@ genesis_bus_link = 'https://drive.google.com/open?id=1tuqRBAYHB_26JzoFy2xMzgePI1
 
 genesis_cashflow = {
   "1": {
-    "cashFlow": 36974,
+    "cashFlow": -36974,
     "isActuals": true
   },
   "2": {
-    "cashFlow": 40018,
+    "cashFlow": -40018,
     "isActuals": true
   },
   "3": {
-    "cashFlow": 16857,
+    "cashFlow": -16857,
     "isActuals": true
   },
   "4": {
@@ -47,7 +47,7 @@ genesis_cashflow = {
     "isActuals": true
   },
   "5": {
-    "cashFlow": 20325,
+    "cashFlow": -20325,
     "isActuals": true
   },
   "6": {
@@ -443,5 +443,5 @@ project8 = Project.create(
  latitude: 0.4083637e2,
  longitude: -0.73944585e2,
  summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
- votes: HamInn_votes
+ votes: hamInn_votes
 )
