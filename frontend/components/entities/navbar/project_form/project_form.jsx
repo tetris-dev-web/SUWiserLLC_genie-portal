@@ -6,7 +6,7 @@ import CashFlowModal from './cashflow_modal/cashflow_modal';
 import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
-import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
+import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal';
 
 
@@ -89,13 +89,20 @@ class ProjectForm extends React.Component {
     data.append("project[continent]", this.state.continent);
 
     data.append("project[valuation]", this.state.valuation);
-    data.append("project[cashflow]", this.state.cashflow);
+    data.append("project[cashflow]", JSON.stringify(this.state.cashflow));
     data.append("project[creator_id]", this.props.currentUser.id);
 
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
     data.append("project[capital_required]", this.state.capital_required);
-
+    data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow))
+    data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow))
+    data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow))
+    data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow))
+    // data.append("project[planFilePDFDataURL]", this.state.planFilePDFDataURL)
+    //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
+    //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving
+    //Object in frontend with JSON.parse
 
     data.append("project[revenue]", this.state.revenue);
     // formData.append("project[icon]", this.state.icon);
@@ -201,6 +208,15 @@ class ProjectForm extends React.Component {
     return netPresentValue;
   }
 
+  // calculateCashflowData(){
+  //   if(this.state.cashflow){
+  //     let actual_cashflow
+  //     let accum_actual_cashflow
+  //     let accum_projected_cashflow
+  //     let projected_cashflow
+  //   }
+  // }
+
   receiveCashflowData(cashflowVars){
     cashflowVars;
     console.log(this);
@@ -303,14 +319,23 @@ class ProjectForm extends React.Component {
         cashflow = processCashData(cashflowData);
         // cashflow = this.setupCashflow(cashflow, currentQuarter)
         quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
+        let {projectedCashflow,
+           actualCashflow,
+        accumActualCashflow,
+      accumProjectedCashflow} = calculateCashflowData(cashflow)
         this.setState({
           cashflow,
           accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
           currentQuarter: this.findCurrentQuarter(quarters, cashflow),
+          projected_cashflow: projectedCashflow,
+          accum_actual_cashflow: accumActualCashflow,
+          accum_projected_cashflow: accumProjectedCashflow,
+          actual_cashflow: actualCashflow
           // capital_required: this.calculateCapitalRequired(cashflow),
         });
         // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
-        console.log("currquar: ", this.state.currentQuarter);
+        // console.log("currquar: ", this.state.currentQuarter);
+        console.log("Calculating Cashflow Data");
       })
     } else {
       let cashflow;
@@ -527,7 +552,7 @@ class ProjectForm extends React.Component {
           </DivWithCorners>
         </div>
 
-        <textarea className="description-area" value={this.state.value} onChange={this.update('description')} ></textarea>
+        <textarea className="summary-area" value={this.state.value} onChange={this.update('summary')} ></textarea>
         <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"

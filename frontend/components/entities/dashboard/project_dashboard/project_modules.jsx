@@ -39,6 +39,15 @@ class ProjectModules extends React.Component {
       const { projectClicked, isInvestor, isModalOpen, closeModalOnClick, doIHaveData} = this.props
       const {model_link,showText} = this.state
       const noDataComponent = <h1 className="nodata-text">No data available</h1>
+      console.log("Project Click cashflow is: ", projectClicked.cashflow);
+      // if (typeof projectClicked.cashflow === String){
+      //   console.log("Should be Object", JSON.parse(projectClicked.cashflow));
+      //   projectClicked.cashflow = JSON.parse(projectClicked.cashflow)
+      //   projectClicked.actual_cashflow = JSON.parse(projectClicked.actual_cashflow)
+      //   projectClicked.accum_projected_cashflow = JSON.parse(projectClicked.accum_projected_cashflow)
+      //   projectClicked.accum_actual_cashflow = JSON.parse(projectClicked.accum_actual_cashflow)
+      //   projectClicked.projected_cashflow = JSON.parse(projectClicked.projected_cashflow)
+      // }
       console.log("projectClicked: ", projectClicked)
 
       return (

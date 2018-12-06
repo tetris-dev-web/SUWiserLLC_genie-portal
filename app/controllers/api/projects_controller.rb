@@ -53,7 +53,9 @@ class Api::ProjectsController < ApplicationController
     params.require(:project).permit(
       :id, :title, :cashflow, :revenue, :valuation, :model_id,
       :file, :icon, :description, :creator_id, :created_at,
-      :city, :country, :continent, :status, :latitude, :longitude, :summary
+      :city, :country, :continent, :status, :latitude, :longitude, :summary,
+      :actual_cashflow, :accum_projected_cashflow, :accum_actual_cashflow,
+      :projected_cashflow, :planFilePDFDataURL, :capital_required
     )
   end
 end
