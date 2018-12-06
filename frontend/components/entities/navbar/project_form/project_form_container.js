@@ -8,6 +8,7 @@ import {
 const mapStateToProps = state => {
   return {
     currentUser: state.session.currentUser,
+    projects: state.entities.projects,
     errors: state.errors.project,
   };
 };

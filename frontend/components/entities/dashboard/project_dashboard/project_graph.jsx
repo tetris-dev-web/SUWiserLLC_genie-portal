@@ -1,4 +1,7 @@
 import React from 'react';
+import ProjectModules from './project_modules';
+
+
 import * as d3 from 'd3';
 import {event as currentEvent} from 'd3-selection';
 
@@ -8,7 +11,7 @@ const height = 500 - margin.top - margin.bottom;
 const citySquareSide = 15;
 const continentSquareSide = 5;
 
-//colors
+//colors - should import from util
 const midNightBlue = "#073444";
 const lightBlue = "#5EABAA";
 const midNightBlack = "#061E24";
@@ -20,12 +23,20 @@ const darkGrey = "#A59A91";
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
+    this.state={
+      projects:{},
+      isModalOpen: false,
+      projectClicked:{},
+      doIHaveData: ''
+    }
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     this.formatData = this.formatData.bind(this);
     this.addDragHandlers = this.addDragHandlers.bind(this);
     this.createSVG = this.createSVG.bind(this);
     this.tickActions = this.tickActions.bind(this);
+    this.toggleModalonClickandPassProject = this.toggleModalonClickandPassProject.bind(this);
+
   }
 
   componentDidMount(){
@@ -33,6 +44,25 @@ class ProjectGraph extends React.Component {
       this.setUp();
     });
   }
+
+  toggleModalonClickandPassProject(projectClicked) {
+    if (typeof projectClicked.cashflow === "string"){
+      projectClicked.cashflow = JSON.parse(projectClicked.cashflow)
+      projectClicked.actual_cashflow = JSON.parse(projectClicked.actual_cashflow)
+      projectClicked.accum_projected_cashflow = JSON.parse(projectClicked.accum_projected_cashflow)
+      projectClicked.accum_actual_cashflow = JSON.parse(projectClicked.accum_actual_cashflow)
+      projectClicked.projected_cashflow = JSON.parse(projectClicked.projected_cashflow)
+    }
+    this.state.isModalOpen === false ? (this.setState({ isModalOpen: true, projectClicked}))
+      : (this.setState({ isModalOpen: false}))
+
+    projectClicked.id > 0 ? this.setState( {doIHaveData:true })
+      : this.setState( {doIHaveData:false })
+
+    };
+
+
+
 
   formatData(projectKeys) {
     const listData = (data) => {
@@ -137,7 +167,7 @@ class ProjectGraph extends React.Component {
         return colorScale(0);
       }
     }).on('click',(d)=>{
-      that.props.openModal(d);
+      that.toggleModalonClickandPassProject(d);
     }).on('mouseover', (d) => that.handleMouseOver(d,link,continentSquares,citySquares,circle))
     .on('mouseout',(d)=> that.handleMouseOut(d,link,continentSquares,citySquares,circle));
 
@@ -382,6 +412,8 @@ class ProjectGraph extends React.Component {
   }
 
   render() {
+
+
     let data = '';
     if (this.props.data) {
       data = Object.keys(this.props.data).map(key => {
@@ -389,16 +421,23 @@ class ProjectGraph extends React.Component {
         return <li key={project.id}>{project.title} {project.created_at}</li>;
       });
     }
+    console.log("graph state", this.state)
 
-    return (
-      <div className='graph-container'>
-        <div className="series content graph" id='project'>
-          <div id="graph"></div>
 
-        </div>
-      </div>
-    );
-  }
+      return (
+        <div className='graph-container'>
+          <div className="series content graph" id='project'>
+            <div id="graph"></div>
+          </div>
+                <ProjectModules
+                  projectClicked={this.state.projectClicked}
+                  currentUser={this.props.currentUser}
+                  isModalOpen = {this.state.isModalOpen}
+                  closeModalOnClick = {this.toggleModalonClickandPassProject}
+                  doIHaveData = {this.state.doIHaveData}
+                  />
+        </div>)
+    }
 }
 
 ProjectGraph.defaultProps = {

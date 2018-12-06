@@ -23,7 +23,6 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
   # PUT /resource
   # def update
   #   # super
-  #   debugger
   #   @user = User.find(current_user.id)
   #   # set to bool
   #   email_changed = @user.email != params[:user][:email]
@@ -57,7 +56,6 @@ class Sessions::RegistrationsController < Devise::RegistrationsController
 
   # DELETE /resource
   def destroy
-    debugger
     super
   end
 

@@ -28,7 +28,7 @@ class Transfer extends React.Component {
 
   componentDidMount () {
     const {drizzle} = this.props;
-    this.setState({tokenContract: drizzle.contracts.GNIToken})
+    this.setState({tokenContract: drizzle.contracts.GNIToken});
   }
 
   handleSubmit(e) {

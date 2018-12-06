@@ -21,6 +21,10 @@ json.extract! project,  :id,
                         :summary,
                         :capital_required,
                         :current_capital,
+                        :actual_cashflow,
+                        :accum_actual_cashflow,
+                        :projected_cashflow,
+                        :accum_projected_cashflow,
                         :close_date,
                         :votes
 

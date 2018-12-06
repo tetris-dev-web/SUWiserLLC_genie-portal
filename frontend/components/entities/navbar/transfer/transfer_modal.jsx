@@ -42,7 +42,6 @@ class TransferModal extends React.Component {
           style={ModalStyle}
           contentLabel="Transfer Modal"
           className="modal-container">
-          <DrizzleConsumer props={{closeModal: this.closeModal}} component={Transfer}/>
         </Modal>
       </div>
     );
@@ -51,4 +50,5 @@ class TransferModal extends React.Component {
 // account={this.props.account}
 // contract={this.props.contract}
 
+// <DrizzleConsumer props={{closeModal: this.closeModal}} component={Transfer}/>
 export default TransferModal;

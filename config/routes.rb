@@ -20,6 +20,13 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :projects, defaults: {format: :json}, only: [:create, :show, :index]
+    resources :projects, defaults: {format: :json}, only: [:create, :show, :index, :edit, :update] do
+      # resources :project_summary, defaults: {format: :json}, only: [:show]
+      collection do
+        get 'deployed_project_revenue'
+        get 'discount_factor'
+        get 'failed_projects_count'
+      end
+    end
   end
 end
