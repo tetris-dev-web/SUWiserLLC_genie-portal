@@ -1,6 +1,5 @@
 
 import React from "react";
-import ReadString from '../entities/dashboard/readString';
 import { DrizzleContext } from "drizzle-react";
 
 export default ({component: Component, props, actions}) => (

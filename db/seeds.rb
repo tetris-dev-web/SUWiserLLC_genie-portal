@@ -443,5 +443,5 @@ project8 = Project.create(
  latitude: 0.4083637e2,
  longitude: -0.73944585e2,
  summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
- votes: HamInn_votes
+ votes: hamInn_votes
 )
