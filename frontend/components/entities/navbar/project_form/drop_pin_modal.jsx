@@ -37,12 +37,14 @@ class DropPinModal extends React.Component {
           onRequestClose={this.closeModal}
           style={ModalStyle}
           >
-          <div className="drop-pin-container">
-            <div className='drop-pin-flex'>
-              <div className='address'>
-                <div>street</div>
-                <div>city</div>
-              </div>
+          <div className='drop-pin-flex'>
+            <div className='address'>
+              <input></input>
+              <input></input>
+              <div>street</div>
+              <div>city</div>
+            </div>
+            <div className="drop-pin-container">
               <DropPinMap
                 lat={this.props.lat}
                 lng={this.props.lng}
