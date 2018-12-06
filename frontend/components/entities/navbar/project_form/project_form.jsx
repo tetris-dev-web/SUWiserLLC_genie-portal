@@ -54,13 +54,13 @@ class ProjectForm extends React.Component {
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
-    this.parseCashflowData = this.parseCashflowData.bind(this);
+    // this.parseCashflowData = this.parseCashflowData.bind(this);
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
     this.updateAddress = this.updateAddress.bind(this);
-    this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this)
-    this.parsePDF = this.parsePDF.bind(this);
+    this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this);
+    this.parseInputFile = this.parseInputFile.bind(this);
   }
 
   componentDidMount() {
