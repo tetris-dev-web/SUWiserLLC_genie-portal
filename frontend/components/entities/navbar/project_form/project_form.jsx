@@ -58,7 +58,7 @@ class ProjectForm extends React.Component {
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
-    this.updateAddress = this.updateAddress.bind(this);
+    this.storeAddress = this.storeAddress.bind(this);
     this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this);
     this.parseInputFile = this.parseInputFile.bind(this);
   }
@@ -136,13 +136,13 @@ class ProjectForm extends React.Component {
   }
 
   updateLatLng(pos) {
-    this.setState({latitude: pos.lat, longitude: pos.lng});
+    this.setState({latitude: parseFloat(pos.lat), longitude: parseFloat(pos.lng)});
   }
 
-  updateAddress(address) {
+  storeAddress(address) {
     if(address) {
       let addr = address.split(',');
-      this.setState({city: addr[1], continent: addr[3]});
+      this.setState({city: addr[1], country: addr[3]});
     }
   }
 
@@ -438,13 +438,17 @@ class ProjectForm extends React.Component {
           </div>
           <DivWithCorners>
             <span className="text">
+              {console.log("Lat n long", this.state.latitude, this.state.longitude, typeof this.state.longitude)}
+
               <DropPinModal
-                lat={this.state.latitude}
-                lng={this.state.longitude}
+                lat={parseFloat(this.state.latitude)}
+                lng={parseFloat(this.state.longitude)}
                 title={this.state.title}
                 updateLatLng={this.updateLatLng}
                 dropPinClick={this.dropPinClick}
-                updateAddress={this.updateAddress}
+                storeAddress={this.storeAddress}
+                city={this.state.city}
+                continent={this.state.continent}
                 />
             </span>
           </DivWithCorners>

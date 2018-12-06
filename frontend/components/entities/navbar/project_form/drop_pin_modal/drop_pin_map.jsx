@@ -14,19 +14,17 @@ class DropPinMap extends React.Component {
       marker: [lat, lng],
       zoom: 14,
       title: title,
-      address: '',
-      openModal: false,
     };
     this.updateMarker = this.updateMarker.bind(this);
     // this.getAddress = this.getAddress.bind(this);
   }
 
   componentDidMount() {
+    // this.props.displayLatLng({lat: this.state.latlng[0], lng: this.state.latlng[1]});
   }
 
   updateMarker(e) {
     this.props.updateLatLng(e.latlng);
-    this.props.displayLatLng(e.latlng);
     this.setState({marker: e.latlng});
     Geocode.setApiKey('AIzaSyBdh7dx8oKj5iDtCAzBBCLNOEA94nf8Cl8');
     Geocode.fromLatLng(this.state.marker.lat, this.state.marker.lng).then(
@@ -35,7 +33,7 @@ class DropPinMap extends React.Component {
         const address = response.results[0].formatted_address;
         this.setState({address: address});
         console.log(this.state.address)
-        this.props.updateAddress(this.state.address);
+        this.props.storeAddress(this.state.address);
       },
       error => {
         console.error(error);

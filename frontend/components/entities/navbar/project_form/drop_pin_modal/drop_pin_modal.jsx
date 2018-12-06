@@ -2,25 +2,28 @@ import React from 'react';
 import Modal from 'react-modal';
 import ModalStyle from './map_modal_style';
 import DropPinMap from './drop_pin_map';
+import DropPinAddress from './drop_pin_address';
 
 class DropPinModal extends React.Component {
   constructor(props) {
     super(props);
-    const {lat, lng } = this.props
     this.state = {
       openModal: false,
-      lat: lat,
-      lng: lng,
     };
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.displayLatLng = this.displayLatLng.bind(this);
+    // this.displayLatLng = this.displayLatLng.bind(this);
+    // this.updateAddress = this.updateAddress.bind(this);
   }
 
-  displayLatLng(pos) {
-    this.setState({lat: pos.lat, lng: pos.lng});
-  }
+  // displayLatLng(pos) {
+  //   this.setState({lat: pos.lat, lng: pos.lng});
+  // }
+  //
+  // updateAddress(address){
+  //   this.setState({address: address})
+  // }
 
   openModal() {
     console.log('modal props', this.props);
@@ -44,21 +47,22 @@ class DropPinModal extends React.Component {
           onRequestClose={this.closeModal}
           style={ModalStyle}
           >
+          {console.log("Props from drop pin is: ",this.props)}
           <div className='drop-pin-flex'>
-            <div className='address'>
-              <input value={this.state.lat}></input>
-              <input value={this.state.lng}></input>
-              <div>street</div>
-              <div>city</div>
-            </div>
+            <DropPinAddress
+              lat={this.props.lat}
+              lng={this.props.lng}
+              updateLatLng={this.props.updateLatLng}
+              city={this.props.city}
+              continent={this.props.continent}
+              />
             <div className="drop-pin-container">
               <DropPinMap
                 lat={this.props.lat}
                 lng={this.props.lng}
                 title={this.props.title}
                 updateLatLng={this.props.updateLatLng}
-                updateAddress={this.props.updateAddress}
-                displayLatLng={this.displayLatLng}
+                storeAddress={this.props.storeAddress}
                 />
             </div>
           </div>
@@ -69,3 +73,13 @@ class DropPinModal extends React.Component {
 }
 
 export default DropPinModal;
+
+
+
+
+
+
+
+
+
+// displayLatLng={this.displayLatLng}
