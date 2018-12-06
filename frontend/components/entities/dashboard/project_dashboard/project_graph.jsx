@@ -46,8 +46,7 @@ class ProjectGraph extends React.Component {
   }
 
   toggleModalonClickandPassProject(projectClicked) {
-    if (typeof projectClicked.cashflow === String){
-      console.log("Should be Object", JSON.parse(projectClicked.cashflow));
+    if (typeof projectClicked.cashflow === "string"){
       projectClicked.cashflow = JSON.parse(projectClicked.cashflow)
       projectClicked.actual_cashflow = JSON.parse(projectClicked.actual_cashflow)
       projectClicked.accum_projected_cashflow = JSON.parse(projectClicked.accum_projected_cashflow)
