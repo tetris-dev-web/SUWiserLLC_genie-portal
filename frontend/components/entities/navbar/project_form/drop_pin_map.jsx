@@ -7,12 +7,15 @@ class DropPinMap extends React.Component {
   constructor(props) {
     super(props);
     const {lat, lng, title} = this.props;
+    console.log(this.props);
+    console.log('this is lat, lng', lat, lng);
     this.state = {
       latlng: [lat, lng],
       marker: [lat, lng],
       zoom: 14,
       title: title,
       address: '',
+      openModal: false,
     };
     this.updateMarker = this.updateMarker.bind(this);
     // this.getAddress = this.getAddress.bind(this);

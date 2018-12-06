@@ -7,6 +7,7 @@ import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
+import DropPinModal from './drop_pin_modal';
 
 
 class ProjectForm extends React.Component {
@@ -18,7 +19,7 @@ class ProjectForm extends React.Component {
       title: '',
       latitude: '',
       longitude: '',
-      revenue: '',
+      revenue: '10',
       valuation: '1',
       model_id: '7syizSLPN60',
       city: 'New York',
@@ -42,6 +43,7 @@ class ProjectForm extends React.Component {
       capital_required: '',
       planFilePDFDataURL: '',
       planFilePDFName: ''
+      drop_pin_clicked: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -53,6 +55,11 @@ class ProjectForm extends React.Component {
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
+    this.parseCashflowData = this.parseCashflowData.bind(this);
+    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
+    this.dropPinClick = this.dropPinClick.bind(this);
+    this.updateLatLng = this.updateLatLng.bind(this);
+    this.updateAddress = this.updateAddress.bind(this);
   }
 
   componentDidMount() {
@@ -90,39 +97,28 @@ class ProjectForm extends React.Component {
     data.append("project[capital_required]", this.state.capital_required);
 
 
-    // data.append("project[revenue]", this.state.revenue);
+    data.append("project[revenue]", this.state.revenue);
     // formData.append("project[icon]", this.state.icon);
     // formData.append("project[description]", this.state.description);
     // formData.append("project[status]", this.state.status);
 
-
-    this.props.closeModal();
-  }
-  // Moved until data is properly structured
-  // this.props.createProject(data)
-  // .then( () => {
-  //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
-  // });
-
-  dropPinClick() {
-    if(this.state.latitude != '' && this.state.longitude != '') {
-      this.setState({latlngpresence: true});
-      this.openModal();
-    } else {
-      this.setState({droppinclicked: true});
+    // Moved until data is properly structured
+    this.props.createProject(data);
+    // .then( () => {
+    //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
+    // });
+    if (this.props.errors.length == 0) {
+      this.props.closeModal();
+      window.location.reload();
     }
   }
 
-  openModal() {
-    this.setState({openModal: true});
+  dropPinClick() {
+    this.setState({drop_pin_clicked: true});
   }
 
-  closeModal() {
-    this.setState({openModal: false});
-  }
-
-  renderLatLngErrors(presence, clicked) {
-    if (!presence && clicked) {
+  renderLatLngErrors(clicked) {
+    if (this.state.latitude == '' && this.state.longitude == '' && clicked) {
       return (
         <ul className="project-errors">
           <li>Latitude and Longitude can't be blank</li>
@@ -138,7 +134,7 @@ class ProjectForm extends React.Component {
   updateAddress(address) {
     if(address) {
       let addr = address.split(',');
-      this.setState({street: addr[0], city: addr[1], continent: addr[3]});
+      this.setState({city: addr[1], continent: addr[3]});
     }
   }
 
@@ -424,9 +420,19 @@ class ProjectForm extends React.Component {
               onChange={this.update('longitude')} />
           </div>
           <DivWithCorners>
-            <span className="text">Drop Pin</span>
+            <span className="text">
+              <DropPinModal
+                lat={this.state.latitude}
+                lng={this.state.longitude}
+                title={this.state.title}
+                updateLatLng={this.updateLatLng}
+                dropPinClick={this.dropPinClick}
+                updateAddress={this.updateAddress}
+                />
+            </span>
           </DivWithCorners>
         </div>
+        {this.renderLatLngErrors(this.state.drop_pin_clicked)}
         <div className="flexed">
           <div>
 

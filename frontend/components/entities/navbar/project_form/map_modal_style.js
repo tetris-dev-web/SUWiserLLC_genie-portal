@@ -17,6 +17,7 @@ module.exports = {
     borderRadius    : '10px',
     padding         : '0px',
     zIndex          : 101,
-    background      : 'rgba(0, 0, 0, .75)'
+    background      : 'rgba(0, 0, 0, .75)',
+    display         : 'flex',
   },
 };
