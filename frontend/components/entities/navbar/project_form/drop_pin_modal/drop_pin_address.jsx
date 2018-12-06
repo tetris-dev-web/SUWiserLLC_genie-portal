@@ -10,11 +10,15 @@ class DropPinAddress extends React.Component{
   render(){
     return(
       <div className='address'>
-      {console.log("Props from pin addy is: ", this.props)}
-        <input type="number" value={parseFloat(this.props.lat.toFixed(6))}></input>
-        <input type="number" value={parseFloat(this.props.lng.toFixed(6))}></input>
-        <div>street</div>
-        <div>city</div>
+        <div className='latlng'>
+          <input type="number" value={parseFloat(this.props.lat.toFixed(6))}></input>
+          <input type="number" value={parseFloat(this.props.lng.toFixed(6))}></input>
+        </div>
+        <div className='address-inner'>
+          <div>{this.props.city}</div>
+          <div>{this.props.continent}</div>
+        </div>
+        <input type="button" value="Thumbs Up"></input>
       </div>
     );
   }

@@ -42,7 +42,8 @@ class ProjectForm extends React.Component {
       accumulatedRevenue: '',
       capital_required: '',
       planFilePDFDataURL: '',
-      planFilePDFName: ''
+      planFilePDFName: '',
+      drop_pin_clicked: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -96,10 +97,10 @@ class ProjectForm extends React.Component {
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
     data.append("project[capital_required]", this.state.capital_required);
-    data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow))
-    data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow))
-    data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow))
-    data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow))
+    data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow));
+    data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow));
+    data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow));
+    data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow));
     // data.append("project[planFilePDFDataURL]", this.state.planFilePDFDataURL)
     //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
     //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving

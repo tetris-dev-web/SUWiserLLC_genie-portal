@@ -27,7 +27,7 @@ class DropPinModal extends React.Component {
 
   openModal() {
     console.log('modal props', this.props);
-    if(this.props.lat != '' && this.props.lng != '') {
+    if(!isNaN(this.props.lat) && !isNaN(this.props.lng)) {
       this.setState({openModal: true});
     } else {
       this.props.dropPinClick();
