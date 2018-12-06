@@ -440,11 +440,12 @@ class ProjectForm extends React.Component {
                 <label htmlFor="json-file">{this.state.cashflowJSONName || " #| choose json"}</label>
             </div>
 
-
-            <input id="current-quarter"
-              type="number"
-              onChange={this.update('currentQuarter')} />
-            <label htmlFor="current-quarter"> current qtr</label>
+            <div className="text-input-container current-quarter-input">
+              <input id="current-quarter"
+                type="number"
+                onChange={this.update('currentQuarter')} />
+              <label htmlFor="current-quarter"> current qtr</label>
+            </div>
 
           </div>
 
