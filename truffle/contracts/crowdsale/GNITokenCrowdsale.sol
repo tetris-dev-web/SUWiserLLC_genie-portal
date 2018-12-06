@@ -33,8 +33,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   address[] public projectAddrs;
   uint256 public inactiveProjectCount;
 
-//after this, the developer has to approve this contract to spend the amount of inactive tokens associated with developers on its behalf
- function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public {//we need more tests for this
+  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public {//we need more tests for this
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);
@@ -49,7 +48,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     projectAddrs.push(projectAddr);
     inactiveProjectCount = inactiveProjectCount.add(1);
     Project(projectAddr).log();
- }
+  }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
    uint256 developerValue = valuation.sub(investorValue);
@@ -74,7 +73,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  address public tentativeLeaderAddr;
  uint256 public tentativeLeaderCapRequired;
  bool public tentativeLeaderConfirmed;
-
 
  struct ProjectsChecked {
    mapping(address => bool) isChecked;
@@ -158,13 +156,13 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  uint256 public inactiveTokensAtClosing;
  uint256 public weiToReimburse;
 
- function reimburseFunds () public {//need tests
+ function reimburseFunds () public {
    require(hasClosed());
    inactiveTokensAtClosing = Token(token).totalInactiveSupply().sub(Token(token).totalPendingActivations());
    weiToReimburse = weiRaised;
  }
 
- function claimReimbursement (address account) public {//need tests
+ function claimReimbursement (address account) public {
    uint256 inactiveTokens = Token(token).inactiveBalanceOf(account);
    uint256 pendingActivations = Token(token).pendingActivations(account);
    uint256 accountTokens = inactiveTokens.sub(pendingActivations);
