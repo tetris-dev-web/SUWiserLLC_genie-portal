@@ -7,7 +7,7 @@ import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
 import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
-import DropPinModal from './drop_pin_modal';
+import DropPinModal from './drop_pin_modal/drop_pin_modal';
 
 
 class ProjectForm extends React.Component {

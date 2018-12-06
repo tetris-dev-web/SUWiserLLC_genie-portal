@@ -6,13 +6,20 @@ import DropPinMap from './drop_pin_map';
 class DropPinModal extends React.Component {
   constructor(props) {
     super(props);
-
+    const {lat, lng } = this.props
     this.state = {
       openModal: false,
+      lat: lat,
+      lng: lng,
     };
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.displayLatLng = this.displayLatLng.bind(this);
+  }
+
+  displayLatLng(pos) {
+    this.setState({lat: pos.lat, lng: pos.lng});
   }
 
   openModal() {
@@ -39,8 +46,8 @@ class DropPinModal extends React.Component {
           >
           <div className='drop-pin-flex'>
             <div className='address'>
-              <input></input>
-              <input></input>
+              <input value={this.state.lat}></input>
+              <input value={this.state.lng}></input>
               <div>street</div>
               <div>city</div>
             </div>
@@ -51,6 +58,7 @@ class DropPinModal extends React.Component {
                 title={this.props.title}
                 updateLatLng={this.props.updateLatLng}
                 updateAddress={this.props.updateAddress}
+                displayLatLng={this.displayLatLng}
                 />
             </div>
           </div>
