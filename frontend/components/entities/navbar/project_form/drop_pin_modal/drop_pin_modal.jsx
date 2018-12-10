@@ -55,6 +55,7 @@ class DropPinModal extends React.Component {
               updateLatLng={this.props.updateLatLng}
               city={this.props.city}
               continent={this.props.continent}
+              closeModal={this.closeModal}
               />
             <div className="drop-pin-container">
               <DropPinMap

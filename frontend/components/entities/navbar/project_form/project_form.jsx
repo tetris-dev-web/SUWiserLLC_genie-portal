@@ -140,11 +140,8 @@ class ProjectForm extends React.Component {
     this.setState({latitude: parseFloat(pos.lat), longitude: parseFloat(pos.lng)});
   }
 
-  storeAddress(address) {
-    if(address) {
-      let addr = address.split(',');
-      this.setState({city: addr[1], country: addr[3]});
-    }
+  storeAddress(city, continent) {
+    this.setState({city, continent});
   }
 
   getFailedProjects(){

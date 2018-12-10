@@ -15,10 +15,16 @@ class DropPinAddress extends React.Component{
           <input type="number" value={parseFloat(this.props.lng.toFixed(6))}></input>
         </div>
         <div className='address-inner'>
-          <div>{this.props.city}</div>
-          <div>{this.props.continent}</div>
+          <div className="city">
+            <div>city</div>
+            <div>{this.props.city}</div>
+          </div>
+          <div className="continent">
+            <div>continent</div>
+            <div>{this.props.continent}</div>
+          </div>
         </div>
-        <input type="button" value="Thumbs Up"></input>
+        <input type="button" value="Thumbs Up" onClick={this.props.closeModal}></input>
       </div>
     );
   }
