@@ -10,6 +10,7 @@ import Navbar from './entities/navbar/navbar_container';
 import Landing from './entities/landing/landing';
 import Dashboard from './entities/dashboard/dashboard';
 import Footer from './entities/footer/footer';
+import './test.scss';
 
 const App = () => (
   <div className="">

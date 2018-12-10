@@ -3,6 +3,10 @@ import React from 'react';
 // import { roundToTwo } from '../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow/cashflow_modal';
+import './project_form.scss';
+import './project_modal.scss';
+import './geoContainer.scss';
+import './projectPitchMod.scss'
 
 class ProjectForm extends React.Component {
 

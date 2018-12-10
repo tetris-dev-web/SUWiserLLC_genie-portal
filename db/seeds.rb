@@ -303,21 +303,21 @@ project6 = Project.create!(
 #   status: "pitched"
 # )
 
-project8 = Project.create(
- title: "Genesis Sans 3d",
- valuation: 210000,
- model_id: nil,
- icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
- description: "BNB/ Business Incubator",
- creator_id: 4,
- revenue: 27000,
- city: "New York",
- country: "United States",
- continent: "North America",
- status: "pitched",
- cashflow: genesis_cashflow,
- latitude: 0.4083637e2,
- longitude: -0.73944585e2,
- summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
- votes: HamInn_votes
-)
+# project8 = Project.create(
+#  title: "Genesis Sans 3d",
+#  valuation: 210000,
+#  model_id: nil,
+#  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#  description: "BNB/ Business Incubator",
+#  creator_id: 4,
+#  revenue: 27000,
+#  city: "New York",
+#  country: "United States",
+#  continent: "North America",
+#  status: "pitched",
+#  cashflow: genesis_cashflow,
+#  latitude: 0.4083637e2,
+#  longitude: -0.73944585e2,
+#  summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
+#  votes: HamInn_votes
+# )

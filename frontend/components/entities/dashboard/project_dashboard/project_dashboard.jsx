@@ -7,6 +7,7 @@ import ProjectThermo from './project_thermo';
 import CashFlowGraph from './project_cashflow_graph';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 import $ from 'jquery';
+import './project_dashboard.scss';
 
 class ProjectDashboard extends React.Component {
   constructor(props){

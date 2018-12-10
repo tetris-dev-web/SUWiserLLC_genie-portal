@@ -3,6 +3,7 @@ import { keys } from 'lodash';
 import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_cashflow_graph';
 import ThumbsUp from '../thumbs_up_svg';
 import { calculateAccumulatedRevenue,  processCashData } from '../../../../../util/project_api_util';
+import './cashflow.scss';
 
 class CashFlow extends React.Component {
   constructor(props) {
