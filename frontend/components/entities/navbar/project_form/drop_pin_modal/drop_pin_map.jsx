@@ -12,7 +12,7 @@ class DropPinMap extends React.Component {
     this.state = {
       latlng: [lat, lng],
       marker: [lat, lng],
-      zoom: 14,
+      zoom: 8,
       title: title,
     };
     this.updateMarker = this.updateMarker.bind(this);
