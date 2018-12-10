@@ -171,6 +171,7 @@ class CashFlowInputSheet extends React.Component {
             placeholder="10,000"
             onChange={this.update(quarter)}
             value={cashflow[quarter]["cashFlow"]} />
+          <input type='checkbox' />
         </li>
       );
     });
@@ -179,6 +180,7 @@ class CashFlowInputSheet extends React.Component {
         <div className="cashflow-title-flex">
           <h3>quarter</h3>
           <h3>cashflow</h3>
+          <h3>actuals</h3>
         </div>
         <ul className="scrollable">
           { quartersList }
