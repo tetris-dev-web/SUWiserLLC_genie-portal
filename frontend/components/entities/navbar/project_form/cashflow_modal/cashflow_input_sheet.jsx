@@ -7,58 +7,22 @@ import { calculateAccumulatedRevenue,  processCashData } from '../../../../../ut
 class CashFlowInputSheet extends React.Component {
   constructor(props) {
     super(props);
-      this.state = {
-      cashflow: this.props.cashflow,
-      currentQuarter: this.props.quarter,
-      accumulatedRevenue: '',
-      actual_cashflow: '',
-      accum_actual_cashflow: '',
-      projected_cashflow: '',
-      accum_projected_cashflow: '',
-    };
-
-    // this.state.currentQuarter ? '' : this.setState({currentQuarter: sampleCurrentQuarter});
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.renderColor = this.renderColor.bind(this);
-    // console.log("Props are: ", this.props);
-    this.update = this.update.bind(this);
     this.downloadJSONSample = this.downloadJSONSample.bind(this);
     this.handleFile = this.handleFile.bind(this);
     this.closeModalAndSendCashflowDataToPitchForm = this.closeModalAndSendCashflowDataToPitchForm.bind(this);
-    this.updateActuals = this.updateActuals.bind(this);
-    // this.findCurrentQuarter = this.findCurrentQuarter.bind(this);
   }
 
   handleSubmit(e) {
-    const { cashflow } = this.state;
-    console.log("Cashflow from inputsheet is: ", cashflow);
+    const { cashflow } = this.props;
     e.preventDefault();
     this.props.updateCashflow(cashflow)(e);
   }
 
-  update(quarter) {
-    // console.log("Type of quarter is: ", typeof quarter);
-    return e => {
-      e.preventDefault();
-      let cashflow = merge({}, this.state.cashflow);
-      cashflow[quarter].cashFlow = parseInt(e.currentTarget.value);
-      const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
-      this.setState({ cashflow, accumulatedRevenue });
-    };
-  }
-
-  updateActuals(quarter) {
-    return e => {
-      e.preventDefault();
-      let cashflow = merge({}, this.state.cashflow);
-      cashflow[quarter].isActuals = !cashflow[quarter].isActuals;
-      this.setState({cashflow});
-    };
-  }
-
   renderColor(quarter) {
-    return this.state.cashflow[quarter].isActuals ? "actual-quarter-blue" : "expected-quarter-black";
+    return this.props.cashflow[quarter].isActuals ? "actual-quarter-blue" : "expected-quarter-black";
   }
 
   handleFile(file, content){
@@ -92,10 +56,11 @@ class CashFlowInputSheet extends React.Component {
 
   render() {
     // 7 years of data is the standard, translating to 28 quarters
-    const { cashflow, accumulatedRevenue } = this.state;
+    const { cashflow } = this.props;
     const quarters = keys(cashflow);
     let checked;
     let quartersList = quarters.map((quarter, idx) => {
+      console.log("Inside Loop: ", cashflow[quarter].isActuals);
       return(
         <li className="flex-display" key={idx}>
           <label htmlFor={`quarter-${quarter}`}>{`${quarter.substring(0, 2)}`}</label>
@@ -103,9 +68,9 @@ class CashFlowInputSheet extends React.Component {
             id={`quarter-${quarter}`}
             type="number"
             placeholder="10,000"
-            onChange={this.update(quarter)}
+            onChange={this.props.updateCashflowValue(quarter)}
             value={cashflow[quarter]["cashFlow"]} />
-          <input type='checkbox' name={quarter} checked={!!cashflow[quarter].isActuals} onChange={this.updateActuals(quarter)} />
+          <input type='checkbox' name={quarter} onChange={() => this.props.updateActuals(quarter)} defaultChecked={cashflow[quarter].isActuals} />
         </li>
       );
     });
