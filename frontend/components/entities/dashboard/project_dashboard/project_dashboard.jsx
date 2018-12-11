@@ -9,7 +9,7 @@ class ProjectDashboard extends React.Component {
     super(props);
 
     this.state = {
-      showText:false,
+      showText:false
     };
     // this.openModal = this.openModal.bind(this);
     this.toggleTextShowing = this.toggleTextShowing.bind(this);
