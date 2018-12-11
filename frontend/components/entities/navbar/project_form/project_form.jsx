@@ -6,7 +6,7 @@ import CashFlowModal from './cashflow_modal/cashflow_modal';
 import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
-import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
+import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal';
 
 
@@ -42,7 +42,9 @@ class ProjectForm extends React.Component {
       accumulatedRevenue: '',
       capital_required: '',
       planFilePDFDataURL: '',
-      planFilePDFName: ''
+      planFilePDFName: '',
+      drop_pin_clicked: false,
+      modelId: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -54,13 +56,10 @@ class ProjectForm extends React.Component {
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
-    // this.parseCashflowData = this.parseCashflowData.bind(this);
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
     this.updateAddress = this.updateAddress.bind(this);
-    this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this);
-    this.parseInputFile = this.parseInputFile.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +75,8 @@ class ProjectForm extends React.Component {
 
     const file = this.state.imageFile;
     const data = new FormData();
+    const {drizzle, drizzleState} = this.props;
+    const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
     if (file) data.append("project[file]", file);
     data.append("project[title]", this.state.title);
@@ -88,20 +89,13 @@ class ProjectForm extends React.Component {
     data.append("project[continent]", this.state.continent);
 
     data.append("project[valuation]", this.state.valuation);
-    data.append("project[cashflow]", JSON.stringify(this.state.cashflow));
+    data.append("project[cashflow]", this.state.cashflow);
     data.append("project[creator_id]", this.props.currentUser.id);
 
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
     data.append("project[capital_required]", this.state.capital_required);
-    data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow))
-    data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow))
-    data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow))
-    data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow))
-    // data.append("project[planFilePDFDataURL]", this.state.planFilePDFDataURL)
-    //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
-    //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving
-    //Object in frontend with JSON.parse
+
 
     data.append("project[revenue]", this.state.revenue);
     // formData.append("project[icon]", this.state.icon);
@@ -110,6 +104,9 @@ class ProjectForm extends React.Component {
 
     // Moved until data is properly structured
     this.props.createProject(data);
+    // .then( () => {
+    //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
+    // });
     if (this.props.errors.length == 0) {
       this.props.closeModal();
       window.location.reload();
@@ -162,7 +159,8 @@ class ProjectForm extends React.Component {
         currentQuarter = quarter;
         return !cashflow[quarter.toString()]["isActuals"];
       }
-    })
+    });
+
     return currentQuarter;
   }
 
@@ -181,7 +179,7 @@ class ProjectForm extends React.Component {
   }
 
   calculateCapitalRequired() {
-    this.setState({capital_required: this.state.accumulatedRevenue.min()});
+    setState({capital_required: this.state.accumulatedRevenue.min()});
   }
 
   calculateDiscountFactor(){
@@ -203,15 +201,6 @@ class ProjectForm extends React.Component {
     let netPresentValue = finance.NPV(discountFactor, 0, ...cashflows);
     return netPresentValue;
   }
-
-  // calculateCashflowData(){
-  //   if(this.state.cashflow){
-  //     let actual_cashflow
-  //     let accum_actual_cashflow
-  //     let accum_projected_cashflow
-  //     let projected_cashflow
-  //   }
-  // }
 
   receiveCashflowData(cashflowVars){
     cashflowVars;
@@ -263,7 +252,7 @@ class ProjectForm extends React.Component {
     // console.log('Cashflow state is', this.state.cashflow);
     return e => {
       let file = e.currentTarget.files[0];
-
+      
       switch (fileType) {
         case "cashflowJSON":
           this.parseInputFile(file).then(cashflowData => {
@@ -401,9 +390,10 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, latitude, longitude, summary,
+    let { title, latitude, longitude, modelId, currentQuarter
       // revenue, valuation, description, model_id, city, country, continent, icon
     } = this.state;
+
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
         <div className="text-input-container project-title-input-container">
@@ -432,7 +422,6 @@ class ProjectForm extends React.Component {
               onChange={this.update('longitude')} />
           </div>
           <DivWithCorners>
-            <span className="text">
               <DropPinModal
                 lat={this.state.latitude}
                 lng={this.state.longitude}
@@ -441,38 +430,45 @@ class ProjectForm extends React.Component {
                 dropPinClick={this.dropPinClick}
                 updateAddress={this.updateAddress}
                 />
-            </span>
           </DivWithCorners>
         </div>
         {this.renderLatLngErrors(this.state.drop_pin_clicked)}
-        <div className="flexed">
+        <div className="flexed cashflows-section">
           <div>
-
             <div className="file-input-container">
               <div className="file-input">
-                <input
+                <input 
                   type="file"
                   onChange={this.updateFile('cashflowJSON')} />
-                <svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg"><path d="m456 176h-52c-.847656-2.175781-1.777344-4.390625-2.785156-6.679688l36.800781-36.800781c9.378906-9.375 9.378906-24.578125 0-33.953125l-56.558594-56.558594c-9.375-9.378906-24.578125-9.378906-33.953125 0l-36.800781 36.800782c-2.289063-1.007813-4.503906-1.9375-6.679687-2.785156v-52.023438c0-13.253906-10.746094-24-24-24h-80.023438c-13.253906 0-24 10.746094-24 24v52c-2.175781.847656-4.390625 1.777344-6.679688 2.785156l-36.800781-36.800781c-9.375-9.378906-24.578125-9.378906-33.953125 0l-56.566406 56.558594c-9.359375 9.382812-9.359375 24.570312 0 33.953125l36.800781 36.800781c-1.007812 2.289063-1.9375 4.503906-2.785156 6.679687h-52.015625c-13.253906 0-24 10.746094-24 24v80.023438c0 13.253906 10.746094 24 24 24h52c.847656 2.175781 1.777344 4.390625 2.785156 6.679688l-36.800781 36.800781c-9.378906 9.375-9.378906 24.578125 0 33.953125l56.558594 56.558594c9.382812 9.359374 24.570312 9.359374 33.953125 0l36.800781-36.800782c2.289063 1.007813 4.503906 1.9375 6.679687 2.785156v52.023438c0 13.253906 10.746094 24 24 24h80.023438c13.253906 0 24-10.746094 24-24v-52c2.175781-.847656 4.390625-1.777344 6.679688-2.785156l36.800781 36.800781c9.382812 9.359375 24.570312 9.359375 33.953125 0l56.566406-56.558594c9.359375-9.382812 9.359375-24.570312 0-33.953125l-36.800781-36.800781c1.007812-2.289063 1.9375-4.503906 2.785156-6.679687h52.015625c13.253906 0 24-10.746094 24-24v-80.023438c0-13.253906-10.746094-24-24-24zm8 104c0 4.417969-3.582031 8-8 8h-57.601562c-3.417969 0-6.457032 2.171875-7.566407 5.40625-1.847656 5.300781-4.003906 10.492188-6.449219 15.546875-1.449218 3.066406-.808593 6.714844 1.601563 9.101563l40.71875 40.722656c1.503906 1.5 2.351563 3.539062 2.351563 5.664062s-.847657 4.160156-2.351563 5.664063l-56.558594 56.558593c-3.171875 3.019532-8.15625 3.019532-11.328125 0l-40.71875-40.71875c-2.390625-2.410156-6.039062-3.050781-9.105468-1.601562-5.054688 2.445312-10.242188 4.597656-15.542969 6.449219-3.265625 1.097656-5.460938 4.164062-5.449219 7.605469v57.601562c0 4.417969-3.582031 8-8 8h-80c-4.417969 0-8-3.582031-8-8v-57.601562c0-3.417969-2.171875-6.457032-5.40625-7.566407-5.300781-1.847656-10.492188-4.003906-15.546875-6.449219-3.066406-1.449218-6.714844-.808593-9.101563 1.601563l-40.722656 40.71875c-3.171875 3.019531-8.152344 3.019531-11.328125 0l-56.558593-56.558594c-1.503907-1.5-2.351563-3.539062-2.351563-5.664062s.847656-4.164063 2.351563-5.664063l40.71875-40.71875c2.410156-2.390625 3.050781-6.039062 1.601562-9.105468-2.445312-5.054688-4.597656-10.242188-6.449219-15.542969-1.097656-3.265625-4.164062-5.460938-7.605469-5.449219h-57.601562c-4.417969 0-8-3.582031-8-8v-80c0-4.417969 3.582031-8 8-8h57.601562c3.417969 0 6.457032-2.171875 7.566407-5.40625 1.847656-5.300781 4.003906-10.492188 6.449219-15.546875 1.449218-3.066406.808593-6.714844-1.601563-9.101563l-40.71875-40.722656c-1.503906-1.5-2.351563-3.539062-2.351563-5.664062s.847657-4.160156 2.351563-5.664063l56.558594-56.558593c3.167969-3.027344 8.160156-3.027344 11.328125 0l40.71875 40.71875c2.390625 2.410156 6.039062 3.050781 9.105468 1.601562 5.054688-2.445312 10.242188-4.597656 15.542969-6.449219 3.265625-1.097656 5.460938-4.164062 5.449219-7.605469v-57.601562c0-4.417969 3.582031-8 8-8h80c4.417969 0 8 3.582031 8 8v57.601562c0 3.417969 2.171875 6.457032 5.40625 7.566407 5.300781 1.847656 10.492188 4.003906 15.546875 6.449219 3.066406 1.449218 6.714844.808593 9.101563-1.601563l40.722656-40.71875c3.171875-3.019531 8.152344-3.019531 11.328125 0l56.558593 56.558594c1.503907 1.5 2.351563 3.539062 2.351563 5.664062s-.847656 4.164063-2.351563 5.664063l-40.71875 40.71875c-2.410156 2.390625-3.050781 6.039062-1.601562 9.105468 2.445312 5.054688 4.597656 10.242188 6.449219 15.542969 1.097656 3.265625 4.164062 5.460938 7.605469 5.449219h57.601562c4.417969 0 8 3.582031 8 8zm0 0" /><path d="m240 136c-57.4375 0-104 46.5625-104 104s46.5625 104 104 104 104-46.5625 104-104c-.066406-57.410156-46.589844-103.933594-104-104zm0 192c-48.601562 0-88-39.398438-88-88s39.398438-88 88-88 88 39.398438 88 88c-.058594 48.578125-39.421875 87.941406-88 88zm0 0" /></svg>
+                  <svg viewBox="2 2 17 17">
+                    <g>
+                      <defs>
+                        <rect id="SVGID_1_" x="-3.9" width="27.3" height="16.1"/>
+                      </defs>
+                      <path className="st1" d="M13.9,7.3c0-0.2-0.1-0.3-0.3-0.3H8.3H6.6H5.4C5.2,7,5.1,7.1,5.1,7.3v7.5c0,0.2,0.1,0.3,0.3,0.3h8.7
+                        c0.2,0,0.3-0.1,0.3-0.3V9c0-0.2-0.1-0.3-0.3-0.3h-0.2V7.3z M9.4,11.4l-0.5,0.5c-0.1,0.1-0.3,0.1-0.4,0c-0.1-0.1-0.1-0.3,0-0.4
+                        l1.2-1.2l1.2,1.2c0.1,0.1,0.1,0.3,0,0.4c-0.1,0.1-0.3,0.1-0.4,0L10,11.4v1.8c0,0.2-0.1,0.3-0.3,0.3s-0.3-0.1-0.3-0.3V11.4z
+                        M13.3,7.6v1.2H9.6L8.8,7.6H13.3z"/>
+                    </g>
+                  </svg>
               </div>
-                <label htmlFor="json-file">{this.state.cashflowJSONName || " #| choose json"}</label>
+                <label htmlFor="json-file">{this.state.cashflowJSONName || "choose json"}</label>
             </div>
 
-
-            <input id="current-quarter"
-              type="number"
-              onChange={this.update('currentQuarter')} />
-            <label htmlFor="current-quarter"> current qtr</label>
-
+            <div className="text-input-container current-quarter-input-container">
+              <input className="current-quarter-input"
+                type="number"
+                value={currentQuarter}
+                onChange={this.update('currentQuarter')} />
+              <label htmlFor="current-quarter"> current qtr</label>
+            </div>
           </div>
 
           <DivWithCorners>
-            <span className="text">
-              <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
+            <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
                 cashflow={this.state.cashflow ? this.state.cashflow : sampleProject}
                 updateCashflow={this.updateCashflow}
                 receiveCashflowData={this.receiveCashflowData} />
-            </span>
           </DivWithCorners>
         </div>
 
@@ -500,35 +496,50 @@ class ProjectForm extends React.Component {
 
         </div>
 
-        <div className="flexed">
+        <div className="flexed pdf-section">
           <div className="file-input-container">
             <div className="file-input">
               <input
                 id="file"
                 type="file"
                 onChange={this.updateFile('planFilePDF')} />
-              <svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg"><path d="m456 176h-52c-.847656-2.175781-1.777344-4.390625-2.785156-6.679688l36.800781-36.800781c9.378906-9.375 9.378906-24.578125 0-33.953125l-56.558594-56.558594c-9.375-9.378906-24.578125-9.378906-33.953125 0l-36.800781 36.800782c-2.289063-1.007813-4.503906-1.9375-6.679687-2.785156v-52.023438c0-13.253906-10.746094-24-24-24h-80.023438c-13.253906 0-24 10.746094-24 24v52c-2.175781.847656-4.390625 1.777344-6.679688 2.785156l-36.800781-36.800781c-9.375-9.378906-24.578125-9.378906-33.953125 0l-56.566406 56.558594c-9.359375 9.382812-9.359375 24.570312 0 33.953125l36.800781 36.800781c-1.007812 2.289063-1.9375 4.503906-2.785156 6.679687h-52.015625c-13.253906 0-24 10.746094-24 24v80.023438c0 13.253906 10.746094 24 24 24h52c.847656 2.175781 1.777344 4.390625 2.785156 6.679688l-36.800781 36.800781c-9.378906 9.375-9.378906 24.578125 0 33.953125l56.558594 56.558594c9.382812 9.359374 24.570312 9.359374 33.953125 0l36.800781-36.800782c2.289063 1.007813 4.503906 1.9375 6.679687 2.785156v52.023438c0 13.253906 10.746094 24 24 24h80.023438c13.253906 0 24-10.746094 24-24v-52c2.175781-.847656 4.390625-1.777344 6.679688-2.785156l36.800781 36.800781c9.382812 9.359375 24.570312 9.359375 33.953125 0l56.566406-56.558594c9.359375-9.382812 9.359375-24.570312 0-33.953125l-36.800781-36.800781c1.007812-2.289063 1.9375-4.503906 2.785156-6.679687h52.015625c13.253906 0 24-10.746094 24-24v-80.023438c0-13.253906-10.746094-24-24-24zm8 104c0 4.417969-3.582031 8-8 8h-57.601562c-3.417969 0-6.457032 2.171875-7.566407 5.40625-1.847656 5.300781-4.003906 10.492188-6.449219 15.546875-1.449218 3.066406-.808593 6.714844 1.601563 9.101563l40.71875 40.722656c1.503906 1.5 2.351563 3.539062 2.351563 5.664062s-.847657 4.160156-2.351563 5.664063l-56.558594 56.558593c-3.171875 3.019532-8.15625 3.019532-11.328125 0l-40.71875-40.71875c-2.390625-2.410156-6.039062-3.050781-9.105468-1.601562-5.054688 2.445312-10.242188 4.597656-15.542969 6.449219-3.265625 1.097656-5.460938 4.164062-5.449219 7.605469v57.601562c0 4.417969-3.582031 8-8 8h-80c-4.417969 0-8-3.582031-8-8v-57.601562c0-3.417969-2.171875-6.457032-5.40625-7.566407-5.300781-1.847656-10.492188-4.003906-15.546875-6.449219-3.066406-1.449218-6.714844-.808593-9.101563 1.601563l-40.722656 40.71875c-3.171875 3.019531-8.152344 3.019531-11.328125 0l-56.558593-56.558594c-1.503907-1.5-2.351563-3.539062-2.351563-5.664062s.847656-4.164063 2.351563-5.664063l40.71875-40.71875c2.410156-2.390625 3.050781-6.039062 1.601562-9.105468-2.445312-5.054688-4.597656-10.242188-6.449219-15.542969-1.097656-3.265625-4.164062-5.460938-7.605469-5.449219h-57.601562c-4.417969 0-8-3.582031-8-8v-80c0-4.417969 3.582031-8 8-8h57.601562c3.417969 0 6.457032-2.171875 7.566407-5.40625 1.847656-5.300781 4.003906-10.492188 6.449219-15.546875 1.449218-3.066406.808593-6.714844-1.601563-9.101563l-40.71875-40.722656c-1.503906-1.5-2.351563-3.539062-2.351563-5.664062s.847657-4.160156 2.351563-5.664063l56.558594-56.558593c3.167969-3.027344 8.160156-3.027344 11.328125 0l40.71875 40.71875c2.390625 2.410156 6.039062 3.050781 9.105468 1.601562 5.054688-2.445312 10.242188-4.597656 15.542969-6.449219 3.265625-1.097656 5.460938-4.164062 5.449219-7.605469v-57.601562c0-4.417969 3.582031-8 8-8h80c4.417969 0 8 3.582031 8 8v57.601562c0 3.417969 2.171875 6.457032 5.40625 7.566407 5.300781 1.847656 10.492188 4.003906 15.546875 6.449219 3.066406 1.449218 6.714844.808593 9.101563-1.601563l40.722656-40.71875c3.171875-3.019531 8.152344-3.019531 11.328125 0l56.558593 56.558594c1.503907 1.5 2.351563 3.539062 2.351563 5.664062s-.847656 4.164063-2.351563 5.664063l-40.71875 40.71875c-2.410156 2.390625-3.050781 6.039062-1.601562 9.105468 2.445312 5.054688 4.597656 10.242188 6.449219 15.542969 1.097656 3.265625 4.164062 5.460938 7.605469 5.449219h57.601562c4.417969 0 8 3.582031 8 8zm0 0" /><path d="m240 136c-57.4375 0-104 46.5625-104 104s46.5625 104 104 104 104-46.5625 104-104c-.066406-57.410156-46.589844-103.933594-104-104zm0 192c-48.601562 0-88-39.398438-88-88s39.398438-88 88-88 88 39.398438 88 88c-.058594 48.578125-39.421875 87.941406-88 88zm0 0" /></svg>
+                <svg viewBox="2 2 17 17">
+                  <g>
+                    <defs>
+                      <rect id="SVGID_1_" x="-3.9" width="27.3" height="16.1"/>
+                    </defs>
+                    <path className="st1" d="M13.9,7.3c0-0.2-0.1-0.3-0.3-0.3H8.3H6.6H5.4C5.2,7,5.1,7.1,5.1,7.3v7.5c0,0.2,0.1,0.3,0.3,0.3h8.7
+                      c0.2,0,0.3-0.1,0.3-0.3V9c0-0.2-0.1-0.3-0.3-0.3h-0.2V7.3z M9.4,11.4l-0.5,0.5c-0.1,0.1-0.3,0.1-0.4,0c-0.1-0.1-0.1-0.3,0-0.4
+                      l1.2-1.2l1.2,1.2c0.1,0.1,0.1,0.3,0,0.4c-0.1,0.1-0.3,0.1-0.4,0L10,11.4v1.8c0,0.2-0.1,0.3-0.3,0.3s-0.3-0.1-0.3-0.3V11.4z
+                      M13.3,7.6v1.2H9.6L8.8,7.6H13.3z"/>
+                  </g>
+                </svg>
             </div>
-            <label htmlFor="file">{this.state.planFilePDFName || " #|choose pdf"}</label>
+            <label htmlFor="file">{this.state.planFilePDFName || "choose pdf"}</label>
           </div>
 
           <DivWithCorners>
-            <span className="text">
               <PDFModal planFilePDFDataURL={this.state.planFilePDFDataURL}/>
-            </span>
           </DivWithCorners>
         </div>
-        <div className="flexed">
-          <input className="text-input inputfile" id="file2"
-            type="file"/>
-          <label htmlFor="file">#|model id</label>
+        <div className="flexed model-id-section">
+          <div className="text-input-container model-id-container">
+            <input className="text-input model-id-input"
+              type="number"
+              step="any"
+              placeholder="model id"
+              value={modelId}
+              onChange={this.update('modelId')} />
+          </div>
 
           <DivWithCorners>
-            <span className="text">Poly Model</span>
+            <div className="project-form-button model-id">
+              <svg className="project-form-button-icons" viewBox="-8 -8 160 160"><g><g><rect x="127.026" y="103.44" transform="matrix(0.8661 0.4999 -0.4999 0.8661 69.9909 -49.9074)" width="2.251" height="4.499" /><path d="M122.188,104.845l-3.863-2.23l2.25-3.896l3.863,2.23L122.188,104.845z M114.462,100.383l-3.863-2.23    l2.25-3.896l3.863,2.23L114.462,100.383z M106.734,95.921l-3.864-2.23l2.25-3.896l3.864,2.23L106.734,95.921z M99.007,91.459    l-3.863-2.23l2.25-3.896l3.863,2.23L99.007,91.459z M91.28,86.997l-3.864-2.23l2.25-3.896l3.864,2.23L91.28,86.997z     M83.552,82.535l-3.863-2.23l2.25-3.896l3.863,2.23L83.552,82.535z" /><polygon points="75.825,78.073 75.001,77.598 74.177,78.073 71.927,74.177 75.001,72.402 78.075,74.177   " /><path d="M27.812,104.843l-2.25-3.896l3.863-2.231l2.251,3.896L27.812,104.843z M35.539,100.381l-2.25-3.896    l3.864-2.23l2.25,3.896L35.539,100.381z M43.267,95.919l-2.25-3.896l3.863-2.23l2.25,3.896L43.267,95.919z M50.995,91.458    l-2.251-3.896l3.864-2.231l2.25,3.896L50.995,91.458z M58.722,86.996l-2.25-3.896l3.864-2.23l2.25,3.896L58.722,86.996z     M66.45,82.534l-2.25-3.896l3.863-2.23l2.25,3.896L66.45,82.534z" /><rect x="19.599" y="104.562" transform="matrix(0.5001 0.866 -0.866 0.5001 102.4474 33.9166)" width="4.499" height="2.251" /></g><g><rect x="72.751" y="72.75" width="4.5" height="2.25" /><path d="M77.251,68.288h-4.5v-4.462h4.5V68.288z M77.251,59.365h-4.5v-4.462h4.5V59.365z M77.251,50.442h-4.5    V45.98h4.5V50.442z M77.251,41.519h-4.5v-4.461h4.5V41.519z M77.251,32.596h-4.5v-4.462h4.5V32.596z M77.251,23.673h-4.5v-4.462    h4.5V23.673z" /><rect x="72.751" y="12.5" width="4.5" height="2.25" /></g><g><path d="M75.001,140.098l-56.377-32.549V42.451L75.001,9.902l56.375,32.551v65.098L75.001,140.098z     M23.124,104.951l51.877,29.951l51.875-29.949V45.051L75.001,15.098L23.124,45.049V104.951z" /><polygon points="75.001,77.598 19.749,45.698 21.999,41.802 75.001,72.402 128.001,41.804 130.251,45.7   " /><rect x="72.751" y="75" width="4.5" height="62.5" /></g></g></svg>
+            </div>
           </DivWithCorners>
         </div>
 
-        <textarea className="summary-area" value={this.state.value} onChange={this.update('summary')} ></textarea>
+        <textarea className="description-area" value="description" onChange={this.update('description')} />
         <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"
@@ -657,15 +668,15 @@ export default ProjectForm;
 //
 const sampleProject = {
   "1": {
-    "cashFlow": -50000,
+    "cashFlow": 50000,
     "isActuals": true
   },
   "2": {
-    "cashFlow": -40018,
+    "cashFlow": 40018,
     "isActuals": true
   },
   "3": {
-    "cashFlow": -16857,
+    "cashFlow": 16857,
     "isActuals": true
   },
   "4": {
@@ -673,7 +684,7 @@ const sampleProject = {
     "isActuals": true
   },
   "5": {
-    "cashFlow": -20325,
+    "cashFlow": 20325,
     "isActuals": true
   },
   "6": {
