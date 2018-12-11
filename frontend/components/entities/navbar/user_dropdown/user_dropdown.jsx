@@ -52,6 +52,22 @@ class UserDropdown extends React.Component {
   }
 
   componentDidMount () {
+<<<<<<< HEAD
+=======
+    const drizzle = this.props.drizzle;
+    const address = drizzle.contracts.Token.address;
+    const abi = TokenData.abi;
+
+    const web3 = drizzle.web3;
+    
+    // const Token = new web3.eth.Contract(abi, address); // come up with better solution (API call to database) for supply data
+    // this.interval = setInterval(() => {
+    //   Token.methods.totalSupply().call().then(totalSupply => {
+    //     this.setState({totalSupply})
+    //   })
+    // }, 500);
+  }
+>>>>>>> 33f77a774fe14f41bdddbfd8869dc5277894df99
 
   }
 

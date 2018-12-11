@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.25;
 import './utility/SafeMath.sol';
 import './token/ERC20/Token.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
