@@ -61,14 +61,13 @@ class UserDropdown extends React.Component {
     const abi = TokenData.abi;
 
     const web3 = drizzle.web3;
-
-    const Token = new web3.eth.Contract(abi, address);
-    this.interval = setInterval(() => {
-      Token.methods.totalSupply().call().then(totalSupply => {
-
-        this.setState({totalSupply})
-      })
-    }, 500);
+    
+    // const Token = new web3.eth.Contract(abi, address); // come up with better solution (API call to database) for supply data
+    // this.interval = setInterval(() => {
+    //   Token.methods.totalSupply().call().then(totalSupply => {
+    //     this.setState({totalSupply})
+    //   })
+    // }, 500);
   }
 
   // tick () {
