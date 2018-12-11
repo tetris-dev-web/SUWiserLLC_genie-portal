@@ -500,13 +500,14 @@ class ProjectForm extends React.Component {
           </div>
 
           <DivWithCorners>
-            <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
+            <span className="text">
+              <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
                 cashflow={this.state.cashflow ? this.state.cashflow : sampleProject}
                 updateCashflow={this.updateCashflow}
                 receiveCashflowData={this.receiveCashflowData}
                 updateActuals={this.updateActuals}
                 updateCashflowValue={this.updateCashflowValue}
-                 />
+                />
             </span>
           </DivWithCorners>
         </div>
