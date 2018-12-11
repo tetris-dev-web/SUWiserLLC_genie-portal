@@ -419,7 +419,6 @@ class ProjectForm extends React.Component {
               onChange={this.update('longitude')} />
           </div>
           <DivWithCorners>
-            <span className="text">
               <DropPinModal
                 lat={this.state.latitude}
                 lng={this.state.longitude}
@@ -428,7 +427,6 @@ class ProjectForm extends React.Component {
                 dropPinClick={this.dropPinClick}
                 updateAddress={this.updateAddress}
                 />
-            </span>
           </DivWithCorners>
         </div>
         {this.renderLatLngErrors(this.state.drop_pin_clicked)}
@@ -453,12 +451,10 @@ class ProjectForm extends React.Component {
           </div>
 
           <DivWithCorners>
-            <span className="text">
-              <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
+            <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
                 cashflow={this.state.cashflow ? this.state.cashflow : sampleProject}
                 updateCashflow={this.updateCashflow}
                 receiveCashflowData={this.receiveCashflowData} />
-            </span>
           </DivWithCorners>
         </div>
 
@@ -499,9 +495,7 @@ class ProjectForm extends React.Component {
           </div>
 
           <DivWithCorners>
-            <span className="text">
               <PDFModal planFilePDFDataURL={this.state.planFilePDFDataURL}/>
-            </span>
           </DivWithCorners>
         </div>
         <div className="flexed">
@@ -515,7 +509,7 @@ class ProjectForm extends React.Component {
           </div>
 
           <DivWithCorners>
-            <span className="text">Poly Model</span>
+            Poly Model
           </DivWithCorners>
         </div>
 

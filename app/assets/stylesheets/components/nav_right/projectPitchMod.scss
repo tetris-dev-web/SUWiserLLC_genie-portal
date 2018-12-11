@@ -142,7 +142,7 @@ $cornerSize: 5px;
     height: 120px;
     max-height: 200px;
   }
-
+  
   input[type=submit] {
     background: white;
     color: grey;
@@ -150,66 +150,65 @@ $cornerSize: 5px;
     height: 30px;
     font-size: 20px;
   }
-
+  
   label {
     margin-bottom: 0;
   }
 }
 
 .cornered-container {
-  width:78px;
-  .cornered-div {
-    position: relative;
-    .top-corner-div{
-      position: absolute;
-      display: flex;
-      top: 0px;
-      .top-corner{
-        display: inline-block;
-        border-top: solid 1px white;
-        border-left: solid 1px white;
-        height: $cornerSize;
-        width: $cornerSize;
-      }
-    }
-    .bottom-corner-div{
-      position: absolute;
-      display: flex;
-      bottom: 0px;
-
-      .bottom-corner{
-        display: inline-block;
-        border-bottom: solid 1px white;
-        border-left: solid 1px white;
-        height: $cornerSize;
-        width: $cornerSize;
-      }
-    }
-    .right{
-      text-align: right;
-      right: 0px;
-      .top-corner{
-        border-right: solid 1px white;
-        border-left: none;
-      }
-      .bottom-corner{
-        border-right: solid 1px white;
-        border-left: none;
-      }
+  position: relative;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: white;
+    .project-form-button-icons {
+      fill: black;
     }
   }
 
-  .text {
-    justify-content: center;
-    display: flex;
-    color: white;
-    text-decoration: none;
+  .top-left-corner,
+  .top-right-corner,
+  .bottom-left-corner,
+  .bottom-right-corner {
+    position: absolute;
+    height: $cornerSize;
+    width: $cornerSize;
+  }
 
-    &:hover {
-      cursor: pointer;
-      background-color: white;
-      color: black;
-    }
+  .top-left-corner{
+    top: 0;
+    left: 0;
+    border-top: solid 1px white;
+    border-left: solid 1px white;
+  }
+  
+  .top-right-corner{
+    top: 0;
+    right: 0;
+    border-top: solid 1px white;
+    border-right: solid 1px white;
+  }
+
+  .bottom-left-corner{
+    bottom: 0;
+    left: 0;
+    border-bottom: solid 1px white;
+    border-left: solid 1px white;
+  }
+
+  .bottom-right-corner{
+    bottom: 0;
+    right: 0;
+    border-bottom: solid 1px white;
+    border-right: solid 1px white;
+  }
+
+  .project-form-button-icons {
+    fill: white;
+    width: 100%;
   }
 }
 
