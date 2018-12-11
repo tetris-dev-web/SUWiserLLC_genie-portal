@@ -47,7 +47,7 @@ class DropPinModal extends React.Component {
           onRequestClose={this.closeModal}
           style={ModalStyle}
           >
-          {console.log("Props from drop pin is: ",this.props)}
+
           <div className='drop-pin-flex'>
             <DropPinAddress
               lat={this.props.lat}
