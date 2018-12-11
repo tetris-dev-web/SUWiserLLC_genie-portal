@@ -211,9 +211,9 @@ class ProjectForm extends React.Component {
 
   calculateNetPresentValue(projectCashflows){
     let discountFactor = this.calculateDiscountFactor();
-    let cashflows = Object.values(processCashData(projectCashflows)).map(el => el["cashFlow"]);
+    // let cashflows = Object.values(processCashData(projectCashflows)).map(el => el["cashFlow"]);
     let finance = new Finance();
-    let netPresentValue = finance.NPV(discountFactor, 0, ...cashflows);
+    let netPresentValue = finance.NPV(discountFactor, 0, ...projectCashflows);
     return netPresentValue;
   }
 
@@ -369,7 +369,7 @@ class ProjectForm extends React.Component {
   render() {
     // console.log("Finance is ", Finance);
     // console.log("Finance.NPV is ", new Finance().NPV);
-    console.log("Net Present Value is: ", this.calculateNetPresentValue(Object.values(processCashData(this.props.projects))[0].cashflow));
+    // console.log("Net Present Value is: ", this.calculateNetPresentValue(Object.values(processCashData(this.props.projects))[0].cashflow));
     // console.log("Discount factor is: ", this.calculateDiscountFactor());
     // console.log("Capital is: ", this.calculateTotalCapitalDeployed());
     // console.log("Cashflow is: ", this.state.cashflow);
@@ -499,7 +499,8 @@ class ProjectForm extends React.Component {
 
           <div className="cap-row">
             <span>valuation</span>
-            <div className="style2">$830,000</div>
+
+            <div className="style2">{this.state.projected_cashflow ? this.calculateNetPresentValue(Object.values(this.state.projected_cashflow).slice(this.state.currentQuarter - 1)) : '$830,000'}</div>
             <div className="style2">{this.state.accumulatedRevenue ? this.calculateCapitalRequired() : "$130,000"}</div>
             <span>capital <br />  required</span>
           </div>
