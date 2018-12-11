@@ -76,8 +76,6 @@ class ProjectForm extends React.Component {
 
     const file = this.state.imageFile;
     const data = new FormData();
-    const {drizzle, drizzleState} = this.props;
-    const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
     if (file) data.append("project[file]", file);
     data.append("project[title]", this.state.title);
@@ -112,9 +110,6 @@ class ProjectForm extends React.Component {
 
     // Moved until data is properly structured
     this.props.createProject(data);
-    // .then( () => {
-    //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
-    // });
     if (this.props.errors.length == 0) {
       this.props.closeModal();
       window.location.reload();

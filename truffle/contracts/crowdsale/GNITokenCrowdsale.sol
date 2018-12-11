@@ -5,12 +5,15 @@ import '../Project.sol';
 import '../ProjectStub.sol';
 import '../token/ERC20/Token.sol';
 import '../InvestorList.sol';
+import '../Reimbursements.sol';
+
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   uint256 public totalValuation;
   InvestorList public investorList;
   address public dividendWallet;
+  address public reimbursements;
 
   constructor
       (
@@ -20,7 +23,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         address _developer,
         address _dividendWallet,
         Token _token,
-        InvestorList _investorList
+        InvestorList _investorList,
+        address _reimbursements
       )
       public
       Crowdsale(_rate, _developer, _token)
@@ -28,6 +32,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         investorList = InvestorList(_investorList);
         totalValuation = 0;
         dividendWallet = _dividendWallet;
+        reimbursements = _reimbursements;
   }
 
   address[] public projectAddrs;
@@ -68,7 +73,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
 
    updateProjects(_projectVotedForId);
- }
+  }
 
  address public tentativeLeaderAddr;
  uint256 public tentativeLeaderCapRequired;
@@ -84,6 +89,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  function considerTentativeLeaderShip (uint256 _projectId) public {
    address projectAddr = projectAddrs[_projectId];
+
+   require(Project(projectAddr).open() && !Project(projectAddr).active());
 
    if (
      tentativeLeaderAddr == address(0) ||
@@ -153,21 +160,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
  }
 
- uint256 public inactiveTokensAtClosing;
- uint256 public weiToReimburse;
-
  function reimburseFunds () public {
    require(hasClosed());
-   inactiveTokensAtClosing = Token(token).totalInactiveSupply().sub(Token(token).totalPendingActivations());
-   weiToReimburse = weiRaised;
- }
-
- function claimReimbursement (address account) public {
-   uint256 inactiveTokens = Token(token).inactiveBalanceOf(account);
-   uint256 pendingActivations = Token(token).pendingActivations(account);
-   uint256 accountTokens = inactiveTokens.sub(pendingActivations);
-   uint256 reimbursement = weiToReimburse.mul(accountTokens).div(inactiveTokensAtClosing);
-   account.transfer(reimbursement);
+   reimbursements.transfer(weiRaised);
  }
 
  function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
