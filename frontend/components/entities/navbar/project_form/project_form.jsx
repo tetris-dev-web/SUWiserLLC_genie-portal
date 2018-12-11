@@ -8,6 +8,7 @@ import PDFModal from './pdf_modal/pdf_modal';
 import Finance from 'financejs';
 import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
+import { merge } from 'lodash';
 
 
 class ProjectForm extends React.Component {
@@ -62,6 +63,8 @@ class ProjectForm extends React.Component {
     this.storeAddress = this.storeAddress.bind(this);
     this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this);
     this.parseInputFile = this.parseInputFile.bind(this);
+    this.updateCashflowValue = this.update.bind(this);
+    this.updateActuals = this.updateActuals.bind(this);
   }
 
   componentDidMount() {
@@ -251,13 +254,28 @@ class ProjectForm extends React.Component {
 
   updateCashflow(cashflow) {
     // Needed to update project state with cashflow state
-    console.log("Updating cashflow with Project Form's function: ", this);
     return e => {
-      console.log("Event is: ", e);
-      console.log("This from updateCashflow function: ", this);
       e.preventDefault();
-      this.setState({ 'cashflow': cashflow });
+      this.setState({ cashflow });
     };
+  }
+
+  updateCashflowValue(quarter) {
+    // console.log("Type of quarter is: ", typeof quarter);
+    return e => {
+      e.preventDefault();
+      let cashflow = merge({}, this.state.cashflow);
+      cashflow[quarter].cashFlow = parseInt(e.currentTarget.value);
+      const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
+      this.setState({ cashflow, accumulatedRevenue });
+    };
+  }
+
+  updateActuals(quarter) {
+      console.log('i have second entried');
+      let cashflow = merge({}, this.state.cashflow);
+      cashflow[quarter].isActuals = !cashflow[quarter].isActuals;
+      this.setState({cashflow});
   }
 
   updateFile(fileType) {
@@ -478,7 +496,10 @@ class ProjectForm extends React.Component {
               <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
                 cashflow={this.state.cashflow ? this.state.cashflow : sampleProject}
                 updateCashflow={this.updateCashflow}
-                receiveCashflowData={this.receiveCashflowData} />
+                receiveCashflowData={this.receiveCashflowData}
+                updateActuals={this.updateActuals}
+                updateCashflowValue={this.updateCashflowValue}
+                 />
             </span>
           </DivWithCorners>
         </div>
