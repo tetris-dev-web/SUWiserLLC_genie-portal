@@ -1,15 +1,57 @@
 @import "../../util/variables";
 $cornerSize: 5px;
 
-.main-input {
-  background-color: $white;
-  margin-bottom: 8px;
+.text-input-container {
+  display: flex;
+  align-items: center;
   border-radius: 5px;
-  padding: 2px 3px 2px 8px;
+}
+
+.text-input {
+  width: 100%;
+  padding: 2px 3px;
   color: $black;
-  width: 80%;
+
   &::-webkit-input-placeholder {
     color: $db-fade3;
+  }
+}
+
+.file-input-container {
+  display: flex;
+}
+
+.file-input {
+  overflow: hidden;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  margin-right: 20px;
+
+  input {
+    filter: alpha(opacity=1);
+    -moz-opacity: 0.01;
+    opacity: 0.01;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  svg {
+    width: 100%;
+  }
+
+  .st0 {
+    fill: none;
+    stroke: #FFFFFF;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st1 {
+    clip-path: url(#SVGID_2_);
+    fill: #FFFFFF;
   }
 }
 
@@ -50,88 +92,204 @@ $cornerSize: 5px;
 .form-box {
   height: 100%;
   justify-content: space-between;
-  .lat-input,.long-input{
+
+  .project-title-input-container {
+    width: 80%;
+    background-color: $white;
+    margin-bottom: 10px;
+
+    &:before {
+      content: "";
+      border-right: 2px solid $db-fade3;
+      color: $db-fade3;
+      width: 25px;
+      height: 14px;
+    }
+  }
+
+  .lat-input-container,
+  .long-input-container {
+    background-color: $white;
     font-size: 10px;
     width: 55px;
+
+    &:before {
+      content: "";
+      border-right: 2px solid $db-fade3;
+      color: $db-fade3;
+      width: 20px;
+      height: 14px;
+    }
+
   }
+  
+  .cashflows-section {
+    align-items: center;
+  }
+  
+  .current-quarter-input-container {
+    margin-top: 10px;
+    
+    .current-quarter-input {
+      color:black;
+      padding-left: 10px;
+      margin-right: 10px;
+      width: 30px;
+      background-color: #fff;
+      border-radius: 5px;
+    }
+  }
+  
+  .pdf-section,
+  .model-id-section {
+    .cornered-container {
+      margin-right: 60px;
+    }
+  }
+
+  .model-id-container {
+    background-color: $white;
+    font-size: 10px;
+    width: 100px;
+
+    &:before {
+      content: "";
+      border-right: 2px solid $db-fade3;
+      color: $db-fade3;
+      width: 20px;
+      height: 14px;
+    }
+  }
+
   .flexed {
     width: 90%;
     justify-content: space-between;
-    input[type=file]{
-      width: 50%;
+
+    input[type=file] {
+      width: 100%;
     }
   }
-  .description-area{
+
+  .description-area {
     width: 90%;
     max-width: 95%;
     height: 120px;
     max-height: 200px;
   }
-  input[type=submit]{
+  
+  input[type=submit] {
     background: white;
     color: grey;
     width: 120px;
     height: 30px;
     font-size: 20px;
   }
+  
+  label {
+    margin-bottom: 0;
+  }
 }
 
 .cornered-container {
-  width:78px;
-  .cornered-div {
-    position: relative;
-    .top-corner-div{
-      position: absolute;
-      display: flex;
-      top: 0px;
-      .top-corner{
-        display: inline-block;
-        border-top: solid 1px white;
-        border-left: solid 1px white;
-        height: $cornerSize;
-        width: $cornerSize;
-      }
-    }
-    .bottom-corner-div{
-      position: absolute;
-      display: flex;
-      bottom: 0px;
-
-      .bottom-corner{
-        display: inline-block;
-        border-bottom: solid 1px white;
-        border-left: solid 1px white;
-        height: $cornerSize;
-        width: $cornerSize;
-      }
-    }
-    .right{
-      text-align: right;
-      right: 0px;
-      .top-corner{
-        border-right: solid 1px white;
-        border-left: none;
-      }
-      .bottom-corner{
-        border-right: solid 1px white;
-        border-left: none;
-      }
+  position: relative;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: white;
+    .project-form-button-icons {
+      fill: black;
     }
   }
 
-  .text {
-    justify-content: center;
-    display: flex;
-    color: white;
-    text-decoration: none;
+  .top-left-corner,
+  .top-right-corner,
+  .bottom-left-corner,
+  .bottom-right-corner {
+    position: absolute;
+    height: $cornerSize;
+    width: $cornerSize;
+  }
 
-    &:hover {
-      cursor: pointer;
-      background-color: white;
-      color: black;
+  .top-left-corner{
+    top: 0;
+    left: 0;
+    border-top: solid 1px white;
+    border-left: solid 1px white;
+  }
+  
+  .top-right-corner{
+    top: 0;
+    right: 0;
+    border-top: solid 1px white;
+    border-right: solid 1px white;
+  }
+
+  .bottom-left-corner{
+    bottom: 0;
+    left: 0;
+    border-bottom: solid 1px white;
+    border-left: solid 1px white;
+  }
+
+  .bottom-right-corner{
+    bottom: 0;
+    right: 0;
+    border-bottom: solid 1px white;
+    border-right: solid 1px white;
+  }
+  
+  .project-form-button {
+    position: relative;
+
+    &.drop-pin:hover:after {
+      content: "drop pin";
+      left: 50%;
+      bottom: -15px;
+      transform: translateX(-50%);
+      display: block;
+      position: absolute;
+      white-space: nowrap;
     }
+
+    &.cashflow:hover:after {
+      content: "cashflows";
+      left: 50%;
+      bottom: -15px;
+      transform: translateX(-50%);
+      display: block;
+      position: absolute;
+      white-space: nowrap;
+    }
+
+    &.pdf:hover:after {
+      content: "plan";
+      right: -40px;
+      top: 40%;
+      transform: translateY(-50%);
+      display: block;
+      position: absolute;
+      white-space: nowrap;
+    }
+
+    &.model-id:hover:after {
+      content: "poly model";
+      right: -70px;
+      top: 40%;
+      transform: translateY(-50%);
+      display: block;
+      position: absolute;
+      white-space: nowrap;
+    }
+  }
+  
+  .project-form-button-icons {
+    fill: white;
+    width: 100%;
   }
 }
+
 
 
 .fin-plan-container {
@@ -142,37 +300,6 @@ $cornerSize: 5px;
   margin-bottom: 5px;
   h5 {
     margin: 0;
-  }
-}
-
-.file-container {
-  justify-self: stretch;
-  .file-input {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-    &:focus + label {
-      outline: 1px dotted #000;
-      outline: -webkit-focus-ring-color auto 5px;
-    }
-  }
-  label {
-    margin: 0;
-    display: inline-block;
-    width: 100%;
-    border-radius: 5px;
-    text-align: center;
-    color: $db-fade3;
-    white-space: nowrap;
-    background-color: $white;
-    &:hover {
-      background-color: $db-fade;
-      color: white;
-      cursor: pointer;
-    }
   }
 }
 
@@ -281,31 +408,6 @@ $cornerSize: 5px;
   }
 }
 
-.inputfile {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
-}
-
-.inputfile + label {
-    font-weight: 700;
-    color: white;
-    background-color: white;
-    color: gray;
-    width: 114px;
-    display: flex;
-    // justify-content: center;
-    align-items: center;
-}
-
-.inputfile:focus + label,
-.inputfile + label:hover {
-    // background-color: red;
-}
-
 .drop-pin-flex {
   display: flex;
   flex-direction: row;
@@ -315,45 +417,22 @@ $cornerSize: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    flex: 2 0 0;
+    flex: 1.5 0 0;
     height: 100%;
     color: white;
-    padding: 5% 0px 5% 0px;
-    .latlng {
+    div {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .address-inner {
-      display: flex;
-      flex: .5 0 0;
-      flex-direction: column;
-      justify-content: space-around;
-      height: 70%;
-      div {
-        display: flex;
-        flex: 1 0 0;
-        align-items: center;
-        justify-content: center;
-      }
-      input {
-        display: flex;
-        flex: .2 0 0;
-        border-radius: 5px;
-        width: 50%;
-        background: white;
-        color: black;
-        margin: 0 auto;
-      }
+      flex: 1 0 0;
+      align-items: center;
+      justify-content: center;
     }
     input {
-      border-radius: 5px;
-      flex: .1 0 0;
+      flex: .2 0 0;
       width: 50%;
       background: white;
       color: black;
       margin: 0 auto;
-      margin-bottom: 5%;
+      margin-bottom: 10%;
     }
   }
 
