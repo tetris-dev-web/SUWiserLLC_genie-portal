@@ -41,10 +41,10 @@ class ProjectForm extends React.Component {
       cashflowJSONName: '',
       accumulatedRevenue: '',
       capital_required: '',
+      planFilePDF: '',
       planFilePDFDataURL: '',
       planFilePDFName: '',
       drop_pin_clicked: false,
-      modelId: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -81,7 +81,7 @@ class ProjectForm extends React.Component {
     const {drizzle, drizzleState} = this.props;
     const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
-    const projectData = Object.assign({}, this.state)
+    // const projectData = Object.assign({}, this.state)
 
 
     if (file) data.append("project[file]", file);
@@ -106,6 +106,7 @@ class ProjectForm extends React.Component {
     data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow));
     data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow));
     data.append("project[revenue]", this.state.revenue);
+    data.append("project[pdf_file]", this.state.planFilePDF);
     // data.append("project[planFilePDFDataURL]", this.state.planFilePDFDataURL)
     //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
     //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving
@@ -197,7 +198,7 @@ class ProjectForm extends React.Component {
     return min * -1;
     // this.setState({capital_required: min});
   }
-;
+
   calculateDiscountFactor(){
     // console.log("Failed Projects are: ", this.getFailedProjects());
     let capitalDeployed = this.calculateTotalCapitalDeployed();
@@ -280,13 +281,13 @@ class ProjectForm extends React.Component {
                 currentQuarter: this.findCurrentQuarter(quarters, cashflow),
               },
               parsedData
-            )
-            // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
-          ); })
+            ));
+          });
           break;
         case "planFilePDF":
           this.parseInputFile(file).then(planFilePDFDataURL => {
             this.setState({
+              planFilePDF: file,
               planFilePDFDataURL,
               planFilePDFName: file.name
             });
@@ -405,7 +406,7 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, latitude, longitude, modelId, currentQuarter
+    let { title, latitude, longitude, model_id, currentQuarter
       // revenue, valuation, description, model_id, city, country, continent, icon
     } = this.state;
 
@@ -543,11 +544,10 @@ class ProjectForm extends React.Component {
         <div className="flexed model-id-section">
           <div className="text-input-container model-id-container">
             <input className="text-input model-id-input"
-              type="number"
               step="any"
               placeholder="model id"
-              value={modelId}
-              onChange={this.update('modelId')} />
+              value={model_id}
+              onChange={this.update('model_id')} />
           </div>
 
           <DivWithCorners>
