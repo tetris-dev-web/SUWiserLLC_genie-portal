@@ -37,6 +37,10 @@ contract ProjectStub is Project, ContractStub {
     totalVotes = mockVotes;
   }
 
+  function setStubClosingTime (uint256 time) public {
+    closingTime = time;
+  }
+
   function vote (address voter, uint256 voteAmount) external {
     CallData storage methodState = method['vote'];
     methodState.firstAddress = voter;
@@ -55,6 +59,12 @@ contract ProjectStub is Project, ContractStub {
       methodState.thirdAddress = voter;
       methodState.thirdUint = voteAmount;
     }
+  }
+
+  bool stubActiveStatus;
+
+  function setStubActiveStatus (bool status) public {
+    active = status;
   }
 
   bool stubOpenStatus;

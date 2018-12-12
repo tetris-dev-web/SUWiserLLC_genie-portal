@@ -47,7 +47,7 @@ genesis_cashflow = {
     "isActuals": true
   },
   "5": {
-    "cashFlow": 20325,
+    "cashFlow": -20325,
     "isActuals": true
   },
   "6": {
@@ -357,7 +357,7 @@ project4 = Project.create!(
   creator_id: user2.id,
   created_at: "14/03/2018",
   status: "deployed",
-  cashflow: hamInn_cashflow,
+  cashflow: genesis_cashflow,
   sketch_link: hamInn_sketch_link,
   bus_plan_link: hamInn_bus_link,
   start_date: hamInn_start_date,
@@ -443,5 +443,5 @@ project8 = Project.create(
  latitude: 0.4083637e2,
  longitude: -0.73944585e2,
  summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
- votes: HamInn_votes
+ votes: hamInn_votes
 )

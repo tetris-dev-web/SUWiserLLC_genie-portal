@@ -46,7 +46,13 @@ class ProjectGraph extends React.Component {
   }
 
   toggleModalonClickandPassProject(projectClicked) {
-
+    if (typeof projectClicked.cashflow === "string"){
+      projectClicked.cashflow = JSON.parse(projectClicked.cashflow)
+      projectClicked.actual_cashflow = JSON.parse(projectClicked.actual_cashflow)
+      projectClicked.accum_projected_cashflow = JSON.parse(projectClicked.accum_projected_cashflow)
+      projectClicked.accum_actual_cashflow = JSON.parse(projectClicked.accum_actual_cashflow)
+      projectClicked.projected_cashflow = JSON.parse(projectClicked.projected_cashflow)
+    }
     this.state.isModalOpen === false ? (this.setState({ isModalOpen: true, projectClicked}))
       : (this.setState({ isModalOpen: false}))
 
@@ -102,6 +108,17 @@ class ProjectGraph extends React.Component {
 
     const ProjectNodeData = this.formatData(projectKeys);
     const projectData = projectKeys.map(key => {
+        if (typeof this.props.data[key].cashflow === 'string')
+        this.props.data[key].cashflow = JSON.parse(this.props.data[key].cashflow)
+        // if (typeof this.props.data[key].accum_actual_cashflow === 'string')
+        // this.props.data[key].accum_actual_cashflow = JSON.parse(this.props.data[key].accum_actual_cashflow)
+        // if (typeof this.props.data[key].accum_projected_cashflow === 'string')
+        // this.props.data[key].accum_projected_cashflow = JSON.parse(this.props.data[key].accum_projected_cashflow)
+        // if (typeof this.props.data[key].actual_cashflow === 'string')
+        // this.props.data[key].actual_cashflow = JSON.parse(this.props.data[key].actual_cashflow)
+
+      // console.log("This.props.data[key] is: ", this.props.data[key]);
+      // console.log(this.props.data[key]);
       return this.props.data[key];
     });
     const cities = ProjectNodeData.cities;

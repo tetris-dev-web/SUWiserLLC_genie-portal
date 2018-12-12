@@ -8,7 +8,6 @@
 
 .project-modal-grid{
   display: grid;
-  // background: black;
   padding-right: 10px;
   height: 100%;
   overflow-y: scroll;
@@ -20,7 +19,6 @@
      "f f f f f f f f f f f f"
      "t t t t g g g g d d d d"
      "m m m m m m m m m m m m";
-  // grid-row-gap: 25px;
 
 
   .iframe{
@@ -32,6 +30,10 @@
       height: 100%;
       a img{
         visibility: hidden;
+      }
+      #iframe{
+        width: 100%;
+        height: 100%;
       }
     }
   }
@@ -51,6 +53,7 @@
   .project-description{
     grid-area: g;
     height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -65,10 +68,20 @@
       margin-top: 25px;
       text-align: justify;
       height: 100%;
+      width:100%;
       padding: 6px;
       overflow:auto;
       .project-summary{
         font-weight: bold !important;
+        resize: none;
+        height: 80%;
+        width:100%;
+        border: none;
+        background: transparent;
+        color: white;
+      }
+      .project-summary:active, .project-summary:focus{
+        border: none;
       }
     }
     .bus-plan-download{

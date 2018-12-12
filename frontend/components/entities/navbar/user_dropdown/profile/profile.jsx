@@ -52,7 +52,7 @@ class Profile extends React.Component {
 
     this.props.updateUser(updatedUser).then(() => {
       this.props.updateUsernameDisplay(updatedUser);
-      $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
+      // $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
     });
   }
 

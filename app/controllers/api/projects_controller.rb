@@ -14,6 +14,7 @@ class Api::ProjectsController < ApplicationController
     if @project.save
       render json: @project
     else
+      puts @project.errors.full_messages
       render json: @project.errors.full_messages, status: 422
     end
   end
@@ -38,9 +39,13 @@ class Api::ProjectsController < ApplicationController
   end
 
   def discount_factor
-    capital_deployed = JSON.parse(Project.first.cashflow)["Actual"].values.reduce(:+)
+    capital_deployed = JSON.parse(Project.first.cashflow).values.reduce(:+)
     discount_factor = 50 - ((capital_deployed / 190000.0) + (Project.where('close_date < ?', Time.current).count) * 6)
     render json: discount_factor > 10 ? discount_factor : 10
+  end
+
+  def failed_projects_count
+    render json: Project.where('close_date < ?', Time.current).count
   end
 
 
@@ -49,7 +54,9 @@ class Api::ProjectsController < ApplicationController
     params.require(:project).permit(
       :id, :title, :cashflow, :revenue, :valuation, :model_id,
       :file, :icon, :description, :creator_id, :created_at,
-      :city, :country, :continent, :status, :latitude, :longitude, :summary
+      :city, :country, :continent, :status, :latitude, :longitude, :summary,
+      :actual_cashflow, :accum_projected_cashflow, :accum_actual_cashflow,
+      :projected_cashflow, :planFilePDFDataURL, :capital_required
     )
   end
 end

@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       collection do
         get 'deployed_project_revenue'
         get 'discount_factor'
+        get 'failed_projects_count'
       end
     end
   end

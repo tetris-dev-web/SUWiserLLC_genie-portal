@@ -32,6 +32,7 @@ export function SummaryAndPlan (props){
     <div className="project-description">
 
       <div className="project-text">
+<<<<<<< HEAD
         <div  onKeyPress={null}
               contentEditable={!props.isInvestor}
               className="project-summary"
@@ -39,6 +40,12 @@ export function SummaryAndPlan (props){
               value = {props.summary}>
         {props.summary}>
         </div>
+=======
+        <textarea onChange={null}
+                  disabled={props.isInvestor}
+                  className="project-summary"
+                  value={props.summary}/>
+>>>>>>> 172d92739b52e26ebdf9c2d1929f134df3a1b138
       </div>
 
       <div className="bus-plan-download">

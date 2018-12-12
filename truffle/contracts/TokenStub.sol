@@ -47,6 +47,20 @@ contract TokenStub is Token, ContractStub {
     return balanceA.add(balanceB).add(balanceC);
   }
 
+  function setStubTotalPendingActivations (uint256 amount) public returns(uint256) {
+    totalPendingActivations = amount;
+  }
+
+  mapping(address => uint256) stubPending;
+
+  function pendingActivations(address account) public returns(uint256) {
+    return stubPending[account];
+  }
+
+  function setStubPendingActivations(address account, uint256 amount) public {
+    stubPending[account] = amount;
+  }
+
   function inactiveBalanceOf (address addr) public view returns (uint256) {
     uint256 b;
 
@@ -91,25 +105,23 @@ contract TokenStub is Token, ContractStub {
     return true;
   }
 
+  function activatePending (address account) external returns (bool) {
+    CallData storage methodState = method['activatePending'];
+    methodState.firstAddress = account;
+    methodState.called = true;
+  }
+
+  function increasePendingActivations(uint256 amount) external {
+    CallData storage methodState = method['increasePendingActivations'];
+    methodState.called = true;
+    methodState.firstUint = amount;
+  }
+
   function transferInactive (address _to, uint256 _value) external {
     CallData storage methodState = method['transferInactive'];
     methodState.firstAddress = _to;
     methodState.firstUint = _value;
+
+    methodState.correctCallOrder = method['activatePending'].called == true;
   }
-
-  /* function activate (address investor, uint256 amount) public {
-    CallData storage methodState = method['activate'];
-    methodState.called = true;
-
-    if (methodState.firstAddress == address(0)) {
-      methodState.firstAddress = investor;
-      methodState.firstUint = amount;
-    } else if (methodState.secondAddress == address(0)) {
-      methodState.secondAddress = investor;
-      methodState.secondUint = amount;
-    } else {
-      methodState.thirdAddress = investor;
-      methodState.thirdUint = amount;
-    }
-  } */
 }

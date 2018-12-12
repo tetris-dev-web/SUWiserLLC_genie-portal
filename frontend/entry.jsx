@@ -2,47 +2,53 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import configureStore from './store/store';
 import Root from './components/root';
-import { Drizzle, generateStore } from "drizzle";
-// import MyStringStore from "./contracts/MyStringStore.json"
-import MyStringStore from '../truffle/build/contracts/MyStringStore.json';
+import merge from 'lodash/merge';
+import Web3 from 'web3';
+import TruffleContract from 'truffle-contract';
 import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';
 import Token from '../truffle/build/contracts/Token.json';
 
-
-// testing start
-import { signup, login, logout } from './actions/session_actions'; // its the actions that dispatch login requests
-// testing end
-
 document.addEventListener('DOMContentLoaded', () => {
   let store;
+  let web3Provider;
+  let preloadedState = {};
+
   if (window.currentUser) {
-    const preloadedState = { session: { currentUser: window.currentUser }};
-    store = configureStore(preloadedState);
+    preloadedState = { session: { currentUser: window.currentUser }};
     delete window.currentUser;
-  } else {
-    store = configureStore();
   }
 
-  const chainOptions = {
-    // web3: {
-    //   block: false,
-    //   fallback: {
-    //     type: 'ws',
-    //     url: 'ws://127.0.0.1:8545',
-    //   },
-    // },
-    contracts: [MyStringStore,Token,GNITokenCrowdsale],
-    events: {},
-  };
+  if (typeof web3 != 'undefined') {
+    web3Provider = web3.currentProvider;
+  } else {
+    web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+  }
 
+  const provider = new Web3(web3Provider);
 
-  const drizzleStore = generateStore(chainOptions);
-  const drizzle = new Drizzle(chainOptions, drizzleStore);
+  const token = TruffleContract(Token);
+  token.setProvider(web3Provider);
 
-  window.drizzle = drizzle;
-  window.store = store;
-  window.getState = store.getState;
+  const crowdsale = TruffleContract(GNITokenCrowdsale);
+  crowdsale.setProvider(web3Provider);
 
-  const root = document.getElementById('root');
-  ReactDOM.render(<Root store={store} drizzle={drizzle}/>, root);
+  let account;
+  let tokenInstance;
+  let crowdsaleInstance;
+  provider.eth.getCoinbase((err, _account) => {
+    account = _account;
+    token.deployed().then((_tokenInstance) => {
+      tokenInstance = _tokenInstance;
+    })
+    .then(() => {
+      crowdsale.deployed().then((_crowdsaleInstance) => {
+        crowdsaleInstance = _crowdsaleInstance;
+        preloadedState = merge({}, preloadedState, { network: { account, tokenInstance, crowdsaleInstance, web3 } });
+        store = configureStore(preloadedState);
+        window.getState = store.getState;
+        const root = document.getElementById('root');
+        ReactDOM.render(<Root store={store} />, root);
+      });
+    });
+  });
 });

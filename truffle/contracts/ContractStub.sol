@@ -13,6 +13,7 @@ contract ContractStub {
     address thirdAddress;
     bool called;
     uint256 callCount;
+    bool correctCallOrder;
   }
 
   mapping(string => CallData) internal method;
@@ -36,6 +37,7 @@ contract ContractStub {
     data.thirdAddress = address(0);
     data.called = false;
     data.callCount = 0;
+    data.correctCallOrder = false;
   }
 
   function callHistory (string methodName) public view returns (
@@ -49,7 +51,8 @@ contract ContractStub {
     address,
     address,
     bool,
-    uint256
+    uint256,
+    bool
     ) {
     CallData memory data = method[methodName];
     return (
@@ -63,7 +66,8 @@ contract ContractStub {
       data.secondAddress,
       data.thirdAddress,
       data.called,
-      data.callCount
+      data.callCount,
+      data.correctCallOrder
     );
   }
 }
