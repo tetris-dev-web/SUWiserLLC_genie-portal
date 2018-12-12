@@ -26,7 +26,6 @@ export const createProject = formData => {
     processData: false,
     contentType: false,
     dataType: 'json',
-    // data: {project: formData},
     data: formData,
   });
 };
