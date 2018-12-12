@@ -357,7 +357,7 @@ project4 = Project.create!(
   creator_id: user2.id,
   created_at: "14/03/2018",
   status: "deployed",
-  cashflow: hamInn_cashflow,
+  cashflow: genesis_cashflow,
   sketch_link: hamInn_sketch_link,
   bus_plan_link: hamInn_bus_link,
   start_date: hamInn_start_date,

@@ -14,6 +14,7 @@ class Api::ProjectsController < ApplicationController
     if @project.save
       render json: @project
     else
+      puts @project.errors.full_messages
       render json: @project.errors.full_messages, status: 422
     end
   end

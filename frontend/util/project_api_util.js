@@ -26,6 +26,7 @@ export const createProject = formData => {
     processData: false,
     contentType: false,
     dataType: 'json',
+    // data: {project: formData},
     data: formData,
   });
 };
@@ -91,10 +92,10 @@ export const calculateCashflowData = (cashflow) => {
   //
   // })
   return {
-    projectedCashflow,
-    actualCashflow,
-    accumProjectedCashflow,
-    accumActualCashflow
+    projected_cashflow: projectedCashflow,
+    actual_cashflow: actualCashflow,
+    accum_projected_cashflow: accumProjectedCashflow,
+    accum_actual_cashflow: accumActualCashflow
   };
 }
 

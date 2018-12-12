@@ -108,6 +108,17 @@ class ProjectGraph extends React.Component {
 
     const ProjectNodeData = this.formatData(projectKeys);
     const projectData = projectKeys.map(key => {
+        if (typeof this.props.data[key].cashflow === 'string')
+        this.props.data[key].cashflow = JSON.parse(this.props.data[key].cashflow)
+        // if (typeof this.props.data[key].accum_actual_cashflow === 'string')
+        // this.props.data[key].accum_actual_cashflow = JSON.parse(this.props.data[key].accum_actual_cashflow)
+        // if (typeof this.props.data[key].accum_projected_cashflow === 'string')
+        // this.props.data[key].accum_projected_cashflow = JSON.parse(this.props.data[key].accum_projected_cashflow)
+        // if (typeof this.props.data[key].actual_cashflow === 'string')
+        // this.props.data[key].actual_cashflow = JSON.parse(this.props.data[key].actual_cashflow)
+
+      // console.log("This.props.data[key] is: ", this.props.data[key]);
+      // console.log(this.props.data[key]);
       return this.props.data[key];
     });
     const cities = ProjectNodeData.cities;

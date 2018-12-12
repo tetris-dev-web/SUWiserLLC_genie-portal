@@ -6,9 +6,16 @@ import CashFlowModal from './cashflow_modal/cashflow_modal';
 import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
+<<<<<<< HEAD
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal';
 
+=======
+import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
+import DropPinModal from './drop_pin_modal/drop_pin_modal';
+import { merge } from 'lodash';
+import PolyModal from './poly_modal/poly_modal';
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
 
 class ProjectForm extends React.Component {
 
@@ -57,6 +64,7 @@ class ProjectForm extends React.Component {
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
 <<<<<<< HEAD
+<<<<<<< HEAD
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
@@ -66,11 +74,20 @@ class ProjectForm extends React.Component {
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
+=======
+    // this.parseCashflowData = this.parseCashflowData.bind(this);
+    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
+    this.dropPinClick = this.dropPinClick.bind(this);
+    this.updateLatLng = this.updateLatLng.bind(this);
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
     this.storeAddress = this.storeAddress.bind(this);
     this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this);
     this.parseInputFile = this.parseInputFile.bind(this);
     this.updateCashflowValue = this.update.bind(this);
     this.updateActuals = this.updateActuals.bind(this);
+<<<<<<< HEAD
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
+=======
 >>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
   }
 
@@ -110,9 +127,12 @@ class ProjectForm extends React.Component {
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
 <<<<<<< HEAD
+<<<<<<< HEAD
     data.append("project[capital_required]", this.state.capital_required);
 
 =======
+=======
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
     data.append("project[capital_required]", (this.calculateCapitalRequired()));
     data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow));
     data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow));
@@ -207,12 +227,18 @@ class ProjectForm extends React.Component {
 
   calculateCapitalRequired() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     setState({capital_required: this.state.accumulatedRevenue.min()});
 =======
+=======
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
     let valuesArray = Object.values(this.state.accumulatedRevenue);
     let min = Math.min(...valuesArray);
     return min * -1;
     // this.setState({capital_required: min});
+<<<<<<< HEAD
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
+=======
 >>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
   }
 ;
@@ -236,12 +262,18 @@ class ProjectForm extends React.Component {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
   // calculateValuation(){
   //
   // }
 
 
+<<<<<<< HEAD
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
+=======
 >>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
   receiveCashflowData(cashflowVars){
     return calculateCashflowData(cashflowVars)
@@ -268,6 +300,7 @@ class ProjectForm extends React.Component {
     return e => {
       e.preventDefault();
       this.setState({ cashflow });
+<<<<<<< HEAD
     };
   }
 
@@ -282,6 +315,22 @@ class ProjectForm extends React.Component {
     };
   }
 
+=======
+    };
+  }
+
+  updateCashflowValue(quarter) {
+    // console.log("Type of quarter is: ", typeof quarter);
+    return e => {
+      e.preventDefault();
+      let cashflow = merge({}, this.state.cashflow);
+      cashflow[quarter].cashFlow = parseInt(e.currentTarget.value);
+      const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
+      this.setState({ cashflow, accumulatedRevenue });
+    };
+  }
+
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
   updateActuals(quarter) {
       console.log('i have second entried');
       let cashflow = merge({}, this.state.cashflow);
