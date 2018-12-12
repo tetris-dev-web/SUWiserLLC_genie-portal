@@ -204,7 +204,7 @@ class ProjectForm extends React.Component {
     return min * -1;
     // this.setState({capital_required: min});
   }
-;
+  
   calculateDiscountFactor(){
     // console.log("Failed Projects are: ", this.getFailedProjects());
     let capitalDeployed = this.calculateTotalCapitalDeployed();
