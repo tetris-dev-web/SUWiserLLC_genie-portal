@@ -7,7 +7,7 @@ class ProjectVotes extends React.Component {
 
   render () {
     return (
-      <div>Project votesssssssssss ma nigggggaaaaaa</div>
+      <div>Project votesssssssssss</div>
     )
   }
 }
