@@ -13,7 +13,7 @@ AccountType.destroy_all
 
 genesis_start_date = '01/01/2019'
 genesis_end_date = '09/01/2019'
-genesis_votes = '{
+genesis_votes = {
   "03/01/2019":5000,
   "04/01/2019":1000,
   "05/01/2019":1000,
@@ -21,7 +21,7 @@ genesis_votes = '{
   "07/01/2019":1000,
   "08/01/2019":1000,
   "08/10/2019":5000
-}'
+}
 genesis_cap_required = 150000
 genesis_current_cap = 15000
 genesis_lat = 40.836678
@@ -29,36 +29,156 @@ genesis_lng = -73.943083
 genesis_sketch_link = 'https://drive.google.com/open?id=1o15Si2ON0X1Cb0QApl7LH6WXeY6JQ9CE'
 genesis_bus_link = 'https://drive.google.com/open?id=1tuqRBAYHB_26JzoFy2xMzgePI1qTrpwL'
 
-genesis_cashflow = '{
-  "01A": -36974,
-  "02A": -40018,
-  "03A": -16857,
-  "04A": -2915,
-  "05A": -20325,
-  "06A": 7864,
-  "07A": 25360,
-  "08A": 28107,
-  "09A": 28942,
-  "10A": 28696,
-  "11A": 29356,
-  "12A": 28854,
-  "13A": 28588,
-  "14A": 30781,
-  "15A": 29081,
-  "16A": 31887,
-  "17A": 51887,
-  "18A": 71887,
-  "19P": 30339,
-  "20P": 30718,
-  "21P": 31102,
-  "22P": 31491,
-  "23P": 31885,
-  "24P": 32283,
-  "25P": 32687,
-  "26P": 33096,
-  "27P": 33509,
-  "28P": 33928
-}'
+genesis_cashflow = {
+  "1": {
+    "cashFlow": -36974,
+    "isActuals": true
+  },
+  "2": {
+    "cashFlow": -40018,
+    "isActuals": true
+  },
+  "3": {
+    "cashFlow": -16857,
+    "isActuals": true
+  },
+  "4": {
+    "cashFlow": -2915,
+    "isActuals": true
+  },
+  "5": {
+    "cashFlow": -20325,
+    "isActuals": true
+  },
+  "6": {
+    "cashFlow": 7864,
+    "isActuals": true
+  },
+  "7": {
+    "cashFlow": 25360,
+    "isActuals": true
+  },
+  "8": {
+    "cashFlow": 28107,
+    "isActuals": true
+  },
+  "9": {
+    "cashFlow": 28942,
+    "isActuals": false
+  },
+  "10": {
+    "cashFlow": 28696,
+    "isActuals": false
+  },
+  "11": {
+    "cashFlow": 29356,
+    "isActuals": false
+  },
+  "12": {
+    "cashFlow": 28854,
+    "isActuals": false
+  },
+  "13": {
+    "cashFlow": 28588,
+    "isActuals": false
+  },
+  "14": {
+    "cashFlow": 30781,
+    "isActuals": false
+  },
+  "15": {
+    "cashFlow": 29081,
+    "isActuals": false
+  },
+  "16": {
+    "cashFlow": 31887,
+    "isActuals": false
+  },
+  "17": {
+    "cashFlow": 51887,
+    "isActuals": false
+  },
+  "18": {
+    "cashFlow": 71887,
+    "isActuals": false
+  },
+  "19": {
+    "cashFlow": 30339,
+    "isActuals": false
+  },
+  "20": {
+    "cashFlow": 30718,
+    "isActuals": false
+  },
+  "21": {
+    "cashFlow": 31102,
+    "isActuals": false
+  },
+  "22": {
+    "cashFlow": 31491,
+    "isActuals": false
+  },
+  "23": {
+    "cashFlow": 31885,
+    "isActuals": false
+  },
+  "24": {
+    "cashFlow": 32283,
+    "isActuals": false
+  },
+  "25": {
+    "cashFlow": 32687,
+    "isActuals": false
+  },
+  "26": {
+    "cashFlow": 33096,
+    "isActuals": false
+  },
+  "27": {
+    "cashFlow": 33509,
+    "isActuals": false
+  },
+  "28": {
+    "cashFlow": 33928,
+    "isActuals": false
+  }
+}
+
+
+genesis_Act_Cashflow = {}
+genesis_Act_Acc_Cashflow = {}
+
+genesis_Proj_Cashflow = {}
+genesis_Proj_Acc_Cashflow = {}
+
+
+accCashFlow = 0
+
+genesis_cashflow.each do |key, value|
+  puts "The hash key is #{key} and the cashFlow is #{value}."
+
+  accCashFlow += value[:"cashFlow"]
+
+  puts(accCashFlow)
+  puts(value[:"cashFlow"])
+
+  if value[:"isActuals"] == true
+    genesis_Act_Cashflow[key] = value[:"cashFlow"]
+    genesis_Act_Acc_Cashflow[key] = accCashFlow
+
+    genesis_Proj_Cashflow[key] = 0
+    genesis_Proj_Acc_Cashflow[key] = 0
+
+  else
+    genesis_Act_Cashflow[key] = 0
+    genesis_Act_Acc_Cashflow[key] = 0
+
+    genesis_Proj_Cashflow[key] =  value[:"cashFlow"]
+    genesis_Proj_Acc_Cashflow[key] = accCashFlow
+  end
+
+end
+
 
 genesis_summary = "Genesis is a boutique gym, similar in structure to a CrossFit, but differentiated by a Co-op
 business structure, a holistic* approach to fitness, and the aesthetics of the space itself. genesis
@@ -72,7 +192,7 @@ hamInn_start_date = '01/01/2017'
 hamInn_end_date = '09/01/2019'
 hamInn_cap_required = 40000
 hamInn_current_cap = 40000
-hamInn_votes = '{
+hamInn_votes = {
   "03/01/2017":2000,
   "04/01/2017":1000,
   "05/01/2017":1000,
@@ -82,12 +202,12 @@ hamInn_votes = '{
   "11/11/2018":20000,
   "09/09/2018":10000,
   "08/10/2018":3000
-}'
+}
 hamInn_lat = 40.836370
 hamInn_lng = -73.944585
 hamInn_sketch_link = 'https://drive.google.com/open?id=0B4qHw8trLI_qQ3VkX0RtRndqVTA'
 hamInn_bus_link = 'https://drive.google.com/open?id=1zxY4cZcdaAMpinQpdZmTb8Zy2i9dh2iZ'
-hamInn_cashflow = '{
+hamInn_cashflow = {
   "01A": -36974,
   "02A": -40018,
   "03A": -16857,
@@ -116,7 +236,7 @@ hamInn_cashflow = '{
   "26P": 33096,
   "27P": 33509,
   "28P": 33928
-}'
+}
 hamInn_summary = "We work hard to set accurate expectations in our listings of our unique experience, and we
 work hard to meet or exceed those expectations. However, we have no control over such
 things as our location and the level of street noise around us, and we urge you to consider
@@ -186,6 +306,10 @@ project0 = Project.create!(
   latitude:hamInn_lat,
   longitude:hamInn_lng,
   summary:genesis_summary,
+  actual_cashflow: genesis_Act_Cashflow,
+  accum_actual_cashflow: genesis_Act_Acc_Cashflow,
+  projected_cashflow: genesis_Proj_Cashflow,
+  accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
   capital_required:genesis_cap_required,
   current_capital:genesis_current_cap
 )
@@ -233,7 +357,7 @@ project4 = Project.create!(
   creator_id: user2.id,
   created_at: "14/03/2018",
   status: "deployed",
-  cashflow: hamInn_cashflow,
+  cashflow: genesis_cashflow,
   sketch_link: hamInn_sketch_link,
   bus_plan_link: hamInn_bus_link,
   start_date: hamInn_start_date,
@@ -319,5 +443,5 @@ project8 = Project.create(
  latitude: 0.4083637e2,
  longitude: -0.73944585e2,
  summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
- votes: HamInn_votes
+ votes: hamInn_votes
 )

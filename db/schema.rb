@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181030163518) do
+ActiveRecord::Schema.define(version: 20181125202102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,10 @@ ActiveRecord::Schema.define(version: 20181030163518) do
     t.float "current_capital"
     t.datetime "close_date"
     t.jsonb "votes"
+    t.jsonb "actual_cashflow"
+    t.jsonb "accum_actual_cashflow"
+    t.jsonb "projected_cashflow"
+    t.jsonb "accum_projected_cashflow"
     t.index ["creator_id"], name: "index_projects_on_creator_id"
   end
 

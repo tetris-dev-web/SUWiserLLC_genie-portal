@@ -12,6 +12,23 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 #
+require 'capybara/poltergeist'
+require 'capybara/rspec'
+require 'rails_helper'
+
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app, {
+    js_errors: false,
+    phantomjs_options: ['--ignore-ssl-errors=yes', '--ssl-protocol=any'],
+    debug: false,
+    timeout: 500,
+    phantomjs: File.absolute_path(Phantomjs.path)
+  })
+end
+Capybara.javascript_driver = :poltergeist
+Capybara.default_driver = :poltergeist
+
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

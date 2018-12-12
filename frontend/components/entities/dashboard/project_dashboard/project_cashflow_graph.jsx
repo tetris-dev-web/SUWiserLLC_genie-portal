@@ -127,7 +127,8 @@ class CashFlowGraph extends React.Component {
     // Retrieve cashflow data from props
     const { cashflow, accumulatedRevenue } = this.props;
     // Process data for D3
-    const quarters = Object.keys(cashflow).sort();
+    console.log("Graph Cashflow is: ", cashflow);
+    const quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
     const currentQuarter = this.findCurrentQuarter(quarters);
     const valuesForQuarters = Object.values(cashflow);
     const valuesForActualQuarters = valuesForQuarters.slice(0, currentQuarter + 1);
@@ -156,12 +157,14 @@ class CashFlowGraph extends React.Component {
   }
 
   findCurrentQuarter(quarters) {
-    let currentQuarter = 29;
-    quarters.forEach((quarter, idx) => {
-      if (quarter[2] === "A") {
-        currentQuarter = idx + 1;
+    const { cashflow } = this.props
+    let currentQuarter;
+    quarters.some(quarter => {
+      if (!cashflow[quarter.toString()]["isActuals"]) {
+        currentQuarter = quarter;
+        return !cashflow[quarter.toString()]["isActuals"];
       }
-    });
+    })
     return currentQuarter;
   }
 

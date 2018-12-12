@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.25;
 
 import "./StandardToken.sol";
 import "../../utility/Ownable.sol";
@@ -31,7 +31,6 @@ contract MintableToken is StandardToken, Ownable {
     require(msg.sender == owner);
     _;
   }
-  /* hasMintPermission */
 
   /**
    * @dev Function to mint tokens
@@ -45,6 +44,7 @@ contract MintableToken is StandardToken, Ownable {
   )
     public
     canMint
+    hasMintPermission
     returns (bool)
   {
     totalSupply_ = totalSupply_.add(_amount);
