@@ -21,7 +21,7 @@ class ProjectForm extends React.Component {
       longitude: '',
       revenue: '10',
       valuation: '1',
-      model_id: '7syizSLPN60',
+      model_id: '870fb9d9-b5d2-4565-a6dd-65f9a1f4d00e',
       city: 'New York',
       country: 'USA',
       continent: 'North America',
@@ -56,10 +56,22 @@ class ProjectForm extends React.Component {
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
+<<<<<<< HEAD
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
     this.updateAddress = this.updateAddress.bind(this);
+=======
+    // this.parseCashflowData = this.parseCashflowData.bind(this);
+    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
+    this.dropPinClick = this.dropPinClick.bind(this);
+    this.updateLatLng = this.updateLatLng.bind(this);
+    this.storeAddress = this.storeAddress.bind(this);
+    this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this);
+    this.parseInputFile = this.parseInputFile.bind(this);
+    this.updateCashflowValue = this.update.bind(this);
+    this.updateActuals = this.updateActuals.bind(this);
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
   }
 
   componentDidMount() {
@@ -78,6 +90,9 @@ class ProjectForm extends React.Component {
     const {drizzle, drizzleState} = this.props;
     const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
+    const projectData = Object.assign({}, this.state)
+
+
     if (file) data.append("project[file]", file);
     data.append("project[title]", this.state.title);
 
@@ -94,15 +109,28 @@ class ProjectForm extends React.Component {
 
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
+<<<<<<< HEAD
     data.append("project[capital_required]", this.state.capital_required);
 
-
+=======
+    data.append("project[capital_required]", (this.calculateCapitalRequired()));
+    data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow));
+    data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow));
+    data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow));
+    data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow));
     data.append("project[revenue]", this.state.revenue);
+    // data.append("project[planFilePDFDataURL]", this.state.planFilePDFDataURL)
+    //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
+    //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving
+    //Object in frontend with JSON.parse
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
+
     // formData.append("project[icon]", this.state.icon);
     // formData.append("project[description]", this.state.description);
     // formData.append("project[status]", this.state.status);
 
     // Moved until data is properly structured
+    // this.props.createProject(projectData);
     this.props.createProject(data);
     // .then( () => {
     //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
@@ -110,6 +138,7 @@ class ProjectForm extends React.Component {
     if (this.props.errors.length == 0) {
       this.props.closeModal();
       window.location.reload();
+      // console.log();
     }
   }
 
@@ -128,14 +157,11 @@ class ProjectForm extends React.Component {
   }
 
   updateLatLng(pos) {
-    this.setState({latitude: pos.lat, longitude: pos.lng});
+    this.setState({latitude: parseFloat(pos.lat), longitude: parseFloat(pos.lng)});
   }
 
-  updateAddress(address) {
-    if(address) {
-      let addr = address.split(',');
-      this.setState({city: addr[1], continent: addr[3]});
-    }
+  storeAddress(city, continent) {
+    this.setState({city, continent});
   }
 
   getFailedProjects(){
@@ -151,9 +177,7 @@ class ProjectForm extends React.Component {
   }
 
   findCurrentQuarter(quarters, cashflow = this.state.cashflow) {
-    // const { cashflow } = this.state
     let currentQuarter;
-    console.log("Cashflow from function is: ", cashflow);
     quarters.some(quarter => {
       if (!cashflow[quarter.toString()]["isActuals"]) {
         currentQuarter = quarter;
@@ -169,21 +193,31 @@ class ProjectForm extends React.Component {
     Object.values(this.props.projects).forEach((project) => {
       if(project.cashflow){
         let jsonProjectCashflow = processCashData(project.cashflow);
-        let quarters = Object.keys(jsonProjectCashflow).sort();
-        let currentQuarter = this.findCurrentQuarter(quarters);
-        let valuesForActualQuarters = Object.values(jsonProjectCashflow).slice(0, currentQuarter + 1);
-        capital += valuesForActualQuarters.reduce((acc, el) => acc + el);
+        if (jsonProjectCashflow["1"]) {
+          let quarters = Object.keys(jsonProjectCashflow).sort();
+          let currentQuarter = this.findCurrentQuarter(quarters, jsonProjectCashflow);
+          let valuesForActualQuarters = Object.values(jsonProjectCashflow).slice(0, currentQuarter + 1);
+          capital += valuesForActualQuarters.reduce((acc, el) => {
+            return acc + el["cashFlow"];}, 0);
+        }
       }
     });
     return capital;
   }
 
   calculateCapitalRequired() {
+<<<<<<< HEAD
     setState({capital_required: this.state.accumulatedRevenue.min()});
+=======
+    let valuesArray = Object.values(this.state.accumulatedRevenue);
+    let min = Math.min(...valuesArray);
+    return min * -1;
+    // this.setState({capital_required: min});
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
   }
-
+;
   calculateDiscountFactor(){
-    // console.log(this.getFailedProjects());
+    // console.log("Failed Projects are: ", this.getFailedProjects());
     let capitalDeployed = this.calculateTotalCapitalDeployed();
     let discountFactor = (50 - ((capitalDeployed/190000.0) + (this.getFailedProjects() * 6)));
     if (discountFactor > 10) {
@@ -195,28 +229,22 @@ class ProjectForm extends React.Component {
 
   calculateNetPresentValue(projectCashflows){
     let discountFactor = this.calculateDiscountFactor();
-    let cashflows = Object.values(processCashData(projectCashflows));
-    //change above line to account for new structure
+    // let cashflows = Object.values(processCashData(projectCashflows)).map(el => el["cashFlow"]);
     let finance = new Finance();
-    let netPresentValue = finance.NPV(discountFactor, 0, ...cashflows);
+    let netPresentValue = finance.NPV(discountFactor, 0, ...projectCashflows);
     return netPresentValue;
   }
 
+<<<<<<< HEAD
+=======
+  // calculateValuation(){
+  //
+  // }
+
+
+>>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
   receiveCashflowData(cashflowVars){
-    cashflowVars;
-    console.log(this);
-    //   const {actual_cashflow,
-    //   accum_actual_cashflow,
-    //   projected_cashflow,
-    //   accum_projected_cashflow,
-    //   cashflow} = cashflowVars
-    // this.setState({
-    //   actual_cashflow,
-    //   accum_actual_cashflow,
-    //   projected_cashflow,
-    //   accum_projected_cashflow,
-    //   cashflow
-    // })
+    return calculateCashflowData(cashflowVars)
   }
 
   update(property) {
@@ -237,13 +265,28 @@ class ProjectForm extends React.Component {
 
   updateCashflow(cashflow) {
     // Needed to update project state with cashflow state
-    console.log("Updating cashflow with Project Form's function: ", this);
     return e => {
-      console.log("Event is: ", e);
-      console.log("This from updateCashflow function: ", this);
       e.preventDefault();
-      this.setState({ 'cashflow': cashflow });
+      this.setState({ cashflow });
     };
+  }
+
+  updateCashflowValue(quarter) {
+    // console.log("Type of quarter is: ", typeof quarter);
+    return e => {
+      e.preventDefault();
+      let cashflow = merge({}, this.state.cashflow);
+      cashflow[quarter].cashFlow = parseInt(e.currentTarget.value);
+      const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
+      this.setState({ cashflow, accumulatedRevenue });
+    };
+  }
+
+  updateActuals(quarter) {
+      console.log('i have second entried');
+      let cashflow = merge({}, this.state.cashflow);
+      cashflow[quarter].isActuals = !cashflow[quarter].isActuals;
+      this.setState({cashflow});
   }
 
   updateFile(fileType) {
@@ -252,7 +295,7 @@ class ProjectForm extends React.Component {
     // console.log('Cashflow state is', this.state.cashflow);
     return e => {
       let file = e.currentTarget.files[0];
-      
+
       switch (fileType) {
         case "cashflowJSON":
           this.parseInputFile(file).then(cashflowData => {
@@ -261,14 +304,21 @@ class ProjectForm extends React.Component {
             let quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
             // console.log('quarters is:', quarters);
             // console.log('Cashflow is:', cashflow);
-            this.setState({
-              cashflow,
-              cashflowJSONName: file.name,
-              accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
-              currentQuarter: this.findCurrentQuarter(quarters, cashflow),
-            });
+
+            const parsedData = this.receiveCashflowData(cashflow)
+            // let {  }
+
+            this.setState(Object.assign({},
+              {
+                cashflow,
+                cashflowJSONName: file.name,
+                accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
+                currentQuarter: this.findCurrentQuarter(quarters, cashflow),
+              },
+              parsedData
+            )
             // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
-          });
+          ); })
           break;
         case "planFilePDF":
           this.parseInputFile(file).then(planFilePDFDataURL => {
@@ -359,6 +409,7 @@ class ProjectForm extends React.Component {
     // console.log("Discount factor is: ", this.calculateDiscountFactor());
     // console.log("Capital is: ", this.calculateTotalCapitalDeployed());
     // console.log("Cashflow is: ", this.state.cashflow);
+    // console.log("Cap required is: ", this.calculateCapitalRequired() * -1);
 
     const geojsons = [];
     const fileId = ["file1", "file2", "file3", "file4", "file5"];
@@ -423,12 +474,14 @@ class ProjectForm extends React.Component {
           </div>
           <DivWithCorners>
               <DropPinModal
-                lat={this.state.latitude}
-                lng={this.state.longitude}
+                lat={parseFloat(this.state.latitude)}
+                lng={parseFloat(this.state.longitude)}
                 title={this.state.title}
                 updateLatLng={this.updateLatLng}
                 dropPinClick={this.dropPinClick}
-                updateAddress={this.updateAddress}
+                storeAddress={this.storeAddress}
+                city={this.state.city}
+                continent={this.state.continent}
                 />
           </DivWithCorners>
         </div>
@@ -437,7 +490,7 @@ class ProjectForm extends React.Component {
           <div>
             <div className="file-input-container">
               <div className="file-input">
-                <input 
+                <input
                   type="file"
                   onChange={this.updateFile('cashflowJSON')} />
                   <svg viewBox="2 2 17 17">
@@ -465,10 +518,15 @@ class ProjectForm extends React.Component {
           </div>
 
           <DivWithCorners>
-            <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
+            <span className="text">
+              <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
                 cashflow={this.state.cashflow ? this.state.cashflow : sampleProject}
                 updateCashflow={this.updateCashflow}
-                receiveCashflowData={this.receiveCashflowData} />
+                receiveCashflowData={this.receiveCashflowData}
+                updateActuals={this.updateActuals}
+                updateCashflowValue={this.updateCashflowValue}
+                />
+            </span>
           </DivWithCorners>
         </div>
 
@@ -476,14 +534,15 @@ class ProjectForm extends React.Component {
           <div className="discounts-box">
             discount rate
             <div className="amount-box">
-              12
+              {this.calculateDiscountFactor()}
             </div>
           </div>
 
           <div className="cap-row">
             <span>valuation</span>
-            <div className="style2">$830,000</div>
-            <div className="style2">$130,000</div>
+
+            <div className="style2">{this.state.projected_cashflow ? this.calculateNetPresentValue(Object.values(this.state.projected_cashflow).slice(this.state.currentQuarter - 1)) : '$830,000'}</div>
+            <div className="style2">{this.state.accumulatedRevenue ? this.calculateCapitalRequired() : "$130,000"}</div>
             <span>capital <br />  required</span>
           </div>
 
@@ -525,17 +584,16 @@ class ProjectForm extends React.Component {
         <div className="flexed model-id-section">
           <div className="text-input-container model-id-container">
             <input className="text-input model-id-input"
-              type="number"
-              step="any"
               placeholder="model id"
               value={modelId}
               onChange={this.update('modelId')} />
           </div>
 
           <DivWithCorners>
-            <div className="project-form-button model-id">
-              <svg className="project-form-button-icons" viewBox="-8 -8 160 160"><g><g><rect x="127.026" y="103.44" transform="matrix(0.8661 0.4999 -0.4999 0.8661 69.9909 -49.9074)" width="2.251" height="4.499" /><path d="M122.188,104.845l-3.863-2.23l2.25-3.896l3.863,2.23L122.188,104.845z M114.462,100.383l-3.863-2.23    l2.25-3.896l3.863,2.23L114.462,100.383z M106.734,95.921l-3.864-2.23l2.25-3.896l3.864,2.23L106.734,95.921z M99.007,91.459    l-3.863-2.23l2.25-3.896l3.863,2.23L99.007,91.459z M91.28,86.997l-3.864-2.23l2.25-3.896l3.864,2.23L91.28,86.997z     M83.552,82.535l-3.863-2.23l2.25-3.896l3.863,2.23L83.552,82.535z" /><polygon points="75.825,78.073 75.001,77.598 74.177,78.073 71.927,74.177 75.001,72.402 78.075,74.177   " /><path d="M27.812,104.843l-2.25-3.896l3.863-2.231l2.251,3.896L27.812,104.843z M35.539,100.381l-2.25-3.896    l3.864-2.23l2.25,3.896L35.539,100.381z M43.267,95.919l-2.25-3.896l3.863-2.23l2.25,3.896L43.267,95.919z M50.995,91.458    l-2.251-3.896l3.864-2.231l2.25,3.896L50.995,91.458z M58.722,86.996l-2.25-3.896l3.864-2.23l2.25,3.896L58.722,86.996z     M66.45,82.534l-2.25-3.896l3.863-2.23l2.25,3.896L66.45,82.534z" /><rect x="19.599" y="104.562" transform="matrix(0.5001 0.866 -0.866 0.5001 102.4474 33.9166)" width="4.499" height="2.251" /></g><g><rect x="72.751" y="72.75" width="4.5" height="2.25" /><path d="M77.251,68.288h-4.5v-4.462h4.5V68.288z M77.251,59.365h-4.5v-4.462h4.5V59.365z M77.251,50.442h-4.5    V45.98h4.5V50.442z M77.251,41.519h-4.5v-4.461h4.5V41.519z M77.251,32.596h-4.5v-4.462h4.5V32.596z M77.251,23.673h-4.5v-4.462    h4.5V23.673z" /><rect x="72.751" y="12.5" width="4.5" height="2.25" /></g><g><path d="M75.001,140.098l-56.377-32.549V42.451L75.001,9.902l56.375,32.551v65.098L75.001,140.098z     M23.124,104.951l51.877,29.951l51.875-29.949V45.051L75.001,15.098L23.124,45.049V104.951z" /><polygon points="75.001,77.598 19.749,45.698 21.999,41.802 75.001,72.402 128.001,41.804 130.251,45.7   " /><rect x="72.751" y="75" width="4.5" height="62.5" /></g></g></svg>
-            </div>
+            <PolyModal
+              modelId={this.state.modelId}
+
+              />
           </DivWithCorners>
         </div>
 
