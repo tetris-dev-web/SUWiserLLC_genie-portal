@@ -10,6 +10,7 @@ class SessionForm extends React.Component {
       email: '',
       username: '',
       password: '',
+      public_key: '',
       bylaw_agreement: false,
       errors: props.errors
     };
@@ -80,6 +81,7 @@ class SessionForm extends React.Component {
       email: this.state.email,
       username: parsedUsername,
       password: this.state.password,
+      public_key: this.state.public_key,
       bylaw_agreement: this.state.bylaw_agreement
     };
 
@@ -98,7 +100,7 @@ class SessionForm extends React.Component {
 
   render() {
 
-    let { email, password, bylaw_agreement } = this.state;
+    let { email, password, bylaw_agreement, public_key } = this.state;
 
     if (this.props.type === "Log In") {
       return(
@@ -141,6 +143,12 @@ class SessionForm extends React.Component {
             value={password}
             onChange={this.update('password')}
             className="session-input" />
+            <input
+              type="text"
+              placeholder="public key"
+              value={public_key}
+              onChange={this.update('public_key')}
+              className="session-input" />
           <div className="checkbox-container">
             <input
               className="checkbox"
