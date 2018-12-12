@@ -40,35 +40,54 @@ class CashFlowGraph extends React.Component {
   //
 
   addData(graph, cssClass, points, xAxisScale, yAxisScale) {
-    const lineConstructor = d3.line()
-              .x( function (d,i){
-                  console.log("i : ", i)
-                  return xAxisScale(i);
-              })
-              .y( function(d) {
-                console.log("d.y: ", d.y)
-                console.log("yScale: ", yAxisScale(d.y))
-                return yAxisScale(d.y)
-              })
-              .defined(function(d){
-                return d.y !== 0;
-              })
 
-    let line = lineConstructor(points)
+    const buildLine = () => {
+      const lineConstructor = d3.line()
+                .x( function (d,i){
+                    console.log("i : ", i)
+                    return xAxisScale(i);
+                })
+                .y( function(d) {
+                  console.log("d.y: ", d.y)
+                  console.log("yScale: ", yAxisScale(d.y))
+                  return yAxisScale(d.y)
+                })
+                .defined(function(d){
+                  return d.y !== 0;
+                })
+
+      const line = lineConstructor(points)
+      return line
+    }
+
+    const buildArea = () => {
+      const areaConstructor = d3.area()
+                .x( function (d,i){
+                    return xAxisScale(i);
+                })
+                .y0( function(d) {
+                  return yAxisScale(0)
+                })
+                .y1( function(d) {
+                  return yAxisScale(d.y)
+                })
+                .defined(function(d){
+                  return d.y !== 0;
+                })
+
+      const area = areaConstructor(points)
+      return area
+    }
+
+
+    const elementToBuild = cssClass.includes("accumulated-line") ? buildArea()
+                          : buildLine()
 
 
     graph.append("g")
       .attr('class', cssClass)
       .append('path')
-      .attr('d', line)
-
-      // .filter(function(d){
-      //         d.y !== 0 ? console.log("data: ", d.y) : null
-      //         return d.y != 0
-      //       })
-
-    //
-
+      .attr('d', elementToBuild)
   }
 
   // addData(graph, cssClass, points, xAxisScale, yAxisScale) {
@@ -110,7 +129,7 @@ class CashFlowGraph extends React.Component {
       .attr("width", this.w)
       .attr("height", this.h);
     graphBase.append("rect")
-      .attr("width", "95%")
+      .attr("width", "100%")
       .attr("height", "100%")
       .attr("fill", "black");
     return graphBase;
@@ -140,9 +159,9 @@ class CashFlowGraph extends React.Component {
         return d3.scaleLinear().domain([inputsMin, inputsMax]).range([outputsMin, outputsMax]);
       }
 
-      const xAxisScale = defineScale(0, numQuarters, 3, this.w-20);
-      const yAxisScale = defineScale(minValue, maxValue, this.h, 15); //add clamp?
-      const yLinesScale = defineScale(minValue, maxValue, this.h/2 + 22, 0); // why is this different?
+      const xAxisScale = defineScale(0, numQuarters, 10, this.w-20);
+      const yAxisScale = defineScale(minValue, maxValue, this.h, 0); //add clamp?
+      const yLinesScale = defineScale(minValue, maxValue, this.h/2+15, 0); // why is this different?
 
 
       return {xAxisScale, yAxisScale, yLinesScale,  maxValue, minValue, minExpectedValueAccuProj}

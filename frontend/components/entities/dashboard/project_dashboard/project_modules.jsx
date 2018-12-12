@@ -59,7 +59,10 @@ class ProjectModules extends React.Component {
 
                     <IframeFor3dModel projectClicked={projectClicked}
                                       model_link ={model_link}/>
-                    <ProjectThermo    project={projectClicked}/>
+
+                    <ProjectThermo    project={projectClicked}
+                                      width = {250}
+                                      height = {200}/>
 
                     <CashFlowGraph
                                       actual_cashflow = {projectClicked.actual_cashflow}
@@ -67,14 +70,15 @@ class ProjectModules extends React.Component {
                                       projected_cashflow = {projectClicked.projected_cashflow}
                                       accum_projected_cashflow ={projectClicked.accum_projected_cashflow}
                                       height={200}
-                                      width={300}/>
+                                      width={250}/>
 
                     <SummaryAndPlan
                                       handleKeyPress = {null}
                                       isInvestor = {isInvestor}
                                       summary = {projectClicked.summary}
                                       bus_plan_link = {projectClicked.bus_plan_link} />
-                    <ProjectMap projectClicked={ projectClicked } />
+
+                    <ProjectMap       projectClicked={ projectClicked } />
 
                   </div>
                 </React.Fragment>
