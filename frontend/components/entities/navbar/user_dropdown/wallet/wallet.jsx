@@ -29,8 +29,7 @@ class Wallet extends React.Component {
       password: this.props.currentUser.password,
       zipcode: this.props.currentUser.zipcode,
       first_name: this.props.currentUser.first_name,
-      last_name: this.props.currentUser.last_name,
-      public_key: this.state.newWalletID
+      last_name: this.props.currentUser.last_name
     };
 
     this.props.updateUser(updatedUser).then(() => {
@@ -41,14 +40,10 @@ class Wallet extends React.Component {
   }
 
   render() {
-    // let { publicKey } = this.props.currentUser.public_key;
-    let { newWalletID } = this.state;
-    let { publicKey } = this.props;
     return(
       <form className="wallet-form">
         <div className="wallet current-wallet">
           <p className="wallet-label current-wallet-label">current wallet</p>
-          <div className="wallet-id current-wallet-id">{publicKey}</div>
         </div>
         <div className="wallet integrate-wallet">
           <p className="wallet-label integrate wallet-label">integrate new wallet</p>
@@ -56,7 +51,6 @@ class Wallet extends React.Component {
             <input
               type="text"
               placeholder="################"
-              value={ newWalletID }
               onChange={ this.update('newWalletID') }
               className="wallet-id integrate-wallet-input"/>
             <button

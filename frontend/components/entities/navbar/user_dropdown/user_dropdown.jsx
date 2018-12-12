@@ -98,8 +98,7 @@ class UserDropdown extends React.Component {
   //     password: this.props.currentUser.password,
   //     zipcode: this.props.currentUser.zipcode,
   //     first_name: this.props.currentUser.first_name,
-  //     last_name: this.props.currentUser.last_name,
-  //     public_key: newKey
+  //     last_name: this.props.currentUser.last_name
   //   };
   //
   //   this.props.updateUser(updatedUser);
@@ -118,7 +117,6 @@ class UserDropdown extends React.Component {
     // let { tokens } = this.props.currentUser;
 
 
-    let publicKey = this.props.currentUser.public_key;
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
@@ -140,7 +138,7 @@ class UserDropdown extends React.Component {
                 <div className="button-text">wallet#</div>
               </a>
               <ul className="dropdown-menu dropdown-item">
-                <Wallet currentUser={this.props.currentUser} publicKey={publicKey} updateUser={this.props.updateUser} updateUsernameDisplay={this.updateUsernameDisplay}/>
+                <Wallet currentUser={this.props.currentUser} updateUser={this.props.updateUser} updateUsernameDisplay={this.updateUsernameDisplay}/>
               </ul>
             </li>
             <li className="dropdown-submenu profile-menu">

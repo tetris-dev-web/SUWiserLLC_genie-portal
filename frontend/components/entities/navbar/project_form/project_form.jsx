@@ -61,7 +61,6 @@ class ProjectForm extends React.Component {
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
-=======
     // this.parseCashflowData = this.parseCashflowData.bind(this);
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
@@ -108,7 +107,6 @@ class ProjectForm extends React.Component {
 
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
-=======
     data.append("project[capital_required]", (this.calculateCapitalRequired()));
     data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow));
     data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow));
@@ -119,7 +117,6 @@ class ProjectForm extends React.Component {
     //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
     //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving
     //Object in frontend with JSON.parse
->>>>>>> 8f85b76ef5b3ea6982b753d244b76513b0675511
 
     // formData.append("project[icon]", this.state.icon);
     // formData.append("project[description]", this.state.description);
@@ -202,7 +199,6 @@ class ProjectForm extends React.Component {
   }
 
   calculateCapitalRequired() {
-=======
     let valuesArray = Object.values(this.state.accumulatedRevenue);
     let min = Math.min(...valuesArray);
     return min * -1;
@@ -228,7 +224,6 @@ class ProjectForm extends React.Component {
     return netPresentValue;
   }
 
-=======
   // calculateValuation(){
   //
   // }

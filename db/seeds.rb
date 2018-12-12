@@ -252,16 +252,14 @@ user1 = User.create!(
   email: "johnjrudell@gmail.com",
   password: "password",
   bylaw_agreement: true,
-  tokens: 20,
-  public_key: '123abc'
+  tokens: 20
 )
 
 user2 = User.create!(
   email: "matsteele@gmail.com",
   password: "password",
   bylaw_agreement: true,
-  tokens: 10,
-  public_key: '0xEF898fd948F50D5010d3Ec20233faE23D89a1a51'
+  tokens: 10
 )
 
 #AccountTypes

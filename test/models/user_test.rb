@@ -28,7 +28,7 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
 
   test "user public key should not be null" do
-    user = User.new(email: "johnjrude@gmail.com", password: "password", public_key: '123abc', bylaw_agreement: true)
+    user = User.new(email: "johnjrude@gmail.com", password: "password", bylaw_agreement: true)
     assert user.valid?
     puts "user public key is valid"
   end
