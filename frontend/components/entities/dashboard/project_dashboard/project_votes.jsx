@@ -221,8 +221,9 @@ const data = {
      {15638400: 89470811},
      {15724800: 89882333}
   ],
-  totalCapitalRaised: 89882333,
-  currentWeiRaised: 20882333,
+  totalCapRaised: 89882333,
+  totalCapDeployed: 69000000,
+  currentCapRaised: 20882333,
   activationHistory: {
     'proj1': {
         time: 3369600,

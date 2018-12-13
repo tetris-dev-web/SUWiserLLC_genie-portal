@@ -11,6 +11,7 @@ import Token from '../truffle/build/contracts/Token.json';
 document.addEventListener('DOMContentLoaded', () => {
   let store;
   let web3Provider;
+  let provider;
   let preloadedState = {};
 
   if (window.currentUser) {
@@ -20,35 +21,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (typeof web3 != 'undefined') {
     web3Provider = web3.currentProvider;
-  } else {
-    web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
-  }
 
-  const provider = new Web3(web3Provider);
+    provider = new Web3(web3Provider);
 
-  const token = TruffleContract(Token);
-  token.setProvider(web3Provider);
+    const token = TruffleContract(Token);
+    token.setProvider(web3Provider);
 
-  const crowdsale = TruffleContract(GNITokenCrowdsale);
-  crowdsale.setProvider(web3Provider);
+    const crowdsale = TruffleContract(GNITokenCrowdsale);
+    crowdsale.setProvider(web3Provider);
 
-  let account;
-  let tokenInstance;
-  let crowdsaleInstance;
-  provider.eth.getCoinbase((err, _account) => {
-    account = _account;
-    token.deployed().then((_tokenInstance) => {
-      tokenInstance = _tokenInstance;
-    })
-    .then(() => {
-      crowdsale.deployed().then((_crowdsaleInstance) => {
-        crowdsaleInstance = _crowdsaleInstance;
-        preloadedState = merge({}, preloadedState, { network: { account, tokenInstance, crowdsaleInstance, web3 } });
-        store = configureStore(preloadedState);
-        window.getState = store.getState;
-        const root = document.getElementById('root');
-        ReactDOM.render(<Root store={store} />, root);
+    let account;
+    let tokenInstance;
+    let crowdsaleInstance;
+    provider.eth.getCoinbase((err, _account) => {
+      account = _account;
+      token.deployed().then((_tokenInstance) => {
+        tokenInstance = _tokenInstance;
+      })
+      .then(() => {
+        crowdsale.deployed().then((_crowdsaleInstance) => {
+          crowdsaleInstance = _crowdsaleInstance;
+          preloadedState = merge({}, preloadedState, { network: { account, tokenInstance, crowdsaleInstance, web3 } });
+          store = configureStore(preloadedState);
+          window.getState = store.getState;
+          const root = document.getElementById('root');
+          ReactDOM.render(<Root store={store} />, root);
+        });
       });
     });
-  });
+  } else {
+    web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+    store = configureStore(preloadedState);
+    const root = document.getElementById('root');
+    ReactDOM.render(<Root store={store} />, root);
+  }
 });
