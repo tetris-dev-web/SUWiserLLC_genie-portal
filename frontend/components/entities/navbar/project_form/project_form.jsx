@@ -10,6 +10,10 @@ import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } f
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
 import { merge } from 'lodash';
 import PolyModal from './poly_modal/poly_modal';
+import './project_form.scss';
+import './project_modal.scss';
+import './geoContainer.scss';
+import './projectPitchMod.scss'
 
 class ProjectForm extends React.Component {
 
@@ -204,7 +208,7 @@ class ProjectForm extends React.Component {
     return min * -1;
     // this.setState({capital_required: min});
   }
-  
+
   calculateDiscountFactor(){
     // console.log("Failed Projects are: ", this.getFailedProjects());
     let capitalDeployed = this.calculateTotalCapitalDeployed();
