@@ -96,7 +96,6 @@ class TokenInterface extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <nav className="series navbar-container">
         <div onClick={this.test}>TEST</div>

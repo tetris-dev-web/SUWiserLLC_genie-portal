@@ -1,4 +1,5 @@
 import React from 'react';
+import ToggleOption from './toggle_option';
 
 class ToggleOptions extends React.Component {
   constructor (props) {
@@ -8,7 +9,10 @@ class ToggleOptions extends React.Component {
     };
     this.updateSelection = this.updateSelection.bind(this);
   }
-
+  // componentDidMount() {
+  //
+  //   this.updateSelection(2)
+  // }
   updateSelection (selectionId) {
     this.setState({
       selectionId
@@ -22,7 +26,7 @@ class ToggleOptions extends React.Component {
         <ToggleOption updateSelection={this.updateSelection}
                       optionId={1}
                       selected={this.state.selectionId === 1}/>
-                      
+
         <ToggleOption updateSelection={this.updateSelection}
                       optionId={2}
                       selected={this.state.selectionId === 2}/>
@@ -31,17 +35,17 @@ class ToggleOptions extends React.Component {
   }
 }
 
-const ToggleOption = ({ updateSelection, optionId, selected }) => {
-  return (
-    <div className='toggle-option'>
-      <div className='toggle-button'
-           id={selected ? 'selected-button' : 'unselected-button'}
-           onClick={() => updateSelection(optionId)}>
-      </div>
-      <div className='toggle-icon'>
-      </div>
-    </div>
-  );
-};
+// const ToggleOption = ({ updateSelection, optionId, selected }) => {
+//   return (
+//     <div className='toggle-option'>
+//       <div className='toggle-button'
+//            id={selected ? 'selected-button' : 'unselected-button'}
+//            onClick={() => updateSelection(optionId)}>
+//       </div>
+//       <div className='toggle-icon'>
+//       </div>
+//     </div>
+//   );
+// };
 
 export default ToggleOptions;
