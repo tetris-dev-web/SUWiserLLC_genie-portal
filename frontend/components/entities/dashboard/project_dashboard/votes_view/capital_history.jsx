@@ -46,7 +46,6 @@ class CapitalHistory extends React.Component {
                        .attr("class", "tooltip")
                        .style("opacity", 0);
 
-
      this.svg.append("path")
         .attr("d", lineScale(this.props.lineData));
 
@@ -70,7 +69,6 @@ class CapitalHistory extends React.Component {
                        .duration(500)
                        .style("opacity", 0);
              });
-
 
       this.svg.selectAll("line")
               .data(this.props.activationHistory)
