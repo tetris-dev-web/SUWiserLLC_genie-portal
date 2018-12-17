@@ -1,6 +1,6 @@
 import React from 'react';
 import ProjectGraph from './project_graph';
-import ProjectVotes from './project_votes';
+import ProjectVotes from './votes_view/project_votes';
 import ToggleOptions from './toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 import './project_dashboard.scss';
@@ -37,9 +37,8 @@ class ProjectDashboard extends React.Component {
   }
 
   render() {
-
+    console.log('what the fuck')
     if (this.props.currentUser) {
-
       return (
         <div className='project-dashboard'>
           <div className="graph-container">
@@ -52,7 +51,7 @@ class ProjectDashboard extends React.Component {
               <ProjectVotes />
             }
           </div>
-          <ToggleOptions toggleView={this.toggleView}/>
+          <ToggleOptions toggleView={this.toggleView} />
         </div>
       );
     } else {

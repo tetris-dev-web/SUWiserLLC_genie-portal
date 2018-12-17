@@ -89,10 +89,9 @@ class ProjectForm extends React.Component {
 
     const file = this.state.imageFile;
     const data = new FormData();
-    const {drizzle, drizzleState} = this.props;
-    const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
     const projectData = Object.assign({}, this.state)
+    const capitalRequired = this.calculateCapitalRequired();
 
 
     if (file) data.append("project[file]", file);
@@ -111,7 +110,7 @@ class ProjectForm extends React.Component {
 
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
-    data.append("project[capital_required]", (this.calculateCapitalRequired()));
+    data.append("project[capital_required]", capitalRequired);
     data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow));
     data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow));
     data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow));
@@ -128,15 +127,15 @@ class ProjectForm extends React.Component {
 
     // Moved until data is properly structured
     // this.props.createProject(projectData);
-    this.props.createProject(data);
-    // .then( () => {
-    //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
-    // });
-    if (this.props.errors.length == 0) {
-      this.props.closeModal();
-      window.location.reload();
-      // console.log();
-    }
+    this.props.createProject(data).then( () => {
+      return this.props.crowdsaleInstance.pitchProject(this.state.title, capitalRequired, this.state.valuation, this.state.latitude, this.state.longitude, {from: this.props.account});
+    }).then(() => {
+      if (this.props.errors.length == 0) {
+        this.props.closeModal();
+        window.location.reload();
+        // console.log();
+      }
+    })
   }
 
   dropPinClick() {

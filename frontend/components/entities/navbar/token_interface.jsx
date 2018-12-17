@@ -25,7 +25,9 @@ class TokenInterface extends React.Component {
   componentDidMount () {
 
     // console.log(this.props)
-    this.watchTransfer();
+    if (this.props.web3) {
+      this.watchTransfer();
+    }
   }
 
   // componentWillMount() {
@@ -94,7 +96,6 @@ class TokenInterface extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <nav className="series navbar-container">
         <div onClick={this.test}>TEST</div>
