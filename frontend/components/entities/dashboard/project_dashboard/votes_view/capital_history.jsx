@@ -6,21 +6,18 @@ class CapitalHistory extends React.Component {
   constructor(props) {
     super(props);
     this.initSVG = this.initSVG.bind(this);
-    this.initLine = this.initLine.bind(this);
-    this.drawLine = this.drawLine.bind(this);
     this.calculateWidth = this.calculateWidth.bind(this);
+    this.draw = this.draw.bind(this);
   }
 
   componentDidMount () {
     this.calculateWidth();
     this.initSVG();
-    this.initLine();
-    this.drawLine();
+    this.draw();
   }
 
   calculateWidth() {
     this.width = document.getElementById("cap-history").clientWidth;
-    // console.log(this.width)
   }
 
   initSVG () {
@@ -31,21 +28,58 @@ class CapitalHistory extends React.Component {
     .style("background-color", "pink");
   }
 
-  initLine () {
-    const xScale = d3.scaleLinear().domain([0, this.props.endTime]).range([0, this.width]);
-    const yScale = d3.scaleLinear().domain([0, this.props.capital]).range([this.props.capital / 24000, 0]);
-    // this.xAxis = d3.axis().scale(x).orient("bottom");
-    // this.yAxis = d3.axis().scale(y).orient("left");
-    this.line = d3.line()
+  draw () {
+    const xScale = d3.scaleLinear()
+                            .domain([0, this.props.endTime])
+                            .range([0, this.width]);
+
+    const yScale = d3.scaleLinear()
+                            .domain([0, this.props.capital])
+                            .range([this.props.capital / 24000, 0]);
+
+    const lineScale = d3.line()
                             .x(function(d) { return xScale(d.date); })
                             .y(function(d) { return yScale(d.capital); });
-  }
 
-  drawLine() {
-    this.svg.append("path")
-        .attr("d", this.line(this.props.graph));
-  }
+    const toolTip = d3.select("body")
+                       .append("div")
+                       .attr("class", "tooltip")
+                       .style("opacity", 0);
 
+     this.svg.append("path")
+        .attr("d", lineScale(this.props.lineData));
+
+     this.svg.selectAll("circle")
+             .data(this.props.activationHistory)
+             .enter()
+             .append("circle")
+             .attr('cx', (d) => xScale(d.time))
+             .attr('cy', (d) => yScale(d.capital))
+             .attr('r', 5)
+             .on("mouseover", (d) => {
+               toolTip.transition()
+                      .duration(200)
+                      .style("opacity", .9)
+               toolTip.html(d.title)
+                      .style("left", (d3.event.pageX) + "px")
+                      .style("top", (d3.event.pageY - 28) + "px")
+             })
+             .on("mouseout", (d) => {
+                toolTip.transition()
+                       .duration(500)
+                       .style("opacity", 0);
+             });
+
+      this.svg.selectAll("line")
+              .data(this.props.activationHistory)
+              .enter()
+              .append("line")
+              .attr("x1", () => 0)
+              .attr("x2", (d) => xScale(d.time))
+              .attr("y1", (d) => yScale(d.capital))
+              .attr("y2", (d) => yScale(d.capital))
+              .style("stroke", "black");
+  }
 
   render() {
     return (
@@ -59,7 +93,7 @@ const mapStateToProps = () => {
     capital: 74369613,
     startTime: 86400,
     endTime: 13305600,
-    graph: [
+    lineData: [
     {date: 0, capital: 0},
     {date: 86400,  capital: 501479},
     {date: 172800,  capital: 1375876},
@@ -220,17 +254,17 @@ const mapStateToProps = () => {
       {
         title: 'proj1',
         time: 3369600,
-        deployedCap: 19000000
+        capital: 19000000
       },
       {
         title: 'proj2',
         time: 6825600,
-        deployedCap: 34000000
+        capital: 34000000
       },
       {
         title: 'proj3',
         time: 13305600,
-        deployedCap: 69000000
+        capital: 69000000
       }
     ],
     width: 800
@@ -238,3 +272,45 @@ const mapStateToProps = () => {
 };
 
 export default connect(mapStateToProps)(CapitalHistory);
+
+// initScales() {
+//   this.xScale = d3.scaleLinear()
+//                         .domain([0, this.props.endTime])
+//                         .range([0, this.width]);
+//
+//   this.yScale = d3.scaleLinear()
+//                         .domain([0, this.props.capital])
+//                         .range([this.props.capital / 24000, 0]);
+//
+//   const xScale = this.xScale;
+//   const yScale = this.yScale;
+//
+//   this.lineScale = d3.line()
+//                         .x(function(d) { return xScale(d.date); })
+//                         .y(function(d) { return yScale(d.capital); });
+// }
+//
+// drawLine() {
+//   this.svg.append("path")
+//      .attr("d", this.lineScale(this.props.lineData));
+// }
+//
+// drawProjects() {
+//   this.svg.selectAll("circle")
+//           .data(this.props.activationHistory)
+//           .enter()
+//           .append("circle")
+//           .attr('cx', (d) => this.xScale(d.time))
+//           .attr('cy', (d) => this.yScale(d.capital))
+//           .attr('r', 5);
+//
+//    this.svg.selectAll("line")
+//            .data(this.props.activationHistory)
+//            .enter()
+//            .append("line")
+//            .attr("x1", () => 0)
+//            .attr("x2", (d) => this.xScale(d.time))
+//            .attr("y1", (d) => this.yScale(d.capital))
+//            .attr("y2", (d) => this.yScale(d.capital))
+//            .style("stroke", "black");
+// }

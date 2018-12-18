@@ -29,7 +29,7 @@ class CashFlowInputSheet extends React.Component {
     let fileReader = new FileReader();
     fileReader.onload = () => {
       content = fileReader.result;
-      console.log(content);
+      // console.log(content);
     };
     fileReader.readAsText(file);
     // return content;
@@ -60,7 +60,6 @@ class CashFlowInputSheet extends React.Component {
     const quarters = keys(cashflow);
     let checked;
     let quartersList = quarters.map((quarter, idx) => {
-      console.log("Inside Loop: ", cashflow[quarter].isActuals);
       return(
         <li className="flex-display" key={idx}>
           <label htmlFor={`quarter-${quarter}`}>{`${quarter.substring(0, 2)}`}</label>

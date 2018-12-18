@@ -1,6 +1,6 @@
 import React from 'react';
 import ProjectGraph from './project_graph';
-import ProjectVotes from './votes_view/project_votes';
+import VotesView from './votes_view/votes_view';
 import ToggleOptions from './toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 import './project_dashboard.scss';
@@ -48,7 +48,7 @@ class ProjectDashboard extends React.Component {
                 currentUser={this.props.currentUser}
                 fetchProjects={this.props.fetchProjects}
                 data={this.props.projects} /> :
-              <ProjectVotes />
+              <VotesView />
             }
           </div>
           <ToggleOptions toggleView={this.toggleView} />
