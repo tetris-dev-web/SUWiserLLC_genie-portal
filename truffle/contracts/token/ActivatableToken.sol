@@ -12,6 +12,13 @@ contract ActivatableToken is MintableToken {
     investorList = InvestorList(_investorList);
   }
 
+  //subtract inactive token amount from total
+  //set a variable that says that each inactive balance is now possibly 0
+  //make a mapping that indicates whether an accounts balance is actually still 0 for the current cycle
+  //make a mapping that indicates which cycle we are on
+  //variable that keeps track of the current cycle
+
+
   function initializeDividendWallet(address _dividendWallet) public onlyOwner {
     dividendWallet = _dividendWallet;
   }
@@ -33,7 +40,9 @@ contract ActivatableToken is MintableToken {
   }
 
   function inactiveBalanceOf(address account) public view returns (uint256) {
+    //if it is not 0
     return balances[account].sub(activeBalances[account]);
+    //else, we return 0
   }
 
   mapping(address => uint256) internal lastActivationPoints;
@@ -77,6 +86,7 @@ contract ActivatableToken is MintableToken {
   function transferInactive(address _to, uint256 _value) external onlyOwner {
     require(inactiveBalanceOf(msg.sender) >= _value);
     super.transfer(_to, _value);
+    //we make sure that it is not 0 for the current cycle
   }
 
   function transferActive(address _from, address _to, uint256 _value) internal {

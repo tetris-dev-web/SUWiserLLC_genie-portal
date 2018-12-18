@@ -169,18 +169,24 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    weiRaised = weiRaised.sub(tentativeLeaderCapRequired);
    inactiveProjectCount = inactiveProjectCount.sub(1);
    Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
+
  }
 
  function reimburseFunds () public {
    require(hasClosed());
    reimbursements.transfer(weiRaised);
+   weiRaised = 0;
  }
 
  function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
    address fromAddr = projectAddrs[fromProjectId];
    address toAddr = projectAddrs[toProjectId];
+
    Project(fromAddr).removeVotes(msg.sender, votes);
    Project(toAddr).vote(msg.sender, votes);
+
+   logVoteChange(projAddr, fromProjectId);
+   logVoteChange(projAddr, toProjectId);
  }
 
  function addVoteCredit (uint256 fromProjectId, uint256 votes) external {
@@ -199,12 +205,24 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    address projAddr = projectAddrs[fromProjectId];
    Project(projAddr).removeVotes(account, votes);
    investorList.addVoteCredit(account, votes);
+   logVoteChange(projAddr, fromProjectId);
  }
 
  function voteWithCredit (uint256 toProjectId, uint256 votes) external {
    address projAddr = projectAddrs[toProjectId];
    investorList.removeVoteCredit(msg.sender, votes);
    Project(projAddr).vote(msg.sender, votes);
+   logVoteChange(projAddr, toProjectId);
+ }
+
+ event VoteChange (
+   uint256 id,
+   uint256 voteCount
+);
+
+ function logVoteChange (address projectAddr, uint256 projectId) private {
+   Project project = Project(projectAddr);
+   emit VoteChange(projectId, project.totalVotes_());
  }
 
  function updateProjects (uint256 _projectId) internal {

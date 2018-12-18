@@ -96,7 +96,7 @@ contract Project {
 
   function capitalRequired_ () public view returns (uint256) {
     return capitalRequired;
-  }
+  } 
 
   /* function getInfo() public view returns(
       string, uint256, uint256, uint256, uint256, bool, uint256, uint256

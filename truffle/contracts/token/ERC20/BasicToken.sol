@@ -45,7 +45,9 @@ contract BasicToken is ERC20Basic {
   * @return An uint256 representing the amount owned by the passed address.
   */
   function balanceOf(address _owner) public view returns (uint256) {
+    //if it is not 0
     return balances[_owner];
+    //else return active balance of owner
   }
 
 }
