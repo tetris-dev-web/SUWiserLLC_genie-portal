@@ -1,8 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import UserDropdownContainer from './user_dropdown/user_dropdown_container';
 import TransferModal from './transfer/transfer_modal';
 import ProjectFormModal from './project_form/project_form_modal';
-import DrizzleConsumer from '../../drizzle/drizzleConsumer';
 
 // import getWeb3 from './getWeb3.js';
 // import TruffleContract from 'truffle-contract';
@@ -10,15 +10,25 @@ import DrizzleConsumer from '../../drizzle/drizzleConsumer';
 // import MultiSigWallet from './MultiSigWallet.json';
 
 class TokenInterface extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  //
-  //   this.state = {
-  //     balance: 0
-  //   };
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      balance: 0
+    };
+    this.watchTransfer = this.watchTransfer.bind(this);
+    this.test = this.test.bind(this);
+    this.pitchProjectTest = this.pitchProjectTest.bind(this);
     // this.updateBalance = this.updateBalance.bind(this);
-  // }
+  }
+
+  componentDidMount () {
+
+    // console.log(this.props)
+    if (this.props.web3) {
+      this.watchTransfer();
+    }
+  }
 
   // componentWillMount() {
   //
@@ -58,9 +68,38 @@ class TokenInterface extends React.Component {
   //   });
   // }
 
+
+  // watchMint () {
+  //   this.props.tokenInstance.Mint().watch((error, event) => {
+  //     console.log(event);
+  //     // this.setState({ balance: this.state.balance + event.amount});
+  //   });
+  // }
+
+  test () {
+    this.props.crowdsaleInstance.buyTokensAndVote(0, {from: this.props.account, value: 1000000});
+  }
+
+  pitchProjectTest(){
+    console.log(this.props.account)
+    this.props.crowdsaleInstance.pitchProject('project1', 5000000, 10000000, '300', '300', {from: this.props.account});
+  }
+
+  watchTransfer () {
+    this.props.tokenInstance.Transfer().watch((error, event) => {
+      console.log(error)
+      console.log(event)
+      if (event.args.to === this.props.account) {
+        this.setState({ balance: this.state.balance + event.amount});
+      }
+    });
+  }
+
   render() {
     return (
       <nav className="series navbar-container">
+        <div onClick={this.test}>TEST</div>
+        <div onClick={this.pitchProjectTest}>PITCHTEST</div>
         <div className= "navbar-left">
           <img className="gen-logo" src="https://s3.amazonaws.com/genie-portal-dev/static/logo.png"/>
           <div className="genus-dev-dash">
@@ -73,11 +112,20 @@ class TokenInterface extends React.Component {
           </div>
           <UserDropdownContainer />
           <TransferModal />
-          <DrizzleConsumer component={ProjectFormModal} />
+          <ProjectFormModal />
         </div>
       </nav>
     );
   }
 }
 
-export default TokenInterface;
+const mapStateToProps = state => {
+  return {
+    web3: state.network.web3,
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    tokenInstance: state.network.tokenInstance,
+    account: state.network.account
+  };
+}
+
+export default connect(mapStateToProps)(TokenInterface);

@@ -1,6 +1,7 @@
 import React from 'react';
 import TokenInterface from './token_interface';
 import Login from './login';
+import './navbar.scss';
 
 class Navbar extends React.Component {
 

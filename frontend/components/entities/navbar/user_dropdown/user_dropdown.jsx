@@ -4,13 +4,11 @@ import ModalStyle from './modal_style';
 import Wallet from './wallet/wallet';
 import ProfileContainer from './profile/profile_container';
 import TokenData from '../../../../contract_data/Token';
+import './user_dropdown.scss';
 
 class UserDropdown extends React.Component {
   constructor(props) {
     super(props);
-
-    console.log(this.props);
-    console.log(this.props.currentUser);
 
     const fName = this.props.currentUser.first_name;
     const lName = this.props.currentUser.last_name;
@@ -49,41 +47,13 @@ class UserDropdown extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.updateUsernameDisplay = this.updateUsernameDisplay.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
-    this.tick = this.tick.bind(this);
     // this.address = null;
     // this.abi = null;
     // this.web3 = null;
   }
 
   componentDidMount () {
-    const drizzle = this.props.drizzle;
-    const address = drizzle.contracts.Token.address;
-    const abi = TokenData.abi;
 
-    const web3 = drizzle.web3;
-
-    const Token = new web3.eth.Contract(abi, address);
-    this.interval = setInterval(() => {
-      Token.methods.totalSupply().call().then(totalSupply => {
-
-        this.setState({totalSupply})
-      })
-    }, 500);
-  }
-
-  // tick () {
-  //   const totalSupplyIdx = this.props.drizzle.contracts.GNIToken.methods.totalSupply.cacheCall();
-  //   this.setState({totalSupplyIdx});
-  // }
-
-  tick () {
-    return new Promise ((resolve,reject) => {
-        const index = this.props.drizzle.contracts.Token.methods.totalSupply.cacheCall()
-        resolve(index);
-      }).then((totalSupplyIdx) => {
-      const totalSupply = this.props.drizzleState.contracts.Token.totalSupply[this.state.totalSupplyIdx]
-      this.setState({totalSupply});
-    })
   }
 
 
@@ -120,6 +90,21 @@ class UserDropdown extends React.Component {
     this.props.logout();
   }
 
+  // handlePublicKeyUpdate(newKey){
+  //   debugger;
+  //   let updatedUser = {
+  //     id: this.props.currentUser.id,
+  //     email: this.props.currentUser.email,
+  //     // password: (this.state.password.length > 6) ? this.state.password : "",
+  //     password: this.props.currentUser.password,
+  //     zipcode: this.props.currentUser.zipcode,
+  //     first_name: this.props.currentUser.first_name,
+  //     last_name: this.props.currentUser.last_name
+  //   };
+  //
+  //   this.props.updateUser(updatedUser);
+  // }
+
   render() {
 
     // const tokens = this.props.drizzleState.contracts.Token.totalSupply[this.state.totalSupplyIdx];
@@ -131,7 +116,6 @@ class UserDropdown extends React.Component {
     // }
     // let { tokens, user_tokens, total_tokens } = this.state;
     // let { tokens } = this.props.currentUser;
-
 
 
     return (
@@ -155,7 +139,7 @@ class UserDropdown extends React.Component {
                 <div className="button-text">wallet#</div>
               </a>
               <ul className="dropdown-menu dropdown-item">
-                <Wallet />
+                <Wallet currentUser={this.props.currentUser} updateUser={this.props.updateUser} updateUsernameDisplay={this.updateUsernameDisplay}/>
               </ul>
             </li>
             <li className="dropdown-submenu profile-menu">

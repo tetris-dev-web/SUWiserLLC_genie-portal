@@ -8,7 +8,12 @@ import PDFModal from './pdf_modal/pdf_modal';
 import Finance from 'financejs';
 import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
-
+import { merge } from 'lodash';
+import PolyModal from './poly_modal/poly_modal';
+import './project_form.scss';
+import './project_modal.scss';
+import './geoContainer.scss';
+import './projectPitchMod.scss'
 
 class ProjectForm extends React.Component {
 
@@ -21,7 +26,7 @@ class ProjectForm extends React.Component {
       longitude: '',
       revenue: '10',
       valuation: '1',
-      model_id: '7syizSLPN60',
+      model_id: '870fb9d9-b5d2-4565-a6dd-65f9a1f4d00e',
       city: 'New York',
       country: 'USA',
       continent: 'North America',
@@ -60,9 +65,15 @@ class ProjectForm extends React.Component {
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
+    // this.parseCashflowData = this.parseCashflowData.bind(this);
+    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
+    this.dropPinClick = this.dropPinClick.bind(this);
+    this.updateLatLng = this.updateLatLng.bind(this);
     this.storeAddress = this.storeAddress.bind(this);
     this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this);
     this.parseInputFile = this.parseInputFile.bind(this);
+    this.updateCashflowValue = this.update.bind(this);
+    this.updateActuals = this.updateActuals.bind(this);
   }
 
   componentDidMount() {
@@ -78,10 +89,9 @@ class ProjectForm extends React.Component {
 
     const file = this.state.imageFile;
     const data = new FormData();
-    const {drizzle, drizzleState} = this.props;
-    const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
-    // const projectData = Object.assign({}, this.state)
+    const projectData = Object.assign({}, this.state)
+    const capitalRequired = this.calculateCapitalRequired();
 
 
     if (file) data.append("project[file]", file);
@@ -95,12 +105,12 @@ class ProjectForm extends React.Component {
     data.append("project[continent]", this.state.continent);
 
     data.append("project[valuation]", this.state.valuation);
-    data.append("project[cashflow]", JSON.stringify(this.state.cashflow));
+    data.append("project[cashflow]", this.state.cashflow);
     data.append("project[creator_id]", this.props.currentUser.id);
 
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
-    data.append("project[capital_required]", (this.calculateCapitalRequired()));
+    data.append("project[capital_required]", capitalRequired);
     data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow));
     data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow));
     data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow));
@@ -118,15 +128,15 @@ class ProjectForm extends React.Component {
 
     // Moved until data is properly structured
     // this.props.createProject(projectData);
-    this.props.createProject(data);
-    // .then( () => {
-    //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
-    // });
-    if (this.props.errors.length == 0) {
-      this.props.closeModal();
-      window.location.reload();
-      // console.log();
-    }
+    this.props.createProject(data).then( () => {
+      return this.props.crowdsaleInstance.pitchProject(this.state.title, capitalRequired, this.state.valuation, this.state.latitude, this.state.longitude, {from: this.props.account});
+    }).then(() => {
+      if (this.props.errors.length == 0) {
+        this.props.closeModal();
+        window.location.reload();
+        // console.log();
+      }
+    })
   }
 
   dropPinClick() {
@@ -245,13 +255,28 @@ class ProjectForm extends React.Component {
 
   updateCashflow(cashflow) {
     // Needed to update project state with cashflow state
-    console.log("Updating cashflow with Project Form's function: ", this);
     return e => {
-      console.log("Event is: ", e);
-      console.log("This from updateCashflow function: ", this);
       e.preventDefault();
-      this.setState({ 'cashflow': cashflow });
+      this.setState({ cashflow });
     };
+  }
+
+  updateCashflowValue(quarter) {
+    // console.log("Type of quarter is: ", typeof quarter);
+    return e => {
+      e.preventDefault();
+      let cashflow = merge({}, this.state.cashflow);
+      cashflow[quarter].cashFlow = parseInt(e.currentTarget.value);
+      const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
+      this.setState({ cashflow, accumulatedRevenue });
+    };
+  }
+
+  updateActuals(quarter) {
+      console.log('i have second entried');
+      let cashflow = merge({}, this.state.cashflow);
+      cashflow[quarter].isActuals = !cashflow[quarter].isActuals;
+      this.setState({cashflow});
   }
 
   updateFile(fileType) {
@@ -483,10 +508,15 @@ class ProjectForm extends React.Component {
           </div>
 
           <DivWithCorners>
-            <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
+            <span className="text">
+              <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
                 cashflow={this.state.cashflow ? this.state.cashflow : sampleProject}
                 updateCashflow={this.updateCashflow}
-                receiveCashflowData={this.receiveCashflowData} />
+                receiveCashflowData={this.receiveCashflowData}
+                updateActuals={this.updateActuals}
+                updateCashflowValue={this.updateCashflowValue}
+                />
+            </span>
           </DivWithCorners>
         </div>
 
@@ -544,20 +574,20 @@ class ProjectForm extends React.Component {
         <div className="flexed model-id-section">
           <div className="text-input-container model-id-container">
             <input className="text-input model-id-input"
-              step="any"
               placeholder="model id"
               value={model_id}
               onChange={this.update('model_id')} />
           </div>
 
           <DivWithCorners>
-            <div className="project-form-button model-id">
-              <svg className="project-form-button-icons" viewBox="-8 -8 160 160"><g><g><rect x="127.026" y="103.44" transform="matrix(0.8661 0.4999 -0.4999 0.8661 69.9909 -49.9074)" width="2.251" height="4.499" /><path d="M122.188,104.845l-3.863-2.23l2.25-3.896l3.863,2.23L122.188,104.845z M114.462,100.383l-3.863-2.23    l2.25-3.896l3.863,2.23L114.462,100.383z M106.734,95.921l-3.864-2.23l2.25-3.896l3.864,2.23L106.734,95.921z M99.007,91.459    l-3.863-2.23l2.25-3.896l3.863,2.23L99.007,91.459z M91.28,86.997l-3.864-2.23l2.25-3.896l3.864,2.23L91.28,86.997z     M83.552,82.535l-3.863-2.23l2.25-3.896l3.863,2.23L83.552,82.535z" /><polygon points="75.825,78.073 75.001,77.598 74.177,78.073 71.927,74.177 75.001,72.402 78.075,74.177   " /><path d="M27.812,104.843l-2.25-3.896l3.863-2.231l2.251,3.896L27.812,104.843z M35.539,100.381l-2.25-3.896    l3.864-2.23l2.25,3.896L35.539,100.381z M43.267,95.919l-2.25-3.896l3.863-2.23l2.25,3.896L43.267,95.919z M50.995,91.458    l-2.251-3.896l3.864-2.231l2.25,3.896L50.995,91.458z M58.722,86.996l-2.25-3.896l3.864-2.23l2.25,3.896L58.722,86.996z     M66.45,82.534l-2.25-3.896l3.863-2.23l2.25,3.896L66.45,82.534z" /><rect x="19.599" y="104.562" transform="matrix(0.5001 0.866 -0.866 0.5001 102.4474 33.9166)" width="4.499" height="2.251" /></g><g><rect x="72.751" y="72.75" width="4.5" height="2.25" /><path d="M77.251,68.288h-4.5v-4.462h4.5V68.288z M77.251,59.365h-4.5v-4.462h4.5V59.365z M77.251,50.442h-4.5    V45.98h4.5V50.442z M77.251,41.519h-4.5v-4.461h4.5V41.519z M77.251,32.596h-4.5v-4.462h4.5V32.596z M77.251,23.673h-4.5v-4.462    h4.5V23.673z" /><rect x="72.751" y="12.5" width="4.5" height="2.25" /></g><g><path d="M75.001,140.098l-56.377-32.549V42.451L75.001,9.902l56.375,32.551v65.098L75.001,140.098z     M23.124,104.951l51.877,29.951l51.875-29.949V45.051L75.001,15.098L23.124,45.049V104.951z" /><polygon points="75.001,77.598 19.749,45.698 21.999,41.802 75.001,72.402 128.001,41.804 130.251,45.7   " /><rect x="72.751" y="75" width="4.5" height="62.5" /></g></g></svg>
-            </div>
+            <PolyModal
+              modelId={this.state.modelId}
+
+              />
           </DivWithCorners>
         </div>
 
-        <textarea className="summary-area" value={this.state.value} onChange={this.update('summary')} ></textarea>
+        <textarea className="description-area" value="description" onChange={this.update('description')} />
         <input type="submit" value="Pitch"/>
         {this.renderErrors()}
         <div className="blue-close-modal-button close-modal-button"
@@ -686,15 +716,15 @@ export default ProjectForm;
 //
 const sampleProject = {
   "1": {
-    "cashFlow": -50000,
+    "cashFlow": 50000,
     "isActuals": true
   },
   "2": {
-    "cashFlow": -40018,
+    "cashFlow": 40018,
     "isActuals": true
   },
   "3": {
-    "cashFlow": -16857,
+    "cashFlow": 16857,
     "isActuals": true
   },
   "4": {
@@ -702,7 +732,7 @@ const sampleProject = {
     "isActuals": true
   },
   "5": {
-    "cashFlow": -20325,
+    "cashFlow": 20325,
     "isActuals": true
   },
   "6": {

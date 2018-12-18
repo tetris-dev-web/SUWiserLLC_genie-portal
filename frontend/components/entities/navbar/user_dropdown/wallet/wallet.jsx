@@ -1,4 +1,5 @@
 import React from 'react';
+import './wallet.scss';
 
 class Wallet extends React.Component {
   constructor(props) {
@@ -7,7 +8,7 @@ class Wallet extends React.Component {
     this.state = {
       newWalletID: ''
     };
-
+    this.update = this.update.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -20,18 +21,30 @@ class Wallet extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
-    console.log('New Wallet ID', this.state.newWalletID);
+    // $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
+    // console.log('New Wallet ID', this.state.newWalletID);
+    let updatedUser = {
+      id: this.props.currentUser.id,
+      email: this.props.currentUser.email,
+      // password: (this.state.password.length > 6) ? this.state.password : "",
+      password: this.props.currentUser.password,
+      zipcode: this.props.currentUser.zipcode,
+      first_name: this.props.currentUser.first_name,
+      last_name: this.props.currentUser.last_name
+    };
+
+    this.props.updateUser(updatedUser).then(() => {
+      this.setState({newWalletID: ''})
+      // this.props.updateUsernameDisplay(updatedUser);
+      // $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
+    });
   }
 
   render() {
-
-    let { newWalletID } = this.state;
     return(
       <form className="wallet-form">
         <div className="wallet current-wallet">
           <p className="wallet-label current-wallet-label">current wallet</p>
-          <div className="wallet-id current-wallet-id">#889341hdaf7g759g0440g</div>
         </div>
         <div className="wallet integrate-wallet">
           <p className="wallet-label integrate wallet-label">integrate new wallet</p>
@@ -39,7 +52,6 @@ class Wallet extends React.Component {
             <input
               type="text"
               placeholder="################"
-              value={ newWalletID }
               onChange={ this.update('newWalletID') }
               className="wallet-id integrate-wallet-input"/>
             <button
