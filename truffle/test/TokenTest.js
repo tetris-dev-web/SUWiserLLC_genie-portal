@@ -60,6 +60,7 @@ contract('Token', async (_accounts) => {
     it('returns the balance of the passed address', async () => {
       let balance1 = await mT.balanceOf(accounts[1]);
       let balance2 = await mT.balanceOf(accounts[2]);
+      console.log(balance1)
       assert.equal(balance1, 7000, 'incorrect balance for account[1]');
       assert.equal(balance2, 10000, 'incorrect balance for account[2]');
     })
@@ -69,6 +70,7 @@ contract('Token', async (_accounts) => {
     it('returns the active balance of the passed address', async () => {
       let activeBalance1 = await mT.activeBalanceOf(accounts[1]);
       let activeBalance2 = await mT.activeBalanceOf(accounts[2]);
+      console.log(activeBalance1)
       assert.equal(activeBalance1, 4000, 'incorrect active balance for account[1]');
       assert.equal(activeBalance2, 3000, 'incorrect active balance for account[2]');
     })
@@ -78,6 +80,7 @@ contract('Token', async (_accounts) => {
     it('returns the inactive balance of the passed address', async () => {
       let inactiveBalance1 = await mT.inactiveBalanceOf(accounts[1]);
       let inactiveBalance2 = await mT.inactiveBalanceOf(accounts[2]);
+      console.log(inactiveBalance1)
       assert.equal(inactiveBalance1, 3000, 'incorrect active balance for account[1]');
       assert.equal(inactiveBalance2, 7000, 'incorrect active balance for account[2]');
     })

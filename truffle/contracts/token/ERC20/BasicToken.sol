@@ -10,7 +10,15 @@ import '../../utility/SafeMath.sol';
 contract BasicToken is ERC20Basic {
   using SafeMath for uint256;
 
-  mapping(address => uint256) internal balances;
+  /* mapping(address => uint256) internal balances; */
+
+  struct Balance {
+    uint256 total;
+    uint256 active;
+    uint256 inactive;
+  }
+
+  mapping(address => Balance) internal balances;
 
   uint256 internal totalSupply_;
 
@@ -30,11 +38,11 @@ contract BasicToken is ERC20Basic {
   */
   function transfer(address _to, uint256 _value) public returns (bool) {
 
-    require(_value <= balances[msg.sender]);
+    require(_value <= balances[msg.sender].total);
     require(_to != address(0));
 
-    balances[msg.sender] = balances[msg.sender].sub(_value);
-    balances[_to] = balances[_to].add(_value);
+    balances[msg.sender].total = balances[msg.sender].total.sub(_value);
+    balances[_to].total = balances[_to].total.add(_value);
     emit Transfer(msg.sender, _to, _value);
     return true;
   }
@@ -44,10 +52,10 @@ contract BasicToken is ERC20Basic {
   * @param _owner The address to query the the balance of.
   * @return An uint256 representing the amount owned by the passed address.
   */
-  function balanceOf(address _owner) public view returns (uint256) {
+  /* function balanceOf(address _owner) public view returns (uint256) {
     //if it is not 0
     return balances[_owner];
     //else return active balance of owner
-  }
+  } */
 
 }

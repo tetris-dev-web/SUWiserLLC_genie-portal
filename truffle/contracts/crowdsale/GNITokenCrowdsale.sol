@@ -185,8 +185,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Project(fromAddr).removeVotes(msg.sender, votes);
    Project(toAddr).vote(msg.sender, votes);
 
-   logVoteChange(projAddr, fromProjectId);
-   logVoteChange(projAddr, toProjectId);
+   logVoteChange(fromAddr, fromProjectId);
+   logVoteChange(toAddr, toProjectId);
  }
 
  function addVoteCredit (uint256 fromProjectId, uint256 votes) external {

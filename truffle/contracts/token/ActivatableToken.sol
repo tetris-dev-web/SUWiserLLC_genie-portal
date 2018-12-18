@@ -18,7 +18,6 @@ contract ActivatableToken is MintableToken {
   //make a mapping that indicates which cycle we are on
   //variable that keeps track of the current cycle
 
-
   function initializeDividendWallet(address _dividendWallet) public onlyOwner {
     dividendWallet = _dividendWallet;
   }
@@ -35,13 +34,17 @@ contract ActivatableToken is MintableToken {
     return totalSupply_.sub(totalActiveSupply_);
   }
 
+  function balanceOf(address _who) public view returns (uint256) {
+    return balances[_who].total;
+  }
+
   function activeBalanceOf(address account) public view returns (uint256) {
-    return activeBalances[account];
+    return balances[account].active;
   }
 
   function inactiveBalanceOf(address account) public view returns (uint256) {
     //if it is not 0
-    return balances[account].sub(activeBalances[account]);
+    return balances[account].inactive;
     //else, we return 0
   }
 
@@ -58,8 +61,10 @@ contract ActivatableToken is MintableToken {
     require(inactiveBalanceOf(account) >= amount);
     distributeOwedDividend(account);
 
-    activeBalances[account] = activeBalances[account].add(amount);
+    balances[account].inactive = balances[account].inactive.sub(amount);
+    balances[account].active = balances[account].active.add(amount);
     totalActiveSupply_ = totalActiveSupply_.add(amount);
+    /* totalInactiveSupply_ = totalInactiveSupply_.sub(amount); */
   }
 
   function pendingActivations(address account) public returns (uint256) {
@@ -86,12 +91,14 @@ contract ActivatableToken is MintableToken {
   function transferInactive(address _to, uint256 _value) external onlyOwner {
     require(inactiveBalanceOf(msg.sender) >= _value);
     super.transfer(_to, _value);
+    balances[msg.sender].inactive = balances[msg.sender].inactive.sub(_value);
+    balances[_to].inactive = balances[_to].inactive.add(_value);
     //we make sure that it is not 0 for the current cycle
   }
 
   function transferActive(address _from, address _to, uint256 _value) internal {
-    activeBalances[_to] = activeBalances[_to].add(_value);
-    activeBalances[_from] = activeBalances[_from].sub(_value);
+    balances[_from].active = balances[_from].active.sub(_value);
+    balances[_to].active = balances[_to].active.add(_value);
 
     investorList.addInvestor(_to);
     investorList.removeVoteCredit(_from, _value);
