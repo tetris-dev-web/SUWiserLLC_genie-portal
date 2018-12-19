@@ -86,7 +86,7 @@ class ProjectForm extends React.Component {
     const file = this.state.imageFile;
     const data = new FormData();
 
-    const projectData = Object.assign({}, this.state)
+    const projectData = Object.assign({}, this.state);
     const capitalRequired = this.calculateCapitalRequired();
 
 
@@ -124,15 +124,12 @@ class ProjectForm extends React.Component {
 
     // Moved until data is properly structured
     // this.props.createProject(projectData);
-    this.props.createProject(data).then( () => {
-      return this.props.crowdsaleInstance.pitchProject(this.state.title, capitalRequired, this.state.valuation, this.state.latitude, this.state.longitude, {from: this.props.account});
-    }).then(() => {
+    this.props.createProject(this.props.crowdsaleInstance, projectData, this.props.currentUser).then(() => {
       if (this.props.errors.length == 0) {
         this.props.closeModal();
         window.location.reload();
-        // console.log();
       }
-    })
+    });
   }
 
   dropPinClick() {

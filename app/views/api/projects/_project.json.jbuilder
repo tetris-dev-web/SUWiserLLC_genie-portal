@@ -1,4 +1,5 @@
 json.extract! project,  :id,
+                        :address,
                         :title,
                         :revenue,
                         :valuation,

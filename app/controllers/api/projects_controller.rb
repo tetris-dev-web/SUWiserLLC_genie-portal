@@ -52,7 +52,7 @@ class Api::ProjectsController < ApplicationController
   private
   def project_params
     params.require(:project).permit(
-      :id, :title, :cashflow, :revenue, :valuation, :model_id,
+      :id, :address, :title, :cashflow, :revenue, :valuation, :model_id,
       :file, :icon, :description, :creator_id, :created_at,
       :city, :country, :continent, :status, :latitude, :longitude, :summary,
       :actual_cashflow, :accum_projected_cashflow, :accum_actual_cashflow,

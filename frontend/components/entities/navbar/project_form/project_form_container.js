@@ -3,7 +3,7 @@ import ProjectForm from './project_form';
 import {
   createProject,
   clearProjectErrors
-} from '../../../../actions/project_actions';
+} from '../../../../actions/chain_actions/project_actions';
 
 const mapStateToProps = state => {
   return {
@@ -16,7 +16,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createProject: project => dispatch(createProject(project)),
+    createProject: (crowdsale, projectData, account) => dispatch(createProject(crowdsale, projectData, account)),
     clearProjectErrors: () => dispatch(clearProjectErrors())
   };
 };

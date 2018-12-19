@@ -50,6 +50,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     address projectAddr = new Project(_name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
     inactiveProjectCount = inactiveProjectCount.add(1);
     Project(projectAddr).log(); //needs to be made
+    return projectAddr;
   }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {

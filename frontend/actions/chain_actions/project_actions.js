@@ -1,6 +1,6 @@
 import * as APIUtil from '../../util/project_api_util';
 import * as ChainUtil from '../../util/chain_util';
-import { receiveProjects } from '../project_actions';
+import { receiveProject, receiveProjectErrors, receiveProjects } from '../project_actions';
 
 
 export const fetchChainProjects  = (crowdsale) => {
@@ -9,6 +9,18 @@ export const fetchChainProjects  = (crowdsale) => {
       return ChainUtil.integrateProjectsData(crowdsale, projects);
     }).then((projectsData) => {
       return dispatch(receiveProjects(projectsData));
+    });
+  };
+};
+
+export const createProject = (crowdsale, projectData, account) => {
+  return dispatch => {
+    return ChainUtil.pitchProject(crowdsale, projectData, account).then((projectData) => {
+      return APIUtil.createProject(projectData).then(project => {
+        return dispatch(receiveProject(project));
+      }, err => {
+        return dispatch(receiveProjectErrors(err.responseJSON));
+      });
     });
   };
 };

@@ -5,8 +5,8 @@ const ProjectContract = TruffleContract(Project);
 
 export const integrateProjectsData = async (crowdsale, projects) => {
   const projectAddrs = [];
-
-  const projectsData = projects.map(async (project) => {
+  const projectsData = Object.keys(projects).map(async (projectId) => {
+    const project = projectsData[projectId];
     const instance = ProjectContract.at(project.address);
     projectAddrs.push(instance.address);
 
@@ -34,4 +34,11 @@ export const formatProjectData = async (crowdsale, instance, project) => {
   project.instance = instance;
 
   return project;
+};
+
+export const pitchProject = async (crowdsale, projectData, account) => {
+  let { title, capitalRequired, valuation, latitude, longitude } = projectData;
+  const address = await crowdsale.pitchProject(title, capitalRequired, valuation, latitude, longitude, {from: account});
+  projectData.address = address;
+  return projectData;
 };
