@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { fetchChainProjects } from '../../../actions/chain_actions/project_actions';
 import UserDropdownContainer from './user_dropdown/user_dropdown_container';
 import TransferModal from './transfer/transfer_modal';
 import ProjectFormModal from './project_form/project_form_modal';
@@ -19,6 +20,7 @@ class TokenInterface extends React.Component {
     this.watchTransfer = this.watchTransfer.bind(this);
     this.test = this.test.bind(this);
     this.pitchProjectTest = this.pitchProjectTest.bind(this);
+    this.fetchTest = this.fetchTest.bind(this);
     // this.updateBalance = this.updateBalance.bind(this);
   }
 
@@ -76,8 +78,12 @@ class TokenInterface extends React.Component {
   //   });
   // }
 
+  fetchTest () {
+    this.props.fetchChainProjects(this.props.crowdsaleInstance);
+  }
+
   test () {
-    this.props.crowdsaleInstance.buyTokensAndVote(0, {from: this.props.account, value: 1000000});
+    this.props.crowdsaleInstance.buyTokens({from: this.props.account, value: 1000000});
   }
 
   pitchProjectTest(){
@@ -100,6 +106,7 @@ class TokenInterface extends React.Component {
       <nav className="series navbar-container">
         <div onClick={this.test}>TEST</div>
         <div onClick={this.pitchProjectTest}>PITCHTEST</div>
+        <div onClick={this.fetchTest}>FETCHTEST</div>
         <div className= "navbar-left">
           <img className="gen-logo" src="https://s3.amazonaws.com/genie-portal-dev/static/logo.png"/>
           <div className="genus-dev-dash">
@@ -126,6 +133,12 @@ const mapStateToProps = state => {
     tokenInstance: state.network.tokenInstance,
     account: state.network.account
   };
-}
+};
 
-export default connect(mapStateToProps)(TokenInterface);
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchChainProjects: (crowdsale) => dispatch(fetchChainProjects(crowdsale))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TokenInterface);

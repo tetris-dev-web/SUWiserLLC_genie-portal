@@ -50,9 +50,9 @@ contract ActivatableToken is MintableToken {
   function balanceOf(address _who) public view returns (uint256) {
     if (
       currentInactiveTokenCycle == 0 ||
-      inactiveTokenCycle(currentInactiveTokenCycle).udpated[account] == true
+      inactiveTokenCycle[currentInactiveTokenCycle].updated[_who] == true
       ) {
-        return balances[account].total;
+        return balances[_who].total;
       }
       return activeBalanceOf(_who);
   }
@@ -64,7 +64,7 @@ contract ActivatableToken is MintableToken {
   function inactiveBalanceOf(address account) public view returns (uint256) {
     if (
       currentInactiveTokenCycle == 0 ||
-      inactiveTokenCycle(currentInactiveTokenCycle).udpated[account] == true
+      inactiveTokenCycle[currentInactiveTokenCycle].updated[account] == true
       ) {
         return balances[account].inactive;
       }

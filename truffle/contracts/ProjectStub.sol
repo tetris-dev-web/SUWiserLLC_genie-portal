@@ -4,7 +4,6 @@ import './ContractStub.sol';
 
 contract ProjectStub is Project, ContractStub {
   constructor (
-    uint256 _id,
     string _name,
     address _developer,
     address _dividendWallet,
@@ -18,7 +17,6 @@ contract ProjectStub is Project, ContractStub {
     )
     public
     Project(
-      _id,
       _name,
       _developer,
       _dividendWallet,

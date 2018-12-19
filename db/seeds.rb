@@ -311,7 +311,6 @@ project0 = Project.create!(
   projected_cashflow: genesis_Proj_Cashflow,
   accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
   capital_required:genesis_cap_required,
-  current_capital:genesis_current_cap
 )
 
 project2 = Project.create!(
@@ -368,8 +367,7 @@ project4 = Project.create!(
   latitude:hamInn_lat,
   votes:hamInn_votes,
   longitude:hamInn_lng,
-  summary:hamInn_summary,
-  current_capital:hamInn_current_cap
+  summary:hamInn_summary
 )
 project5 = Project.create!(
   title: "Penn Generator",

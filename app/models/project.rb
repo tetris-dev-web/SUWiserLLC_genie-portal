@@ -34,7 +34,7 @@
 #
 
 class Project < ApplicationRecord
-  validates :title, :revenue, :valuation, :creator_id, :city, :continent, presence: true
+  validates :title, :revenue, :valuation, :descripton, :capital_required, :creator_id, :city, :continent, presence: true
   validates :title, uniqueness: true
 
   # # validates_attachment_content_type :file, content_type: /\Aimage\/.*\Z/

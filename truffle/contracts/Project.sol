@@ -1,10 +1,10 @@
 pragma solidity ^0.4.23;
 import './utility/SafeMath.sol';
+
 contract Project {
   using SafeMath for uint256;
   //these will all need to be private so they cannot be set arbitrarily
   //we'll make read methods when necessary
-  uint256 private id; //this should be public?
   string private name;
   address private developer;
   address public dividendWallet;
@@ -18,7 +18,6 @@ contract Project {
   uint256 internal totalVotes;
   bool public active;
   constructor (
-    uint256 _id,
     string _name,
     address _developer,
     address _dividendWallet,
@@ -29,7 +28,6 @@ contract Project {
     string _lat,
     string _lng
     ) public {
-      id = _id;
       name = _name;
       developer = _developer;
       dividendWallet = _dividendWallet;
@@ -70,9 +68,9 @@ contract Project {
     return closingTime > now;
   }
 
-  function id_ () public view returns (uint256) {
+  /* function id_ () public view returns (uint256) {
     return id;
-  }
+  } */
 
   function active_ () public view returns (bool) {
     return active;

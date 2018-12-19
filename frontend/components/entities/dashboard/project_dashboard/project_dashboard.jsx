@@ -38,7 +38,6 @@ class ProjectDashboard extends React.Component {
   }
 
   render() {
-    console.log('what the fuck')
     if (this.props.currentUser) {
       return (
         <div className='project-dashboard'>

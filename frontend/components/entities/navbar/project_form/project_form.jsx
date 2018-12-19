@@ -92,6 +92,7 @@ class ProjectForm extends React.Component {
 
     if (file) data.append("project[file]", file);
     data.append("project[title]", this.state.title);
+    data.append("project[description]", this.state.description);
 
     data.append("project[latitude]", this.state.latitude);
     data.append("project[longitude]", this.state.longitude);

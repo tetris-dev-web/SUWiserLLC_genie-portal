@@ -47,9 +47,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
    _extendDoomsDay(90);
 
-    address projectAddr = new Project(_id, _name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
+    address projectAddr = new Project(_name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
     inactiveProjectCount = inactiveProjectCount.add(1);
-    Project.log(); //needs to be made
+    Project(projectAddr).log(); //needs to be made
   }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
@@ -79,7 +79,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  uint256 internal currentCheckCycle;
  mapping(uint256 => ProjectsChecked) internal checkCycle;
 
- function considerTentativeLeaderShip (address projectAddr) public { //we need more tests for new functionality
+ function considerTentativeLeaderShip (address projectAddr) public { //we need more tests for new functionality (when its implemented)
    require(Project(projectAddr).open() && !Project(projectAddr).active());
 
    if (
@@ -174,7 +174,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    fromProj.log();
    toProj.log();
  } */
- uint256 totalVotesCast;
+ uint256 public totalVotesCast;
 
 //tests need to be modified for all voting functions
  function addVoteCredit (address fromProjectAddr, uint256 votes) external { //tests need to be modified
@@ -197,10 +197,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    investorList.addVoteCredit(account, votes);
 
    project.log();
-   updateProjects();
+   updateProjects(fromProjectAddr);
  }
 
- function voteWithCredit (address toProjecAddr, uint256 votes) external {
+ function voteWithCredit (address toProjectAddr, uint256 votes) external {
    investorList.removeVoteCredit(msg.sender, votes);
 
    Project project = Project(toProjectAddr);

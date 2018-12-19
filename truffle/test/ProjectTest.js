@@ -106,25 +106,6 @@ contract('Project', async (_accounts) => {
     })
   })
 
-  // describe('setDividendWallet', async () => {
-  //   it('sets the dividend wallet to the address when the sender is the developer', async () => {
-  //     await mP.setDividendWallet(accounts[2], {from: accounts[0]});
-  //     let wallet = await mP.checkDividendWallet();
-  //     assert.equal(wallet, accounts[2], 'dividend wallet not set properly');
-  //   })
-  //
-  //   it('works when the sender is a manager', async () => {
-  //     await mP.addManager(accounts[2]);
-  //     await mP.setDividendWallet(accounts[3], {from: accounts[2]});
-  //     let wallet = await mP.checkDividendWallet();
-  //     assert.equal(wallet, accounts[3], 'manager should be able to set divident wallet');
-  //   })
-  //
-  //   it('reverts when the sender is not a manager or the developer', async () => {
-  //     await exceptions.catchRevert(mP.setDividendWallet(accounts[2], {from: accounts[1]}));
-  //   })
-  // })
-
   describe('deposit', async () => {
     it('adds the wei value to the dividend wallet', async () => {
       // await mP.setDividendWallet(accounts[2], {from: accounts[0]});
@@ -249,7 +230,7 @@ contract('Project', async (_accounts) => {
 
 const setUp = async () => {
   mP = await mockP({
-    id: 0, name: 'project1', developer: accounts[0], dividendWallet: accounts[1],
+    name: 'project1', developer: accounts[0], dividendWallet: accounts[1],
     valuation: 5000000, capitalRequired: 1000000, developerTokens: 40000000,
     investorTokens: 10000000, lat: '340', lng: '340'
   });
@@ -270,13 +251,13 @@ const recordVoteValues = async () => {
 
 const mockP = async (params) => {
   let {
-    id, name, developer, dividendWallet,
+    name, developer, dividendWallet,
     valuation, capitalRequired, developerTokens,
     investorTokens, lat, lng
   } = params;
 
   return await ProjectMock.new(
-    id, name, developer, dividendWallet,
+    name, developer, dividendWallet,
     valuation, capitalRequired, developerTokens,
     investorTokens, lat, lng
   );
