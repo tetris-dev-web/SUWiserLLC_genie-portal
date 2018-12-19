@@ -11,12 +11,25 @@ contract ActivatableToken is MintableToken {
   constructor (InvestorList _investorList) public {
     investorList = InvestorList(_investorList);
   }
+  //still need to test this new functionality
+  struct InactiveTokenCycle {
+    mapping(address => bool) updated;
+  }
 
-  //subtract inactive token amount from total
-  //set a variable that says that each inactive balance is now possibly 0
-  //make a mapping that indicates whether an accounts balance is actually still 0 for the current cycle
-  //make a mapping that indicates which cycle we are on
-  //variable that keeps track of the current cycle
+  uint256 currentInactiveTokenCycle;
+  mapping(uint256 => InactiveTokenCycle) inactiveTokenCycle;
+
+  function resetInactiveTokenCycle () {
+    totalSupply_ = totalSupply_.sub(totalInactiveSupply());
+    currentInactiveTokenCycle = currentInactiveTokenCycle.add(1);
+
+    InactiveTokenCycle memory newInactiveTokenCycle;
+    inactiveTokenCycle[currentInactiveTokenCycle] = newInactiveTokenCycle;
+
+    balances[msg.sender].total = 0;
+    balances[msg.sender].inactive = 0;
+    inactiveTokenCycle[currentInactiveTokenCycle].updated[msg.sender] = true;
+  }
 
   function initializeDividendWallet(address _dividendWallet) public onlyOwner {
     dividendWallet = _dividendWallet;
@@ -35,7 +48,13 @@ contract ActivatableToken is MintableToken {
   }
 
   function balanceOf(address _who) public view returns (uint256) {
-    return balances[_who].total;
+    if (
+      currentInactiveTokenCycle == 0 ||
+      inactiveTokenCycle(currentInactiveTokenCycle).udpated[account] == true
+      ) {
+        return balances[account].total;
+      }
+      return activeBalanceOf(_who);
   }
 
   function activeBalanceOf(address account) public view returns (uint256) {
@@ -43,9 +62,13 @@ contract ActivatableToken is MintableToken {
   }
 
   function inactiveBalanceOf(address account) public view returns (uint256) {
-    //if it is not 0
-    return balances[account].inactive;
-    //else, we return 0
+    if (
+      currentInactiveTokenCycle == 0 ||
+      inactiveTokenCycle(currentInactiveTokenCycle).udpated[account] == true
+      ) {
+        return balances[account].inactive;
+      }
+      return 0;
   }
 
   mapping(address => uint256) internal lastActivationPoints;
@@ -64,7 +87,6 @@ contract ActivatableToken is MintableToken {
     balances[account].inactive = balances[account].inactive.sub(amount);
     balances[account].active = balances[account].active.add(amount);
     totalActiveSupply_ = totalActiveSupply_.add(amount);
-    /* totalInactiveSupply_ = totalInactiveSupply_.sub(amount); */
   }
 
   function pendingActivations(address account) public returns (uint256) {
@@ -91,9 +113,14 @@ contract ActivatableToken is MintableToken {
   function transferInactive(address _to, uint256 _value) external onlyOwner {
     require(inactiveBalanceOf(msg.sender) >= _value);
     super.transfer(_to, _value);
+
+    if (inactiveTokenCycle[currentInactiveTokenCycle].updated[_to] == false) {
+      balances[_to].inactive = 0;
+      inactiveTokenCycle[currentInactiveTokenCycle].updated[_to] = true;
+    }
+
     balances[msg.sender].inactive = balances[msg.sender].inactive.sub(_value);
     balances[_to].inactive = balances[_to].inactive.add(_value);
-    //we make sure that it is not 0 for the current cycle
   }
 
   function transferActive(address _from, address _to, uint256 _value) internal {

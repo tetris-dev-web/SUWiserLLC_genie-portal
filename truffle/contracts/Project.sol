@@ -44,7 +44,7 @@ contract Project {
       closingTime = now + 86600 * 240;
   }
   event LogProject (
-      uint id,
+      address addr,
       string name,
       uint256 valuation,
       uint256 capitalRequired,
@@ -63,7 +63,7 @@ contract Project {
   }
 
   function log () public {
-    emit LogProject(id, name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, totalVotes, active);
+    emit LogProject(address(this), name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, totalVotes, active);
   }
 
   function open () public view returns (bool) {
@@ -96,7 +96,7 @@ contract Project {
 
   function capitalRequired_ () public view returns (uint256) {
     return capitalRequired;
-  } 
+  }
 
   /* function getInfo() public view returns(
       string, uint256, uint256, uint256, uint256, bool, uint256, uint256
