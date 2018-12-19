@@ -1,5 +1,7 @@
 import React from 'react';
 import ProjectGraph from './project_graph';
+import VotesView from './votes_view/votes_view';
+import ToggleOptions from './toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 
 //Combine this with container
@@ -10,13 +12,19 @@ class ProjectDashboard extends React.Component {
 
     this.state = {
       showText:false,
+      viewId: 1
     };
     // this.openModal = this.openModal.bind(this);
+    this.toggleView = this.toggleView.bind(this);
     this.toggleTextShowing = this.toggleTextShowing.bind(this);
   }
 
   toggleTextShowing() {
     this.setState({ showText:!this.state.showText });
+  }
+
+  toggleView (viewId) {
+    this.setState({viewId});
   }
 
 
@@ -30,16 +38,21 @@ class ProjectDashboard extends React.Component {
   }
 
   render() {
-
+    console.log('what the fuck')
     if (this.props.currentUser) {
-
       return (
-        <div className="graph-container">
-          <ProjectGraph
-            showText = {this.state.showText}
-            currentUser={this.props.currentUser}
-            fetchProjects={this.props.fetchProjects}
-            data={this.props.projects} />
+        <div className='project-dashboard'>
+          <div className="graph-container">
+            { this.state.viewId === 1 ?
+              <ProjectGraph
+                showText = {this.state.showText}
+                currentUser={this.props.currentUser}
+                fetchProjects={this.props.fetchProjects}
+                data={this.props.projects} /> :
+              <VotesView />
+            }
+          </div>
+          <ToggleOptions toggleView={this.toggleView} />
         </div>
       );
     } else {

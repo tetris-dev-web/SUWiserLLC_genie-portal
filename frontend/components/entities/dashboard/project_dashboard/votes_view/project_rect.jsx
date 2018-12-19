@@ -24,6 +24,11 @@ class ProjectRect extends React.Component{
        .attr('x', x)
        .attr('y', y)
        .style('opacity', opacity)
+       .style('stroke', 'white')
+       .style('stroke-width', 2)
+       // .style('border-width', 0, 1, 0, 1)
+       // .style('border-style', 'solid')
+       // .style('border-color', 'white')
   }
 
   render(){

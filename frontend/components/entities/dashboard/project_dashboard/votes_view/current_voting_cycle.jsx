@@ -24,7 +24,9 @@ const mapStateToProps = (state) => {
           voteShare: .25,
           title: "Penn Generator"
         },
-      ]
+      ],
+      maxValuation: 5000000,
+      capitalRaised: 3000000
     });
 };
 
@@ -35,9 +37,10 @@ class CurrentVotingCycle extends React.Component{
   constructor(props){
     super(props);
     this.state={
-
+      svg: undefined
     };
 
+    this.calculateStartingY = this.calculateStartingY.bind(this);
     this.setUp = this.setUp.bind(this);
     this.projects = this.projects.bind(this);
   }
@@ -47,27 +50,38 @@ class CurrentVotingCycle extends React.Component{
   }
 
   setUp(){
-    console.log("Setting Up");
-    let { height, width } = this.props;
-    // let { projects } = this.props;
-    // #d3bcaf
-    this.svg = d3.select('.current-voting-cycle-container')
-    .append('svg')
-    .classed('current-cycle-capital', true)
-    .attr('width', width)
-    .attr('height', height)
+    let { maxValuation, capitalRaised } = this.props;
 
+    const svg =  d3.select('.current-voting-cycle-container')
+                 .append('svg')
+                 .attr('width', "100%")
+                 .attr('height', maxValuation/24000)
+
+
+    const y = this.calculateStartingY(this.props.capitalRaised);
+    svg.append("rect")
+       .classed('current-cycle-capital', true)
+       .attr('width', "100%")
+       .attr('height', capitalRaised/24000)
+       .attr('y', `${y}%`)
+       .attr('fill', '#aa7a60')
+       .style('opacity', .5)
+
+    this.setState({svg})
   }
 
   projects(){
     const numberOfProjects = this.props.pitchedProjects.length;
     const projectWidthPercentage = 60 - (numberOfProjects * 2);
-    let startX = 21
+    let startX = 21;
+
     const pitchedProjects = this.props.pitchedProjects.map((project, idx) => {
-      console.log(startX)
       const currentX = startX
+      const valuationY = this.calculateStartingY(project.valuation);
+      const capitalRequiredY = this.calculateStartingY(project.capitalRequired);
+
       const projectWidth = project.voteShare * projectWidthPercentage;
-      startX = startX + 1 + projectWidth;
+      startX += projectWidth + 1;
 
       return (<PitchedProject
                             key={idx}
@@ -75,15 +89,19 @@ class CurrentVotingCycle extends React.Component{
                             capitalRequired={project.capitalRequired}
                             width={`${projectWidth}%`}
                             title={project.title}
-                            svg={this.svg}
+                            svg={this.state.svg}
                             x={`${currentX}%`}
-                            y={this.props.height} />);
+                            valuationY={`${valuationY}%`}
+                            capitalRequiredY={`${capitalRequiredY}%`} />);
     });
     return pitchedProjects;
   }
 
+  calculateStartingY(capital) {
+    return ((this.props.maxValuation - capital) / this.props.maxValuation) * 100;
+  }
+
   render(){
-    // let { capitalRaised } = this.props;
     return(
       <div className="current-voting-cycle-container">Hey
         { this.projects() }

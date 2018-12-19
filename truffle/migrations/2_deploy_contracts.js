@@ -1,43 +1,21 @@
 const Token = artifacts.require("Token");
-const TokenMock = artifacts.require("TokenMock");
-const ProjectQueue = artifacts.require("ProjectQueue");
 const InvestorList = artifacts.require("InvestorList");
-const InvestorListMock = artifacts.require("InvestorListMock");
-const InvestorListStub = artifacts.require("InvestorListStub");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
-const MyStringStore = artifacts.require("MyStringStore");
 const Dividends = artifacts.require("Dividends");
-
-const GNITokenCrowdsaleMock = artifacts.require("GNITokenCrowdsaleMock");
-const TokenStub = artifacts.require("TokenStub");
-const ProjectQueueStub = artifacts.require("ProjectQueueStub");
+const Reimbursements = artifacts.require("Reimbursements");
 
 let tokenInstance;
 
 module.exports = function (deployer, network, accounts) {
     const rate = 10000;
-    const developer = accounts[1];
+    const developer = accounts[0];
 
     return deployer
-        .then(() => {
-          return deployer.deploy(InvestorListStub);
-        })
-        .then(() => {
-          return deployer.deploy(TokenMock, InvestorListStub.address);
-        })
-        // .then(() => {
-        //   return deployer.deploy(ProjectQueue);
-        // })
-        .then(() => {
-          return deployer.deploy(MyStringStore);
-        })
         .then(() => {
           return deployer.deploy(InvestorList);
         })
         .then(() => {
-          return deployer.deploy(InvestorListMock);
-        })
-        .then(() => {
+          console.log('INVESTOR LIST', InvestorList.address);
           return deployer.deploy(Token, InvestorList.address);
         })
         .then(() => {
@@ -48,17 +26,30 @@ module.exports = function (deployer, network, accounts) {
             InvestorList.address
           );
         })
+        .then(() => {
+          return deployer.deploy(
+            Reimbursements,
+            Token.address
+          )
+        })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {
                     if (err) reject();
-                    const openingTime = time.timestamp + 5;
+                    const openingTime = time.timestamp + 50;
                     resolve(openingTime);
                 })
             })
         })
         .then((openingTime) => { // deploy the crowdsale (token functionality)
+            console.log('DEVELOPER', developer);
+            console.log('OPENING TIME', openingTime);
             const doomsDay = openingTime + 86400 * 240; // 240 days
+            console.log('DOOMS DAY', doomsDay);
+            console.log('RATE', rate);
+            console.log('DIVIDENDS', Dividends.address);
+            console.log("TOKEN", Token.address);
+            console.log("INVESTOR LIST", InvestorList.address);
             return deployer.deploy(
                 GNITokenCrowdsale,
                 openingTime,
@@ -68,6 +59,7 @@ module.exports = function (deployer, network, accounts) {
                 Dividends.address,
                 Token.address,
                 InvestorList.address,
+                Reimbursements.address
             );
         })
         .then(() => {
@@ -78,11 +70,7 @@ module.exports = function (deployer, network, accounts) {
           const investorListInst = InvestorList.at(InvestorList.address);
           return investorListInst.transferOwnership(GNITokenCrowdsale.address);
         })
-        // .then(() => {
-        //   const pQInst = ProjectQueue.at(ProjectQueue.address);
-        //   return pQInst.transferOwnership(GNITokenCrowdsale.address);
-        // })
         .then(() => {
-          tokenInstance.transferOwnership(GNITokenCrowdsale.address);
-        })
+          return tokenInstance.transferOwnership(GNITokenCrowdsale.address);
+        });
 };

@@ -11,10 +11,10 @@ function componentSetup(){
     fetchProjects: jest.fn(()=>{
       return Promise.resolve();
     }),
-    actual_cashflow: {1:10, 2:-30, 3:40, 4:50},
-    accum_actual_cashflow: {1:10, 2:-20, 3:20, 4:70},
-    projected_cashflow: {1:10, 2:-15, 3:60, 4:80},
-    accum_projected_cashflow: {1:10, 2:-5, 3:55, 4:140},
+    actual_cashflow:          {1:0, 2:-30, 3: -10,  4: 0,   5: 0},
+    accum_actual_cashflow:    {1:0, 2:-30, 3: -40,  4: 0,   5: 0},
+    projected_cashflow:       {1:0, 2:-15, 3: -10,  4: 40,  5: 45 },
+    accum_projected_cashflow: {1:0, 2:-15, 3: -25,  4: 15,   5: 60},
     height: 200,
     width: 300,
   }
@@ -37,27 +37,61 @@ describe('Project Module Component', () => {
    it('should match snapshot', () => {
      const { eWrapper} = componentSetup()
      // expect(eWrapper.find('section').hasClass('graph-container')).toBe(true)
-      expect(eWrapper).toMatchSnapshot();
+      expect(eWrapper).toMatchSnapshot()
    })
 
 
    it('scales should default to the min/max of projected or actual cashflows', () => {
      const {props, eWrapper} = componentSetup()
-     const [xAxisScale, yAxisScale, yLinesScale] = eWrapper.instance().defineScales()
+     const {xAxisScale, yAxisScale, yLinesScale, maxValue, minValue, minExpectedValueAccuProj} = eWrapper.instance().defineScales()
 
-     expect(xAxisScale(2)).toEqual(props.width/Object.keys(props.actual_cashflow).length*2)
-     //make min of projected and or actual
-     // minOfProjCashFlow = 
-     // minOfActCashFlow
+     expect(maxValue).toEqual(-25)
+     expect(minValue).toEqual(-40)
+     expect(minExpectedValueAccuProj).toEqual(-25)
 
-     //expect(yAxisScale(2)).toEqual(10)
+     expect(xAxisScale(2)).toEqual(124)
+     expect(yAxisScale(20)).toEqual(627)
+     expect(yLinesScale(20)).toEqual(254)
+
    })
 
-})
 
-test('1 + 1 equals 2', () => {
-  expect(1 + 3).toBe(4);
-});
+   it('cashflow should be formatted to output just values, identify currentQuarter and identify min/max', () => {
+      const {props, eWrapper} = componentSetup()
+
+      const {currentQuarter,
+              actualPoints,
+              actualAccumulatedPoints,
+              projectedPoints,
+              projectedAccumulatedPoints} = eWrapper.instance().formatCashData()
+
+
+      expect(currentQuarter).toEqual(4)
+
+      expect(actualPoints).toEqual([ { x: 0, y: 0 },
+        { x: 1, y: -30 },
+        { x: 2, y: -10 },
+        { x: 3, y: 0 },
+        { x: 4, y: 0 } ])
+      expect(actualAccumulatedPoints).toEqual([ { x: 0, y: 0 },
+        { x: 1, y: -30 },
+        { x: 2, y: -40 },
+        { x: 3, y: 0 },
+        { x: 4, y: 0 } ])
+      expect(projectedPoints).toEqual([ { x: 0, y: 0 },
+        { x: 1, y: -15 },
+        { x: 2, y: -10 },
+        { x: 3, y: 40 },
+        { x: 4, y: 45 } ])
+      expect(projectedAccumulatedPoints).toEqual([ { x: 0, y: 0 },
+        { x: 1, y: -15 },
+        { x: 2, y: -25 },
+        { x: 3, y: 15 },
+        { x: 4, y: 60 } ])
+
+    })
+
+})
 
 //
 // accum_actual_cashflow = {
