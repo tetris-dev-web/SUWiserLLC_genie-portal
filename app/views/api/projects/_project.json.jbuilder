@@ -28,5 +28,7 @@ json.extract! project,  :id,
                         :accum_projected_cashflow,
                         :close_date,
                         :votes
-
+if project.pdf_file.attached?
+    json.pdfUrl url_for(project.pdf_file)
+end
 json.file asset_path(project.file.url)

@@ -10,6 +10,7 @@ class Api::ProjectsController < ApplicationController
   end
 
   def create
+    debugger
     @project = Project.new(project_params)
     if @project.save
       render json: @project
@@ -56,7 +57,8 @@ class Api::ProjectsController < ApplicationController
       :file, :icon, :description, :creator_id, :created_at,
       :city, :country, :continent, :status, :latitude, :longitude, :summary,
       :actual_cashflow, :accum_projected_cashflow, :accum_actual_cashflow,
-      :projected_cashflow, :planFilePDFDataURL, :capital_required
+      :projected_cashflow, :planFilePDFDataURL, :capital_required,
+      :pdf_file
     )
   end
 end
