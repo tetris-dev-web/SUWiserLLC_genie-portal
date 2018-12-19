@@ -318,7 +318,6 @@ project2 = Project.create!(
   title: "Fitness Complex",
   revenue: 250,
   valuation: 400000,
-  capital_required: 250000,
   city: "Rio",
   country: "Brazil",
   continent: "South America",
@@ -327,14 +326,13 @@ project2 = Project.create!(
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user2.id,
   created_at: "12/02/2018",
-  status: "deployed"
+  status: "inDevelopment"
 )
 
 project3 = Project.create!(
   title: "Sleepless Nights",
   revenue: 5060,
-  valuation: 478880,
-  capital_required: 350000,
+  valuation: 4788800,
   city: "Seattle",
   country: "USA",
   continent: "North America",
@@ -349,8 +347,7 @@ project3 = Project.create!(
 project4 = Project.create!(
   title: "HamInn",
   revenue: 8000,
-  valuation: 1700000,
-  capital_required: 1000000,
+  valuation: 57000,
   city: "New York",
   country: "USA",
   continent: "North America",
@@ -369,13 +366,13 @@ project4 = Project.create!(
   votes:hamInn_votes,
   longitude:hamInn_lng,
   summary:hamInn_summary,
+  capital_required:hamInn_cap_required,
   current_capital:hamInn_current_cap
 )
 project5 = Project.create!(
   title: "Penn Generator",
   revenue: 6000,
-  valuation: 720000,
-  capital_required: 400000,
+  valuation: 72000,
   city: "Philidelphia",
   country: "USA",
   continent: "North America",
@@ -389,8 +386,7 @@ project5 = Project.create!(
 project6 = Project.create!(
   title: "BeefInn",
   revenue: 9000,
-  valuation: 1000000,
-  capital_required: 600000,
+  valuation: 10000,
   city: "Bogota",
   country: "Columbia",
   continent: "South America",
@@ -405,7 +401,6 @@ project6 = Project.create!(
   title: "ChickInn",
   revenue: 27000,
   valuation: 200000,
-  capital_required: 125000,
   city: "Berlin",
   country: "Germany",
   continent: "Europe",
@@ -435,7 +430,6 @@ project6 = Project.create!(
 project8 = Project.create(
  title: "Genesis Sans 3d",
  valuation: 210000,
- capital_required: 125000,
  model_id: nil,
  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
  description: "BNB/ Business Incubator",

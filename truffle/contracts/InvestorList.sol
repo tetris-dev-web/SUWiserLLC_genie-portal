@@ -22,16 +22,17 @@ contract InvestorList is Ownable {
     address voter,
     uint256 projectId,
     uint256 votes
-  );
+    );
 
   function investorCount () external view returns(uint256) {
     return investorCount_;
   }
 
+  //make this function only accessible by crowdsale for security
   function addrById (uint256 id) public view returns(address) {
     return investors[id].addr;
   }
-  //make only accessible by token
+  //make only accessible by crowdsale
   function addInvestor (address investorAddr) external {
     if (investorIds[investorAddr] == 0) {
       Investor memory newInvestor;
@@ -43,6 +44,7 @@ contract InvestorList is Ownable {
 
       investorIds[investorAddr] = id;
       investors[id] = newInvestor;
+
     }
   }
   //make this function only accessible by crowdsale for security

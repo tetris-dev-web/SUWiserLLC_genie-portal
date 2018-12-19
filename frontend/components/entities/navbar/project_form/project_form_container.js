@@ -10,7 +10,6 @@ const mapStateToProps = state => {
     currentUser: state.session.currentUser,
     projects: state.entities.projects,
     errors: state.errors.project,
-    crowdsaleInstance: state.network.crowdsaleInstance
   };
 };
 

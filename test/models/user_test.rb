@@ -26,18 +26,7 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-
-  test "user public key should not be null" do
-    user = User.new(email: "johnjrude@gmail.com", password: "password", bylaw_agreement: true)
-    assert user.valid?
-    puts "user public key is valid"
-  end
-  #
-  # test "user public key should not be null" do
-  #   user = User.new(first_name: 'michael', encrypted_password: 'password')
-  #   assert_not user.valid?, "public_key is null (not allowed)"
-  #   puts "user public key is valid"
+  # test "the truth" do
+  #   assert true
   # end
-
-
 end

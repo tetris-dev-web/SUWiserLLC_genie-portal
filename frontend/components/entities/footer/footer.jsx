@@ -2,7 +2,6 @@ import React from 'react';
 import BylawsModal from './bylaws_modal';
 import StrategyModal from './strategy_modal';
 import WalletModal from './wallet_modal';
-import './footer.scss';
 
 class Footer extends React.Component {
 

@@ -1,23 +1,23 @@
 import React from 'react';
-import ProjectRect from './project_rect'
+import ProjectSubBar from './project_sub_bar'
 
-const PitchedProject = ({ valuation, capitalRequired, width, title, svg, x, valuationY, capitalRequiredY }) =>{
+const PitchedProject = ({ valuation, capitalRequired, width, title, svg, x, y }) =>{
   return (
     <div className="pitched-project">
-      <ProjectRect
+      <ProjectSubBar
                     height={(valuation - capitalRequired)/24000}
                     width={width}
-                    opacity={.3}
+                    opacity={.5}
                     svg={svg}
                     x={x}
-                    y={valuationY} />
-      <ProjectRect
+                    y={y} />
+      <ProjectSubBar
                     height={capitalRequired/24000}
                     width={width}
                     opacity={1}
                     svg={svg}
                     x={x}
-                    y={capitalRequiredY} />
+                    y={y} />
     </div>
   );
 }

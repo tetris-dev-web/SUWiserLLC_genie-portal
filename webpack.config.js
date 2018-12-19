@@ -1,6 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-const miniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   context: __dirname,
@@ -9,12 +8,7 @@ module.exports = {
     path: path.resolve(__dirname, "app", "assets", "javascripts"),
     filename: "bundle.js"
   },
-  plugins: [
-    new miniCssExtractPlugin({
-      path: path.resolve(__dirname, "app", "assets", "stylesheets"),
-      filename: 'bundle.scss'
-    })
-  ],
+  // plugins: plugins,
   mode: 'development',
   module: {
     rules: [
@@ -25,14 +19,6 @@ module.exports = {
         query: {
           presets: ['react', 'env']
         }
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          miniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader'
-        ]
       },
       {
         test: /\.(jpg|png|gif|svg|pdf|ico)$/,
