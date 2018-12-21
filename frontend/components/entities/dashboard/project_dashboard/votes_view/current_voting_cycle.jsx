@@ -8,23 +8,35 @@ const mapStateToProps = (state) => {
       pitchedProjects: [
         {
           valuation: 5000000,
-          capitalRequired: 3000000,
-          voteShare: .4,
-          title: "Genesis"
+          capitalRequired: 3500000,
+          voteShare: .15,
+          title: "Ryan and Liam"
+        },
+        {
+          valuation: 2000000,
+          capitalRequired: 1500000,
+          voteShare: .15,
+          title: "Liam and Ryan"
         },
         {
           valuation: 4000000,
           capitalRequired: 2500000,
-          voteShare: .35,
+          voteShare: .20,
           title: "HamInn"
+        },
+        {
+          valuation: 5000000,
+          capitalRequired: 4000000,
+          voteShare: .30,
+          title: "Genesis"
         },
         {
           valuation: 3500000,
           capitalRequired: 2000000,
-          voteShare: .25,
+          voteShare: .20,
           title: "Penn Generator"
         },
-      ],
+      ].sort((a,b) => b.voteShare - a.voteShare),
       maxValuation: 5000000,
       capitalRaised: 3000000
     });
@@ -71,6 +83,7 @@ class CurrentVotingCycle extends React.Component{
   }
 
   projects(){
+    const { capitalRaised } = this.props;
     const numberOfProjects = this.props.pitchedProjects.length;
     const projectWidthPercentage = 60 - (numberOfProjects * 2);
     let startX = 21;
@@ -87,6 +100,7 @@ class CurrentVotingCycle extends React.Component{
                             key={idx}
                             valuation={project.valuation}
                             capitalRequired={project.capitalRequired}
+                            capitalRaised = {capitalRaised}
                             width={`${projectWidth}%`}
                             title={project.title}
                             svg={this.state.svg}
@@ -103,7 +117,7 @@ class CurrentVotingCycle extends React.Component{
 
   render(){
     return(
-      <div className="current-voting-cycle-container">Hey
+      <div className="current-voting-cycle-container">
         { this.projects() }
       </div>
     );

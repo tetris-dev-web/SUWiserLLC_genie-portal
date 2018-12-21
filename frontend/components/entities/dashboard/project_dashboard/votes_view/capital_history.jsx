@@ -83,7 +83,7 @@ class CapitalHistory extends React.Component {
 
   render() {
     return (
-      <div id='cap-history'></div>
+      <div id='cap-history' className="cap-history-container"></div>
     );
   }
 }
