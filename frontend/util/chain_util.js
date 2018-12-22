@@ -4,41 +4,60 @@ import Project from '../../truffle/build/contracts/Project.json';
 const ProjectContract = TruffleContract(Project);
 
 export const integrateProjectsData = async (crowdsale, projects) => {
+  const totalVotesCast = await crowdsale.totalVotesCast();
   const projectAddrs = [];
+  console.log(projects)
   const projectsData = Object.keys(projects).map(async (projectId) => {
-    const project = projectsData[projectId];
-    const instance = ProjectContract.at(project.address);
-    projectAddrs.push(instance.address);
+    const project = projects[projectId];
 
-    return formatProjectData(crowdsale, instance, project);
+    if (project.address) {
+      const address = JSON.parse(project.address);
+      const instance = ProjectContract.at(address);
+      projectAddrs.push(instance.address);
+
+      return formatProjectData(totalVotesCast, instance, project);
+    }
+
+    return project;
   });
 
   const resolvedProjectsData = await Promise.all(projectsData);
+
   return {
     projectAddrs,
     resolvedProjectsData
   };
 };
 
-export const formatProjectData = async (crowdsale, instance, project) => {
-  project.active = await instance.active();
+export const formatProjectData = async (totalVotesCast, instance, project) => {
+  project.instance = instance;
+  project.active = await instance.active_();
+
   if (project.active) {
     return project;//for now
   } else {
-    const totalVotes = await crowdsale.totalVotesCast();
     const projectVotes = await instance.totalVotes_();
 
-    project.voteShare = projectVotes / totalVotes;
+    project.voteShare = projectVotes / totalVotesCast;
   }
 
-  project.instance = instance;
 
   return project;
 };
 
-export const pitchProject = async (crowdsale, projectData, account) => {
-  let { title, capitalRequired, valuation, latitude, longitude } = projectData;
-  const address = await crowdsale.pitchProject(title, capitalRequired, valuation, latitude, longitude, {from: account});
-  projectData.address = address;
-  return projectData;
+export const pitchProject = async (crowdsale, data, account) => {
+  // let title = data.get("project[title]");
+  // let capital_required = data.get("project[capital_required]");
+  // let valuation = data.get("project[valuation]");
+  // let latitude = data.get("project[latitude]");
+  // let longitude = data.get("project[longitude]");
+  let { title, capital_required, valuation, latitude, longitude } = data;
+  const address = await crowdsale.pitchProject(title, capital_required, valuation, latitude, longitude, {from: account});
+  console.log('stringify:', JSON.stringify(address));
+  console.log(address);
+  data.address = JSON.stringify(address);
+  // data.append("project[address]", address.tx);
+
+  // data.address = address.tx;
+  return data;
 };

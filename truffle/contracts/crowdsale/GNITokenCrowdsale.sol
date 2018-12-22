@@ -37,6 +37,18 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
   uint256 public inactiveProjectCount;
 
+  event ProjectPitch (
+    address projectAddress,
+    address developer,
+    string name,
+    string lat,
+    string lng,
+    uint256 capitalRequired,
+    uint256 valuation,
+    uint256 developerTokens,
+    uint256 investorTokens
+  );
+
   function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public {//we need more tests for this
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
@@ -49,8 +61,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
     address projectAddr = new Project(_name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
     inactiveProjectCount = inactiveProjectCount.add(1);
-    Project(projectAddr).log(); //needs to be made
-    return projectAddr;
+    emit ProjectPitch(projectAddr, developer, _name, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens);
   }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
@@ -197,7 +208,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    totalVotesCast = totalVotesCast.sub(votes);
    investorList.addVoteCredit(account, votes);
 
-   project.log();
    updateProjects(fromProjectAddr);
  }
 
@@ -208,7 +218,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    project.vote(msg.sender, votes);
    totalVotesCast = totalVotesCast.add(votes);
 
-   project.log();
    updateProjects(toProjectAddr);
  }
 

@@ -54,6 +54,20 @@ contract Project {
       bool active
   );
 
+  event VoteChange (
+    address addr,
+    string name,
+    uint256 totalVotes
+  );
+
+  event ProjectActivation (
+    address addr,
+    string name,
+    bool activationStatus,
+    uint256 capitalRequired,
+    uint256 valuation
+  );
+
   mapping(address => uint256) internal votes;
 
   function votesOf(address voter) public view returns (uint256) {
@@ -137,6 +151,8 @@ contract Project {
     votes[voter] = votes[voter].add(voteAmount);
     totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
+    
+    emit VoteChange(address(this), name, totalVotes);
   }
 
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
@@ -147,11 +163,13 @@ contract Project {
     votes[voter] = votes[voter].sub(voteAmount);
     totalVotes = totalVotes.sub(voteAmount);
     closingTime = closingTime.sub(43200);
+
+    emit VoteChange(address(this), name, totalVotes);
   }
 
   function activate () external {
     active = true;
-    log();
+    emit ProjectActivation(address(this), name, active, capitalRequired, valuation);
   }
 
   function beats (address otherProject) public view returns (bool) {

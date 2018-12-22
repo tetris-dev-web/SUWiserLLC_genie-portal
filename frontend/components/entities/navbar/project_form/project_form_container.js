@@ -1,16 +1,17 @@
 import { connect } from 'react-redux';
 import ProjectForm from './project_form';
 import {
-  createProject,
-  clearProjectErrors
+  createProject
 } from '../../../../actions/chain_actions/project_actions';
+import { clearProjectErrors } from '../../../../actions/project_actions';
 
 const mapStateToProps = state => {
   return {
     currentUser: state.session.currentUser,
     projects: state.entities.projects,
     errors: state.errors.project,
-    crowdsaleInstance: state.network.crowdsaleInstance
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    account: state.network.account
   };
 };
 
