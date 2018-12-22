@@ -3,7 +3,8 @@ import ProjectGraph from './project_graph';
 import VotesView from './votes_view/votes_view';
 import ToggleOptions from './toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
-import './project_dashboard.scss';
+
+//Combine this with container
 
 class ProjectDashboard extends React.Component {
   constructor(props){

@@ -3,7 +3,7 @@ import Konva from 'konva';
 import { Stage, Layer, Rect,Line,Shape, Text } from 'react-konva';
 import * as d3 from 'd3';
 
-/// TODO REFACTOR THIS SHITTT
+
 class ProjectThermo extends React.Component {
   constructor(props){
     super(props);
@@ -20,8 +20,8 @@ class ProjectThermo extends React.Component {
 
   render() {
     //change vote expectation to capital raised
-    const {project} = this.props
-    const {current_capital, capital_required, start_date, close_date } = project;
+    const { project} = this.props
+    const { current_capital, capital_required, start_date, close_date } = project;
 
     const percentCompleted = (current_capital*100) / capital_required;
 
@@ -81,7 +81,7 @@ class ProjectThermo extends React.Component {
     // TODO make line draw on hover as an animation
 
     const CapRaisedLine = () => <Line
-                points={[lineStartX, filledRectStartingY, 190, filledRectStartingY]}
+                points={[lineStartX,filledRectStartingY,190,filledRectStartingY]}
                 stroke={'#00FFFF'}
                 strokeWidth={1.5}/>
 
@@ -93,6 +93,7 @@ class ProjectThermo extends React.Component {
                 />
 
 
+
     const CurrentDayLine = () => <Line
                 points={[daysToCloseLineX,55,daysToCloseLineX,160]}
                 stroke={'#00FFFF'}
@@ -101,10 +102,11 @@ class ProjectThermo extends React.Component {
 
 
 
+
       return (
         <div className="temp">
           <div className="thermo-canvas-container">
-            <Stage width={this.props.width} height={this.props.height}
+            <Stage width={220} height={200}
               >
               <Layer>
                   <Text

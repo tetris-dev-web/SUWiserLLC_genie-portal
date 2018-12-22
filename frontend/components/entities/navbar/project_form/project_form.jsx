@@ -10,9 +10,6 @@ import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } f
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
 import { merge } from 'lodash';
 import PolyModal from './poly_modal/poly_modal';
-import './project_modal.scss';
-import './geoContainer.scss';
-import './projectPitchMod.scss';
 
 class ProjectForm extends React.Component {
 

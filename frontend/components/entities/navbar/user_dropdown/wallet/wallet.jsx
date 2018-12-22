@@ -1,5 +1,4 @@
 import React from 'react';
-import './wallet.scss';
 
 class Wallet extends React.Component {
   constructor(props) {

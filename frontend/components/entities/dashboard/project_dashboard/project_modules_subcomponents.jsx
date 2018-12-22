@@ -19,7 +19,7 @@ export function Title (props){
 export function SummaryAndPlan (props){
   // TODO figure out how to submit div text based on which key is pressed (Enter)
   // TODO create indication of text being edited by highlighting outline of div and flashing save in small text in same color
-  console.log("is this loading?? ?? ")
+
   // handleKeyPress(event) {
   //   event.preventDefault()
   //   console.log("event value: ", event.value)
