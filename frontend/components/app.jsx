@@ -1,8 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { connect } from 'react-redux';
 import { Switch } from 'react-router-dom';
-import { listenForProjectPitch } from '../util/chain_event_util';
 import {
   AuthRoute,
   ProtectedRoute,
@@ -35,9 +33,7 @@ class App extends React.Component {
     // this.crowdsale = TruffleContract(GNITokenCrowdsale);
     // this.crowdsale.setProvider(this.web3Provider);
   }
-  componentDidMount() {
-    this.props.listenForProjectPitch(this.props.crowdsaleInstance);
-  }
+
   // componentDidMount() {
   //   let account;
   //   let tokenInstance;
@@ -71,10 +67,4 @@ class App extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    listenForProjectPitch: crowdsaleInstance => dispatch(listenForProjectPitch(crowdsaleInstance))
-  };
-};
-
-export default connect(null, mapDispatchToProps)(App);
+export default App;
