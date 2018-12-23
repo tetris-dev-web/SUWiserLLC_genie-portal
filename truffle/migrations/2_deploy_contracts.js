@@ -3,6 +3,7 @@ const InvestorList = artifacts.require("InvestorList");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const Dividends = artifacts.require("Dividends");
 const Reimbursements = artifacts.require("Reimbursements");
+const ProjectLeaderBoard = artifacts.require("ProjectLeaderBoard");
 
 let tokenInstance;
 
@@ -30,6 +31,11 @@ module.exports = function (deployer, network, accounts) {
           return deployer.deploy(
             Reimbursements,
             Token.address
+          )
+        })
+        .then(() => {
+          return deployer.deploy(
+            ProjectLeaderBoard
           )
         })
         .then(() => { // establish start time variable
@@ -69,6 +75,10 @@ module.exports = function (deployer, network, accounts) {
         .then(() => {
           const investorListInst = InvestorList.at(InvestorList.address);
           return investorListInst.transferOwnership(GNITokenCrowdsale.address);
+        })
+        .then(() => {
+          const projectLeaderBoardInst = ProjectLeaderBoard.at(ProjectLeaderBoard.address);
+          return projectLeaderBoardInst.transferOwnership(GNITokenCrowdsale.address);
         })
         .then(() => {
           return tokenInstance.transferOwnership(GNITokenCrowdsale.address);
