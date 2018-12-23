@@ -7,16 +7,19 @@ import {
 import ProjectDashboard from './project_dashboard';
 
 const mapStateToProps = state => {
-  const currUser = state.session.currentUser;
+  const currentUser = state.session.currentUser;
+
   let isInvestor = false;
-  currUser.accounts.forEach( account => {
+  currentUser.accounts.forEach( account => {
     if(account.account_type === "Investor") isInvestor = true;
   });
 
+
   return {
-    currentUser: currUser,
-    isInvestor: isInvestor,
-    projects: state.entities.projects
+    projects: state.entitites.projects,
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    currentUser,
+    isInvestor
   };
 };
 

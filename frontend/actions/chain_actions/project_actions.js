@@ -14,15 +14,21 @@ export const fetchChainProjects  = (crowdsale) => {
 };
 
 
+// export const createProject = (crowdsale, projectData, account) => {
+//   return dispatch => {
+//     return ChainUtil.pitchProject(crowdsale, projectData, account).then((projectData) => {
+//       //the following should run on an event listener instead in case the user refreshes the page.
+//       return APIUtil.createProject(projectData).then(project => {
+//         return dispatch(receiveProject(project));
+//       }, err => {
+//         return dispatch(receiveProjectErrors(err.responseJSON));
+//       });
+//     });
+//   };
+// };
+
 export const createProject = (crowdsale, projectData, account) => {
-  return dispatch => {
-    return ChainUtil.pitchProject(crowdsale, projectData, account).then((projectData) => {
-      //the following should run on an event listener instead in case the user refreshes the page.
-      return APIUtil.createProject(projectData).then(project => {
-        return dispatch(receiveProject(project));
-      }, err => {
-        return dispatch(receiveProjectErrors(err.responseJSON));
-      });
-    });
-  };
+    return APIUtil.createProject(projectData).then(() => {
+      return ChainUtil.pitchProject(crowdsale, projectData, account);
+  });
 };

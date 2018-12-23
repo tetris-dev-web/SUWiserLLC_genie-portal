@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import configureStore from './store/store';
+import { loadPendingProjectPitches } from './util/local_storage_util';
 import Root from './components/root';
 import merge from 'lodash/merge';
 import Web3 from 'web3';
@@ -12,7 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
   let store;
   let web3Provider;
   let provider;
-  let preloadedState = {};
+  let preloadedState = {
+    entities: {
+      projects: {
+        pendingPitches: loadPendingProjectPitches()
+      }
+    }
+  };
 
   if (window.currentUser) {
     preloadedState = { session: { currentUser: window.currentUser }};

@@ -16,6 +16,8 @@ class ProjectDashboard extends React.Component {
     // this.openModal = this.openModal.bind(this);
     this.toggleView = this.toggleView.bind(this);
     this.toggleTextShowing = this.toggleTextShowing.bind(this);
+    this.watchProjectPitch = this.watchProjectPitch.bind(this);
+    this.filterPitchedProjects = this.filterPitchedProjects.bind(this);
   }
 
   toggleTextShowing() {
@@ -27,10 +29,27 @@ class ProjectDashboard extends React.Component {
   }
 
 
-  componentDidMount() { //where is this being used?
+  componentDidMount() {
     this.props.fetchProjects();
+    this.watchProjectPitch();
   }
 
+  watchProjectPitch() {
+    this.props.crowdsaleInstance.ProjectPitch.watch((error, event) => {
+      const address = event.args.projectAddress;
+      const title = event.args.title;
+      const project = this.props.projects[title];
+      project.address = address;
+
+      this.props.receiveProject(project);
+    });
+  }
+
+  filterPitchedProjects () {
+    return this.props.projects.filter(project => {
+      return typeof project.address !== "undefined";
+    });
+  }
 
   handleKeyPress(e) {
     alert('PRESSED');
@@ -46,7 +65,7 @@ class ProjectDashboard extends React.Component {
                 showText = {this.state.showText}
                 currentUser={this.props.currentUser}
                 fetchProjects={this.props.fetchProjects}
-                data={this.props.projects} /> :
+                data={this.filterPitchedProjects()} /> :
               <VotesView />
             }
           </div>

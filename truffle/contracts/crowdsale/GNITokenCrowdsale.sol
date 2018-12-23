@@ -46,8 +46,16 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 capitalRequired,
     uint256 valuation,
     uint256 developerTokens,
-    uint256 investorTokens
+    uint256 investorTokens,
+    uint256 totalProjectCount
   );
+
+  mapping(uint256 => address) internal projectAddress;
+  uint256 public totalProjectCount;
+
+  function projectById (uint256 id) returns (address) {
+    return projectAddress[id];
+  }
 
   function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public {//we need more tests for this
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
@@ -61,7 +69,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
     address projectAddr = new Project(_name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
     inactiveProjectCount = inactiveProjectCount.add(1);
-    emit ProjectPitch(projectAddr, developer, _name, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens);
+    totalProjectCount = totalProjectCount.add(1);
+    projectAddress[totalProjectCount] = projectAddr;
+    emit ProjectPitch(projectAddr, developer, _name, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
   }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {

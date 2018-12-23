@@ -87,14 +87,11 @@ class TokenInterface extends React.Component {
   }
 
   pitchProjectTest(){
-    console.log(this.props.account)
     this.props.crowdsaleInstance.pitchProject('project1', 5000000, 10000000, '300', '300', {from: this.props.account});
   }
 
   watchTransfer () {
     this.props.tokenInstance.Transfer().watch((error, event) => {
-      console.log(error)
-      console.log(event)
       if (event.args.to === this.props.account) {
         this.setState({ balance: this.state.balance + event.amount});
       }

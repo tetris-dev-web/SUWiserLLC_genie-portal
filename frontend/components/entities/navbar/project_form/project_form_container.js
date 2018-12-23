@@ -6,9 +6,13 @@ import {
 import { clearProjectErrors } from '../../../../actions/project_actions';
 
 const mapStateToProps = state => {
+  const projects = state.entities.projects.filter(project => {
+    return typeof project.address !== "undefined";
+  });
+
   return {
+    projects,
     currentUser: state.session.currentUser,
-    projects: state.entities.projects,
     errors: state.errors.project,
     crowdsaleInstance: state.network.crowdsaleInstance,
     account: state.network.account
