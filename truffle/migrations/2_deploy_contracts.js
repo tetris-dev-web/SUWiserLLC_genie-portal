@@ -65,6 +65,7 @@ module.exports = function (deployer, network, accounts) {
                 Dividends.address,
                 Token.address,
                 InvestorList.address,
+                ProjectLeaderBoard.address,
                 Reimbursements.address
             );
         })

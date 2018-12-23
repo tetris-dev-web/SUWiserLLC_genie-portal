@@ -4,8 +4,15 @@ import Project from '../../truffle/build/contracts/Project.json';
 const ProjectContract = TruffleContract(Project);
 
 export const integrateProjectsData = async (crowdsale, initialProjectsData) => {
-  const projectInstances = await getProjectInstances(crowdsale);
-  return await getProjectsData(crowdsale, projectInstances, initialProjectsData);
+  const totalVotesCast = await crowdsale.totalVotesCast();
+  const projectAddresses = await getProjectAddresses(crowdsale);
+
+  const projectsData = projectAddresses.map(address => {
+    const instance = ProjectContract.at(address);
+    return formatProjectData(totalVotesCast, instance, initialProjectsData);
+  });
+
+  return await Promise.all(projectsData);
   // const projectTitles = Object.keys(initialProjectsData);
   //
   // return {
@@ -32,26 +39,6 @@ export const integrateProjectsData = async (crowdsale, initialProjectsData) => {
   //   projectAddrs,
   //   resolvedProjectsData
   // };
-};
-
-const getProjectsData = async (crowdsale, projectInstances, initialProjectsData) => {
-  const totalVotesCast = await crowdsale.totalVotesCast();
-
-  const projectsData = projectInstances.map(instance => {
-    return formatProjectData(totalVotesCast, instance, initialProjectsData);
-  });
-
-  return await Promise.all(projectsData);
-};
-
-const getProjectInstances = async crowdsale => {
-  const projectAddresses = await getProjectAddresses(crowdsale);
-
-  const projectInstances = projectAddresses.map(address => {
-    return ProjectContract.at(address);
-  });
-
-  return await Promise.all(projectInstances);
 };
 
 const getProjectAddresses = async crowdsale => {

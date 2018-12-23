@@ -1,10 +1,12 @@
 pragma solidity ^0.4.24;
-import './Project';
-import './utility/ownable';
+import './Project.sol';
+import './utility/Ownable.sol';
+import './utility/SafeMath.sol';
 
 //we need to make tests for these
 //game theory of this needs to be analyzed further
 contract ProjectLeaderBoard is Ownable {
+  using SafeMath for uint256;
   uint256 public candidateCount;
   address public tentativeLeaderAddr;
   uint256 public tentativeLeaderCapRequired;
@@ -85,24 +87,15 @@ contract ProjectLeaderBoard is Ownable {
   } */
 
   function tentativeLeader () public view returns (address, uint256, bool) {
-    bool canActivate = false;
-    if (
-      tentativeLeaderCapRequired <= weiRaised &&
-      tentativeLeaderConfirmed &&
-      Project(tentativeLeaderAddr).open()
-    ) {
-      canActivate = true;
-    }
-
-    return (tentativeLeaderAddr, tentativeLeaderCapRequired, canActivate);
+    return (tentativeLeaderAddr, tentativeLeaderCapRequired, tentativeLeaderConfirmed);
   }
 
-  function handleProjectActivation () ownlyOwner external {
+  function handleProjectActivation () onlyOwner external {
     updateTentativeLeader(address(0));
     candidateCount = candidateCount.sub(1);
   }
 
-  function incrementCandidateCount() ownlyOwner external {
+  function incrementCandidateCount() onlyOwner external {
     candidateCount = candidateCount.add(1);
     //we should probably updateTentativeLeader with account 0...
   }

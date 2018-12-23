@@ -6,12 +6,14 @@ import '../ProjectStub.sol';
 import '../token/ERC20/Token.sol';
 import '../InvestorList.sol';
 import '../Reimbursements.sol';
+import '../ProjectLeaderBoard.sol';
 
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   uint256 public totalValuation;
   InvestorList public investorList;
+  ProjectLeaderBoard public projectLeaderBoard;
   address public dividendWallet;
   address public reimbursements;
 
@@ -24,6 +26,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         address _dividendWallet,
         Token _token,
         InvestorList _investorList,
+        ProjectLeaderBoard _projectLeaderBoard,
         address _reimbursements
       )
       public
@@ -31,6 +34,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       TimedCrowdsale(_openingTime, _doomsDay) {
         investorList = InvestorList(_investorList);
         totalValuation = 0;
+        projectLeaderBoard = ProjectLeaderBoard(_projectLeaderBoard);
         dividendWallet = _dividendWallet;
         reimbursements = _reimbursements;
   }
@@ -91,10 +95,14 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    (
      address tentativeLeaderAddr,
      uint256 tentativeLeaderCapRequired,
-     bool canActivate
+     bool tentativeLeaderConfirmed
    ) = projectLeaderBoard.tentativeLeader();
 
-   if (canActivate) {
+   if (
+     tentativeLeaderCapRequired <= weiRaised &&
+     tentativeLeaderConfirmed &&
+     Project(tentativeLeaderAddr).open()
+     ) {
      Project project = Project(tentativeLeaderAddr);
      project.activate();
      project.log();
