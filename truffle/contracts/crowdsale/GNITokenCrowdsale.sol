@@ -35,8 +35,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         reimbursements = _reimbursements;
   }
 
-  uint256 public inactiveProjectCount;
-
   event ProjectPitch (
     address projectAddress,
     address developer,
@@ -68,7 +66,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
 
     address projectAddr = new Project(_name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
-    inactiveProjectCount = inactiveProjectCount.add(1);
+    projectLeaderBoard.incrementCandidateCount();
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
     emit ProjectPitch(projectAddr, developer, _name, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
@@ -89,94 +87,25 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
   }
 
- address public tentativeLeaderAddr;
- uint256 public tentativeLeaderCapRequired;
- bool public tentativeLeaderConfirmed;
-
- struct ProjectsChecked {
-   mapping(address => bool) isChecked;
-   uint256 totalChecked;
- }
-
- uint256 internal currentCheckCycle;
- mapping(uint256 => ProjectsChecked) internal checkCycle;
-
- function considerTentativeLeaderShip (address projectAddr) public { //we need more tests for new functionality (when its implemented)
-   require(Project(projectAddr).open() && !Project(projectAddr).active());
-
-   if (
-     tentativeLeaderAddr == address(0) ||
-     Project(projectAddr).totalVotes_() > Project(tentativeLeaderAddr).totalVotes_() ||
-     !Project(tentativeLeaderAddr).open()
-     )
-   {
-     updateTentativeLeader(projectAddr);
-   } else if (projectAddr == tentativeLeaderAddr) {
-     //if it increased, we just increase the variable.
-     //if votes decreased, we call updateTentativeLeader with address 0
-   }
-
-   recordCheck(projectAddr);
-
-   if (checkCycle[currentCheckCycle].totalChecked == inactiveProjectCount){
-     tentativeLeaderConfirmed = true;
-   }
- }
-
- function recordCheck (address projectAddr) internal {
-   bool hasBeenChecked = checkCycle[currentCheckCycle].isChecked[projectAddr];
-
-   if (!hasBeenChecked) {
-    checkCycle[currentCheckCycle].totalChecked = checkCycle[currentCheckCycle].totalChecked.add(1);
-    checkCycle[currentCheckCycle].isChecked[projectAddr] = true;
-   }
- }
-
- function updateTentativeLeader (address newLeaderAddr) internal {
-   //if its overtaking a project that is open, that means it has more votes and we dont need to reset all the checks
-   if (tentativeLeaderAddr != address(0) && !Project(tentativeLeaderAddr).open()) {
-     resetProjectsChecked();
-   }
-   setTentativeLeader(newLeaderAddr);
- }
-
- function resetProjectsChecked() internal {
-   ProjectsChecked memory newProjectsChecked;
-   currentCheckCycle = currentCheckCycle.add(1);
-   checkCycle[currentCheckCycle] = newProjectsChecked;
-   inactiveProjectCount = inactiveProjectCount.sub(1);
- }
-
- function setTentativeLeader(address newLeaderAddr) internal {
-   Project newLeader = Project(newLeaderAddr);
-
-   tentativeLeaderAddr = newLeaderAddr;
-   //these next two lines only runs if the address isnt addr(0)
-   tentativeLeaderCapRequired = newLeader.capitalRequired_();
-   //we also need to reset the tentative leader votes, either to a real amount or based on if there is a new leader
-   tentativeLeaderConfirmed = false;
- }
-
- function attemptProjectActivation () public {
-   if (
-     tentativeLeaderCapRequired <= weiRaised &&
-     tentativeLeaderConfirmed &&
-     Project(tentativeLeaderAddr).open()
-     ) {
-     activateProject();
-   }
- }
-
  function activateProject () internal { //we need more tests for added functionality
-   Project project = Project(tentativeLeaderAddr);
-   project.activate();
-   project.log();
-   //reduce cast vote count by the number of project votes, set the number of project votes to 0.
+   (
+     address tentativeLeaderAddr,
+     uint256 tentativeLeaderCapRequired,
+     bool canActivate
+   ) = projectLeaderBoard.tentativeLeader();
 
-   forwardFunds(developer, tentativeLeaderCapRequired);
-   weiRaised = weiRaised.sub(tentativeLeaderCapRequired);
-   inactiveProjectCount = inactiveProjectCount.sub(1);
-   Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
+   if (canActivate) {
+     Project project = Project(tentativeLeaderAddr);
+     project.activate();
+     project.log();
+     //reduce cast vote count by the number of project votes, set the number of project votes to 0.
+
+     forwardFunds(developer, tentativeLeaderCapRequired);
+     weiRaised = weiRaised.sub(tentativeLeaderCapRequired);
+
+     projectLeaderBoard.handleProjectActivation();
+     Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
+   }
  }
 
  function reimburseFunds () public { //we need tests for this
@@ -186,16 +115,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Token(token).resetInactiveTokenCycle();
  }
 
- /* function transferVotes (address fromProjectAddr, address toProjectAddr, uint256 votes) external {
-   Project fromProj = Project(fromProjectAddr);
-   Project toProj = Project(toProjectAddr);
-
-   fromProj.removeVotes(msg.sender, votes);
-   toProj.vote(msg.sender, votes);
-
-   fromProj.log();
-   toProj.log();
- } */
  uint256 public totalVotesCast;
 
 //tests need to be modified for all voting functions
@@ -232,8 +151,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  }
 
  function updateProjects (address votedForProj) internal {
-   considerTentativeLeaderShip(votedForProj);
-   attemptProjectActivation();
+   projectLeaderBoard.considerTentativeLeaderShip(votedForProj);
+   activateProject();
  }
 
  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
@@ -244,6 +163,17 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     _to.transfer(amount);
   }
 }
+
+/* function transferVotes (address fromProjectAddr, address toProjectAddr, uint256 votes) external {
+  Project fromProj = Project(fromProjectAddr);
+  Project toProj = Project(toProjectAddr);
+
+  fromProj.removeVotes(msg.sender, votes);
+  toProj.vote(msg.sender, votes);
+
+  fromProj.log();
+  toProj.log();
+} */
 
 /* function getInfo(uint256 id) public view returns(address) {
     /* string, uint256, uint256, uint256, uint256, bool, uint256, uint256, address */
