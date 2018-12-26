@@ -1,59 +1,53 @@
 import React from 'react';
 
-// class ToggleOptions extends React.Component {
-//   constructor (props) {
-//     super(props);
-//     this.state = {
-//       selectionId: 1
-//     };
-//     this.updateSelection = this.updateSelection.bind(this);
-//   }
-//   // componentDidMount() {
-//   //
-//   //   this.updateSelection(2)
-//   // }
-//   updateSelection (selectionId) {
-//     this.setState({
-//       selectionId
-//     });
-//     this.props.toggleView(selectionId);
-//   }
+class ToggleOptions extends React.Component {
+  constructor() {
+    super();
 
-//   render () {
-//     return (
-//       <div className='toggle-view-options'>
-//         <ToggleOption updateSelection={this.updateSelection}
-//                       optionId={1}
-//                       selected={this.state.selectionId === 1}/>
+    this.state = {
+      showViewType: false
+    };
 
-//         <ToggleOption updateSelection={this.updateSelection}
-//                       optionId={2}
-//                       selected={this.state.selectionId === 2}/>
-//       </div>
-//     );
-//   }
-// }
+    this.handleHover = this.handleHover.bind(this);
+  }
 
-const ToggleOptions = ({ toggleView, viewId, numberOfViews }) => {
-  const options = [];
-  for(let i = 1; i <= numberOfViews; i++) {
-    options.push(
-      <div key={i} className='toggle-option'>
-        <div className='toggle-button'
-          id={viewId === i ? 'selected-button' : 'unselected-button'}
-          onClick={() => toggleView(i)}>
+  handleHover() {
+    this.setState({showViewType: !this.state.showViewType});
+  }
+
+  generateOptions() {
+    const { toggleView, viewId, optionIcons } = this.props;
+
+    return optionIcons.map((icon, i) => (
+      <div key={i} className='toggle-option' onClick={() => toggleView(i)}>
+        <div>
+          <div className='toggle-icon'>
+            {icon}
+          </div>
+          <div className='toggle-button'
+            id={viewId === i ? 'selected-button' : 'unselected-button'}>
+          </div>
         </div>
-        <div className='toggle-icon'>
+      </div>
+    ));
+  }
+
+  render() {
+    const { viewId, viewTitle, viewTypes } = this.props;
+    const options = this.generateOptions();
+
+    return (
+      <div className="toggle-view-options-container">
+        <div className='toggle-view-options'
+          onMouseEnter={this.handleHover}
+          onMouseLeave={this.handleHover}>
+          {options}
+          <div className="toggle-view-title">{viewTitle}</div>
+          <div className="toggle-view-current-view">{this.state.showViewType ? viewTypes[viewId]: ""}</div>
         </div>
       </div>
     );
   }
-  
-  return (
-    <div className='toggle-view-options'>
-      {options}
-    </div>
-  );
-};
+}
 
 export default ToggleOptions;
