@@ -108,8 +108,10 @@ class ProjectGraph extends React.Component {
 
     const ProjectNodeData = this.formatData(projectKeys);
     const projectData = projectKeys.map(key => {
-        if (typeof this.props.data[key].cashflow === 'string')
-        this.props.data[key].cashflow = JSON.parse(this.props.data[key].cashflow)
+        // if (typeof this.props.data[key].cashflow === 'string') {
+        //   console.log(this.props.data[key].cashflow);
+        //   this.props.data[key].cashflow = JSON.parse(this.props.data[key].cashflow);
+        // }
         // if (typeof this.props.data[key].accum_actual_cashflow === 'string')
         // this.props.data[key].accum_actual_cashflow = JSON.parse(this.props.data[key].accum_actual_cashflow)
         // if (typeof this.props.data[key].accum_projected_cashflow === 'string')

@@ -17,13 +17,13 @@ class PitchedProjectRect extends React.Component{
     let { height, width, x, y, svg, opacity, valuation, capitalRequired, isTop, capitalRaised  } = this.props;
     console.log("Capital Raised is: ", capitalRaised);
     console.log("Capital Required is: ", capitalRequired);
-      let textHeight = parseInt(y.slice(0, y.length-1)) + 8 + "%"
+      let textHeight = parseInt(y.slice(0, y.length-1)) + 8 + "%";
       // let textWidth = parseInt(x.slice(0, x.length-1)) + 10 + "%"
       // let textHeight = parseInt(y.slice(0, y.length-1));// + parseInt(y.slice(0, y.length-1))
-      let textWidth = `${parseInt(x.slice(0, x.length-1)) + parseInt(width.slice(0, width.length-1))/2 - .5}%` //- String(valuation).length *
-      const color = capitalRaised < capitalRequired ? '#aa7a60' : '#61aba9'
+      let textWidth = `${parseInt(x.slice(0, x.length-1)) + parseInt(width.slice(0, width.length-1))/2 - .5}%`; //- String(valuation).length *
+      const color = capitalRaised < capitalRequired ? '#aa7a60' : '#61aba9';
       // debugger
-       let group = svg.append('g')
+       let group = svg.append('g');
        let rect = group.append('rect')
        .classed('project-sub-bar-svg', true)
        .attr('fill', color)
@@ -35,11 +35,11 @@ class PitchedProjectRect extends React.Component{
        .style('stroke', 'white')
        .style('stroke-width', 2)
        .on('mouseover', () => {
-         textNode.attr("display", "block")
+         textNode.attr("display", "block");
        })
        .on('mouseout', () => {
-         textNode.attr('display', 'none')
-       })
+         textNode.attr('display', 'none');
+       });
 
 
        let textNode = group.append('text')
@@ -51,7 +51,7 @@ class PitchedProjectRect extends React.Component{
        })
        .attr('x', textWidth)
        .attr('y', textHeight)
-       .attr('pointer-events', 'none')
+       .attr('pointer-events', 'none');
 
   }
 

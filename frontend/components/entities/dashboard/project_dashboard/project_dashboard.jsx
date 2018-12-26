@@ -38,7 +38,6 @@ class ProjectDashboard extends React.Component {
   }
 
   render() {
-    console.log('what the fuck')
     if (this.props.currentUser) {
       return (
         <div className='project-dashboard'>
@@ -52,7 +51,10 @@ class ProjectDashboard extends React.Component {
               <VotesView />
             }
           </div>
-          <ToggleOptions toggleView={this.toggleView} />
+          <ToggleOptions 
+            toggleView={this.toggleView} 
+            viewId={this.state.viewId} 
+            numberOfViews={2} />
         </div>
       );
     } else {

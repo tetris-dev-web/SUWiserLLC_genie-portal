@@ -96,7 +96,7 @@ export const calculateCashflowData = (cashflow) => {
     accum_projected_cashflow: accumProjectedCashflow,
     accum_actual_cashflow: accumActualCashflow
   };
-}
+};
 
 export const processCashData = (cashflow) => {
   // Dealing with tempfiles
