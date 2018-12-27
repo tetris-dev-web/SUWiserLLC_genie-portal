@@ -46,6 +46,17 @@ class VoteShiftTool extends React.Component {
 			.attr("x", innerBarMargin)
 			.attr("y", innerBarMargin);
 
+		const voteBarFreedUpWidth = (voteBarWidth - 4 * innerBarMargin - voteShiftLineWidth) * (userTotalVotes - appliedVotes) / userTotalVotes
+		const voteBarFreedUp = svg.append("g")
+			.append("rect")
+			.attr("width", voteBarFreedUpWidth)
+			.attr("height", innerBarHeight)
+			.attr("fill", "#fff")
+			.attr("rx", voteBarRaduis)
+			.attr("ry", voteBarRaduis)
+			.attr("x", 3 * innerBarMargin + voteBarAppliedWidth + voteShiftLineWidth)
+			.attr("y", innerBarMargin);
+
 		const voteShiftLine = svg.append("g")
 			.append("line")
 			.attr("stroke", "#9a9288")
@@ -60,32 +71,29 @@ class VoteShiftTool extends React.Component {
 				.on("end", dragended));
 
 		function dragstarted() {
-			console.log("drag started");
 			d3.select(this).raise().classed("active", true);
 		}
 
 		function dragged() {
-			console.log("dragging");
-			d3.select(this)
-				.attr("x1", d3.event.x)
-				.attr("x2", d3.event.x);
+			const voteShiftLineX = d3.event.x;
+			if (voteShiftLineX >= innerBarMargin + 0.5 * voteShiftLineWidth && voteShiftLineX <= voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth) {
+				d3.select(this)
+					.attr("x1", voteShiftLineX)
+					.attr("x2", voteShiftLineX);
+			} else if (voteShiftLineX < innerBarMargin + 0.5 * voteShiftLineWidth) {
+				d3.select(this)
+					.attr("x1", innerBarMargin + 0.5 * voteShiftLineWidth)
+					.attr("x2", innerBarMargin + 0.5 * voteShiftLineWidth);
+			} else if (voteShiftLineX > voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth) {
+				d3.select(this)
+					.attr("x1", voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth)
+					.attr("x2", voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth);
+			}
 		}
 
 		function dragended() {
-			console.log("drag ended");
 			d3.select(this).classed("active", false);
 		}
-
-		const voteBarFreedUpWidth = (voteBarWidth - 4 * innerBarMargin - voteShiftLineWidth) * (userTotalVotes - appliedVotes) / userTotalVotes
-		const voteBarFreedUp = svg.append("g")
-			.append("rect")
-			.attr("width", voteBarFreedUpWidth)
-			.attr("height", innerBarHeight)
-			.attr("fill", "#fff")
-			.attr("rx", voteBarRaduis)
-			.attr("ry", voteBarRaduis)
-			.attr("x", 3 * innerBarMargin + voteBarAppliedWidth + voteShiftLineWidth)
-			.attr("y", innerBarMargin);
 	}
 
 	render() {
