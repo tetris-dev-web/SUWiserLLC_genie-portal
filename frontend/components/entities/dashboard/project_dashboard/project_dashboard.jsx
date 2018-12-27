@@ -40,7 +40,8 @@ class ProjectDashboard extends React.Component {
       return (
         <div className='project-dashboard'>
           <div className="graph-container">
-            { this.state.viewId === 0 ?
+            { 
+              this.state.viewId === 0 ?
               <ProjectGraph
                 currentUser={this.props.currentUser}
                 fetchProjects={this.props.fetchProjects}

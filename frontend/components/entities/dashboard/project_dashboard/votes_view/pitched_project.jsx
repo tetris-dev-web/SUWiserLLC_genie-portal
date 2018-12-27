@@ -27,17 +27,6 @@ const PitchedProject = ({ valuation, capitalRequired, width, title, svg, x, valu
                     capitalRaised={capitalRaised} />
     </div>
   );
-}
-
-// class PitchedProject extends React.Component{
-//   constructor(props){
-//     super(props);
-//
-//   }
-//
-//   render(){
-//     return();
-//   }
-// }
+}；
 
 export default PitchedProject;
