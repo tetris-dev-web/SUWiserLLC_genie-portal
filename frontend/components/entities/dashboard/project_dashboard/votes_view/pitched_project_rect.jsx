@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 class PitchedProjectRect extends React.Component{
   constructor(props){
     super(props);
-    this.setUpProject = this.setUpProject.bind(this)
+    this.setUpProject = this.setUpProject.bind(this);
   }
 
   componentDidUpdate(prevProps){
@@ -15,8 +15,6 @@ class PitchedProjectRect extends React.Component{
 
   setUpProject(){
     let { height, width, x, y, svg, opacity, valuation, capitalRequired, isTop, capitalRaised  } = this.props;
-    console.log("Capital Raised is: ", capitalRaised);
-    console.log("Capital Required is: ", capitalRequired);
       let textHeight = parseInt(y.slice(0, y.length-1)) + 8 + "%";
       // let textWidth = parseInt(x.slice(0, x.length-1)) + 10 + "%"
       // let textHeight = parseInt(y.slice(0, y.length-1));// + parseInt(y.slice(0, y.length-1))

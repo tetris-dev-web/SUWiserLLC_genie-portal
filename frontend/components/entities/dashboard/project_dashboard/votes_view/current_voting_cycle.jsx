@@ -3,6 +3,8 @@ import PitchedProject from './pitched_project';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
 
+import VoteShiftTool from './vote_shift_tool';
+
 const mapStateToProps = (state) => {
     return({
       pitchedProjects: [
@@ -41,9 +43,6 @@ const mapStateToProps = (state) => {
       capitalRaised: 3000000
     });
 };
-
-
-
 
 class CurrentVotingCycle extends React.Component{
   constructor(props){
@@ -119,6 +118,7 @@ class CurrentVotingCycle extends React.Component{
     return(
       <div className="current-voting-cycle-container">
         { this.projects() }
+        <VoteShiftTool />
       </div>
     );
   }

@@ -27,6 +27,6 @@ const PitchedProject = ({ valuation, capitalRequired, width, title, svg, x, valu
                     capitalRaised={capitalRaised} />
     </div>
   );
-}；
+};
 
 export default PitchedProject;
