@@ -1,5 +1,6 @@
 import React from 'react';
 import PitchedProject from './pitched_project';
+import PercentageBar from './percentage_bar';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
 
@@ -116,14 +117,25 @@ class CurrentVotingCycle extends React.Component{
   }
 
   render(){
+    const { pitchedProjects } = this.props
+    const numberOfProjects = pitchedProjects.length;
+    const projectWidthPercentage = 60 - (numberOfProjects * 2);
     return(
       <div className="current-voting-cycle-container">
         { this.projects() }
+        <PercentageBar
+                      pitchedProjects={this.props.pitchedProjects}
+                      width={`${projectWidthPercentage + numberOfProjects}%`}
+                      height={"50px"}
+                      x={`21%`}
+                      y={0}
+                      svg={this.state.svg} />
       </div>
     );
   }
 }
 
+// y={"242%"}
 export default connect(mapStateToProps)(CurrentVotingCycle);
 // <PitchedProject valuation={5000000} capitalRequired={2000000} width={"20%"} height={"100px"}/>
 // <PitchedProject valuation={4000000} capitalRequired={1000000} width={"20%"} height={"100px"}/>

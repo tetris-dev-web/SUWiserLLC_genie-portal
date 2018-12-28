@@ -15,16 +15,11 @@ class PitchedProjectRect extends React.Component{
 
   setUpProject(){
     let { height, width, x, y, svg, opacity, valuation, capitalRequired, isTop, capitalRaised  } = this.props;
-    console.log("Capital Raised is: ", capitalRaised);
-    console.log("Capital Required is: ", capitalRequired);
       let textHeight = parseInt(y.slice(0, y.length-1)) + 8 + "%"
-      // let textWidth = parseInt(x.slice(0, x.length-1)) + 10 + "%"
-      // let textHeight = parseInt(y.slice(0, y.length-1));// + parseInt(y.slice(0, y.length-1))
       let textWidth = `${parseInt(x.slice(0, x.length-1)) + parseInt(width.slice(0, width.length-1))/2 - .5}%` //- String(valuation).length *
       const color = capitalRaised < capitalRequired ? '#aa7a60' : '#61aba9'
-      // debugger
-       let group = svg.append('g')
-       let rect = group.append('rect')
+       let projectGroup = svg.append('g')
+       let rect = projectGroup.append('rect')
        .classed('project-sub-bar-svg', true)
        .attr('fill', color)
        .attr('width', width)
@@ -42,7 +37,7 @@ class PitchedProjectRect extends React.Component{
        })
 
 
-       let textNode = group.append('text')
+       let textNode = projectGroup.append('text')
        .style("font-size", "12px")
        .style("fill", 'white')
        .attr('display', 'none')
@@ -52,6 +47,19 @@ class PitchedProjectRect extends React.Component{
        .attr('x', textWidth)
        .attr('y', textHeight)
        .attr('pointer-events', 'none')
+
+       if(!isTop){
+         const percentageGroup = svg.append('g')
+         .append('rect')
+         .attr('fill', color)
+         .attr('width', width)
+         .attr('height', '35')
+         .style('stroke', '#aa7a60')
+         .style('stroke-width', 2)
+         .attr('x', x)
+         .attr('y', capitalRaised/24000)
+
+       }
 
   }
 
