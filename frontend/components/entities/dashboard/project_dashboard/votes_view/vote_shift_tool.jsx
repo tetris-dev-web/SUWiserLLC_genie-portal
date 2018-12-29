@@ -46,7 +46,7 @@ class VoteShiftTool extends React.Component {
 			.attr("x", innerBarMargin)
 			.attr("y", innerBarMargin);
 
-		const voteBarFreedUpWidth = (voteBarWidth - 4 * innerBarMargin - voteShiftLineWidth) * (userTotalVotes - appliedVotes) / userTotalVotes
+		const voteBarFreedUpWidth = (voteBarWidth - 4 * innerBarMargin - voteShiftLineWidth) * (userTotalVotes - appliedVotes) / userTotalVotes;
 		const voteBarFreedUp = svg.append("g")
 			.append("rect")
 			.attr("width", voteBarFreedUpWidth)
@@ -67,33 +67,36 @@ class VoteShiftTool extends React.Component {
 			.attr("y2", -10 + voteShiftLineLength)
 			.call(d3.drag()
 				.on("start", dragstarted)
-				.on("drag", dragged)
+				.on("drag", dragged(this.setState.bind(this)))
 				.on("end", dragended));
 
-		function dragstarted() {
+		const dragstarted = () => {
 			d3.select(this).raise().classed("active", true);
+		};
+		// for some reason need to be es5
+		function dragged(setState) {
+			return function() {
+				
+				const voteShiftLineX = d3.event.x;
+				if (voteShiftLineX >= innerBarMargin + 0.5 * voteShiftLineWidth && voteShiftLineX <= voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth) {
+					d3.select(this)
+						.attr("x1", voteShiftLineX)
+						.attr("x2", voteShiftLineX);
+				} else if (voteShiftLineX < innerBarMargin + 0.5 * voteShiftLineWidth) {
+					d3.select(this)
+						.attr("x1", innerBarMargin + 0.5 * voteShiftLineWidth)
+						.attr("x2", innerBarMargin + 0.5 * voteShiftLineWidth);
+				} else if (voteShiftLineX > voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth) {
+					d3.select(this)
+						.attr("x1", voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth)
+						.attr("x2", voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth);
+				}
+			};
 		}
 
-		function dragged() {
-			const voteShiftLineX = d3.event.x;
-			if (voteShiftLineX >= innerBarMargin + 0.5 * voteShiftLineWidth && voteShiftLineX <= voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth) {
-				d3.select(this)
-					.attr("x1", voteShiftLineX)
-					.attr("x2", voteShiftLineX);
-			} else if (voteShiftLineX < innerBarMargin + 0.5 * voteShiftLineWidth) {
-				d3.select(this)
-					.attr("x1", innerBarMargin + 0.5 * voteShiftLineWidth)
-					.attr("x2", innerBarMargin + 0.5 * voteShiftLineWidth);
-			} else if (voteShiftLineX > voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth) {
-				d3.select(this)
-					.attr("x1", voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth)
-					.attr("x2", voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth);
-			}
-		}
-
-		function dragended() {
+		const dragended = () => {
 			d3.select(this).classed("active", false);
-		}
+		};
 	}
 
 	render() {
