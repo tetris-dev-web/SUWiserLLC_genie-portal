@@ -44,9 +44,11 @@ const mapStateToProps = state => {
 class VotesView2 extends React.Component{
   constructor(props){
     super(props);
-    this.state={
+    // this.state = {pitchedProjects: this.props.pitchedProjects};
+  }
 
-    };
+  componentDidUpdate() {
+    // needs a lifecycle method when props is changed
   }
 
   componentDidMount(){
@@ -76,6 +78,7 @@ class VotesView2 extends React.Component{
     valuationRect.data(projects)
       .enter()
       .append('rect')
+      .attr('class', 'valuation-rect')
       .attr('width', project => `${project.projectWidth}%`)
       .attr('height', project => project.projectValutionHeight)
       .attr('fill', project => project.fill)
@@ -91,6 +94,7 @@ class VotesView2 extends React.Component{
     capRequiredRect.data(projects)
       .enter()
       .append('rect')
+      .attr('class', 'capital-required-rect')
       .attr('width', project => `${project.projectWidth}%`)
       .attr('height', project => project.projectCapitalRequiredHeight)
       .attr('fill', project => project.fill)
@@ -106,16 +110,18 @@ class VotesView2 extends React.Component{
     votePercentageRect.data(projects)
       .enter()
       .append('rect')
+      .attr('class', 'vote-percentage-rect')
       .attr('width', project => `${project.projectWidth + 1}%`)
       .attr('height', 30)
       .attr('fill', project => project.fill)
       .attr('x', project => `${project.projectStartX - .5}%`)
       .attr('y', capitalRaised / 24000);
 
-    const votePercentageText = this.svg.selectAll('.vote-percentage-rect').remove();
+    const votePercentageText = this.svg.selectAll('.vote-percentage-text').remove();
     votePercentageText.data(projects)
       .enter()
       .append('text')
+      .attr('class', 'vote-percentage-text')
       .style("font-size", "18px")
       .style("fill", '#000')
       .style("text-anchor", "middle")
@@ -125,7 +131,8 @@ class VotesView2 extends React.Component{
   }
 
   processProjectData(){
-    const { pitchedProjects, capitalRaised } = this.props;
+    const { capitalRaised, pitchedProjects } = this.props;
+    // const { pitchedProjects } = this.state; // getting from state for now to simulate props update
     const numberOfProjects = this.props.pitchedProjects.length;
     const percentOfScreen = 60;
     const projectWidthPercentage = percentOfScreen - (numberOfProjects - 1);
@@ -150,7 +157,6 @@ class VotesView2 extends React.Component{
 
   handleMouseOver(type){
     const { capitalRaised } = this.props;
-    const pixelPerDigit = 3;
     return project => {
       this.svg.append('text')
         .classed('svg-text', true)
@@ -180,10 +186,50 @@ class VotesView2 extends React.Component{
     return () => d3.selectAll('.svg-text').remove();
   }
 
+  // handleClick() {
+  //   return () => {
+  //     this.setState({
+  //       pitchedProjects: [
+  //         {
+  //           valuation: 4000000,
+  //           capitalRequired: 3000000,
+  //           voteShare: .25,
+  //           title: "Ryan and Liam"
+  //         },
+  //         {
+  //           valuation: 7000000,
+  //           capitalRequired: 2500000,
+  //           voteShare: .1,
+  //           title: "Liam and Ryan"
+  //         },
+  //         {
+  //           valuation: 2000000,
+  //           capitalRequired: 2500000,
+  //           voteShare: .20,
+  //           title: "HamInn"
+  //         },
+  //         {
+  //           valuation: 5000000,
+  //           capitalRequired: 4000000,
+  //           voteShare: .05,
+  //           title: "Genesis"
+  //         },
+  //         {
+  //           valuation: 5500000,
+  //           capitalRequired: 3000000,
+  //           voteShare: .40,
+  //           title: "Penn Generator"
+  //         },
+  //       ]});
+  //   };
+  // }
+
   render(){
     const { maxValuation, capitalRaised } = this.props;
     return(
-      <div className="votes-view" style={{marginTop: (maxValuation - capitalRaised) / 24000 + 20}}></div>
+      <div className="votes-view" style={{marginTop: (maxValuation - capitalRaised) / 24000 + 20}}>
+        {/* <button onClick={this.handleClick()}>click me</button> */}
+      </div>
     );
   }
 }
