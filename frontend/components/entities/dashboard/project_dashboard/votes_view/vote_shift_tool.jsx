@@ -76,7 +76,6 @@ class VoteShiftTool extends React.Component {
 		// for some reason need to be es5
 		function dragged(setState) {
 			return function() {
-				
 				const voteShiftLineX = d3.event.x;
 				if (voteShiftLineX >= innerBarMargin + 0.5 * voteShiftLineWidth && voteShiftLineX <= voteBarWidth - innerBarMargin - 0.5 * voteShiftLineWidth) {
 					d3.select(this)

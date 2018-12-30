@@ -1,6 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
+import VoteShiftTool from './vote_shift_tool';
 
 const mapStateToProps = state => {
     return({
@@ -44,7 +45,9 @@ const mapStateToProps = state => {
 class VotesView2 extends React.Component{
   constructor(props){
     super(props);
-    // this.state = {pitchedProjects: this.props.pitchedProjects};
+    this.state = {
+      showVoteShiftTool: false
+    };
   }
 
   componentDidUpdate() {
@@ -87,8 +90,9 @@ class VotesView2 extends React.Component{
       .attr('opacity', .3)
       .style('stroke', 'white')
       .style('stroke-width', 2)
-      .on('mouseover', this.handleMouseOver("valuation"))
-      .on('mouseout', this.handleMouseOut());
+      .on('mouseover', this.handleMouseOver())
+      .on('mouseout', this.handleMouseOut())
+      .on('click', this.handleClick());
 
     const capRequiredRect = this.svg.selectAll('.capital-required-rect').remove();
     capRequiredRect.data(projects)
@@ -103,8 +107,9 @@ class VotesView2 extends React.Component{
       .attr('opacity', 1)
       .style('stroke', 'white')
       .style('stroke-width', 2)
-      .on('mouseover', this.handleMouseOver("capitalRequired"))
-      .on('mouseout', this.handleMouseOut());
+      .on('mouseover', this.handleMouseOver())
+      .on('mouseout', this.handleMouseOut())
+      .on('click', this.handleClick());
 
     const votePercentageRect = this.svg.selectAll('.vote-percentage-rect').remove();
     votePercentageRect.data(projects)
@@ -155,80 +160,45 @@ class VotesView2 extends React.Component{
     });
   }
 
-  handleMouseOver(type){
-    const { capitalRaised } = this.props;
-    return project => {
+  handleMouseOver(){
+    const appendTextToRect = (textContent, textFill, textX, textY) => {
       this.svg.append('text')
         .classed('svg-text', true)
         .style("font-size", "12px")
-        .style("fill", () => type === 'capitalRequired' ? 'white' : project.fill)
+        .style('fill', textFill)
         .style("text-anchor", "middle")
-        .text(project[type])
-        .attr('x', () => `${project.projectRectCenter}%`)
-        .attr('y', () => type === 'valuation' ? (capitalRaised - project.valuation) / 24000 + 15 : (capitalRaised - project.capitalRequired) / 24000 + 15)
+        .text(textContent)
+        .attr('x', textX)
+        .attr('y', textY)
         .attr('pointer-events', 'none');
+    };
 
-      this.svg.append('text')
-        .classed('svg-text', true)
-        .style("font-size", "12px")
-        .style("fill", () => type === 'capitalRequired' ? 'white' : project.fill)
-        .style("text-anchor", "middle")
-        .text(() => type === 'valuation' ? 'valuation' : 'capital needs')
-        .attr('x', () => type === 'valuation' ? 
-          `${project.projectRectCenter}%`:
-          `${project.projectRectCenter}%`)
-        .attr('y', () => type === 'valuation' ? (capitalRaised - project.valuation) / 24000 - 10 : (capitalRaised - project.capitalRequired) / 24000 - 10)
-        .attr('pointer-events', 'none');
+    return project => {
+      appendTextToRect(project.valuation, project.fill, `${project.projectRectCenter}%`, project.projectValutionStartY + 15);
+      appendTextToRect(project.capitalRequired, 'white', `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY + 15);
+      appendTextToRect('valution', project.fill, `${project.projectRectCenter}%`, project.projectValutionStartY - 10);
+      appendTextToRect('capital needs', 'white', `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY - 10);
     };
   }
 
   handleMouseOut(){
-    return () => d3.selectAll('.svg-text').remove();
+    return () => {
+      d3.selectAll('.svg-text').remove();
+    };
   }
 
-  // handleClick() {
-  //   return () => {
-  //     this.setState({
-  //       pitchedProjects: [
-  //         {
-  //           valuation: 4000000,
-  //           capitalRequired: 3000000,
-  //           voteShare: .25,
-  //           title: "Ryan and Liam"
-  //         },
-  //         {
-  //           valuation: 7000000,
-  //           capitalRequired: 2500000,
-  //           voteShare: .1,
-  //           title: "Liam and Ryan"
-  //         },
-  //         {
-  //           valuation: 2000000,
-  //           capitalRequired: 2500000,
-  //           voteShare: .20,
-  //           title: "HamInn"
-  //         },
-  //         {
-  //           valuation: 5000000,
-  //           capitalRequired: 4000000,
-  //           voteShare: .05,
-  //           title: "Genesis"
-  //         },
-  //         {
-  //           valuation: 5500000,
-  //           capitalRequired: 3000000,
-  //           voteShare: .40,
-  //           title: "Penn Generator"
-  //         },
-  //       ]});
-  //   };
-  // }
+  handleClick() {
+    return () => {
+      console.log('click')
+      this.setState({showVoteShiftTool: !this.state.showVoteShiftTool});
+    };
+  }
 
   render(){
     const { maxValuation, capitalRaised } = this.props;
     return(
       <div className="votes-view" style={{marginTop: (maxValuation - capitalRaised) / 24000 + 20}}>
-        {/* <button onClick={this.handleClick()}>click me</button> */}
+        {this.state.showVoteShiftTool && <VoteShiftTool />}
       </div>
     );
   }
