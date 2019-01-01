@@ -5,8 +5,11 @@ const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
 
 class VoteShiftTool extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+
+		this.state = Object.assign({}, this.props.votesMockup);
+		this.handleClick = this.handleClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -19,7 +22,7 @@ class VoteShiftTool extends React.Component {
 	}
 
 	setup() {
-		const { appliedVotes, userTotalVotes } = this.props.votesMockup;
+		const { votesPerProject, votesNotDedicated } = this.state;
 		const voteBarRaduis = 8;
 		const voteBarInnerMargin = 5;
 		const innerBarHeight = VOTE_BAR_HEIGHT - 2 * voteBarInnerMargin;
@@ -33,7 +36,7 @@ class VoteShiftTool extends React.Component {
 			.attr("rx", voteBarRaduis)
 			.attr("ry", voteBarRaduis);
 
-		const voteBarAppliedWidth = (VOTE_BAR_WIDTH - 4 * voteBarInnerMargin - voteShiftLineWidth) * appliedVotes / userTotalVotes;
+		const voteBarAppliedWidth = (VOTE_BAR_WIDTH - 4 * voteBarInnerMargin - voteShiftLineWidth) * votesPerProject / (votesNotDedicated + votesPerProject);
 		const voteBarApplied = this.svg.append("rect")
 			.attr("width", voteBarAppliedWidth)
 			.attr("height", innerBarHeight)
@@ -43,7 +46,7 @@ class VoteShiftTool extends React.Component {
 			.attr("x", voteBarInnerMargin)
 			.attr("y", voteBarInnerMargin);
 
-		const voteBarFreedUpWidth = (VOTE_BAR_WIDTH - 4 * voteBarInnerMargin - voteShiftLineWidth) * (userTotalVotes - appliedVotes) / userTotalVotes;
+		const voteBarFreedUpWidth = (VOTE_BAR_WIDTH - 4 * voteBarInnerMargin - voteShiftLineWidth) * votesNotDedicated / (votesNotDedicated + votesPerProject);
 		const voteBarFreedUp = this.svg.append("rect")
 			.attr("width", voteBarFreedUpWidth)
 			.attr("height", innerBarHeight)
@@ -53,20 +56,55 @@ class VoteShiftTool extends React.Component {
 			.attr("x", 3 * voteBarInnerMargin + voteBarAppliedWidth + voteShiftLineWidth)
 			.attr("y", voteBarInnerMargin);
 
+		const voteShiftLineX = 2 * voteBarInnerMargin + voteBarAppliedWidth;
 		const voteShiftLine = this.svg.append("rect")
-			// .attr("stroke", "#9a9288")
-			// .attr("stroke-width", voteShiftLineWidth)
 			.attr("width", voteShiftLineWidth)
 			.attr("height", voteShiftLineHeight)
 			.attr("fill", "#9a9288")
-			.attr("x", 2 * voteBarInnerMargin + voteBarAppliedWidth)
+			.attr("x", voteShiftLineX)
 			.attr("y", -10)
-			// .attr("x2", 2 * voteBarInnerMargin + voteBarAppliedWidth + .5 * voteShiftLineWidth)
-			// .attr("y2", -10 + voteShiftLineLength)
 			.call(d3.drag()
 				.on("start", dragstarted)
 				.on("drag", dragged)
 				.on("end", dragended));
+
+		const appliedVote = this.svg.append('text')
+			.style("font-size", "12px")
+			.style("fill", "#61aba9")
+			.text(`${votesPerProject}`)
+			.attr("x", voteShiftLineX - 45)
+			.attr("y", VOTE_BAR_HEIGHT + 15);
+
+		appliedVote.append("tspan")
+			.style("font-size", "12px")
+			.style("fill", "#9a9288")
+			.text("votes")
+			.attr("dx", 5);
+
+		appliedVote.append("tspan")
+			.style("font-size", "12px")
+			.style("fill", "#9a9288")
+			.text("applied")
+			.attr("dx", -40)
+			.attr("dy", 15);
+
+		const freedUpVote = this.svg.append('text')
+			.style("font-size", "12px")
+			.style("fill", "#9a9288")
+			.text(`${votesNotDedicated}`)
+			.attr("x", voteShiftLineX + 10)
+			.attr("y", VOTE_BAR_HEIGHT + 15);
+
+		freedUpVote.append("tspan")
+			.style("font-size", "12px")
+			.text("votes")
+			.attr("dx", 5);
+
+		freedUpVote.append("tspan")
+			.style("font-size", "12px")
+			.text("freed up")
+			.attr("dx", -40)
+			.attr("dy", 15);
 
 		const dragstarted = () => {
 			d3.select(this).raise().classed("active", true);
@@ -81,14 +119,22 @@ class VoteShiftTool extends React.Component {
 				voteBarApplied.attr("width", voteShiftLineX - 2 * voteBarInnerMargin);
 				voteBarFreedUp.attr("width", VOTE_BAR_WIDTH - voteShiftLineX - voteShiftLineWidth - 2 * voteBarInnerMargin)
 					.attr("x", voteShiftLineX + 2 * voteBarInnerMargin);
+				appliedVote.attr("x", voteShiftLineX - 45);
+				freedUpVote.attr("x", voteShiftLineX + 10);
 			} else if (voteShiftLineX < 2 * voteBarInnerMargin) {
 				d3.select(this)
 					.attr("x", 2 * voteBarInnerMargin);
 
 				voteBarApplied.attr("width", 0);
+				voteBarFreedUp.attr("width", VOTE_BAR_WIDTH - 4 * voteBarInnerMargin - voteShiftLineWidth)
+					.attr("x", 3 * voteBarInnerMargin + voteShiftLineWidth);
 			} else if (voteShiftLineX > VOTE_BAR_WIDTH - 2 * voteBarInnerMargin - voteShiftLineWidth) {
 				d3.select(this)
 					.attr("x", VOTE_BAR_WIDTH - 2 * voteBarInnerMargin - voteShiftLineWidth);
+
+				voteBarFreedUp.attr("width", 0)
+					.attr("x", VOTE_BAR_WIDTH - 2 * voteBarInnerMargin);
+				voteBarApplied.attr("width", VOTE_BAR_WIDTH - 4 * voteBarInnerMargin - voteShiftLineWidth);
 			}
 		}
 
@@ -97,17 +143,23 @@ class VoteShiftTool extends React.Component {
 		};
 	}
 
+	handleClick() {
+		// make call to blockchain
+	}
+
 	render() {
 		return (
-			<div className="vote-shift-tool"></div>
+			<div className="vote-shift-tool">
+				<button className="vote-shift-tool-log-button" onClick={this.handleClick}>log</button>
+			</div>
 		);
 	}
 }
 
 VoteShiftTool.defaultProps = {
 	votesMockup: {
-		appliedVotes: 200,
-		userTotalVotes: 500
+		votesPerProject: 200,
+		votesNotDedicated: 500
 	}
 };
 
