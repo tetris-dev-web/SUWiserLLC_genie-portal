@@ -14,11 +14,13 @@ import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import GNITokenCrowdsale from '../../truffle/build/contracts/GNITokenCrowdsale.json';
 import Token from '../../truffle/build/contracts/Token.json';
+import { connect } from 'react-redux';
+import {processVotes} from '../actions/chain_actions/vote_actions';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
+    this.voteTest = this.voteTest.bind(this);
     // if (typeof web3 != 'undefined') {
     //   this.web3Provider = web3.currentProvider;
     // } else {
@@ -52,9 +54,25 @@ class App extends React.Component {
   //   });
   // }
 
+  voteTest () {
+    this.props.processVotes({
+      voter_address: '1232414434',
+      vote_additions: [
+        {project_title: 'title', signed_transaction: 'defkweofmk'},
+        {project_title: 'title', signed_transaction: 'defkweofmk'}
+      ],
+      vote_removals: [
+        {project_title: 'title', signed_transaction: 'defkweofmk'},
+        {project_title: 'title', signed_transaction: 'defkweofmk'}
+      ]
+    });
+  }
+
+
   render() {
     return (
       <div className="">
+        <div onClick={this.voteTest}>VoteTest</div>
         <Navbar />
         <RedirectedRoute />
         <Switch>
@@ -67,4 +85,10 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+  return {
+    processVotes: vote_data => dispatch(processVotes(vote_data))
+  }
+}
+
+export default connect(null, mapDispatchToProps)(App);

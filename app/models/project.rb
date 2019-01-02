@@ -35,7 +35,7 @@
 
 class Project < ApplicationRecord
   validates :title, :revenue, :valuation, :description, :capital_required, :creator_id, :city, :continent, presence: true
-  validates :title, :address, uniqueness: true
+  validates :title, uniqueness: true
 
   # # validates_attachment_content_type :file, content_type: /\Aimage\/.*\Z/
   # validates_attachment_content_type :file, content_type: ["image/jpeg", "image/png", "application/pdf","application/vnd.ms-excel",

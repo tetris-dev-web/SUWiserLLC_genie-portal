@@ -6,9 +6,13 @@ import {
 import { clearProjectErrors } from '../../../../actions/project_actions';
 
 const mapStateToProps = state => {
-  const projects = state.entities.projects.filter(project => {
-    return typeof project.address !== "undefined";
-  });
+  const projects = Object.keys(state.entities.projects).reduce((pitchedProjects, projectTitle) => {
+    const project = state.entities.projects[projectTitle];
+    if (project.instance) {
+      pitchedProjects[projectTitle] = project;
+    }
+    return pitchedProjects;
+  }, {});
 
   return {
     projects,

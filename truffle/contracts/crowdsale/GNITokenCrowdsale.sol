@@ -53,9 +53,13 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   );
 
   mapping(uint256 => address) internal projectAddress;
-  uint256 public totalProjectCount;
+  uint256 internal totalProjectCount;
 
-  function projectById (uint256 id) returns (address) {
+  function totalProjectCount_() public view returns (uint256) {
+    return totalProjectCount;
+  }
+
+  function projectById (uint256 id) public view returns (address) {
     return projectAddress[id];
   }
 

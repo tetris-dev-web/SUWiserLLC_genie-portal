@@ -3,32 +3,21 @@ import * as ChainUtil from '../../util/chain_util';
 import { receiveProject, receiveProjectErrors, receiveProjects } from '../project_actions';
 
 
-export const fetchChainProjects  = (crowdsale) => {
+export const fetchProjects  = (crowdsale, projectContract) => {
   return dispatch => {
     return APIUtil.fetchProjects().then(projects => {
-      return ChainUtil.integrateProjectsData(crowdsale, projects);
-    }).then((projectsData) => {
-      return dispatch(receiveProjects(projectsData));
+      return ChainUtil.integrateProjectsData(crowdsale, projectContract, projects).then((projectsData) => {
+        return dispatch(receiveProjects(projectsData));
+      });
     });
   };
 };
 
-
-// export const createProject = (crowdsale, projectData, account) => {
-//   return dispatch => {
-//     return ChainUtil.pitchProject(crowdsale, projectData, account).then((projectData) => {
-//       //the following should run on an event listener instead in case the user refreshes the page.
-//       return APIUtil.createProject(projectData).then(project => {
-//         return dispatch(receiveProject(project));
-//       }, err => {
-//         return dispatch(receiveProjectErrors(err.responseJSON));
-//       });
-//     });
-//   };
-// };
-
 export const createProject = (crowdsale, projectData, account) => {
-    return APIUtil.createProject(projectData).then(() => {
+  return dispatch => {
+    return APIUtil.createProject(projectData).then(project => {
+      dispatch(receiveProject(project));
       return ChainUtil.pitchProject(crowdsale, projectData, account);
-  });
+    });
+  };
 };

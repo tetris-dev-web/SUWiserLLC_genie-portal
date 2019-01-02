@@ -147,7 +147,7 @@ class ProjectForm extends React.Component {
     this.props.createProject(this.props.crowdsaleInstance, projectData, this.props.account).then(() => {
       if (this.props.errors.length == 0) {
         this.props.closeModal();
-        window.location.reload();
+        // window.location.reload();
       }
     });
   }
@@ -436,7 +436,6 @@ class ProjectForm extends React.Component {
   // }
 
   render() {
-    console.log(this.state)
     let modelLink;
     if (this.state.modelId === "") {
       modelLink = "https://poly.google.com"

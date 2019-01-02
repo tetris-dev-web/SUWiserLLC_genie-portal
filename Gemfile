@@ -5,6 +5,10 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+gem 'ethereum.rb'
+gem 'eth'
+gem 'dotenv-rails', groups: [:development, :test]
+
 # Devise auth gem
 gem 'devise'
 # CanCanCan authorization

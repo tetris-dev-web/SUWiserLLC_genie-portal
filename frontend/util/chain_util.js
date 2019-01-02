@@ -1,59 +1,31 @@
-import TruffleContract from 'truffle-contract';
-import Project from '../../truffle/build/contracts/Project.json';
-
-const ProjectContract = TruffleContract(Project);
-
-export const integrateProjectsData = async (crowdsale, initialProjectsData) => {
-  const totalVotesCast = await crowdsale.totalVotesCast();
+export const integrateProjectsData = async (crowdsale, projectContract, initialProjectsData) => {
   const projectAddresses = await getProjectAddresses(crowdsale);
 
   const projectsData = projectAddresses.map(address => {
-    const instance = ProjectContract.at(address);
-    return formatProjectData(totalVotesCast, instance, initialProjectsData);
+    const instance = projectContract.at(address);
+    return formatProjectData(instance, address, initialProjectsData);
   });
 
-  return await Promise.all(projectsData);
-  // const projectTitles = Object.keys(initialProjectsData);
-  //
-  // return {
-  //   projectsData,
-  //   projectTitles
-  // };
-  // const projectsData = Object.keys(projects).map(async (projectId) => {
-  //   const project = projects[projectId];
-  //
-  //   if (project.address) {
-  //     const address = JSON.parse(project.address);
-  //     const instance = ProjectContract.at(address);
-  //     projectAddrs.push(instance.address);
-  //
-  //     return formatProjectData(totalVotesCast, instance, project);
-  //   }
-  //
-  //   return project;
-  // });
-  //
-  // const resolvedProjectsData = await Promise.all(projectsData);
-  //
-  // return {
-  //   projectAddrs,
-  //   resolvedProjectsData
-  // };
+  return Promise.all(projectsData).then(resolvedProjectsData => {
+    return resolvedProjectsData.reduce((projects, project) => {
+      projects[project.title] = project;
+      return projects;
+    }, {});
+  });
 };
 
 const getProjectAddresses = async crowdsale => {
-  const totalProjectCount = await crowdsale.totalProjectCount();
+  const totalProjectCount = await crowdsale.totalProjectCount_();
   const projectAddresses = [];
 
   for (let i = 1; i <= totalProjectCount; i++) {
     let projectAddress = crowdsale.projectById(i);
     projectAddresses.push(projectAddress);
   }
-
   return await Promise.all(projectAddresses);
 };
 
-export const formatProjectData = async (totalVotesCast, instance, initialProjectsData) => {
+export const formatProjectData = async (instance, address, initialProjectsData) => {
   const title = await instance.name_();
   const project = initialProjectsData[title];
 
@@ -61,11 +33,10 @@ export const formatProjectData = async (totalVotesCast, instance, initialProject
   project.active = await instance.active_();
 
   if (project.active) {
-    return project;//for now
+    project.votes = 0;
+    project.activationTime = await instance.activationTime_();
   } else {
-    const projectVotes = await instance.totalVotes_();
-
-    project.voteShare = projectVotes / totalVotesCast;
+    project.votes = await instance.totalVotes_();
   }
 
   return project;

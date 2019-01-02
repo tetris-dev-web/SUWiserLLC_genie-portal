@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
 import {
-  fetchProjects,
   fetchProject,
-  editProject
+  editProject,
+  receiveProject
 } from '../../../../actions/project_actions';
+import { fetchProjects } from '../../../../actions/chain_actions/project_actions';
 import ProjectDashboard from './project_dashboard';
 
 const mapStateToProps = state => {
@@ -16,8 +17,9 @@ const mapStateToProps = state => {
 
 
   return {
-    projects: state.entitites.projects,
+    projects: state.entities.projects,
     crowdsaleInstance: state.network.crowdsaleInstance,
+    projectContract: state.network.project,
     currentUser,
     isInvestor
   };
@@ -25,7 +27,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchProjects: () => dispatch(fetchProjects()),
+    receiveProject: project => dispatch(receiveProject(project)),
+    fetchProjects: (crowdsaleInstance, projectContract) => dispatch(fetchProjects(crowdsaleInstance, projectContract)),
     fetchProject: project => dispatch(fetchProject(project)),
     editProject: project => dispatch(editProject(project))
   };

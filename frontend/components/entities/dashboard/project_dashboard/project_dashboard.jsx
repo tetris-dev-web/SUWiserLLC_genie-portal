@@ -28,27 +28,29 @@ class ProjectDashboard extends React.Component {
     this.setState({viewId});
   }
 
-
   componentDidMount() {
-    this.props.fetchProjects();
     this.watchProjectPitch();
   }
 
   watchProjectPitch() {
-    this.props.crowdsaleInstance.ProjectPitch.watch((error, event) => {
+    this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
       const address = event.args.projectAddress;
-      const title = event.args.title;
+      const title = event.args.name;
       const project = this.props.projects[title];
-      project.address = address;
+      project.instance = this.props.projectContract.at(address);
 
       this.props.receiveProject(project);
     });
   }
 
   filterPitchedProjects () {
-    return this.props.projects.filter(project => {
-      return typeof project.address !== "undefined";
-    });
+    return Object.keys(this.props.projects).reduce((pitchedProjects, projectTitle) => {
+      const project = this.props.projects[projectTitle];
+      if (project.instance) {
+        pitchedProjects[projectTitle] = project;
+      }
+      return pitchedProjects;
+    }, {});
   }
 
   handleKeyPress(e) {
@@ -64,6 +66,8 @@ class ProjectDashboard extends React.Component {
               <ProjectGraph
                 showText = {this.state.showText}
                 currentUser={this.props.currentUser}
+                crowdsaleInstance={this.props.crowdsaleInstance}
+                projectContract={this.props.projectContract}
                 fetchProjects={this.props.fetchProjects}
                 data={this.filterPitchedProjects()} /> :
               <VotesView />

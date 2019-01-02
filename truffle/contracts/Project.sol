@@ -17,6 +17,7 @@ contract Project {
   string private lng;
   uint256 internal totalVotes;
   bool public active;
+  uint256 public activationTime;
   constructor (
     string _name,
     address _developer,
@@ -85,9 +86,16 @@ contract Project {
   /* function id_ () public view returns (uint256) {
     return id;
   } */
+  function name_ () public view returns (string) {
+    return name;
+  }
 
   function active_ () public view returns (bool) {
     return active;
+  }
+
+  function activationTime_ () public view returns (uint256) {
+    return activationTime;
   }
 
   function totalVotes_ () public view returns (uint256) {
@@ -151,7 +159,7 @@ contract Project {
     votes[voter] = votes[voter].add(voteAmount);
     totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
-    
+
     emit VoteChange(address(this), name, totalVotes);
   }
 
@@ -169,6 +177,7 @@ contract Project {
 
   function activate () external {
     active = true;
+    activationTime = now;
     emit ProjectActivation(address(this), name, active, capitalRequired, valuation);
   }
 
