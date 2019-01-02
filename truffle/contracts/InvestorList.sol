@@ -28,12 +28,12 @@ contract InvestorList is Ownable {
     return investorCount_;
   }
 
-  function addrById (uint256 id) public view returns(address) {
-    return investors[id].addr;
+  function validAccount (address investorAddr) public view returns (bool) {
+    return !(investorIds[investorAddr] == 0);
   }
   //make only accessible by token
   function addInvestor (address investorAddr) external {
-    if (investorIds[investorAddr] == 0) {
+    if (!validAccount(investorAddr)) {
       Investor memory newInvestor;
       investorCount_ = investorCount_.add(1);
 

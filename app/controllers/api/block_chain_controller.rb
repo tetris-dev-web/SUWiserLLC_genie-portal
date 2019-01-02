@@ -11,8 +11,8 @@ class Api::BlockChainController < ApplicationController
   def vote_params
     params.require(:vote_data).permit(
       :voter_address,
-      vote_additions: [:project_title, :signed_transaction],
-      vote_removals: [:project_title, :signed_transaction]
+      vote_additions: [:project_address, :votes, :signed_message],
+      vote_removals: [:project_address, :votes, :signed_message]
     )
   end
 end

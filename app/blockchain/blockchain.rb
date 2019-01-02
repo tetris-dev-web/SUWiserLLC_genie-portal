@@ -13,6 +13,14 @@ class BlockChain
   end
 
   def distribute_votes (key, vote_data)
-    debugger
+    voter_address = vote_data.voter_address
+
+    vote_data.vote_additions.each do |transaction|
+      @crowdsaleInstance.transact_and_wait.removeVotesFromProject(transaction.project_address, voter_address, transaction.votes, transaction.signed_message)
+    end
+
+    vote_data.vote_removals.each do |transaction|
+      @crowdsaleInstance.transact_and_wait.voteForProject(transaction.project_address, voter_address, transaction.votes, transaction.signed_message)
+    end
   end
 end

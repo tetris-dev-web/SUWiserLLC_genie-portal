@@ -130,19 +130,41 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  uint256 public totalVotesCast;
 
 //tests need to be modified for all voting functions
- function addVoteCredit (address fromProjectAddr, uint256 votes) external { //tests need to be modified
-   addVoteCredit_(msg.sender, fromProjectAddr, votes);
- }
+mapping(address => uint256) public voteHash;
+mapping(address => uint256) public removeHash;
+
+function voteForProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
+  bytes32 vote = voteHash[_project];
+  address recoveredVoter = vote.recover(_signedMessage);
+
+  authenticateVoter(recoveredVoter, _voter);
+
+  investorList.removeVoteCredit(_voter, votes);
+
+  Project project = Project(toProjectAddr);
+  project.vote(msg.sender, votes);
+  totalVotesCast = totalVotesCast.add(votes);
+
+  updateProjects(toProjectAddr);
+}
+
+function removeVotesFromProject(address _project, address _voter, uint256 _votes, bytes _signedMessage) public {
+  bytes32 vote = removeHash[_project];
+  address recoveredVoter = vote.recover(_signedMessage);
+
+  authenticateVoter(recoveredVoter, _voter);
+  removeVotesFromProject_(_voter, _project, _votes);
+}
 
  //this is for adding vote credit for each investor from the frontend after a project has been activated
- function addVoteCreditTo (address account, address fromProjectAddr) external {
+ function removeVotesFromProjectByAccount (address account, address fromProjectAddr) external {
    Project project = Project(fromProjectAddr);
    require(!project.open() || project.active_());
    uint256 votes = project.votesOf(account);
-   addVoteCredit_(account, fromProjectAddr, votes);
+   removeVotesFromProject_(account, fromProjectAddr, votes);
  }
 
- function addVoteCredit_ (address account, address fromProjectAddr, uint256 votes) internal {
+ function removeVotesFromProject_ (address account, address fromProjectAddr, uint256 votes) internal {
    Project project = Project(fromProjectAddr);
 
    project.removeVotes(account, votes);
@@ -152,14 +174,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    updateProjects(fromProjectAddr);
  }
 
- function voteWithCredit (address toProjectAddr, uint256 votes) external {
-   investorList.removeVoteCredit(msg.sender, votes);
-
-   Project project = Project(toProjectAddr);
-   project.vote(msg.sender, votes);
-   totalVotesCast = totalVotesCast.add(votes);
-
-   updateProjects(toProjectAddr);
+ function authenticateVoter(address recoveredVoter, address voter) internal {
+   require(recoveredVoter == _voter);
+   require(investorList.validAccount(_voter));
  }
 
  function updateProjects (address votedForProj) internal {
