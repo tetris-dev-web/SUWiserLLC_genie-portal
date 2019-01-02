@@ -2,17 +2,16 @@ require 'BlockChain'
 
 class Api::BlockChainController < ApplicationController
   def update
-    @key = BlockChain.new_key(BlockChainAccount.first.private_key)
-    BlockChain.new.distribute_votes(@key, vote_params)
+    private_key = BlockChainAccount.first.private_key
+    BlockChain.new.distribute_votes(private_key, vote_params)
     render {}
   end
 
   private
   def vote_params
     params.require(:vote_data).permit(
-      :voter_address,
-      vote_additions: [:project_address, :votes, :signed_message],
-      vote_removals: [:project_address, :votes, :signed_message]
+      vote_additions: [:project_address, :voter_address, :votes, :type, :signed_message],
+      vote_removals: [:project_address, :voter_address, :votes, :type, :signed_message]
     )
   end
 end

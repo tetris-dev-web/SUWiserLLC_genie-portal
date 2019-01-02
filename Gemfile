@@ -7,6 +7,7 @@ end
 
 gem 'ethereum.rb'
 gem 'eth'
+gem 'concurrent-ruby', require: 'concurrent'
 gem 'dotenv-rails', groups: [:development, :test]
 
 # Devise auth gem
