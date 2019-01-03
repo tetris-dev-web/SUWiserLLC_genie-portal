@@ -46,8 +46,11 @@ class VotesView2 extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      showVoteShiftTool: false
+      showVoteShiftTool: false,
+      selectedProject: null
     };
+
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidUpdate() {
@@ -92,7 +95,7 @@ class VotesView2 extends React.Component{
       .style('stroke-width', 2)
       .on('mouseover', this.handleMouseOver())
       .on('mouseout', this.handleMouseOut())
-      .on('click', this.handleClick());
+      .on('click', this.handleClick);
 
     const capRequiredRect = this.svg.selectAll('.capital-required-rect').remove();
     capRequiredRect.data(projects)
@@ -109,7 +112,7 @@ class VotesView2 extends React.Component{
       .style('stroke-width', 2)
       .on('mouseover', this.handleMouseOver())
       .on('mouseout', this.handleMouseOut())
-      .on('click', this.handleClick());
+      .on('click', this.handleClick);
 
     const votePercentageRect = this.svg.selectAll('.vote-percentage-rect').remove();
     votePercentageRect.data(projects)
@@ -120,7 +123,9 @@ class VotesView2 extends React.Component{
       .attr('height', 30)
       .attr('fill', project => project.fill)
       .attr('x', project => `${project.projectStartX - .5}%`)
-      .attr('y', capitalRaised / 24000);
+      .attr('y', capitalRaised / 24000)
+      .style('stroke', 'white')
+      .style('stroke-width', 2);
 
     const votePercentageText = this.svg.selectAll('.vote-percentage-text').remove();
     votePercentageText.data(projects)
@@ -128,7 +133,7 @@ class VotesView2 extends React.Component{
       .append('text')
       .attr('class', 'vote-percentage-text')
       .style("font-size", "18px")
-      .style("fill", '#000')
+      .style("fill", '#fff')
       .style("text-anchor", "middle")
       .text(project => `${project.voteShare * 100}%`)
       .attr('x', project => `${project.projectRectCenter}%`)
@@ -187,17 +192,26 @@ class VotesView2 extends React.Component{
     };
   }
 
-  handleClick() {
-    return () => {
-      this.setState({showVoteShiftTool: !this.state.showVoteShiftTool});
-    };
+  handleClick(project) {
+    const { showVoteShiftTool } = this.state;
+    if (showVoteShiftTool) {
+      this.setState({
+        showVoteShiftTool: !showVoteShiftTool,
+        selectedProject: null
+      });
+    } else {
+      this.setState({
+        showVoteShiftTool: !showVoteShiftTool,
+        selectedProject: project
+      });
+    }
   }
 
   render(){
     const { maxValuation, capitalRaised } = this.props;
     return(
-      <div className="votes-view" style={{marginTop: (maxValuation - capitalRaised) / 24000 + 20}}>
-        {this.state.showVoteShiftTool && <VoteShiftTool />}
+      <div className="votes-view" style={{marginTop: (maxValuation - capitalRaised) / 24000 * 2}}>
+        {this.state.showVoteShiftTool && <VoteShiftTool project={this.state.selectedProject}/>}
       </div>
     );
   }
