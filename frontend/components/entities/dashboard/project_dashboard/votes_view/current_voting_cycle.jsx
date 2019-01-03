@@ -69,7 +69,7 @@ class VotesView2 extends React.Component{
       .append("rect")
       .classed("current-cycle-capital", true)
       .attr("width", "100%")
-      .attr("height", capitalRaised/24000)
+      .attr("height", capitalRaised / 24000)
       .attr("fill", "#aa7a60")
       .style("opacity", .5);
 
@@ -132,17 +132,16 @@ class VotesView2 extends React.Component{
       .enter()
       .append("text")
       .attr("class", "vote-percentage-text")
+      .attr("x", project => `${project.projectRectCenter}%`)
+      .attr("y", capitalRaised / 24000 + 20)
       .style("font-size", "18px")
       .style("fill", "#fff")
       .style("text-anchor", "middle")
-      .text(project => `${project.voteShare * 100}%`)
-      .attr("x", project => `${project.projectRectCenter}%`)
-      .attr("y", capitalRaised / 24000 + 20);
+      .text(project => `${project.voteShare * 100}%`);
   }
 
   processProjectData(){
     const { capitalRaised, pitchedProjects } = this.props;
-    // const { pitchedProjects } = this.state; // getting from state for now to simulate props update
     const numberOfProjects = this.props.pitchedProjects.length;
     const percentOfScreen = 60;
     const projectWidthPercentage = percentOfScreen - (numberOfProjects - 1);
@@ -179,14 +178,14 @@ class VotesView2 extends React.Component{
         .text(textContent);
     };
 
-    const appendOutLines = () => {
+    const appendOutLines = (outlineX, outlineY, outlineWidth, outlineHeight) => {
       this.svg.append("rect")
         .attr("class", "rect-outline")
-        .attr("x")
-        .attr("y")
-        .attr("width")
-        .attr("height")
-        .style("fill", "#fff")
+        .attr("x", outlineX)
+        .attr("y", outlineY)
+        .attr("width", outlineWidth)
+        .attr("height", outlineHeight)
+        .style("fill", "#fff");
     };
 
     return project => {
@@ -195,12 +194,21 @@ class VotesView2 extends React.Component{
       appendTextToRect("valution", project.fill, "12px", `${project.projectRectCenter}%`, project.projectValutionStartY - 7);
       appendTextToRect("capital needs", "white", "12px", `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY - 7);
       appendTextToRect(project.title, "#aa7a60", "15px", `${project.projectRectCenter}%`, -(maxValuation - capitalRaised) / 24000 * 1.5);
+      appendOutLines(`${project.projectStartX}%`, project.projectValutionStartY, `${project.projectWidth}%`, 2);
+      appendOutLines(`${project.projectStartX + project.projectWidth}%`, project.projectValutionStartY, 2, project.valuation / 24000);
+      appendOutLines(`${project.projectStartX + project.projectWidth}%`, capitalRaised / 24000, "0.5%", 2);
+      appendOutLines(`${project.projectStartX + project.projectWidth + 0.5}%`, capitalRaised / 24000, 2, 30);
+      appendOutLines(`${project.projectStartX - 0.5}%`, capitalRaised / 24000 + 28, `${project.projectWidth + 1}%`, 2);
+      appendOutLines(`${project.projectStartX - 0.5}%`, capitalRaised / 24000, 2, 30);
+      appendOutLines(`${project.projectStartX - 0.5}%`, capitalRaised / 24000, "0.5%", 2);
+      appendOutLines(`${project.projectStartX}%`, project.projectValutionStartY + 2, 2, project.valuation / 24000);
     };
   }
 
   handleMouseOut(){
     return () => {
       d3.selectAll(".rect-text").remove();
+      d3.selectAll(".rect-outline").remove();
     };
   }
 
