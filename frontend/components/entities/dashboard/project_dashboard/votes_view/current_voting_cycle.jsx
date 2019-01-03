@@ -59,19 +59,19 @@ class VotesView2 extends React.Component{
 
   componentDidMount(){
     const { maxValuation, capitalRaised } = this.props;
-    this.svg = d3.select('.votes-view')
-      .append('svg')
-      .classed('votes-view-svg', true)
-      .attr('width', "100%")
-      .attr('height', maxValuation/24000);
+    this.svg = d3.select(".votes-view")
+      .append("svg")
+      .classed("votes-view-svg", true)
+      .attr("width", "100%")
+      .attr("height", maxValuation/24000);
 
-    this.svg.append('g')
-      .append('rect')
-      .classed('current-cycle-capital', true)
-      .attr('width', "100%")
-      .attr('height', capitalRaised/24000)
-      .attr('fill', '#aa7a60')
-      .style('opacity', .5);
+    this.svg.append("g")
+      .append("rect")
+      .classed("current-cycle-capital", true)
+      .attr("width", "100%")
+      .attr("height", capitalRaised/24000)
+      .attr("fill", "#aa7a60")
+      .style("opacity", .5);
 
     this.setUp();
   }
@@ -80,64 +80,64 @@ class VotesView2 extends React.Component{
     const { capitalRaised } = this.props;
     const projects = this.processProjectData();
 
-    const valuationRect = this.svg.selectAll('.valuation-rect').remove();
+    const valuationRect = this.svg.selectAll(".valuation-rect").remove();
     valuationRect.data(projects)
       .enter()
-      .append('rect')
-      .attr('class', 'valuation-rect')
-      .attr('width', project => `${project.projectWidth}%`)
-      .attr('height', project => project.projectValutionHeight)
-      .attr('fill', project => project.fill)
-      .attr('x', project => `${project.projectStartX}%`)
-      .attr('y', project => project.projectValutionStartY)
-      .attr('opacity', .3)
-      .style('stroke', 'white')
-      .style('stroke-width', 2)
-      .on('mouseover', this.handleMouseOver())
-      .on('mouseout', this.handleMouseOut())
-      .on('click', this.handleClick);
+      .append("rect")
+      .attr("class", "valuation-rect")
+      .attr("width", project => `${project.projectWidth}%`)
+      .attr("height", project => project.projectValutionHeight)
+      .attr("fill", project => project.fill)
+      .attr("x", project => `${project.projectStartX}%`)
+      .attr("y", project => project.projectValutionStartY)
+      .attr("opacity", .3)
+      // .style("stroke", "white")
+      // .style("stroke-width", 2)
+      .on("mouseover", this.handleMouseOver())
+      .on("mouseout", this.handleMouseOut())
+      .on("click", this.handleClick);
 
-    const capRequiredRect = this.svg.selectAll('.capital-required-rect').remove();
+    const capRequiredRect = this.svg.selectAll(".capital-required-rect").remove();
     capRequiredRect.data(projects)
       .enter()
-      .append('rect')
-      .attr('class', 'capital-required-rect')
-      .attr('width', project => `${project.projectWidth}%`)
-      .attr('height', project => project.projectCapitalRequiredHeight)
-      .attr('fill', project => project.fill)
-      .attr('x', project => `${project.projectStartX}%`)
-      .attr('y', project => project.projectCapitalRequiredStartY)
-      .attr('opacity', 1)
-      .style('stroke', 'white')
-      .style('stroke-width', 2)
-      .on('mouseover', this.handleMouseOver())
-      .on('mouseout', this.handleMouseOut())
-      .on('click', this.handleClick);
+      .append("rect")
+      .attr("class", "capital-required-rect")
+      .attr("width", project => `${project.projectWidth}%`)
+      .attr("height", project => project.projectCapitalRequiredHeight)
+      .attr("fill", project => project.fill)
+      .attr("x", project => `${project.projectStartX}%`)
+      .attr("y", project => project.projectCapitalRequiredStartY)
+      .attr("opacity", 1)
+      // .style("stroke", "white")
+      // .style("stroke-width", 2)
+      .on("mouseover", this.handleMouseOver())
+      .on("mouseout", this.handleMouseOut())
+      .on("click", this.handleClick);
 
-    const votePercentageRect = this.svg.selectAll('.vote-percentage-rect').remove();
+    const votePercentageRect = this.svg.selectAll(".vote-percentage-rect").remove();
     votePercentageRect.data(projects)
       .enter()
-      .append('rect')
-      .attr('class', 'vote-percentage-rect')
-      .attr('width', project => `${project.projectWidth + 1}%`)
-      .attr('height', 30)
-      .attr('fill', project => project.fill)
-      .attr('x', project => `${project.projectStartX - .5}%`)
-      .attr('y', capitalRaised / 24000)
-      .style('stroke', 'white')
-      .style('stroke-width', 2);
+      .append("rect")
+      .attr("class", "vote-percentage-rect")
+      .attr("width", project => `${project.projectWidth + 1}%`)
+      .attr("height", 30)
+      .attr("fill", project => project.fill)
+      .attr("x", project => `${project.projectStartX - .5}%`)
+      .attr("y", capitalRaised / 24000);
+      // .style("stroke", "white")
+      // .style("stroke-width", 2);
 
-    const votePercentageText = this.svg.selectAll('.vote-percentage-text').remove();
+    const votePercentageText = this.svg.selectAll(".vote-percentage-text").remove();
     votePercentageText.data(projects)
       .enter()
-      .append('text')
-      .attr('class', 'vote-percentage-text')
+      .append("text")
+      .attr("class", "vote-percentage-text")
       .style("font-size", "18px")
-      .style("fill", '#fff')
+      .style("fill", "#fff")
       .style("text-anchor", "middle")
       .text(project => `${project.voteShare * 100}%`)
-      .attr('x', project => `${project.projectRectCenter}%`)
-      .attr('y', capitalRaised / 24000 + 20);
+      .attr("x", project => `${project.projectRectCenter}%`)
+      .attr("y", capitalRaised / 24000 + 20);
   }
 
   processProjectData(){
@@ -153,7 +153,7 @@ class VotesView2 extends React.Component{
       const newProject = Object.assign({}, project, {
         projectStartX,
         projectWidth,
-        fill: capitalRaised < project.capitalRequired ? '#aa7a60' : '#61aba9',
+        fill: capitalRaised < project.capitalRequired ? "#aa7a60" : "#61aba9",
         projectValutionHeight: (project.valuation - project.capitalRequired) / 24000,
         projectValutionStartY: (capitalRaised - project.valuation) / 24000,
         projectCapitalRequiredHeight: project.capitalRequired / 24000,
@@ -168,29 +168,39 @@ class VotesView2 extends React.Component{
   handleMouseOver(){
     const { maxValuation, capitalRaised } = this.props;
     const appendTextToRect = (textContent, textFill, textSize, textX, textY) => {
-      this.svg.append('text')
-        .classed('svg-text', true)
+      this.svg.append("text")
+        .attr("class", "rect-text")
+        .attr("x", textX)
+        .attr("y", textY)
+        .attr("pointer-events", "none")
         .style("font-size", textSize)
-        .style('fill', textFill)
+        .style("fill", textFill)
         .style("text-anchor", "middle")
-        .text(textContent)
-        .attr('x', textX)
-        .attr('y', textY)
-        .attr('pointer-events', 'none');
+        .text(textContent);
+    };
+
+    const appendOutLines = () => {
+      this.svg.append("rect")
+        .attr("class", "rect-outline")
+        .attr("x")
+        .attr("y")
+        .attr("width")
+        .attr("height")
+        .style("fill", "#fff")
     };
 
     return project => {
       appendTextToRect(project.valuation, project.fill, "12px", `${project.projectRectCenter}%`, project.projectValutionStartY + 15);
-      appendTextToRect(project.capitalRequired, 'white', "12px", `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY + 15);
-      appendTextToRect('valution', project.fill, "12px", `${project.projectRectCenter}%`, project.projectValutionStartY - 7);
-      appendTextToRect('capital needs', 'white', "12px", `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY - 7);
+      appendTextToRect(project.capitalRequired, "white", "12px", `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY + 15);
+      appendTextToRect("valution", project.fill, "12px", `${project.projectRectCenter}%`, project.projectValutionStartY - 7);
+      appendTextToRect("capital needs", "white", "12px", `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY - 7);
       appendTextToRect(project.title, "#aa7a60", "15px", `${project.projectRectCenter}%`, -(maxValuation - capitalRaised) / 24000 * 1.5);
     };
   }
 
   handleMouseOut(){
     return () => {
-      d3.selectAll('.svg-text').remove();
+      d3.selectAll(".rect-text").remove();
     };
   }
 
