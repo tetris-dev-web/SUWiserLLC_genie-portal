@@ -166,10 +166,11 @@ class VotesView2 extends React.Component{
   }
 
   handleMouseOver(){
-    const appendTextToRect = (textContent, textFill, textX, textY) => {
+    const { maxValuation, capitalRaised } = this.props;
+    const appendTextToRect = (textContent, textFill, textSize, textX, textY) => {
       this.svg.append('text')
         .classed('svg-text', true)
-        .style("font-size", "12px")
+        .style("font-size", textSize)
         .style('fill', textFill)
         .style("text-anchor", "middle")
         .text(textContent)
@@ -179,10 +180,11 @@ class VotesView2 extends React.Component{
     };
 
     return project => {
-      appendTextToRect(project.valuation, project.fill, `${project.projectRectCenter}%`, project.projectValutionStartY + 15);
-      appendTextToRect(project.capitalRequired, 'white', `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY + 15);
-      appendTextToRect('valution', project.fill, `${project.projectRectCenter}%`, project.projectValutionStartY - 7);
-      appendTextToRect('capital needs', 'white', `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY - 7);
+      appendTextToRect(project.valuation, project.fill, "12px", `${project.projectRectCenter}%`, project.projectValutionStartY + 15);
+      appendTextToRect(project.capitalRequired, 'white', "12px", `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY + 15);
+      appendTextToRect('valution', project.fill, "12px", `${project.projectRectCenter}%`, project.projectValutionStartY - 7);
+      appendTextToRect('capital needs', 'white', "12px", `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY - 7);
+      appendTextToRect(project.title, "#aa7a60", "15px", `${project.projectRectCenter}%`, -(maxValuation - capitalRaised) / 24000 * 1.5);
     };
   }
 
