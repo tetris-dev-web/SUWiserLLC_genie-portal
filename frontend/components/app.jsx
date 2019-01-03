@@ -54,16 +54,25 @@ class App extends React.Component {
   //   });
   // }
 
+  componentDidMount () {
+    this.props.crowdsaleInstance.VoteAddition().watch((error, event) => {
+        console.log(event);
+    });
+
+    this.props.crowdsaleInstance.VoteRemoval().watch((error, event) => {
+      console.log(event)
+    });
+  }
+
   voteTest () {
     this.props.processVotes({
-      voter_address: '1232414434',
       vote_additions: [
-        {project_title: 'title', signed_transaction: 'defkweofmk'},
-        {project_title: 'title', signed_transaction: 'defkweofmk'}
+        {project_address: this.props.account, voter_address: this.props.account, votes: 1, type: 'addition', signed_message: 'defkweofmk'},
+        {project_address: this.props.account, voter_address: this.props.account, votes: 2, type: 'addition', signed_message: 'defkweofmk'}
       ],
       vote_removals: [
-        {project_title: 'title', signed_transaction: 'defkweofmk'},
-        {project_title: 'title', signed_transaction: 'defkweofmk'}
+        {project_address: this.props.account, voter_address: this.props.account, votes: 3, type: 'removal', signed_message: 'defkweofmk'},
+        {project_address: this.props.account, voter_address: this.props.account, votes: 4, type: 'removal', signed_message: 'defkweofmk'}
       ]
     });
   }
@@ -85,10 +94,17 @@ class App extends React.Component {
   }
 }
 
+const mapStateToProps  = state => {
+  return {
+    account: state.network.account,
+    crowdsaleInstance: state.network.crowdsaleInstance
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     processVotes: vote_data => dispatch(processVotes(vote_data))
-  }
-}
+  };
+};
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

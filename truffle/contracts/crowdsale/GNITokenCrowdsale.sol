@@ -133,8 +133,22 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 mapping(address => uint256) public voteHash;
 mapping(address => uint256) public removeHash;
 
-function voteForProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
-  bytes32 vote = voteHash[_project];
+event VoteAddition (
+  uint256 voteAdditions,
+  uint256 num
+);
+
+
+event VoteRemoval (
+  uint256 voteRemovals
+);
+
+uint256 voteAdditions;
+uint256 voteRemovals;
+
+
+function voteForProject(address _project, address _voter, uint256 votes, string _signedMessage) public {
+  /* bytes32 vote = voteHash[_project];
   address recoveredVoter = vote.recover(_signedMessage);
 
   authenticateVoter(recoveredVoter, _voter);
@@ -145,15 +159,21 @@ function voteForProject(address _project, address _voter, uint256 votes, bytes _
   project.vote(msg.sender, votes);
   totalVotesCast = totalVotesCast.add(votes);
 
-  updateProjects(toProjectAddr);
+  updateProjects(toProjectAddr); */
+
+  voteAdditions = voteAdditions.add(1);
+  VoteAddition(voteAdditions, votes);
 }
 
-function removeVotesFromProject(address _project, address _voter, uint256 _votes, bytes _signedMessage) public {
-  bytes32 vote = removeHash[_project];
+function removeVotesFromProject(uint256 _votes, string _signedMessage) public {
+  /* bytes32 vote = removeHash[_project];
   address recoveredVoter = vote.recover(_signedMessage);
 
   authenticateVoter(recoveredVoter, _voter);
-  removeVotesFromProject_(_voter, _project, _votes);
+  removeVotesFromProject_(_voter, _project, _votes); */
+
+  voteRemovals = voteRemovals.add(1);
+  VoteRemoval(voteAdditions);
 }
 
  //this is for adding vote credit for each investor from the frontend after a project has been activated
@@ -175,8 +195,8 @@ function removeVotesFromProject(address _project, address _voter, uint256 _votes
  }
 
  function authenticateVoter(address recoveredVoter, address voter) internal {
-   require(recoveredVoter == _voter);
-   require(investorList.validAccount(_voter));
+   require(recoveredVoter == voter);
+   require(investorList.validAccount(voter));
  }
 
  function updateProjects (address votedForProj) internal {

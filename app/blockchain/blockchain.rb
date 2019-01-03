@@ -1,6 +1,5 @@
 require 'eth'
 require 'ethereum'
-require 'concurrent'
 
 class BlockChain
   def initialize
@@ -8,52 +7,27 @@ class BlockChain
     @crowdsaleInstance = Ethereum::Contract.create(name: "GNITokenCrowdsale", truffle: { paths: [ 'truffle' ] }, client: @client)
   end
 
-  def distribute_votes (private_key, vote_data)
+  def distribute_votes (private_key, vote_transactions)
     set_key(private_key)
-    all_transactions = vote_data.vote_additions.concat(vote_data.vote_removals)
-
-    process_votes(key, all_transactions) do |transaction|
-      process_transaction(transaction)
-    end
-
+    process_votes(vote_transactions)
     unset_key
   end
 
   private
 
   def set_key(private_key)
-    key = Eth::Key.new(priv: private_key)
-    @crowdsaleInstance.key = key.private_hex
+    @crowdsaleInstance.key = Eth::Key.new(priv: private_key)
   end
 
   def unset_key
     @crowdsaleInstance.key = nil
   end
 
-  def process_votes (key, voter_address, all_transactions)
+  def process_votes (vote_transactions)
     promise = nil
-
-    all_transactions.each do |transaction|
-      if promise.nil?
-        promise = Concurrent::Promise.new do
-          yield(transaction)
-        end
-      else
-        promise = promise.then do
-          yield(transaction)
-      end
-    end
-
-    promise.execute if promise
-  end
-
-  def process_transaction (transaction)
-    args = [transaction.project_address, voter_address, transaction.votes, transaction.signed_message]
-
-    if transaction.type == 'addition'
-      @crowdsaleInstance.transact_and_wait.voteForProject(*args)
-    else
-      @crowdsaleInstance.transact_and_wait.removeVotesFromProject(*args)
+    vote_transactions.each do |transaction|
+      args = [transaction["project_address"], transaction["voter_address"], transaction["votes"], transaction["signed_message"]]
+      transaction["type"] = "addition" ? @crowdsaleInstance.transact_and_wait.vote_for_project(*args) : @crowdsaleInstance.transact_and_wait.remove_votes_from_project(*args)
     end
   end
 end
