@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as d3 from 'd3';
 
-class CapitalHistory extends React.Component {
+class VotesViewCapitalRaised extends React.Component {
   constructor(props) {
     super(props);
     this.initSVG = this.initSVG.bind(this);
@@ -271,7 +271,7 @@ const mapStateToProps = () => {
  };
 };
 
-export default connect(mapStateToProps)(CapitalHistory);
+export default connect(mapStateToProps)(VotesViewCapitalRaised);
 
 // initScales() {
 //   this.xScale = d3.scaleLinear()
