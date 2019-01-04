@@ -27,7 +27,7 @@ class VoteShiftTool extends React.Component {
 	}
 
 	componentDidMount() {
-		this.svg = d3.select(".vote-shift-tool")
+		this.svg = d3.select(this.root)
 			.append("svg")
 			.attr("width", VOTE_BAR_WIDTH)
 			.attr("height", VOTE_BAR_HEIGHT);
@@ -195,7 +195,7 @@ class VoteShiftTool extends React.Component {
 
 	render() {
 		return (
-			<div className="vote-shift-tool">
+			<div className="vote-shift-tool" ref={node => this.root = node}>
 				{
 					this.state.showLogButton &&
 					<button className="vote-shift-tool-log-button" onClick={this.handleClick}>log</button>
