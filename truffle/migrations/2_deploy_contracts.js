@@ -1,9 +1,11 @@
 const Token = artifacts.require("Token");
 const InvestorList = artifacts.require("InvestorList");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
+const GNITokenCrowdsaleMock = artifacts.require("GNITokenCrowdsaleMock");
 const Dividends = artifacts.require("Dividends");
 const Reimbursements = artifacts.require("Reimbursements");
 const ProjectLeaderBoard = artifacts.require("ProjectLeaderBoard");
+const ECRecovery = artifacts.require("ECRecovery");
 
 let tokenInstance;
 
@@ -37,6 +39,15 @@ module.exports = function (deployer, network, accounts) {
           return deployer.deploy(
             ProjectLeaderBoard
           )
+        })
+        .then(() => {
+          return deployer.deploy(ECRecovery);
+        })
+        .then(() => {
+          return deployer.link(ECRecovery, GNITokenCrowdsale);
+        })
+        .then(() => {
+          return deployer.link(ECRecovery, GNITokenCrowdsaleMock);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {

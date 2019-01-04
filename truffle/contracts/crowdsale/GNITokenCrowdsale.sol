@@ -7,10 +7,12 @@ import '../token/ERC20/Token.sol';
 import '../InvestorList.sol';
 import '../Reimbursements.sol';
 import '../ProjectLeaderBoard.sol';
+import '../ECRecovery.sol';
 
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
+  using ECRecovery for bytes32;
   uint256 public totalValuation;
   InvestorList public investorList;
   ProjectLeaderBoard public projectLeaderBoard;
@@ -52,6 +54,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 totalProjectCount
   );
 
+  mapping(address => bytes32) public voteHash;
+  mapping(address => bytes32) public removeHash;
+
   mapping(uint256 => address) internal projectAddress;
   uint256 internal totalProjectCount;
 
@@ -63,7 +68,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     return projectAddress[id];
   }
 
-  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public {//we need more tests for this
+  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng, bytes32 _voteHash, bytes32 _removeHash) public {//we need more tests for this
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);
@@ -77,6 +82,10 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     projectLeaderBoard.incrementCandidateCount();
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
+
+    voteHash[projectAddr] = _voteHash;
+    removeHash[projectAddr] = _removeHash;
+
     emit ProjectPitch(projectAddr, developer, _name, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
   }
 
@@ -127,53 +136,26 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Token(token).resetInactiveTokenCycle();
  }
 
- uint256 public totalVotesCast;
+ /* uint256 public totalVotesCast; */
 
 //tests need to be modified for all voting functions
-mapping(address => uint256) public voteHash;
-mapping(address => uint256) public removeHash;
-
-event VoteAddition (
-  uint256 voteAdditions,
-  uint256 num
-);
-
-
-event VoteRemoval (
-  uint256 voteRemovals
-);
-
-uint256 voteAdditions;
-uint256 voteRemovals;
-
-
-function voteForProject(address _project, address _voter, uint256 votes, string _signedMessage) public {
-  /* bytes32 vote = voteHash[_project];
-  address recoveredVoter = vote.recover(_signedMessage);
-
-  authenticateVoter(recoveredVoter, _voter);
+function voteForProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
+  bytes32 vote = voteHash[_project];
+  authenticateVoter(_signedMessage, _voter, vote);
 
   investorList.removeVoteCredit(_voter, votes);
 
-  Project project = Project(toProjectAddr);
-  project.vote(msg.sender, votes);
-  totalVotesCast = totalVotesCast.add(votes);
+  Project project = Project(_project);
+  project.vote(_voter, votes);
+  /* totalVotesCast = totalVotesCast.add(votes); */
 
-  updateProjects(toProjectAddr); */
-
-  voteAdditions = voteAdditions.add(1);
-  VoteAddition(voteAdditions, votes);
+  updateProjects(_project);
 }
 
-function removeVotesFromProject(uint256 _votes, string _signedMessage) public {
-  /* bytes32 vote = removeHash[_project];
-  address recoveredVoter = vote.recover(_signedMessage);
-
-  authenticateVoter(recoveredVoter, _voter);
-  removeVotesFromProject_(_voter, _project, _votes); */
-
-  voteRemovals = voteRemovals.add(1);
-  VoteRemoval(voteAdditions);
+function removeVotesFromProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
+  bytes32 vote = removeHash[_project];
+  authenticateVoter(_signedMessage, _voter, vote);
+  removeVotesFromProject_(_voter, _project, votes);
 }
 
  //this is for adding vote credit for each investor from the frontend after a project has been activated
@@ -188,13 +170,13 @@ function removeVotesFromProject(uint256 _votes, string _signedMessage) public {
    Project project = Project(fromProjectAddr);
 
    project.removeVotes(account, votes);
-   totalVotesCast = totalVotesCast.sub(votes);
    investorList.addVoteCredit(account, votes);
 
    updateProjects(fromProjectAddr);
  }
 
- function authenticateVoter(address recoveredVoter, address voter) internal {
+ function authenticateVoter(bytes _signedMessage, address voter, bytes32 vote) internal {
+   address recoveredVoter = vote.recover(_signedMessage);
    require(recoveredVoter == voter);
    require(investorList.validAccount(voter));
  }
@@ -240,3 +222,16 @@ function removeVotesFromProject(uint256 _votes, string _signedMessage) public {
       /* projectAddr */
       /* ); */
     /* }  */
+
+    /* event VoteAddition (
+      uint256 voteAdditions,
+      uint256 num
+    );
+
+
+    event VoteRemoval (
+      uint256 voteRemovals
+    );
+
+    uint256 voteAdditions;
+    uint256 voteRemovals; */

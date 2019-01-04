@@ -7,9 +7,14 @@ class BlockChain
     @crowdsaleInstance = Ethereum::Contract.create(name: "GNITokenCrowdsale", truffle: { paths: [ 'truffle' ] }, client: @client)
   end
 
-  def distribute_votes (private_key, vote_transactions)
+  def process_votes (private_key, vote_transactions)
     set_key(private_key)
-    process_votes(vote_transactions)
+
+    vote_transactions.each do |transaction|
+      args = [transaction["project_address"], transaction["voter_address"], transaction["votes"], transaction["signed_message"]]
+      transaction["type"] = "addition" ? @crowdsaleInstance.transact_and_wait.vote_for_project(*args) : @crowdsaleInstance.transact_and_wait.remove_votes_from_project(*args)
+    end
+
     unset_key
   end
 
@@ -21,13 +26,5 @@ class BlockChain
 
   def unset_key
     @crowdsaleInstance.key = nil
-  end
-
-  def process_votes (vote_transactions)
-    promise = nil
-    vote_transactions.each do |transaction|
-      args = [transaction["project_address"], transaction["voter_address"], transaction["votes"], transaction["signed_message"]]
-      transaction["type"] = "addition" ? @crowdsaleInstance.transact_and_wait.vote_for_project(*args) : @crowdsaleInstance.transact_and_wait.remove_votes_from_project(*args)
-    end
   end
 end

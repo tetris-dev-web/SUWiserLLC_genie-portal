@@ -2,7 +2,7 @@ require 'BlockChain'
 
 class Api::BlockChainController < ApplicationController
   def update
-    BlockChain.new.distribute_votes(BlockChainAccount.first.private_key, vote_transactions)
+    BlockChain.new.process_votes(BlockChainAccount.first.private_key, vote_transactions)
   end
 
   private
