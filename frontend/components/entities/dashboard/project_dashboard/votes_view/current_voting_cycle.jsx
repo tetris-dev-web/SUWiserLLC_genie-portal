@@ -73,7 +73,40 @@ class VotesView2 extends React.Component{
       .attr("fill", "#aa7a60")
       .style("opacity", .5);
 
+      this.svg.append('text')
+      .text(() => {
+        return this.formatNumber(capitalRaised);
+      })
+      .style('fill', '#fff')
+      .style('font-size', '18px')
+      .style('text-anchor', 'start')
+      .attr('x', '4%')
+      .attr('y', '30%');
+
+      this.svg.append('text')
+      .text("capital being")
+      .style('fill', '#fff')
+      .style('font-size', '18px')
+      // .style('text-anchor', 'end')
+      .attr('x', '90%')
+      .attr('y', '40%')
+      .append('tspan')
+      .text('raised')
+      .attr('dy', '1.2em')
+      // .attr('text-anchor', 'middle')
+      .attr('dx', '-3em')
+      .style('fill', '#fff')
+      .style('font-size', '18px')
+      // .attr('x', '90%')
+      // .attr('y', '40%')
+      .text('raised');
+
+
     this.setUp();
+  }
+
+  formatNumber(number){
+    return `$ ${Number(number/1000.0).toLocaleString()} k`;
   }
 
   setUp(){
