@@ -1,316 +1,253 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as d3 from 'd3';
+import VotesViewCapitalRaisedRect from './votes_view_capital_raised_rect';
+import VotesViewCapitalRaisedPath from './votes_view_capital_raised_path'
 
 class VotesViewCapitalRaised extends React.Component {
   constructor(props) {
     super(props);
-    this.initSVG = this.initSVG.bind(this);
-    this.calculateWidth = this.calculateWidth.bind(this);
-    this.draw = this.draw.bind(this);
+
+    const { startTime, endTime, capital } = this.props;
+    this.xScale = d3.scaleLinear()
+      .domain([startTime, endTime])
+      .range([0, window.innerWidth]);
+    this.yScale = d3.scaleLinear()
+      .domain([0, capital])
+      .range([capital / 24000, 0]);
   }
 
-  componentDidMount () {
-    this.calculateWidth();
-    this.initSVG();
-    this.draw();
+  generateActivationHistory() {
+
   }
+    //  this.svg.selectAll("circle")
+    //          .data(this.props.activationHistory)
+    //          .enter()
+    //          .append("circle")
+    //          .attr('cx', (d) => xScale(d.time))
+    //          .attr('cy', (d) => yScale(d.capital))
+    //          .attr('r', 5)
+    //          .on("mouseover", (d) => {
+    //            toolTip.transition()
+    //                   .duration(200)
+    //                   .style("opacity", .9)
+    //            toolTip.html(d.title)
+    //                   .style("left", (d3.event.pageX) + "px")
+    //                   .style("top", (d3.event.pageY - 28) + "px")
+    //          })
+    //          .on("mouseout", (d) => {
+    //             toolTip.transition()
+    //                    .duration(500)
+    //                    .style("opacity", 0);
+    //          });
 
-  calculateWidth() {
-    this.width = document.getElementById("cap-history").clientWidth;
-  }
-
-  initSVG () {
-    this.svg = d3.select("#cap-history")
-    .append('svg')
-    .attr("width", this.width)
-    .attr("height", this.props.capital / 24000)
-    .style("background-color", "pink");
-  }
-
-  draw () {
-    const xScale = d3.scaleLinear()
-                            .domain([0, this.props.endTime])
-                            .range([0, this.width]);
-
-    const yScale = d3.scaleLinear()
-                            .domain([0, this.props.capital])
-                            .range([this.props.capital / 24000, 0]);
-
-    const lineScale = d3.line()
-                            .x(function(d) { return xScale(d.date); })
-                            .y(function(d) { return yScale(d.capital); });
-
-    const toolTip = d3.select("body")
-                       .append("div")
-                       .attr("class", "tooltip")
-                       .style("opacity", 0);
-
-     this.svg.append("path")
-        .attr("d", lineScale(this.props.lineData));
-
-     this.svg.selectAll("circle")
-             .data(this.props.activationHistory)
-             .enter()
-             .append("circle")
-             .attr('cx', (d) => xScale(d.time))
-             .attr('cy', (d) => yScale(d.capital))
-             .attr('r', 5)
-             .on("mouseover", (d) => {
-               toolTip.transition()
-                      .duration(200)
-                      .style("opacity", .9)
-               toolTip.html(d.title)
-                      .style("left", (d3.event.pageX) + "px")
-                      .style("top", (d3.event.pageY - 28) + "px")
-             })
-             .on("mouseout", (d) => {
-                toolTip.transition()
-                       .duration(500)
-                       .style("opacity", 0);
-             });
-
-      this.svg.selectAll("line")
-              .data(this.props.activationHistory)
-              .enter()
-              .append("line")
-              .attr("x1", () => 0)
-              .attr("x2", (d) => xScale(d.time))
-              .attr("y1", (d) => yScale(d.capital))
-              .attr("y2", (d) => yScale(d.capital))
-              .style("stroke", "black");
-  }
+    //   this.svg.selectAll("line")
+    //           .data(this.props.activationHistory)
+    //           .enter()
+    //           .append("line")
+    //           .attr("x1", () => 0)
+    //           .attr("x2", (d) => xScale(d.time))
+    //           .attr("y1", (d) => yScale(d.capital))
+    //           .attr("y2", (d) => yScale(d.capital))
+    //           .style("stroke", "black");
 
   render() {
+    const { maxValuation, capitalRaised, capital, lineData } = this.props;
+
     return (
-      <div id='cap-history' className="cap-history-container"></div>
+      <div id="cap-history" className="votes-view-capital-raised">
+        <svg className="votes-view-svg" height={(capital + capitalRaised) / 24000} viewBox="0 0 100% 100%">
+          <VotesViewCapitalRaisedRect x="0" y="0" height={capitalRaised / 24000} fill="#aa7a60" />
+          <VotesViewCapitalRaisedRect x="0" y={capitalRaised / 24000} height={(capital - capitalRaised) / 24000} fill="#61aba9"/>
+          <VotesViewCapitalRaisedPath xScale={this.xScale} yScale={this.yScale} lineData={lineData}/>
+        </svg>
+      </div>
     );
   }
 }
 
 const mapStateToProps = () => {
   return {
-    capital: 74369613,
-    startTime: 86400,
+    capital: 7436961,
+    startTime: 0,
     endTime: 13305600,
     lineData: [
-    {date: 0, capital: 0},
-    {date: 86400,  capital: 501479},
-    {date: 172800,  capital: 1375876},
-    {date: 259200,  capital: 1499460},
-    {date: 345600,  capital: 1559440},
-    {date: 432000,  capital: 2485582},
-    {date: 518400,  capital: 3194069},
-    {date: 604800,  capital: 3876013},
-    {date: 691200,  capital: 4444190},
-    {date: 777600,  capital: 4448633},
-    {date: 864000,  capital: 4547845},
-    {date: 950400,  capital: 5007385},
-    {date: 1036800,  capital: 5334688},
-    {date: 1123200,  capital: 6311284},
-    {date: 1209600,  capital: 6674661},
-    {date: 1296000,  capital: 7317270},
-    {date: 1382400,  capital: 7966441},
-    {date: 1468800,  capital: 8563693},
-    {date: 1555200,  capital: 9074561},
-    {date: 1641600,  capital: 9831451},
-    {date: 1728000,  capital: 10358922},
-    {date: 1814400,  capital: 10547308},
-    {date: 1900800,  capital: 10738853},
-    {date: 1987200,  capital: 11618641},
-    {date: 2073600,  capital: 12498354},
-    {date: 2160000,  capital: 13014381},
-    {date: 2246400,  capital: 13871651},
-    {date: 2332800,  capital: 14097678},
-    {date: 2419200,  capital: 14489576},
-    {date: 2505600,  capital: 14992117},
-    {date: 2592000,  capital: 15080612},
-    {date: 2678400,  capital: 16034296},
-    {date: 2764800,  capital: 16754687},
-    {date: 2851200,  capital: 17477850},
-    {date: 2937600,  capital: 18247462},
-    {date: 3024000,  capital: 18645062},
-    {date: 3110400,  capital: 19044219},
-    {date: 3196800,  capital: 19939991},
-    {date: 3283200,  capital: 19978081},
-    {date: 3369600,  capital: 20256983},
-    {date: 3456000,  capital: 20784523},
-    {date: 3542400,  capital: 21301176},
-    {date: 3628800,  capital: 21410608},
-    {date: 3715200,  capital: 21733456},
-    {date: 3801600,  capital: 22011008},
-    {date: 3888000,  capital: 22692812},
-    {date: 3974400,  capital: 23029329},
-    {date: 4060800,  capital: 23206451},
-    {date: 4147200,  capital: 24014781},
-    {date: 4233600,  capital: 24260889},
-    {date: 4320000,  capital: 24940430},
-    {date: 4406400,  capital: 25626946},
-    {date: 4492800,  capital: 26239750},
-    {date: 4579200,  capital: 26511840},
-    {date: 4665600,  capital: 27004144},
-    {date: 4752000,  capital: 27200831},
-    {date: 4838400,  capital: 27926583},
-    {date: 4924800,  capital: 28658329},
-    {date: 5011200,  capital: 29069600},
-    {date: 5097600,  capital: 29919443},
-    {date: 5184000,  capital: 29983398},
-    {date: 5270400,  capital: 30233874},
-    {date: 5356800,  capital: 30452257},
-    {date: 5443200,  capital: 31191111},
-    {date: 5529600,  capital: 31869181},
-    {date: 5616000,  capital: 32579816},
-    {date: 5702400,  capital: 33214617},
-    {date: 5788800,  capital: 33752120},
-    {date: 5875200,  capital: 34201920},
-    {date: 5961600,  capital: 35023005},
-    {date: 6048000,  capital: 35194210},
-    {date: 6134400,  capital: 35716996},
-    {date: 6220800,  capital: 35915187},
-    {date: 6307200,  capital: 35915820},
-    {date: 6393600,  capital: 36256983},
-    {date: 6480000,  capital: 36644120},
-    {date: 6566400,  capital: 37000101},
-    {date: 6652800,  capital: 37587565},
-    {date: 6739200,  capital: 37617695},
-    {date: 6825600,  capital: 38501702},
-    {date: 6912000,  capital: 38929815},
-    {date: 6998400,  capital: 38992039},
-    {date: 7084800,  capital: 39841019},
-    {date: 7171200,  capital: 40185797},
-    {date: 7257600,  capital: 40572778},
-    {date: 7344000,  capital: 41002756},
-    {date: 7430400,  capital: 41863317},
-    {date: 7516800,  capital: 42657642},
-    {date: 7603200,  capital: 43404327},
-    {date: 7689600,  capital: 43446446},
-    {date: 7776000,  capital: 43910159},
-    {date: 7862400,  capital: 44715488},
-    {date: 7948800,  capital: 44943717},
-    {date: 8035200,  capital: 44984291},
-    {date: 8121600,  capital: 45949103},
-    {date: 8208000,  capital: 46575341},
-    {date: 8294400,  capital: 46700685},
-    {date: 8380800,  capital: 47460007},
-    {date: 8467200,  capital: 47936708},
-    {date: 8553600,  capital: 48740713},
-    {date: 8640000,  capital: 48937718},
-     {date: 8726400,  capital: 48982485},
-     {date: 8812800,  capital: 49023179},
-     {date: 8899200,  capital: 49556850},
-     {date: 8985600,  capital: 49577916},
-     {date: 9072000,  capital: 50174088},
-     {date: 9158400,  capital: 50455300},
-     {date: 9244800,  capital: 50505468},
-     {date: 9331200,  capital: 51361540},
-     {date: 9417600,  capital: 52112956},
-     {date: 9504000,  capital: 52934570},
-     {date: 9590400,  capital: 53406751},
-     {date: 9676800,  capital: 54007741},
-     {date: 9763200,  capital: 54594775},
-     {date: 9849600,  capital: 55026799},
-     {date: 9936000,  capital: 55434626},
-     {date: 10022400,  capital: 56271966},
-     {date: 10108800,  capital: 56425367},
-     {date: 10195200,  capital: 56454762},
-     {date: 10281600,  capital: 56465615},
-     {date: 10368000,  capital: 57003879},
-     {date: 10454400,  capital: 57297160},
-     {date: 10540800,  capital: 57922467},
-     {date: 10627200,  capital: 58591843},
-     {date: 10713600,  capital: 58724591},
-     {date: 10800000,  capital: 58958221},
-     {date: 10886400,  capital: 59090325},
-     {date: 10972800,  capital: 59917192},
-     {date: 11059200,  capital: 60896382},
-     {date: 11145600,  capital: 61312517},
-     {date: 11232000,  capital: 61799725},
-     {date: 11318400,  capital: 61912252},
-     {date: 11404800,  capital: 62542001},
-     {date: 11491200,  capital: 63279692},
-     {date: 11577600,  capital: 64081831},
-     {date: 11664000,  capital: 64691413},
-     {date: 11750400,  capital: 65230316},
-     {date: 11836800,  capital: 65354815},
-     {date: 11923200,  capital: 66076491},
-     {date: 12009600,  capital: 67044046},
-     {date: 12096000,  capital: 67348216},
-     {date: 12182400,  capital: 68073251},
-     {date: 12268800,  capital: 68384545},
-     {date: 12355200,  capital: 68701056},
-     {date: 12441600,  capital: 69514593},
-     {date: 12528000,  capital: 70334023},
-     {date: 12614400,  capital: 70914657},
-     {date: 12700800,  capital: 70919045},
-     {date: 12787200,  capital: 71034597},
-     {date: 12873600,  capital: 71923834},
-     {date: 12960000,  capital: 72173121},
-     {date: 13046400,  capital: 73007522},
-     {date: 13132800,  capital: 74005270},
-     {date: 13219200,  capital: 74162397},
-     {date: 13305600,  capital: 74369613}
+      {date: 0, capital: 0},
+      {date: 86400,  capital: 50147},
+      {date: 172800,  capital: 137587},
+      {date: 259200,  capital: 149946},
+      {date: 345600,  capital: 155944},
+      {date: 432000,  capital: 248558},
+      {date: 518400,  capital: 319406},
+      {date: 604800,  capital: 387601},
+      {date: 691200,  capital: 444419},
+      {date: 777600,  capital: 444863},
+      {date: 864000,  capital: 454784},
+      {date: 950400,  capital: 500738},
+      {date: 1036800,  capital: 533468},
+      {date: 1123200,  capital: 631128},
+      {date: 1209600,  capital: 667466},
+      {date: 1296000,  capital: 731727},
+      {date: 1382400,  capital: 796644},
+      {date: 1468800,  capital: 856369},
+      {date: 1555200,  capital: 907456},
+      {date: 1641600,  capital: 983145},
+      {date: 1728000,  capital: 1035892},
+      {date: 1814400,  capital: 1054730},
+      {date: 1900800,  capital: 1073885},
+      {date: 1987200,  capital: 1161864},
+      {date: 2073600,  capital: 1249835},
+      {date: 2160000,  capital: 1301438},
+      {date: 2246400,  capital: 1387165},
+      {date: 2332800,  capital: 1409767},
+      {date: 2419200,  capital: 1448957},
+      {date: 2505600,  capital: 1499211},
+      {date: 2592000,  capital: 1508061},
+      {date: 2678400,  capital: 1603429},
+      {date: 2764800,  capital: 1675468},
+      {date: 2851200,  capital: 1747785},
+      {date: 2937600,  capital: 1824746},
+      {date: 3024000,  capital: 1864506},
+      {date: 3110400,  capital: 1904421},
+      {date: 3196800,  capital: 1993999},
+      {date: 3283200,  capital: 1997808},
+      {date: 3369600,  capital: 2025698},
+      {date: 3456000,  capital: 2078452},
+      {date: 3542400,  capital: 2130117},
+      {date: 3628800,  capital: 2141060},
+      {date: 3715200,  capital: 2173345},
+      {date: 3801600,  capital: 2201100},
+      {date: 3888000,  capital: 2269281},
+      {date: 3974400,  capital: 2302932},
+      {date: 4060800,  capital: 2320645},
+      {date: 4147200,  capital: 2401478},
+      {date: 4233600,  capital: 2426088},
+      {date: 4320000,  capital: 2494043},
+      {date: 4406400,  capital: 2562694},
+      {date: 4492800,  capital: 2623975},
+      {date: 4579200,  capital: 2651184},
+      {date: 4665600,  capital: 2700414},
+      {date: 4752000,  capital: 2720083},
+      {date: 4838400,  capital: 2792658},
+      {date: 4924800,  capital: 2865832},
+      {date: 5011200,  capital: 2906960},
+      {date: 5097600,  capital: 2991944},
+      {date: 5184000,  capital: 2998339},
+      {date: 5270400,  capital: 3023387},
+      {date: 5356800,  capital: 3045225},
+      {date: 5443200,  capital: 3119111},
+      {date: 5529600,  capital: 3186918},
+      {date: 5616000,  capital: 3257981},
+      {date: 5702400,  capital: 3321461},
+      {date: 5788800,  capital: 3375212},
+      {date: 5875200,  capital: 3420192},
+      {date: 5961600,  capital: 3502300},
+      {date: 6048000,  capital: 3519421},
+      {date: 6134400,  capital: 3571699},
+      {date: 6220800,  capital: 3591518},
+      {date: 6307200,  capital: 3591582},
+      {date: 6393600,  capital: 3625698},
+      {date: 6480000,  capital: 3664412},
+      {date: 6566400,  capital: 3700010},
+      {date: 6652800,  capital: 3758756},
+      {date: 6739200,  capital: 3761769},
+      {date: 6825600,  capital: 3850170},
+      {date: 6912000,  capital: 3892981},
+      {date: 6998400,  capital: 3899203},
+      {date: 7084800,  capital: 3984101},
+      {date: 7171200,  capital: 4018579},
+      {date: 7257600,  capital: 4057277},
+      {date: 7344000,  capital: 4100275},
+      {date: 7430400,  capital: 4186331},
+      {date: 7516800,  capital: 4265764},
+      {date: 7603200,  capital: 4340432},
+      {date: 7689600,  capital: 4344644},
+      {date: 7776000,  capital: 4391015},
+      {date: 7862400,  capital: 4471548},
+      {date: 7948800,  capital: 4494371},
+      {date: 8035200,  capital: 4498429},
+      {date: 8121600,  capital: 4594910},
+      {date: 8208000,  capital: 4657534},
+      {date: 8294400,  capital: 4670068},
+      {date: 8380800,  capital: 4746000},
+      {date: 8467200,  capital: 4793670},
+      {date: 8553600,  capital: 4874071},
+      {date: 8640000,  capital: 4893771},
+      {date: 8726400,  capital: 4898248},
+      {date: 8812800,  capital: 4902317},
+      {date: 8899200,  capital: 4955685},
+      {date: 8985600,  capital: 4957791},
+      {date: 9072000,  capital: 5017408},
+      {date: 9158400,  capital: 5045530},
+      {date: 9244800,  capital: 5050546},
+      {date: 9331200,  capital: 5136154},
+      {date: 9417600,  capital: 5211295},
+      {date: 9504000,  capital: 5293457},
+      {date: 9590400,  capital: 5340675},
+      {date: 9676800,  capital: 5400774},
+      {date: 9763200,  capital: 5459477},
+      {date: 9849600,  capital: 5502679},
+      {date: 9936000,  capital: 5543462},
+      {date: 10022400,  capital: 5627196},
+      {date: 10108800,  capital: 5642536},
+      {date: 10195200,  capital: 5645476},
+      {date: 10281600,  capital: 5646561},
+      {date: 10368000,  capital: 5700387},
+      {date: 10454400,  capital: 5729716},
+      {date: 10540800,  capital: 5792246},
+      {date: 10627200,  capital: 5859184},
+      {date: 10713600,  capital: 5872459},
+      {date: 10800000,  capital: 5895822},
+      {date: 10886400,  capital: 5909032},
+      {date: 10972800,  capital: 5991719},
+      {date: 11059200,  capital: 6089638},
+      {date: 11145600,  capital: 6131251},
+      {date: 11232000,  capital: 6179972},
+      {date: 11318400,  capital: 6191225},
+      {date: 11404800,  capital: 6254200},
+      {date: 11491200,  capital: 6327969},
+      {date: 11577600,  capital: 6408183},
+      {date: 11664000,  capital: 6469141},
+      {date: 11750400,  capital: 6523031},
+      {date: 11836800,  capital: 6535481},
+      {date: 11923200,  capital: 6607649},
+      {date: 12009600,  capital: 6704404},
+      {date: 12096000,  capital: 6734821},
+      {date: 12182400,  capital: 6807325},
+      {date: 12268800,  capital: 6838454},
+      {date: 12355200,  capital: 6870105},
+      {date: 12441600,  capital: 6951459},
+      {date: 12528000,  capital: 7033402},
+      {date: 12614400,  capital: 7091465},
+      {date: 12700800,  capital: 7091904},
+      {date: 12787200,  capital: 7103459},
+      {date: 12873600,  capital: 7192383},
+      {date: 12960000,  capital: 7217312},
+      {date: 13046400,  capital: 7300752},
+      {date: 13132800,  capital: 7400527},
+      {date: 13219200,  capital: 7416239},
+      {date: 13305600,  capital: 7436961}
    ],
    activationHistory: [
       {
         title: 'proj1',
         time: 3369600,
-        capital: 19000000
+        capital: 1900000
       },
       {
         title: 'proj2',
         time: 6825600,
-        capital: 34000000
+        capital: 2500000
       },
       {
         title: 'proj3',
         time: 13305600,
-        capital: 69000000
+        capital: 420000
       }
     ],
-    width: 800
+    maxValuation: 5000000,
+    capitalRaised: 3000000
  };
 };
 
 export default connect(mapStateToProps)(VotesViewCapitalRaised);
-
-// initScales() {
-//   this.xScale = d3.scaleLinear()
-//                         .domain([0, this.props.endTime])
-//                         .range([0, this.width]);
-//
-//   this.yScale = d3.scaleLinear()
-//                         .domain([0, this.props.capital])
-//                         .range([this.props.capital / 24000, 0]);
-//
-//   const xScale = this.xScale;
-//   const yScale = this.yScale;
-//
-//   this.lineScale = d3.line()
-//                         .x(function(d) { return xScale(d.date); })
-//                         .y(function(d) { return yScale(d.capital); });
-// }
-//
-// drawLine() {
-//   this.svg.append("path")
-//      .attr("d", this.lineScale(this.props.lineData));
-// }
-//
-// drawProjects() {
-//   this.svg.selectAll("circle")
-//           .data(this.props.activationHistory)
-//           .enter()
-//           .append("circle")
-//           .attr('cx', (d) => this.xScale(d.time))
-//           .attr('cy', (d) => this.yScale(d.capital))
-//           .attr('r', 5);
-//
-//    this.svg.selectAll("line")
-//            .data(this.props.activationHistory)
-//            .enter()
-//            .append("line")
-//            .attr("x1", () => 0)
-//            .attr("x2", (d) => this.xScale(d.time))
-//            .attr("y1", (d) => this.yScale(d.capital))
-//            .attr("y2", (d) => this.yScale(d.capital))
-//            .style("stroke", "black");
-// }

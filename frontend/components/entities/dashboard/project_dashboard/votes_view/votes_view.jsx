@@ -59,7 +59,7 @@ class VotesView extends React.Component{
 
   componentDidMount(){
     const { capitalRaised } = this.props;
-    this.svg = d3.select(".votes-view")
+    this.svg = d3.select(this.root)
       .append("svg")
       .classed("votes-view-svg", true)
       .attr("width", "100%")
@@ -213,10 +213,10 @@ class VotesView extends React.Component{
     }
   }
 
-  render(){
-    const { maxValuation, capitalRaised } = this.props;
+  render() {
+    const { capitalRaised } = this.props;
     return(
-      <div className="votes-view" style={{ top: (maxValuation - capitalRaised) / 24000 * 2}}>
+      <div className="votes-view" style={{ height: capitalRaised / 24000 }} ref={node => this.root = node}>
         {this.state.showVoteShiftTool && <VoteShiftTool project={this.state.selectedProject}/>}
       </div>
     );
