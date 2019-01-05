@@ -8,18 +8,21 @@ class VotesViewCapitalRaised extends React.Component {
   constructor(props) {
     super(props);
 
-    const { startTime, endTime, capital } = this.props;
-    this.xScale = d3.scaleLinear()
-      .domain([startTime, endTime])
-      .range([0, window.innerWidth]);
-    this.yScale = d3.scaleLinear()
-      .domain([0, capital])
-      .range([capital / 24000, 0]);
+    this.state = {
+      currentWindowWidth: window.innerWidth
+    };
+  }
+  
+  componentDidMount() {
+    window.onresize = () => {
+      this.setState({currentWindowWidth: window.innerWidth});
+    };
   }
 
   generateActivationHistory() {
 
   }
+
     //  this.svg.selectAll("circle")
     //          .data(this.props.activationHistory)
     //          .enter()
@@ -52,14 +55,21 @@ class VotesViewCapitalRaised extends React.Component {
     //           .style("stroke", "black");
 
   render() {
-    const { maxValuation, capitalRaised, capital, lineData } = this.props;
+    const { maxValuation, capitalRaised, capital, lineData, startTime, endTime } = this.props;
+    const xScale = d3.scaleLinear()
+      .domain([startTime, endTime])
+      .range([0, window.innerWidth]);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, capital])
+      .range([capital / 24000, 0]);
 
     return (
       <div id="cap-history" className="votes-view-capital-raised">
-        <svg className="votes-view-svg" height={(capital + capitalRaised) / 24000} viewBox="0 0 100% 100%">
+        <svg className="votes-view-svg" height={(capital + capitalRaised) / 24000}>
           <VotesViewCapitalRaisedRect x="0" y="0" height={capitalRaised / 24000} fill="#aa7a60" />
           <VotesViewCapitalRaisedRect x="0" y={capitalRaised / 24000} height={(capital - capitalRaised) / 24000} fill="#61aba9"/>
-          <VotesViewCapitalRaisedPath xScale={this.xScale} yScale={this.yScale} lineData={lineData}/>
+          <VotesViewCapitalRaisedPath xScale={xScale} yScale={yScale} lineData={lineData}/>
         </svg>
       </div>
     );
