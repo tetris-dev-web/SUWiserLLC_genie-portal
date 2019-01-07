@@ -29,6 +29,7 @@ class VoteShiftTool extends React.Component {
 	componentDidMount() {
 		this.svg = d3.select(this.root)
 			.append("svg")
+			.classed("votes-view-svg", true)
 			.attr("width", VOTE_BAR_WIDTH)
 			.attr("height", VOTE_BAR_HEIGHT);
 
