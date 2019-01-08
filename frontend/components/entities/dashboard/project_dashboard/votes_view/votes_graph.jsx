@@ -13,30 +13,35 @@ const mapStateToProps = () => {
   return {
     pitchedProjects: [
       {
+        id: 1,
         valuation: 5000000,
         capitalRequired: 3500000,
         voteShare: .15,
         title: "Ryan and Liam"
       },
       {
+        id: 2,
         valuation: 2000000,
         capitalRequired: 1500000,
         voteShare: .15,
         title: "Liam and Ryan"
       },
       {
+        id: 3,
         valuation: 4000000,
         capitalRequired: 2500000,
         voteShare: .20,
         title: "HamInn"
       },
       {
+        id: 4,
         valuation: 5000000,
         capitalRequired: 4000000,
         voteShare: .30,
         title: "Genesis"
       },
       {
+        id: 5,
         valuation: 3500000,
         capitalRequired: 2000000,
         voteShare: .20,
@@ -250,17 +255,32 @@ const mapStateToProps = () => {
   };
 };
 
-const VotesGraph = (props) =>  {
-  const { maxValuation, capitalRaised, capital } = props;
-  return (
-    <div className='votes-graph' style={{ marginTop: (maxValuation - capitalRaised) / 24000 * 2 }}>
-      <svg className="votes-view-svg" height={capital / 24000}>
-        <VotesViewCapitalRaised {...props}/>
-        <VotesViewPitchedProjects {...props} />
-      </svg>
-    </div>
-  );
-};
+class VotesGraph extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      selectedProjectId: null
+    };
+  }
+
+  render() {
+    const { maxValuation, capitalRaised, capital } = this.props;
+    return (
+      <div className='votes-graph' style={{ marginTop: (maxValuation - capitalRaised) / 24000 * 2 }}>
+        <svg className="votes-view-svg" height={capital / 24000}>
+          <VotesViewCapitalRaised
+            {...this.props}
+            {...this.state}/>
+          <VotesViewPitchedProjects
+            {...this.props}
+            {...this.state}
+            toggleSelectedProjectId={selectedProjectId => this.setState({selectedProjectId})}/>
+        </svg>
+      </div>
+    );
+  }
+}
 
 export default connect(mapStateToProps)(VotesGraph);
 

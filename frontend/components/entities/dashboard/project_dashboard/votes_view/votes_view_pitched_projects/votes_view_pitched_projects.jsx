@@ -1,17 +1,10 @@
 import React from 'react';
 import * as d3 from 'd3';
-import VoteShiftTool from '../vote_shift_tool';
 import VotesViewPitchedProjectsRect from './votes_view_pitched_projects_rect';
 
 class VotesViewPitchedProjects extends React.Component {
-	constructor(props) {
-			super(props);
-			this.state = {
-					showVoteShiftTool: false,
-					selectedProject: null
-			};
-
-			// this.handleClick = this.handleClick.bind(this);
+	constructor() {
+		super();
 	}
 
 	processProjectData() {
@@ -39,15 +32,19 @@ class VotesViewPitchedProjects extends React.Component {
 	}
 
 	render() {
-		const { capitalRaised, pitchedProjects } = this.props;
+		const { maxValuation, capitalRaised, selectedProjectId, toggleSelectedProjectId } = this.props;
 
 		const rects = this.processProjectData().map((project, idx) => (
-			<VotesViewPitchedProjectsRect key={idx} {...project} capitalRaised={capitalRaised}/>
+			<VotesViewPitchedProjectsRect key={idx}
+				{...project}
+				maxValuation={maxValuation}
+				capitalRaised={capitalRaised} 
+				selectedProjectId={selectedProjectId}
+				toggleSelectedProjectId={toggleSelectedProjectId}/>
 		));
 
 		return (
 			<React.Fragment>
-				{this.state.showVoteShiftTool && <VoteShiftTool project={this.state.selectedProject} />}
 				{rects}
 			</React.Fragment>
 		);
