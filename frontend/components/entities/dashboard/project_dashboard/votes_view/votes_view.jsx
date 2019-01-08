@@ -3,45 +3,6 @@ import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import VoteShiftTool from './vote_shift_tool';
 
-const mapStateToProps = state => {
-    return({
-      pitchedProjects: [
-        {
-          valuation: 5000000,
-          capitalRequired: 3500000,
-          voteShare: .15,
-          title: "Ryan and Liam"
-        },
-        {
-          valuation: 2000000,
-          capitalRequired: 1500000,
-          voteShare: .15,
-          title: "Liam and Ryan"
-        },
-        {
-          valuation: 4000000,
-          capitalRequired: 2500000,
-          voteShare: .20,
-          title: "HamInn"
-        },
-        {
-          valuation: 5000000,
-          capitalRequired: 4000000,
-          voteShare: .30,
-          title: "Genesis"
-        },
-        {
-          valuation: 3500000,
-          capitalRequired: 2000000,
-          voteShare: .20,
-          title: "Penn Generator"
-        },
-      ].sort((a,b) => b.voteShare - a.voteShare),
-      maxValuation: 5000000,
-      capitalRaised: 3000000
-    });
-};
-
 class VotesView extends React.Component{
   constructor(props){
     super(props);
@@ -122,7 +83,7 @@ class VotesView extends React.Component{
       .attr("y", capitalRaised / 24000 + 20)
       .style("font-size", "18px")
       .style("fill", "#fff")
-      .style("text-anchor", "middle")
+      // .style("text-anchor", "middle")
       .text(project => `${project.voteShare * 100}%`);
   }
 
@@ -157,10 +118,10 @@ class VotesView extends React.Component{
         .attr("class", "rect-text")
         .attr("x", textX)
         .attr("y", textY)
-        .attr("pointer-events", "none")
+        // .attr("pointer-events", "none")
         .style("font-size", textSize)
         .style("fill", textFill)
-        .style("text-anchor", "middle")
+        // .style("text-anchor", "middle")
         .text(textContent);
     };
 
