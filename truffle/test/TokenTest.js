@@ -494,6 +494,60 @@ contract('Token', async (_accounts) => {
     })
   })
 
+  describe('resetInactiveTokenCycle', async () => {
+    let mockInactiveTokenCycleT1;
+
+    before(async () => {
+      mockInactiveTokenCycleT1 = await parseMethod(getMockInactiveTokenCycle);
+      await mT.resetInactiveTokenCycle(accounts[2], {from: accounts[1]});
+    })
+
+    after(async () => {
+      await resetBalances();
+      await mT.setMockInactiveTokenCycle(0);
+    })
+
+    it('increments the inactive token cycle by 1', async () => {
+      let cycle = await parseMethod(getMockInactiveTokenCycle);
+      assert.equal(cycle, mockInactiveTokenCycleT1 + 1, 'inactive token cycle should increase by 1');
+    })
+
+    it('sets the totalInactiveSupply to 0', async () => {
+      let totalInactiveSupplyT2 = await parseMethod(getTotalInactiveSupply);
+      assert.equal(totalInactiveSupplyT2, 0, 'totalInactiveSupply should be 0');
+    })
+
+    it('decrements the totalSupply by the starting totalInactiveSupply', async () => {
+      let totalSupplyT2 = await parseMethod(getTotalSupply);
+      assert.equal(totalSupplyT2, totalSupplyT1 - totalInactiveSupplyT1, 'totalSupply should decrease by the starting totalInactiveSupply');
+    })
+
+    it('does not affect totalActiveSupply', async () => {
+      let totalActiveSupplyT2 = await parseMethod(getTotalActiveSupply);
+      assert.equal(totalActiveSupplyT2, totalActiveSupplyT1, 'totalActiveSupply should not change');
+    })
+
+    it('sets the senders inactive balance to 0', async () => {
+      let inactiveBalance = await parseWithArg(getInactiveBalance, accounts[1]);
+      assert.equal(inactiveBalance, 0, 'sender inactive balance should be 0');
+    })
+
+    it('sets the developers inactive balance to 0', async () => {
+      let inactiveBalance = await parseWithArg(getInactiveBalance, accounts[2]);
+      assert.equal(inactiveBalance, 0, 'developer inactive balance should be 0');
+    })
+
+    it('updates the sender with the current inactive token cycle', async () => {
+      let status = await mT.getMockCycleUpdateStatus.call(accounts[1]);
+      assert.equal(status, true, 'sender account not updated with the current inactive token cycle');
+    })
+
+    it('updates the developer with the current inactive token cycle', async () => {
+      let status = await mT.getMockCycleUpdateStatus.call(accounts[2]);
+      assert.equal(status, true, 'developer account not updated with the current inactive token cycle');
+    })
+  })
+
   describe('approve', async () => {
     before(async () => {
       await mT.approve(accounts[2], 3000, {from: accounts[1]})
@@ -758,4 +812,8 @@ const getTotalActiveSupply = async () => {
 
 const getTotalInactiveSupply = async () => {
   return await mT.totalInactiveSupply();
+}
+
+const getMockInactiveTokenCycle = async () => {
+  return await mT.getMockInactiveTokenCycle.call();
 }

@@ -20,7 +20,7 @@ contract ActivatableToken is MintableToken {
   mapping(uint256 => InactiveTokenCycle) internal inactiveTokenCycle;
 
   //should only be callable by the crowdsale
-  function resetInactiveTokenCycle (address developer) {
+  function resetInactiveTokenCycle (address developer) public {
     totalSupply_ = totalSupply_.sub(totalInactiveSupply());
     currentInactiveTokenCycle = currentInactiveTokenCycle.add(1);
 

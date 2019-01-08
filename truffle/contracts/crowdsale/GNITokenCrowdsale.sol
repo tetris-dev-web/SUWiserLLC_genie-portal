@@ -96,7 +96,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  //before this, we need to execute any pending token activations with the modifier above for the sender account. We need to do this so that the correct number of tokens are activated
  function buyTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
-   /* Token(token).activatePending(msg.sender); */
+   Token(token).activatePending(msg.sender);
 
    uint256 voteCredit = super.buyTokens(msg.sender);
    investorList.addInvestor(msg.sender);
@@ -142,7 +142,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 //needs to be callable only by the developer
 function voteForProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
   bytes32 unsignedMessage = voteHash[_project];
-  authenticateVoter(_signedMessage, _voter, unsignedMessage);
+  /* authenticateVoter(_signedMessage, _voter, unsignedMessage); */
 
   investorList.removeVoteCredit(_voter, votes);
 
@@ -153,9 +153,9 @@ function voteForProject(address _project, address _voter, uint256 votes, bytes _
   updateProjects(_project);
 }
 
-function removeVotesFromProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
+function removeVotesFromProject(address _project, address _voter, uint256 votes, bytes32 _signedMessage) public {
   bytes32 unsignedMessage = removeVoteHash[_project];
-  authenticateVoter(_signedMessage, _voter, unsignedMessage);
+  /* authenticateVoter(_signedMessage, _voter, unsignedMessage); */
   removeVotesFromProject_(_voter, _project, votes);
 }
 
@@ -197,7 +197,6 @@ function removeVotesFromProject(address _project, address _voter, uint256 votes,
  }
 
   function forwardFunds (address _to, uint256 amount) internal {
-
     _to.transfer(amount);
   }
 }

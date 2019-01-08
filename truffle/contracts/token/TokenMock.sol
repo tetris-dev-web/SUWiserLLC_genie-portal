@@ -49,6 +49,10 @@ contract TokenMock is Token, ContractStub {
     totalActiveSupply_ = totalActiveSupply_.add(active);
   }
 
+  function getMockInactiveTokenCycle () public returns (uint256) {
+    return currentInactiveTokenCycle;
+  }
+
   function setMockInactiveTokenCycle (uint256 cycle) public {
     currentInactiveTokenCycle = cycle;
   }

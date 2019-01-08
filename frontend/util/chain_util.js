@@ -26,6 +26,7 @@ const getProjectAddresses = async crowdsale => {
 };
 
 export const formatProjectData = async (instance, address, initialProjectsData) => {
+  //combine functions into one on the blockchain
   const title = await instance.name_();
   const project = initialProjectsData[title];
 
