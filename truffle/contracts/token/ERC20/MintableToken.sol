@@ -48,7 +48,7 @@ contract MintableToken is StandardToken, Ownable {
     returns (bool)
   {
     totalSupply_ = totalSupply_.add(_amount);
-    balances[_to].total = balances[_to].total.add(_amount);
+    /* balances[_to].total = balances[_to].total.add(_amount); */
     balances[_to].inactive = balances[_to].inactive.add(_amount);
     emit Mint(_to, _amount);
     emit Transfer(address(0), _to, _amount);

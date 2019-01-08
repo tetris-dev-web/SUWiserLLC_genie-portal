@@ -55,7 +55,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   );
 
   mapping(address => bytes32) public voteHash;
-  mapping(address => bytes32) public removeHash;
+  mapping(address => bytes32) public removeVoteHash;
 
   mapping(uint256 => address) internal projectAddress;
   uint256 internal totalProjectCount;
@@ -68,7 +68,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     return projectAddress[id];
   }
 
-  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng, bytes32 _voteHash, bytes32 _removeHash) public {//we need more tests for this
+  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng, bytes32 _voteHash, bytes32 _removeVoteHash) public {//we need more tests for this
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);
@@ -84,7 +84,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     projectAddress[totalProjectCount] = projectAddr;
 
     voteHash[projectAddr] = _voteHash;
-    removeHash[projectAddr] = _removeHash;
+    removeVoteHash[projectAddr] = _removeVoteHash;
 
     emit ProjectPitch(projectAddr, developer, _name, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
   }
@@ -96,7 +96,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  //before this, we need to execute any pending token activations with the modifier above for the sender account. We need to do this so that the correct number of tokens are activated
  function buyTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
-   Token(token).activatePending(msg.sender);
+   /* Token(token).activatePending(msg.sender); */
 
    uint256 voteCredit = super.buyTokens(msg.sender);
    investorList.addInvestor(msg.sender);
@@ -133,32 +133,34 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    require(hasClosed());
    reimbursements.transfer(weiRaised);
    weiRaised = 0;
-   Token(token).resetInactiveTokenCycle();
+   Token(token).resetInactiveTokenCycle(developer);
  }
 
  /* uint256 public totalVotesCast; */
 
 //tests need to be modified for all voting functions
+//needs to be callable only by the developer
 function voteForProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
-  bytes32 vote = voteHash[_project];
-  authenticateVoter(_signedMessage, _voter, vote);
+  bytes32 unsignedMessage = voteHash[_project];
+  authenticateVoter(_signedMessage, _voter, unsignedMessage);
 
   investorList.removeVoteCredit(_voter, votes);
 
   Project project = Project(_project);
   project.vote(_voter, votes);
-  /* totalVotesCast = totalVotesCast.add(votes); */
+  doomsDay = doomsDay.add(43200);
 
   updateProjects(_project);
 }
 
 function removeVotesFromProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
-  bytes32 vote = removeHash[_project];
-  authenticateVoter(_signedMessage, _voter, vote);
+  bytes32 unsignedMessage = removeVoteHash[_project];
+  authenticateVoter(_signedMessage, _voter, unsignedMessage);
   removeVotesFromProject_(_voter, _project, votes);
 }
 
  //this is for adding vote credit for each investor from the frontend after a project has been activated
+ //call this function removeVotesFromIneligibleProject
  function removeVotesFromProjectByAccount (address account, address fromProjectAddr) external {
    Project project = Project(fromProjectAddr);
    require(!project.open() || project.active_());
@@ -170,13 +172,14 @@ function removeVotesFromProject(address _project, address _voter, uint256 votes,
    Project project = Project(fromProjectAddr);
 
    project.removeVotes(account, votes);
+   doomsDay = doomsDay.sub(43200);
    investorList.addVoteCredit(account, votes);
 
    updateProjects(fromProjectAddr);
  }
 
- function authenticateVoter(bytes _signedMessage, address voter, bytes32 vote) internal {
-   address recoveredVoter = vote.recover(_signedMessage);
+ function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
+   address recoveredVoter = unsignedMessage.recover(_signedMessage);
    require(recoveredVoter == voter);
    require(investorList.validAccount(voter));
  }
@@ -187,10 +190,14 @@ function removeVotesFromProject(address _project, address _voter, uint256 votes,
  }
 
  function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
-    doomsDay = doomsDay.add(_days.mul(1728000));
+    uint256 newDoomsDay = now.add(_days.mul(1728000));
+    if (newDoomsDay > doomsDay) {
+      doomsDay = newDoomsDay;
+    }
  }
 
   function forwardFunds (address _to, uint256 amount) internal {
+
     _to.transfer(amount);
   }
 }

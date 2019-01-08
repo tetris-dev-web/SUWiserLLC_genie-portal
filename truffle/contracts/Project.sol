@@ -177,6 +177,7 @@ contract Project {
 
   function activate () external {
     active = true;
+    //we should set totalVotes to 0
     activationTime = now;
     emit ProjectActivation(address(this), name, active, capitalRequired, valuation);
   }

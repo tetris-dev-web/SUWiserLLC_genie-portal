@@ -42,11 +42,22 @@ contract TokenMock is Token, ContractStub {
   }
 
   function initMockBalance (address addr, uint256 active, uint256 inactive) public {
-    balances[addr].total = (active).add(inactive);
     balances[addr].inactive = inactive;
     balances[addr].active = active;
 
     totalSupply_ = totalSupply_.add(active).add(inactive);
     totalActiveSupply_ = totalActiveSupply_.add(active);
+  }
+
+  function setMockInactiveTokenCycle (uint256 cycle) public {
+    currentInactiveTokenCycle = cycle;
+  }
+
+  function setMockCycleUpdateStatus (address account, bool status) public {
+    inactiveTokenCycle[currentInactiveTokenCycle].updated[account] = status;
+  }
+
+  function getMockCycleUpdateStatus (address account) public returns (bool) {
+    return inactiveTokenCycle[currentInactiveTokenCycle].updated[account];
   }
 }

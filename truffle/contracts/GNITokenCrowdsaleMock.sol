@@ -78,4 +78,29 @@ constructor
     methodState.secondAddress = fromProjectAddr;
     methodState.firstUint = votes;
   }
+
+  function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
+    CallData storage methodState = method['authenticateVoter'];
+    methodState.firstAddress = voter;
+  }
+
+  function setMockVoteHash (address projectAddr, bytes32 mockHash) {
+    voteHash[projectAddr] = mockHash;
+  }
+
+  function setMockRemoveHash (address projectAddr, bytes32 mockHash) {
+    removeVoteHash[projectAddr] = mockHash;
+  }
+
+  function viewMockVoteHash (address projectAddress) public view returns (bytes32) {
+    return voteHash[projectAddress];
+  }
+
+  function viewMockRemoveVoteHash (address projectAddress) public view returns (bytes32) {
+    return removeVoteHash[projectAddress];
+  }
+
+  function mockProjectById (uint256 id) public view returns (address) {
+    return projectAddress[id];
+  }
 }

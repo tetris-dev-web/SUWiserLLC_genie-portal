@@ -1,4 +1,4 @@
-
+ pragma solidity ^0.4.24;
   /* function totalChecked () public view returns(uint256) {
     return checkCycle[currentCheckCycle].totalChecked;
   }

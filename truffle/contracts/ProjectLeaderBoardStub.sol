@@ -7,7 +7,7 @@ contract ProjectLeaderBoardStub {
   }
 
   function tentativeLeader () public view returns (address, uint256, bool) {
-    return (address(0), 500, true);
+    return (address(0), 10000000, true);
   }
 
   function handleProjectActivation () onlyOwner external {
