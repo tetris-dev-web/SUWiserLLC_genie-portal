@@ -19,7 +19,7 @@ class ProjectDashboard extends React.Component {
   }
 
   toggleOnHoverText() {
-    
+
   }
 
   toggleView (viewId) {
@@ -48,7 +48,7 @@ class ProjectDashboard extends React.Component {
       case 1:
         currentGraph = <VotesGraph />;
         break;
-      default: 
+      default:
         break;
     }
 
@@ -58,9 +58,9 @@ class ProjectDashboard extends React.Component {
           <div className="graph-container">
             {currentGraph}
           </div>
-          <ToggleOptions 
+          <ToggleOptions
             viewTitle="PROJECT DASHBOARD"
-            toggleView={this.toggleView} 
+            toggleView={this.toggleView}
             viewId={this.state.viewId}
             viewTypes={this.viewTypes}
             optionIcons={[

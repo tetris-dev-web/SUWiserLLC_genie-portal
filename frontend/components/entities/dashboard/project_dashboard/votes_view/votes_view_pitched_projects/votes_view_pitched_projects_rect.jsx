@@ -3,7 +3,7 @@ import VoteShiftTool from '../vote_shift_tool';
 
 class VotesViewPitchedProjectsRect extends React.Component {
 	constructor() {
-		super(); 
+		super();
 
 		this.state = {
 			showHoverEffect: false
@@ -36,21 +36,21 @@ class VotesViewPitchedProjectsRect extends React.Component {
 
 		return(
 			<g className="votes-view-project-group" onClick={this.handleClick}>
-				<rect 
+				<rect
 					width={`${projectWidth}%`}
 					height={projectValutionHeight}
 					x={`${projectStartX}%`}
 					y={projectValutionStartY}
-					fill={fill} 
+					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "0.3"}
 					onMouseOver={this.handleHover}
 					onMouseLeave={this.handleHover}></rect>
-				<rect 
+				<rect
 					width={`${projectWidth}%`}
 					height={projectCapitalRequiredHeight}
 					x={`${projectStartX}%`}
 					y={projectCapitalRequiredStartY}
-					fill={fill} 
+					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
 					onMouseOver={this.handleHover}
 					onMouseLeave={this.handleHover}></rect>
@@ -59,7 +59,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					height="30"
 					x={`${projectStartX - .5}%`}
 					y={capitalRaised / 24000}
-					fill={fill} 
+					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
 					onMouseOver={this.handleHover}
 					onMouseLeave={this.handleHover}></rect>

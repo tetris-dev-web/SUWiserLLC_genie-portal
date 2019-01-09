@@ -1,5 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
+import './vote_shift_tool.scss';
 
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
@@ -8,6 +9,8 @@ const VOTE_BAR_RADIUS = 8;
 const VOTE_SHIFT_LINE_WIDTH = 5;
 const VOTE_SHIFT_LINE_HEIGHT = 80;
 const INNER_BAR_HEIGHT = VOTE_BAR_HEIGHT - 2 * VOTE_BAR_INNER_MARGIN;
+
+
 
 
 class VoteShiftTool extends React.Component {
@@ -116,11 +119,11 @@ class VoteShiftTool extends React.Component {
 				freedUpVoteText.attr("dx", -30);
 			}
 		};
-		
+
 		const dragstarted = () => {
 			voteShiftLine.raise().classed("active", true);
 		};
-		
+
 		const dragended = () => {
 			voteShiftLine.classed("active", false);
 			const { votesPerProject, votesNotDedicated } = this.props.votesMockup;
