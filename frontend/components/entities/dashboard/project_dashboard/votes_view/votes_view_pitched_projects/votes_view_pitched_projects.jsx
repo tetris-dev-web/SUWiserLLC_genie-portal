@@ -44,9 +44,9 @@ class VotesViewPitchedProjects extends React.Component {
 		));
 
 		return (
-			<React.Fragment>
+			<g className="votes-view-pitched-projects">
 				{rects}
-			</React.Fragment>
+			</g>
 		);
 	}
 }

@@ -17,15 +17,16 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 	}
 
 	render() {
-		const { xScale, yScale, circleScale, activation } = this.props;
+		const { xScale, yScale, circleScale, activation, opacity } = this.props;
 
 		return (
 			<React.Fragment>
 				<circle 
+					fill="#bdc4c9"
 					cx={xScale(activation.time)}
 					cy={yScale(activation.capital)}
 					r={`${circleScale(activation.valuation)}%`} 
-					fill="#bdc4c9"
+					opacity={opacity}
 					onMouseOver={this.handleHover} onMouseLeave={this.handleHover}></circle>
 				{
 					this.state.showText &&
