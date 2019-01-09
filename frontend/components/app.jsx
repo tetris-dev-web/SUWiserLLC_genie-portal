@@ -61,7 +61,7 @@ class App extends React.Component {
           <AuthRoute path="/login" component={Landing} />
           <ProtectedRoute path="/dashboard" component={Dashboard} />
         </Switch>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

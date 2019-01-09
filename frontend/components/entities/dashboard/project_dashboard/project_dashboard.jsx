@@ -36,18 +36,27 @@ class ProjectDashboard extends React.Component {
   }
 
   render() {
+    let currentGraph = <div></div>;
+
+    switch (this.state.viewId) {
+      case 0:
+        currentGraph = <ProjectGraph
+          currentUser={this.props.currentUser}
+          fetchProjects={this.props.fetchProjects}
+          data={this.props.projects} />;
+        break;
+      case 1:
+        currentGraph = <VotesGraph />;
+        break;
+      default: 
+        break;
+    }
+
     if (this.props.currentUser) {
       return (
         <div className='project-dashboard'>
           <div className="graph-container">
-            { 
-              this.state.viewId === 0 ?
-              <ProjectGraph
-                currentUser={this.props.currentUser}
-                fetchProjects={this.props.fetchProjects}
-                data={this.props.projects} /> :
-              <VotesGraph />
-            }
+            {currentGraph}
           </div>
           <ToggleOptions 
             viewTitle="PROJECT DASHBOARD"
