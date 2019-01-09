@@ -98,8 +98,6 @@ class TokenInterface extends React.Component {
   render() {
     return (
       <nav className="series navbar-container">
-        <div onClick={this.test}>TEST</div>
-        <div onClick={this.pitchProjectTest}>PITCHTEST</div>
         <div className= "navbar-left">
           <img className="gen-logo" src="https://s3.amazonaws.com/genie-portal-dev/static/logo.png"/>
           <div className="genus-dev-dash">

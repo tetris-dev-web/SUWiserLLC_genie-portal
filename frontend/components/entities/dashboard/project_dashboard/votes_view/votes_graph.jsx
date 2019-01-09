@@ -256,7 +256,7 @@ const mapStateToProps = () => {
   };
 };
 
-class VotesGraph extends React.Component {
+export class VotesGraph extends React.Component {
   constructor() {
     super();
 
@@ -268,7 +268,7 @@ class VotesGraph extends React.Component {
   render() {
     const { maxValuation, capitalRaised, capital } = this.props;
     return (
-      <div className="votes-graph" style={{ marginTop: (maxValuation - capitalRaised) / 24000 * 2 }}>
+      <div className="votes-graph" style={{ marginTop: (maxValuation ) / 24000 }}>
         <svg className="votes-view-svg" height={capital / 24000}>
           <VotesViewCapitalRaised
             {...this.props}
@@ -284,5 +284,3 @@ class VotesGraph extends React.Component {
 }
 
 export default connect(mapStateToProps)(VotesGraph);
-
-
