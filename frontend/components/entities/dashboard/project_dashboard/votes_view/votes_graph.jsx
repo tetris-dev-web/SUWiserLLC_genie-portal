@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
 import VoteShiftTool from './vote_shift_tool';
+import './votes_graph.scss';
 
 const activationHistoryValuationMinMax = (projects) => {
   const projectValuations = projects.map(project => project.valuation);
