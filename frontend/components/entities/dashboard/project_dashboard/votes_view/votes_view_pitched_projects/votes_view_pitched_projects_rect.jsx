@@ -20,11 +20,13 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	}
 
 	handleClick() {
-		const { selectedProject, toggleSelectedProject, project } = this.props;
+		const { selectedProject, toggleSelectedProject, project, toggleVoteShiftTool } = this.props;
 		if (selectedProject && selectedProject.id === project.id) {
 			toggleSelectedProject(null);
+			toggleVoteShiftTool();
 		} else if (!selectedProject) {
 			toggleSelectedProject(project);
+			toggleVoteShiftTool();
 		}
 	}
 
@@ -71,7 +73,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					this.state.showHoverEffect &&
 					<g className="votes-view-onhover-group">
 						<g className="votes-view-onhover-text-group">
-							<text className="votes-view-project-title" x={`${projectRectCenter}%`} y={-(maxValuation - capitalRaised) / 24000 * 1.5} fill="#aa7a60">
+							<text className="votes-view-project-title" x={`${projectRectCenter}%`} y={-(maxValuation - capitalRaised) / 24000 * 1.75} fill="#aa7a60">
 								<tspan>{title}</tspan>
 							</text>
 							<text x={`${projectRectCenter}%`} y={projectValutionStartY - 25} fill={fill}>

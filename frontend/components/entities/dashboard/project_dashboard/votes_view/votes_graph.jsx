@@ -261,14 +261,15 @@ class VotesGraph extends React.Component {
     super();
 
     this.state = {
-      selectedProject: null
+      selectedProject: null,
+      showVoteShiftTool: false,
     };
   }
 
   render() {
     const { maxValuation, capitalRaised, capital } = this.props;
     return (
-      <div className="votes-graph" style={{ marginTop: (maxValuation - capitalRaised) / 24000 * 2 }}>
+      <div className="votes-graph" style={{ marginTop: maxValuation / 24000 }}>
         <svg className="votes-view-svg" height={capital / 24000}>
           <VotesViewCapitalRaised
             {...this.props}
@@ -276,8 +277,14 @@ class VotesGraph extends React.Component {
           <VotesViewPitchedProjects
             {...this.props}
             {...this.state}
-            toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
+            toggleSelectedProject={selectedProject => this.setState({selectedProject})}
+            toggleVoteShiftTool={() => this.setState({showVoteShiftTool: !this.state.showVoteShiftTool})}/>
         </svg>
+        {
+          this.state.showVoteShiftTool &&
+          <VoteShiftTool />
+          // pass in the votes applied and votes freedup in for the selected project
+        }
       </div>
     );
   }

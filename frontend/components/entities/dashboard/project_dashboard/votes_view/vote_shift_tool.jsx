@@ -195,6 +195,7 @@ class VoteShiftTool extends React.Component {
 	}
 
 	render() {
+		console.log(this.props)
 		return (
 			<div className="vote-shift-tool" ref={node => this.root = node}>
 				{
