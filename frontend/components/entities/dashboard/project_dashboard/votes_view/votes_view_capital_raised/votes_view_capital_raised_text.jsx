@@ -20,7 +20,7 @@ class VotesViewCapitalRaisedRectText extends React.Component{
     return (
         <text className="votes-view-capital-raised-text" x={x} y={y}>
           <tspan dy={".4em"}>
-            {this.state.showText && `$ ${Number(activation.capital/1000.0).toLocaleString()} k`}
+            {`$ ${Number(activation.capital/1000.0).toLocaleString()} k`}
           </tspan>
         </text>
     );

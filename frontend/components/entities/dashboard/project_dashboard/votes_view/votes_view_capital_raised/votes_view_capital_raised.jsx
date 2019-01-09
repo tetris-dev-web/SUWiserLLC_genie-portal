@@ -12,8 +12,8 @@ class VotesViewCapitalRaised extends React.Component {
 
     this.state = {
       currentWindowWidth: window.innerWidth,
-      capBeingRaisedHovered: true,
-      capRaisedHovered: true
+      capBeingRaisedHovered: false,
+      capRaisedHovered: false
     };
     this.setHoveredState.bind(this)
   }
@@ -62,7 +62,7 @@ class VotesViewCapitalRaised extends React.Component {
         <VotesViewCapitalRaisedPath xScale={xScale} yScale={yScale} lineData={lineData} />
         {lines}
         {circles}
-        {text}
+        {this.state.capRaisedHovered && text}
       </React.Fragment>
     );
   }
