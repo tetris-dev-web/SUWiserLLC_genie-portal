@@ -57,8 +57,8 @@ class VotesViewCapitalRaised extends React.Component {
 
     return (
       <React.Fragment>
-        <VotesViewCapitalRaisedRect x="0" y="0" height={capitalRaised / 24000} fill="#aa7a60" setHoveredState={this.setHoveredState("capBeingRaisedHovered")}/>
-        <VotesViewCapitalRaisedRect x="0" y={capitalRaised / 24000} height={(capital - capitalRaised) / 24000} fill="#61aba9" setHoveredState={this.setHoveredState("capRaisedHovered")} capitalRaised={capitalRaised} hovered={this.state.capRaisedHovered}/>
+        <VotesViewCapitalRaisedRect x="0" y="0" height={capitalRaised / 24000} fill="#aa7a60" setHoveredState={this.setHoveredState("capBeingRaisedHovered")} hovered={this.state.capBeingRaisedHovered} capitalRaised={capitalRaised}/>
+        <VotesViewCapitalRaisedRect x="0" y={capitalRaised / 24000} height={(capital - capitalRaised) / 24000} fill="#61aba9" setHoveredState={this.setHoveredState("capRaisedHovered")} capital={capital} hovered={this.state.capRaisedHovered}/>
         <VotesViewCapitalRaisedPath xScale={xScale} yScale={yScale} lineData={lineData} />
         {lines}
         {circles}
