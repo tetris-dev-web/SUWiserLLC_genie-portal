@@ -62,6 +62,7 @@ class App extends React.Component {
     this.props.crowdsaleInstance.VoteRemoval().watch((error, event) => {
       console.log(event)
     });
+    
   }
 
   voteTest () {
