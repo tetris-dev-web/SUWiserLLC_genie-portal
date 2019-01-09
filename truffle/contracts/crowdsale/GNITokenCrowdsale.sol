@@ -6,7 +6,7 @@ import '../ProjectStub.sol';
 import '../token/ERC20/Token.sol';
 import '../InvestorList.sol';
 import '../Reimbursements.sol';
-import '../ProjectLeaderBoard.sol';
+import '../ProjectLeaderTracker.sol';
 import '../ECRecovery.sol';
 
 
@@ -15,7 +15,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   using ECRecovery for bytes32;
   uint256 public totalValuation;
   InvestorList public investorList;
-  ProjectLeaderBoard public projectLeaderBoard;
+  ProjectLeaderTracker public projectLeaderTracker;
   address public dividendWallet;
   address public reimbursements;
 
@@ -28,7 +28,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         address _dividendWallet,
         Token _token,
         InvestorList _investorList,
-        ProjectLeaderBoard _projectLeaderBoard,
+        ProjectLeaderTracker _projectLeaderTracker,
         address _reimbursements
       )
       public
@@ -36,7 +36,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       TimedCrowdsale(_openingTime, _doomsDay) {
         investorList = InvestorList(_investorList);
         totalValuation = 0;
-        projectLeaderBoard = ProjectLeaderBoard(_projectLeaderBoard);
+        projectLeaderTracker = ProjectLeaderTracker(_projectLeaderTracker);
         dividendWallet = _dividendWallet;
         reimbursements = _reimbursements;
   }
@@ -79,7 +79,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
 
     address projectAddr = new Project(_name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
-    projectLeaderBoard.incrementCandidateCount();
+    projectLeaderTracker.hanldeProjectPitch();
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
 
@@ -109,7 +109,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
      address tentativeLeaderAddr,
      uint256 tentativeLeaderCapRequired,
      bool tentativeLeaderConfirmed
-   ) = projectLeaderBoard.tentativeLeader();
+   ) = projectLeaderTracker.tentativeLeader();
 
    if (
      tentativeLeaderCapRequired <= weiRaised &&
@@ -124,7 +124,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
      forwardFunds(developer, tentativeLeaderCapRequired);
      weiRaised = weiRaised.sub(tentativeLeaderCapRequired);
 
-     projectLeaderBoard.handleProjectActivation();
+     projectLeaderTracker.handleProjectActivation();
      Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
    }
  }
@@ -185,7 +185,7 @@ function removeVotesFromProject(address _project, address _voter, uint256 votes,
  }
 
  function updateProjects (address votedForProj) internal {
-   projectLeaderBoard.considerTentativeLeaderShip(votedForProj);
+   projectLeaderTracker.considerTentativeLeaderShip(votedForProj);
    activateProject();
  }
 

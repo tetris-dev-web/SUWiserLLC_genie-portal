@@ -4,7 +4,7 @@ const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const GNITokenCrowdsaleMock = artifacts.require("GNITokenCrowdsaleMock");
 const Dividends = artifacts.require("Dividends");
 const Reimbursements = artifacts.require("Reimbursements");
-const ProjectLeaderBoard = artifacts.require("ProjectLeaderBoard");
+const ProjectLeaderTracker = artifacts.require("ProjectLeaderTracker");
 const ECRecovery = artifacts.require("ECRecovery");
 
 let tokenInstance;
@@ -37,7 +37,7 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(() => {
           return deployer.deploy(
-            ProjectLeaderBoard
+            ProjectLeaderTracker
           )
         })
         .then(() => {
@@ -58,15 +58,7 @@ module.exports = function (deployer, network, accounts) {
                 })
             })
         })
-        .then((openingTime) => { // deploy the crowdsale (token functionality)
-            console.log('DEVELOPER', developer);
-            console.log('OPENING TIME', openingTime);
-            const doomsDay = openingTime + 86400 * 240; // 240 days
-            console.log('DOOMS DAY', doomsDay);
-            console.log('RATE', rate);
-            console.log('DIVIDENDS', Dividends.address);
-            console.log("TOKEN", Token.address);
-            console.log("INVESTOR LIST", InvestorList.address);
+        .then((openingTime) => {
             return deployer.deploy(
                 GNITokenCrowdsale,
                 openingTime,
@@ -76,7 +68,7 @@ module.exports = function (deployer, network, accounts) {
                 Dividends.address,
                 Token.address,
                 InvestorList.address,
-                ProjectLeaderBoard.address,
+                ProjectLeaderTracker.address,
                 Reimbursements.address
             );
         })
@@ -89,10 +81,19 @@ module.exports = function (deployer, network, accounts) {
           return investorListInst.transferOwnership(GNITokenCrowdsale.address);
         })
         .then(() => {
-          const projectLeaderBoardInst = ProjectLeaderBoard.at(ProjectLeaderBoard.address);
+          const projectLeaderBoardInst = ProjectLeaderTracker.at(ProjectLeaderTracker.address);
           return projectLeaderBoardInst.transferOwnership(GNITokenCrowdsale.address);
         })
         .then(() => {
           return tokenInstance.transferOwnership(GNITokenCrowdsale.address);
         });
 };
+
+// console.log('DEVELOPER', developer);
+// console.log('OPENING TIME', openingTime);
+// const doomsDay = openingTime + 86400 * 240; // 240 days
+// console.log('DOOMS DAY', doomsDay);
+// console.log('RATE', rate);
+// console.log('DIVIDENDS', Dividends.address);
+// console.log("TOKEN", Token.address);
+// console.log("INVESTOR LIST", InvestorList.address);

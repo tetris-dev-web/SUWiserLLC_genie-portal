@@ -2,18 +2,19 @@ const GNITokenCrowdsaleMock = artifacts.require("GNITokenCrowdsaleMock");
 const InvestorListStub = artifacts.require("InvestorListStub");
 const TokenStub = artifacts.require("TokenStub");
 const ProjectStub = artifacts.require("ProjectStub");
-const ProjectLeaderBoardStub = artifacts.require("ProjectLeaderBoardStub");
+const ProjectLeaderTrackerStub = artifacts.require("ProjectLeaderTrackerStub");
 const Project = artifacts.require("Project");
 const BigNumber = require('bignumber.js');
 const exceptions = require('./exceptions');
 const stubUtil = require('./stubUtil');
 const { parseBN, parseMethod, weiBalanceOf } = require('./parseUtil');
+const { initProjectStubs } = require('./projectStubsInit');
 
 let accounts;
 let mockGTC;
 let iLStub;
 let tokenStub;
-let lBStub;
+let lTStub;
 let projStub1;
 let projStub2;
 let projStub3;
@@ -355,6 +356,178 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       assert.equal(firstUint, 20000000, 'incorrect vote amount assigned to project');
     })
   })
+
+  // describe('attemptProjectActivation', async () => {
+  //   before(async () => {
+  //     await mockGTC.setMockTentativeLeader(projStub1.address, 7000000);
+  //
+  //     await stubUtil.addMethod(projStub1, 'activate');
+  //     await stubUtil.addMethod(tokenStub, 'increasePendingActivations');
+  //     await mockGTC.setStubProjectCount(3);
+  //   })
+  //
+  //   describe('when there is not enough weiRaised to cover the project', async () => {
+  //     let initialDeveloperWei;
+  //     let beforeWeiRaised;
+  //     before(async () => {
+  //       await mockGTC.setMockWeiRaised(500);
+  //       await projStub1.setStubOpenStatus(true);
+  //       await mockGTC.setMockConfirmedLeaderStatus(true);
+  //       initialDeveloperWei = await weiBalanceOf(accounts[1]);
+  //       beforeWeiRaised = await parseMethod(getWeiRaised);
+  //       await mockGTC.attemptProjectActivation_();
+  //     })
+  //
+  //     it('does not activate the project', async () => {
+  //       let { called } = await stubUtil.callHistory(projStub1, 'activate');
+  //       assert.equal(called, false, 'project should not be activated');
+  //     })
+  //
+  //     it('does not forward funds to the developer', async () => {
+  //       let finalDeveloperWei = await weiBalanceOf(accounts[1]);
+  //       assert.equal(finalDeveloperWei, initialDeveloperWei, 'funds should not be forwarded to the developer');
+  //     })
+  //
+  //     it('does not affect weiRaised', async () => {
+  //       let afterWei = await parseMethod(getWeiRaised);
+  //       assert.equal(afterWei, beforeWeiRaised, 'weiRaised not reduced by capitalRequired');
+  //     })
+  //
+  //     it('does not affect inactiveProjectCount', async () => {
+  //       let afterInactiveProjectCount = await await mockGTC.inactiveProjectCount();
+  //       assert.equal(afterInactiveProjectCount, 3, 'inactiveProjectCount should not change');
+  //     })
+  //
+  //     it('does not affect pending token activations', async () => {
+  //       let { called } = await stubUtil.callHistory(tokenStub, 'increasePendingActivations');
+  //       assert.equal(called, false, 'pending token activations should not change');
+  //     })
+  //   })
+  //
+  //   describe('when the tentative leader has not been confirmed', async () => {
+  //     let initialDeveloperWei;
+  //     let beforeWeiRaised;
+  //     before(async () => {
+  //       await mockGTC.setMockWeiRaised(8000000);
+  //       await projStub1.setStubOpenStatus(true);
+  //       await mockGTC.setMockConfirmedLeaderStatus(false);
+  //       initialDeveloperWei = await weiBalanceOf(accounts[1]);
+  //       beforeWeiRaised = await parseMethod(getWeiRaised);
+  //       await mockGTC.attemptProjectActivation_();
+  //     })
+  //
+  //     it('does not activate the project', async () => {
+  //       let { called } = await stubUtil.callHistory(projStub1, 'activate');
+  //       assert.equal(called, false, 'project should not be activated');
+  //     })
+  //
+  //     it('does not forward funds to the developer', async () => {
+  //       let finalDeveloperWei = await weiBalanceOf(accounts[1]);
+  //       assert.equal(finalDeveloperWei, initialDeveloperWei, 'funds should not be forwarded to the developer');
+  //     })
+  //
+  //     it('does not affect weiRaised', async () => {
+  //       let afterWei = await parseMethod(getWeiRaised);
+  //       assert.equal(afterWei, beforeWeiRaised, 'weiRaised not reduced by capitalRequired');
+  //     })
+  //
+  //     it('does not affect inactiveProjectCount', async () => {
+  //       let afterInactiveProjectCount = await await mockGTC.inactiveProjectCount();
+  //       assert.equal(afterInactiveProjectCount, 3, 'inactiveProjectCount should not change');
+  //     })
+  //
+  //     it('does not affect pending token activations', async () => {
+  //       let { called } = await stubUtil.callHistory(tokenStub, 'increasePendingActivations');
+  //       assert.equal(called, false, 'pending token activations should not change');
+  //     })
+  //   })
+  //
+  //   describe('when the tentative leader has closed', async () => {
+  //     let initialDeveloperWei;
+  //     let beforeWeiRaised;
+  //     before(async () => {
+  //       await mockGTC.setMockWeiRaised(8000000);
+  //       await projStub1.setStubOpenStatus(false);
+  //       await mockGTC.setMockConfirmedLeaderStatus(true);
+  //       initialDeveloperWei = await weiBalanceOf(accounts[1]);
+  //       beforeWeiRaised = await parseMethod(getWeiRaised);
+  //       await mockGTC.attemptProjectActivation_();
+  //     })
+  //
+  //     it('does not activate the project', async () => {
+  //       let { called } = await stubUtil.callHistory(projStub1, 'activate');
+  //       assert.equal(called, false, 'project should not be activated');
+  //     })
+  //
+  //     it('does not forward funds to the developer', async () => {
+  //       let finalDeveloperWei = await weiBalanceOf(accounts[1]);
+  //       assert.equal(finalDeveloperWei, initialDeveloperWei, 'funds should not be forwarded to the developer');
+  //     })
+  //
+  //     it('does not affect weiRaised', async () => {
+  //       let afterWei = await parseMethod(getWeiRaised);
+  //       assert.equal(afterWei, beforeWeiRaised, 'weiRaised not reduced by capitalRequired');
+  //     })
+  //
+  //     it('does not affect inactiveProjectCount', async () => {
+  //       let afterInactiveProjectCount = await await mockGTC.inactiveProjectCount();
+  //       assert.equal(afterInactiveProjectCount, 3, 'inactiveProjectCount should not change');
+  //     })
+  //
+  //     it('does not affect pending token activations', async () => {
+  //       let { called } = await stubUtil.callHistory(tokenStub, 'increasePendingActivations');
+  //       assert.equal(called, false, 'pending token activations should not change');
+  //     })
+  //   })
+  //
+  //   describe('when a project can be activated', async () => {
+  //     let initialDeveloperWei;
+  //     let beforeWeiRaised;
+  //     before(async () => {
+  //       await mockGTC.receiveMockWei({value: 8000000, from: accounts[2]});
+  //       await mockGTC.setMockWeiRaised(8000000);
+  //       await projStub1.setStubOpenStatus(true);
+  //       await mockGTC.setMockConfirmedLeaderStatus(true);
+  //       developerWei = await weiBalanceOf(accounts[1]);
+  //       initialDeveloperWei = new BigNumber(developerWei.toString());
+  //       beforeWeiRaised = await parseMethod(getWeiRaised);
+  //       await mockGTC.attemptProjectActivation_();
+  //     })
+  //
+  //     after(async () => {
+  //       await stubUtil.resetMethod(projStub1, 'activate');
+  //       await stubUtil.resetMethod(tokenStub, 'increasePendingActivations');
+  //       await mockGTC.setStubProjectCount(3);
+  //     })
+  //
+  //     it('activates the project', async () => {
+  //       let { called } = await stubUtil.callHistory(projStub1, 'activate');
+  //       assert.equal(called, true, 'project should be activated');
+  //     })
+  //
+  //     it('forwards capital required to the developer', async () => {
+  //       let developerWei = await weiBalanceOf(accounts[1]);
+  //       let finalDeveloperWei = new BigNumber(developerWei.toString());
+  //       let expected = initialDeveloperWei.plus('7000000').decimalPlaces(0);
+  //       assert(finalDeveloperWei.isEqualTo(expected), 'capital required should be forwarded to the developer');
+  //     })
+  //
+  //     it('decreases weiRaised by the capital required', async () => {
+  //       let afterWei = await parseMethod(getWeiRaised);
+  //         assert.equal(afterWei, beforeWeiRaised - 7000000, 'weiRaised not reduced by capitalRequired');
+  //     })
+  //
+  //     it('decreases the inactiveProjectCount by one', async () => {
+  //       let afterInactiveProjectCount = await await mockGTC.inactiveProjectCount();
+  //       assert.equal(afterInactiveProjectCount, 2, 'inactiveProjectCount should decrease by one');
+  //     })
+  //
+  //     it('increases pending token activations by the amount of tokens associated with the project', async () => {
+  //       let { firstUint, called } = await stubUtil.callHistory(tokenStub, 'increasePendingActivations');
+  //       assert.equal(called, true, 'pending token activations should be increased');
+  //       assert.equal(firstUint, 20000000, 'pending activations should be increases by the number of tokens associated with the activated project');
+  //     })
+  //   })
 })
 
 const setUp = async () => {
@@ -368,7 +541,7 @@ const initMock = async () => {
   defaultOpeningTime = await getLatestBlockTime();
   defaultDoomsDay = defaultOpeningTime + 86400 * 240;
   //possibly reverting because of race conditions with the linked library? I think thats the only thing that changed...
-  mockGTC = await GNITokenCrowdsaleMock.new(defaultOpeningTime, defaultDoomsDay, 50, accounts[1], accounts[2], tokenStub.address, iLStub.address, lBStub.address, accounts[3]);
+  mockGTC = await GNITokenCrowdsaleMock.new(defaultOpeningTime, defaultDoomsDay, 50, accounts[1], accounts[2], tokenStub.address, iLStub.address, lTStub.address, accounts[3]);
 }
 
 const initIL = async () => {
@@ -380,33 +553,7 @@ const initToken = async () => {
 }
 
 const initLeaderBoard = async () => {
-  lBStub = await ProjectLeaderBoardStub.new();
-}
-
-const initProjectStubs = async () => {
-  projStub1 = await ProjectStub.new(
-    'project1', accounts[1], accounts[2],
-    4000000, 2000000, 200000000,
-    100000000, '340', '340', 75000000
-  )
-
-  await mockGTC.addMockProject(projStub1.address);
-
-  projStub2 = await ProjectStub.new(
-    'project2', accounts[1], accounts[2],
-    3000000, 1000000, 150000000,
-    50000000, '340', '340', 50000000
-  )
-
-  await mockGTC.addMockProject(projStub2.address);
-
-  projStub3 = await ProjectStub.new(
-    'project3', accounts[1], accounts[2],
-    4000000, 2000000, 200000000,
-    100000000, '340', '340', 75000000
-  );
-
-  await mockGTC.addMockProject(projStub3.address);
+  lTStub = await ProjectLeaderTrackerStub.new();
 }
 
 const getProjectCount = async () => {

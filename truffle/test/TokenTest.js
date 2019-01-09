@@ -493,7 +493,7 @@ contract('Token', async (_accounts) => {
       })
     })
   })
-
+  //maybe something that tests that the struct changed
   describe('resetInactiveTokenCycle', async () => {
     let mockInactiveTokenCycleT1;
 
