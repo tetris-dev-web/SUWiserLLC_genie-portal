@@ -1,5 +1,5 @@
 import React from 'react';
-import VoteShiftTool from '../vote_shift_tool';
+import VoteShiftTool from '../vote_shift_tool2';
 
 class VotesViewPitchedProjectsRect extends React.Component {
 	constructor() {
@@ -9,24 +9,31 @@ class VotesViewPitchedProjectsRect extends React.Component {
 			showHoverEffect: false
 		};
 
-		this.handleHover = this.handleHover.bind(this);
 		this.handleClick = this.handleClick.bind(this);
 	}
 
-	handleHover() {
-		if (!this.props.selectedProject) {
-			this.setState({showHoverEffect: !this.state.showHoverEffect});
-		}
+	handleHover(boolean) {
+		const { selectedProject } = this.props;
+		return () => {
+			if (!selectedProject) {
+				this.setState({ showHoverEffect: boolean });
+			}
+		};
 	}
 
-	handleClick() {
-		const { selectedProject, toggleSelectedProject, project, toggleVoteShiftTool } = this.props;
-		if (selectedProject && selectedProject.id === project.id) {
-			toggleSelectedProject(null);
-			toggleVoteShiftTool();
-		} else if (!selectedProject) {
+	handleClick(e) {
+		const { selectedProject, toggleSelectedProject, project } = this.props;
+		debugger
+		if (!selectedProject) {
+			document.addEventListener('click', this.handleClick, false);
 			toggleSelectedProject(project);
-			toggleVoteShiftTool();
+		} else if (selectedProject.id !== project.id) {
+			return;
+		} else {
+			if (this.projectGroup.contains(e.target)) return;
+			document.removeEventListener('click', this.handleClick, false);
+			toggleSelectedProject(null);
+			this.setState({ showHoverEffect: false });
 		}
 	}
 
@@ -35,7 +42,9 @@ class VotesViewPitchedProjectsRect extends React.Component {
 		const { fill, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
 
 		return(
-			<g className="votes-view-project-group" onClick={this.handleClick}>
+			<g className="votes-view-project-group" 
+				onClick={this.handleClick}
+				ref={node => this.projectGroup = node}>
 				<rect
 					width={`${projectWidth}%`}
 					height={projectValutionHeight}
@@ -43,8 +52,8 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					y={projectValutionStartY}
 					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "0.3"}
-					onMouseOver={this.handleHover}
-					onMouseLeave={this.handleHover}></rect>
+					onMouseOver={this.handleHover(true)}
+					onMouseLeave={this.handleHover(false)}></rect>
 				<rect
 					width={`${projectWidth}%`}
 					height={projectCapitalRequiredHeight}
@@ -52,8 +61,8 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					y={projectCapitalRequiredStartY}
 					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
-					onMouseOver={this.handleHover}
-					onMouseLeave={this.handleHover}></rect>
+					onMouseOver={this.handleHover(true)}
+					onMouseLeave={this.handleHover(false)}></rect>
 				<rect
 					width={`${projectWidth + 1}%`}
 					height="30"
@@ -61,8 +70,8 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					y={capitalRaised / 24000}
 					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
-					onMouseOver={this.handleHover}
-					onMouseLeave={this.handleHover}></rect>
+					onMouseOver={this.handleHover(true)}
+					onMouseLeave={this.handleHover(false)}></rect>
 				<text className="votes-view-percentage-breakdown"
 					x={`${projectRectCenter}%`}
 					y={capitalRaised / 24000 + 20}
@@ -100,6 +109,10 @@ class VotesViewPitchedProjectsRect extends React.Component {
 							<rect x={`${projectStartX}%`} y={projectValutionStartY + 2} width={2} height={valuation / 24000}></rect>
 						</g>
 					</g>
+				}
+				{
+					this.props.selectedProject &&
+					<VoteShiftTool />
 				}
 			</g>
 		);

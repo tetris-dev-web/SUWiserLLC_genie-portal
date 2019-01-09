@@ -262,8 +262,7 @@ export class VotesGraph extends React.Component {
     super();
 
     this.state = {
-      selectedProject: null,
-      showVoteShiftTool: false,
+      selectedProject: null
     };
   }
 
@@ -278,14 +277,8 @@ export class VotesGraph extends React.Component {
           <VotesViewPitchedProjects
             {...this.props}
             {...this.state}
-            toggleSelectedProject={selectedProject => this.setState({selectedProject})}
-            toggleVoteShiftTool={() => this.setState({showVoteShiftTool: !this.state.showVoteShiftTool})}/>
+            toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
         </svg>
-        {
-          this.state.showVoteShiftTool &&
-          <VoteShiftTool />
-          // pass in the votes applied and votes freedup in for the selected project
-        }
       </div>
     );
   }

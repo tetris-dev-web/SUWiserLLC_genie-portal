@@ -40,8 +40,7 @@ class VotesViewPitchedProjects extends React.Component {
 				maxValuation={maxValuation}
 				capitalRaised={capitalRaised} 
 				selectedProject={selectedProject}
-				toggleSelectedProject={toggleSelectedProject}
-				toggleVoteShiftTool={toggleVoteShiftTool}/>
+				toggleSelectedProject={toggleSelectedProject}/>
 		));
 
 		return (

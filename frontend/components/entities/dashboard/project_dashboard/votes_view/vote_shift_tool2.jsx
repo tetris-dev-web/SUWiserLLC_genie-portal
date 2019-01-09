@@ -22,9 +22,9 @@ class VoteShiftTool extends React.Component {
 
   render() {
     return(
-      <g className="vote_shift_tool">
-
-      </g>
+      <svg className="vote_shift_tool">
+        <rect width="20" height="20"></rect>
+      </svg>
     );
   }
 }
