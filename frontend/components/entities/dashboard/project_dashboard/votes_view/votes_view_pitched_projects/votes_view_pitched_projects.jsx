@@ -32,15 +32,15 @@ class VotesViewPitchedProjects extends React.Component {
 	}
 
 	render() {
-		const { maxValuation, capitalRaised, selectedProjectId, toggleSelectedProjectId } = this.props;
+		const { maxValuation, capitalRaised, selectedProject, toggleSelectedProject } = this.props;
 
 		const rects = this.processProjectData().map((project, idx) => (
 			<VotesViewPitchedProjectsRect key={idx}
-				{...project}
+				project={project}
 				maxValuation={maxValuation}
 				capitalRaised={capitalRaised} 
-				selectedProjectId={selectedProjectId}
-				toggleSelectedProjectId={toggleSelectedProjectId}/>
+				selectedProject={selectedProject}
+				toggleSelectedProject={toggleSelectedProject}/>
 		));
 
 		return (

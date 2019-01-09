@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
+import VoteShiftTool from './vote_shift_tool';
 
 const activationHistoryValuationMinMax = (projects) => {
   const projectValuations = projects.map(project => project.valuation);
@@ -260,7 +261,7 @@ class VotesGraph extends React.Component {
     super();
 
     this.state = {
-      selectedProjectId: null
+      selectedProject: null
     };
   }
 
@@ -275,7 +276,7 @@ class VotesGraph extends React.Component {
           <VotesViewPitchedProjects
             {...this.props}
             {...this.state}
-            toggleSelectedProjectId={selectedProjectId => this.setState({selectedProjectId})}/>
+            toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
         </svg>
       </div>
     );

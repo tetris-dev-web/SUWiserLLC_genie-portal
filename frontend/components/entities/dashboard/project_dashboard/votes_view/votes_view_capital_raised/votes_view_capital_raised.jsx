@@ -21,7 +21,7 @@ class VotesViewCapitalRaised extends React.Component {
   }
 
   render() {
-    const { maxValuation, capitalRaised, capital, lineData, startTime, endTime, activationHistory, activationHistoryValuationMinMax, selectedProjectId } = this.props;
+    const { maxValuation, capitalRaised, capital, lineData, startTime, endTime, activationHistory, activationHistoryValuationMinMax, selectedProject } = this.props;
     const xScale = d3.scaleLinear()
       .domain([startTime, endTime])
       .range([0, window.innerWidth]);
@@ -39,7 +39,7 @@ class VotesViewCapitalRaised extends React.Component {
         xScale={xScale} 
         yScale={yScale} 
         activation={activation}
-        opacity={selectedProjectId ? "0.2" : "1"}/>
+        opacity={selectedProject ? "0.2" : "1"}/>
     ));
 
     const circles = activationHistory.map((activation, idx) => (
@@ -48,7 +48,7 @@ class VotesViewCapitalRaised extends React.Component {
         yScale={yScale} 
         circleScale={circleScale} 
         activation={activation} 
-        opacity={selectedProjectId ? "0.2" : "1"}/>
+        opacity={selectedProject ? "0.2" : "1"}/>
     ));
 
     return (
@@ -57,17 +57,17 @@ class VotesViewCapitalRaised extends React.Component {
           x="0" y="0" 
           fill="#aa7a60" 
           height={capitalRaised / 24000} 
-          opacity={selectedProjectId ? "0.2" : "0.4"}/>
+          opacity={selectedProject ? "0.2" : "0.4"}/>
         <VotesViewCapitalRaisedRect 
           x="0" y={capitalRaised / 24000} 
           fill="#61aba9" 
           height={(capital - capitalRaised) / 24000} 
-          opacity={selectedProjectId ? "0.2" : "0.4"}/>
+          opacity={selectedProject ? "0.2" : "0.4"}/>
         <VotesViewCapitalRaisedPath 
           xScale={xScale} 
           yScale={yScale} 
           lineData={lineData} 
-          opacity={selectedProjectId ? "0.2" : "1"}/>
+          opacity={selectedProject ? "0.2" : "1"}/>
         {lines}
         {circles}
       </g>
