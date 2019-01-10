@@ -1,7 +1,8 @@
 pragma solidity ^0.4.23;
 import './utility/SafeMath.sol';
+import './utility/Ownable.sol';
 
-contract Project {
+contract Project is Ownable {
   using SafeMath for uint256;
   //these will all need to be private so they cannot be set arbitrarily
   //we'll make read methods when necessary
@@ -154,7 +155,7 @@ contract Project {
     dividendWallet = wallet;
   }
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
-  function vote (address voter, uint256 voteAmount) external {
+  function vote (address voter, uint256 voteAmount) external onlyOwner {
     //maybe require that its open and not active
     votes[voter] = votes[voter].add(voteAmount);
     totalVotes = totalVotes.add(voteAmount);
@@ -164,7 +165,7 @@ contract Project {
   }
 
   //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
-  function removeVotes (address voter, uint256 voteAmount) external {
+  function removeVotes (address voter, uint256 voteAmount) external onlyOwner {
     require(voteAmount <= totalVotes);
     require(voteAmount <= votes[voter]);
 
@@ -175,7 +176,7 @@ contract Project {
     emit VoteChange(address(this), name, totalVotes);
   }
 
-  function activate () external {
+  function activate () external onlyOwner {
     active = true;
     //we should set totalVotes to 0
     activationTime = now;
@@ -184,8 +185,5 @@ contract Project {
 
   function beats (address otherProject) public view returns (bool) {
     return totalVotes > 0 && totalVotes >= Project(otherProject).totalVotes_();
-      /* open() && *///we dont need this if we remove all votes for projects that are closed
-      /* totalVotes >= Project(otherProject).totalVotes_() */
-      //we dont need to check if the competitor is active because an active project always has 0 votes
   }
 }

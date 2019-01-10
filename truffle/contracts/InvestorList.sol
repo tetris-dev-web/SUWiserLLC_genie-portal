@@ -2,8 +2,9 @@ pragma solidity 0.4.24;
 import './utility/SafeMath.sol';
 import './Project.sol';
 import './utility/Ownable.sol';
+import './utility/Secondary.sol';
 
-contract InvestorList is Ownable {
+contract InvestorList is Ownable, Secondary {
   using SafeMath for uint256;
 
   struct Investor {
@@ -24,6 +25,11 @@ contract InvestorList is Ownable {
     uint256 votes
   );
 
+  modifier authorize () {
+    require(msg.sender == owner || msg.sender == primary());
+    _;
+  }
+
   function investorCount () external view returns(uint256) {
     return investorCount_;
   }
@@ -32,7 +38,7 @@ contract InvestorList is Ownable {
     return !(investorIds[investorAddr] == 0);
   }
   //make only accessible by token
-  function addInvestor (address investorAddr) external {
+  function addInvestor (address investorAddr) external authorize {
     if (!validAccount(investorAddr)) {
       Investor memory newInvestor;
       investorCount_ = investorCount_.add(1);
@@ -46,11 +52,11 @@ contract InvestorList is Ownable {
     }
   }
   //make this function only accessible by crowdsale for security
-  function addVoteCredit (address investorAddr, uint256 votes) public {
+  function addVoteCredit (address investorAddr, uint256 votes) public authorize {
     investors[investorIds[investorAddr]].voteCredit = investors[investorIds[investorAddr]].voteCredit.add(votes);
   }
   //make only accessible by corwdsale
-  function removeVoteCredit (address investorAddr, uint256 votes) public {
+  function removeVoteCredit (address investorAddr, uint256 votes) public authorize {
     require(investors[investorIds[investorAddr]].voteCredit >= votes);
     investors[investorIds[investorAddr]].voteCredit = investors[investorIds[investorAddr]].voteCredit.sub(votes);
   }

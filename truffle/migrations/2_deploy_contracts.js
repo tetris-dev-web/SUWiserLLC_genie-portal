@@ -8,6 +8,7 @@ const ProjectLeaderTracker = artifacts.require("ProjectLeaderTracker");
 const ECRecovery = artifacts.require("ECRecovery");
 
 let tokenInstance;
+let investorListInst;
 
 module.exports = function (deployer, network, accounts) {
     const rate = 10000;
@@ -78,8 +79,11 @@ module.exports = function (deployer, network, accounts) {
           return tokenInstance.initializeDividendWallet(Dividends.address);
         })
         .then(() => {
-          const investorListInst = InvestorList.at(InvestorList.address);
+          investorListInst = InvestorList.at(InvestorList.address);
           return investorListInst.transferOwnership(GNITokenCrowdsale.address);
+        })
+        .then(() => {
+          return investorListInst.transferPrimary(Token.address);
         })
         .then(() => {
           const projectLeaderBoardInst = ProjectLeaderTracker.at(ProjectLeaderTracker.address);
