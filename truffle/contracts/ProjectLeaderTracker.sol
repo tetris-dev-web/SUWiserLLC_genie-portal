@@ -3,8 +3,6 @@ import './Project.sol';
 import './utility/Ownable.sol';
 import './utility/SafeMath.sol';
 
-//we need to make tests for these
-//game theory of this needs to be analyzed further
 contract ProjectLeaderTracker is Ownable {
   using SafeMath for uint256;
   uint256 public candidateCount;
@@ -29,7 +27,7 @@ contract ProjectLeaderTracker is Ownable {
     decrementCandidateCount();
   }
 
-  function handleProjetPitch () onlyOwner external {
+  function handleProjectPitch () onlyOwner external {
     candidateCount = candidateCount.add(1);
   }
 
@@ -90,6 +88,10 @@ contract ProjectLeaderTracker is Ownable {
     }
   }
 
+  function decrementCandidateCount() internal {
+    candidateCount = candidateCount.sub(1);
+  }
+
   function shouldUpdateTentativeLeader (address projectAddr) internal view returns (bool) {
     return Project(projectAddr).totalVotes_() > leadingVoteCount ||
            tentativeLeaderAddr == address(0) ||
@@ -107,10 +109,6 @@ contract ProjectLeaderTracker is Ownable {
 
   function tentativeLeaderConfirmed () internal view returns (bool) {
     return checkCycle[currentCheckCycle].totalChecked == candidateCount;
-  }
-
-  function decrementCandidateCount() internal {
-    candidateCount = candidateCount.add(1);
   }
 }
 

@@ -79,7 +79,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    _extendDoomsDay(90);
 
     address projectAddr = new Project(_name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
-    projectLeaderTracker.hanldeProjectPitch();
+    projectLeaderTracker.handleProjectPitch();
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
 
@@ -107,22 +107,22 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  function activateProject () internal { //we need more tests for added functionality
    (
      address tentativeLeaderAddr,
-     uint256 tentativeLeaderCapRequired,
      bool tentativeLeaderConfirmed
    ) = projectLeaderTracker.tentativeLeader();
 
+   Project project = Project(tentativeLeaderAddr);
+   uint256 capitalRequired = project.capitalRequired_();
    if (
-     tentativeLeaderCapRequired <= weiRaised &&
      tentativeLeaderConfirmed &&
-     Project(tentativeLeaderAddr).open()
+     capitalRequired <= weiRaised &&
+     project.open()
      ) {
-     Project project = Project(tentativeLeaderAddr);
      project.activate();
      project.log();
-     //reduce cast vote count by the number of project votes, set the number of project votes to 0.
+     //set the number of project votes to 0.
 
-     forwardFunds(developer, tentativeLeaderCapRequired);
-     weiRaised = weiRaised.sub(tentativeLeaderCapRequired);
+     forwardFunds(developer, capitalRequired);
+     weiRaised = weiRaised.sub(capitalRequired);
 
      projectLeaderTracker.handleProjectActivation();
      Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));

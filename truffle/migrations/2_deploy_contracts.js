@@ -59,6 +59,7 @@ module.exports = function (deployer, network, accounts) {
             })
         })
         .then((openingTime) => {
+          const doomsDay = openingTime + 86400 * 240; // 240 days
             return deployer.deploy(
                 GNITokenCrowdsale,
                 openingTime,
@@ -91,7 +92,6 @@ module.exports = function (deployer, network, accounts) {
 
 // console.log('DEVELOPER', developer);
 // console.log('OPENING TIME', openingTime);
-// const doomsDay = openingTime + 86400 * 240; // 240 days
 // console.log('DOOMS DAY', doomsDay);
 // console.log('RATE', rate);
 // console.log('DIVIDENDS', Dividends.address);

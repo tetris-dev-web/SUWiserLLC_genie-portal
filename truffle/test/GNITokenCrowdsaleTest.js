@@ -8,7 +8,6 @@ const BigNumber = require('bignumber.js');
 const exceptions = require('./exceptions');
 const stubUtil = require('./stubUtil');
 const { parseBN, parseMethod, weiBalanceOf } = require('./parseUtil');
-const { initProjectStubs } = require('./projectStubsInit');
 
 let accounts;
 let mockGTC;
@@ -542,6 +541,32 @@ const initMock = async () => {
   defaultDoomsDay = defaultOpeningTime + 86400 * 240;
   //possibly reverting because of race conditions with the linked library? I think thats the only thing that changed...
   mockGTC = await GNITokenCrowdsaleMock.new(defaultOpeningTime, defaultDoomsDay, 50, accounts[1], accounts[2], tokenStub.address, iLStub.address, lTStub.address, accounts[3]);
+}
+
+const initProjectStubs = async () => {
+  projStub1 = await ProjectStub.new(
+    'project1', accounts[1], accounts[2],
+    4000000, 2000000, 200000000,
+    100000000, '340', '340', 75000000
+  )
+
+  await mockGTC.addMockProject(projStub1.address);
+
+  projStub2 = await ProjectStub.new(
+    'project2', accounts[1], accounts[2],
+    3000000, 1000000, 150000000,
+    50000000, '340', '340', 50000000
+  )
+
+  await mockGTC.addMockProject(projStub2.address);
+
+  projStub3 = await ProjectStub.new(
+    'project3', accounts[1], accounts[2],
+    4000000, 2000000, 200000000,
+    100000000, '340', '340', 75000000
+  );
+
+  await mockGTC.addMockProject(projStub3.address);
 }
 
 const initIL = async () => {
