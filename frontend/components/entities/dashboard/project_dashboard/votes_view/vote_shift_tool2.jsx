@@ -34,6 +34,7 @@ class VoteShiftTool extends React.Component {
     this.handleDragStart = this.handleDragStart.bind(this);
     this.handleDragEnd = this.handleDragEnd.bind(this);
     this.handleDragging = this.handleDragging.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleDragStart(e) {
@@ -66,8 +67,6 @@ class VoteShiftTool extends React.Component {
       voteBarFreedUpWidth,
       voteShiftLineLeft: newLeft
     });
-    // this.voteBarApplied.style.width = `${newLeft - 2 * VOTE_BAR_INNER_MARGIN}px`;
-    // this.voteBarFreedup.style.width = `${VOTE_BAR_WIDTH - newLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH}px`;
   }
   
   handleDragEnd() { 
@@ -75,55 +74,64 @@ class VoteShiftTool extends React.Component {
 
     document.removeEventListener('mousemove', this.handleDragging);
     document.removeEventListener('mouseup', this.handleDragEnd);
-    if (this.newVotesPerProject === votesPerProject && this.newVotesNotDedicated === votesNotDedicated) {
+    if (this.state.newVotesPerProject === votesPerProject && this.state.newVotesNotDedicated === votesNotDedicated) {
       this.setState({ showLogButton: false });
     } else {
       this.setState({ showLogButton: true });
     }
   }
 
+  handleClick() {
+
+  }
+
   render() {
     return(
-      <div className="vote-bar" style={{
-        width: VOTE_BAR_WIDTH,
-        height: VOTE_BAR_HEIGHT,
-        borderRadius: VOTE_BAR_RADIUS
-      }}>
-      
-        <div className="vote-bar-inner-container" style={{padding: VOTE_BAR_INNER_MARGIN}}
-          ref={node => this.voteBarContainer = node}>
-          <div className="vote-bar-applied" style={{
-            height: INNER_BAR_HEIGHT,
-            width: this.state.voteBarAppliedWidth,
-            borderRadius: VOTE_BAR_RADIUS
-          }}
-            ref={node => this.voteBarApplied = node}></div>
+      <React.Fragment>
 
-          <div className="vote-bar-shift-line" style={{
-            height: VOTE_SHIFT_LINE_HEIGHT,
-            width: VOTE_SHIFT_LINE_WIDTH,
-            left: this.state.voteShiftLineLeft
-          }}
-            ref={node => this.shiftLine = node}
-            onMouseDown={this.handleDragStart}>
-            <span>{`${this.state.newVotesPerProject} votes applied`}</span>
-            <span>{`${this.state.newVotesNotDedicated} votes freed up`}</span>
+        <div className="vote-bar" style={{
+          width: VOTE_BAR_WIDTH,
+          height: VOTE_BAR_HEIGHT,
+          borderRadius: VOTE_BAR_RADIUS
+        }}>
+  
+          <div className="vote-bar-inner-container" style={{padding: VOTE_BAR_INNER_MARGIN}}
+            ref={node => this.voteBarContainer = node}>
+            <div className="vote-bar-applied" style={{
+              height: INNER_BAR_HEIGHT,
+              width: this.state.voteBarAppliedWidth,
+              borderRadius: VOTE_BAR_RADIUS
+            }}
+              ref={node => this.voteBarApplied = node}></div>
+  
+            <div className="vote-bar-shift-line" style={{
+              height: VOTE_SHIFT_LINE_HEIGHT,
+              width: VOTE_SHIFT_LINE_WIDTH,
+              left: this.state.voteShiftLineLeft
+            }}
+              ref={node => this.shiftLine = node}
+              onMouseDown={this.handleDragStart}>
+              <span className="vote-bar-applied-votes-number">
+                {`${this.state.newVotesPerProject} votes applied`}
+              </span>
+              <span className="vote-bar-freedup-votes-number">
+                {`${this.state.newVotesNotDedicated} votes freed up`}
+              </span>
+            </div>
+  
+            <div className="vote-bar-freedup" style={{
+              height: INNER_BAR_HEIGHT,
+              width: this.state.voteBarFreedUpWidth,
+              borderRadius: VOTE_BAR_RADIUS,
+            }}
+              ref={node => this.voteBarFreedup = node}></div>
           </div>
-
-          <div className="vote-bar-freedup" style={{
-            height: INNER_BAR_HEIGHT,
-            width: this.state.voteBarFreedUpWidth,
-            borderRadius: VOTE_BAR_RADIUS,
-          }}
-            ref={node => this.voteBarFreedup = node}></div>
         </div>
-
-        {
-          this.state.showLogButton &&
-          <button className="vote-shift-tool-log-button" onClick={this.handleClick}>log</button>
-        }
-
-      </div>
+          {
+            this.state.showLogButton &&
+            <button className="vote-shift-tool-log-button" onClick={this.handleClick}>log</button>
+          }
+      </React.Fragment>
     );
   }
 }
