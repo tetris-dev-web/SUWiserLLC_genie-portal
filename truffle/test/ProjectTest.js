@@ -119,77 +119,106 @@ contract('Project', async (_accounts) => {
   })
 
   describe('vote', async () => {
-    before(async () => {
-      await mP.vote(accounts[1], 1000000);
+    describe('when the sender is the owner', async () => {
+      before(async () => {
+        await mP.vote(accounts[1], 1000000);
+      })
+
+      after(async () => {
+        await mP.removeMockVoter(accounts[1]);
+        await mP.changeClosingTime(beforeClosingTime);
+      })
+
+      it('adds the voters votes by the vote amount', async () => {
+        let bN = await mP.checkVoteAmount(accounts[1]);
+        let afterVotes = parseBN(bN);
+        assert.equal(afterVotes, beforeVotes + 1000000, 'votes not added to the voter');
+      })
+
+      it('adds the totalVotes by the vote amount', async () => {
+        let bN = await mP.totalVotes_();
+        let afterTotalVotes = parseBN(bN);
+        assert.equal(afterTotalVotes, beforeTotalVotes + 1000000, 'votes not added to totalVotes');
+      })
+
+      it('extends the closing time by 43200', async () => {
+        let bN = await mP.closingTime_();
+        let afterClosingTime = parseBN(bN);
+        assert.equal(afterClosingTime, beforeClosingTime + 43200, 'closingTime not extended');
+      })
     })
 
-    after(async () => {
-      await mP.removeMockVoter(accounts[1]);
-      await mP.changeClosingTime(beforeClosingTime);
-    })
-
-    it('adds the voters votes by the vote amount', async () => {
-      let bN = await mP.checkVoteAmount(accounts[1]);
-      let afterVotes = parseBN(bN);
-      assert.equal(afterVotes, beforeVotes + 1000000, 'votes not added to the voter');
-    })
-
-    it('adds the totalVotes by the vote amount', async () => {
-      let bN = await mP.totalVotes_();
-      let afterTotalVotes = parseBN(bN);
-      assert.equal(afterTotalVotes, beforeTotalVotes + 1000000, 'votes not added to totalVotes');
-    })
-
-    it('extends the closing time by 43200', async () => {
-      let bN = await mP.closingTime_();
-      let afterClosingTime = parseBN(bN);
-      assert.equal(afterClosingTime, beforeClosingTime + 43200, 'closingTime not extended');
+    describe('when the sender is not the owner', async () => {
+      it('reverts', async () => {
+        await exceptions.catchRevert(mP.vote(accounts[1], 1000000, {from: accounts[1]}));
+      })
     })
   })
 
   describe('removeVotes', async () => {
-    before(async () => {
-      await addMockVoter(accounts[1], 2000000);
-      await mP.removeVotes(accounts[1], 1000000);
+    describe('when the sender is the owner', async () => {
+      before(async () => {
+        await addMockVoter(accounts[1], 2000000);
+        await mP.removeVotes(accounts[1], 1000000);
+      })
+
+      it('decreases the voters votes by the vote amount', async () => {
+        let bN = await mP.checkVoteAmount(accounts[1]);
+        let afterVotes = parseBN(bN);
+        assert.equal(afterVotes, beforeVotes - 1000000, 'votes not removed from the voter');
+      })
+
+      it('decreases the totalVotes by the vote amount', async () => {
+        let bN2 = await mP.totalVotes_();
+        let afterTotalVotes = parseBN(bN2);
+        assert.equal(afterTotalVotes, beforeTotalVotes - 1000000, 'votes not removed from totalVotes');
+      })
+
+      it('diminishes the closing time by 43200', async () => {
+        let bN2 = await mP.closingTime_();
+        let afterClosingTime = parseBN(bN2);
+        assert.equal(afterClosingTime, beforeClosingTime - 43200, 'closingTime not diminished');
+      })
+
+      it('reverts if the voteAmount is greater than the totalVotes', async () => {
+        await addMockVoter(accounts[2], 3000000);
+        await exceptions.catchRevert(mP.removeVotes(accounts[1], 6000000));
+      })
+
+      it('reverts if the voteAmount is greater than the voters votes', async () => {
+        await addMockVoter(accounts[2], 3000000);
+        await exceptions.catchRevert(mP.removeVotes(accounts[1], 3000000));
+      })
     })
 
-    it('decreases the voters votes by the vote amount', async () => {
-      let bN = await mP.checkVoteAmount(accounts[1]);
-      let afterVotes = parseBN(bN);
-      assert.equal(afterVotes, beforeVotes - 1000000, 'votes not removed from the voter');
-    })
+    describe('when the sender is not the owner', async () => {
+      before(async () => {
+        await addMockVoter(accounts[1], 2000000);
+      })
 
-    it('decreases the totalVotes by the vote amount', async () => {
-      let bN2 = await mP.totalVotes_();
-      let afterTotalVotes = parseBN(bN2);
-      assert.equal(afterTotalVotes, beforeTotalVotes - 1000000, 'votes not removed from totalVotes');
-    })
-
-    it('diminishes the closing time by 43200', async () => {
-      let bN2 = await mP.closingTime_();
-      let afterClosingTime = parseBN(bN2);
-      assert.equal(afterClosingTime, beforeClosingTime - 43200, 'closingTime not diminished');
-    })
-
-    it('reverts if the voteAmount is greater than the totalVotes', async () => {
-      await addMockVoter(accounts[2], 3000000);
-      await exceptions.catchRevert(mP.removeVotes(accounts[1], 6000000));
-    })
-
-    it('reverts if the voteAmount is greater than the voters votes', async () => {
-      await addMockVoter(accounts[2], 3000000);
-      await exceptions.catchRevert(mP.removeVotes(accounts[1], 3000000));
+      it('reverts', async () => {
+        await exceptions.catchRevert(mP.removeVotes(accounts[1], 1000000, {from: accounts[1]}));
+      })
     })
   })
 
   describe('activate', async () => {
-    it('activates the project', async () => {
-      let beforeOpenStatus = await mP.active_();
-      await mP.activate();
-      let afterOpenStatus = await mP.active_();
-      assert.equal(beforeOpenStatus, false, 'project should not be active before activation');
-      assert.equal(afterOpenStatus, true, 'project was not activated');
+    describe('when the sender is not the owner', async () => {
+      it('reverts', async () => {
+        await exceptions.catchRevert(mP.activate({from: accounts[1]}));
+      })
     })
+
+    describe('when the sender is the owner', async () => {
+      it('activates the project', async () => {
+        let beforeOpenStatus = await mP.active_();
+        await mP.activate();
+        let afterOpenStatus = await mP.active_();
+        assert.equal(beforeOpenStatus, false, 'project should not be active before activation');
+        assert.equal(afterOpenStatus, true, 'project was not activated');
+      })
+    })
+
   })
 
   describe('beats', async () => {

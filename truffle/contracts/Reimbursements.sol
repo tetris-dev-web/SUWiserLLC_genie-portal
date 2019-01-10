@@ -13,6 +13,7 @@ contract Reimbursements {
     token = _token;
   }
 
+  //this needs to be only accessible by crowdsale
   function () public payable {
     inactiveTokensAtClosing = Token(token).totalInactiveSupply().sub(Token(token).totalPendingActivations());
     weiToReimburse = msg.value;

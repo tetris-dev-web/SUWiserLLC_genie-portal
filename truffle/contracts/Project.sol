@@ -154,7 +154,7 @@ contract Project is Ownable {
   function setDividendWallet (address wallet) public authorize {
     dividendWallet = wallet;
   }
-  //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
+
   function vote (address voter, uint256 voteAmount) external onlyOwner {
     //maybe require that its open and not active
     votes[voter] = votes[voter].add(voteAmount);
@@ -164,7 +164,6 @@ contract Project is Ownable {
     emit VoteChange(address(this), name, totalVotes);
   }
 
-  //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
   function removeVotes (address voter, uint256 voteAmount) external onlyOwner {
     require(voteAmount <= totalVotes);
     require(voteAmount <= votes[voter]);
