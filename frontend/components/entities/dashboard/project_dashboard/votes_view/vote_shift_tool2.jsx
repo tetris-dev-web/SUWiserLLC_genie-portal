@@ -1,5 +1,5 @@
 import React from 'react';
-import * as d3 from 'd3';
+import './vote_shift_tool.scss';
 
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
@@ -13,18 +13,117 @@ class VoteShiftTool extends React.Component {
   constructor(props) {
     super(props);
 
+    const { votesPerProject, votesNotDedicated } = this.props.votesMockup;
+
+    this.offsetX = 0;
+    this.totalVotes = votesPerProject + votesNotDedicated;
+    this.votesPerPixel = this.totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
+
+    const voteBarAppliedWidth = votesPerProject / this.votesPerPixel;
+    const voteBarFreedUpWidth = votesNotDedicated / this.votesPerPixel;
+
     this.state = {
       showLogButton: false,
-      appliedVotes: this.props.votesPerProject,
-      freedupVotes: this.props.votesNotDedicated
+      newVotesPerProject: votesPerProject,
+      newVotesNotDedicated: votesNotDedicated,
+      voteBarAppliedWidth,
+      voteBarFreedUpWidth,
+      voteShiftLineLeft: 2 * VOTE_BAR_INNER_MARGIN + voteBarAppliedWidth
     };
+
+    this.handleDragStart = this.handleDragStart.bind(this);
+    this.handleDragEnd = this.handleDragEnd.bind(this);
+    this.handleDragging = this.handleDragging.bind(this);
+  }
+
+  handleDragStart(e) {
+    e.preventDefault();
+    this.offsetX = e.clientX - this.shiftLine.getBoundingClientRect().left;
+
+    document.addEventListener('mousemove', this.handleDragging);
+    document.addEventListener('mouseup', this.handleDragEnd);
+  }
+
+  handleDragging(e) {
+    const mouseX = e.clientX - this.voteBarContainer.getBoundingClientRect().left;
+    let newLeft = mouseX - this.offsetX;
+
+    if (newLeft < 2 * VOTE_BAR_INNER_MARGIN) {
+      newLeft = 2 * VOTE_BAR_INNER_MARGIN;
+    }
+
+    if (newLeft > VOTE_BAR_WIDTH - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH) {
+      newLeft = VOTE_BAR_WIDTH - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
+    }
+
+    const voteBarAppliedWidth = newLeft - 2 * VOTE_BAR_INNER_MARGIN;
+    const voteBarFreedUpWidth = VOTE_BAR_WIDTH - newLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
+    
+    this.setState({
+      newVotesPerProject: Math.ceil(voteBarAppliedWidth * this.votesPerPixel),
+      newVotesNotDedicated: Math.floor(voteBarFreedUpWidth * this.votesPerPixel),
+      voteBarAppliedWidth,
+      voteBarFreedUpWidth,
+      voteShiftLineLeft: newLeft
+    });
+    // this.voteBarApplied.style.width = `${newLeft - 2 * VOTE_BAR_INNER_MARGIN}px`;
+    // this.voteBarFreedup.style.width = `${VOTE_BAR_WIDTH - newLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH}px`;
+  }
+  
+  handleDragEnd() { 
+    const { votesPerProject, votesNotDedicated } = this.props.votesMockup;
+
+    document.removeEventListener('mousemove', this.handleDragging);
+    document.removeEventListener('mouseup', this.handleDragEnd);
+    if (this.newVotesPerProject === votesPerProject && this.newVotesNotDedicated === votesNotDedicated) {
+      this.setState({ showLogButton: false });
+    } else {
+      this.setState({ showLogButton: true });
+    }
   }
 
   render() {
     return(
-      <svg className="vote_shift_tool">
-        <rect width="20" height="20"></rect>
-      </svg>
+      <div className="vote-bar" style={{
+        width: VOTE_BAR_WIDTH,
+        height: VOTE_BAR_HEIGHT,
+        borderRadius: VOTE_BAR_RADIUS
+      }}>
+      
+        <div className="vote-bar-inner-container" style={{padding: VOTE_BAR_INNER_MARGIN}}
+          ref={node => this.voteBarContainer = node}>
+          <div className="vote-bar-applied" style={{
+            height: INNER_BAR_HEIGHT,
+            width: this.state.voteBarAppliedWidth,
+            borderRadius: VOTE_BAR_RADIUS
+          }}
+            ref={node => this.voteBarApplied = node}></div>
+
+          <div className="vote-bar-shift-line" style={{
+            height: VOTE_SHIFT_LINE_HEIGHT,
+            width: VOTE_SHIFT_LINE_WIDTH,
+            left: this.state.voteShiftLineLeft
+          }}
+            ref={node => this.shiftLine = node}
+            onMouseDown={this.handleDragStart}>
+            <span>{`${this.state.newVotesPerProject} votes applied`}</span>
+            <span>{`${this.state.newVotesNotDedicated} votes freed up`}</span>
+          </div>
+
+          <div className="vote-bar-freedup" style={{
+            height: INNER_BAR_HEIGHT,
+            width: this.state.voteBarFreedUpWidth,
+            borderRadius: VOTE_BAR_RADIUS,
+          }}
+            ref={node => this.voteBarFreedup = node}></div>
+        </div>
+
+        {
+          this.state.showLogButton &&
+          <button className="vote-shift-tool-log-button" onClick={this.handleClick}>log</button>
+        }
+
+      </div>
     );
   }
 }

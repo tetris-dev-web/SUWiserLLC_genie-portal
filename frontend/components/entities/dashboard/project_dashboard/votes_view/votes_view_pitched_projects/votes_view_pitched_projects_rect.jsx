@@ -1,5 +1,4 @@
 import React from 'react';
-import VoteShiftTool from '../vote_shift_tool2';
 
 class VotesViewPitchedProjectsRect extends React.Component {
 	constructor() {
@@ -22,25 +21,24 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	}
 
 	handleClick(e) {
-		const { selectedProject, toggleSelectedProject, project } = this.props;
-		debugger
+		const { selectedProject, toggleSelectedProject, project, voteShiftTool } = this.props;
+
 		if (!selectedProject) {
 			document.addEventListener('click', this.handleClick, false);
 			toggleSelectedProject(project);
-		} else if (selectedProject.id !== project.id) {
-			return;
-		} else {
-			if (this.projectGroup.contains(e.target)) return;
+			if (!this.state.showHoverEffect) this.setState({ showHoverEffect: true });
+		} else if (selectedProject.id === project.id) {
+			// debugger
+			if (this.projectGroup.contains(e.target) || voteShiftTool.contains(e.target)) return;
 			document.removeEventListener('click', this.handleClick, false);
 			toggleSelectedProject(null);
-			this.setState({ showHoverEffect: false });
+			if (this.state.showHoverEffect) this.setState({ showHoverEffect: false });
 		}
 	}
 
 	render() {
 		const { selectedProject, maxValuation, capitalRaised, project} = this.props;
 		const { fill, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
-
 		return(
 			<g className="votes-view-project-group" 
 				onClick={this.handleClick}
@@ -109,10 +107,6 @@ class VotesViewPitchedProjectsRect extends React.Component {
 							<rect x={`${projectStartX}%`} y={projectValutionStartY + 2} width={2} height={valuation / 24000}></rect>
 						</g>
 					</g>
-				}
-				{
-					this.props.selectedProject &&
-					<VoteShiftTool />
 				}
 			</g>
 		);
