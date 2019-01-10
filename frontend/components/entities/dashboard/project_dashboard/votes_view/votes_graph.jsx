@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
-import VoteShiftTool from './vote_shift_tool2';
+import VoteShiftTool from './vote_shift_tool';
 import './votes_graph.scss';
 
 const activationHistoryValuationMinMax = (projects) => {
@@ -272,7 +272,7 @@ export class VotesGraph extends React.Component {
       <div className="votes-graph" style={{ marginTop: maxValuation / 24000 }}>
         <div className="vote-shift-tool-container"
           ref={node => this.voteShiftTool = node} 
-          style={{top: -maxValuation / 24000 * 0.75}}>
+          style={{ top: -maxValuation / 24000 }}>
           {
             this.state.selectedProject &&
             <VoteShiftTool />
