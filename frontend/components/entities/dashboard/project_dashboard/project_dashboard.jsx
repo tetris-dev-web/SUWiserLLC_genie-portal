@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectGraph from './project_graph';
+import ProjectGraph from './loc_view/project_graph';
 import VotesGraph from './votes_view/votes_graph';
 import ToggleOptions from './toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';

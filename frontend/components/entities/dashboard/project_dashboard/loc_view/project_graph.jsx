@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectModules from './project_modules';
+import ProjectModules from './../project_modules/project_modules';
 
 
 import * as d3 from 'd3';

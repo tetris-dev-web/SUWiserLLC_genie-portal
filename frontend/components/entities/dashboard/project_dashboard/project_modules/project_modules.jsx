@@ -1,5 +1,4 @@
 import React from 'react';
-import ProjectGraph from './project_graph';
 import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import ProjectMap from './project_modules_map';
