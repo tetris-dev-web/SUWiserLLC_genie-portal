@@ -98,7 +98,6 @@ contract ProjectLeaderTracker is Ownable {
            !Project(tentativeLeaderAddr).open();
   }
 
-  //if its overtaking a project that is open, that means it has more votes and we dont need to reset all the checks
   function currentLeaderClosed () internal view returns (bool) {
     return (tentativeLeaderAddr != address(0) && !Project(tentativeLeaderAddr).open());
   }
