@@ -35,7 +35,7 @@ class VoteShiftTool extends React.Component {
     this.handleDragStart = this.handleDragStart.bind(this);
     this.handleDragEnd = this.handleDragEnd.bind(this);
     this.handleDragging = this.handleDragging.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleLogClick = this.handleLogClick.bind(this);
   }
 
   handleDragStart(e) {
@@ -48,25 +48,25 @@ class VoteShiftTool extends React.Component {
 
   handleDragging(e) {
     const mouseX = e.clientX - this.voteBarContainer.getBoundingClientRect().left;
-    let newLeft = mouseX - this.offsetX;
+    let voteShiftLineLeft = mouseX - this.offsetX;
 
-    if (newLeft < 2 * VOTE_BAR_INNER_MARGIN) {
-      newLeft = 2 * VOTE_BAR_INNER_MARGIN;
+    if (voteShiftLineLeft < 2 * VOTE_BAR_INNER_MARGIN) {
+      voteShiftLineLeft = 2 * VOTE_BAR_INNER_MARGIN;
     }
 
-    if (newLeft > VOTE_BAR_WIDTH - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH) {
-      newLeft = VOTE_BAR_WIDTH - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
+    if (voteShiftLineLeft > VOTE_BAR_WIDTH - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH) {
+      voteShiftLineLeft = VOTE_BAR_WIDTH - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
     }
 
-    const voteBarAppliedWidth = newLeft - 2 * VOTE_BAR_INNER_MARGIN;
-    const voteBarFreedUpWidth = VOTE_BAR_WIDTH - newLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
+    const voteBarAppliedWidth = voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN;
+    const voteBarFreedUpWidth = VOTE_BAR_WIDTH - voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
     
     this.setState({
       newVotesPerProject: Math.ceil(voteBarAppliedWidth * this.votesPerPixel),
       newVotesNotDedicated: Math.floor(voteBarFreedUpWidth * this.votesPerPixel),
       voteBarAppliedWidth,
       voteBarFreedUpWidth,
-      voteShiftLineLeft: newLeft
+      voteShiftLineLeft
     });
   }
   
@@ -82,9 +82,26 @@ class VoteShiftTool extends React.Component {
     }
   }
 
-  handleClick() {
+  handleLogClick() {
     this.setState({ blockchainLoading: !this.state.blockchainLoading });
+  }
 
+  handleVoteClick(vote) {
+    return () => {
+      if (vote > 0 && this.totalVotes === this.state.newVotesPerProject ||
+        vote < 0 && this.state.newVotesPerProject === 0) return;
+      const voteShiftLineLeft = this.state.voteShiftLineLeft + vote / this.votesPerPixel;
+      const voteBarAppliedWidth = voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN;
+      const voteBarFreedUpWidth = VOTE_BAR_WIDTH - voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
+  
+      this.setState({
+        newVotesPerProject: this.state.newVotesPerProject + vote,
+        newVotesNotDedicated: this.state.newVotesNotDedicated - vote,
+        voteBarAppliedWidth,
+        voteBarFreedUpWidth,
+        voteShiftLineLeft
+      });
+    };
   }
 
   render() {
@@ -120,6 +137,8 @@ class VoteShiftTool extends React.Component {
               <span className="vote-bar-freedup-votes-number">
                 {`${this.state.newVotesNotDedicated} votes freed up`}
               </span>
+              <span onClick={this.handleVoteClick(1)} className="vote-bar-add-vote-button">&#65291;</span>
+              <span onClick={this.handleVoteClick(-1)} className="vote-bar-minus-vote-button">&#8722;</span>              
             </div>
   
             <div className="vote-bar-freedup" style={{
@@ -132,7 +151,7 @@ class VoteShiftTool extends React.Component {
         </div>
           {
             this.state.showLogButton &&
-            <button className="vote-shift-tool-log-button" onClick={this.handleClick}>log</button>
+            <button className="vote-shift-tool-log-button" onClick={this.handleLogClick}>log</button>
           }
       </React.Fragment>
     );
