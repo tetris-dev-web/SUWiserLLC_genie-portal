@@ -15,12 +15,12 @@ class VotesViewCapitalRaisedRectText extends React.Component{
   }
 
   render(){
-    const { x, y, activation } = this.props;
+    const { x, y, project } = this.props;
 
     return (
         <text className="votes-view-capital-raised-text" x={x} y={y}>
           <tspan dy={".4em"}>
-            {`$ ${Number(activation.capital/1000.0).toLocaleString()} k`}
+            {`$ ${Number(project.capital/1000.0).toLocaleString()} k`}
           </tspan>
         </text>
     );
