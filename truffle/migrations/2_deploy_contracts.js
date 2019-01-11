@@ -91,6 +91,10 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(() => {
           return tokenInstance.transferOwnership(GNITokenCrowdsale.address);
+        })
+        .then(() => {
+          const reimbursementsInst = Reimbursements.at(Reimbursements.address);
+          return reimbursementsInst.transferOwnership(GNITokenCrowdsale.address);
         });
 };
 

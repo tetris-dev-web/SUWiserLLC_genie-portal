@@ -34,7 +34,7 @@ contract Dividends {
     return true;
   }
 
-  function () external payable {
+  function receiveDividends () external payable {
     uint256 totalTokens = Token(token).totalActiveSupply();
     uint256 weiAmount = msg.value;
 

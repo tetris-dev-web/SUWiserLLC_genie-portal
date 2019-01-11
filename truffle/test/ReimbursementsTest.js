@@ -1,32 +1,12 @@
-/* describe('reimburseFunds', async () => {
-  describe('when the crowdsale is still open', async () => {
-    it('reverts', async () => {
-      await exceptions.catchRevert(mockGTC.reimburseFunds());
-    })
-  })
 
-  describe('when the crowdsale has closed', async () => {
-    before(async () => {
-      await mockGTC.setMockDoomsDay(defaultDoomsDay / 2);
-      await mockGTC.setMockWeiRaised(1200000);
-      await tokenStub.setStubTotalPendingActivations(30000000);
-      await mockGTC.reimburseFunds();
-    })
+it('sets inactiveTokensAtClosing to totalInactiveSupply - totalPendingActivations', async () => {
+  let inactiveTokensAtClosing = await mockGTC.inactiveTokensAtClosing();
+  assert.equal(inactiveTokensAtClosing, 60000000, 'should set inactiveTokensAtClosing to totalInactiveSupply - totalPendingActivations');
+})
 
-    after(async () => {
-      await mockGTC.setMockDoomsDay(defaultDoomsDay);
-    })
-
-    it('sets inactiveTokensAtClosing to totalInactiveSupply - totalPendingActivations', async () => {
-      let inactiveTokensAtClosing = await mockGTC.inactiveTokensAtClosing();
-      assert.equal(inactiveTokensAtClosing, 60000000, 'should set inactiveTokensAtClosing to totalInactiveSupply - totalPendingActivations');
-    })
-
-    it('sets weiToReimburse to weiRaised', async () => {
-      let weiToReimburse = await mockGTC.weiToReimburse();
-      assert.equal(weiToReimburse, 1200000, 'should set weiToReimburse to weiRaised');
-    })
-  })
+it('sets weiToReimburse to weiRaised', async () => {
+  let weiToReimburse = await mockGTC.weiToReimburse();
+  assert.equal(weiToReimburse, 1200000, 'should set weiToReimburse to weiRaised');
 })
 
 describe('claimReimbursement', async () => {
@@ -60,7 +40,7 @@ describe('claimReimbursement', async () => {
     let expected = initialContractWei.minus('160000').decimalPlaces(0);
     assert(finalContractWei.isEqualTo(expected), `expected ${expected} but got ${finalContractWei}`);
   })
-}) */
+}) 
 
 /* function setMockWeiToReimburse (uint256 amount) public {
   weiToReimburse = amount;

@@ -17,4 +17,10 @@ contract DividendsStub is Dividends, ContractStub {
     methodState.firstAddress = account;
     return true;
   }
+
+  function receiveDividends () external payable {
+    CallData storage methodState = method['receiveDividends'];
+    methodState.called = true;
+    methodState.firstUint = msg.value;
+  }
 }

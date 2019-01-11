@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-contract ProjectLeaderBoardStub {
+contract ProjectLeaderTrackerStub {
   address addr;
   function considerTentativeLeaderShip (address projectAddr) public { //we need more tests for new functionality (when its implemented)
     addr = projectAddr;

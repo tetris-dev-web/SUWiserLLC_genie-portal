@@ -105,6 +105,12 @@ contract TokenStub is Token, ContractStub {
     return true;
   }
 
+  function resetInactiveTokenCycle (address developer) public {
+    CallData storage methodState = method['resetInactiveTokenCycle'];
+    methodState.firstAddress = developer;
+    methodState.called = true;
+  }
+
   function activatePending (address account) external returns (bool) {
     CallData storage methodState = method['activatePending'];
     methodState.firstAddress = account;

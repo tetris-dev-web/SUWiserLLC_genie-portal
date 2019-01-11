@@ -8,6 +8,7 @@ import './TokenStub.sol';
 import './InvestorListStub.sol';
 import './ContractStub.sol';
 import './ProjectLeaderTracker.sol';
+import './Reimbursements.sol';
 
 contract GNITokenCrowdsaleMock is GNITokenCrowdsale, ContractStub {
 constructor

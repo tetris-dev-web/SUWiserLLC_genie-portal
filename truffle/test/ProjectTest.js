@@ -1,10 +1,14 @@
 const ProjectMock = artifacts.require("ProjectMock");
+const DividendsStub = artifacts.require("DividendsStub");
+const TokenStub = artifacts.require("TokenStub");
+const InvestorListStub = artifacts.require("InvestorListStub");
 
 const exceptions = require('./exceptions');
 const { parseBN } = require('./parseUtil');
 
 let accounts;
 let mP;
+let dStub;
 
 let beforeVotes;
 let beforeTotalVotes;
@@ -108,11 +112,10 @@ contract('Project', async (_accounts) => {
 
   describe('deposit', async () => {
     it('adds the wei value to the dividend wallet', async () => {
-      // await mP.setDividendWallet(accounts[2], {from: accounts[0]});
-      let s1 = await web3.eth.getBalance(accounts[2]);
+      let s1 = await web3.eth.getBalance(dStub.address);
       let before = Number(s1);
       await mP.deposit({value: 3000, from: accounts[1]});
-      let s2 = await web3.eth.getBalance(accounts[2]);
+      let s2 = await web3.eth.getBalance(dStub.address);
       let after = Number(s2);
       assert.equal(after, before + 3000, 'wei not deposited to dividend wallet');
     })
@@ -257,14 +260,23 @@ contract('Project', async (_accounts) => {
   })
 })
 
+
+//we may need to make the dividendWallet a contract to test this properly
 const setUp = async () => {
+  await initDStub();
   mP = await mockP({
-    name: 'project1', developer: accounts[0], dividendWallet: accounts[1],
+    name: 'project1', developer: accounts[0], dividendWallet: dStub.address,
     valuation: 5000000, capitalRequired: 1000000, developerTokens: 40000000,
     investorTokens: 10000000, lat: '340', lng: '340'
   });
   await addMockVoter(accounts[1], 2000000);
   await recordVoteValues();
+}
+
+const initDStub = async () => {
+  let i = await InvestorListStub.new();
+  let t = await TokenStub.new(i.address);
+  dStub = await DividendsStub.new(t.address, accounts [1], i.address);
 }
 
 const recordVoteValues = async () => {

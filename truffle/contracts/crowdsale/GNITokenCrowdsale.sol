@@ -131,7 +131,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  function reimburseFunds () public { //we need tests for this
    require(hasClosed());
-   reimbursements.transfer(weiRaised);
+   Reimbursements(reimbursements).recordReimbursement.value(weiRaised)();
    weiRaised = 0;
    Token(token).resetInactiveTokenCycle(developer);
  }

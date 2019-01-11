@@ -1,7 +1,7 @@
 pragma solidity ^0.4.23;
 import './utility/SafeMath.sol';
 import './utility/Ownable.sol';
-
+import './Dividends.sol';
 contract Project is Ownable {
   using SafeMath for uint256;
   //these will all need to be private so they cannot be set arbitrarily
@@ -144,7 +144,7 @@ contract Project is Ownable {
   function deposit () public payable {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
-    dividendWallet.transfer(weiAmount);
+    Dividends(dividendWallet).receiveDividends.value(weiAmount)();
   }
 
   function addManager (address manager) public authorize {
