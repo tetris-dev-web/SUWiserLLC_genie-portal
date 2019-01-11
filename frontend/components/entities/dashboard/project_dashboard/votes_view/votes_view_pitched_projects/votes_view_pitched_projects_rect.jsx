@@ -1,8 +1,9 @@
 import React from 'react';
+import VoteShiftTool from '../vote_shift_tool';
 
 class VotesViewPitchedProjectsRect extends React.Component {
 	constructor() {
-		super(); 
+		super();
 
 		this.state = {
 			showHoverEffect: false
@@ -13,40 +14,42 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	}
 
 	handleHover() {
-		if (!this.props.selectedProjectId) {
+		if (!this.props.selectedProject) {
 			this.setState({showHoverEffect: !this.state.showHoverEffect});
 		}
 	}
 
 	handleClick() {
-		const { selectedProjectId, toggleSelectedProjectId, id } = this.props;
-		if (selectedProjectId && selectedProjectId === id) {
-			toggleSelectedProjectId(null);
-		} else if (!selectedProjectId) {
-			toggleSelectedProjectId(id);
+		const { selectedProject, toggleSelectedProject, project } = this.props;
+		if (selectedProject && selectedProject.id === project.id) {
+			toggleSelectedProject(null);
+		} else if (!selectedProject) {
+			toggleSelectedProject(project);
 		}
 	}
 
 	render() {
-		const { maxValuation, capitalRaised, fill, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title} = this.props;
+		const { selectedProject, maxValuation, capitalRaised, project} = this.props;
+		const { fill, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
 
 		return(
-			<g onClick={this.handleClick}>
-				<rect 
+			<g className="votes-view-project-group" onClick={this.handleClick}>
+				<rect
 					width={`${projectWidth}%`}
 					height={projectValutionHeight}
 					x={`${projectStartX}%`}
 					y={projectValutionStartY}
-					fill={fill} opacity="0.3"
+					fill={fill}
+					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "0.3"}
 					onMouseOver={this.handleHover}
 					onMouseLeave={this.handleHover}></rect>
-				<text><tspan></tspan></text>
-				<rect 
+				<rect
 					width={`${projectWidth}%`}
 					height={projectCapitalRequiredHeight}
 					x={`${projectStartX}%`}
 					y={projectCapitalRequiredStartY}
 					fill={fill}
+					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
 					onMouseOver={this.handleHover}
 					onMouseLeave={this.handleHover}></rect>
 				<rect
@@ -54,16 +57,21 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					height="30"
 					x={`${projectStartX - .5}%`}
 					y={capitalRaised / 24000}
-					fill={fill}>
-				</rect>
-				<text className="votes-view-percentage-breakdown" x={`${projectRectCenter}%`} y={capitalRaised / 24000 + 20}>
+					fill={fill}
+					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
+					onMouseOver={this.handleHover}
+					onMouseLeave={this.handleHover}></rect>
+				<text className="votes-view-percentage-breakdown"
+					x={`${projectRectCenter}%`}
+					y={capitalRaised / 24000 + 20}
+					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}>
 					<tspan>{`${voteShare * 100}%`}</tspan>
 				</text>
 				{
 					this.state.showHoverEffect &&
-					<g>
-						<g>
-							<text className="votes-view-project-title" x={`${projectRectCenter}%`} y={-(maxValuation - capitalRaised) / 24000 * 1.5} fill="#aa7a60">
+					<g className="votes-view-onhover-group">
+						<g className="votes-view-onhover-text-group">
+							<text className="votes-view-project-title" x={`${projectRectCenter}%`} y={-(maxValuation - capitalRaised) / 24000 * 1.75} fill="#aa7a60">
 								<tspan>{title}</tspan>
 							</text>
 							<text x={`${projectRectCenter}%`} y={projectValutionStartY - 25} fill={fill}>
@@ -79,11 +87,11 @@ class VotesViewPitchedProjectsRect extends React.Component {
 								<tspan>{capitalRequired}</tspan>
 							</text>
 						</g>
-						<g className="votes-view-project-outlines">
+						<g className="votes-view-onhover-project-outlines-group">
 							<rect x={`${projectStartX}%`} y={projectValutionStartY} width={`${projectWidth}%`} height={2}></rect>
 							<rect x={`${projectStartX + projectWidth}%`} y={projectValutionStartY} width={2} height={valuation / 24000}></rect>
 							<rect x={`${projectStartX + projectWidth}%`} y={capitalRaised / 24000} width="0.5%" height={2}></rect>
-							<rect x={`${projectStartX + projectWidth + 0.5}%`} y={capitalRaised / 24000} width={2} height={30}></rect>
+							<rect x={`${projectStartX + projectWidth + 0.35}%`} y={capitalRaised / 24000} width={2} height={30}></rect>
 							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / 24000 + 28} width={`${projectWidth + 1}%`} height={2}></rect>
 							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / 24000} width={2} height={30}></rect>
 							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / 24000} width="0.5%" height={2}></rect>

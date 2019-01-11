@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectGraph from './project_graph';
+import ProjectGraph from './loc_view/project_graph';
 import VotesGraph from './votes_view/votes_graph';
 import ToggleOptions from './toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
@@ -19,7 +19,7 @@ class ProjectDashboard extends React.Component {
   }
 
   toggleOnHoverText() {
-    
+
   }
 
   toggleView (viewId) {
@@ -36,22 +36,31 @@ class ProjectDashboard extends React.Component {
   }
 
   render() {
+    let currentGraph = <div></div>;
+
+    switch (this.state.viewId) {
+      case 0:
+        currentGraph = <ProjectGraph
+          currentUser={this.props.currentUser}
+          fetchProjects={this.props.fetchProjects}
+          data={this.props.projects} />;
+        break;
+      case 1:
+        currentGraph = <VotesGraph />;
+        break;
+      default:
+        break;
+    }
+
     if (this.props.currentUser) {
       return (
         <div className='project-dashboard'>
           <div className="graph-container">
-            { 
-              this.state.viewId === 0 ?
-              <ProjectGraph
-                currentUser={this.props.currentUser}
-                fetchProjects={this.props.fetchProjects}
-                data={this.props.projects} /> :
-              <VotesGraph />
-            }
+            {currentGraph}
           </div>
-          <ToggleOptions 
+          <ToggleOptions
             viewTitle="PROJECT DASHBOARD"
-            toggleView={this.toggleView} 
+            toggleView={this.toggleView}
             viewId={this.state.viewId}
             viewTypes={this.viewTypes}
             optionIcons={[

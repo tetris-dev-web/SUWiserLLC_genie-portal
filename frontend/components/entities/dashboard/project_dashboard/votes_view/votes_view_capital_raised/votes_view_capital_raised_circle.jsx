@@ -6,7 +6,7 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 
 		this.state = {
 			showText: false,
-			
+
 		};
 
 		this.handleHover = this.handleHover.bind(this);
@@ -17,21 +17,22 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 	}
 
 	render() {
-		const { xScale, yScale, circleScale, activation } = this.props;
+		const { xScale, yScale, circleScale, project, opacity } = this.props;
 
 		return (
 			<React.Fragment>
-				<circle 
-					cx={xScale(activation.time)}
-					cy={yScale(activation.capital)}
-					r={`${circleScale(activation.valuation)}%`} 
+				<circle
 					fill="#bdc4c9"
+					cx={xScale(project.time)}
+					cy={yScale(project.capital)}
+					r={`${circleScale(project.valuation)}%`}
+					opacity={opacity}
 					onMouseOver={this.handleHover} onMouseLeave={this.handleHover}></circle>
 				{
 					this.state.showText &&
 					<text className="votes-view-capital-raised-text"
-						x={xScale(activation.time)}
-						y={yScale(activation.capital) + 30}><tspan>{activation.title}</tspan>
+						x={xScale(project.time)}
+						y={yScale(project.capital) + 30}><tspan>{project.title}</tspan>
 					</text>
 				}
 			</React.Fragment>

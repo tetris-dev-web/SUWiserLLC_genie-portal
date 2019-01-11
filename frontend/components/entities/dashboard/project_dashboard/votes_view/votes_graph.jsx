@@ -2,8 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
+import VoteShiftTool from './vote_shift_tool';
+import './votes_graph.scss';
 
-const activationHistoryValuationMinMax = (projects) => {
+const deployedProjectsValuationMinMax = (projects) => {
   const projectValuations = projects.map(project => project.valuation);
 
   return [Math.min(...projectValuations), Math.max(...projectValuations)];
@@ -49,8 +51,8 @@ const mapStateToProps = () => {
       },
     ].sort((a, b) => b.voteShare - a.voteShare),
     maxValuation: 5000000,
-    capitalRaised: 3000000,
-    capital: 7436961,
+    capitalBeingRaised: 3000000,
+    capitalTotal: 7436961,
     startTime: 0,
     endTime: 13305600,
     lineData: [
@@ -210,7 +212,7 @@ const mapStateToProps = () => {
       { date: 13219200, capital: 7416239 },
       { date: 13305600, capital: 7436961 }
     ],
-    activationHistory: [
+    deployedProjects: [
       {
         title: 'proj1',
         time: 3369600,
@@ -230,7 +232,7 @@ const mapStateToProps = () => {
         valuation: 6000000
       }
     ],
-    activationHistoryValuationMinMax: activationHistoryValuationMinMax(
+    deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(
       [
         {
           title: 'proj1',
@@ -255,27 +257,27 @@ const mapStateToProps = () => {
   };
 };
 
-class VotesGraph extends React.Component {
+export class VotesGraph extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      selectedProjectId: null
+      selectedProject: null
     };
   }
 
   render() {
-    const { maxValuation, capitalRaised, capital } = this.props;
+    const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
     return (
-      <div className='votes-graph' style={{ marginTop: (maxValuation - capitalRaised) / 24000 * 2 }}>
-        <svg className="votes-view-svg" height={capital / 24000}>
+      <div className="votes-graph" style={{ marginTop: (maxValuation ) / 24000 }}>
+        <svg className="votes-view-svg" height={capitalTotal / 24000}>
           <VotesViewCapitalRaised
             {...this.props}
             {...this.state}/>
           <VotesViewPitchedProjects
             {...this.props}
             {...this.state}
-            toggleSelectedProjectId={selectedProjectId => this.setState({selectedProjectId})}/>
+            toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
         </svg>
       </div>
     );
