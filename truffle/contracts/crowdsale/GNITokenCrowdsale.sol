@@ -129,17 +129,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    }
  }
 
- function reimburseFunds () public { //we need tests for this
+ function reimburseFunds () public {
    require(hasClosed());
    Reimbursements(reimbursements).recordReimbursement.value(weiRaised)();
    weiRaised = 0;
    Token(token).resetInactiveTokenCycle(developer);
  }
 
- /* uint256 public totalVotesCast; */
-
 //tests need to be modified for all voting functions
-//needs to be callable only by the developer
+//we need to see if it creates a different hash every time...if the hash is exposed to the frontend it is not secure and anyone can use it to sign this transaction
 function voteForProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
   bytes32 unsignedMessage = voteHash[_project];
   /* authenticateVoter(_signedMessage, _voter, unsignedMessage); */
@@ -189,10 +187,11 @@ function removeVotesFromProject(address _project, address _voter, uint256 votes,
    activateProject();
  }
 
- function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
+ function _extendDoomsDay(uint256 _days) internal canExtendDoomsDay {
     uint256 newDoomsDay = now.add(_days.mul(1728000));
     if (newDoomsDay > doomsDay) {
       doomsDay = newDoomsDay;
+      canReOpen = false;
     }
  }
 

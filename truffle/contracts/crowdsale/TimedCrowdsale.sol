@@ -13,7 +13,7 @@ contract TimedCrowdsale is Crowdsale {
 
   uint256 public openingTime;
   uint256 public doomsDay;
-
+  bool public canReOpen;
   /**
    * @dev Reverts if not in crowdsale time range.
    */
@@ -25,6 +25,16 @@ contract TimedCrowdsale is Crowdsale {
     require(block.timestamp >= openingTime && block.timestamp <= doomsDay);
     _;
   }
+
+  modifier canExtendDoomsDay {
+    uint timestamp = block.timestamp;
+    uint time1 = openingTime;
+    uint time2 = doomsDay;
+    require((block.timestamp >= openingTime && block.timestamp <= doomsDay) || canReOpen);
+    _;
+  }
+
+  //can extend doomsDay....
 
   /**
    * @dev Constructor, takes crowdsale opening and closing times.
@@ -47,6 +57,12 @@ contract TimedCrowdsale is Crowdsale {
   function hasClosed() public view returns (bool) {
     // solium-disable-next-line security/no-block-members
     return block.timestamp > doomsDay;
+  }
+
+  //this should only be callable by reimbursements contract
+  function allowReOpening () external {
+    require(msg.sender == reimbursements && hasClosed());
+    canReOpen = true;
   }
 
   /**
