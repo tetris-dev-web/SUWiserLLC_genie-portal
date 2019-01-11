@@ -1,7 +1,7 @@
 import React from 'react';
 
 const VotesViewCapitalRaisedRect = ({x, y, height, fill, setHoveredState, capitalRaised, capital, hovered}) => (
-  <React.Fragment>
+  <g>
     <rect x={x} y={y} width="100%" height={height} fill={fill} opacity="0.5"
       onMouseOver={setHoveredState} onMouseLeave={setHoveredState}> </rect>
 
@@ -15,7 +15,7 @@ const VotesViewCapitalRaisedRect = ({x, y, height, fill, setHoveredState, capita
     ) :
     hovered && capitalRaised &&
      (
-       <React.Fragment>
+       <g>
         <text x="95%" y="20%" className="votes-view-capital-raised-text-right">
           <tspan>
             capital being raised
@@ -26,12 +26,12 @@ const VotesViewCapitalRaisedRect = ({x, y, height, fill, setHoveredState, capita
             {`$ ${Number(capitalRaised/1000.0).toLocaleString()} k`}
           </tspan>
         </text>
-    </React.Fragment>
+    </g>
       )
 
     }
 
-  </React.Fragment>
+  </g>
 );
 
 export default VotesViewCapitalRaisedRect;
