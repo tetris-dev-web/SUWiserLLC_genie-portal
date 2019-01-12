@@ -127,9 +127,9 @@ contract ActivatableToken is MintableToken {
     balances[_from].active = balances[_from].active.sub(_value);
     balances[_to].active = balances[_to].active.add(_value);
 
-    investorList.addInvestor(_to);
-    investorList.removeVoteCredit(_from, _value);
-    investorList.addVoteCredit(_to, _value);
+    investorList.addInvestor(_to);//this function will just be here
+    investorList.removeVoteCredit(_from, _value);//same with this one
+    investorList.addVoteCredit(_to, _value);//and this one
   }
 
   function updateAccountCycle (address account) internal {

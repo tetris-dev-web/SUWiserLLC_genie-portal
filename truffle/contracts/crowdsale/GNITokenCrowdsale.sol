@@ -97,8 +97,8 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Token(token).activatePending(msg.sender);
 
    uint256 voteCredit = super.buyTokens(msg.sender);
-   investorList.addInvestor(msg.sender);
-   investorList.addVoteCredit(msg.sender, voteCredit);
+   investorList.addInvestor(msg.sender);//recordAccount - will be handled in the call above
+   investorList.addVoteCredit(msg.sender, voteCredit);//recordVoteRemoval - will be handled in the call above
    _extendDoomsDay(90);
   }
 
@@ -140,7 +140,7 @@ function voteForProject(address _project, address _voter, uint256 votes, bytes _
   bytes32 unsignedMessage = voteHash[_project];
   authenticateVoter(_signedMessage, _voter, unsignedMessage);
 
-  investorList.removeVoteCredit(_voter, votes);
+  investorList.removeVoteCredit(_voter, votes);//token.cast(account, amount)
 
   Project project = Project(_project);
   project.vote(_voter, votes);
@@ -169,7 +169,7 @@ function removeVotesFromProject(address _project, address _voter, uint256 votes,
 
    project.removeVotes(account, votes);
    doomsDay = doomsDay.sub(43200);
-   investorList.addVoteCredit(account, votes);
+   investorList.addVoteCredit(account, votes);//token.freeUp(account, amount)
 
    updateProjects(fromProjectAddr);
  }
@@ -178,7 +178,7 @@ function removeVotesFromProject(address _project, address _voter, uint256 votes,
  function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
    address recoveredVoter = unsignedMessage.recover(_signedMessage);
    require(recoveredVoter == voter);
-   require(investorList.validAccount(voter));
+   require(investorList.validAccount(voter));//token.existingAccount
  }
 
  function updateProjects (address votedForProj) internal {

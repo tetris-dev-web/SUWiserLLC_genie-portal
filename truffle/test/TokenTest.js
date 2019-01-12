@@ -757,7 +757,7 @@ const iLStub = async () => {
 }
 
 const dStub = async () => {
-  d = await DividendsStub.new(mT.address, accounts[0], iL.address);
+  d = await DividendsStub.new(mT.address, accounts[0]);
 }
 
 const setUp = async () => {

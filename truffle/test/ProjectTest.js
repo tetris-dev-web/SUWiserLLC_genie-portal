@@ -276,7 +276,7 @@ const setUp = async () => {
 const initDStub = async () => {
   let i = await InvestorListStub.new();
   let t = await TokenStub.new(i.address);
-  dStub = await DividendsStub.new(t.address, accounts [1], i.address);
+  dStub = await DividendsStub.new(t.address, accounts [1]);
 }
 
 const recordVoteValues = async () => {
