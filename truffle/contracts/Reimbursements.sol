@@ -3,16 +3,15 @@ pragma solidity ^0.4.24;
 import './token/ERC20/Token.sol';
 import './utility/SafeMath.sol';
 import './utility/Ownable.sol';
-import './crowdsale/GNITokenCrowdsale';
+import './crowdsale/GNITokenCrowdsale.sol';
 
 contract Reimbursements is Ownable {
   using SafeMath for uint256;
   uint256 public inactiveTokensAtClosing;
   uint256 public weiToReimburse;
   Token public token;
-  address public crowdsale;
 
-  constructor (Token _token address crowdsale) payable {
+  constructor (Token _token) payable {
     token = _token;
   }
 
@@ -33,7 +32,7 @@ contract Reimbursements is Ownable {
 
     if (address(this.balance) == 0) {
       weiToReimburse = 0;
-      GNITokenCrowdsale(crowdsale).allowReOpening();
+      GNITokenCrowdsale(owner).allowReOpening();
     }
   }
 }

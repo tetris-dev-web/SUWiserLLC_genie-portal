@@ -1,20 +1,24 @@
 pragma solidity ^0.4.24;
+import './ProjectLeaderTracker.sol';
+import './ContractStub.sol';
 
-contract ProjectLeaderTrackerStub {
+contract ProjectLeaderTrackerStub is ProjectLeaderTracker, ContractStub {
   address addr;
-  function considerTentativeLeaderShip (address projectAddr) public { //we need more tests for new functionality (when its implemented)
-    addr = projectAddr;
+  function trackProject (address projectAddr) public { //we need more tests for new functionality (when its implemented)
+    CallData storage methodState = method['trackProject'];
+    methodState.firstAddress = projectAddr;
+    methodState.called = true;
   }
 
-  function tentativeLeader () public view returns (address, uint256, bool) {
-    return (address(0), 10000000, true);
+  function tentativeLeader () external view returns (address, bool) {
+    return (address(0), true);
   }
 
   function handleProjectActivation () onlyOwner external {
 
   }
 
-  function incrementCandidateCount() onlyOwner external {
+  function handleProjectPitch () onlyOwner external {
 
   }
 

@@ -17,7 +17,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   InvestorList public investorList;
   ProjectLeaderTracker public projectLeaderTracker;
   address public dividendWallet;
-  address public reimbursements;
 
   constructor
       (
@@ -33,12 +32,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       )
       public
       Crowdsale(_rate, _developer, _token)
-      TimedCrowdsale(_openingTime, _doomsDay) {
+      TimedCrowdsale(_openingTime, _doomsDay, _reimbursements) {
         investorList = InvestorList(_investorList);
         totalValuation = 0;
         projectLeaderTracker = ProjectLeaderTracker(_projectLeaderTracker);
         dividendWallet = _dividendWallet;
-        reimbursements = _reimbursements;
   }
 
   event ProjectPitch (
@@ -68,7 +66,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     return projectAddress[id];
   }
 
-  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng, bytes32 _voteHash, bytes32 _removeVoteHash) public {//we need more tests for this
+  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng, bytes32 _voteHash, bytes32 _removeVoteHash) public {//should only be callable by developer. may need more tests
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);
@@ -140,7 +138,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 //we need to see if it creates a different hash every time...if the hash is exposed to the frontend it is not secure and anyone can use it to sign this transaction
 function voteForProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
   bytes32 unsignedMessage = voteHash[_project];
-  /* authenticateVoter(_signedMessage, _voter, unsignedMessage); */
+  authenticateVoter(_signedMessage, _voter, unsignedMessage);
 
   investorList.removeVoteCredit(_voter, votes);
 
@@ -151,9 +149,9 @@ function voteForProject(address _project, address _voter, uint256 votes, bytes _
   updateProjects(_project);
 }
 
-function removeVotesFromProject(address _project, address _voter, uint256 votes, bytes32 _signedMessage) public {
+function removeVotesFromProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
   bytes32 unsignedMessage = removeVoteHash[_project];
-  /* authenticateVoter(_signedMessage, _voter, unsignedMessage); */
+  authenticateVoter(_signedMessage, _voter, unsignedMessage);
   removeVotesFromProject_(_voter, _project, votes);
 }
 
@@ -176,6 +174,7 @@ function removeVotesFromProject(address _project, address _voter, uint256 votes,
    updateProjects(fromProjectAddr);
  }
 
+ //we will test this separately
  function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
    address recoveredVoter = unsignedMessage.recover(_signedMessage);
    require(recoveredVoter == voter);
@@ -183,10 +182,11 @@ function removeVotesFromProject(address _project, address _voter, uint256 votes,
  }
 
  function updateProjects (address votedForProj) internal {
-   projectLeaderTracker.considerTentativeLeaderShip(votedForProj);
+   projectLeaderTracker.trackProject(votedForProj);
    activateProject();
  }
 
+ //tests need to be updated
  function _extendDoomsDay(uint256 _days) internal canExtendDoomsDay {
     uint256 newDoomsDay = now.add(_days.mul(1728000));
     if (newDoomsDay > doomsDay) {

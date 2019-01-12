@@ -31,194 +31,202 @@ contract('GNITokenCrowdsale', async (_accounts) => {
     await initProjectStubs();
   })
 
-  // describe('pitchProject', async () => {
-  //   let voteHash;
-  //   let removeVoteHash;
-  //   describe('when the crowdsale is open', async () => {
-  //     let initialProjectCount;
-  //     let initialTotalValuation;
-  //     let initialDoomsDay;
-  //     let mintCallData;
-  //
-  //     before(async () => {
-  //       initialProjectCount = await parseMethod(getProjectCount);
-  //       initialTotalValuation = await parseMethod(getTotalValuation);
-  //       initialDoomsDay = await parseMethod(getDoomsDay);
-  //
-  //       await stubUtil.addMethod(tokenStub, 'mint');
-  //       voteHash = web3.fromAscii('random');
-  //       removeVoteHash = web3.fromAscii('moreRandom');
-  //
-  //       await mockGTC.pitchProject('mockProject', 1000000, 3000000, '345', '345', voteHash, removeVoteHash);
-  //       mintCallData = await stubUtil.callHistory(tokenStub, 'mint');
-  //     })
-  //
-  //     after(async () => {
-  //       await mockGTC.setStubProjectCount(0);
-  //     })
-  //
-  //     it('mints developer tokens to the developer as a function of (rate * (valuation - capitalRequired))', async () => {
-  //       let { firstAddress, firstUint } = mintCallData;
-  //       assert.equal(firstAddress, accounts[1], 'developer tokens not minted to contract');
-  //       assert.equal(firstUint, 100000000, 'incorrect number of developer tokens minted');
-  //     })
-  //
-  //     it('mints investor tokens to the contract as a function of (rate * capitalRequired)', async () => {
-  //       let { secondAddress, secondUint } = mintCallData;
-  //       assert.equal(secondAddress, mockGTC.address, 'investor tokens not minted to contract');
-  //       assert.equal(secondUint, 50000000, 'incorrect number of investor tokens minted');
-  //     })
-  //
-  //     it('increases the totalValuation by the project valuation', async () => {
-  //       let finalTotalValuation = await parseMethod(getTotalValuation);
-  //       assert.equal(finalTotalValuation, initialTotalValuation + 3000000, 'valuation not updated properly');
-  //     })
-  //
-  //     it('extends the doomsDay by 90 days from the current time', async () => {
-  //       let finalDoomsDay = await parseMethod(getDoomsDay);
-  //       let now = await getLatestBlockTime();
-  //       assert.equal(finalDoomsDay, now + (90 * 1728000), 'doomsDay not extended properly');
-  //     })
-  //
-  //     it('increments totalProjectCount by one', async () => {
-  //       let finalProjectCount = await parseMethod(getProjectCount);
-  //       assert.equal(finalProjectCount, initialProjectCount + 1, 'totalProjectCount should increment by 1');
-  //     })
-  //
-  //     it('stores the project address by the order in which it was created', async () => {
-  //       let address = await mockGTC.mockProjectById(4);
-  //       assert(address, 'project address not stored');
-  //     })
-  //
-  //     //it should create mappings for vote hashes
-  //     it('stores a vote hash associated with the project', async () => {
-  //       let address = await mockGTC.mockProjectById(4);
-  //       let storedVoteHash = await mockGTC.viewMockVoteHash(address);
-  //       let recoveredHash = web3.toAscii(storedVoteHash);
-  //       assert(recoveredHash, 'voteHash should be stored asssociated with project');
-  //     })
-  //
-  //     it('stores a remove vote hash associated with the project', async () => {
-  //       let address = await mockGTC.mockProjectById(4);
-  //       let storedRemoveVoteHash = await mockGTC.viewMockRemoveVoteHash(address);
-  //       let recoveredHash = web3.toAscii(storedRemoveVoteHash);
-  //       assert(recoveredHash, 'voteHash should be stored asssociated with project');
-  //     })
-  //     //checks that it creates a mapping of count to address
-  //     // it('adds the new project address to projectAddrs array', async () => {
-  //     //   let finalProjectCount = await parseMethod(getProjectCount);
-  //     //   assert.equal(finalProjectCount, initialProjectCount + 1, 'project address not added to projectAddrs array');
-  //     // })
-  //   })
-  //
-  //   describe('when the crowdsale is not open', async () => {
-  //     after(async () => {
-  //       await mockGTC.setMockDoomsDay(defaultDoomsDay);
-  //     })
-  //
-  //     it('reverts when the crowdsale has not opened yet', async () => {
-  //       await mockGTC.setMockOpening(defaultOpeningTime * 400);
-  //       await exceptions.catchRevert(mockGTC.pitchProject('mockProject', 1000000, 3000000, '345', '345', voteHash, removeVoteHash));
-  //     })
-  //
-  //     it('reverts after the crowdsale has closed', async () => {
-  //       await mockGTC.setMockOpening(defaultOpeningTime);
-  //       await mockGTC.setMockDoomsDay(defaultDoomsDay / 2);
-  //       await exceptions.catchRevert(mockGTC.pitchProject('mockProject', 1000000, 3000000, '345', '345', voteHash, removeVoteHash));
-  //     })
-  //   })
-  // })
-  //
-  // describe('buyTokens', async () => {
-  //   describe('when the crowdsale is open', async () => {
-  //     let initialWeiRaised;
-  //     let initialDoomsDay;
-  //
-  //     before(async () => {
-  //       initialWeiRaised = await parseMethod(getWeiRaised);
-  //       initialDoomsDay = await parseMethod(getDoomsDay);
-  //
-  //       await stubUtil.addMethod(tokenStub, 'activatePending');
-  //       await stubUtil.addMethod(iLStub, 'addInvestor');
-  //       await stubUtil.addMethod(tokenStub, 'transferInactive');
-  //       await stubUtil.addMethod(projStub1, 'vote');
-  //       await stubUtil.addMethod(mockGTC, 'considerTentativeLeaderShip');
-  //       await stubUtil.addMethod(mockGTC, 'attemptProjectActivation');
-  //
-  //       await mockGTC.buyTokens({from: accounts[2], value: 500000});
-  //     })
-  //
-  //     after(async () => {
-  //       await stubUtil.resetMethod(tokenStub, 'activatePending');
-  //       await stubUtil.resetMethod(iLStub, 'addInvestor');
-  //       // await stubUtil.resetMethod(tokenStub, 'transferInactive');
-  //       // await stubUtil.resetMethod(projStub1, 'vote');
-  //       // await stubUtil.resetMethod(mockGTC, 'considerTentativeLeaderShip');
-  //       // await stubUtil.resetMethod(mockGTC, 'attemptProjectActivation');
-  //     })
-  //
-  //     it('activates the buyers pending activations', async () => {
-  //       let { firstAddress } = await stubUtil.callHistory(tokenStub, 'activatePending');
-  //       assert.equal(firstAddress, accounts[2], 'pending activations not activated for the sender');
-  //     })
-  //
-  //     it('activates pending activations before transfering active tokens to the sender', async () => {
-  //       let { correctCallOrder } = await stubUtil.callHistory(tokenStub, 'transferInactive');
-  //       assert(correctCallOrder, 'pending activations not handled before more tokens are transferred');
-  //     })
-  //
-  //     it('transfers inactive tokens from the contract to the beneficiary as a function of value * rate', async () => {
-  //       let { firstAddress, firstUint } = await stubUtil.callHistory(tokenStub, 'transferInactive');
-  //       assert.equal(firstAddress, accounts[2], 'tokens not transfered to the correct beneficiary');
-  //       assert.equal(firstUint, 25000000, 'incorrect token amount transfered');
-  //     })
-  //
-  //     it('increases weiRaised by the purchase value', async () => {
-  //       let finalWeiRaised = await parseMethod(getWeiRaised);
-  //       assert.equal(finalWeiRaised, initialWeiRaised + 500000, 'purchase value not added to weiRaised');
-  //     })
-  //
-  //     // it('votes for the project indicated', async () => {
-  //     //   let { firstAddress, firstUint } = await stubUtil.callHistory(projStub1, 'vote');
-  //     //   assert.equal(firstAddress, accounts[2], 'the corrent project was not voted for');
-  //     //   assert.equal(firstUint, 25000000, 'incorrect vote amount assigned to project');
-  //     // })
-  //
-  //     it('extends the doomsDay by 90 days from the current time', async () => {
-  //       let finalDoomsDay = await parseMethod(getDoomsDay);
-  //       let now = await getLatestBlockTime();
-  //       assert.equal(finalDoomsDay, now + (90 * 1728000), 'doomsDay not extended properly');
-  //     })
-  //
-  //   //these should be for voting
-  //     // it('considers the voted for project for leadership', async () => {
-  //     //   let { firstUint } = await stubUtil.callHistory(mockGTC, 'considerTentativeLeaderShip');
-  //     //   assert.equal(firstUint, 0, 'voted for project should be considered for leadership');
-  //     // })
-  //     //
-  //     // it('attemps to activate the leading project', async () => {
-  //     //   let { called } = await stubUtil.callHistory(mockGTC, 'attemptProjectActivation');
-  //     //   assert.equal(called, true, 'project activation should be attempted');
-  //     // })
-  //   })
-  //
-  //   describe('when the crowdsale is not open', async () => {
-  //     after(async () => {
-  //       await mockGTC.setMockDoomsDay(defaultDoomsDay);
-  //     })
-  //
-  //     it('reverts when the crowdsale has not opened yet', async () => {
-  //       await mockGTC.setMockOpening(defaultOpeningTime * 400);
-  //       await exceptions.catchRevert(mockGTC.buyTokens({from: accounts[2], value: 500000}));
-  //     })
-  //
-  //     it('reverts after the crowdsale has closed', async () => {
-  //       await mockGTC.setMockOpening(defaultOpeningTime);
-  //       await mockGTC.setMockDoomsDay(defaultDoomsDay / 2);
-  //       await exceptions.catchRevert(mockGTC.buyTokens({from: accounts[2], value: 500000}));
-  //     })
-  //   })
-  // })
+  describe('pitchProject', async () => {
+    let voteHash;
+    let removeVoteHash;
+    describe('when the crowdsale is open', async () => {
+      let initialProjectCount;
+      let initialTotalValuation;
+      let mintCallData;
+
+      before(async () => {
+        initialProjectCount = await parseMethod(getProjectCount);
+        initialTotalValuation = await parseMethod(getTotalValuation);
+
+        await stubUtil.addMethod(tokenStub, 'mint');
+        voteHash = await web3.fromAscii('random');
+        removeVoteHash = await web3.fromAscii('moreRandom');
+
+        await lTStub.transferOwnership(mockGTC.address);
+        await mockGTC.pitchProject('mockProject', 1000000, 3000000, '345', '345', voteHash, removeVoteHash);
+        mintCallData = await stubUtil.callHistory(tokenStub, 'mint');
+      })
+
+      after(async () => {
+        await mockGTC.setStubProjectCount(0);
+      })
+
+      it('mints developer tokens to the developer as a function of (rate * (valuation - capitalRequired))', async () => {
+        let { firstAddress, firstUint } = mintCallData;
+        assert.equal(firstAddress, accounts[1], 'developer tokens not minted to contract');
+        assert.equal(firstUint, 100000000, 'incorrect number of developer tokens minted');
+      })
+
+      it('mints investor tokens to the contract as a function of (rate * capitalRequired)', async () => {
+        let { secondAddress, secondUint } = mintCallData;
+        assert.equal(secondAddress, mockGTC.address, 'investor tokens not minted to contract');
+        assert.equal(secondUint, 50000000, 'incorrect number of investor tokens minted');
+      })
+
+      it('increases the totalValuation by the project valuation', async () => {
+        let finalTotalValuation = await parseMethod(getTotalValuation);
+        assert.equal(finalTotalValuation, initialTotalValuation + 3000000, 'valuation not updated properly');
+      })
+
+      it('extends the doomsDay by 90 days from the current time', async () => {
+        let finalDoomsDay = await parseMethod(getDoomsDay);
+        let now = await getLatestBlockTime();
+        assert.equal(finalDoomsDay, now + (90 * 1728000), 'doomsDay not extended properly');
+      })
+
+      it('increments totalProjectCount by one', async () => {
+        let finalProjectCount = await parseMethod(getProjectCount);
+        assert.equal(finalProjectCount, initialProjectCount + 1, 'totalProjectCount should increment by 1');
+      })
+
+      it('stores the project address by the order in which it was created', async () => {
+        let address = await mockGTC.mockProjectById(4);
+        assert(address, 'project address not stored');
+      })
+
+      //it should create mappings for vote hashes
+      it('stores a vote hash associated with the project', async () => {
+        let address = await mockGTC.mockProjectById(4);
+        let storedVoteHash = await mockGTC.viewMockVoteHash(address);
+        let recoveredHash = web3.toAscii(storedVoteHash);
+        assert(recoveredHash, 'voteHash should be stored asssociated with project');
+      })
+
+      it('stores a remove vote hash associated with the project', async () => {
+        let address = await mockGTC.mockProjectById(4);
+        let storedRemoveVoteHash = await mockGTC.viewMockRemoveVoteHash(address);
+        let recoveredHash = web3.toAscii(storedRemoveVoteHash);
+        assert(recoveredHash, 'voteHash should be stored asssociated with project');
+      })
+      //checks that it creates a mapping of count to address
+      // it('adds the new project address to projectAddrs array', async () => {
+      //   let finalProjectCount = await parseMethod(getProjectCount);
+      //   assert.equal(finalProjectCount, initialProjectCount + 1, 'project address not added to projectAddrs array');
+      // })
+    })
+
+    describe('when the crowdsale is not open', async () => {
+      after(async () => {
+        await mockGTC.setMockDoomsDay(defaultDoomsDay);
+        await mockGTC.setMockReOpening(false);
+      })
+
+      it('reverts when the crowdsale has not opened yet', async () => {
+        await mockGTC.setMockOpening(defaultOpeningTime * 400);
+        await exceptions.catchRevert(mockGTC.pitchProject('mockProject', 1000000, 3000000, '345', '345', voteHash, removeVoteHash));
+      })
+
+      it('reverts after the crowdsale has closed and it cannot be reopened', async () => {
+        await mockGTC.setMockReOpening(false);
+        await mockGTC.setMockOpening(defaultOpeningTime);
+        await mockGTC.setMockDoomsDay(defaultDoomsDay / 2);
+        await exceptions.catchRevert(mockGTC.pitchProject('mockProject', 1000000, 3000000, '345', '345', voteHash, removeVoteHash));
+      })
+
+      it('runs when the crowdsale can be reopened', async () => {
+        await mockGTC.setMockReOpening(true);
+        await mockGTC.setMockOpening(defaultOpeningTime);
+        await mockGTC.setMockDoomsDay(defaultDoomsDay / 2);
+        await mockGTC.pitchProject('mockProject', 1000000, 3000000, '345', '345', voteHash, removeVoteHash)
+      })
+    })
+  })
+
+  describe('buyTokens', async () => {
+    describe('when the crowdsale is open', async () => {
+      let initialWeiRaised;
+      let initialDoomsDay;
+
+      before(async () => {
+        initialWeiRaised = await parseMethod(getWeiRaised);
+        initialDoomsDay = await parseMethod(getDoomsDay);
+
+        await stubUtil.addMethod(tokenStub, 'activatePending');
+        await stubUtil.addMethod(iLStub, 'addInvestor');
+        await stubUtil.addMethod(tokenStub, 'transferInactive');
+        await stubUtil.addMethod(projStub1, 'vote');
+        await stubUtil.addMethod(mockGTC, 'trackProject');
+        await stubUtil.addMethod(mockGTC, 'attemptProjectActivation');
+
+        await mockGTC.buyTokens({from: accounts[2], value: 500000});
+      })
+
+      after(async () => {
+        await stubUtil.resetMethod(tokenStub, 'activatePending');
+        await stubUtil.resetMethod(iLStub, 'addInvestor');
+        // await stubUtil.resetMethod(tokenStub, 'transferInactive');
+        // await stubUtil.resetMethod(projStub1, 'vote');
+        // await stubUtil.resetMethod(mockGTC, 'trackProject');
+        // await stubUtil.resetMethod(mockGTC, 'attemptProjectActivation');
+      })
+
+      it('activates the buyers pending activations', async () => {
+        let { firstAddress } = await stubUtil.callHistory(tokenStub, 'activatePending');
+        assert.equal(firstAddress, accounts[2], 'pending activations not activated for the sender');
+      })
+
+      it('activates pending activations before transfering active tokens to the sender', async () => {
+        let { correctCallOrder } = await stubUtil.callHistory(tokenStub, 'transferInactive');
+        assert(correctCallOrder, 'pending activations not handled before more tokens are transferred');
+      })
+
+      it('transfers inactive tokens from the contract to the beneficiary as a function of value * rate', async () => {
+        let { firstAddress, firstUint } = await stubUtil.callHistory(tokenStub, 'transferInactive');
+        assert.equal(firstAddress, accounts[2], 'tokens not transfered to the correct beneficiary');
+        assert.equal(firstUint, 25000000, 'incorrect token amount transfered');
+      })
+
+      it('increases weiRaised by the purchase value', async () => {
+        let finalWeiRaised = await parseMethod(getWeiRaised);
+        assert.equal(finalWeiRaised, initialWeiRaised + 500000, 'purchase value not added to weiRaised');
+      })
+
+      // it('votes for the project indicated', async () => {
+      //   let { firstAddress, firstUint } = await stubUtil.callHistory(projStub1, 'vote');
+      //   assert.equal(firstAddress, accounts[2], 'the corrent project was not voted for');
+      //   assert.equal(firstUint, 25000000, 'incorrect vote amount assigned to project');
+      // })
+
+      it('extends the doomsDay by 90 days from the current time', async () => {
+        let finalDoomsDay = await parseMethod(getDoomsDay);
+        let now = await getLatestBlockTime();
+        assert.equal(finalDoomsDay, now + (90 * 1728000), 'doomsDay not extended properly');
+      })
+
+    //these should be for voting
+      // it('considers the voted for project for leadership', async () => {
+      //   let { firstUint } = await stubUtil.callHistory(mockGTC, 'trackProject');
+      //   assert.equal(firstUint, 0, 'voted for project should be considered for leadership');
+      // })
+      //
+      // it('attemps to activate the leading project', async () => {
+      //   let { called } = await stubUtil.callHistory(mockGTC, 'attemptProjectActivation');
+      //   assert.equal(called, true, 'project activation should be attempted');
+      // })
+    })
+
+    describe('when the crowdsale is not open', async () => {
+      after(async () => {
+        await mockGTC.setMockDoomsDay(defaultDoomsDay);
+      })
+
+      it('reverts when the crowdsale has not opened yet', async () => {
+        await mockGTC.setMockOpening(defaultOpeningTime * 400);
+        await exceptions.catchRevert(mockGTC.buyTokens({from: accounts[2], value: 500000}));
+      })
+
+      it('reverts after the crowdsale has closed', async () => {
+        await mockGTC.setMockOpening(defaultOpeningTime);
+        await mockGTC.setMockDoomsDay(defaultDoomsDay / 2);
+        await exceptions.catchRevert(mockGTC.buyTokens({from: accounts[2], value: 500000}));
+      })
+    })
+  })
 
   describe('reimburseFunds', async () => {
     describe('when the crowdsale has closed', async () => {
@@ -226,11 +234,9 @@ contract('GNITokenCrowdsale', async (_accounts) => {
         await mockGTC.setMockDoomsDay(0);
         const addr = mockGTC.address;
         await web3.eth.sendTransaction({from: accounts[1], to: addr, value: 1200000});
-        const b = await weiBalanceOf(mockGTC.address);
-        console.log("BALANCE", b);
+
         await mockGTC.setMockWeiRaised(1200000);
-        const weiRaised = await mockGTC.weiRaised_.call();
-        console.log("WEIRAISED", parseBN(weiRaised));
+
         await stubUtil.addMethod(rStub, 'recordClosing');
         await stubUtil.addMethod(tokenStub, 'resetInactiveTokenCycle');
         await mockGTC.reimburseFunds();
@@ -308,12 +314,16 @@ contract('GNITokenCrowdsale', async (_accounts) => {
     before(async () => {
       await stubUtil.addMethod(projStub2, 'removeVotes');
       await stubUtil.addMethod(iLStub, 'addVoteCredit');
+      await stubUtil.addMethod(mockGTC, 'attemptProjectActivation');
+      await stubUtil.addMethod(lTStub, 'trackProject');
       await mockGTC._removeVotesFromProject_(accounts[2], projStub2.address, 20000000);
     })
 
     after(async () => {
       await stubUtil.resetMethod(projStub2, 'removeVotes');
       await stubUtil.resetMethod(iLStub, 'addVoteCredit');
+      await stubUtil.resetMethod(mockGTC, 'attemptProjectActivation');
+      await stubUtil.resetMethod(lTStub, 'trackProject');
     })
 
     it('removes the indicated amount of votes from a project', async () => {
@@ -326,6 +336,17 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       let { firstAddress, firstUint } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
       assert.equal(firstAddress, accounts[2], 'votes not assigned for correct voter');
       assert.equal(firstUint, 20000000, 'incorrect vote credit amount assigned');
+    })
+
+    it('considers the project for leadership', async () => {
+      let { called, firstAddress } = await stubUtil.callHistory(lTStub, 'trackProject');
+      assert.equal(called, true, 'project voted for should be considered for leadership');
+      assert.equal(firstAddress, projStub2.address, 'project voted for should be considered for leadership');
+    })
+
+    it('attempts to activate a project', async () => {
+      let { called } = await stubUtil.callHistory(mockGTC, 'activateProject');
+      assert.equal(called, true, 'project activation should be attempted');
     })
   })
 
@@ -393,6 +414,9 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       await stubUtil.addMethod(projStub3, 'vote');
       await stubUtil.addMethod(iLStub, 'removeVoteCredit');
       await stubUtil.addMethod(mockGTC, 'authenticateVoter');
+      await stubUtil.addMethod(mockGTC, 'activateProject');
+      await stubUtil.addMethod(mockGTC, 'authenticateVoter');
+      await stubUtil.addMethod(lTStub, 'trackProject');
       const hash = await web3.fromAscii('random');
       await mockGTC.setMockVoteHash(projStub3.address, hash);
       await mockGTC.voteForProject(projStub3.address, accounts[2], 20000000, hash, {from: accounts[1]});
@@ -401,6 +425,16 @@ contract('GNITokenCrowdsale', async (_accounts) => {
     after(async () => {
       await stubUtil.resetMethod(projStub3, 'vote');
       await stubUtil.resetMethod(iLStub, 'removeVoteCredit');
+      await stubUtil.resetMethod(lTStub, 'trackProject');
+      await stubUtil.resetMethod(mockGTC, 'authenticateVoter');
+      await stubUtil.resetMethod(mockGTC, 'activateProject');
+    })
+
+    it('authenticates the voter', async () => {
+      let { firstAddress } = await stubUtil.callHistory(mockGTC, 'authenticateVoter');
+      // console.log('firstBytes', firstBytes);
+      // console.log('firstBytes32', secondBytes);
+      assert.equal(firstAddress, accounts[2], 'authentication should be passed the voter address');
     })
 
     it('removes the indicated amount of votes from the senders vote credit', async () => {
@@ -414,8 +448,19 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       assert.equal(firstAddress, accounts[2], 'the corrent project was not voted for');
       assert.equal(firstUint, 20000000, 'incorrect vote amount assigned to project');
     })
+
+    it('considers the project for leadership', async () => {
+      let { called, firstAddress } = await stubUtil.callHistory(lTStub, 'trackProject');
+      assert.equal(called, true, 'project voted for should be considered for leadership');
+      assert.equal(firstAddress, projStub3.address, 'project voted for should be considered for leadership');
+    })
+
+    it('attempts to activate a project', async () => {
+      let { called } = await stubUtil.callHistory(mockGTC, 'activateProject');
+      assert.equal(called, true, 'project activation should be attempted');
+    })
   })
-  // describe('attemptProjectActivation', async () => {
+  // describe('activateProject', async () => {
   //   before(async () => {
   //     await mockGTC.setMockTentativeLeader(projStub1.address, 7000000);
   //
@@ -433,7 +478,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
   //       await mockGTC.setMockConfirmedLeaderStatus(true);
   //       initialDeveloperWei = await weiBalanceOf(accounts[1]);
   //       beforeWeiRaised = await parseMethod(getWeiRaised);
-  //       await mockGTC.attemptProjectActivation_();
+  //       await mockGTC.activateProject_();
   //     })
   //
   //     it('does not activate the project', async () => {

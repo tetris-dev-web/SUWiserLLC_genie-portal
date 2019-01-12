@@ -17,7 +17,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
     await initProjectStubs();
   })
 
-  describe('considerTentativeLeaderShip', async () => {
+  describe('trackProject', async () => {
     describe('when sent an active project', async () => {
       before(async () => {
         await projStub2.setStubActiveStatus(true);
@@ -28,7 +28,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
       })
 
       it('reverts', async () => {
-        await exceptions.catchRevert(mPLT.considerTentativeLeaderShip(projStub2.address));
+        await exceptions.catchRevert(mPLT.trackProject(projStub2.address));
       })
     })
 
@@ -45,7 +45,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
             initialCheckedCount = await parseMethod(mPLT.totalChecked);
             await mPLT.setStubCandidateCount(1);
             await mPLT.setMockTotalChecked(0);
-            await mPLT.considerTentativeLeaderShip(projStub1.address);
+            await mPLT.trackProject(projStub1.address);
           })
 
           after(async () => {
@@ -84,7 +84,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
           before(async () => {
             initialCheckedCount = await parseMethod(mPLT.totalChecked);
             await mPLT.setStubCandidateCount(2);
-            await mPLT.considerTentativeLeaderShip(projStub1.address);
+            await mPLT.trackProject(projStub1.address);
           })
 
           after(async () => {
@@ -130,7 +130,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
             await mPLT.setStubCandidateCount(2);
             await mPLT.setMockTotalChecked(1);
             initialCheckedCount = await parseMethod(mPLT.totalChecked);
-            await mPLT.considerTentativeLeaderShip(projStub2.address);
+            await mPLT.trackProject(projStub2.address);
           })
           after(async () => {
             await mPLT.resetMockTentativeProject();
@@ -172,7 +172,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
             await mPLT.setStubCandidateCount(3);
             await mPLT.setMockTotalChecked(1);
             initialCheckedCount = await parseMethod(mPLT.totalChecked);
-            await mPLT.considerTentativeLeaderShip(projStub2.address);
+            await mPLT.trackProject(projStub2.address);
           })
 
           after(async () => {
@@ -213,7 +213,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
           await projStub1.setStubOpenStatus(false);
           await mPLT.setStubCandidateCount(3);
           await projStub3.setMockVotes(2000000);
-          await mPLT.considerTentativeLeaderShip(projStub3.address);
+          await mPLT.trackProject(projStub3.address);
         })
 
         after(async () => {
@@ -254,7 +254,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
             await mPLT.setMockLeadingVoteCount(1000000);
             await projStub1.setStubOpenStatus(true);
             await projStub1.setMockVotes(500000);
-            await mPLT.considerTentativeLeaderShip(projStub1.address);
+            await mPLT.trackProject(projStub1.address);
           })
 
           after(async () => {
@@ -298,7 +298,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
               await mPLT.setMockCheckedStatus(projStub1.address, true);
               await mPLT.setStubCandidateCount(5);
               await mPLT.setMockTotalChecked(5);
-              await mPLT.considerTentativeLeaderShip(projStub1.address);
+              await mPLT.trackProject(projStub1.address);
             })
 
             after(async () => {
@@ -340,7 +340,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
               await mPLT.setMockCheckedStatus(projStub1.address, true);
               await mPLT.setStubCandidateCount(5);
               await mPLT.setMockTotalChecked(3);
-              await mPLT.considerTentativeLeaderShip(projStub1.address);
+              await mPLT.trackProject(projStub1.address);
             })
 
             it('updates the leadingVoteCount', async () => {
@@ -381,7 +381,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
             await mPLT.setMockTentativeLeader(projStub1.address);
             await mPLT.setStubCandidateCount(3);
             await mPLT.setMockTotalChecked(2);
-            await mPLT.considerTentativeLeaderShip(projStub3.address);
+            await mPLT.trackProject(projStub3.address);
           })
 
           after(async () => {
@@ -409,7 +409,7 @@ contract("ProjectLeaderTracker", async (_accounts) => {
             await mPLT.setMockTentativeLeader(projStub1.address);
             await mPLT.setStubCandidateCount(3);
             await mPLT.setMockTotalChecked(1);
-            await mPLT.considerTentativeLeaderShip(projStub3.address);
+            await mPLT.trackProject(projStub3.address);
           })
 
           after(async () => {

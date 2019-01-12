@@ -82,7 +82,19 @@ constructor
 
   function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
     CallData storage methodState = method['authenticateVoter'];
+    //the below throws an out of gas error? 
+    /* methodState.firstBytes = _signedMessage;
+    methodState.firstBytes32 = unsignedMessage; */
     methodState.firstAddress = voter;
+  }
+
+  function activateProject () internal {
+    CallData storage methodState = method['activateProject'];
+    methodState.called = true;
+  }
+
+  function _activateProject () public {
+    super.activateProject();
   }
 
   function setMockVoteHash (address projectAddr, bytes32 mockHash) {
@@ -103,5 +115,9 @@ constructor
 
   function mockProjectById (uint256 id) public view returns (address) {
     return projectAddress[id];
+  }
+
+  function setMockReOpening (bool status) public {
+    canReOpen = status;
   }
 }

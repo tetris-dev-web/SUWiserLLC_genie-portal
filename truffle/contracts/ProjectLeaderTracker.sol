@@ -31,17 +31,11 @@ contract ProjectLeaderTracker is Ownable {
     candidateCount = candidateCount.add(1);
   }
 
-  function considerTentativeLeaderShip (address projectAddr) public { //we need more tests for new functionality (when its implemented)
-    require(!Project(projectAddr).active());
+  function trackProject (address projectAddr) public { //we need more tests for new functionality (when its implemented)
+    require(projectAddr != address(0) && !Project(projectAddr).active());
 
     if(Project(projectAddr).open()) {
-      if (shouldUpdateTentativeLeader(projectAddr)) {
-        updateTentativeLeader(projectAddr);
-      }
-
-      else if (projectAddr == tentativeLeaderAddr) {
-        maintainTentativeLeaderAndUpdate();
-      }
+      updateTentativeLeader(projectAddr);
     }
 
     recordCheck(projectAddr);
@@ -54,19 +48,39 @@ contract ProjectLeaderTracker is Ownable {
     }
   }
 
-  function updateTentativeLeader (address newLeaderAddr) internal {
-    if (currentLeaderClosed()) {
-      resetProjectsChecked();
+  function updateTentativeLeader (address projectAddr) internal {
+    bool _leaderExists = leaderExists();
+    bool _isLeader;
+    bool _currentLeaderClosed;
+    bool _beatsLeader;
+
+    if (_leaderExists) {
+      _isLeader = isLeader(projectAddr);
+      _currentLeaderClosed = currentLeaderClosed();
+      _beatsLeader = beatsLeader(projectAddr);
+
+      if (_currentLeaderClosed || (_isLeader && !_beatsLeader)) {  //if the real leader can be a project that we have already checked
+        resetProjectsChecked();
+      }
     }
-    setTentativeLeader(newLeaderAddr);
+
+    if (!_leaderExists || _currentLeaderClosed || _beatsLeader) { //if the tentative leader cannot possibly be in the lead
+      setTentativeLeader(projectAddr);
+    } else if (_isLeader) {
+      setLeadingVoteCount();
+    }
   }
 
-  function maintainTentativeLeaderAndUpdate () internal {
-    uint256 currentLeaderVotes = Project(tentativeLeaderAddr).totalVotes_();
-    if (currentLeaderVotes < leadingVoteCount) {
-      resetProjectsChecked();
-    }
-    setLeadingVoteCount();
+  function leaderExists () internal view returns (bool) {
+    return tentativeLeaderAddr != address(0);
+  }
+
+  function isLeader (address projAddr) internal view returns (bool) {
+    return projAddr == tentativeLeaderAddr;
+  }
+
+  function beatsLeader (address projAddr) internal view returns (bool) {
+    return Project(projAddr).totalVotes_() > leadingVoteCount;
   }
 
   function resetProjectsChecked() internal {
@@ -92,14 +106,8 @@ contract ProjectLeaderTracker is Ownable {
     candidateCount = candidateCount.sub(1);
   }
 
-  function shouldUpdateTentativeLeader (address projectAddr) internal view returns (bool) {
-    return Project(projectAddr).totalVotes_() > leadingVoteCount ||
-           tentativeLeaderAddr == address(0) ||
-           !Project(tentativeLeaderAddr).open();
-  }
-
   function currentLeaderClosed () internal view returns (bool) {
-    return (tentativeLeaderAddr != address(0) && !Project(tentativeLeaderAddr).open());
+    return !Project(tentativeLeaderAddr).open();
   }
 
   function alreadyChecked (address projectAddr) internal view returns (bool) {
