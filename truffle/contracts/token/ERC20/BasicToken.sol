@@ -15,9 +15,14 @@ contract BasicToken is ERC20Basic {
   struct Balance {
     uint256 active;
     uint256 inactive;
+    uint256 freedUp;
+    bool exists;
   }
 
   mapping(address => Balance) internal balances;
+
+  mapping(uint256 => address) internal accounts;
+  uint256 internal totalAccounts_;
 
   uint256 internal totalSupply_;
 
@@ -30,6 +35,25 @@ contract BasicToken is ERC20Basic {
     return totalSupply_;
   }
 
+  function totalAccounts () public view returns uint256 {
+    return totalAccounts_;
+  }
+
+  function existingAccount (address account) public view returns (bool) {
+    return accounts[account].exists;
+  }
+
+  function initAccount (address account) internal {
+    if (!existingAccount(account)) {
+      Balance memory newBalance;
+      newBalance.exists = true;
+      balances[account] = newBalance;
+
+      accounts[totalAccounts_] = account;
+      totalAccounts_ = _accountCount.add(1);
+    }
+  }
+
   /**
   * @dev Transfer token for a specified address
   * @param _to The address to transfer to.
@@ -39,6 +63,8 @@ contract BasicToken is ERC20Basic {
 
     require(_value <= balanceOf(msg.sender));
     require(_to != address(0));
+
+    initAccount(_to);
 
     /* balances[msg.sender].total = balances[msg.sender].total.sub(_value); */
     /* balances[_to].total = balances[_to].total.add(_value); */

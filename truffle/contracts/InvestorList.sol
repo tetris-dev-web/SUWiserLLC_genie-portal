@@ -52,12 +52,12 @@ contract InvestorList is Ownable, Secondary {
     }
   }
   //make this function only accessible by crowdsale for security
-  function addVoteCredit (address investorAddr, uint256 votes) public authorize {
+  /* function addVoteCredit (address investorAddr, uint256 votes) public authorize {
     investors[investorIds[investorAddr]].voteCredit = investors[investorIds[investorAddr]].voteCredit.add(votes);
   }
   //make only accessible by corwdsale
   function removeVoteCredit (address investorAddr, uint256 votes) public authorize {
     require(investors[investorIds[investorAddr]].voteCredit >= votes);
     investors[investorIds[investorAddr]].voteCredit = investors[investorIds[investorAddr]].voteCredit.sub(votes);
-  }
+  } */
 }

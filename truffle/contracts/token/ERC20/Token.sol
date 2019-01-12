@@ -25,5 +25,5 @@ contract Token is ActivatableToken {
     transferActive(_from, _to, _value);
 
     return true;
-  }
+  } 
 }

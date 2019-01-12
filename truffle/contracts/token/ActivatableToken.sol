@@ -49,13 +49,10 @@ contract ActivatableToken is MintableToken {
   }
 
   function balanceOf(address _who) public view returns (uint256) {
-    if (
-      currentInactiveTokenCycle == 0 ||
-      accountCycleUpdated(_who)
-      ) {
-        return balances[_who].active.add(balances[_who].inactive);
-      }
-      return activeBalanceOf(_who);
+    if (accountCycleUpdated(_who)) {
+      return balances[_who].active.add(balances[_who].inactive);
+    }
+    return activeBalanceOf(_who);
   }
 
   function activeBalanceOf(address account) public view returns (uint256) {
@@ -63,13 +60,21 @@ contract ActivatableToken is MintableToken {
   }
 
   function inactiveBalanceOf(address account) public view returns (uint256) {
-    if (
-      currentInactiveTokenCycle == 0 ||
-      accountCycleUpdated(account)
-      ) {
-        return balances[account].inactive;
-      }
-      return 0;
+    if (accountCycleUpdated(account)) {
+      return balances[account].inactive;
+    }
+    return 0;
+  }
+
+  function assignedBalanceOf (address account) public view returns (uint256) {
+    return balanceOf(account).sub(freedUpBalanceOf(account));
+  }
+
+  function freedUpBalanceOf (address account) public view returns (uint256) {
+    if (accountCycleUpdated(account)) {
+      return balances[account].freedUp;
+    }
+    return activeBalanceOf(account);
   }
 
   mapping(address => uint256) internal lastActivationPoints;
@@ -112,28 +117,54 @@ contract ActivatableToken is MintableToken {
   }
 
   function transferInactive(address _to, uint256 _value) external onlyOwner {
-    require(inactiveBalanceOf(msg.sender) >= _value);
+    require(_value != 0 && inactiveBalanceOf(msg.sender) >= _value);
     super.transfer(_to, _value);
+
+
+    assign(_from, _value);
+    balances[msg.sender].inactive = balances[msg.sender].inactive.sub(_value);
 
     if (!accountCycleUpdated(_to)) {
       updateAccountCycle(_to);
     }
 
-    balances[msg.sender].inactive = balances[msg.sender].inactive.sub(_value);
     balances[_to].inactive = balances[_to].inactive.add(_value);
+    freeUp(_to, _value);
   }
 
   function transferActive(address _from, address _to, uint256 _value) internal {
+
+    assign(_from, _value);
     balances[_from].active = balances[_from].active.sub(_value);
     balances[_to].active = balances[_to].active.add(_value);
 
-    investorList.addInvestor(_to);//this function will just be here
-    investorList.removeVoteCredit(_from, _value);//same with this one
-    investorList.addVoteCredit(_to, _value);//and this one
+    if (!accountCycleUpdated(_to)) {
+      updateAccountCycle(_to);
+    }
+    
+    freeUp(_to, _value);
+  }
+
+  function freeUp (address account, uint256 amount) public onlyOwner {
+    require(amount != 0 && assignedBalanceOf(account) >= amount);
+
+    //if it gets here, the account must be updated with the current cycle already
+    balances[account].freedUp = balances[account].freedUp.add(amount);
+  }
+
+  function assign (address account, uint256 amount) public onlyOwner {
+    require(freedUpBalanceOf(account) >= amount);
+
+    if (!accountCycleUpdated(account)) {
+      updateAccountCycle(account);
+    }
+
+    balances[account].freedUp = balances[account].freedUp.sub(amount);
   }
 
   function updateAccountCycle (address account) internal {
     balances[account].inactive = 0;
+    balances[account].freedUp = balances[account].active;
     inactiveTokenCycle[currentInactiveTokenCycle].updated[account] = true;
   }
 
