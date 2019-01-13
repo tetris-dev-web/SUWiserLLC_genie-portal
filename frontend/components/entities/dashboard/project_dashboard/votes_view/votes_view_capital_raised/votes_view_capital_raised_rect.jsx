@@ -23,7 +23,7 @@ const VotesViewCapitalRaisedRect = ({x, y, height, fill, opacity, setHoveredStat
 	   { hovered && (
         <text
 					x={"89%"}
-					y={ y + height/2}
+					y={ y + height/2 }
 					className="votes-view-capital-raised-text-right">
               <tspan dx="0" dy="1.4em">{capRaisedTextToDisplay.text}</tspan>
               <tspan dx="-5.5em" dy="1.4em">{capRaisedTextToDisplay.amount}</tspan>
