@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity ^0.4.24;
 import './Dividends.sol';
 import './token/ERC20/Token.sol';
 import './InvestorList.sol';
