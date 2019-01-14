@@ -527,8 +527,8 @@ class ProjectForm extends React.Component {
           <div className="cap-row">
             <span>valuation</span>
 
-            <div className="style2">{this.state.projected_cashflow ? "$" + this.calculateNetPresentValue(Object.values(this.state.projected_cashflow).slice(this.state.currentQuarter - 1)) : '$830,000'}</div>
-            <div className="style2">{this.state.accumulatedRevenue ? "$" + this.calculateCapitalRequired() : "$130,000"}</div>
+            <div className="style2">{this.state.projected_cashflow ? "$" + this.calculateNetPresentValue(Object.values(this.state.projected_cashflow).slice(this.state.currentQuarter - 1)) : 'input info'}</div>
+            <div className="style2">{this.state.accumulatedRevenue ? "$" + this.calculateCapitalRequired() : "input info"}</div>
             <span>capital <br />  required</span>
           </div>
 
