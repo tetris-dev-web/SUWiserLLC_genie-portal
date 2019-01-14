@@ -34,7 +34,7 @@ class StrategyModal extends React.Component {
   render() {
     return(
       <div>
-        <div className="strategy-button" onClick={this.openModal}>STRATEGY</div>
+        <div className="strategy-button overSubButtonText" onClick={this.openModal}>STRATEGY</div>
         <Modal
           isOpen={this.state.openModal}
           onRequestClose={this.closeModal}

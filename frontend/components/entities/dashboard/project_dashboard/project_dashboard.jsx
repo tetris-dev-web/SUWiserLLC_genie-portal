@@ -3,6 +3,7 @@ import ProjectGraph from './loc_view/project_graph';
 import VotesGraph from './votes_view/votes_graph';
 import ToggleOptions from './toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
+import './project_dashboard.scss'
 
 //Combine this with container
 

@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 // import Web3 from 'web3';
 
-class WalletModal extends React.Component{
+class DeveloperInfoButton extends React.Component{
   constructor(props){
     super(props);
     this.state = {
@@ -128,7 +128,7 @@ class WalletModal extends React.Component{
   render(){
     return (
       <div>
-        <div className="strategy-button" onClick={this.openModal}>WalletInfo</div>
+        <div className="strategy-button" onClick={this.openModal}>DEVELOPER INFO</div>
         <Modal
           isOpen={this.state.openModal}
           onRequestClose={this.closeModal}
@@ -157,4 +157,4 @@ class WalletModal extends React.Component{
 
 }
 
-export default WalletModal;
+export default DeveloperInfoButton;
