@@ -62,15 +62,15 @@ module.exports = function (deployer, network, accounts) {
                 Reimbursements.address
             );
         })
-        .then(() => {
-          tokenInstance = Token.at(Token.address);
-          return tokenInstance.initializeDividendWallet(Dividends.address);
-        })
-        .then(() => {
-          const investorListInst = InvestorList.at(InvestorList.address);
-          return investorListInst.transferOwnership(GNITokenCrowdsale.address);
-        })
-        .then(() => {
-          return tokenInstance.transferOwnership(GNITokenCrowdsale.address);
-        });
+        // .then(() => {
+        //   tokenInstance = Token.at(Token.address);
+        //   return tokenInstance.initializeDividendWallet(Dividends.address);
+        // })
+        // .then(() => {
+        //   const investorListInst = InvestorList.at(InvestorList.address);
+        //   return investorListInst.transferOwnership(GNITokenCrowdsale.address);
+        // })
+        // .then(() => {
+        //   return tokenInstance.transferOwnership(GNITokenCrowdsale.address);
+        // });
 };
