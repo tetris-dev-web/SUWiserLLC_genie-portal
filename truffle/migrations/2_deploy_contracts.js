@@ -16,18 +16,13 @@ module.exports = function (deployer, network, accounts) {
 
     return deployer
         .then(() => {
-          return deployer.deploy(InvestorList);
-        })
-        .then(() => {
-          console.log('INVESTOR LIST', InvestorList.address);
-          return deployer.deploy(Token, InvestorList.address);
+          return deployer.deploy(Token);
         })
         .then(() => {
           return deployer.deploy(
             Dividends,
             Token.address,
-            developer,
-            InvestorList.address
+            developer
           );
         })
         .then(() => {
@@ -69,7 +64,6 @@ module.exports = function (deployer, network, accounts) {
                 developer,
                 Dividends.address,
                 Token.address,
-                InvestorList.address,
                 ProjectLeaderTracker.address,
                 Reimbursements.address
             );
@@ -77,13 +71,6 @@ module.exports = function (deployer, network, accounts) {
         .then(() => {
           tokenInstance = Token.at(Token.address);
           return tokenInstance.initializeDividendWallet(Dividends.address);
-        })
-        .then(() => {
-          investorListInst = InvestorList.at(InvestorList.address);
-          return investorListInst.transferOwnership(GNITokenCrowdsale.address);
-        })
-        .then(() => {
-          return investorListInst.transferPrimary(Token.address);
         })
         .then(() => {
           const projectLeaderBoardInst = ProjectLeaderTracker.at(ProjectLeaderTracker.address);
@@ -97,7 +84,13 @@ module.exports = function (deployer, network, accounts) {
           return reimbursementsInst.transferOwnership(GNITokenCrowdsale.address);
         });
 };
-
+// .then(() => {
+//   investorListInst = InvestorList.at(InvestorList.address);
+//   return investorListInst.transferOwnership(GNITokenCrowdsale.address);
+// })
+// .then(() => {
+//   return investorListInst.transferPrimary(Token.address);
+// })
 // console.log('DEVELOPER', developer);
 // console.log('OPENING TIME', openingTime);
 // console.log('DOOMS DAY', doomsDay);

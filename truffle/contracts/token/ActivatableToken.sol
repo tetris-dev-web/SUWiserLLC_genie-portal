@@ -6,12 +6,6 @@ import '../ContractStub.sol';
 
 contract ActivatableToken is MintableToken {
   address public dividendWallet;
-  InvestorList private investorList;
-
-  constructor (InvestorList _investorList) public {
-    investorList = InvestorList(_investorList);
-  }
-  //still need to test this new functionality
   struct InactiveTokenCycle {
     mapping(address => bool) updated;
   }
@@ -67,14 +61,19 @@ contract ActivatableToken is MintableToken {
   }
 
   function assignedBalanceOf (address account) public view returns (uint256) {
-    return balanceOf(account).sub(freedUpBalanceOf(account));
+    /* return balanceOf(account).sub(freedUpBalanceOf(account)); */
+    if (accountCycleUpdated(account)) {
+      return balances[account].assigned;
+    }
+    return 0;
   }
 
   function freedUpBalanceOf (address account) public view returns (uint256) {
-    if (accountCycleUpdated(account)) {
+    /* if (accountCycleUpdated(account)) {
       return balances[account].freedUp;
     }
-    return activeBalanceOf(account);
+    return activeBalanceOf(account); */
+    return balanceOf(account).sub(assignedBalanceOf(account));
   }
 
   mapping(address => uint256) internal lastActivationPoints;
@@ -117,39 +116,32 @@ contract ActivatableToken is MintableToken {
   }
 
   function transferInactive(address _to, uint256 _value) external onlyOwner {
-    require(_value != 0 && inactiveBalanceOf(msg.sender) >= _value);
-    super.transfer(_to, _value);
-
-
-    assign(_from, _value);
-    balances[msg.sender].inactive = balances[msg.sender].inactive.sub(_value);
+    require(_value != 0);
+    require(inactiveBalanceOf(msg.sender) >= _value);
+    require(freedUpBalanceOf(msg.sender) >= _value);
+    super.transfer(_to, _value);//we should change this
 
     if (!accountCycleUpdated(_to)) {
       updateAccountCycle(_to);
     }
 
+    balances[msg.sender].inactive = balances[msg.sender].inactive.sub(_value);
     balances[_to].inactive = balances[_to].inactive.add(_value);
-    freeUp(_to, _value);
   }
 
   function transferActive(address _from, address _to, uint256 _value) internal {
-
-    assign(_from, _value);
-    balances[_from].active = balances[_from].active.sub(_value);
-    balances[_to].active = balances[_to].active.add(_value);
-
     if (!accountCycleUpdated(_to)) {
       updateAccountCycle(_to);
     }
-    
-    freeUp(_to, _value);
+    balances[_from].active = balances[_from].active.sub(_value);
+    balances[_to].active = balances[_to].active.add(_value);
   }
 
   function freeUp (address account, uint256 amount) public onlyOwner {
     require(amount != 0 && assignedBalanceOf(account) >= amount);
 
-    //if it gets here, the account must be updated with the current cycle already
-    balances[account].freedUp = balances[account].freedUp.add(amount);
+    //if we reach here, it means the account must be updated with the current cycle bc otherwise assignedBalanceOf returns 0
+    balances[account].assigned = balances[account].assigned.sub(amount);
   }
 
   function assign (address account, uint256 amount) public onlyOwner {
@@ -159,12 +151,14 @@ contract ActivatableToken is MintableToken {
       updateAccountCycle(account);
     }
 
-    balances[account].freedUp = balances[account].freedUp.sub(amount);
+    balances[account].assigned = balances[account].assigned.add(amount);
   }
+
+
 
   function updateAccountCycle (address account) internal {
     balances[account].inactive = 0;
-    balances[account].freedUp = balances[account].active;
+    balances[account].assigned = 0;
     inactiveTokenCycle[currentInactiveTokenCycle].updated[account] = true;
   }
 

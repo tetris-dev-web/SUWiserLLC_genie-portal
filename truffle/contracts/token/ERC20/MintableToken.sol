@@ -1,7 +1,6 @@
 pragma solidity 0.4.24;
 
 import "./StandardToken.sol";
-import "../ActivatableToken.sol";
 import "../../utility/Ownable.sol";
 
 
@@ -10,7 +9,7 @@ import "../../utility/Ownable.sol";
  * @dev Simple ERC20 Token example, with mintable token creation
  * Based on code by TokenMarketNet: https://github.com/TokenMarketNet/ico/blob/master/contracts/MintableToken.sol
  */
-contract MintableToken is StandardToken, ActivatableToken, Ownable {
+contract MintableToken is StandardToken, Ownable {
   event Mint(address indexed to, uint256 amount);
   event MintFinished();
 
@@ -50,12 +49,12 @@ contract MintableToken is StandardToken, ActivatableToken, Ownable {
   {
     totalSupply_ = totalSupply_.add(_amount);
 
-    if(!accountCycleUpdated(_to)) {
+    /* if(!accountCycleUpdated(_to)) {
       updateAccountCycle(_to);
-    }
+    } */
     /* balances[_to].total = balances[_to].total.add(_amount); */
     balances[_to].inactive = balances[_to].inactive.add(_amount);
-    balances[_to].freedUp = balances[_to].freedUp.add(_amount);
+    /* balances[_to].freedUp = balances[_to].freedUp.add(_amount); */
     emit Mint(_to, _amount);
     emit Transfer(address(0), _to, _amount);
     return true;

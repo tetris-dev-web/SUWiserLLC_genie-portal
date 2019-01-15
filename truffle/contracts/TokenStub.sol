@@ -4,9 +4,6 @@ import './InvestorList.sol';
 import './ContractStub.sol';
 
 contract TokenStub is Token, ContractStub {
-  constructor(InvestorList _investorList) public
-  Token(_investorList) {}
-
   address mockInvestorA;
   address mockInvestorB;
   address mockInvestorC;

@@ -1,5 +1,5 @@
 const GNITokenCrowdsaleMock = artifacts.require("GNITokenCrowdsaleMock");
-const InvestorListStub = artifacts.require("InvestorListStub");
+// const InvestorListStub = artifacts.require("InvestorListStub");
 const TokenStub = artifacts.require("TokenStub");
 const ProjectStub = artifacts.require("ProjectStub");
 const ProjectLeaderTrackerStub = artifacts.require("ProjectLeaderTrackerStub");
@@ -12,7 +12,7 @@ const { parseBN, parseMethod, weiBalanceOf } = require('./parseUtil');
 
 let accounts;
 let mockGTC;
-let iLStub;
+// let iLStub;
 let tokenStub;
 let lTStub;
 let rStub;
@@ -147,7 +147,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
         initialDoomsDay = await parseMethod(getDoomsDay);
 
         await stubUtil.addMethod(tokenStub, 'activatePending');
-        await stubUtil.addMethod(iLStub, 'addInvestor');
+        // await stubUtil.addMethod(iLStub, 'addInvestor');
         await stubUtil.addMethod(tokenStub, 'transferInactive');
         await stubUtil.addMethod(projStub1, 'vote');
         await stubUtil.addMethod(mockGTC, 'trackProject');
@@ -158,7 +158,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
 
       after(async () => {
         await stubUtil.resetMethod(tokenStub, 'activatePending');
-        await stubUtil.resetMethod(iLStub, 'addInvestor');
+        // await stubUtil.resetMethod(iLStub, 'addInvestor');
         // await stubUtil.resetMethod(tokenStub, 'transferInactive');
         // await stubUtil.resetMethod(projStub1, 'vote');
         // await stubUtil.resetMethod(mockGTC, 'trackProject');
@@ -313,7 +313,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
   describe('removeVotesFromProject_', async () => {
     before(async () => {
       await stubUtil.addMethod(projStub2, 'removeVotes');
-      await stubUtil.addMethod(iLStub, 'addVoteCredit');
+      // await stubUtil.addMethod(iLStub, 'addVoteCredit');
       await stubUtil.addMethod(mockGTC, 'attemptProjectActivation');
       await stubUtil.addMethod(lTStub, 'trackProject');
       await mockGTC._removeVotesFromProject_(accounts[2], projStub2.address, 20000000);
@@ -321,7 +321,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
 
     after(async () => {
       await stubUtil.resetMethod(projStub2, 'removeVotes');
-      await stubUtil.resetMethod(iLStub, 'addVoteCredit');
+      // await stubUtil.resetMethod(iLStub, 'addVoteCredit');
       await stubUtil.resetMethod(mockGTC, 'attemptProjectActivation');
       await stubUtil.resetMethod(lTStub, 'trackProject');
     })
@@ -332,11 +332,11 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       assert.equal(firstUint, 20000000, 'incorrect vote amount transfered from project');
     })
 
-    it('assigns the inicated amount of vote credit to the sender', async () => {
-      let { firstAddress, firstUint } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
-      assert.equal(firstAddress, accounts[2], 'votes not assigned for correct voter');
-      assert.equal(firstUint, 20000000, 'incorrect vote credit amount assigned');
-    })
+    // it('assigns the inicated amount of vote credit to the sender', async () => {
+    //   let { firstAddress, firstUint } = await stubUtil.callHistory(iLStub, 'addVoteCredit');
+    //   assert.equal(firstAddress, accounts[2], 'votes not assigned for correct voter');
+    //   assert.equal(firstUint, 20000000, 'incorrect vote credit amount assigned');
+    // })
 
     it('considers the project for leadership', async () => {
       let { called, firstAddress } = await stubUtil.callHistory(lTStub, 'trackProject');
@@ -412,7 +412,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
   describe('voteForProject', async () => {
     before(async () => {
       await stubUtil.addMethod(projStub3, 'vote');
-      await stubUtil.addMethod(iLStub, 'removeVoteCredit');
+      // await stubUtil.addMethod(iLStub, 'removeVoteCredit');
       await stubUtil.addMethod(mockGTC, 'authenticateVoter');
       await stubUtil.addMethod(mockGTC, 'activateProject');
       await stubUtil.addMethod(mockGTC, 'authenticateVoter');
@@ -424,7 +424,7 @@ contract('GNITokenCrowdsale', async (_accounts) => {
 
     after(async () => {
       await stubUtil.resetMethod(projStub3, 'vote');
-      await stubUtil.resetMethod(iLStub, 'removeVoteCredit');
+      // await stubUtil.resetMethod(iLStub, 'removeVoteCredit');
       await stubUtil.resetMethod(lTStub, 'trackProject');
       await stubUtil.resetMethod(mockGTC, 'authenticateVoter');
       await stubUtil.resetMethod(mockGTC, 'activateProject');
@@ -437,11 +437,11 @@ contract('GNITokenCrowdsale', async (_accounts) => {
       assert.equal(firstAddress, accounts[2], 'authentication should be passed the voter address');
     })
 
-    it('removes the indicated amount of votes from the senders vote credit', async () => {
-      let { firstAddress, firstUint } = await stubUtil.callHistory(iLStub, 'removeVoteCredit');
-      assert.equal(firstAddress, accounts[2], 'votes credit not removed for the correct voter');
-      assert.equal(firstUint, 20000000, 'incorrect vote credit amount removed');
-    })
+    // it('removes the indicated amount of votes from the senders vote credit', async () => {
+    //   let { firstAddress, firstUint } = await stubUtil.callHistory(iLStub, 'removeVoteCredit');
+    //   assert.equal(firstAddress, accounts[2], 'votes credit not removed for the correct voter');
+    //   assert.equal(firstUint, 20000000, 'incorrect vote credit amount removed');
+    // })
 
     it('votes for the project indicated', async () => {
       let { firstAddress, firstUint } = await stubUtil.callHistory(projStub3, 'vote');
@@ -645,7 +645,7 @@ const initMock = async () => {
   defaultOpeningTime = await getLatestBlockTime();
   defaultDoomsDay = defaultOpeningTime + 86400 * 240;
   //possibly reverting because of race conditions with the linked library? I think thats the only thing that changed...
-  mockGTC = await GNITokenCrowdsaleMock.new(defaultOpeningTime, defaultDoomsDay, 50, accounts[1], accounts[2], tokenStub.address, iLStub.address, lTStub.address, rStub.address);
+  mockGTC = await GNITokenCrowdsaleMock.new(defaultOpeningTime, defaultDoomsDay, 50, accounts[1], accounts[2], tokenStub.address, lTStub.address, rStub.address);
 }
 
 const initProjectStubs = async () => {
@@ -674,9 +674,9 @@ const initProjectStubs = async () => {
   await mockGTC.addMockProject(projStub3.address);
 }
 
-const initIL = async () => {
-  iLStub = await InvestorListStub.new();
-}
+// const initIL = async () => {
+//   iLStub = await InvestorListStub.new();
+// }
 
 const initToken = async () => {
   tokenStub = await TokenStub.new(iLStub.address);

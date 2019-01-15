@@ -5,7 +5,7 @@ import './token/ERC20/Token.sol';
 import './InvestorList.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
 import './TokenStub.sol';
-import './InvestorListStub.sol';
+/* import './InvestorListStub.sol'; */
 import './ContractStub.sol';
 import './ProjectLeaderTracker.sol';
 import './Reimbursements.sol';
@@ -19,12 +19,12 @@ constructor
     address _developer,
     address _dividendWallet,
     TokenStub _token,
-    InvestorListStub _investorList,
+    /* InvestorListStub _investorList, */
     ProjectLeaderTracker _projectLeaderTracker,
     address _reimbursements
   )
   public
-  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _investorList, _projectLeaderTracker, _reimbursements) {}
+  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _projectLeaderTracker, _reimbursements) {}
 
   function receiveMockWei () external payable {
 
@@ -82,7 +82,7 @@ constructor
 
   function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
     CallData storage methodState = method['authenticateVoter'];
-    //the below throws an out of gas error? 
+    //the below throws an out of gas error?
     /* methodState.firstBytes = _signedMessage;
     methodState.firstBytes32 = unsignedMessage; */
     methodState.firstAddress = voter;

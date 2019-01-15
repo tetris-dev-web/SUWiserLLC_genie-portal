@@ -1,13 +1,9 @@
 pragma solidity 0.4.24;
 
 import './ERC20/Token.sol';
-import './../InvestorList.sol';
 import './../ContractStub.sol';
 
 contract TokenMock is Token, ContractStub {
-  constructor(InvestorList _investorList) public
-  Token(_investorList) {}
-
   function setMockTotalActivationPonts (uint256 newTokens, uint256 inactiveSupply) public {
     totalActivationPoints = newTokens.mul(activationMultiplier).div(inactiveSupply);
   }
@@ -39,12 +35,16 @@ contract TokenMock is Token, ContractStub {
   function resetSupply () public {
     totalSupply_ = 0;
     totalActiveSupply_ = 0;
+    totalAccounts_ = 0;
   }
 
-  function initMockBalance (address addr, uint256 active, uint256 inactive) public {
+  function initMockBalance (address addr, uint256 active, uint256 inactive, uint256 assigned) public {
     balances[addr].inactive = inactive;
     balances[addr].active = active;
+    balances[addr].assigned = assigned;
+    balances[addr].exists = true;
 
+    totalAccounts_ = totalAccounts_.add(1); 
     totalSupply_ = totalSupply_.add(active).add(inactive);
     totalActiveSupply_ = totalActiveSupply_.add(active);
   }

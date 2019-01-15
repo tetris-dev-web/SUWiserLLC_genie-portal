@@ -15,7 +15,7 @@ contract BasicToken is ERC20Basic {
   struct Balance {
     uint256 active;
     uint256 inactive;
-    uint256 freedUp;
+    uint256 assigned;
     bool exists;
   }
 
@@ -35,12 +35,12 @@ contract BasicToken is ERC20Basic {
     return totalSupply_;
   }
 
-  function totalAccounts () public view returns uint256 {
+  function totalAccounts () public view returns (uint256) {
     return totalAccounts_;
   }
 
   function existingAccount (address account) public view returns (bool) {
-    return accounts[account].exists;
+    return balances[account].exists;
   }
 
   function initAccount (address account) internal {
@@ -50,7 +50,7 @@ contract BasicToken is ERC20Basic {
       balances[account] = newBalance;
 
       accounts[totalAccounts_] = account;
-      totalAccounts_ = _accountCount.add(1);
+      totalAccounts_ = totalAccounts_.add(1);
     }
   }
 
