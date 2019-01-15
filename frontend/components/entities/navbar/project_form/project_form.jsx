@@ -9,7 +9,7 @@ import Finance from 'financejs';
 import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
 import { merge } from 'lodash';
-import PolyModal from './poly_modal/poly_modal';
+import './project_form.scss';
 
 class ProjectForm extends React.Component {
 

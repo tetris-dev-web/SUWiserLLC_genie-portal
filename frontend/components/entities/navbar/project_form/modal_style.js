@@ -15,7 +15,7 @@ module.exports = {
     paddingBottom   : 0,
     right           : 0,
     borderRadius    : '0 0 0 15px',
-    backgroundColor : '#49797a',
+    backgroundColor : '#4a7a7b',
     // zIndex          : 101,
     color           : 'white',
     minHeight       : '480px',
