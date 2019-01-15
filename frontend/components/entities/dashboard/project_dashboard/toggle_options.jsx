@@ -36,7 +36,7 @@ class ToggleOptions extends React.Component {
     const options = this.generateOptions();
 
     return (
-      <div className="toggle-view-options-container">
+      <div className={viewId === null ? "toggle-view-options-container-graph-hidden" : "toggle-view-options-container"}>
         <div className='toggle-view-options'
           onMouseEnter={this.handleHover}
           onMouseLeave={this.handleHover}>
