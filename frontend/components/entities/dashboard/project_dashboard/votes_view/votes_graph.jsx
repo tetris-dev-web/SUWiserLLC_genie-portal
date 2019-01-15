@@ -5,7 +5,7 @@ import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_p
 import VoteShiftTool from './vote_shift_tool';
 import './votes_graph.scss';
 
-const activationHistoryValuationMinMax = (projects) => {
+const deployedProjectsValuationMinMax = (projects) => {
   const projectValuations = projects.map(project => project.valuation);
 
   return [Math.min(...projectValuations), Math.max(...projectValuations)];
@@ -51,8 +51,8 @@ const mapStateToProps = () => {
       },
     ].sort((a, b) => b.voteShare - a.voteShare),
     maxValuation: 5000000,
-    capitalRaised: 3000000,
-    capital: 7436961,
+    capitalBeingRaised: 3000000,
+    capitalTotal: 7436961,
     startTime: 0,
     endTime: 13305600,
     lineData: [
@@ -212,7 +212,7 @@ const mapStateToProps = () => {
       { date: 13219200, capital: 7416239 },
       { date: 13305600, capital: 7436961 }
     ],
-    activationHistory: [
+    deployedProjects: [
       {
         title: 'proj1',
         time: 3369600,
@@ -232,7 +232,7 @@ const mapStateToProps = () => {
         valuation: 6000000
       }
     ],
-    activationHistoryValuationMinMax: activationHistoryValuationMinMax(
+    deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(
       [
         {
           title: 'proj1',
@@ -267,7 +267,7 @@ export class VotesGraph extends React.Component {
   }
 
   render() {
-    const { maxValuation, capitalRaised, capital } = this.props;
+    const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
     return (
       <div className="votes-graph" style={{ marginTop: maxValuation / 24000 }}>
         <div className="vote-shift-tool-container"

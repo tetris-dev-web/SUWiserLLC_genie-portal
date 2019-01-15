@@ -1,6 +1,8 @@
 import React from 'react';
 import Modal from 'react-modal';
 import ModalStyle from './modal_style';
+import './project_view.scss';
+import DoomsDayDetail from './dooms_day_detail';
 
 class StrategyModal extends React.Component {
 
@@ -32,7 +34,7 @@ class StrategyModal extends React.Component {
   render() {
     return(
       <div>
-        <div className="strategy-button" onClick={this.openModal}>STRATEGY</div>
+        <div className="strategy-button overSubButtonText" onClick={this.openModal}>STRATEGY</div>
         <Modal
           isOpen={this.state.openModal}
           onRequestClose={this.closeModal}
@@ -54,6 +56,9 @@ class StrategyModal extends React.Component {
               <p className="ft-el-text">Genus Development Partners is an integrated real estate investment, design and development company headquartered in New York City that focuses on innovative and synergistic multi-use projects in central areas of large multi-cultural cities throughout the Americas. Each project will integrate a workshare/cooperative element. Current geographical foci are New York City, Philadelphia, Bogota and Puerto Rico. Genus Development will host a portal where potential investors can analyze projects through a data-driven dashboard. Stakes in each each project may be purchased as blockchain ledgered tokens that are tradable on secondary markets.
               </p>
             </div>
+          </div>
+          <div className='doomsday-style'>
+            <DoomsDayDetail />
           </div>
         </Modal>
       </div>

@@ -32,7 +32,7 @@ class BylawsModal extends React.Component {
   render() {
     return(
       <div>
-        <div className="bylaw-button" onClick={this.openModal}>BYLAWS</div>
+        <div className="bylaw-button overSubButtonText" onClick={this.openModal}>BYLAWS</div>
         <Modal
           isOpen={this.state.openModal}
           onRequestClose={this.closeModal}
