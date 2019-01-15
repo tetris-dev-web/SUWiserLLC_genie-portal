@@ -40,7 +40,7 @@ class ProjectGraph extends React.Component {
   }
 
   componentDidMount(){
-    this.props.fetchProjects().then(() => {
+    this.props.fetchProjects(this.props.crowdsaleInstance, this.props.projectContract).then(() => {
       this.setUp();
     });
   }

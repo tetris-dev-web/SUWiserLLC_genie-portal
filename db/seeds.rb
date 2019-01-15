@@ -281,141 +281,141 @@ user_account3 = UserAccount.create!(
   user_id: user2.id,account_id:developer.id
 )
 
+#BlockChainAccounts
+BlockChainAccount.create!(private_key: 'B93CCB911EAD59F21CE693ACB2AAEC2B1377F1FFD029F1AC3E48B531F54F3236', address: '0xEF898fd948F50D5010d3Ec20233faE23D89a1a51')
 
 # projects
 
-project0 = Project.create!(
-  title: "Genesis",
-  revenue: 250000,
-  valuation: 10000000,
-  city: "New York",
-  country: "USA",
-  continent: "North America",
-  model_id: "7syizSLPN60",
-  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-  description: "BNB/ Business Incubator",
-  creator_id: user2.id,
-  created_at: "14/03/2018",
-  status: "deployed",
-  cashflow: genesis_cashflow,
-  votes:genesis_votes,
-  sketch_link: genesis_sketch_link,
-  bus_plan_link: genesis_bus_link,
-  start_date: genesis_start_date,
-  close_date: genesis_end_date,
-  latitude:hamInn_lat,
-  longitude:hamInn_lng,
-  summary:genesis_summary,
-  actual_cashflow: genesis_Act_Cashflow,
-  accum_actual_cashflow: genesis_Act_Acc_Cashflow,
-  projected_cashflow: genesis_Proj_Cashflow,
-  accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
-  capital_required:genesis_cap_required,
-  current_capital:genesis_current_cap
-)
-
-project2 = Project.create!(
-  title: "Fitness Complex",
-  revenue: 250,
-  valuation: 400000,
-  capital_required: 250000,
-  city: "Rio",
-  country: "Brazil",
-  continent: "South America",
-  model_id: "7syizSLPN60",
-  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-  creator_id: user2.id,
-  created_at: "12/02/2018",
-  status: "deployed"
-)
-
-project3 = Project.create!(
-  title: "Sleepless Nights",
-  revenue: 5060,
-  valuation: 478880,
-  capital_required: 350000,
-  city: "Seattle",
-  country: "USA",
-  continent: "North America",
-  model_id: "7syizSLPN60",
-  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-  creator_id: user1.id,
-  created_at: "14/03/2018",
-  status: "pitched"
-)
-
-project4 = Project.create!(
-  title: "HamInn",
-  revenue: 8000,
-  valuation: 1700000,
-  capital_required: 1000000,
-  city: "New York",
-  country: "USA",
-  continent: "North America",
-  model_id: "51be9e3e-f32e-4825-a011-eac8a9132a00",
-  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-  description: "BNB/ Business Incubator",
-  creator_id: user2.id,
-  created_at: "14/03/2018",
-  status: "deployed",
-  cashflow: genesis_cashflow,
-  sketch_link: hamInn_sketch_link,
-  bus_plan_link: hamInn_bus_link,
-  start_date: hamInn_start_date,
-  close_date: hamInn_end_date,
-  latitude:hamInn_lat,
-  votes:hamInn_votes,
-  longitude:hamInn_lng,
-  summary:hamInn_summary,
-  current_capital:hamInn_current_cap
-)
-project5 = Project.create!(
-  title: "Penn Generator",
-  revenue: 6000,
-  valuation: 720000,
-  capital_required: 400000,
-  city: "Philidelphia",
-  country: "USA",
-  continent: "North America",
-  model_id: "7syizSLPN60",
-  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-  description: "BNB/ Business Incubator",
-  creator_id: user2.id,
-  created_at: "14/03/2018",
-  status: "deployed"
-)
-project6 = Project.create!(
-  title: "BeefInn",
-  revenue: 9000,
-  valuation: 1000000,
-  capital_required: 600000,
-  city: "Bogota",
-  country: "Columbia",
-  continent: "South America",
-  model_id: "7syizSLPN60",
-  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-  description: "BNB/ Business Incubator",
-  creator_id: user2.id,
-  created_at: "14/03/2018",
-  status: "pitched"
-)
-project6 = Project.create!(
-  title: "ChickInn",
-  revenue: 27000,
-  valuation: 200000,
-  capital_required: 125000,
-  city: "Berlin",
-  country: "Germany",
-  continent: "Europe",
-  model_id: "7syizSLPN60",
-  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-  description: "BNB/ Business Incubator",
-  creator_id: user2.id,
-  created_at: "14/03/2018",
-  status: "pitched"
-)
+# project0 = Project.create!(
+#   title: "Genesis",
+#   revenue: 250000,
+#   valuation: 10000000,
+#   city: "New York",
+#   country: "USA",
+#   continent: "North America",
+#   model_id: "7syizSLPN60",
+#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#   description: "BNB/ Business Incubator",
+#   creator_id: user2.id,
+#   created_at: "14/03/2018",
+#   status: "deployed",
+#   cashflow: genesis_cashflow,
+#   votes:genesis_votes,
+#   sketch_link: genesis_sketch_link,
+#   bus_plan_link: genesis_bus_link,
+#   start_date: genesis_start_date,
+#   close_date: genesis_end_date,
+#   latitude:hamInn_lat,
+#   longitude:hamInn_lng,
+#   summary:genesis_summary,
+#   actual_cashflow: genesis_Act_Cashflow,
+#   accum_actual_cashflow: genesis_Act_Acc_Cashflow,
+#   projected_cashflow: genesis_Proj_Cashflow,
+#   accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
+#   capital_required:genesis_cap_required,
+# )
+#
+# project2 = Project.create!(
+#   title: "Fitness Complex",
+#   revenue: 250,
+#   valuation: 400000,
+#   capital_required: 250000,
+#   city: "Rio",
+#   country: "Brazil",
+#   continent: "South America",
+#   model_id: "7syizSLPN60",
+#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+#   creator_id: user2.id,
+#   created_at: "12/02/2018",
+#   status: "deployed"
+# )
+#
+# project3 = Project.create!(
+#   title: "Sleepless Nights",
+#   revenue: 5060,
+#   valuation: 478880,
+#   capital_required: 350000,
+#   city: "Seattle",
+#   country: "USA",
+#   continent: "North America",
+#   model_id: "7syizSLPN60",
+#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+#   creator_id: user1.id,
+#   created_at: "14/03/2018",
+#   status: "pitched"
+# )
+#
+# project4 = Project.create!(
+#   title: "HamInn",
+#   revenue: 8000,
+#   valuation: 1700000,
+#   capital_required: 1000000,
+#   city: "New York",
+#   country: "USA",
+#   continent: "North America",
+#   model_id: "51be9e3e-f32e-4825-a011-eac8a9132a00",
+#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#   description: "BNB/ Business Incubator",
+#   creator_id: user2.id,
+#   created_at: "14/03/2018",
+#   status: "deployed",
+#   cashflow: genesis_cashflow,
+#   sketch_link: hamInn_sketch_link,
+#   bus_plan_link: hamInn_bus_link,
+#   start_date: hamInn_start_date,
+#   close_date: hamInn_end_date,
+#   latitude:hamInn_lat,
+#   votes:hamInn_votes,
+#   longitude:hamInn_lng,
+#   summary:hamInn_summary
+# )
+# project5 = Project.create!(
+#   title: "Penn Generator",
+#   revenue: 6000,
+#   valuation: 720000,
+#   capital_required: 400000,
+#   city: "Philidelphia",
+#   country: "USA",
+#   continent: "North America",
+#   model_id: "7syizSLPN60",
+#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#   description: "BNB/ Business Incubator",
+#   creator_id: user2.id,
+#   created_at: "14/03/2018",
+#   status: "deployed"
+# )
+# project6 = Project.create!(
+#   title: "BeefInn",
+#   revenue: 9000,
+#   valuation: 1000000,
+#   capital_required: 600000,
+#   city: "Bogota",
+#   country: "Columbia",
+#   continent: "South America",
+#   model_id: "7syizSLPN60",
+#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#   description: "BNB/ Business Incubator",
+#   creator_id: user2.id,
+#   created_at: "14/03/2018",
+#   status: "pitched"
+# )
+# project6 = Project.create!(
+#   title: "ChickInn",
+#   revenue: 27000,
+#   valuation: 200000,
+#   capital_required: 125000,
+#   city: "Berlin",
+#   country: "Germany",
+#   continent: "Europe",
+#   model_id: "7syizSLPN60",
+#   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#   description: "BNB/ Business Incubator",
+#   creator_id: user2.id,
+#   created_at: "14/03/2018",
+#   status: "pitched"
+# )
 
 # project7 = Project.create(
 #   title: "Genesis Sans 3d",
@@ -432,22 +432,22 @@ project6 = Project.create!(
 #   status: "pitched"
 # )
 
-project8 = Project.create(
- title: "Genesis Sans 3d",
- valuation: 210000,
- capital_required: 125000,
- model_id: nil,
- icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
- description: "BNB/ Business Incubator",
- creator_id: 4,
- revenue: 27000,
- city: "New York",
- country: "United States",
- continent: "North America",
- status: "pitched",
- cashflow: genesis_cashflow,
- latitude: 0.4083637e2,
- longitude: -0.73944585e2,
- summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
- votes: hamInn_votes
-)
+# project8 = Project.create(
+#  title: "Genesis Sans 3d",
+#  valuation: 210000,
+#  capital_required: 125000,
+#  model_id: nil,
+#  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
+#  description: "BNB/ Business Incubator",
+#  creator_id: 4,
+#  revenue: 27000,
+#  city: "New York",
+#  country: "United States",
+#  continent: "North America",
+#  status: "pitched",
+#  cashflow: genesis_cashflow,
+#  latitude: 0.4083637e2,
+#  longitude: -0.73944585e2,
+#  summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
+#  votes: hamInn_votes
+# )

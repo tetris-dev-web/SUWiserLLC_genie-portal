@@ -5,8 +5,10 @@ import './token/ERC20/Token.sol';
 import './InvestorList.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
 import './TokenStub.sol';
-import './InvestorListStub.sol';
+/* import './InvestorListStub.sol'; */
 import './ContractStub.sol';
+import './ProjectLeaderTracker.sol';
+import './Reimbursements.sol';
 
 contract GNITokenCrowdsaleMock is GNITokenCrowdsale, ContractStub {
 constructor
@@ -17,14 +19,19 @@ constructor
     address _developer,
     address _dividendWallet,
     TokenStub _token,
-    InvestorListStub _investorList,
+    /* InvestorListStub _investorList, */
+    ProjectLeaderTracker _projectLeaderTracker,
     address _reimbursements
   )
   public
-  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _investorList, _reimbursements) {}
+  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _projectLeaderTracker, _reimbursements) {}
 
-  /* function receiveMockWei () external payable {
+  function receiveMockWei () external payable {
 
+  }
+
+  function setStubProjectCount (uint256 count) public {
+    totalProjectCount = count;
   }
 
   function setMockWeiRaised (uint256 mockRaised_) public {
@@ -32,7 +39,7 @@ constructor
   }
 
   function mockProjectCount () public view returns (uint256) {
-    return projectAddrs.length;
+    return totalProjectCount;
   }
 
   function mockDoomsDay () public view returns (uint256) {
@@ -44,92 +51,73 @@ constructor
   }
 
   function lastAddedAddr () public view returns (address) {
-    return projectAddrs[projectAddrs.length - 1];
+    return projectAddress[totalProjectCount];
   }
 
   function setMockOpening (uint256 _openingTime) public {
     /* openingTime = openingTime.mul(openMultiplier); */
-    /* openingTime = _openingTime;
-  } */
+    openingTime = _openingTime;
+  }
 
-  /* function setMockDoomsDay (uint256 _doomsDay) public {
+  function setMockDoomsDay (uint256 _doomsDay) public {
     /* doomsDay = doomsDay.div(doomDivisor); */
-    /* doomsDay = _doomsDay;
-  } */
+    doomsDay = _doomsDay;
+  }
 
-  /* function addMockProject (address projAddr) public {
-    projectAddrs.push(projAddr);
-  } */
+  function addMockProject (address projAddr) public {
+    totalProjectCount = totalProjectCount.add(1);
+    projectAddress[totalProjectCount] = projAddr;
+  }
 
-  /* function _addVoteCredit_ (address account, uint256 fromProjectId, uint256 votes) public {
-    super.addVoteCredit_(account, fromProjectId, votes);
-  } */
+  function _removeVotesFromProject_ (address account, address fromProjectAddr, uint256 votes) public {
+    super.removeVotesFromProject_(account, fromProjectAddr, votes);
+  }
 
-  /* function addVoteCredit_ (address account, uint256 fromProjectId, uint256 votes) internal {
-    CallData storage methodState = method['addVoteCredit_'];
+  function removeVotesFromProject_ (address account, address fromProjectAddr, uint256 votes) internal {
+    CallData storage methodState = method['removeVotesFromProject_'];
     methodState.firstAddress = account;
-    methodState.firstUint = fromProjectId;
-    methodState.secondUint = votes;
-  } */
-
-  /* function totalChecked () public view returns(uint256) {
-    return checkCycle[currentCheckCycle].totalChecked;
-  } */
-
-  /* function checkedStatusOf(address projectAddr) public view returns (bool) {
-    return checkCycle[currentCheckCycle].isChecked[projectAddr];
-  } */
-
-  /* function setStubProjectCount (uint256 count) public {
-    inactiveProjectCount = count;
+    methodState.secondAddress = fromProjectAddr;
+    methodState.firstUint = votes;
   }
 
-  function setMockTotalChecked(uint256 num) public {
-    checkCycle[currentCheckCycle].totalChecked = num;
-  } */
-
-  /* function setMockConfirmedLeaderStatus (bool status) public {
-    tentativeLeaderConfirmed = status;
+  function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
+    CallData storage methodState = method['authenticateVoter'];
+    //the below throws an out of gas error?
+    /* methodState.firstBytes = _signedMessage;
+    methodState.firstBytes32 = unsignedMessage; */
+    methodState.firstAddress = voter;
   }
 
-  function setMockTentativeLeader (address mockAddr, uint256 mockCap) public {
-    tentativeLeaderAddr = mockAddr;
-    tentativeLeaderCapRequired = mockCap;
-  } */
-
-  /* function resetMockTentativeProject () public {
-    tentativeLeaderAddr = address(0);
-    tentativeLeaderCapRequired = 0;
-    tentativeLeaderConfirmed = false;
-
-    ProjectsChecked memory newProjectsChecked;
-    currentCheckCycle = currentCheckCycle.add(1);
-    checkCycle[currentCheckCycle] = newProjectsChecked;
-  } */
-
-  /* function considerTentativeLeaderShip (uint256 _projectId) public {
-    CallData storage methodState = method['considerTentativeLeaderShip'];
-    methodState.firstUint = _projectId;
-  }
-
-  function considerTentativeLeaderShip_ (uint256 _projectId) public {
-    super.considerTentativeLeaderShip(_projectId);
-  } */
-
-  /* function attemptProjectActivation () public {
-    CallData storage methodState = method['attemptProjectActivation'];
+  function activateProject () internal {
+    CallData storage methodState = method['activateProject'];
     methodState.called = true;
   }
 
-  function attemptProjectActivation_ () public {
-    super.attemptProjectActivation();
-  } */
-
-  /* function setMockWeiToReimburse (uint256 amount) public {
-    weiToReimburse = amount;
+  function _activateProject () public {
+    super.activateProject();
   }
 
-  function setMockInactiveTokensAtClosing (uint256 amount) public {
-    inactiveTokensAtClosing = amount;
-  }  */
+  function setMockVoteHash (address projectAddr, bytes32 mockHash) {
+    voteHash[projectAddr] = mockHash;
+  }
+
+  function setMockRemoveHash (address projectAddr, bytes32 mockHash) {
+    removeVoteHash[projectAddr] = mockHash;
+  }
+
+  function viewMockVoteHash (address projectAddress) public view returns (bytes32) {
+    return voteHash[projectAddress];
+  }
+
+  function viewMockRemoveVoteHash (address projectAddress) public view returns (bytes32) {
+    return removeVoteHash[projectAddress];
+  }
+
+  function mockProjectById (uint256 id) public view returns (address) {
+    return projectAddress[id];
+  }
+
+  function setMockReOpening (bool status) public {
+    canReOpen = status;
+  }
 }

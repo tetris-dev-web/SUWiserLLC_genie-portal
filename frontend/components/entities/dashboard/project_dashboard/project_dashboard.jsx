@@ -16,7 +16,9 @@ class ProjectDashboard extends React.Component {
     };
 
     this.toggleView = this.toggleView.bind(this);
-    this.toggleOnHoverText = this.toggleOnHoverText.bind(this);
+    this.toggleTextShowing = this.toggleTextShowing.bind(this);
+    this.watchProjectPitch = this.watchProjectPitch.bind(this);
+    this.filterPitchedProjects = this.filterPitchedProjects.bind(this);
   }
 
   toggleOnHoverText() {
@@ -27,10 +29,30 @@ class ProjectDashboard extends React.Component {
     this.setState({viewId});
   }
 
-  componentDidMount() { //where is this being used?
-    this.props.fetchProjects();
+  componentDidMount() {
+    this.watchProjectPitch();
   }
 
+  watchProjectPitch() {
+    this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
+      const address = event.args.projectAddress;
+      const title = event.args.name;
+      const project = this.props.projects[title];
+      project.instance = this.props.projectContract.at(address);
+
+      this.props.receiveProject(project);
+    });
+  }
+
+  filterPitchedProjects () {
+    return Object.keys(this.props.projects).reduce((pitchedProjects, projectTitle) => {
+      const project = this.props.projects[projectTitle];
+      if (project.instance) {
+        pitchedProjects[projectTitle] = project;
+      }
+      return pitchedProjects;
+    }, {});
+  }
 
   handleKeyPress(e) {
     alert('PRESSED');
@@ -41,10 +63,13 @@ class ProjectDashboard extends React.Component {
 
     switch (this.state.viewId) {
       case 0:
-        currentGraph = <ProjectGraph
-          currentUser={this.props.currentUser}
-          fetchProjects={this.props.fetchProjects}
-          data={this.props.projects} />;
+        currentGraph =  <ProjectGraph
+                        showText = {this.state.showText}
+                        currentUser={this.props.currentUser}
+                        crowdsaleInstance={this.props.crowdsaleInstance}
+                        projectContract={this.props.projectContract}
+                        fetchProjects={this.props.fetchProjects}
+                        data={this.filterPitchedProjects()} /> :
         break;
       case 1:
         currentGraph = <VotesGraph />;

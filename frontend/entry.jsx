@@ -7,6 +7,7 @@ import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';
 import Token from '../truffle/build/contracts/Token.json';
+import Project from '../truffle/build/contracts/Project.json';
 
 document.addEventListener('DOMContentLoaded', () => {
   let store;
@@ -30,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const crowdsale = TruffleContract(GNITokenCrowdsale);
     crowdsale.setProvider(web3Provider);
 
+    const project = TruffleContract(Project);
+    project.setProvider(web3Provider);
+
     let account;
     let tokenInstance;
     let crowdsaleInstance;
@@ -41,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {
           crowdsaleInstance = _crowdsaleInstance;
-          preloadedState = merge({}, preloadedState, { network: { account, tokenInstance, crowdsaleInstance, web3 } });
+          preloadedState = merge({}, preloadedState, { network: { account, tokenInstance, crowdsaleInstance, project, web3 } });
           store = configureStore(preloadedState);
           window.getState = store.getState;
           const root = document.getElementById('root');

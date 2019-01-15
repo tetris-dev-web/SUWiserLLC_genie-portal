@@ -11,6 +11,7 @@ class Api::ProjectsController < ApplicationController
 
   def create
     debugger
+    puts ENV['INFURA_API_KEY']
     @project = Project.new(project_params)
     if @project.save
       render json: @project
@@ -53,7 +54,7 @@ class Api::ProjectsController < ApplicationController
   private
   def project_params
     params.require(:project).permit(
-      :id, :title, :cashflow, :revenue, :valuation, :model_id,
+      :id, :address, :title, :cashflow, :revenue, :valuation, :model_id,
       :file, :icon, :description, :creator_id, :created_at,
       :city, :country, :continent, :status, :latitude, :longitude, :summary,
       :actual_cashflow, :accum_projected_cashflow, :accum_actual_cashflow,

@@ -87,7 +87,7 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    Token(token).transferInactive(_beneficiary, tokens);
+    Token(token).transferInactive(_beneficiary, tokens);//we can call all the account/voting logic through this function
     /* _processPurchase(_beneficiary, tokens); */
 
     emit TokenPurchase(

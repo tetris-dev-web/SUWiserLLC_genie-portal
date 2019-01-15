@@ -4,7 +4,6 @@ import './Project.sol';
 
 contract ProjectMock is Project {
   constructor (
-    uint256 _id,
     string _name,
     address _developer,
     address _dividendWallet,
@@ -15,7 +14,6 @@ contract ProjectMock is Project {
     string _lat,
     string _lng
     ) public Project(
-      _id,
       _name,
       _developer,
       _dividendWallet,

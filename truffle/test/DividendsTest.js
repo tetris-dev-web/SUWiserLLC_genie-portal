@@ -93,6 +93,6 @@ const setUp = async () => {
   let token = await TokenStub.new(iL.address);
   token.init(accounts[1], accounts[2], accounts[3]);
 
-  mD = await DividendsMock.new(token.address, accounts[1], iL.address);
+  mD = await DividendsMock.new(token.address, accounts[1]);
   // await web3.eth.sendTransaction({from: accounts[1], to: mD.address, value: web3.toWei(9, "ether")});
 }

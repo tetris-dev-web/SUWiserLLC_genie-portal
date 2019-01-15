@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { fetchChainProjects } from '../../../actions/chain_actions/project_actions';
 import UserDropdownContainer from './user_dropdown/user_dropdown_container';
 import TransferModal from './transfer/transfer_modal';
 import ProjectFormModal from './project_form/project_form_modal';
@@ -19,6 +20,7 @@ class TokenInterface extends React.Component {
     this.watchTransfer = this.watchTransfer.bind(this);
     this.test = this.test.bind(this);
     this.pitchProjectTest = this.pitchProjectTest.bind(this);
+    // this.fetchTest = this.fetchTest.bind(this);
     // this.updateBalance = this.updateBalance.bind(this);
   }
 
@@ -76,19 +78,20 @@ class TokenInterface extends React.Component {
   //   });
   // }
 
+  // fetchTest () {
+  //   this.props.fetchChainProjects(this.props.crowdsaleInstance, this.props.projectContract);
+  // }
+
   test () {
-    this.props.crowdsaleInstance.buyTokensAndVote(0, {from: this.props.account, value: 1000000});
+    this.props.crowdsaleInstance.buyTokens({from: this.props.account, value: 1000000});
   }
 
   pitchProjectTest(){
-    console.log(this.props.account)
     this.props.crowdsaleInstance.pitchProject('project1', 5000000, 10000000, '300', '300', {from: this.props.account});
   }
 
   watchTransfer () {
     this.props.tokenInstance.Transfer().watch((error, event) => {
-      console.log(error)
-      console.log(event)
       if (event.args.to === this.props.account) {
         this.setState({ balance: this.state.balance + event.amount});
       }
@@ -117,13 +120,21 @@ class TokenInterface extends React.Component {
   }
 }
 
+// <div onClick={this.fetchTest}>FETCHTEST</div>
 const mapStateToProps = state => {
   return {
     web3: state.network.web3,
     crowdsaleInstance: state.network.crowdsaleInstance,
+    projectContract: state.network.project,
     tokenInstance: state.network.tokenInstance,
     account: state.network.account
   };
-}
+};
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     fetchChainProjects: (crowdsale, projectContract) => dispatch(fetchChainProjects(crowdsale, projectContract))
+//   };
+// };
 
 export default connect(mapStateToProps)(TokenInterface);

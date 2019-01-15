@@ -1,28 +1,34 @@
 import { connect } from 'react-redux';
 import {
-  fetchProjects,
   fetchProject,
-  editProject
+  editProject,
+  receiveProject
 } from '../../../../actions/project_actions';
+import { fetchProjects } from '../../../../actions/chain_actions/project_actions';
 import ProjectDashboard from './project_dashboard';
 
 const mapStateToProps = state => {
-  const currUser = state.session.currentUser;
+  const currentUser = state.session.currentUser;
+
   let isInvestor = false;
-  currUser.accounts.forEach( account => {
+  currentUser.accounts.forEach( account => {
     if(account.account_type === "Investor") isInvestor = true;
   });
 
+
   return {
-    currentUser: currUser,
-    isInvestor: isInvestor,
-    projects: state.entities.projects
+    projects: state.entities.projects,
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    projectContract: state.network.project,
+    currentUser,
+    isInvestor
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchProjects: () => dispatch(fetchProjects()),
+    receiveProject: project => dispatch(receiveProject(project)),
+    fetchProjects: (crowdsaleInstance, projectContract) => dispatch(fetchProjects(crowdsaleInstance, projectContract)),
     fetchProject: project => dispatch(fetchProject(project)),
     editProject: project => dispatch(editProject(project))
   };

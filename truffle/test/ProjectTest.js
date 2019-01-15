@@ -1,10 +1,14 @@
 const ProjectMock = artifacts.require("ProjectMock");
+const DividendsStub = artifacts.require("DividendsStub");
+const TokenStub = artifacts.require("TokenStub");
+const InvestorListStub = artifacts.require("InvestorListStub");
 
 const exceptions = require('./exceptions');
 const { parseBN } = require('./parseUtil');
 
 let accounts;
 let mP;
+let dStub;
 
 let beforeVotes;
 let beforeTotalVotes;
@@ -106,109 +110,118 @@ contract('Project', async (_accounts) => {
     })
   })
 
-  // describe('setDividendWallet', async () => {
-  //   it('sets the dividend wallet to the address when the sender is the developer', async () => {
-  //     await mP.setDividendWallet(accounts[2], {from: accounts[0]});
-  //     let wallet = await mP.checkDividendWallet();
-  //     assert.equal(wallet, accounts[2], 'dividend wallet not set properly');
-  //   })
-  //
-  //   it('works when the sender is a manager', async () => {
-  //     await mP.addManager(accounts[2]);
-  //     await mP.setDividendWallet(accounts[3], {from: accounts[2]});
-  //     let wallet = await mP.checkDividendWallet();
-  //     assert.equal(wallet, accounts[3], 'manager should be able to set divident wallet');
-  //   })
-  //
-  //   it('reverts when the sender is not a manager or the developer', async () => {
-  //     await exceptions.catchRevert(mP.setDividendWallet(accounts[2], {from: accounts[1]}));
-  //   })
-  // })
-
   describe('deposit', async () => {
     it('adds the wei value to the dividend wallet', async () => {
-      // await mP.setDividendWallet(accounts[2], {from: accounts[0]});
-      let s1 = await web3.eth.getBalance(accounts[2]);
+      let s1 = await web3.eth.getBalance(dStub.address);
       let before = Number(s1);
       await mP.deposit({value: 3000, from: accounts[1]});
-      let s2 = await web3.eth.getBalance(accounts[2]);
+      let s2 = await web3.eth.getBalance(dStub.address);
       let after = Number(s2);
       assert.equal(after, before + 3000, 'wei not deposited to dividend wallet');
     })
   })
 
   describe('vote', async () => {
-    before(async () => {
-      await mP.vote(accounts[1], 1000000);
+    describe('when the sender is the owner', async () => {
+      before(async () => {
+        await mP.vote(accounts[1], 1000000);
+      })
+
+      after(async () => {
+        await mP.removeMockVoter(accounts[1]);
+        await mP.changeClosingTime(beforeClosingTime);
+      })
+
+      it('adds the voters votes by the vote amount', async () => {
+        let bN = await mP.checkVoteAmount(accounts[1]);
+        let afterVotes = parseBN(bN);
+        assert.equal(afterVotes, beforeVotes + 1000000, 'votes not added to the voter');
+      })
+
+      it('adds the totalVotes by the vote amount', async () => {
+        let bN = await mP.totalVotes_();
+        let afterTotalVotes = parseBN(bN);
+        assert.equal(afterTotalVotes, beforeTotalVotes + 1000000, 'votes not added to totalVotes');
+      })
+
+      it('extends the closing time by 43200', async () => {
+        let bN = await mP.closingTime_();
+        let afterClosingTime = parseBN(bN);
+        assert.equal(afterClosingTime, beforeClosingTime + 43200, 'closingTime not extended');
+      })
     })
 
-    after(async () => {
-      await mP.removeMockVoter(accounts[1]);
-      await mP.changeClosingTime(beforeClosingTime);
-    })
-
-    it('adds the voters votes by the vote amount', async () => {
-      let bN = await mP.checkVoteAmount(accounts[1]);
-      let afterVotes = parseBN(bN);
-      assert.equal(afterVotes, beforeVotes + 1000000, 'votes not added to the voter');
-    })
-
-    it('adds the totalVotes by the vote amount', async () => {
-      let bN = await mP.totalVotes_();
-      let afterTotalVotes = parseBN(bN);
-      assert.equal(afterTotalVotes, beforeTotalVotes + 1000000, 'votes not added to totalVotes');
-    })
-
-    it('extends the closing time by 43200', async () => {
-      let bN = await mP.closingTime_();
-      let afterClosingTime = parseBN(bN);
-      assert.equal(afterClosingTime, beforeClosingTime + 43200, 'closingTime not extended');
+    describe('when the sender is not the owner', async () => {
+      it('reverts', async () => {
+        await exceptions.catchRevert(mP.vote(accounts[1], 1000000, {from: accounts[1]}));
+      })
     })
   })
 
   describe('removeVotes', async () => {
-    before(async () => {
-      await addMockVoter(accounts[1], 2000000);
-      await mP.removeVotes(accounts[1], 1000000);
+    describe('when the sender is the owner', async () => {
+      before(async () => {
+        await addMockVoter(accounts[1], 2000000);
+        await mP.removeVotes(accounts[1], 1000000);
+      })
+
+      it('decreases the voters votes by the vote amount', async () => {
+        let bN = await mP.checkVoteAmount(accounts[1]);
+        let afterVotes = parseBN(bN);
+        assert.equal(afterVotes, beforeVotes - 1000000, 'votes not removed from the voter');
+      })
+
+      it('decreases the totalVotes by the vote amount', async () => {
+        let bN2 = await mP.totalVotes_();
+        let afterTotalVotes = parseBN(bN2);
+        assert.equal(afterTotalVotes, beforeTotalVotes - 1000000, 'votes not removed from totalVotes');
+      })
+
+      it('diminishes the closing time by 43200', async () => {
+        let bN2 = await mP.closingTime_();
+        let afterClosingTime = parseBN(bN2);
+        assert.equal(afterClosingTime, beforeClosingTime - 43200, 'closingTime not diminished');
+      })
+
+      it('reverts if the voteAmount is greater than the totalVotes', async () => {
+        await addMockVoter(accounts[2], 3000000);
+        await exceptions.catchRevert(mP.removeVotes(accounts[1], 6000000));
+      })
+
+      it('reverts if the voteAmount is greater than the voters votes', async () => {
+        await addMockVoter(accounts[2], 3000000);
+        await exceptions.catchRevert(mP.removeVotes(accounts[1], 3000000));
+      })
     })
 
-    it('decreases the voters votes by the vote amount', async () => {
-      let bN = await mP.checkVoteAmount(accounts[1]);
-      let afterVotes = parseBN(bN);
-      assert.equal(afterVotes, beforeVotes - 1000000, 'votes not removed from the voter');
-    })
+    describe('when the sender is not the owner', async () => {
+      before(async () => {
+        await addMockVoter(accounts[1], 2000000);
+      })
 
-    it('decreases the totalVotes by the vote amount', async () => {
-      let bN2 = await mP.totalVotes_();
-      let afterTotalVotes = parseBN(bN2);
-      assert.equal(afterTotalVotes, beforeTotalVotes - 1000000, 'votes not removed from totalVotes');
-    })
-
-    it('diminishes the closing time by 43200', async () => {
-      let bN2 = await mP.closingTime_();
-      let afterClosingTime = parseBN(bN2);
-      assert.equal(afterClosingTime, beforeClosingTime - 43200, 'closingTime not diminished');
-    })
-
-    it('reverts if the voteAmount is greater than the totalVotes', async () => {
-      await addMockVoter(accounts[2], 3000000);
-      await exceptions.catchRevert(mP.removeVotes(accounts[1], 6000000));
-    })
-
-    it('reverts if the voteAmount is greater than the voters votes', async () => {
-      await addMockVoter(accounts[2], 3000000);
-      await exceptions.catchRevert(mP.removeVotes(accounts[1], 3000000));
+      it('reverts', async () => {
+        await exceptions.catchRevert(mP.removeVotes(accounts[1], 1000000, {from: accounts[1]}));
+      })
     })
   })
 
   describe('activate', async () => {
-    it('activates the project', async () => {
-      let beforeOpenStatus = await mP.active_();
-      await mP.activate();
-      let afterOpenStatus = await mP.active_();
-      assert.equal(beforeOpenStatus, false, 'project should not be active before activation');
-      assert.equal(afterOpenStatus, true, 'project was not activated');
+    describe('when the sender is not the owner', async () => {
+      it('reverts', async () => {
+        await exceptions.catchRevert(mP.activate({from: accounts[1]}));
+      })
     })
+
+    describe('when the sender is the owner', async () => {
+      it('activates the project', async () => {
+        let beforeOpenStatus = await mP.active_();
+        await mP.activate();
+        let afterOpenStatus = await mP.active_();
+        assert.equal(beforeOpenStatus, false, 'project should not be active before activation');
+        assert.equal(afterOpenStatus, true, 'project was not activated');
+      })
+    })
+
   })
 
   describe('beats', async () => {
@@ -247,14 +260,23 @@ contract('Project', async (_accounts) => {
   })
 })
 
+
+//we may need to make the dividendWallet a contract to test this properly
 const setUp = async () => {
+  await initDStub();
   mP = await mockP({
-    id: 0, name: 'project1', developer: accounts[0], dividendWallet: accounts[1],
+    name: 'project1', developer: accounts[0], dividendWallet: dStub.address,
     valuation: 5000000, capitalRequired: 1000000, developerTokens: 40000000,
     investorTokens: 10000000, lat: '340', lng: '340'
   });
   await addMockVoter(accounts[1], 2000000);
   await recordVoteValues();
+}
+
+const initDStub = async () => {
+  let i = await InvestorListStub.new();
+  let t = await TokenStub.new(i.address);
+  dStub = await DividendsStub.new(t.address, accounts [1]);
 }
 
 const recordVoteValues = async () => {
@@ -270,13 +292,13 @@ const recordVoteValues = async () => {
 
 const mockP = async (params) => {
   let {
-    id, name, developer, dividendWallet,
+    name, developer, dividendWallet,
     valuation, capitalRequired, developerTokens,
     investorTokens, lat, lng
   } = params;
 
   return await ProjectMock.new(
-    id, name, developer, dividendWallet,
+    name, developer, dividendWallet,
     valuation, capitalRequired, developerTokens,
     investorTokens, lat, lng
   );
