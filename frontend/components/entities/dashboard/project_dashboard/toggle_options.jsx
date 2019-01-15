@@ -1,4 +1,5 @@
 import React from 'react';
+import './toggle_options.scss';
 
 class ToggleOptions extends React.Component {
   constructor() {
@@ -20,13 +21,11 @@ class ToggleOptions extends React.Component {
 
     return optionIcons.map((icon, i) => (
       <div key={i} className='toggle-option' onClick={() => toggleView(i)}>
-        <div>
-          <div className='toggle-icon'>
-            {icon}
-          </div>
-          <div className='toggle-button'
-            id={viewId === i ? 'selected-button' : 'unselected-button'}>
-          </div>
+        <div className='toggle-button'
+          id={viewId === i ? 'selected-button' : 'unselected-button'}>
+        </div>
+        <div className='toggle-icon'>
+          {icon}
         </div>
       </div>
     ));

@@ -278,7 +278,7 @@ export class VotesGraph extends React.Component {
             <VoteShiftTool />
           }
         </div>
-        <svg className="votes-view-svg" height={capital / 24000}>
+        <svg className="votes-view-svg" height={capitalTotal / 24000}>
           <VotesViewCapitalRaised
             {...this.props}
             {...this.state}/>

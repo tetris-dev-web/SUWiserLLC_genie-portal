@@ -75,11 +75,7 @@ class VoteShiftTool extends React.Component {
 
     document.removeEventListener('mousemove', this.handleDragging);
     document.removeEventListener('mouseup', this.handleDragEnd);
-    if (this.state.newVotesPerProject === votesPerProject && this.state.newVotesNotDedicated === votesNotDedicated) {
-      this.setState({ showLogButton: false });
-    } else {
-      this.setState({ showLogButton: true });
-    }
+    this.setState({ showLogButton: !(this.state.newVotesPerProject === votesPerProject && this.state.newVotesNotDedicated === votesNotDedicated) });
   }
 
   handleLogClick() {
@@ -87,6 +83,8 @@ class VoteShiftTool extends React.Component {
   }
 
   handleVoteClick(vote) {
+    const { votesPerProject, votesNotDedicated } = this.props.votesMockup;
+
     return () => {
       if (vote > 0 && this.totalVotes === this.state.newVotesPerProject ||
         vote < 0 && this.state.newVotesPerProject === 0) return;
@@ -99,7 +97,8 @@ class VoteShiftTool extends React.Component {
         newVotesNotDedicated: this.state.newVotesNotDedicated - vote,
         voteBarAppliedWidth,
         voteBarFreedUpWidth,
-        voteShiftLineLeft
+        voteShiftLineLeft,
+        showLogButton: !(this.state.newVotesPerProject + vote === votesPerProject && this.state.newVotesNotDedicated - vote === votesNotDedicated)
       });
     };
   }
@@ -137,8 +136,8 @@ class VoteShiftTool extends React.Component {
               <span className="vote-bar-freedup-votes-number">
                 {`${this.state.newVotesNotDedicated} votes freed up`}
               </span>
-              <span onClick={this.handleVoteClick(1)} className="vote-bar-add-vote-button">&#65291;</span>
-              <span onClick={this.handleVoteClick(-1)} className="vote-bar-minus-vote-button">&#8722;</span>              
+              <span onClick={this.handleVoteClick(1)} className="vote-bar-add-vote-button">{">"}</span>
+              <span onClick={this.handleVoteClick(-1)} className="vote-bar-minus-vote-button">{"<"}</span>              
             </div>
   
             <div className="vote-bar-freedup" style={{

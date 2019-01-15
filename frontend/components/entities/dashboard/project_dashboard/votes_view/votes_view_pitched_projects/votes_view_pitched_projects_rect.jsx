@@ -28,7 +28,6 @@ class VotesViewPitchedProjectsRect extends React.Component {
 			toggleSelectedProject(project);
 			if (!this.state.showHoverEffect) this.setState({ showHoverEffect: true });
 		} else if (selectedProject.id === project.id) {
-			// debugger
 			if (this.projectGroup.contains(e.target) || voteShiftTool.contains(e.target)) return;
 			document.removeEventListener('click', this.handleClick, false);
 			toggleSelectedProject(null);

@@ -3,7 +3,7 @@ import ProjectGraph from './loc_view/project_graph';
 import VotesGraph from './votes_view/votes_graph';
 import ToggleOptions from './toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
-import './project_dashboard.scss'
+import './project_dashboard.scss';
 
 //Combine this with container
 
@@ -12,19 +12,14 @@ class ProjectDashboard extends React.Component {
     super(props);
     this.viewTypes = ["GRAPH VIEW", "VOTE VIEW", "NO VIEW"];
     this.state = {
-      viewId: 1
+      viewId: null
     };
 
     this.toggleView = this.toggleView.bind(this);
-    this.toggleOnHoverText = this.toggleOnHoverText.bind(this);
-  }
-
-  toggleOnHoverText() {
-
   }
 
   toggleView (viewId) {
-    this.setState({viewId});
+    this.setState({viewId: viewId === this.state.viewId ? null : viewId});
   }
 
   componentDidMount() { //where is this being used?
@@ -40,6 +35,8 @@ class ProjectDashboard extends React.Component {
     let currentGraph = <div></div>;
 
     switch (this.state.viewId) {
+      case null:
+        break;
       case 0:
         currentGraph = <ProjectGraph
           currentUser={this.props.currentUser}
