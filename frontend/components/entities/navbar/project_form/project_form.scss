@@ -4,7 +4,7 @@ $cornerSize: 5px;
 .text-input-container {
   display: flex;
   align-items: center;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 .text-input {
@@ -90,14 +90,20 @@ $cornerSize: 5px;
 }
 
 .form-box {
-  height: calc(100% - 60px);
-  margin-top: 60px;
+  height: calc(100% - 40px);
+  margin: 40px 0;
+  padding: 5px;
+  
+  h1 {
+    font-size: 18px;
+    margin: 0;
+  }
 
   .project-title-input-container {
-    width: 80%;
+    width: 70%;
     background-color: $white;
-    margin-bottom: 10px;
-
+    margin: 10px auto;
+    
     &:before {
       content: "";
       border-right: 2px solid $db-fade3;
@@ -107,87 +113,70 @@ $cornerSize: 5px;
     }
   }
 
-  .lat-input-container,
-  .long-input-container {
-    background-color: $white;
-    font-size: 10px;
-    width: 55px;
+  .form-box-container {
+    width: 85%;
+    margin: 15px auto 0 auto;
+  }
 
-    &:before {
-      content: "";
-      border-right: 2px solid $db-fade3;
-      color: $db-fade3;
-      width: 20px;
-      height: 14px;
+  .form-box-lat-long-section {
+    display: flex;
+
+    .lat-input-container,
+    .long-input-container {
+      background-color: $white;
+      font-size: 10px;
+      width: 55px;
+  
+      &:before {
+        content: "";
+        border-right: 2px solid $db-fade3;
+        color: $db-fade3;
+        width: 20px;
+        height: 14px;
+      }
     }
-
   }
 
   .cashflows-section {
-    align-items: center;
-  }
+    display: flex;
 
-  .current-quarter-input-container {
-    margin-top: 10px;
-
-    .current-quarter-input {
-      color:black;
-      padding-left: 10px;
-      margin-right: 10px;
-      width: 30px;
-      background-color: #fff;
-      border-radius: 5px;
+    .current-quarter-input-container {
+      margin-top: 10px;
+  
+      .current-quarter-input {
+        color:black;
+        padding-left: 10px;
+        margin-right: 10px;
+        width: 30px;
+        background-color: #fff;
+        border-radius: 5px;
+      }
     }
   }
 
   .pdf-section,
   .model-id-section {
-    .cornered-container {
-      margin-right: 60px;
+    .model-id-container {
+      background-color: $white;
+      font-size: 10px;
+      width: 100px;
+  
+      &:before {
+        content: "";
+        border-right: 2px solid $db-fade3;
+        color: $db-fade3;
+        width: 20px;
+        height: 14px;
+      }
     }
   }
 
-  .model-id-container {
-    background-color: $white;
-    font-size: 10px;
-    width: 100px;
+  .description-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-    &:before {
-      content: "";
-      border-right: 2px solid $db-fade3;
-      color: $db-fade3;
-      width: 20px;
-      height: 14px;
-    }
-  }
 
-  .flexed {
-    width: 90%;
-    justify-content: space-between;
-
-    input[type=file] {
-      width: 100%;
-    }
-  }
-
-  .summary-area{
-    width: 90%;
-    max-width: 95%;
-    height: 120px;
-    max-height: 200px;
-    color: grey;
-  }
-
-  input[type=submit] {
-    background: white;
-    color: grey;
-    width: 120px;
-    height: 30px;
-    font-size: 20px;
-  }
-
-  label {
-    margin-bottom: 0;
   }
 }
 
@@ -290,8 +279,6 @@ $cornerSize: 5px;
     width: 100%;
   }
 }
-
-
 
 .fin-plan-container {
   display: grid;

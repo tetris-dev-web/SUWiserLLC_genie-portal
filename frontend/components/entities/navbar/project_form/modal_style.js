@@ -18,7 +18,6 @@ module.exports = {
     backgroundColor : '#4a7a7b',
     // zIndex          : 101,
     color           : 'white',
-    minHeight       : '480px',
-    height          : '90%',
+    minHeight       : '480px'
   },
 };
