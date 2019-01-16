@@ -252,14 +252,20 @@ user1 = User.create!(
   email: "johnjrudell@gmail.com",
   password: "password",
   bylaw_agreement: true,
-  tokens: 20
+  tokens: 20,
+  active_tokens: {
+    Time.now => 10
+  }
 )
 
 user2 = User.create!(
   email: "matsteele@gmail.com",
   password: "password",
   bylaw_agreement: true,
-  tokens: 10
+  tokens: 10,
+  active_tokens: {
+    Time.now => 5
+  }
 )
 
 #AccountTypes
@@ -324,10 +330,18 @@ project2 = Project.create!(
   continent: "South America",
   model_id: "7syizSLPN60",
   icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+  summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user2.id,
   created_at: "12/02/2018",
-  status: "deployed"
+  status: "deployed",
+  cashflow: genesis_cashflow,
+  latitude:hamInn_lat,
+  longitude:hamInn_lng,
+  actual_cashflow: genesis_Act_Cashflow,
+  accum_actual_cashflow: genesis_Act_Acc_Cashflow,
+  projected_cashflow: genesis_Proj_Cashflow,
+  accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
+
 )
 
 project3 = Project.create!(
@@ -343,7 +357,15 @@ project3 = Project.create!(
   description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
   creator_id: user1.id,
   created_at: "14/03/2018",
-  status: "pitched"
+  status: "pitched",
+  cashflow: genesis_cashflow,
+  actual_cashflow: genesis_Act_Cashflow,
+  accum_actual_cashflow: genesis_Act_Acc_Cashflow,
+  projected_cashflow: genesis_Proj_Cashflow,
+  accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
+  summary: "Very Sleepless Nights",
+  latitude:hamInn_lat,
+  longitude:hamInn_lng,
 )
 
 project4 = Project.create!(
@@ -361,6 +383,10 @@ project4 = Project.create!(
   created_at: "14/03/2018",
   status: "deployed",
   cashflow: genesis_cashflow,
+  actual_cashflow: genesis_Act_Cashflow,
+  accum_actual_cashflow: genesis_Act_Acc_Cashflow,
+  projected_cashflow: genesis_Proj_Cashflow,
+  accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
   sketch_link: hamInn_sketch_link,
   bus_plan_link: hamInn_bus_link,
   start_date: hamInn_start_date,
@@ -384,7 +410,15 @@ project5 = Project.create!(
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
   created_at: "14/03/2018",
-  status: "deployed"
+  status: "deployed",
+  cashflow: genesis_cashflow,
+  actual_cashflow: genesis_Act_Cashflow,
+  accum_actual_cashflow: genesis_Act_Acc_Cashflow,
+  projected_cashflow: genesis_Proj_Cashflow,
+  accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
+  summary: "Penn Generator is ... (tbd)",
+  latitude: 39.9522,
+  longitude: -75.1932,
 )
 project6 = Project.create!(
   title: "BeefInn",
@@ -399,7 +433,14 @@ project6 = Project.create!(
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
   created_at: "14/03/2018",
-  status: "pitched"
+  status: "pitched",
+  cashflow: genesis_cashflow,
+  actual_cashflow: genesis_Act_Cashflow,
+  accum_actual_cashflow: genesis_Act_Acc_Cashflow,
+  projected_cashflow: genesis_Proj_Cashflow,
+  accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
+  latitude: 4.71,
+  longitude: -74.07,
 )
 project6 = Project.create!(
   title: "ChickInn",
@@ -414,7 +455,14 @@ project6 = Project.create!(
   description: "BNB/ Business Incubator",
   creator_id: user2.id,
   created_at: "14/03/2018",
-  status: "pitched"
+  status: "pitched",
+  cashflow: genesis_cashflow,
+  actual_cashflow: genesis_Act_Cashflow,
+  accum_actual_cashflow: genesis_Act_Acc_Cashflow,
+  projected_cashflow: genesis_Proj_Cashflow,
+  accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
+  latitude: 52.52,
+  longitude: 13.405,
 )
 
 # project7 = Project.create(
@@ -439,13 +487,18 @@ project8 = Project.create(
  model_id: nil,
  icon: "https://image.freepik.com/free-icon/picture-frame-with-mountain-image_318-40293.jpg",
  description: "BNB/ Business Incubator",
- creator_id: 4,
+ creator_id: user2.id,
+ created_at: "14/03/2018",
  revenue: 27000,
  city: "New York",
  country: "United States",
  continent: "North America",
  status: "pitched",
  cashflow: genesis_cashflow,
+ actual_cashflow: genesis_Act_Cashflow,
+ accum_actual_cashflow: genesis_Act_Acc_Cashflow,
+ projected_cashflow: genesis_Proj_Cashflow,
+ accum_projected_cashflow: genesis_Proj_Acc_Cashflow,
  latitude: 0.4083637e2,
  longitude: -0.73944585e2,
  summary: "I am testing this project in order to see if I can get the 3D model rendering only if a model is inputed",
