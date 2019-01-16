@@ -16,8 +16,7 @@ module.exports = {
     right           : 0,
     borderRadius    : '0 0 0 15px',
     backgroundColor : '#4a7a7b',
-    // zIndex          : 101,
     color           : 'white',
-    minHeight       : '480px'
+    maxHeight       : '100vh'
   },
 };

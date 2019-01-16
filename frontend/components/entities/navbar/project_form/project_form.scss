@@ -55,48 +55,38 @@ $cornerSize: 5px;
   }
 }
 
-.valuation-container {
-  display: flex;
-  flex-direction: row;
-  .valuation-input {
-    background-color: $white;
-    border-radius: 5px;
-    padding: 2px 3px 2px 8px;
-    color: $black;
-    &::-webkit-input-placeholder {
-      color: $db-fade3;
-    }
-  }
-  div {
-    margin-left: 11px;
-  }
-  .coin-count {
-    color: $lightgrey;
-    border: 1px solid $lightgrey;
-    padding: 2px;
-    align-self: center;
-  }
-  .coin-text {
-    color: $lightgrey;
-    align-self: center;
-  }
-}
-
-.project-divider {
-  width: 100%;
-  border-color: $lb-fade1;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
 .form-box {
-  height: calc(100% - 40px);
-  margin: 40px 0;
-  padding: 5px;
+  margin-top: 40px;
   
-  h1 {
+  .form-box-title {
     font-size: 18px;
     margin: 0;
+
+    &.with-border {
+      padding-left: 5px;
+      border-left: 1px dotted white;
+    }
+  }
+  
+  .form-box-container {
+    width: 85%;
+    margin: 10px auto 0 auto;
+  }
+
+  .form-box-border-layer {
+    position: relative;
+
+    &:before {
+      content: "";
+      position: absolute;
+      border-top: 1px dotted white;
+      border-bottom: 1px dotted white;
+      border-left: 1px dotted white;
+      width: 20px;
+      top: 0;
+      left: 0;
+      height: 100%;
+    }
   }
 
   .project-title-input-container {
@@ -112,14 +102,12 @@ $cornerSize: 5px;
       height: 14px;
     }
   }
-
-  .form-box-container {
-    width: 85%;
-    margin: 15px auto 0 auto;
-  }
-
+  
   .form-box-lat-long-section {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 10px 30px;
 
     .lat-input-container,
     .long-input-container {
@@ -135,13 +123,20 @@ $cornerSize: 5px;
         height: 14px;
       }
     }
+
+    .long-input-container {
+      margin-top: 5px;
+    }
   }
 
   .cashflows-section {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 0 30px;
 
     .current-quarter-input-container {
-      margin-top: 10px;
+      margin-top: 5px;
   
       .current-quarter-input {
         color:black;
@@ -156,6 +151,11 @@ $cornerSize: 5px;
 
   .pdf-section,
   .model-id-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 0 30px;
+
     .model-id-container {
       background-color: $white;
       font-size: 10px;
@@ -176,7 +176,21 @@ $cornerSize: 5px;
     flex-direction: column;
     align-items: center;
 
+    .description-area {
+      color: black;
+      resize: none;
+      width: 90%;
+      height: 100px;
+      border-radius: 8px;
+      border-color: transparent;
+    }
 
+    .submit-button {
+      background-color: white;
+      color: black;
+      padding: 5px 40px;
+      margin-top: 10px;
+    }
   }
 }
 
@@ -275,70 +289,9 @@ $cornerSize: 5px;
   }
 
   .project-form-button-icons {
+    display: block;
     fill: white;
     width: 100%;
-  }
-}
-
-.fin-plan-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-row-gap: 5px;
-  grid-column-gap: 30px;
-  margin-bottom: 5px;
-  h5 {
-    margin: 0;
-  }
-}
-
-.link-upload-cont {
-  display: flex;
-  margin-top: 5px;
-  .link-input {
-    background-color: $white;
-    border-radius: 5px;
-    color: rgb(155, 146, 135);
-    width: 100%;
-    padding: 2px 3px 2px 8px;
-    &::-webkit-input-placeholder {
-      color: $db-fade3;
-    }
-  }
-}
-
-.p-form-label {
-  font-weight: 100;
-  .p-form-description {
-    color: black;
-    border: none;
-    border-radius: 10px;
-    padding: 5px;
-    margin-top: 5px;
-    width: 100%;
-    height: 100px;
-    resize: none;
-    &:focus {
-      outline: none;
-    }
-  }
-}
-
-.pitch-button-cont {
-  display: flex;
-  justify-content: center;
-  .pitch-button {
-    background-color: $db-fade;
-    color: $white;
-    padding: 4px;
-    text-align: center;
-    width: 40%;
-    letter-spacing: 0.5px;
-    margin-top: 10px;
-    transition: all 0.5s ease-in-out;
-    &:hover {
-      transform: translateY(-1px);
-      background-color: $darkblue;
-    }
   }
 }
 
@@ -349,13 +302,10 @@ $cornerSize: 5px;
   color: $error-color;
 }
 
-.rates-box div {
-  margin-bottom: 6px;
-}
-
 .rates-box{
-  width: 90%;
   padding: 5px;
+  margin-left: 10px;
+
   .coins{
     display: flex;
     flex-direction: column;

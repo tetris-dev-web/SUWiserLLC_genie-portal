@@ -38,40 +38,29 @@
     clip-path: url(#SVGID_2_);
     fill: #FFFFFF; }
 
-.valuation-container {
-  display: flex;
-  flex-direction: row; }
-  .valuation-container .valuation-input {
-    background-color: white;
-    border-radius: 5px;
-    padding: 2px 3px 2px 8px;
-    color: black; }
-    .valuation-container .valuation-input::-webkit-input-placeholder {
-      color: rgba(56, 71, 120, 0.4); }
-  .valuation-container div {
-    margin-left: 11px; }
-  .valuation-container .coin-count {
-    color: darkgray;
-    border: 1px solid darkgray;
-    padding: 2px;
-    align-self: center; }
-  .valuation-container .coin-text {
-    color: darkgray;
-    align-self: center; }
-
-.project-divider {
-  width: 100%;
-  border-color: rgba(179, 185, 207, 0.8);
-  margin-top: 10px;
-  margin-bottom: 10px; }
-
 .form-box {
-  height: calc(100% - 40px);
-  margin: 40px 0;
-  padding: 5px; }
-  .form-box h1 {
+  margin-top: 40px; }
+  .form-box .form-box-title {
     font-size: 18px;
     margin: 0; }
+    .form-box .form-box-title.with-border {
+      padding-left: 5px;
+      border-left: 1px dotted white; }
+  .form-box .form-box-container {
+    width: 85%;
+    margin: 10px auto 0 auto; }
+  .form-box .form-box-border-layer {
+    position: relative; }
+    .form-box .form-box-border-layer:before {
+      content: "";
+      position: absolute;
+      border-top: 1px dotted white;
+      border-bottom: 1px dotted white;
+      border-left: 1px dotted white;
+      width: 20px;
+      top: 0;
+      left: 0;
+      height: 100%; }
   .form-box .project-title-input-container {
     width: 70%;
     background-color: white;
@@ -82,11 +71,11 @@
       color: rgba(56, 71, 120, 0.4);
       width: 25px;
       height: 14px; }
-  .form-box .form-box-container {
-    width: 85%;
-    margin: 15px auto 0 auto; }
   .form-box .form-box-lat-long-section {
-    display: flex; }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 10px 30px; }
     .form-box .form-box-lat-long-section .lat-input-container,
     .form-box .form-box-lat-long-section .long-input-container {
       background-color: white;
@@ -99,10 +88,15 @@
         color: rgba(56, 71, 120, 0.4);
         width: 20px;
         height: 14px; }
+    .form-box .form-box-lat-long-section .long-input-container {
+      margin-top: 5px; }
   .form-box .cashflows-section {
-    display: flex; }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 0 30px; }
     .form-box .cashflows-section .current-quarter-input-container {
-      margin-top: 10px; }
+      margin-top: 5px; }
       .form-box .cashflows-section .current-quarter-input-container .current-quarter-input {
         color: black;
         padding-left: 10px;
@@ -110,22 +104,40 @@
         width: 30px;
         background-color: #fff;
         border-radius: 5px; }
-  .form-box .pdf-section .model-id-container,
-  .form-box .model-id-section .model-id-container {
-    background-color: white;
-    font-size: 10px;
-    width: 100px; }
-    .form-box .pdf-section .model-id-container:before,
-    .form-box .model-id-section .model-id-container:before {
-      content: "";
-      border-right: 2px solid rgba(56, 71, 120, 0.4);
-      color: rgba(56, 71, 120, 0.4);
-      width: 20px;
-      height: 14px; }
+  .form-box .pdf-section,
+  .form-box .model-id-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 0 30px; }
+    .form-box .pdf-section .model-id-container,
+    .form-box .model-id-section .model-id-container {
+      background-color: white;
+      font-size: 10px;
+      width: 100px; }
+      .form-box .pdf-section .model-id-container:before,
+      .form-box .model-id-section .model-id-container:before {
+        content: "";
+        border-right: 2px solid rgba(56, 71, 120, 0.4);
+        color: rgba(56, 71, 120, 0.4);
+        width: 20px;
+        height: 14px; }
   .form-box .description-section {
     display: flex;
     flex-direction: column;
     align-items: center; }
+    .form-box .description-section .description-area {
+      color: black;
+      resize: none;
+      width: 90%;
+      height: 100px;
+      border-radius: 8px;
+      border-color: transparent; }
+    .form-box .description-section .submit-button {
+      background-color: white;
+      color: black;
+      padding: 5px 40px;
+      margin-top: 10px; }
 
 .cornered-container {
   position: relative;
@@ -198,59 +210,9 @@
       position: absolute;
       white-space: nowrap; }
   .cornered-container .project-form-button-icons {
+    display: block;
     fill: white;
     width: 100%; }
-
-.fin-plan-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-row-gap: 5px;
-  grid-column-gap: 30px;
-  margin-bottom: 5px; }
-  .fin-plan-container h5 {
-    margin: 0; }
-
-.link-upload-cont {
-  display: flex;
-  margin-top: 5px; }
-  .link-upload-cont .link-input {
-    background-color: white;
-    border-radius: 5px;
-    color: #9b9287;
-    width: 100%;
-    padding: 2px 3px 2px 8px; }
-    .link-upload-cont .link-input::-webkit-input-placeholder {
-      color: rgba(56, 71, 120, 0.4); }
-
-.p-form-label {
-  font-weight: 100; }
-  .p-form-label .p-form-description {
-    color: black;
-    border: none;
-    border-radius: 10px;
-    padding: 5px;
-    margin-top: 5px;
-    width: 100%;
-    height: 100px;
-    resize: none; }
-    .p-form-label .p-form-description:focus {
-      outline: none; }
-
-.pitch-button-cont {
-  display: flex;
-  justify-content: center; }
-  .pitch-button-cont .pitch-button {
-    background-color: rgba(56, 71, 120, 0.9);
-    color: white;
-    padding: 4px;
-    text-align: center;
-    width: 40%;
-    letter-spacing: 0.5px;
-    margin-top: 10px;
-    transition: all 0.5s ease-in-out; }
-    .pitch-button-cont .pitch-button:hover {
-      transform: translateY(-1px);
-      background-color: #384778; }
 
 .project-errors {
   margin-top: 10px;
@@ -258,12 +220,9 @@
   background-color: #b3b9cf;
   color: red; }
 
-.rates-box div {
-  margin-bottom: 6px; }
-
 .rates-box {
-  width: 90%;
-  padding: 5px; }
+  padding: 5px;
+  margin-left: 10px; }
   .rates-box .coins {
     display: flex;
     flex-direction: column;
