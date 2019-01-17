@@ -11,7 +11,8 @@
     color: rgba(56, 71, 120, 0.4); }
 
 .file-input-container {
-  display: flex; }
+  display: flex;
+  align-items: center; }
 
 .file-input {
   overflow: hidden;
@@ -20,10 +21,10 @@
   height: 20px;
   margin-right: 20px; }
   .file-input input {
-    filter: alpha(opacity=1);
     -moz-opacity: 0.01;
     opacity: 0.01;
     position: absolute;
+    width: 100%;
     right: 0;
     top: 0; }
   .file-input svg {
@@ -575,13 +576,15 @@
           display: block; }
       .toggle-view-options-container .toggle-view-options .toggle-option .toggle-button,
       .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-button {
+        cursor: pointer;
         width: 18px;
         height: 18px;
         margin-bottom: 8px;
-        -webkit-border-radius: 25px;
-        -moz-border-radius: 25px;
         border-radius: 25px;
         background-color: white; }
+        .toggle-view-options-container .toggle-view-options .toggle-option .toggle-button:hover,
+        .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-button:hover {
+          background-color: #61aba9; }
       .toggle-view-options-container .toggle-view-options .toggle-option #selected-button,
       .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option #selected-button {
         background-color: #707070; }
@@ -609,15 +612,26 @@
 .toggle-view-options-container-graph-hidden .toggle-view-options {
   border-radius: 15px;
   padding: 8px 8px 12px 8px; }
-  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-title {
+  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-title,
+  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-next-view,
+  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-dashboard-instruction {
+    font-size: 15px;
+    color: black;
     position: absolute;
     font-weight: 700;
-    font-size: 15px;
-    top: calc(100% + 10px);
+    top: 100%;
     right: 50%;
     transform: translateX(50%);
-    color: black;
     white-space: nowrap; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-title {
+    padding-top: 10px; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-next-view {
+    top: calc(100% + 40px);
+    font-size: 12px;
+    color: #61aba9; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-dashboard-instruction {
+    top: calc(100% + 40px);
+    font-size: 12px; }
 
 .project-dashboard {
   min-height: 50vh; }

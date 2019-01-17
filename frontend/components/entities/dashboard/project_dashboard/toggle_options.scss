@@ -29,13 +29,16 @@
       }
       
       .toggle-button {
+        cursor: pointer;
         width: 18px;
         height: 18px;
         margin-bottom: 8px;
-        -webkit-border-radius: 25px;
-        -moz-border-radius: 25px;
         border-radius: 25px;
-        background-color: white
+        background-color: white;
+
+        &:hover {
+          background-color: $teal;
+        }
       }
       
       #selected-button {
@@ -74,17 +77,32 @@
     border-radius: 15px;
     padding: 8px 8px 12px 8px;
     
-    .toggle-view-title {
+    .toggle-view-title,
+    .toggle-view-next-view,
+    .toggle-view-dashboard-instruction {
+      font-size: 15px;
+      color: black;
       position: absolute;
       font-weight: 700;
-      font-size: 15px;
-      top: calc(100% + 10px);
+      top: 100%;
       right: 50%;
       transform: translateX(50%);
-      color: black;
       white-space: nowrap;
     }
+
+    .toggle-view-title {
+      padding-top: 10px;
+    }
+
+    .toggle-view-next-view {
+      top: calc(100% + 40px);
+      font-size: 12px;
+      color: $teal;
+    }
+
+    .toggle-view-dashboard-instruction {
+      top: calc(100% + 40px);
+      font-size: 12px;
+    }
   }
-
-
 }

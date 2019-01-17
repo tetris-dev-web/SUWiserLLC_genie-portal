@@ -10,16 +10,16 @@ import './project_dashboard.scss';
 class ProjectDashboard extends React.Component {
   constructor(props){
     super(props);
-    this.viewTypes = ["GRAPH VIEW", "VOTE VIEW", "NO VIEW"];
+    this.viewTypes = ["GRAPH VIEW", "VOTE VIEW", "LOCATION VIEW"];
     this.state = {
-      viewId: null
+      currentViewId: null
     };
 
     this.toggleView = this.toggleView.bind(this);
   }
 
-  toggleView (viewId) {
-    this.setState({viewId: viewId === this.state.viewId ? null : viewId});
+  toggleView (currentViewId) {
+    this.setState({currentViewId: currentViewId === this.state.currentViewId ? null : currentViewId});
   }
 
   componentDidMount() { //where is this being used?
@@ -34,7 +34,7 @@ class ProjectDashboard extends React.Component {
   render() {
     let currentGraph = <div></div>;
 
-    switch (this.state.viewId) {
+    switch (this.state.currentViewId) {
       case null:
         break;
       case 0:
@@ -57,9 +57,10 @@ class ProjectDashboard extends React.Component {
             {currentGraph}
           </div>
           <ToggleOptions
+            dashboardType="project"
             viewTitle="PROJECT DASHBOARD"
             toggleView={this.toggleView}
-            viewId={this.state.viewId}
+            currentViewId={this.state.currentViewId}
             viewTypes={this.viewTypes}
             optionIcons={[
               <svg id="active" x="0px" y="0px" viewBox="0 0 288 288"><path d="M0,207l288-0.2V81H0V207z M270,98.9v90l-108,0v-90L270,98.9z" /></svg>,
