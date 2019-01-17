@@ -389,55 +389,96 @@
     float: none !important;
     margin-right: 0 !important; } }
 
-.token-svg {
-  width: 90%;
-  height: 90%;
-  width: 75%;
-  height: 75%;
-  overflow: visible !important; }
+.toggle-view-options-container,
+.toggle-view-options-container-graph-hidden {
+  text-align: center; }
+  .toggle-view-options-container .toggle-view-options,
+  .toggle-view-options-container-graph-hidden .toggle-view-options {
+    position: relative;
+    display: inline-flex;
+    background-color: #9b9287;
+    padding: 8px 8px 20px 8px;
+    color: white;
+    border-radius: 15px 15px 0 0; }
+    .toggle-view-options-container .toggle-view-options .toggle-option,
+    .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center; }
+      .toggle-view-options-container .toggle-view-options .toggle-option .toggle-icon,
+      .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-icon {
+        fill: white;
+        width: 30px; }
+        .toggle-view-options-container .toggle-view-options .toggle-option .toggle-icon #active,
+        .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-icon #active {
+          transform: rotate(90deg); }
+        .toggle-view-options-container .toggle-view-options .toggle-option .toggle-icon svg,
+        .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-icon svg {
+          display: block; }
+      .toggle-view-options-container .toggle-view-options .toggle-option .toggle-button,
+      .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-button {
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+        margin-bottom: 8px;
+        border-radius: 25px;
+        background-color: white; }
+        .toggle-view-options-container .toggle-view-options .toggle-option .toggle-button:hover,
+        .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-button:hover {
+          background-color: #61aba9; }
+      .toggle-view-options-container .toggle-view-options .toggle-option #selected-button,
+      .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option #selected-button {
+        background-color: #707070; }
+    .toggle-view-options-container .toggle-view-options .project-toggle-view-title,
+    .toggle-view-options-container .toggle-view-options .token-toggle-view-title,
+    .toggle-view-options-container-graph-hidden .toggle-view-options .project-toggle-view-title,
+    .toggle-view-options-container-graph-hidden .toggle-view-options .token-toggle-view-title {
+      position: absolute;
+      font-weight: 700;
+      font-size: 15px;
+      top: 50%;
+      right: calc(100% + 20px);
+      transform: translateY(-50%);
+      color: black;
+      white-space: nowrap; }
+    .toggle-view-options-container .toggle-view-options .toggle-view-current-view,
+    .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-current-view {
+      position: absolute;
+      font-weight: 700;
+      font-size: 15px;
+      top: 50%;
+      left: calc(100% + 20px);
+      transform: translateY(-50%);
+      color: black;
+      white-space: nowrap; }
 
-.x .domain {
-  stroke: none; }
-
-.x .tick line {
-  stroke: none; }
-
-.x .tick text {
-  fill: #736566; }
-
-.line {
-  fill: none;
-  stroke: #1a1919; }
-
-.focus .circle-earnings {
-  fill: black;
-  z-index: 999; }
-
-.focus .x {
-  stroke: #9b9287;
-  stroke-dasharray: 8 8; }
-
-.focus .price {
-  fill: #9b9287; }
-
-.focus .earnings {
-  fill: black; }
-
-.focus2 .x {
-  stroke: #384778; }
-
-.focus2 .y {
-  stroke: rgba(56, 71, 120, 0.4); }
-
-.focus2 .balance {
-  fill: #384778; }
-
-.focus2 .tokens {
-  fill: #384778; }
-
-.overlay {
-  fill: none;
-  pointer-events: all; }
+.toggle-view-options-container-graph-hidden .toggle-view-options {
+  border-radius: 15px;
+  padding: 8px 8px 12px 8px; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options .project-toggle-view-title,
+  .toggle-view-options-container-graph-hidden .toggle-view-options .project-toggle-view-next-view,
+  .toggle-view-options-container-graph-hidden .toggle-view-options .project-toggle-view-dashboard-instruction,
+  .toggle-view-options-container-graph-hidden .toggle-view-options .token-toggle-view-title {
+    font-size: 15px;
+    color: black;
+    position: absolute;
+    font-weight: 700;
+    top: 100%;
+    right: 50%;
+    transform: translateX(50%);
+    white-space: nowrap; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options .project-toggle-view-title {
+    padding-top: 10px; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options .project-toggle-view-next-view {
+    top: calc(100% + 40px);
+    font-size: 12px;
+    color: #61aba9; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options .project-toggle-view-dashboard-instruction {
+    top: calc(100% + 40px);
+    font-size: 12px; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options .token-toggle-view-title {
+    padding-bottom: 10px;
+    top: -30px; }
 
 
 
@@ -547,91 +588,6 @@
   .votes-graph .votes-view-onhover-project-outlines-group rect {
     fill: #fff;
     pointer-events: none; }
-
-.toggle-view-options-container,
-.toggle-view-options-container-graph-hidden {
-  text-align: center; }
-  .toggle-view-options-container .toggle-view-options,
-  .toggle-view-options-container-graph-hidden .toggle-view-options {
-    position: relative;
-    display: inline-flex;
-    background-color: #9b9287;
-    padding: 8px 8px 20px 8px;
-    color: white;
-    border-radius: 15px 15px 0 0; }
-    .toggle-view-options-container .toggle-view-options .toggle-option,
-    .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option {
-      display: flex;
-      flex-direction: column;
-      align-items: center; }
-      .toggle-view-options-container .toggle-view-options .toggle-option .toggle-icon,
-      .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-icon {
-        fill: white;
-        width: 30px; }
-        .toggle-view-options-container .toggle-view-options .toggle-option .toggle-icon #active,
-        .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-icon #active {
-          transform: rotate(90deg); }
-        .toggle-view-options-container .toggle-view-options .toggle-option .toggle-icon svg,
-        .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-icon svg {
-          display: block; }
-      .toggle-view-options-container .toggle-view-options .toggle-option .toggle-button,
-      .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-button {
-        cursor: pointer;
-        width: 18px;
-        height: 18px;
-        margin-bottom: 8px;
-        border-radius: 25px;
-        background-color: white; }
-        .toggle-view-options-container .toggle-view-options .toggle-option .toggle-button:hover,
-        .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option .toggle-button:hover {
-          background-color: #61aba9; }
-      .toggle-view-options-container .toggle-view-options .toggle-option #selected-button,
-      .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-option #selected-button {
-        background-color: #707070; }
-    .toggle-view-options-container .toggle-view-options .toggle-view-title,
-    .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-title {
-      position: absolute;
-      font-weight: 700;
-      font-size: 15px;
-      top: 50%;
-      right: calc(100% + 20px);
-      transform: translateY(-50%);
-      color: black;
-      white-space: nowrap; }
-    .toggle-view-options-container .toggle-view-options .toggle-view-current-view,
-    .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-current-view {
-      position: absolute;
-      font-weight: 700;
-      font-size: 15px;
-      top: 50%;
-      left: calc(100% + 20px);
-      transform: translateY(-50%);
-      color: black;
-      white-space: nowrap; }
-
-.toggle-view-options-container-graph-hidden .toggle-view-options {
-  border-radius: 15px;
-  padding: 8px 8px 12px 8px; }
-  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-title,
-  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-next-view,
-  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-dashboard-instruction {
-    font-size: 15px;
-    color: black;
-    position: absolute;
-    font-weight: 700;
-    top: 100%;
-    right: 50%;
-    transform: translateX(50%);
-    white-space: nowrap; }
-  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-title {
-    padding-top: 10px; }
-  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-next-view {
-    top: calc(100% + 40px);
-    font-size: 12px;
-    color: #61aba9; }
-  .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-dashboard-instruction {
-    top: calc(100% + 40px);
-    font-size: 12px; }
 
 .project-dashboard {
   min-height: 50vh; }

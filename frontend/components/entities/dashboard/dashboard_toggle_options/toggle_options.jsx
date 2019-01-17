@@ -8,16 +8,15 @@ class ToggleOptions extends React.Component {
     this.state = {
       showCurrentViewType: false,
       showNextViewType: null,
-      showDashboardInstruction: false
+      showDashboardDescription: false
     };
-
   }
 
   handleDashboardHover(boolean) {
     const { currentViewId } = this.props;
     return () => {
       if (currentViewId === null) {
-        this.setState({ showDashboardInstruction: boolean });
+        this.setState({ showDashboardDescription: boolean });
       } else {
         this.setState({ showCurrentViewType: boolean });
       }
@@ -31,12 +30,12 @@ class ToggleOptions extends React.Component {
         if (nextViewType === null) {
           this.setState({ 
             showNextViewType: nextViewType,
-            showDashboardInstruction: true
+            showDashboardDescription: true
           });
         } else {
           this.setState({
             showNextViewType: nextViewType,
-            showDashboardInstruction: false
+            showDashboardDescription: false
           });
         }
       }
@@ -50,25 +49,25 @@ class ToggleOptions extends React.Component {
       switch (dashboardType) {
         case "project":
           return (
-            <div key={i} className='toggle-option' onClick={() => toggleView(i)}>
-              <div className='toggle-button'
+            <div key={i} className="toggle-option" onClick={() => toggleView(i)}>
+              <div className="toggle-button"
                 onMouseEnter={this.handleButtonHover(i)}
                 onMouseLeave={this.handleButtonHover(null)}
-                id={currentViewId === i ? 'selected-button' : 'unselected-button'}>
+                id={currentViewId === i ? "selected-button" : "unselected-button"}>
               </div>
-              <div className='toggle-icon'>
+              <div className="toggle-icon">
                 {icon}
               </div>
             </div>
           );
           case "token":
           return (
-            <div key={i} className='toggle-option' onClick={() => toggleView(i)}>
-              <div className='toggle-icon'>
+            <div key={i} className="toggle-option" onClick={() => toggleView(i)}>
+              <div className="toggle-icon">
                 {icon}
               </div>
-              <div className='toggle-button'
-                id={currentViewId === i ? 'selected-button' : 'unselected-button'}>
+              <div className="toggle-button"
+                id={currentViewId === i ? "selected-button" : "unselected-button"}>
               </div>
             </div>
           );
@@ -79,34 +78,28 @@ class ToggleOptions extends React.Component {
     }
     
     render() {
-      const { currentViewId, viewTitle, viewTypes } = this.props;
-      const { showCurrentViewType, showNextViewType, showDashboardInstruction } = this.state;
+      const { currentViewId, dashboardTitle, viewTypes, dashboardDescription, dashboardType } = this.props;
+      const { showCurrentViewType, showNextViewType, showDashboardDescription } = this.state;
 
       return (
         <div className={currentViewId === null ? "toggle-view-options-container-graph-hidden" : "toggle-view-options-container"}>
-          <div className='toggle-view-options'
+          <div className="toggle-view-options"
             onMouseEnter={this.handleDashboardHover(true)}
             onMouseLeave={this.handleDashboardHover(false)}>
             {this.generateOptions()}
-            <div className="toggle-view-title">{viewTitle}</div>
+            <div className={`${dashboardType}-toggle-view-title`}>{dashboardTitle}</div>
             {
               currentViewId !== null && showCurrentViewType &&
               <div className="toggle-view-current-view">{viewTypes[currentViewId]}</div>
             }
             {
               currentViewId === null && showNextViewType !== null &&
-              <div className="toggle-view-next-view">{viewTypes[showNextViewType]}</div> 
+              <div className={`${dashboardType}-toggle-view-next-view`}>{viewTypes[showNextViewType]}</div> 
             }
             {
-              currentViewId === null && showDashboardInstruction &&
-              <div className="toggle-view-dashboard-instruction">
-                <p>
-                  The project dashboard tracks
-                  the performance of the projects
-                  providing investors a comparative 
-                  framework to provide direction on 
-                  which investments to focus on.
-                </p>
+              currentViewId === null && showDashboardDescription &&
+              <div className={`${dashboardType}-toggle-view-dashboard-instruction`}>
+                <p>{dashboardDescription}</p>
               </div> 
             }
           </div>
