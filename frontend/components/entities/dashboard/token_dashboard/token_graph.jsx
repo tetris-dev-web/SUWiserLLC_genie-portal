@@ -1,7 +1,7 @@
 import React from 'react';
 // import { data } from '../../../util/token_data_util'
 import * as d3 from 'd3';
-// import TokenDashboardRect from './token_dashboard_rect';
+import TokenDashboardRect from './token_dashboard_rect';
 
 class TokenGraph extends React.Component {
   constructor(props) {
@@ -9,6 +9,7 @@ class TokenGraph extends React.Component {
 
     this.handleMousemove = this.handleMousemove.bind(this);
     this.drawChart = this.drawChart.bind(this);
+    this.calculateActiveTokenRatio = this.calculateActiveTokenRatio.bind(this)
   }
 
   componentDidMount() {
@@ -191,8 +192,28 @@ class TokenGraph extends React.Component {
       .attr('d', this.linePrice);
   }
 
+  calculateActiveTokenRatio(){
+    let { data } = this.props;
+    let recentActiveTokens = data[data.length-1].active_tokens;
+    let recentTotalTokens = data[data.length-1].tokens;
+    let activeTokenRatio = (recentActiveTokens / recentTotalTokens) * 100;
+    return `${activeTokenRatio}%`;
+
+  }
+
   render() {
-    return <div className="series content graph" id='token'></div>;
+    console.log(this.props.data);
+
+    return (
+      <div className="series content graph" id='token'>
+        <TokenDashboardRect
+                        x={0}
+                        y={0}
+                        width={75}
+                        height={this.height ? this.height : 430}
+                        activeTokenRatio={this.calculateActiveTokenRatio()}/>
+      </div>
+  );
   }
 
 }
