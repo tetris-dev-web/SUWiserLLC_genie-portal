@@ -53,12 +53,12 @@ class TokenDashboard extends React.Component {
 
   render() {
     return (
-      <div className="graph-container">
-        {/* <TokenGraph currentUser={this.props.currentUser} data={this.state.data} />
+      <div>
+        <TokenGraph currentUser={this.props.currentUser} data={this.state.data} />
         <label className="switch">
           <input type="checkbox" onClick={this.toggleData} />
           <span className="slider round"></span>
-        </label> */}
+        </label>
       </div>
     );
   }

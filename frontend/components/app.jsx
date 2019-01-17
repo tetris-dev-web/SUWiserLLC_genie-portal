@@ -55,7 +55,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div style={{height: "100%"}}>
+      <div style={{height: "100%", position: "relative"}}>
         <Navbar />
         <DeveloperInfo />
         <RedirectedRoute />
