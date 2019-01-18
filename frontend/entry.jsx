@@ -8,6 +8,7 @@ import TruffleContract from 'truffle-contract';
 import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';
 import Token from '../truffle/build/contracts/Token.json';
 import Project from '../truffle/build/contracts/Project.json';
+import Voting from '../truffle/build/contracts/Voting.json';
 
 document.addEventListener('DOMContentLoaded', () => {
   let store;
@@ -31,21 +32,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const crowdsale = TruffleContract(GNITokenCrowdsale);
     crowdsale.setProvider(web3Provider);
 
+    const voting = TruffleContract(Voting);
+
     const project = TruffleContract(Project);
     project.setProvider(web3Provider);
 
     let account;
     let tokenInstance;
     let crowdsaleInstance;
+    let votingInstance;
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
       token.deployed().then((_tokenInstance) => {
         tokenInstance = _tokenInstance;
       })
       .then(() => {
+        return voting.deployed().then((_votingInstance) => {
+          votingInstance = _votingInstance;
+        })
+      })
+      .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {
           crowdsaleInstance = _crowdsaleInstance;
-          preloadedState = merge({}, preloadedState, { network: { account, tokenInstance, crowdsaleInstance, project, web3 } });
+          preloadedState = merge({}, preloadedState, { network: { account, tokenInstance, votingInstance, crowdsaleInstance, project, web3 } });
           store = configureStore(preloadedState);
           window.getState = store.getState;
           const root = document.getElementById('root');

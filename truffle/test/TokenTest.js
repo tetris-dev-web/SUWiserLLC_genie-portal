@@ -417,6 +417,7 @@ contract('Token', async (_accounts) => {
 
           after(async () => {
             await resetBalances();
+            await mT.clearMockBalance(accounts[3]);
           })
 
           it('removes the token value from the senders total balance', async () => {
@@ -523,6 +524,7 @@ contract('Token', async (_accounts) => {
 
           after(async () => {
             await resetBalances();
+            await mT.clearMockBalance(accounts[3]);
           })
 
           it('removes the token value from the senders total balance', async () => {
@@ -690,7 +692,7 @@ contract('Token', async (_accounts) => {
 
           describe('when the receiver does not have an account', async () => {
             before(async () => {
-              await mT.setMockCycleUpdateStatus(accounts[2], false);
+              await mT.setMockCycleUpdateStatus(accounts[3], false);
               await mT.transferInactive(accounts[3], 3000, {from: accounts[1]});
             })
 

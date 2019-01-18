@@ -20,17 +20,17 @@ contract TimedCrowdsale is Crowdsale {
    */
   modifier onlyWhileOpen {
     // solium-disable-next-line security/no-block-members
-    uint timestamp = block.timestamp;
+    /* uint timestamp = block.timestamp;
     uint time1 = openingTime;
-    uint time2 = doomsDay;
+    uint time2 = doomsDay; */
     require(block.timestamp >= openingTime && block.timestamp <= doomsDay);
     _;
   }
 
   modifier canExtendDoomsDay {
-    uint timestamp = block.timestamp;
+    /* uint timestamp = block.timestamp;
     uint time1 = openingTime;
-    uint time2 = doomsDay;
+    uint time2 = doomsDay; */
     require((block.timestamp >= openingTime && block.timestamp <= doomsDay) || canReOpen);
     _;
   }
@@ -72,7 +72,7 @@ contract TimedCrowdsale is Crowdsale {
    * @param _beneficiary Token purchaser
    * @param _weiAmount Amount of wei contributed
    */
-  function _preValidatePurchase(
+  /* function _preValidatePurchase(
     address _beneficiary,
     uint256 _weiAmount
   )
@@ -80,6 +80,6 @@ contract TimedCrowdsale is Crowdsale {
     onlyWhileOpen
   {
     super._preValidatePurchase(_beneficiary, _weiAmount);
-  }
+  } */
 
 }

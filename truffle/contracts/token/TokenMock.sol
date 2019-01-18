@@ -38,13 +38,20 @@ contract TokenMock is Token, ContractStub {
     totalAccounts_ = 0;
   }
 
+  function clearMockBalance (address addr) public {
+    balances[addr].inactive = 0;
+    balances[addr].active = 0;
+    balances[addr].assigned = 0;
+    balances[addr].exists = false;
+  }
+
   function initMockBalance (address addr, uint256 active, uint256 inactive, uint256 assigned) public {
     balances[addr].inactive = inactive;
     balances[addr].active = active;
     balances[addr].assigned = assigned;
     balances[addr].exists = true;
 
-    totalAccounts_ = totalAccounts_.add(1); 
+    totalAccounts_ = totalAccounts_.add(1);
     totalSupply_ = totalSupply_.add(active).add(inactive);
     totalActiveSupply_ = totalActiveSupply_.add(active);
   }

@@ -12,7 +12,9 @@ contract ProjectMock is Project {
     uint256 _developerTokens,
     uint256 _investorTokens,
     string _lat,
-    string _lng
+    string _lng,
+    bytes32 _voteForHash,
+    bytes32 _voteAgainstHash
     ) public Project(
       _name,
       _developer,
@@ -22,7 +24,9 @@ contract ProjectMock is Project {
       _developerTokens,
       _investorTokens,
       _lat,
-      _lng
+      _lng,
+      _voteForHash,
+      _voteAgainstHash
       ) {}
 
   function removeMockVoter (address addr) public {
