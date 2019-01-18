@@ -9,7 +9,7 @@ class TokenGraph extends React.Component {
 
     this.handleMousemove = this.handleMousemove.bind(this);
     this.drawChart = this.drawChart.bind(this);
-    this.calculateActiveTokenRatio = this.calculateActiveTokenRatio.bind(this)
+    this.calculateTokenData = this.calculateTokenData.bind(this)
   }
 
   componentDidMount() {
@@ -192,12 +192,14 @@ class TokenGraph extends React.Component {
       .attr('d', this.linePrice);
   }
 
-  calculateActiveTokenRatio(){
+  calculateTokenData(){
     let { data } = this.props;
     let recentActiveTokens = data[data.length-1].active_tokens;
     let recentTotalTokens = data[data.length-1].tokens;
     let activeTokenRatio = (recentActiveTokens / recentTotalTokens) * 100;
-    return `${activeTokenRatio}%`;
+    let tokenData = { activeTokenRatio, recentActiveTokens, recentTotalTokens };
+    return tokenData
+    // return `${activeTokenRatio}%`;
 
   }
 
@@ -209,9 +211,9 @@ class TokenGraph extends React.Component {
         <TokenDashboardRect
                         x={0}
                         y={0}
-                        width={75}
+                        width={100}
                         height={this.height ? this.height : 430}
-                        activeTokenRatio={this.calculateActiveTokenRatio()}/>
+                        tokenData={this.calculateTokenData()}/>
       </div>
   );
   }
