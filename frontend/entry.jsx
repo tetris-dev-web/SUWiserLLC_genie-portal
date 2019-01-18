@@ -39,7 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let crowdsaleInstance;
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
+      console.log("tokenInst: ", token)
       token.deployed().then((_tokenInstance) => {
+        console.log("tokenInst: ", _tokenInstance)
         tokenInstance = _tokenInstance;
       })
       .then(() => {
@@ -47,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
           crowdsaleInstance = _crowdsaleInstance;
           preloadedState = merge({}, preloadedState, { network: { account, tokenInstance, crowdsaleInstance, project, web3 } });
           store = configureStore(preloadedState);
-          window.getState = store.getState;
+          window.getState = store.getState; //just for development purposes - remove later - use logger
           const root = document.getElementById('root');
           ReactDOM.render(<Root store={store} />, root);
         });
@@ -56,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
     store = configureStore(preloadedState);
+    window.getState = store.getState;
     const root = document.getElementById('root');
     ReactDOM.render(<Root store={store} />, root);
   }

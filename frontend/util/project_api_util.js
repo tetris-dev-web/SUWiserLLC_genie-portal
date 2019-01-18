@@ -93,18 +93,6 @@ export const parseCashflows = cashflow => {
       result.accum_projected_cashflow[quarter] = cashflow[quarter]["cashFlow"]
     }
 
-<<<<<<< HEAD
-  // cashflow.forEach((quarter) => {
-  //
-  // })
-  return {
-    projected_cashflow: projectedCashflow,
-    actual_cashflow: actualCashflow,
-    accum_projected_cashflow: accumProjectedCashflow,
-    accum_actual_cashflow: accumActualCashflow
-  };
-};
-=======
     return result;
   }, {
     projected_cashflow: {},
@@ -114,7 +102,6 @@ export const parseCashflows = cashflow => {
     accumulated_revenue: {}
   });
 }
->>>>>>> 292f6d0ae27c0e6e545df033f747053161a62371
 
 // export const calculateAccumulatedRevenue = (cashflow) => {
 //   const accumulatedRevenue = {};

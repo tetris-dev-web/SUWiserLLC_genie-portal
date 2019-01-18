@@ -10,6 +10,7 @@ import { formatProjectData, processCashData } from '../../../../util/project_api
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
 import { merge } from 'lodash';
 import PolyModal from './poly_modal/poly_modal';
+import sigUtil from 'eth-sig-util';
 
 class ProjectForm extends React.Component {
 
@@ -141,7 +142,7 @@ class ProjectForm extends React.Component {
         accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
      });
 
-    this.props.createProject(this.props.crowdsaleInstance, projectData, this.props.account).then(() => {
+    this.props.createProject(this.props.crowdsaleInstance, projectData, this.props.account, voteForHash, voteAgainstHash).then(() => {
       if (this.props.errors.length == 0) {
         this.props.closeModal();
         // window.location.reload();
@@ -157,7 +158,7 @@ class ProjectForm extends React.Component {
     if (this.state.projectData.latitude == '' && this.state.projectData.longitude == '' && clicked) {
       return (
         <ul className="project-errors">
-          <li>Latitude and Longitude can't be blank</li>
+          <li> Latitude and Longitude can't be blank </li>
         </ul>
       );
     }
@@ -199,7 +200,7 @@ class ProjectForm extends React.Component {
 
   calculateTotalCapitalDeployed(){
     let capital = 0;
-    
+
     Object.values(this.props.projects).forEach((project) => {
       if (project.cashflow) {
         let jsonProjectCashflow = processCashData(project.cashflow);

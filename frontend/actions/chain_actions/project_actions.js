@@ -7,6 +7,7 @@ export const fetchProjects  = (crowdsale, projectContract) => {
   return dispatch => {
     return APIUtil.fetchProjects().then(projects => {
       return ChainUtil.integrateProjectsData(crowdsale, projectContract, projects).then((projectsData) => {
+        debugger
         return dispatch(receiveProjects(projectsData));
       });
     });

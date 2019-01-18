@@ -16,7 +16,7 @@ class ProjectDashboard extends React.Component {
     };
 
     this.toggleView = this.toggleView.bind(this);
-    this.toggleTextShowing = this.toggleTextShowing.bind(this);
+    // this.toggleTextShowing = this.toggleTextShowing.bind(this);
     this.watchProjectPitch = this.watchProjectPitch.bind(this);
     this.filterPitchedProjects = this.filterPitchedProjects.bind(this);
   }
@@ -30,16 +30,16 @@ class ProjectDashboard extends React.Component {
   }
 
   componentDidMount() {
-    this.watchProjectPitch();
+    if (this.props.web3){this.watchProjectPitch();}
+
   }
 
-  watchProjectPitch() {
+  watchProjectPitch() { //event listener for pitched projects
     this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
       const address = event.args.projectAddress;
       const title = event.args.name;
       const project = this.props.projects[title];
       project.instance = this.props.projectContract.at(address);
-
       this.props.receiveProject(project);
     });
   }
@@ -69,7 +69,7 @@ class ProjectDashboard extends React.Component {
                         crowdsaleInstance={this.props.crowdsaleInstance}
                         projectContract={this.props.projectContract}
                         fetchProjects={this.props.fetchProjects}
-                        data={this.filterPitchedProjects()} /> :
+                        data={this.filterPitchedProjects()} />
         break;
       case 1:
         currentGraph = <VotesGraph />;

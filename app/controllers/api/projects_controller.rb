@@ -10,7 +10,6 @@ class Api::ProjectsController < ApplicationController
   end
 
   def create
-    debugger
     puts ENV['INFURA_API_KEY']
     @project = Project.new(project_params)
     if @project.save

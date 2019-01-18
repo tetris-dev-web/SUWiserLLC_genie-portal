@@ -1,3 +1,5 @@
+
+
 export const integrateProjectsData = async (crowdsale, projectContract, initialProjectsData) => {
   const projectAddresses = await getProjectAddresses(crowdsale);
 
@@ -13,6 +15,8 @@ export const integrateProjectsData = async (crowdsale, projectContract, initialP
     }, {});
   });
 };
+
+
 
 const getProjectAddresses = async crowdsale => {
   const totalProjectCount = await crowdsale.totalProjectCount_();

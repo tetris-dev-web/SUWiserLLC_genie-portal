@@ -56,14 +56,14 @@ class App extends React.Component {
   // }
 
   componentDidMount () {
-    this.props.crowdsaleInstance.VoteAddition().watch((error, event) => {
-        console.log(event);
-    });
-
-    this.props.crowdsaleInstance.VoteRemoval().watch((error, event) => {
-      console.log(event)
-    });
-    
+    if(this.props.web3){
+      this.props.crowdsaleInstance.VoteAddition().watch((error, event) => {
+        console.log(event); //TODO log to state
+      });
+      this.props.crowdsaleInstance.VoteRemoval().watch((error, event) => {
+        console.log(event)
+      });
+    }
   }
 
   voteTest () {
@@ -100,6 +100,7 @@ class App extends React.Component {
 const mapStateToProps  = state => {
   return {
     account: state.network.account,
+    web3: state.network.web3,
     crowdsaleInstance: state.network.crowdsaleInstance
   };
 };
