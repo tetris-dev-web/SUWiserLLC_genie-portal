@@ -400,36 +400,6 @@ class ProjectForm extends React.Component {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
 
-    const geojsons = [];
-    const fileId = ["file1", "file2", "file3", "file4", "file5"];
-    for (let i = 0; i < 5; i++) {
-      geojsons.push(
-        <div className="geo-row-container" key={i}>
-          <div className="file-container">
-            <input id={fileId[i]}
-              name={fileId[i]}
-              className="file-input"
-              type="file" />
-            <label htmlFor={fileId[i]}>
-              <span>choose geojson</span>
-            </label>
-          </div>
-          <select className="heir-input">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-          <input className="opacity-input"
-            type="number"
-            min="0"
-            max="1"
-            placeholder="0.5" />
-        </div>
-      );
-    }
-
     let { title, latitude, longitude, model_id, currentQuarter, description
       // revenue, valuation, description, model_id, city, country, continent, icon
     } = this.state;

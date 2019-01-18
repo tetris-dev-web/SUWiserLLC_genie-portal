@@ -1,76 +1,80 @@
 @import "./frontend/util/_variables.scss";
 
-.toggle-view-options-container,
-.toggle-view-options-container-graph-hidden {
+.toggle-view-options {
+  position: relative;
+  display: inline-flex;
+  background-color: $tan;
+  color: white;
+
+  .toggle-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .toggle-icon {
+      fill: white;
+      width: 30px;
+
+      #active {
+        transform: rotate(90deg);
+      }
+
+      svg {
+        display: block;
+      }
+    }
+
+    .toggle-button {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      border-radius: 25px;
+      background-color: white;
+
+      &:hover {
+        background-color: $teal;
+      }
+
+      &.project {
+        margin-bottom: 8px;
+      }
+
+      &.token {
+        margin-top: 8px;
+      }
+    }
+
+    #selected-button {
+      background-color: $grey;
+    }
+  }
+}
+
+.toggle-view-options-container {
   text-align: center;
   width: 100%;
-  
-  .toggle-view-options-border-layer {
-    width: 70%;
-    margin: auto;
+  transition: 0.5s;
 
+  &.project {
+  }
+
+  &.token {
+    transform: translateY(-260px);
+    // potentially move this to react since 260px is hardcoded
+  }
+
+  .toggle-view-options {
     &.project {
-      padding-top: 25px;
+      padding: 8px 8px 20px 8px;
+      border-radius: 15px 15px 0 0;
     }
 
     &.token {
-      padding-bottom: 25px;
-    }
-  }
-
-  .project-toggle-view-options,
-  .token-toggle-view-options {
-    position: relative;
-    display: inline-flex;
-    background-color: $tan;
-    padding: 8px 8px 20px 8px;
-    color: white;
-    border-radius: 15px 15px 0 0;
-  
-    .toggle-option {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .toggle-icon {
-        fill: white;
-        width: 30px;
-        #active {
-          transform: rotate(90deg);
-        }
-  
-        svg {
-          display: block;
-        }
-      }
-      
-      .toggle-button {
-        cursor: pointer;
-        width: 18px;
-        height: 18px;
-        border-radius: 25px;
-        background-color: white;
-
-        &:hover {
-          background-color: $teal;
-        }
-
-        &.project {
-          margin-bottom: 8px;
-        }
-
-        &.token {
-          margin-top: 8px;
-        }
-      }
-      
-      #selected-button {
-        background-color: $grey;
-      }
+      padding: 20px 8px 8px 8px;
+      border-radius: 0 0 15px 15px;
     }
 
-    .project-toggle-view-title,
-    .token-toggle-view-title {
+    .toggle-view-title {
       position: absolute;
       font-weight: 700;
       font-size: 15px;
@@ -92,25 +96,36 @@
       white-space: nowrap;
     }
   }
-
-  .token-toggle-view-options {
-    padding: 20px 8px 8px 8px;
-    border-radius: 0 0 15px 15px;
-  }
 }
 
 .toggle-view-options-container-graph-hidden {
+  text-align: center;
+  width: 100%;
+  transition: 0.5s;
+
+  .toggle-view-options-border-layer {
+    width: 70%;
+    margin: auto;
+
+    &.project {
+      padding-top: 25px;
+    }
+
+    &.token {
+      padding-bottom: 25px;
+    }
+  }
 
   .toggle-view-options {
-    border-radius: 15px;
-    padding: 8px 8px 12px 8px;
+    &.project,
+    &.token {
+      border-radius: 15px;
+      padding: 8px 8px 12px 8px;
+    }
     
-    .project-toggle-view-title,
-    .project-toggle-view-next-view,
-    .project-toggle-view-dashboard-description,
-    .token-toggle-view-title,
-    .token-toggle-view-next-view,
-    .token-toggle-view-dashboard-description {
+    .toggle-view-title,
+    .toggle-view-next-view,
+    .toggle-view-dashboard-description {
       font-size: 15px;
       color: black;
       position: absolute;
@@ -121,35 +136,41 @@
       white-space: nowrap;
     }
 
-    .project-toggle-view-title {
-      padding-top: 10px;
+    .toggle-view-title {
+      &.project {
+        padding-top: 10px;
+      }
+
+      &.token {
+        padding-bottom: 10px;
+        top: -30px;
+      }
     }
 
-    .project-toggle-view-next-view {
-      top: calc(100% + 40px);
-      font-size: 12px;
-      color: $teal;
+    .toggle-view-next-view {
+      &.project {
+        top: calc(100% + 40px);
+        font-size: 12px;
+        color: $teal;
+      }
+
+      &.token {
+        top: -70px;
+        font-size: 12px;
+        color: $teal;
+      }
     }
 
-    .project-toggle-view-dashboard-description {
-      top: calc(100% + 40px);
-      font-size: 12px;
-    }
+    .toggle-view-dashboard-description {
+      &.project {
+        top: calc(100% + 40px);
+        font-size: 12px;
+      }
 
-    .token-toggle-view-title {
-      padding-bottom: 10px;
-      top: -30px;
-    }
-
-    .token-toggle-view-next-view {
-      top: -70px;
-      font-size: 12px;
-      color: $teal;
-    }
-
-    .token-toggle-view-dashboard-description {
-      top: -70px;
-      font-size: 12px;
+      &.token {
+        top: -70px;
+        font-size: 12px;
+      }
     }
   }
 }

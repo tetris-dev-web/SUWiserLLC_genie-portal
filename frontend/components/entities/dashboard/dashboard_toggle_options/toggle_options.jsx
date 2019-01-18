@@ -79,31 +79,35 @@ class ToggleOptions extends React.Component {
       });
     }
     
-    render() {
-      const { currentViewId, dashboardTitle, viewTypes, dashboardDescription, dashboardType } = this.props;
-      const { showCurrentViewType, showNextViewType, showDashboardDescription } = this.state;
+  render() {
+    const { currentViewId, dashboardTitle, viewTypes, dashboardDescription, dashboardType } = this.props;
+    const { showCurrentViewType, showNextViewType, showDashboardDescription } = this.state;
 
-      return (
-        <div className="toggle-view-options"
-          onMouseEnter={this.handleDashboardHover(true)}
-          onMouseLeave={this.handleDashboardHover(false)}>
-          {this.generateOptions()}
-          <div className={`${dashboardType}-toggle-view-title`}>{dashboardTitle}</div>
-          {
-            currentViewId !== null && showCurrentViewType &&
-            <div className="toggle-view-current-view">{viewTypes[currentViewId]}</div>
-          }
-          {
-            currentViewId === null && showNextViewType !== null &&
-            <div className={`${dashboardType}-toggle-view-next-view`}>{viewTypes[showNextViewType]}</div> 
-          }
-          {
-            currentViewId === null && showDashboardDescription &&
-            <div className={`${dashboardType}-toggle-view-dashboard-description`}>
-              <p>{dashboardDescription}</p>
-            </div> 
-          }
+    return (
+      <div className={currentViewId === null ? `toggle-view-options-container-graph-hidden ${dashboardType}` : `toggle-view-options-container ${dashboardType}`}>
+        <div className={`toggle-view-options-border-layer ${dashboardType}`}>
+          <div className={`toggle-view-options ${dashboardType}`}
+            onMouseEnter={this.handleDashboardHover(true)}
+            onMouseLeave={this.handleDashboardHover(false)}>
+            {this.generateOptions()}
+            <div className={`toggle-view-title ${dashboardType}`}>{dashboardTitle}</div>
+            {
+              currentViewId !== null && showCurrentViewType &&
+              <div className="toggle-view-current-view">{viewTypes[currentViewId]}</div>
+            }
+            {
+              currentViewId === null && showNextViewType !== null &&
+              <div className={`toggle-view-next-view ${dashboardType}`}>{viewTypes[showNextViewType]}</div> 
+            }
+            {
+              currentViewId === null && showDashboardDescription &&
+              <div className={`toggle-view-dashboard-description ${dashboardType}`}>
+                <p>{dashboardDescription}</p>
+              </div> 
+            }
+          </div>
         </div>
+      </div>
     );
   }
 }
