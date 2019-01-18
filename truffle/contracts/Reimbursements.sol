@@ -30,7 +30,7 @@ contract Reimbursements is Ownable {
     uint256 reimbursement = weiToReimburse.mul(accountTokens).div(inactiveTokensAtClosing);
     account.transfer(reimbursement);
 
-    if (address(this.balance) == 0) {
+    if (address(this).balance == 0) {
       weiToReimburse = 0;
       GNITokenCrowdsale(owner).allowReOpening();
     }

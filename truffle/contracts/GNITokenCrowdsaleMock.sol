@@ -9,6 +9,7 @@ import './TokenStub.sol';
 import './ContractStub.sol';
 import './ProjectLeaderTracker.sol';
 import './Reimbursements.sol';
+import './Voting.sol';
 
 contract GNITokenCrowdsaleMock is GNITokenCrowdsale, ContractStub {
 constructor
@@ -21,12 +22,13 @@ constructor
     TokenStub _token,
     /* InvestorListStub _investorList, */
     ProjectLeaderTracker _projectLeaderTracker,
-    address _reimbursements
+    address _reimbursements,
+    Voting _voting
   )
   public
-  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _projectLeaderTracker, _reimbursements) {}
+  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _projectLeaderTracker, _reimbursements, _voting) {}
 
-  function receiveMockWei () external payable {
+  /* function receiveMockWei () external payable {
 
   }
 
@@ -52,50 +54,44 @@ constructor
 
   function lastAddedAddr () public view returns (address) {
     return projectAddress[totalProjectCount];
-  }
+  } */
 
-  function setMockOpening (uint256 _openingTime) public {
-    /* openingTime = openingTime.mul(openMultiplier); */
+  /* function setMockOpening (uint256 _openingTime) public {
     openingTime = _openingTime;
   }
 
   function setMockDoomsDay (uint256 _doomsDay) public {
-    /* doomsDay = doomsDay.div(doomDivisor); */
     doomsDay = _doomsDay;
-  }
+  } */
 
-  function addMockProject (address projAddr) public {
+  /* function addMockProject (address projAddr) public {
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projAddr;
   }
 
-  function _removeVotesFromProject_ (address account, address fromProjectAddr, uint256 votes) public {
-    super.removeVotesFromProject_(account, fromProjectAddr, votes);
-  }
+
 
   function removeVotesFromProject_ (address account, address fromProjectAddr, uint256 votes) internal {
     CallData storage methodState = method['removeVotesFromProject_'];
     methodState.firstAddress = account;
     methodState.secondAddress = fromProjectAddr;
     methodState.firstUint = votes;
-  }
+  } */
 
-  function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
+  /* function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
     CallData storage methodState = method['authenticateVoter'];
     //the below throws an out of gas error?
     /* methodState.firstBytes = _signedMessage;
     methodState.firstBytes32 = unsignedMessage; */
-    methodState.firstAddress = voter;
-  }
+    /* methodState.firstAddress = voter; */
+  /* } */
 
-  function activateProject () internal {
+  /* function activateProject () internal {
     CallData storage methodState = method['activateProject'];
     methodState.called = true;
   }
 
-  function _activateProject () public {
-    super.activateProject();
-  }
+
 
   function setMockVoteHash (address projectAddr, bytes32 mockHash) {
     voteHash[projectAddr] = mockHash;
@@ -119,5 +115,5 @@ constructor
 
   function setMockReOpening (bool status) public {
     canReOpen = status;
-  }
+  } */
 }

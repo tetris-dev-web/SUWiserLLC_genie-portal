@@ -21,6 +21,12 @@ contract ProjectLeaderTracker is Ownable {
     return (tentativeLeaderAddr, tentativeLeaderConfirmed());
   }
 
+  function reset () onlyOwner external {
+    resetProjectsChecked();
+    setTentativeLeader(address(0));
+    candidateCount = 0;
+  }
+
   function handleProjectActivation () onlyOwner external {
     resetProjectsChecked();
     setTentativeLeader(address(0));

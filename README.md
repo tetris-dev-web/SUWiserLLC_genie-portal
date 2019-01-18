@@ -40,6 +40,11 @@ Real estate blockchain token portal engine
     ```
     `rails db:migrate` to run future migrations with
 
+  3. Ropsten
+  ```bash
+  truffle migrate --compile-all --reset --network ropsten
+  ```
+
 ## Running the Project
 
 Have the following sets of commands running in separate terminals:

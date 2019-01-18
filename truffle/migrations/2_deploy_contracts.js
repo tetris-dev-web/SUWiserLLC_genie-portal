@@ -6,9 +6,11 @@ const Dividends = artifacts.require("Dividends");
 const Reimbursements = artifacts.require("Reimbursements");
 const ProjectLeaderTracker = artifacts.require("ProjectLeaderTracker");
 const ECRecovery = artifacts.require("ECRecovery");
+const Voting = artifacts.require("Voting");
 
 let tokenInstance;
 let investorListInst;
+let votingInstance;
 
 module.exports = function (deployer, network, accounts) {
     const rate = 10000;
@@ -40,11 +42,14 @@ module.exports = function (deployer, network, accounts) {
           return deployer.deploy(ECRecovery);
         })
         .then(() => {
-          return deployer.link(ECRecovery, GNITokenCrowdsale);
+          return deployer.deploy(Voting, Token.address, ProjectLeaderTracker.address);
         })
-        .then(() => {
-          return deployer.link(ECRecovery, GNITokenCrowdsaleMock);
-        })
+        // .then(() => {
+        //   return deployer.link(ECRecovery, GNITokenCrowdsale);
+        // })
+        // .then(() => {
+        //   return deployer.link(ECRecovery, GNITokenCrowdsaleMock);
+        // })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {
@@ -65,12 +70,17 @@ module.exports = function (deployer, network, accounts) {
                 Dividends.address,
                 Token.address,
                 ProjectLeaderTracker.address,
-                Reimbursements.address
+                Reimbursements.address,
+                Voting.address
             );
         })
         .then(() => {
           tokenInstance = Token.at(Token.address);
           return tokenInstance.initializeDividendWallet(Dividends.address);
+        })
+        .then(() => {
+          votingInstance = Voting.at(Voting.address);
+          return votingInstance.transferOwnership(GNITokenCrowdsale.address);
         })
         .then(() => {
           const projectLeaderBoardInst = ProjectLeaderTracker.at(ProjectLeaderTracker.address);

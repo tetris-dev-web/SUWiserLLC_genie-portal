@@ -2,8 +2,11 @@ pragma solidity ^0.4.23;
 import './utility/SafeMath.sol';
 import './utility/Ownable.sol';
 import './Dividends.sol';
+import './ECRecovery.sol';
+
 contract Project is Ownable {
   using SafeMath for uint256;
+  using ECRecovery for bytes32;
   //these will all need to be private so they cannot be set arbitrarily
   //we'll make read methods when necessary
   string private name;
@@ -19,6 +22,8 @@ contract Project is Ownable {
   uint256 internal totalVotes;
   bool public active;
   uint256 public activationTime;
+  bytes32 private voteForHash;
+  bytes32 private voteAgainstHash;
   constructor (
     string _name,
     address _developer,
@@ -28,7 +33,9 @@ contract Project is Ownable {
     uint256 _developerTokens,
     uint256 _investorTokens,
     string _lat,
-    string _lng
+    string _lng,
+    bytes32 _voteForHash,
+    bytes32 _voteAgainstHash
     ) public {
       name = _name;
       developer = _developer;
@@ -42,6 +49,8 @@ contract Project is Ownable {
       totalVotes = 0;
       active = false;
       closingTime = now + 86600 * 240;
+      voteForHash = _voteForHash;
+      voteAgainstHash = _voteAgainstHash;
   }
   event LogProject (
       address addr,
@@ -56,19 +65,19 @@ contract Project is Ownable {
       bool active
   );
 
-  event VoteChange (
+  /* event VoteChange (
     address addr,
     string name,
     uint256 totalVotes
-  );
+  ); */
 
-  event ProjectActivation (
+  /* event ProjectActivation (
     address addr,
     string name,
     bool activationStatus,
     uint256 capitalRequired,
     uint256 valuation
-  );
+  ); */
 
   mapping(address => uint256) internal votes;
 
@@ -155,16 +164,30 @@ contract Project is Ownable {
     dividendWallet = wallet;
   }
 
-  function vote (address voter, uint256 voteAmount) external onlyOwner {
+  function vote (address voter, uint256 voteAmount, bytes _signedMessage) external onlyOwner {
     //maybe require that its open and not active
+    address recoveredVoter = voteForHash.recover(_signedMessage);
+    require(recoveredVoter == voter);
     votes[voter] = votes[voter].add(voteAmount);
     totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
 
-    emit VoteChange(address(this), name, totalVotes);
+    /* emit VoteChange(address(this), name, totalVotes); */
   }
 
+  function voteAgainst (address voter, uint256 voteAmount, bytes _signedMessage) onlyOwner {
+    address recoveredVoter = voteAgainstHash.recover(_signedMessage);
+    require(recoveredVoter == voter);
+    removeVotes_(voter, voteAmount);
+  }
+
+  //when the project has closed
   function removeVotes (address voter, uint256 voteAmount) external onlyOwner {
+    require(!open() || active);
+    removeVotes_(voter, voteAmount);
+  }
+
+  function removeVotes_ (address voter, uint256 voteAmount) internal {
     require(voteAmount <= totalVotes);
     require(voteAmount <= votes[voter]);
 
@@ -172,14 +195,15 @@ contract Project is Ownable {
     totalVotes = totalVotes.sub(voteAmount);
     closingTime = closingTime.sub(43200);
 
-    emit VoteChange(address(this), name, totalVotes);
+    /* emit VoteChange(address(this), name, totalVotes); */
   }
 
-  function activate () external onlyOwner {
+  function activate () external onlyOwner returns(uint256) {
     active = true;
     //we should set totalVotes to 0
     activationTime = now;
-    emit ProjectActivation(address(this), name, active, capitalRequired, valuation);
+    return activationTime;
+    /* emit ProjectActivation(address(this), name, active, capitalRequired, valuation); */
   }
 
   function beats (address otherProject) public view returns (bool) {
