@@ -5,6 +5,9 @@ const TokenDashboardRect = (props) => {
   let { x, y, width, height, tokenData } = props;
   let { activeTokenRatio, recentTotalTokens, recentActiveTokens } = tokenData;
   let activeTokenPercentage = `${activeTokenRatio}%`;
+  let inactiveTokenPercentage = `${100 - activeTokenRatio}%`;
+  let inactiveTokenRatio = 100 - activeTokenRatio
+
 
   return(
       <React.Fragment>
@@ -12,9 +15,9 @@ const TokenDashboardRect = (props) => {
         style={{position:"absolute", left: "-1%", overflow: "visible"}}>
           <defs>
             <linearGradient id="Gradient1" x1="0" x2="0%" y1="0" y2="100%">
-              <stop offset={activeTokenPercentage} stopColor={"rgba(170, 122, 96, .3)"}/>
-              <stop offset={activeTokenPercentage} stopColor={"rgb(170, 122, 96)"}/>
-              <stop offset="90%" stopColor={"rgb(170, 122, 96)"}/>
+              <stop offset={inactiveTokenPercentage} stopColor={"rgba(170, 122, 96, .3)"}/>
+              <stop offset={inactiveTokenPercentage} stopColor={"rgb(170, 122, 96)"}/>
+              <stop offset="100%" stopColor={"rgb(170, 122, 96)"}/>
             </linearGradient>
           </defs>
           <g>
@@ -30,23 +33,23 @@ const TokenDashboardRect = (props) => {
             stroke="black"
             strokeWidth=".5px" />
 
-            <text x="0" y={`${activeTokenRatio/2}%`} fill="black">
+            <text x="0" y={`${inactiveTokenRatio/2}%`} fill="black">
               <tspan dx="125px" dy="0">
               {recentTotalTokens} total
               </tspan>
             </text>
-            <text x='125px' y={`${activeTokenRatio/2}%`}>
-              <tspan dx="0" dy="2em">
+            <text x='125px' y={`${inactiveTokenRatio/2}%`}>
+              <tspan dx="0" dy="1.5em">
               tokens owned
               </tspan>
             </text>
-            <text x='125px' y={height}>
-              <tspan dx="0" dy="75px">
+            <text x='125px' y={`${(100 - inactiveTokenRatio)/2 + inactiveTokenRatio}%`}>
+              <tspan dx="0" dy="0">
               {recentActiveTokens} active
               </tspan>
             </text>
-            <text x='125px' y={height}>
-              <tspan dx="0" dy="2em">
+            <text x='125px' y={`${(100 - inactiveTokenRatio)/2 + inactiveTokenRatio}%`}>
+              <tspan dx="0" dy="1.5em">
               tokens
               </tspan>
             </text>
