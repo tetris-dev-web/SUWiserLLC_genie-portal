@@ -10,6 +10,7 @@ class TokenGraph extends React.Component {
     this.handleMousemove = this.handleMousemove.bind(this);
     this.drawChart = this.drawChart.bind(this);
     this.calculateTokenData = this.calculateTokenData.bind(this)
+    this.handleGraphHover = this.handleGraphHover.bind(this)
   }
 
   componentDidMount() {
@@ -118,6 +119,12 @@ class TokenGraph extends React.Component {
         this.focus2.style('display', 'none');
       })
       .on('mousemove', this.handleMousemove);
+  }
+
+  handleGraphHover(){
+    this.setState({
+      tokensRectHovered: true
+    })
   }
 
   handleMousemove() {

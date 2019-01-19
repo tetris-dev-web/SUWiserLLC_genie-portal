@@ -1,15 +1,31 @@
 import React from 'react';
 import * as d3 from 'd3'
 
-const TokenDashboardRect = (props) => {
-  let { x, y, width, height, tokenData } = props;
-  let { activeTokenRatio, recentTotalTokens, recentActiveTokens } = tokenData;
-  let activeTokenPercentage = `${activeTokenRatio}%`;
-  let inactiveTokenPercentage = `${100 - activeTokenRatio}%`;
-  let inactiveTokenRatio = 100 - activeTokenRatio
+class TokenDashboardRect extends React.Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      hovered: false
+    }
+    this.handleMouseOver = this.handleMouseOver.bind(this)
+    this.handleMouseLeave = this.handleMouseLeave.bind(this)
+  }
 
+  handleMouseOver(){
+    this.setState({ hovered: true });
+  }
+  handleMouseLeave(){
+    this.setState({ hovered: false });
+  }
 
-  return(
+  render(){
+    let { x, y, width, height, tokenData } = this.props;
+    let { activeTokenRatio, recentTotalTokens, recentActiveTokens } = tokenData;
+    let activeTokenPercentage = `${activeTokenRatio}%`;
+    let inactiveTokenPercentage = `${100 - activeTokenRatio}%`;
+    let inactiveTokenRatio = 100 - activeTokenRatio
+
+    return(
       <React.Fragment>
         <svg width={width} height={height} x={0} y={0}
         style={{position:"absolute", left: "-1%", overflow: "visible"}}>
@@ -31,33 +47,40 @@ const TokenDashboardRect = (props) => {
             rx="20"
             ry="20"
             stroke="black"
-            strokeWidth=".5px" />
-
-            <text x="0" y={`${inactiveTokenRatio/2}%`} fill="black">
-              <tspan dx="125px" dy="0">
-              {recentTotalTokens} total
-              </tspan>
-            </text>
-            <text x='125px' y={`${inactiveTokenRatio/2}%`}>
-              <tspan dx="0" dy="1.5em">
-              tokens owned
-              </tspan>
-            </text>
-            <text x='125px' y={`${(100 - inactiveTokenRatio)/2 + inactiveTokenRatio}%`}>
-              <tspan dx="0" dy="0">
-              {recentActiveTokens} active
-              </tspan>
-            </text>
-            <text x='125px' y={`${(100 - inactiveTokenRatio)/2 + inactiveTokenRatio}%`}>
-              <tspan dx="0" dy="1.5em">
-              tokens
-              </tspan>
-            </text>
-
+            strokeWidth=".5px"
+            onMouseEnter={this.handleMouseOver}
+            onMouseLeave={this.handleMouseLeave} />
+            {
+              this.state.hovered && (
+            <g>
+              <text x="0" y={`${inactiveTokenRatio/2}%`} fill="black">
+                <tspan dx="125px" dy="0">
+                {recentTotalTokens} total
+                </tspan>
+              </text>
+              <text x='125px' y={`${inactiveTokenRatio/2}%`}>
+                <tspan dx="0" dy="1.5em">
+                tokens owned
+                </tspan>
+              </text>
+              <text x='125px' y={`${(100 - inactiveTokenRatio)/2 + inactiveTokenRatio}%`}>
+                <tspan dx="0" dy="0">
+                {recentActiveTokens} active
+                </tspan>
+              </text>
+              <text x='125px' y={`${(100 - inactiveTokenRatio)/2 + inactiveTokenRatio}%`}>
+                <tspan dx="0" dy="1.5em">
+                tokens
+                </tspan>
+              </text>
+            </g>
+              )
+            }
           </g>
         </svg>
       </React.Fragment>
-  );
+    );
+  }
 };
 
 // <text fill="black" className="svg-rect-text" x="150px" y="30px">
