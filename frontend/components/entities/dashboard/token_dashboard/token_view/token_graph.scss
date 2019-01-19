@@ -9,35 +9,60 @@
   height: 75%;
   overflow: visible !important;
 
-  path {
-    stroke: black;
-    stroke-width: 1px;
-    fill: none;
+  .token-graph-token-path {
+    &.total-tokens path {
+      stroke: black;
+      stroke-width: 1px;
+      fill: none;
+    }
+
+    &.active-tokens path {
+      stroke: $rosy-brown;
+      stroke-width: 3px;
+      fill: none;
+    }
+  }
+  // x axis
+  .token-graph-x-axis {
+    // remove line
+    .domain {
+      stroke: none;
+    }
+    // remove ticks
+    .tick {
+      line {
+        stroke: none;
+      }
+      text {
+        fill: $dim-gray;
+      }
+    }
   }
 }
 
-// x axis
-.x {
-  // remove line
-  .domain {
-    stroke: none;
+.token-graph-overlay {
+  .token-graph-overlay-rect {
+    fill: none;
+    pointer-events: all;
   }
-  // remove ticks
-  .tick {
+
+  .token-graph-dashed-lines {
     line {
-      stroke: none;
+      stroke-dasharray: 8 8;
+      transition: all 0.5s;
     }
-    text {
-      fill: $dim-gray;
+
+    .total-tokens-line {
+      stroke: $tan;
+    }
+
+    .active-tokens-line {
+      stroke: $rosy-brown;
     }
   }
 }
 
 // share price line
-.line {
-  fill: none;
-  stroke: $lightblack;
-}
 
 .focus {
   .circle-earnings {
@@ -73,7 +98,3 @@
   }
 }
 
-.overlay {
-  fill: none;
-  pointer-events: all;
-}

@@ -505,23 +505,34 @@
   width: 75%;
   height: 75%;
   overflow: visible !important; }
-  .token-svg path {
+  .token-svg .token-graph-token-path.total-tokens path {
     stroke: black;
     stroke-width: 1px;
     fill: none; }
+  .token-svg .token-graph-token-path.active-tokens path {
+    stroke: #AB7A5E;
+    stroke-width: 3px;
+    fill: none; }
+  .token-svg .token-graph-x-axis .domain {
+    stroke: none; }
+  .token-svg .token-graph-x-axis .tick line {
+    stroke: none; }
+  .token-svg .token-graph-x-axis .tick text {
+    fill: #736566; }
 
-.x .domain {
-  stroke: none; }
-
-.x .tick line {
-  stroke: none; }
-
-.x .tick text {
-  fill: #736566; }
-
-.line {
+.token-graph-overlay .token-graph-overlay-rect {
   fill: none;
-  stroke: #1a1919; }
+  pointer-events: all; }
+
+.token-graph-overlay .token-graph-dashed-lines line {
+  stroke-dasharray: 8 8;
+  transition: all 0.5s; }
+
+.token-graph-overlay .token-graph-dashed-lines .total-tokens-line {
+  stroke: #9b9287; }
+
+.token-graph-overlay .token-graph-dashed-lines .active-tokens-line {
+  stroke: #AB7A5E; }
 
 .focus .circle-earnings {
   fill: black;
@@ -548,10 +559,6 @@
 
 .focus2 .tokens {
   fill: #384778; }
-
-.overlay {
-  fill: none;
-  pointer-events: all; }
 
 
 
