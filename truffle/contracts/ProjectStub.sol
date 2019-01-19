@@ -4,7 +4,6 @@ import './ContractStub.sol';
 
 contract ProjectStub is Project, ContractStub {
   constructor (
-    uint256 _id,
     string _name,
     address _developer,
     address _dividendWallet,
@@ -14,11 +13,12 @@ contract ProjectStub is Project, ContractStub {
     uint256 _investorTokens,
     string _lat,
     string _lng,
-    uint256 _mockVotes
+    uint256 _mockVotes,
+    bytes32 _voteHash,
+    bytes32 _voteAgainstHash
     )
     public
     Project(
-      _id,
       _name,
       _developer,
       _dividendWallet,
@@ -27,7 +27,9 @@ contract ProjectStub is Project, ContractStub {
       _developerTokens,
       _investorTokens,
       _lat,
-      _lng
+      _lng,
+      _voteHash,
+      _voteAgainstHash
       )
       {
     totalVotes = _mockVotes;
@@ -95,9 +97,10 @@ contract ProjectStub is Project, ContractStub {
     return 10000000;
   }
 
-  function activate () external {
+  function activate () external returns(uint256){
     CallData storage methodState = method['activate'];
     methodState.called = true;
+    return now;
   }
 
   function setMockVotesOf (address voter, uint256 amount) public {

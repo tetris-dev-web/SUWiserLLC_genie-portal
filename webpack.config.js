@@ -1,10 +1,10 @@
 const path = require("path");
 const webpack = require("webpack");
-const miniCssExtractPlugin = require('mini-css-extract-plugin')
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   context: __dirname,
-  entry: "./frontend/entry.jsx",
+  entry: ["@babel/polyfill", "./frontend/entry.jsx"],
   output: {
     path: path.resolve(__dirname, "app", "assets", "javascripts"),
     filename: "bundle.js"

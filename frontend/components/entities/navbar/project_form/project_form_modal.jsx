@@ -3,7 +3,6 @@ import Modal from 'react-modal';
 import ProjectForm from './project_form_container';
 import ModalStyle from './modal_style';
 
-
 class ProjectFormModal extends React.Component {
   constructor(props) {
     super(props);
@@ -37,7 +36,7 @@ class ProjectFormModal extends React.Component {
 
     return (
       <div className="modal-button-cont">
-        <div className="modal-button" onClick={this.openModal}>Manage</div>
+        <div className={this.state.openModal ? "modal-button-modal-open" : "modal-button"} onClick={this.openModal}>PITCH</div>
 
         <Modal
           isOpen={this.state.openModal}

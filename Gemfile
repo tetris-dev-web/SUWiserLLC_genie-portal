@@ -5,12 +5,16 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+gem 'ethereum.rb'
+gem 'eth'
+gem 'dotenv-rails', groups: [:development, :test]
+
 # Devise auth gem
 gem 'devise'
 # CanCanCan authorization
 gem 'cancancan', '~> 2.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.4'
+gem 'rails', '~> 5.2.0'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
@@ -38,7 +42,8 @@ gem 'bcrypt'
 gem 'jquery-rails'
 gem 'pry-rails'
 gem 'figaro'
-gem 'aws-sdk', '< 3.0'
+gem 'aws-sdk'
+gem 'aws-sdk-s3'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a  console

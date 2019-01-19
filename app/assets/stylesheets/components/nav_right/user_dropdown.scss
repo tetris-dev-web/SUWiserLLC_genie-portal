@@ -1,0 +1,114 @@
+@import "../../util/variables";
+
+
+.user-container {
+  text-align: center;
+  padding: 5px;
+  margin-right: 20px;
+  margin-left: 10px;
+}
+
+.user-dropdown-button {
+  padding: 5px 30px 10px 30px;
+  transition: all .2s ease-in-out;
+  color: white;
+  hr {
+    margin: 0;
+  }
+  &:hover {
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 5px;
+    color: $db-fade;
+  }
+  &:active {
+    color: $db-fade;
+  }
+}
+
+.display-name {
+  text-transform: uppercase;
+}
+
+.tokens-cont {
+  display: flex;
+  justify-content: center;
+  .total-tokens {
+    color: $darkblue;
+  }
+}
+
+// dropdown toggler
+.dropdown {
+  .dropdown-link {
+    &:hover {
+      color: white;
+      text-decoration: none;
+    }
+  }
+}
+
+// bg color on dropdown
+.open > .dropdown-menu {
+  background-color: $db-fade3;
+  min-width: 0;
+}
+
+// menu item
+.butt {
+  display: flex !important;
+  color: $white !important;
+  .button-img {
+    object-fit: contain;
+    width: 16px;
+    height: 16px;
+    align-self: center;
+    padding-right: 5px;
+  }
+}
+
+// hover on menu item
+.dropdown-menu > li > a {
+  &:hover {
+    background-color: $db-fade3 !important;
+    cursor: pointer;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
+// positioning of sub-modal
+.dropdown-submenu > .dropdown-menu {
+    background-color: $db-fade3;
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+// show sub-modal
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+    padding-top: 10px;
+}
+
+// show profile
+.profile-menu:hover > .dropdown-menu {
+    display: block;
+    padding-top: 10px;
+    margin-top: 29.5px;
+}
+
+// reset Bootstrap media query
+@media (min-width: 768px) {
+  .navbar-right .dropdown-menu {
+    right: auto !important;
+  }
+  .dropdown-item {
+    left: 100% !important;
+  }
+}

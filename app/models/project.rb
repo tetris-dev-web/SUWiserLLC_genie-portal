@@ -34,7 +34,7 @@
 #
 
 class Project < ApplicationRecord
-  validates :title, :revenue, :valuation, :creator_id, :city, :continent, presence: true
+  validates :title, :revenue, :valuation, :description, :capital_required, :creator_id, :city, :continent, presence: true
   validates :title, uniqueness: true
 
   # # validates_attachment_content_type :file, content_type: /\Aimage\/.*\Z/
@@ -44,10 +44,12 @@ class Project < ApplicationRecord
   #            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   #            "text/plain"], message: ", TESTING- That was not a correct file type. -TESTING"
 
-  has_attached_file :file, default_url: "missing.png"
-  validates_attachment :file, :content_type => {:content_type => %w(image/jpeg image/jpg image/png application/pdf application/msword application/json application/vnd.openxmlformats-officedocument.wordprocessingml.document)}
+  # has_attached_file :file, default_url: "missing.png"
+  # validates_attachment :file, :content_type => {:content_type => %w(image/jpeg image/jpg image/png application/pdf application/msword application/json application/vnd.openxmlformats-officedocument.wordprocessingml.document)}
 
   belongs_to :creator,
     foreign_key: :creator_id,
     class_name: :User
+
+  has_one_attached :pdf_file
 end

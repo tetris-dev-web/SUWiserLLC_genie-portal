@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   namespace :api do
     # resources :users, defaults: {format: :json}, only: [:show]
     # resources :users, defaults: {format: :json}, only: [:show, :edit] do
+    resources :block_chain, defaults: {format: :json}, path_names: { update: 'vote' }
     resources :users, defaults: {format: :json}, only: [:show, :edit] do
       collection do
         patch 'update_info'

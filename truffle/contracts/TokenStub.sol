@@ -1,12 +1,8 @@
-pragma solidity 0.4.24;
+pragma solidity ^0.4.24;
 import './token/ERC20/Token.sol';
-import './InvestorList.sol';
 import './ContractStub.sol';
 
 contract TokenStub is Token, ContractStub {
-  constructor(InvestorList _investorList) public
-  Token(_investorList) {}
-
   address mockInvestorA;
   address mockInvestorB;
   address mockInvestorC;
@@ -103,6 +99,12 @@ contract TokenStub is Token, ContractStub {
     }
 
     return true;
+  }
+
+  function resetInactiveTokenCycle (address developer) public {
+    CallData storage methodState = method['resetInactiveTokenCycle'];
+    methodState.firstAddress = developer;
+    methodState.called = true;
   }
 
   function activatePending (address account) external returns (bool) {

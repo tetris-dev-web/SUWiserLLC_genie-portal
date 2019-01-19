@@ -1,19 +1,16 @@
-pragma solidity 0.4.24;
+pragma solidity ^0.4.24;
 import './utility/SafeMath.sol';
 import './token/ERC20/Token.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
-import './InvestorList.sol';
 
 contract Dividends {
   using SafeMath for uint256;
   Token token;
-  InvestorList investorList;
   address developer;
 
-  constructor (Token token_, address developer_, InvestorList investorList_) public {
+  constructor (Token token_, address developer_) public {
     token = token_;
     developer = developer_;
-    investorList = InvestorList(investorList_);
   }
 
   mapping(address => uint256) public lastDividendPoints;
@@ -34,7 +31,7 @@ contract Dividends {
     return true;
   }
 
-  function () external payable {
+  function receiveDividends () external payable {
     uint256 totalTokens = Token(token).totalActiveSupply();
     uint256 weiAmount = msg.value;
 

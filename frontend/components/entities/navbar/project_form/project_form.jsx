@@ -6,14 +6,10 @@ import CashFlowModal from './cashflow_modal/cashflow_modal';
 import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
-import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
+import { formatProjectData, processCashData } from '../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
 import { merge } from 'lodash';
-import PolyModal from './poly_modal/poly_modal';
 import './project_form.scss';
-import './project_modal.scss';
-import './geoContainer.scss';
-import './projectPitchMod.scss'
 
 class ProjectForm extends React.Component {
 
@@ -21,35 +17,38 @@ class ProjectForm extends React.Component {
     super(props);
 
     this.state = {
-      title: '',
-      latitude: '',
-      longitude: '',
-      revenue: '10',
-      valuation: '1',
-      model_id: '870fb9d9-b5d2-4565-a6dd-65f9a1f4d00e',
-      city: 'New York',
-      country: 'USA',
-      continent: 'North America',
+      projectData: {
+        title: '',
+        latitude: '',
+        longitude: '',
+        city: 'New York',
+        country: 'USA',
+        continent: 'North America',
+        valuation: '1',
+        cashflow: '',
+        creator_id: this.props.currentUser.id,
+        model_id: '870fb9d9-b5d2-4565-a6dd-65f9a1f4d00e',
+        summary: 'summary',
+        capital_required: '',
+        actual_cashflow: '',
+        accum_projected_cashflow: '',
+        accum_actual_cashflow: '',
+        projected_cashflow: '',
+        revenue: .1,
+        description: 'hkopt'
+      },
       icon: '',
-      description: '',
       imageUrl: '',
       coins: '****',
       status: 'pitched',
-      summary: 'summary',
       openModal: false,
       currentQuarter: '',
-      actual_cashflow: '',
-      accum_actual_cashflow: '',
-      projected_cashflow: '',
-      accum_projected_cashflow: '',
-      cashflow: '',
       cashflowJSONName: '',
       accumulatedRevenue: '',
-      capital_required: '',
+      planFilePDF: '',
       planFilePDFDataURL: '',
       planFilePDFName: '',
       drop_pin_clicked: false,
-      modelId: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -77,7 +76,7 @@ class ProjectForm extends React.Component {
   }
 
   componentDidMount() {
-    this.renderFileName();
+    // this.renderFileName();
   }
 
   componentWillUnmount() {
@@ -87,36 +86,37 @@ class ProjectForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    const file = this.state.imageFile;
-    const data = new FormData();
-
-    const projectData = Object.assign({}, this.state)
-    const capitalRequired = this.calculateCapitalRequired();
-
-
-    if (file) data.append("project[file]", file);
-    data.append("project[title]", this.state.title);
-
-    data.append("project[latitude]", this.state.latitude);
-    data.append("project[longitude]", this.state.longitude);
-
-    data.append("project[city]", this.state.city);
-    data.append("project[country]", this.state.country);
-    data.append("project[continent]", this.state.continent);
-
-    data.append("project[valuation]", this.state.valuation);
-    data.append("project[cashflow]", this.state.cashflow);
-    data.append("project[creator_id]", this.props.currentUser.id);
-
-    data.append("project[model_id]", this.state.model_id);
-    data.append("project[summary]", this.state.summary);
-    data.append("project[capital_required]", capitalRequired);
-    data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow));
-    data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow));
-    data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow));
-    data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow));
-    data.append("project[revenue]", this.state.revenue);
-    // data.append("project[planFilePDFDataURL]", this.state.planFilePDFDataURL)
+    // const file = this.state.imageFile;
+    // const data = new FormData();
+    //
+    // // const projectData = merge({}, this.state);
+    //
+    //
+    // if (file) data.append("project[file]", file);
+    // data.append("project[title]", this.state.projectData.title);
+    // data.append("project[description]", this.state.projectData.description);
+    //
+    // data.append("project[latitude]", this.state.projectData.latitude);
+    // data.append("project[longitude]", this.state.projectData.longitude);
+    //
+    // data.append("project[city]", this.state.projectData.city);
+    // data.append("project[country]", this.state.projectData.country);
+    // data.append("project[continent]", this.state.projectData.continent);
+    //
+    // data.append("project[valuation]", this.state.projectData.valuation);
+    // data.append("project[cashflow]", this.state.projectData.cashflow);
+    // data.append("project[creator_id]", this.state.projectData.creator_id);
+    //
+    // data.append("project[model_id]", this.state.projectData.model_id);
+    // data.append("project[summary]", this.state.projectData.summary);
+    // data.append("project[capital_required]", this.state.projectData.capital_required);
+    // data.append("project[cashflow]", JSON.stringify(this.state.projectData.cashflow));
+    // data.append("project[actual_cashflow]", JSON.stringify(this.state.projectData.actual_cashflow));
+    // data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.projectData.accum_projected_cashflow));
+    // data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.projectData.accum_actual_cashflow));
+    // data.append("project[projected_cashflow]", JSON.stringify(this.state.projectData.projected_cashflow));
+    // data.append("project[revenue]", this.state.projectData.revenue);
+    // data.append("project[pdf_file]", this.state.planFilePDF);
     //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
     //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving
     //Object in frontend with JSON.parse
@@ -127,15 +127,26 @@ class ProjectForm extends React.Component {
 
     // Moved until data is properly structured
     // this.props.createProject(projectData);
-    this.props.createProject(data).then( () => {
-      return this.props.crowdsaleInstance.pitchProject(this.state.title, capitalRequired, this.state.valuation, this.state.latitude, this.state.longitude, {from: this.props.account});
-    }).then(() => {
+
+
+    // pdf_file: this.state.planFilePDF,
+    const projectData = Object.assign(
+      {},
+      this.state.projectData,
+      {
+        cashflow: JSON.stringify(this.state.projectData.cashflow),
+        actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
+        projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
+        accum_projected_cashflow: JSON.stringify(this.state.projectData.accum_projected_cashflow),
+        accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
+     });
+
+    this.props.createProject(this.props.crowdsaleInstance, projectData, this.props.account).then(() => {
       if (this.props.errors.length == 0) {
         this.props.closeModal();
-        window.location.reload();
-        // console.log();
+        // window.location.reload();
       }
-    })
+    });
   }
 
   dropPinClick() {
@@ -143,21 +154,23 @@ class ProjectForm extends React.Component {
   }
 
   renderLatLngErrors(clicked) {
-    if (this.state.latitude == '' && this.state.longitude == '' && clicked) {
+    if (this.state.projectData.latitude == '' && this.state.projectData.longitude == '' && clicked) {
       return (
         <ul className="project-errors">
-          <li>Latitude and Longitude can't be blank</li>
+          <li> Latitude and Longitude can't be blank </li>
         </ul>
       );
     }
   }
 
   updateLatLng(pos) {
-    this.setState({latitude: parseFloat(pos.lat), longitude: parseFloat(pos.lng)});
+    const projectData = merge({}, this.state.projectData, {latitude: parseFloat(pos.lat), longitude: parseFloat(pos.lng)});
+    this.setState(projectData);
   }
 
   storeAddress(city, continent) {
-    this.setState({city, continent});
+    const projectData = merge({}, this.state.projectData, {city, continent});
+    this.setState(projectData);
   }
 
   getFailedProjects(){
@@ -172,7 +185,7 @@ class ProjectForm extends React.Component {
     return failedProjectCount;
   }
 
-  findCurrentQuarter(quarters, cashflow = this.state.cashflow) {
+  findCurrentQuarter(quarters, cashflow = this.state.projectData.cashflow) {
     let currentQuarter;
     quarters.some(quarter => {
       if (!cashflow[quarter.toString()]["isActuals"]) {
@@ -186,8 +199,9 @@ class ProjectForm extends React.Component {
 
   calculateTotalCapitalDeployed(){
     let capital = 0;
+
     Object.values(this.props.projects).forEach((project) => {
-      if(project.cashflow){
+      if (project.cashflow) {
         let jsonProjectCashflow = processCashData(project.cashflow);
         if (jsonProjectCashflow["1"]) {
           let quarters = Object.keys(jsonProjectCashflow).sort();
@@ -198,11 +212,13 @@ class ProjectForm extends React.Component {
         }
       }
     });
+
     return capital;
   }
 
-  calculateCapitalRequired() {
-    let valuesArray = Object.values(this.state.accumulatedRevenue);
+  calculateCapitalRequired(accumulatedRevenue) {
+    console.log(accumulatedRevenue);
+    let valuesArray = Object.values(accumulatedRevenue);
     let min = Math.min(...valuesArray);
     return min * -1;
     // this.setState({capital_required: min});
@@ -233,22 +249,17 @@ class ProjectForm extends React.Component {
 
 
   receiveCashflowData(cashflowVars){
-    return calculateCashflowData(cashflowVars)
+    return calculateCashflowData(cashflowVars);
   }
 
   update(property) {
     return (e) => {
-      this.setState({ [property]: e.currentTarget.value });
-
-      // const { revenue } = this.state;
-      // const price = 70;
-      // const coins = roundToTwo(revenue / price);
-      //
-      // if (revenue || revenue > 0) {
-      //   this.setState({ coins });
-      // } else {
-      //   this.setState({ coins: '****' });
-      // }
+      if (this.state.hasOwnProperty(property)) {
+        this.setState({ [property]: e.currentTarget.value });
+      } else {
+        const projectData = merge({}, this.state.projectData, { [property]: e.currentTarget.value });
+        this.setState({projectData});
+      }
     };
   }
 
@@ -256,7 +267,7 @@ class ProjectForm extends React.Component {
     // Needed to update project state with cashflow state
     return e => {
       e.preventDefault();
-      this.setState({ cashflow });
+      this.setState({ projectData: cashflow });
     };
   }
 
@@ -265,18 +276,23 @@ class ProjectForm extends React.Component {
     console.log("Is the cashflow value being updated?");
     return e => {
       e.preventDefault();
-      let cashflow = merge({}, this.state.cashflow);
+      let cashflow = merge({}, this.state.projectData.cashflow);
       cashflow[quarter].cashFlow = parseInt(e.currentTarget.value);
       const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
-      this.setState({ cashflow, accumulatedRevenue });
+      const projectData = merge({}, this.state.projectData, { cashflow });
+      this.setState({
+        projectData,
+        accumulatedRevenue
+      });
     };
   }
 
   updateActuals(quarter) {
       console.log('i have second entried');
-      let cashflow = merge({}, this.state.cashflow);
+      let cashflow = merge({}, this.state.projectData.cashflow);
       cashflow[quarter].isActuals = !cashflow[quarter].isActuals;
-      this.setState({cashflow});
+      const projectData = merge({}, this.state.projectData, { cashflow });
+      this.setState({ projectData });
   }
 
   updateFile(fileType) {
@@ -295,24 +311,50 @@ class ProjectForm extends React.Component {
             // console.log('quarters is:', quarters);
             // console.log('Cashflow is:', cashflow);
 
-            const parsedData = this.receiveCashflowData(cashflow)
-            // let {  }
+            // const data = formatProjectData(cashflow);
+            // const currentQuarter = this.findCurrentQuarter(quarters, cashflow);
+            // const capital_required = this.calculateCapitalRequired(data.accumulated_revenue);
+            // const valuation = this.calculateNetPresentValue(Object.values(data.projected_cashflow).slice(currentQuarter - 1));
+            //
+            // const newProjectData = merge({}, data, { cashflow, capital_required, valuation });
+            // const projectData = merge({}, this.state.projectData, newProjectData);
 
-            this.setState(Object.assign({},
+
+            const {
+              projected_cashflow,
+              actual_cashflow,
+              accum_actual_cashflow,
+              accum_projected_cashflow,
+              accumulated_revenue
+            } = formatProjectData(cashflow);
+
+            const currentQuarter = this.findCurrentQuarter(quarters, cashflow);
+            const capital_required = this.calculateCapitalRequired(accumulated_revenue);
+            const valuation = this.calculateNetPresentValue(Object.values(projected_cashflow).slice(currentQuarter - 1));
+            const projectData = merge({}, this.state.projectData,
               {
                 cashflow,
+                projected_cashflow,
+                actual_cashflow,
+                accum_actual_cashflow,
+                accum_projected_cashflow,
+                capital_required,
+                valuation
+            });
+
+            this.setState(merge({},
+              {
+                projectData,
                 cashflowJSONName: file.name,
-                accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
-                currentQuarter: this.findCurrentQuarter(quarters, cashflow),
-              },
-              parsedData
-            )
-            // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
-          ); })
+                currentQuarter
+              }
+            ));
+          });
           break;
         case "planFilePDF":
           this.parseInputFile(file).then(planFilePDFDataURL => {
             this.setState({
+              planFilePDF: file,
               planFilePDFDataURL,
               planFilePDFName: file.name
             });
@@ -367,33 +409,32 @@ class ProjectForm extends React.Component {
     }
   }
 
-  renderFileName() {
-    const inputs = document.querySelectorAll( '.file-input' );
-    Array.prototype.forEach.call( inputs, function( input ) {
-      const label	 = input.nextElementSibling;
-      const labelVal = label.innerHTML;
-
-      input.addEventListener('change', function(e) {
-        let fileName = e.target.value.split( '\\' ).pop();
-        // let fileName = '';
-        // if (this.files && this.files.length > 1 ) {
-        //   fileName = ( this.getAttribute('data-multiple-caption' ) || '')
-        //                 .replace('{count}', this.files.length);
-        // } else {
-        //   fileName = e.target.value.split( '\\' ).pop();
-        // }
-
-        if (fileName) {
-          label.querySelector('span').innerHTML = fileName;
-        } else {
-          label.innerHTML = labelVal;
-        }
-      });
-    });
-  }
+  // renderFileName() {
+  //   const inputs = document.querySelectorAll( '.file-input' );
+  //   Array.prototype.forEach.call( inputs, function( input ) {
+  //     const label	 = input.nextElementSibling;
+  //     const labelVal = label.innerHTML;
+  //
+  //     input.addEventListener('change', function(e) {
+  //       let fileName = e.target.value.split( '\\' ).pop();
+  //       // let fileName = '';
+  //       // if (this.files && this.files.length > 1 ) {
+  //       //   fileName = ( this.getAttribute('data-multiple-caption' ) || '')
+  //       //                 .replace('{count}', this.files.length);
+  //       // } else {
+  //       //   fileName = e.target.value.split( '\\' ).pop();
+  //       // }
+  //
+  //       if (fileName) {
+  //         label.querySelector('span').innerHTML = fileName;
+  //       } else {
+  //         label.innerHTML = labelVal;
+  //       }
+  //     });
+  //   });
+  // }
 
   render() {
-
     let modelLink;
     if (this.state.modelId === "") {
       modelLink = "https://poly.google.com"
@@ -401,6 +442,7 @@ class ProjectForm extends React.Component {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
 
+<<<<<<< HEAD
     const geojsons = [];
     const fileId = ["file1", "file2", "file3", "file4", "file5"];
     for (let i = 0; i < 5; i++) {
@@ -431,9 +473,14 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, latitude, longitude, modelId, currentQuarter
+    let { title, latitude, longitude, model_id
+=======
+    let { title, latitude, longitude, model_id, currentQuarter, description
+>>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
       // revenue, valuation, description, model_id, city, country, continent, icon
-    } = this.state;
+    } = this.state.projectData;
+
+    let { currentQuarter } = this.state;
 
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
@@ -445,155 +492,184 @@ class ProjectForm extends React.Component {
             onChange={this.update('title')} />
         </div>
 
-        <div className="flexed">
-          <div className="text-input-container lat-input-container">
-            <input className="text-input lat-input"
-              type="number"
-              step="any"
-              placeholder="lat"
-              value={latitude}
-              onChange={this.update('latitude')} />
-          </div>
-          <div className="text-input-container long-input-container">
-            <input className="text-input long-input"
-              type="number"
-              step="any"
-              placeholder="long"
-              value={longitude}
-              onChange={this.update('longitude')} />
-          </div>
-          <DivWithCorners>
-              <DropPinModal
-                lat={parseFloat(this.state.latitude)}
-                lng={parseFloat(this.state.longitude)}
-                title={this.state.title}
-                updateLatLng={this.updateLatLng}
-                dropPinClick={this.dropPinClick}
-                storeAddress={this.storeAddress}
-                city={this.state.city}
-                continent={this.state.continent}
-                />
-          </DivWithCorners>
-        </div>
-        {this.renderLatLngErrors(this.state.drop_pin_clicked)}
-        <div className="flexed cashflows-section">
-          <div>
-            <div className="file-input-container">
-              <div className="file-input">
-                <input
-                  type="file"
-                  onChange={this.updateFile('cashflowJSON')} />
-                  <svg viewBox="2 2 17 17">
-                    <g>
-                      <defs>
-                        <rect id="SVGID_1_" x="-3.9" width="27.3" height="16.1"/>
-                      </defs>
-                      <path className="st1" d="M13.9,7.3c0-0.2-0.1-0.3-0.3-0.3H8.3H6.6H5.4C5.2,7,5.1,7.1,5.1,7.3v7.5c0,0.2,0.1,0.3,0.3,0.3h8.7
-                        c0.2,0,0.3-0.1,0.3-0.3V9c0-0.2-0.1-0.3-0.3-0.3h-0.2V7.3z M9.4,11.4l-0.5,0.5c-0.1,0.1-0.3,0.1-0.4,0c-0.1-0.1-0.1-0.3,0-0.4
-                        l1.2-1.2l1.2,1.2c0.1,0.1,0.1,0.3,0,0.4c-0.1,0.1-0.3,0.1-0.4,0L10,11.4v1.8c0,0.2-0.1,0.3-0.3,0.3s-0.3-0.1-0.3-0.3V11.4z
-                        M13.3,7.6v1.2H9.6L8.8,7.6H13.3z"/>
-                    </g>
-                  </svg>
+        <div className="form-box-container">
+          <h1 className="form-box-title with-border">WHERE IS IT?</h1>
+          <div className="form-box-border-layer">
+
+            <div className="form-box-lat-long-section">
+              <div className="lat-long-input-container">
+                <div className="text-input-container lat-input-container">
+                  <input className="text-input lat-input"
+                    type="number"
+                    step="any"
+                    placeholder="lat"
+                    value={latitude}
+                    onChange={this.update('latitude')} />
+                </div>
+                <div className="text-input-container long-input-container">
+                  <input className="text-input long-input"
+                    type="number"
+                    step="any"
+                    placeholder="long"
+                    value={longitude}
+                    onChange={this.update('longitude')} />
+                </div>
               </div>
-                <label htmlFor="json-file">{this.state.cashflowJSONName || "choose json"}</label>
+              <DivWithCorners>
+                  <DropPinModal
+                    lat={parseFloat(this.state.latitude)}
+                    lng={parseFloat(this.state.longitude)}
+                    title={this.state.title}
+                    updateLatLng={this.updateLatLng}
+                    dropPinClick={this.dropPinClick}
+                    storeAddress={this.storeAddress}
+                    city={this.state.city}
+                    continent={this.state.continent}
+                    />
+              </DivWithCorners>
             </div>
 
-            <div className="text-input-container current-quarter-input-container">
-              <input className="current-quarter-input"
-                type="number"
-                value={currentQuarter}
-                onChange={this.update('currentQuarter')} />
-              <label htmlFor="current-quarter"> current qtr</label>
-            </div>
           </div>
-
-          <DivWithCorners>
-            <span className="text">
-              <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
-                cashflow={this.state.cashflow ? this.state.cashflow : sampleProject}
-                updateCashflow={this.updateCashflow}
-                receiveCashflowData={this.receiveCashflowData}
-                updateActuals={this.updateActuals}
-                updateCashflowValue={this.updateCashflowValue}
-                />
-            </span>
-          </DivWithCorners>
         </div>
 
-        <div className="rates-box">
-          <div className="discounts-box">
-            discount rate
-            <div className="amount-box">
-              {this.calculateDiscountFactor()}
-            </div>
-          </div>
+        {this.renderLatLngErrors(this.state.drop_pin_clicked)}
 
-          <div className="cap-row">
-            <span>valuation</span>
-
-            <div className="style2">{this.state.projected_cashflow ? "$" + this.calculateNetPresentValue(Object.values(this.state.projected_cashflow).slice(this.state.currentQuarter - 1)) : '$830,000'}</div>
-            <div className="style2">{this.state.accumulatedRevenue ? "$" + this.calculateCapitalRequired() : "$130,000"}</div>
+<<<<<<< HEAD
+            <div className="style2">{"$" + this.state.projectData.valuation}</div>
+            <div className="style2">{"$" + this.state.projectData.capital_required}</div>
             <span>capital <br />  required</span>
           </div>
+=======
+        <div className="form-box-container">
+          <h1 className="form-box-title with-border">HOW MUCH MONEY WILL IT MAKE?</h1>
+          <div className="form-box-border-layer">
 
-          <div className="coins">
-            <div className="style2">
-              10,000
+            <div className="cashflows-section">
+              <div>
+                <div className="file-input-container">
+                  <div className="file-input">
+                    <input
+                      type="file"
+                      onChange={this.updateFile('cashflowJSON')} />
+                      <svg viewBox="2 2 17 17">
+                        <g>
+                          <defs>
+                            <rect id="SVGID_1_" x="-3.9" width="27.3" height="16.1"/>
+                          </defs>
+                          <path className="st1" d="M13.9,7.3c0-0.2-0.1-0.3-0.3-0.3H8.3H6.6H5.4C5.2,7,5.1,7.1,5.1,7.3v7.5c0,0.2,0.1,0.3,0.3,0.3h8.7
+                            c0.2,0,0.3-0.1,0.3-0.3V9c0-0.2-0.1-0.3-0.3-0.3h-0.2V7.3z M9.4,11.4l-0.5,0.5c-0.1,0.1-0.3,0.1-0.4,0c-0.1-0.1-0.1-0.3,0-0.4
+                            l1.2-1.2l1.2,1.2c0.1,0.1,0.1,0.3,0,0.4c-0.1,0.1-0.3,0.1-0.4,0L10,11.4v1.8c0,0.2-0.1,0.3-0.3,0.3s-0.3-0.1-0.3-0.3V11.4z
+                            M13.3,7.6v1.2H9.6L8.8,7.6H13.3z"/>
+                        </g>
+                      </svg>
+                  </div>
+                    <label htmlFor="json-file">{this.state.cashflowJSONName || "choose json"}</label>
+                </div>
+                <div className="text-input-container current-quarter-input-container">
+                  <input className="current-quarter-input"
+                    type="number"
+                    value={currentQuarter}
+                    onChange={this.update('currentQuarter')} />
+                  <label htmlFor="current-quarter"> current qtr</label>
+                </div>
+              </div>
+              <DivWithCorners>
+                <span className="text">
+                  <CashFlowModal quarter={this.state.currentQuarter ? this.state.currentQuarter : 9}
+                    cashflow={this.state.cashflow ? this.state.cashflow : sampleProject}
+                    updateCashflow={this.updateCashflow}
+                    receiveCashflowData={this.receiveCashflowData}
+                    updateActuals={this.updateActuals}
+                    updateCashflowValue={this.updateCashflowValue}
+                    />
+                </span>
+              </DivWithCorners>
             </div>
-            coins to be issued
-          </div>
+>>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
 
+            <div className="rates-box">
+              <div className="discounts-box">
+                discount rate
+                <div className="amount-box">
+                  {this.calculateDiscountFactor()}
+                </div>
+              </div>
+              <div className="cap-row">
+                <span>valuation</span>
+                <div className="style2">{this.state.projected_cashflow ? "$" + this.calculateNetPresentValue(Object.values(this.state.projected_cashflow).slice(this.state.currentQuarter - 1)) : '$830,000'}</div>
+                <div className="style2">{this.state.accumulatedRevenue ? "$" + this.calculateCapitalRequired() : "$130,000"}</div>
+                <span>capital <br />  required</span>
+              </div>
+              <div className="coins">
+                <div className="style2">
+                  10,000
+                </div>
+                coins to be issued
+              </div>
+            </div>
+
+          </div>
         </div>
 
-        <div className="flexed pdf-section">
-          <div className="file-input-container">
-            <div className="file-input">
-              <input
-                id="file"
-                type="file"
-                onChange={this.updateFile('planFilePDF')} />
-                <svg viewBox="2 2 17 17">
-                  <g>
-                    <defs>
-                      <rect id="SVGID_1_" x="-3.9" width="27.3" height="16.1"/>
-                    </defs>
-                    <path className="st1" d="M13.9,7.3c0-0.2-0.1-0.3-0.3-0.3H8.3H6.6H5.4C5.2,7,5.1,7.1,5.1,7.3v7.5c0,0.2,0.1,0.3,0.3,0.3h8.7
-                      c0.2,0,0.3-0.1,0.3-0.3V9c0-0.2-0.1-0.3-0.3-0.3h-0.2V7.3z M9.4,11.4l-0.5,0.5c-0.1,0.1-0.3,0.1-0.4,0c-0.1-0.1-0.1-0.3,0-0.4
-                      l1.2-1.2l1.2,1.2c0.1,0.1,0.1,0.3,0,0.4c-0.1,0.1-0.3,0.1-0.4,0L10,11.4v1.8c0,0.2-0.1,0.3-0.3,0.3s-0.3-0.1-0.3-0.3V11.4z
-                      M13.3,7.6v1.2H9.6L8.8,7.6H13.3z"/>
-                  </g>
-                </svg>
+        <div className="form-box-container">
+          <h1 className="form-box-title with-border">WHAT'S YOUR PLAN?</h1>
+          <div className="form-box-border-layer">
+
+            <div className="flexed pdf-section">
+              <div className="file-input-container">
+                <div className="file-input">
+                  <input
+                    id="file"
+                    type="file"
+                    onChange={this.updateFile('planFilePDF')} />
+                    <svg viewBox="2 2 17 17">
+                      <g>
+                        <defs>
+                          <rect id="SVGID_1_" x="-3.9" width="27.3" height="16.1"/>
+                        </defs>
+                        <path className="st1" d="M13.9,7.3c0-0.2-0.1-0.3-0.3-0.3H8.3H6.6H5.4C5.2,7,5.1,7.1,5.1,7.3v7.5c0,0.2,0.1,0.3,0.3,0.3h8.7
+                          c0.2,0,0.3-0.1,0.3-0.3V9c0-0.2-0.1-0.3-0.3-0.3h-0.2V7.3z M9.4,11.4l-0.5,0.5c-0.1,0.1-0.3,0.1-0.4,0c-0.1-0.1-0.1-0.3,0-0.4
+                          l1.2-1.2l1.2,1.2c0.1,0.1,0.1,0.3,0,0.4c-0.1,0.1-0.3,0.1-0.4,0L10,11.4v1.8c0,0.2-0.1,0.3-0.3,0.3s-0.3-0.1-0.3-0.3V11.4z
+                          M13.3,7.6v1.2H9.6L8.8,7.6H13.3z"/>
+                      </g>
+                    </svg>
+                </div>
+                <label htmlFor="file">{this.state.planFilePDFName || "choose pdf"}</label>
+              </div>
+              <DivWithCorners>
+                  <PDFModal planFilePDFDataURL={this.state.planFilePDFDataURL}/>
+              </DivWithCorners>
             </div>
-            <label htmlFor="file">{this.state.planFilePDFName || "choose pdf"}</label>
-          </div>
-
-          <DivWithCorners>
-              <PDFModal planFilePDFDataURL={this.state.planFilePDFDataURL}/>
-          </DivWithCorners>
-        </div>
-        <div className="flexed model-id-section">
-          <div className="text-input-container model-id-container">
-            <input className="text-input model-id-input"
-              placeholder="model id"
-              value={modelId}
-              onChange={this.update('modelId')} />
-          </div>
-
-          <DivWithCorners>
-            <div className="project-form-button model-id">
-              <a href={modelLink} target="_blank">
-                <svg className="project-form-button-icons" viewBox="-8 -8 160 160"><g><g><rect x="127.026" y="103.44" transform="matrix(0.8661 0.4999 -0.4999 0.8661 69.9909 -49.9074)" width="2.251" height="4.499" /><path d="M122.188,104.845l-3.863-2.23l2.25-3.896l3.863,2.23L122.188,104.845z M114.462,100.383l-3.863-2.23    l2.25-3.896l3.863,2.23L114.462,100.383z M106.734,95.921l-3.864-2.23l2.25-3.896l3.864,2.23L106.734,95.921z M99.007,91.459    l-3.863-2.23l2.25-3.896l3.863,2.23L99.007,91.459z M91.28,86.997l-3.864-2.23l2.25-3.896l3.864,2.23L91.28,86.997z     M83.552,82.535l-3.863-2.23l2.25-3.896l3.863,2.23L83.552,82.535z" /><polygon points="75.825,78.073 75.001,77.598 74.177,78.073 71.927,74.177 75.001,72.402 78.075,74.177   " /><path d="M27.812,104.843l-2.25-3.896l3.863-2.231l2.251,3.896L27.812,104.843z M35.539,100.381l-2.25-3.896    l3.864-2.23l2.25,3.896L35.539,100.381z M43.267,95.919l-2.25-3.896l3.863-2.23l2.25,3.896L43.267,95.919z M50.995,91.458    l-2.251-3.896l3.864-2.231l2.25,3.896L50.995,91.458z M58.722,86.996l-2.25-3.896l3.864-2.23l2.25,3.896L58.722,86.996z     M66.45,82.534l-2.25-3.896l3.863-2.23l2.25,3.896L66.45,82.534z" /><rect x="19.599" y="104.562" transform="matrix(0.5001 0.866 -0.866 0.5001 102.4474 33.9166)" width="4.499" height="2.251" /></g><g><rect x="72.751" y="72.75" width="4.5" height="2.25" /><path d="M77.251,68.288h-4.5v-4.462h4.5V68.288z M77.251,59.365h-4.5v-4.462h4.5V59.365z M77.251,50.442h-4.5    V45.98h4.5V50.442z M77.251,41.519h-4.5v-4.461h4.5V41.519z M77.251,32.596h-4.5v-4.462h4.5V32.596z M77.251,23.673h-4.5v-4.462    h4.5V23.673z" /><rect x="72.751" y="12.5" width="4.5" height="2.25" /></g><g><path d="M75.001,140.098l-56.377-32.549V42.451L75.001,9.902l56.375,32.551v65.098L75.001,140.098z     M23.124,104.951l51.877,29.951l51.875-29.949V45.051L75.001,15.098L23.124,45.049V104.951z" /><polygon points="75.001,77.598 19.749,45.698 21.999,41.802 75.001,72.402 128.001,41.804 130.251,45.7   " /><rect x="72.751" y="75" width="4.5" height="62.5" /></g></g></svg>
-              </a>
+            <div className="flexed model-id-section">
+              <div className="text-input-container model-id-container">
+                <input className="text-input model-id-input"
+                  placeholder="model id"
+                  value={model_id}
+                  onChange={this.update('model_id')} />
+              </div>
+              <DivWithCorners>
+                <div className="project-form-button model-id">
+                  <a href={modelLink} target="_blank">
+                    <svg className="project-form-button-icons" viewBox="-8 -8 160 160"><g><g><rect x="127.026" y="103.44" transform="matrix(0.8661 0.4999 -0.4999 0.8661 69.9909 -49.9074)" width="2.251" height="4.499" /><path d="M122.188,104.845l-3.863-2.23l2.25-3.896l3.863,2.23L122.188,104.845z M114.462,100.383l-3.863-2.23    l2.25-3.896l3.863,2.23L114.462,100.383z M106.734,95.921l-3.864-2.23l2.25-3.896l3.864,2.23L106.734,95.921z M99.007,91.459    l-3.863-2.23l2.25-3.896l3.863,2.23L99.007,91.459z M91.28,86.997l-3.864-2.23l2.25-3.896l3.864,2.23L91.28,86.997z     M83.552,82.535l-3.863-2.23l2.25-3.896l3.863,2.23L83.552,82.535z" /><polygon points="75.825,78.073 75.001,77.598 74.177,78.073 71.927,74.177 75.001,72.402 78.075,74.177   " /><path d="M27.812,104.843l-2.25-3.896l3.863-2.231l2.251,3.896L27.812,104.843z M35.539,100.381l-2.25-3.896    l3.864-2.23l2.25,3.896L35.539,100.381z M43.267,95.919l-2.25-3.896l3.863-2.23l2.25,3.896L43.267,95.919z M50.995,91.458    l-2.251-3.896l3.864-2.231l2.25,3.896L50.995,91.458z M58.722,86.996l-2.25-3.896l3.864-2.23l2.25,3.896L58.722,86.996z     M66.45,82.534l-2.25-3.896l3.863-2.23l2.25,3.896L66.45,82.534z" /><rect x="19.599" y="104.562" transform="matrix(0.5001 0.866 -0.866 0.5001 102.4474 33.9166)" width="4.499" height="2.251" /></g><g><rect x="72.751" y="72.75" width="4.5" height="2.25" /><path d="M77.251,68.288h-4.5v-4.462h4.5V68.288z M77.251,59.365h-4.5v-4.462h4.5V59.365z M77.251,50.442h-4.5    V45.98h4.5V50.442z M77.251,41.519h-4.5v-4.461h4.5V41.519z M77.251,32.596h-4.5v-4.462h4.5V32.596z M77.251,23.673h-4.5v-4.462    h4.5V23.673z" /><rect x="72.751" y="12.5" width="4.5" height="2.25" /></g><g><path d="M75.001,140.098l-56.377-32.549V42.451L75.001,9.902l56.375,32.551v65.098L75.001,140.098z     M23.124,104.951l51.877,29.951l51.875-29.949V45.051L75.001,15.098L23.124,45.049V104.951z" /><polygon points="75.001,77.598 19.749,45.698 21.999,41.802 75.001,72.402 128.001,41.804 130.251,45.7   " /><rect x="72.751" y="75" width="4.5" height="62.5" /></g></g></svg>
+                  </a>
+                </div>
+              </DivWithCorners>
             </div>
-          </DivWithCorners>
+
+          </div>
         </div>
 
-        <textarea className="description-area" value="description" onChange={this.update('description')} />
-        <input type="submit" value="Pitch"/>
-        {this.renderErrors()}
+        <div className="form-box-container">
+          <div className="description-section">
+            <h1 className="form-box-title">SUMMARY DESCRIPTION</h1>
+            <textarea className="description-area" value={description} onChange={this.update('description')} />
+            <input className="submit-button" type="submit" value="Pitch"/>
+            {this.renderErrors()}
+          </div>
+        </div>
+
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
-
       </form>
     );
   }

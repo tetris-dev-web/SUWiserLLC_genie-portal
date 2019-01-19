@@ -1,7 +1,6 @@
 /*jshint esversion: 6 */
 
 import React from 'react';
-import './transfer.scss';
 
 class Transfer extends React.Component {
 

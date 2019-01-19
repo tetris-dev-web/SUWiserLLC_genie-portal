@@ -4,7 +4,6 @@ import ModalStyle from './modal_style';
 import Wallet from './wallet/wallet';
 import ProfileContainer from './profile/profile_container';
 import TokenData from '../../../../contract_data/Token';
-import './user_dropdown.scss';
 
 class UserDropdown extends React.Component {
   constructor(props) {
