@@ -10,7 +10,6 @@ class TokenGraph extends React.Component {
     this.handleMousemove = this.handleMousemove.bind(this);
     this.drawChart = this.drawChart.bind(this);
     this.calculateTokenData = this.calculateTokenData.bind(this)
-    this.handleGraphHover = this.handleGraphHover.bind(this)
   }
 
   componentDidMount() {
@@ -121,12 +120,6 @@ class TokenGraph extends React.Component {
       .on('mousemove', this.handleMousemove);
   }
 
-  handleGraphHover(){
-    this.setState({
-      tokensRectHovered: true
-    })
-  }
-
   handleMousemove() {
     const overlay = this.overlay._groups[0][0];
     const { data } = this.props;
@@ -211,7 +204,6 @@ class TokenGraph extends React.Component {
   }
 
   render() {
-    console.log(this.props.data);
 
     return (
       <div className="series content graph" id='token'>
@@ -220,7 +212,10 @@ class TokenGraph extends React.Component {
                         y={0}
                         width={100}
                         height={this.height ? this.height : 430}
-                        tokenData={this.calculateTokenData()}/>
+                        tokenData={this.calculateTokenData()}
+                        color={"rgba(170, 122, 96, 1)"}
+                        opaqueColor={"rgba(170, 122, 96, .3)"}
+                        tokenRect={true}/>
       </div>
   );
   }
@@ -228,3 +223,13 @@ class TokenGraph extends React.Component {
 }
 
 export default TokenGraph;
+
+// <TokenDashboardRect
+//   x={window.innerWidth-100}
+//   y={0}
+//   width={100}
+//   height={430}
+//   tokenData={this.calculateTokenData()}
+//   color={"rgba(97, 171, 169, 1)"}
+//   opaqueColor={"rgba(97, 171, 169, .3)"}
+//   />

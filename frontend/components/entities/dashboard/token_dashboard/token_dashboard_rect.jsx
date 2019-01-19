@@ -1,25 +1,26 @@
 import React from 'react';
-import * as d3 from 'd3'
+import TokenDashBoardRectText from './token_dashboard_rect_text';
 
 class TokenDashboardRect extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      hovered: false
+      tokenSquareHovered: false,
+      earningsSquareHovered: false
     }
     this.handleMouseOver = this.handleMouseOver.bind(this)
     this.handleMouseLeave = this.handleMouseLeave.bind(this)
   }
 
   handleMouseOver(){
-    this.setState({ hovered: true });
+    this.props.tokenRect && this.setState({ tokenSquareHovered: true });
   }
   handleMouseLeave(){
-    this.setState({ hovered: false });
+    this.props.tokenRect && this.setState({ tokenSquareHovered: false });
   }
 
   render(){
-    let { x, y, width, height, tokenData } = this.props;
+    let { x, y, width, height, tokenData, color, opaqueColor } = this.props;
     let { activeTokenRatio, recentTotalTokens, recentActiveTokens } = tokenData;
     let activeTokenPercentage = `${activeTokenRatio}%`;
     let inactiveTokenPercentage = `${100 - activeTokenRatio}%`;
@@ -31,9 +32,9 @@ class TokenDashboardRect extends React.Component{
         style={{position:"absolute", left: "-1%", overflow: "visible"}}>
           <defs>
             <linearGradient id="Gradient1" x1="0" x2="0%" y1="0" y2="100%">
-              <stop offset={inactiveTokenPercentage} stopColor={"rgba(170, 122, 96, .3)"}/>
-              <stop offset={inactiveTokenPercentage} stopColor={"rgb(170, 122, 96)"}/>
-              <stop offset="100%" stopColor={"rgb(170, 122, 96)"}/>
+              <stop offset={inactiveTokenPercentage} stopColor={opaqueColor}/>
+              <stop offset={inactiveTokenPercentage} stopColor={color}/>
+              <stop offset="100%" stopColor={color}/>
             </linearGradient>
           </defs>
           <g>
@@ -51,29 +52,11 @@ class TokenDashboardRect extends React.Component{
             onMouseEnter={this.handleMouseOver}
             onMouseLeave={this.handleMouseLeave} />
             {
-              this.state.hovered && (
-            <g>
-              <text x="0" y={`${inactiveTokenRatio/2}%`} fill="black">
-                <tspan dx="125px" dy="0">
-                {recentTotalTokens} total
-                </tspan>
-              </text>
-              <text x='125px' y={`${inactiveTokenRatio/2}%`}>
-                <tspan dx="0" dy="1.5em">
-                tokens owned
-                </tspan>
-              </text>
-              <text x='125px' y={`${(100 - inactiveTokenRatio)/2 + inactiveTokenRatio}%`}>
-                <tspan dx="0" dy="0">
-                {recentActiveTokens} active
-                </tspan>
-              </text>
-              <text x='125px' y={`${(100 - inactiveTokenRatio)/2 + inactiveTokenRatio}%`}>
-                <tspan dx="0" dy="1.5em">
-                tokens
-                </tspan>
-              </text>
-            </g>
+              this.state.tokenSquareHovered && (
+                <TokenDashBoardRectText
+                inactiveTokenRatio={inactiveTokenRatio}
+                recentActiveTokens={recentActiveTokens}
+                recentTotalTokens={recentTotalTokens} />
               )
             }
           </g>
