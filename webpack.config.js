@@ -1,6 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
-const miniCssExtractPlugin = require('mini-css-extract-plugin')
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   context: __dirname,

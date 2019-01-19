@@ -5,9 +5,7 @@ import VotesViewCapitalRaisedPath from './votes_view_capital_raised_path';
 import VotesViewCapitalRaisedLine from './votes_view_capital_raised_line';
 import VotesViewCapitalRaisedCircle from './votes_view_capital_raised_circle';
 import VotesViewCapitalRaisedRectText from './votes_view_capital_raised_text';
-import colors from  "/Users/matsteelelap/Desktop/ProjectFolder/genie-portal/frontend/util/_variables.scss";
-
-
+import colors from  "../../../../../../util/_variables.scss";
 
 class VotesViewCapitalRaised extends React.Component {
   constructor(props) {
@@ -19,12 +17,15 @@ class VotesViewCapitalRaised extends React.Component {
       timerOn: false,
       capRaisedHovered: false
     };
-    this.setHoveredStateOnEnter.bind(this)
-    this.setHoveredStateOnLeave.bind(this)
+    this.setHoveredStateOnEnter.bind(this);
+    this.setHoveredStateOnLeave.bind(this);
   }
 
   componentDidMount() {
+<<<<<<< HEAD
     console.log("colors specific: ", colors.rosyBrown)
+=======
+>>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
     window.onresize = () => {
       this.setState({currentWindowWidth: window.innerWidth});
     };
@@ -33,15 +34,15 @@ class VotesViewCapitalRaised extends React.Component {
   setHoveredStateOnEnter(component){
     if(!this.state.timerOn) {
       setTimeout( () => {
-        this.setState({[component]: false})
-        this.setState({timerOn:false})
-       }, 10000)
-      this.setState({timerOn:true})
+        this.setState({[component]: false});
+        this.setState({timerOn:false});
+       }, 10000);
+      this.setState({timerOn:true});
     }
-    return () => this.setState({[component]: true })
+    return () => this.setState({[component]: true });
   }
   setHoveredStateOnLeave(component){
-    return () => this.setState({[component]: false })
+    return () => this.setState({[component]: false });
   }
 
   render() {
@@ -84,7 +85,7 @@ class VotesViewCapitalRaised extends React.Component {
     ));
 
     const CapBeingRaisedAmounts = (props) => {
-      const yScaleFunction = capitalBeingRaised / 24000
+      const yScaleFunction = capitalBeingRaised / 24000;
       return (
         <text
           className={"votes-view-capital-raised-text"}
@@ -96,12 +97,12 @@ class VotesViewCapitalRaised extends React.Component {
           </tspan>
         </text>
       );
-    }
+    };
 
 
 
     const CapitalBeingRaisedRect = (props) => {
-      const heightOfRect = capitalBeingRaised / 24000
+      const heightOfRect = capitalBeingRaised / 24000;
 
       return (<VotesViewCapitalRaisedRect
         x="0" y="0"
@@ -111,16 +112,16 @@ class VotesViewCapitalRaised extends React.Component {
         setHoveredStateOnEnter={this.setHoveredStateOnEnter("capBeingRaisedHovered")}
         setHoveredStateOnLeave= {this.setHoveredStateOnLeave("capBeingRaisedHovered")}
         opacity={selectedProject ? "0.1" : "0.3"}
-        hovered={this.state.capBeingRaisedHovered}/>)
-    }
+        hovered={this.state.capBeingRaisedHovered}/>);
+    };
 
 
     const CapitalRaisedPrevRect = (props) => {
-      const heightOfRect = (capitalTotal - capitalBeingRaised) / 24000
+      const heightOfRect = (capitalTotal - capitalBeingRaised) / 24000;
       const textToDisplay = {
         "text": "capital that has been raised" ,
         "amount": Number(capitalBeingRaised/1000.0).toLocaleString()
-      }
+      };
       return (<VotesViewCapitalRaisedRect
         x="0" y={capitalBeingRaised / 24000}
         height={heightOfRect}
@@ -129,16 +130,16 @@ class VotesViewCapitalRaised extends React.Component {
         capRaisedTextToDisplay =  {textToDisplay}
         setHoveredStateOnEnter={this.setHoveredStateOnEnter("capRaisedHovered")}
         setHoveredStateOnLeave= {this.setHoveredStateOnLeave("capRaisedHovered")}
-        hovered={this.state.capRaisedHovered}/>)
-    }
+        hovered={this.state.capRaisedHovered}/>);
+    };
 
 
 
     return (
       <g className="votes-view-capital-raised">
 
-        <CapitalBeingRaisedRect/>
-        <CapitalRaisedPrevRect/>
+        <CapitalBeingRaisedRect />
+        <CapitalRaisedPrevRect />
 
         <VotesViewCapitalRaisedPath
           xScale={xScale}

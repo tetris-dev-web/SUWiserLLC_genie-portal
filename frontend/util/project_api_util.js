@@ -1,10 +1,10 @@
 import { keys } from 'lodash'; // TODO - see if .keys works instead of keys()
 
 export const fetchProjects = () => {
-  console.log("projectList",$.ajax({
-    method: 'GET',
-    url: 'api/projects',
-  }))
+  // console.log("projectList",$.ajax({
+  //   method: 'GET',
+  //   url: 'api/projects',
+  // }))
   return $.ajax({
     method: 'GET',
     url: 'api/projects',

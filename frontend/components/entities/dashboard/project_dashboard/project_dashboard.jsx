@@ -1,32 +1,31 @@
 import React from 'react';
 import ProjectGraph from './loc_view/project_graph';
 import VotesGraph from './votes_view/votes_graph';
-import ToggleOptions from './toggle_options';
+import ToggleOptions from '../dashboard_toggle_options/toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
-import './project_dashboard.scss'
+import './project_dashboard.scss';
 
 //Combine this with container
 
 class ProjectDashboard extends React.Component {
   constructor(props){
     super(props);
-    this.viewTypes = ["GRAPH VIEW", "VOTE VIEW", "NO VIEW"];
+    this.viewTypes = ["GRAPH VIEW", "VOTE VIEW", "LOCATION VIEW"];
     this.state = {
-      viewId: 1
+      currentViewId: null
     };
 
     this.toggleView = this.toggleView.bind(this);
+<<<<<<< HEAD
     // this.toggleTextShowing = this.toggleTextShowing.bind(this);
     this.watchProjectPitch = this.watchProjectPitch.bind(this);
     this.filterPitchedProjects = this.filterPitchedProjects.bind(this);
+=======
+>>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
   }
 
-  toggleOnHoverText() {
-
-  }
-
-  toggleView (viewId) {
-    this.setState({viewId});
+  toggleView (currentViewId) {
+    this.setState({currentViewId: currentViewId === this.state.currentViewId ? null : currentViewId});
   }
 
   componentDidMount() {
@@ -59,9 +58,12 @@ class ProjectDashboard extends React.Component {
   }
 
   render() {
-    let currentGraph = <div></div>;
+    let currentGraph;
 
-    switch (this.state.viewId) {
+    switch (this.state.currentViewId) {
+      case null:
+        currentGraph = <div></div>;
+        break;
       case 0:
         currentGraph =  <ProjectGraph
                         showText = {this.state.showText}
@@ -74,25 +76,29 @@ class ProjectDashboard extends React.Component {
       case 1:
         currentGraph = <VotesGraph />;
         break;
+      case 2:
+        break;
       default:
         break;
     }
 
     if (this.props.currentUser) {
       return (
-        <div className='project-dashboard'>
+        <div className="project-dashboard">
           <div className="graph-container">
             {currentGraph}
           </div>
           <ToggleOptions
-            viewTitle="PROJECT DASHBOARD"
+            dashboardType="project"
+            dashboardTitle="PROJECT DASHBOARD"
+            dashboardDescription="The project dashboard tracks the performance of the projects providing investors a comparative framework to provide direction on which investments to focus on."
             toggleView={this.toggleView}
-            viewId={this.state.viewId}
+            currentViewId={this.state.currentViewId}
             viewTypes={this.viewTypes}
             optionIcons={[
-              <svg id="active" x="0px" y="0px" viewBox="0 0 288 288"><path d="M0,207l288-0.2V81H0V207z M270,98.9v90l-108,0v-90L270,98.9z" /></svg>,
-              <svg id="active" x="0px" y="0px" viewBox="0 0 288 288"><path d="M0,207l288-0.2V81H0V207z M270,98.9v90l-108,0v-90L270,98.9z" /></svg>,
-              <svg x="0px" y="0px" viewBox="-2.5 -2.5 30 30"><path d="M25,11.5h-2.551C21.98,6.776,18.223,3.02,13.5,2.551V0h-2v2.55C6.776,3.02,3.02,6.776,2.551,11.5H0v2h2.551  c0.469,4.723,4.226,8.48,8.949,8.949V25h2v-2.551c4.723-0.469,8.48-4.227,8.949-8.949H25V11.5z M13.5,20.431V18.41  c-0.326,0.055-0.659,0.09-1,0.09c-0.342,0-0.675-0.035-1-0.09v2.021c-3.612-0.453-6.478-3.319-6.931-6.931H6.59  c-0.055-0.326-0.09-0.659-0.09-1s0.035-0.674,0.09-1H4.569C5.022,7.888,7.888,5.022,11.5,4.569V6.59c0.325-0.055,0.658-0.09,1-0.09  c0.341,0,0.674,0.035,1,0.09V4.569c3.611,0.454,6.478,3.319,6.931,6.931H18.41c0.055,0.326,0.09,0.659,0.09,1s-0.035,0.674-0.09,1  h2.021C19.978,17.111,17.111,19.978,13.5,20.431z" /></svg>
+              <svg id="active" viewBox="0 0 288 288"><path d="M0,207l288-0.2V81H0V207z M270,98.9v90l-108,0v-90L270,98.9z" /></svg>,
+              <svg id="active" viewBox="0 0 288 288"><path d="M0,207l288-0.2V81H0V207z M270,98.9v90l-108,0v-90L270,98.9z" /></svg>,
+              <svg viewBox="-2.5 -2.5 30 30"><path d="M25,11.5h-2.551C21.98,6.776,18.223,3.02,13.5,2.551V0h-2v2.55C6.776,3.02,3.02,6.776,2.551,11.5H0v2h2.551  c0.469,4.723,4.226,8.48,8.949,8.949V25h2v-2.551c4.723-0.469,8.48-4.227,8.949-8.949H25V11.5z M13.5,20.431V18.41  c-0.326,0.055-0.659,0.09-1,0.09c-0.342,0-0.675-0.035-1-0.09v2.021c-3.612-0.453-6.478-3.319-6.931-6.931H6.59  c-0.055-0.326-0.09-0.659-0.09-1s0.035-0.674,0.09-1H4.569C5.022,7.888,7.888,5.022,11.5,4.569V6.59c0.325-0.055,0.658-0.09,1-0.09  c0.341,0,0.674,0.035,1,0.09V4.569c3.611,0.454,6.478,3.319,6.931,6.931H18.41c0.055,0.326,0.09,0.659,0.09,1s-0.035,0.674-0.09,1  h2.021C19.978,17.111,17.111,19.978,13.5,20.431z" /></svg>
             ]} />
         </div>
       );

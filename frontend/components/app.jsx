@@ -79,8 +79,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="">
-        <div onClick={this.voteTest}>VoteTest</div>
+      <div style={{height: "100%", position: "relative"}}>
         <Navbar />
         <DeveloperInfo />
         <RedirectedRoute />

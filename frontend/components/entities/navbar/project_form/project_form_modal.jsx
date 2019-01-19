@@ -36,7 +36,7 @@ class ProjectFormModal extends React.Component {
 
     return (
       <div className="modal-button-cont">
-        <div className="modal-button" onClick={this.openModal}>Manage</div>
+        <div className={this.state.openModal ? "modal-button-modal-open" : "modal-button"} onClick={this.openModal}>PITCH</div>
 
         <Modal
           isOpen={this.state.openModal}
