@@ -53,25 +53,32 @@
 .toggle-view-options-container {
   text-align: center;
   width: 100%;
-  transition: 0.5s;
 
-  &.project {
-  }
-
-  &.token {
-    transform: translateY(-260px);
-    // potentially move this to react since 260px is hardcoded
+  .toggle-view-options-border-layer {
+    height: 0;
   }
 
   .toggle-view-options {
+    &.token {
+    }
+    
     &.project {
       padding: 8px 8px 20px 8px;
       border-radius: 15px 15px 0 0;
+      transition: border-radius 1s,
+      padding 1s,
+      cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
     }
-
+    
     &.token {
       padding: 20px 8px 8px 8px;
       border-radius: 0 0 15px 15px;
+      transition: border-radius 1s,
+      padding 1s,
+      cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
+
+      transform: translateY(-260px);
+      // potentially move this to react since 260px is hardcoded
     }
 
     .toggle-view-title {
@@ -101,26 +108,28 @@
 .toggle-view-options-container-graph-hidden {
   text-align: center;
   width: 100%;
-  transition: 0.5s;
-
+  
   .toggle-view-options-border-layer {
     width: 70%;
     margin: auto;
-
+    
     &.project {
       padding-top: 25px;
     }
-
+    
     &.token {
       padding-bottom: 25px;
     }
   }
-
+  
   .toggle-view-options {
     &.project,
     &.token {
       border-radius: 15px;
       padding: 8px 8px 12px 8px;
+      transition: border-radius 1s,
+      padding 1s,
+      cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
     }
     
     .toggle-view-title,

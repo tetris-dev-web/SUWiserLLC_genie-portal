@@ -112,7 +112,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px 0 30px; }
+    padding: 10px 30px 0 30px; }
     .form-box .pdf-section .model-id-container,
     .form-box .model-id-section .model-id-container {
       background-color: white;
@@ -183,7 +183,7 @@
     .cornered-container .project-form-button.drop-pin:hover:after {
       content: "drop pin";
       left: 50%;
-      bottom: -15px;
+      bottom: -20px;
       transform: translateX(-50%);
       display: block;
       position: absolute;
@@ -198,7 +198,7 @@
       white-space: nowrap; }
     .cornered-container .project-form-button.pdf:hover:after {
       content: "plan";
-      right: -40px;
+      right: -30px;
       top: 40%;
       transform: translateY(-50%);
       display: block;
@@ -206,7 +206,7 @@
       white-space: nowrap; }
     .cornered-container .project-form-button.model-id:hover:after {
       content: "poly model";
-      right: -70px;
+      right: -60px;
       top: 40%;
       transform: translateY(-50%);
       display: block;
@@ -422,16 +422,18 @@
 
 .toggle-view-options-container {
   text-align: center;
-  width: 100%;
-  transition: 0.5s; }
-  .toggle-view-options-container.token {
-    transform: translateY(-260px); }
+  width: 100%; }
+  .toggle-view-options-container .toggle-view-options-border-layer {
+    height: 0; }
   .toggle-view-options-container .toggle-view-options.project {
     padding: 8px 8px 20px 8px;
-    border-radius: 15px 15px 0 0; }
+    border-radius: 15px 15px 0 0;
+    transition: border-radius 1s, padding 1s, cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
   .toggle-view-options-container .toggle-view-options.token {
     padding: 20px 8px 8px 8px;
-    border-radius: 0 0 15px 15px; }
+    border-radius: 0 0 15px 15px;
+    transition: border-radius 1s, padding 1s, cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
+    transform: translateY(-260px); }
   .toggle-view-options-container .toggle-view-options .toggle-view-title {
     position: absolute;
     font-weight: 700;
@@ -453,8 +455,7 @@
 
 .toggle-view-options-container-graph-hidden {
   text-align: center;
-  width: 100%;
-  transition: 0.5s; }
+  width: 100%; }
   .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer {
     width: 70%;
     margin: auto; }
@@ -464,7 +465,8 @@
       padding-bottom: 25px; }
   .toggle-view-options-container-graph-hidden .toggle-view-options.project, .toggle-view-options-container-graph-hidden .toggle-view-options.token {
     border-radius: 15px;
-    padding: 8px 8px 12px 8px; }
+    padding: 8px 8px 12px 8px;
+    transition: border-radius 1s, padding 1s, cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
   .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-title,
   .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-next-view,
   .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-dashboard-description {
@@ -496,12 +498,17 @@
     top: -70px;
     font-size: 12px; }
 
+.token-graph {
+  text-align: center; }
+
 .token-svg {
-  width: 90%;
-  height: 90%;
   width: 75%;
   height: 75%;
   overflow: visible !important; }
+  .token-svg path {
+    stroke: black;
+    stroke-width: 1px;
+    fill: none; }
 
 .x .domain {
   stroke: none; }

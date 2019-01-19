@@ -1,13 +1,13 @@
 import React from 'react';
 import ToggleOptions from '../dashboard_toggle_options/toggle_options';
-import TokenGraphContainer from './user_view/token_graph_container';
+import TokenGraphContainer from './token_view/token_graph_container';
 
 class TokenDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.viewTypes = ["BY USER", "BY ALL", "BY LOCATION"];
     this.state = {
-      currentViewId: null
+      currentViewId: 0
     };
 
     this.toggleView = this.toggleView.bind(this);

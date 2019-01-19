@@ -134,8 +134,8 @@ class VotesViewCapitalRaised extends React.Component {
     return (
       <g className="votes-view-capital-raised">
 
-        <CapitalBeingRaisedRect/>
-        <CapitalRaisedPrevRect/>
+        <CapitalBeingRaisedRect />
+        <CapitalRaisedPrevRect />
 
         <VotesViewCapitalRaisedPath
           xScale={xScale}
