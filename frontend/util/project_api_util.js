@@ -20,7 +20,6 @@ export const fetchProject = id => {
 };
 
 export const createProject = formData => {
-  debugger
   return $.ajax({
     method: 'POST',
     url: 'api/projects',

@@ -6,7 +6,6 @@ import '../ProjectStub.sol';
 import '../token/ERC20/Token.sol';
 import '../Reimbursements.sol';
 import '../ProjectLeaderTracker.sol';
-import '../ECRecovery.sol';
 import '../Voting.sol';
 
 

@@ -1,6 +1,5 @@
 pragma solidity ^0.4.24;
 import './token/ERC20/Token.sol';
-import './InvestorList.sol';
 import './ContractStub.sol';
 
 contract TokenStub is Token, ContractStub {

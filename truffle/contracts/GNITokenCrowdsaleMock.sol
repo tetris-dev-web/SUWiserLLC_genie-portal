@@ -1,11 +1,8 @@
 pragma solidity ^0.4.24;
 
-import './ProjectQueue.sol';
 import './token/ERC20/Token.sol';
-import './InvestorList.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
 import './TokenStub.sol';
-/* import './InvestorListStub.sol'; */
 import './ContractStub.sol';
 import './ProjectLeaderTracker.sol';
 import './Reimbursements.sol';

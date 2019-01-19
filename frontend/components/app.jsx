@@ -57,11 +57,8 @@ class App extends React.Component {
 
   componentDidMount () {
     if(this.props.web3){
-      this.props.crowdsaleInstance.VoteAddition().watch((error, event) => {
+      this.props.votingInstance.VoteChange().watch((error, event) => {
         console.log(event); //TODO log to state
-      });
-      this.props.crowdsaleInstance.VoteRemoval().watch((error, event) => {
-        console.log(event)
       });
     }
   }
@@ -101,7 +98,8 @@ const mapStateToProps  = state => {
   return {
     account: state.network.account,
     web3: state.network.web3,
-    crowdsaleInstance: state.network.crowdsaleInstance
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    votingInstance: state.network.votingInstance
   };
 };
 

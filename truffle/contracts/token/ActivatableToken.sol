@@ -1,7 +1,6 @@
 pragma solidity ^0.4.24;
 import './ERC20/MintableToken.sol';
 import '../Dividends.sol';
-import '../InvestorList.sol';
 import '../ContractStub.sol';
 
 contract ActivatableToken is MintableToken {

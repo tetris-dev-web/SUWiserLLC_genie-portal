@@ -142,7 +142,7 @@ class ProjectForm extends React.Component {
         accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
      });
 
-    this.props.createProject(this.props.crowdsaleInstance, projectData, this.props.account, voteForHash, voteAgainstHash).then(() => {
+    this.props.createProject(this.props.crowdsaleInstance, projectData, this.props.account).then(() => {
       if (this.props.errors.length == 0) {
         this.props.closeModal();
         // window.location.reload();

@@ -44,12 +44,12 @@ module.exports = function (deployer, network, accounts) {
         .then(() => {
           return deployer.deploy(Voting, Token.address, ProjectLeaderTracker.address);
         })
-        // .then(() => {
-        //   return deployer.link(ECRecovery, GNITokenCrowdsale);
-        // })
-        // .then(() => {
-        //   return deployer.link(ECRecovery, GNITokenCrowdsaleMock);
-        // })
+        .then(() => {
+          return deployer.link(ECRecovery, GNITokenCrowdsale);
+        })
+        .then(() => {
+          return deployer.link(ECRecovery, GNITokenCrowdsaleMock);
+        })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {

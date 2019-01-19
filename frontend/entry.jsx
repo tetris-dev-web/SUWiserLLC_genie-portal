@@ -33,9 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
     crowdsale.setProvider(web3Provider);
 
     const voting = TruffleContract(Voting);
+    voting.setProvider(web3Provider);
 
-    const project = TruffleContract(Project);
-    project.setProvider(web3Provider);
+    const projectContract = TruffleContract(Project);
+    projectContract.setProvider(web3Provider);
 
     let account;
     let tokenInstance;
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {
           crowdsaleInstance = _crowdsaleInstance;
-          preloadedState = merge({}, preloadedState, { network: { account, tokenInstance, votingInstance, crowdsaleInstance, project, web3 } });
+          preloadedState = merge({}, preloadedState, { network: {account, tokenInstance, votingInstance, crowdsaleInstance, projectContract, web3 } });
           store = configureStore(preloadedState);
           window.getState = store.getState; //just for development purposes - remove later - use logger
           const root = document.getElementById('root');
