@@ -25,7 +25,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createProject: (crowdsale, projectData, account) => dispatch(createProject(crowdsale, projectData, account)),
+    createProject: (crowdsale, projectData, pdf_file, account) => dispatch(createProject(crowdsale, projectData, pdf_file, account)),
     clearProjectErrors: () => dispatch(clearProjectErrors())
   };
 };

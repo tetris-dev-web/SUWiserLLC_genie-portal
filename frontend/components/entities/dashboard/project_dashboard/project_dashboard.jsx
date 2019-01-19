@@ -16,12 +16,9 @@ class ProjectDashboard extends React.Component {
     };
 
     this.toggleView = this.toggleView.bind(this);
-<<<<<<< HEAD
     // this.toggleTextShowing = this.toggleTextShowing.bind(this);
     this.watchProjectPitch = this.watchProjectPitch.bind(this);
     this.filterPitchedProjects = this.filterPitchedProjects.bind(this);
-=======
->>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
   }
 
   toggleView (currentViewId) {
@@ -30,16 +27,18 @@ class ProjectDashboard extends React.Component {
 
   componentDidMount() {
     if (this.props.web3){this.watchProjectPitch();}
-
   }
 
   watchProjectPitch() { //event listener for pitched projects
+    console.log("instance", this.props.crowdsaleInstance)
     this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
-      const address = event.args.projectAddress;
-      const title = event.args.name;
-      const project = this.props.projects[title];
-      project.instance = this.props.projectContract.at(address);
-      this.props.receiveProject(project);
+    console.log("projectInfo", this.props.projects)
+    console.log("event", event)
+    const address = event.args.projectAddress;
+    const title = event.args.title;
+    const project = this.props.projects[title];
+    project.instance = this.props.projectContract.at(address);
+    this.props.receiveProject(project);
     });
   }
 

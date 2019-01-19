@@ -9,7 +9,7 @@ contract Project is Ownable {
   using ECRecovery for bytes32;
   //these will all need to be private so they cannot be set arbitrarily
   //we'll make read methods when necessary
-  string private name;
+  string private title;
   address private developer;
   address public dividendWallet;
   uint256 internal closingTime;
@@ -25,7 +25,7 @@ contract Project is Ownable {
   bytes32 private voteForHash;
   bytes32 private voteAgainstHash;
   constructor (
-    string _name,
+    string _title,
     address _developer,
     address _dividendWallet,
     uint256 _valuation,
@@ -37,7 +37,7 @@ contract Project is Ownable {
     bytes32 _voteForHash,
     bytes32 _voteAgainstHash
     ) public {
-      name = _name;
+      title = _title;
       developer = _developer;
       dividendWallet = _dividendWallet;
       valuation = _valuation;
@@ -54,7 +54,7 @@ contract Project is Ownable {
   }
   event LogProject (
       address addr,
-      string name,
+      string title,
       uint256 valuation,
       uint256 capitalRequired,
       uint256 developerTokens,
@@ -67,13 +67,13 @@ contract Project is Ownable {
 
   /* event VoteChange (
     address addr,
-    string name,
+    string title,
     uint256 totalVotes
   ); */
 
   /* event ProjectActivation (
     address addr,
-    string name,
+    string title,
     bool activationStatus,
     uint256 capitalRequired,
     uint256 valuation
@@ -86,7 +86,7 @@ contract Project is Ownable {
   }
 
   function log () public {
-    emit LogProject(address(this), name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, totalVotes, active);
+    emit LogProject(address(this), title, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, totalVotes, active);
   }
 
   function open () public view returns (bool) {
@@ -96,8 +96,8 @@ contract Project is Ownable {
   /* function id_ () public view returns (uint256) {
     return id;
   } */
-  function name_ () public view returns (string) {
-    return name;
+  function title_ () public view returns (string) {
+    return title;
   }
 
   function active_ () public view returns (bool) {
@@ -132,7 +132,7 @@ contract Project is Ownable {
       string, uint256, uint256, uint256, uint256, bool, uint256, uint256
       ) {
       return (
-          name,
+          title,
           valuation,
           capitalRequired,
           developerTokens,
@@ -172,7 +172,7 @@ contract Project is Ownable {
     totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
 
-    /* emit VoteChange(address(this), name, totalVotes); */
+    /* emit VoteChange(address(this), title, totalVotes); */
   }
 
   function voteAgainst (address voter, uint256 voteAmount, bytes _signedMessage) onlyOwner {
@@ -195,7 +195,7 @@ contract Project is Ownable {
     totalVotes = totalVotes.sub(voteAmount);
     closingTime = closingTime.sub(43200);
 
-    /* emit VoteChange(address(this), name, totalVotes); */
+    /* emit VoteChange(address(this), title, totalVotes); */
   }
 
   function activate () external onlyOwner returns(uint256) {
@@ -203,7 +203,7 @@ contract Project is Ownable {
     //we should set totalVotes to 0
     activationTime = now;
     return activationTime;
-    /* emit ProjectActivation(address(this), name, active, capitalRequired, valuation); */
+    /* emit ProjectActivation(address(this), title, active, capitalRequired, valuation); */
   }
 
   function beats (address otherProject) public view returns (bool) {

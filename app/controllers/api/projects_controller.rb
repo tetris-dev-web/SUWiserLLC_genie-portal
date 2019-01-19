@@ -23,8 +23,10 @@ class Api::ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
     if @project.update(project_params)
+      debugger
       render json: @project
     else
+      debugger
       render json: @project.errors.full_messages, status: 422
     end
   end
@@ -52,6 +54,7 @@ class Api::ProjectsController < ApplicationController
 
   private
   def project_params
+    debugger
     params.require(:project).permit(
       :id, :address, :title, :cashflow, :revenue, :valuation, :model_id,
       :file, :icon, :description, :creator_id, :created_at,

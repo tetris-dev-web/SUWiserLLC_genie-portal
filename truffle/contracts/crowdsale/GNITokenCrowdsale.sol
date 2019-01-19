@@ -42,9 +42,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   event ProjectPitch (
     address projectAddress,
     address developer,
-    string name,
-    string lat,
-    string lng,
+    string  title,
+    string  lat,
+    string  lng,
     uint256 capitalRequired,
     uint256 valuation,
     uint256 developerTokens,
@@ -66,7 +66,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     return projectAddress[id];
   }
 
-  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng, bytes32 _voteForHash, bytes32 _voteAgainstHash) public {//should only be callable by developer. may need more tests
+  function pitchProject(string _title, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng, bytes32 _voteForHash, bytes32 _voteAgainstHash) public {//should only be callable by developer. may need more tests
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);
@@ -74,12 +74,12 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
    _extendDoomsDay(90);
 
-    address projectAddr = new Project(_name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng, _voteForHash, _voteAgainstHash);
+    address projectAddr = new Project(_title, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng, _voteForHash, _voteAgainstHash);
     projectLeaderTracker.handleProjectPitch();
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
 
-    emit ProjectPitch(projectAddr, developer, _name, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
+    emit ProjectPitch(projectAddr, developer, _title, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
   }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {

@@ -14,11 +14,13 @@ export const fetchProjects  = (crowdsale, projectContract) => {
   };
 };
 
-export const createProject = (crowdsale, projectData, account) => {
+export const createProject = (crowdsale, projectData, pdf_file, account) => {
   return dispatch => {
     return APIUtil.createProject(projectData).then(project => {
-      dispatch(receiveProject(project));
-      return ChainUtil.pitchProject(crowdsale, projectData, account);
+      return APIUtil.uploadPDF(project, pdf_file).then(()=>{
+        dispatch(receiveProject(project));
+        return ChainUtil.pitchProject(crowdsale, projectData, account);
+      })
     });
   };
 };

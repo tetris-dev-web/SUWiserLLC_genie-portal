@@ -40,7 +40,7 @@ export const integrateProjectsData = async (crowdsale, projectContract, initialP
 
   return Promise.all(projectsData).then(resolvedProjectsData => {
     return resolvedProjectsData.reduce((projects, project) => {
-      projects[project.address] = project;
+      projects[project.title] = project;
       return projects;
     }, {});
   });
