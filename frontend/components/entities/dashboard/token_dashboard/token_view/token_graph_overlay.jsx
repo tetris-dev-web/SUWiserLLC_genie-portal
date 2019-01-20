@@ -6,42 +6,34 @@ class TokenGraphOverlay extends React.Component {
     super(props);
 
     this.state ={
-      showDashedLines: false,
       dataHovered: null
     };
 
     this.tickIntervalInPixel = this.props.width / (this.props.data.length - 1);
 
-    this.handleMouseEnter = this.handleMouseEnter.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
   }
-
-  handleMouseEnter() {
-    this.setState({ showDashedLines: true });
-  }
   
   handleMouseMove(e) {
-    const { showDashedLines, dataHovered } = this.state;
-    if (showDashedLines) {
-      const [x, y] = d3.clientPoint(e.currentTarget, e);
-      const currentDataHovered = Math.round(x / this.tickIntervalInPixel);
-      if (currentDataHovered !== dataHovered) {
-        this.setState({ dataHovered: currentDataHovered });
-      }
+    const { dataHovered } = this.state;
+    const [x, y] = d3.clientPoint(e.currentTarget, e);
+    const currentDataHovered = Math.round(x / this.tickIntervalInPixel);
+
+    if (currentDataHovered !== dataHovered) {
+      this.setState({ dataHovered: currentDataHovered });
     }
   }
 
   handleMouseOut() {
-    this.setState({ 
-      showDashedLines: false,
+    this.setState({
       dataHovered: null
     });
   }
 
   render() {
     const { width, height, transform, data, xScale, yScaleTokens, yScaleEarnings } = this.props;
-    const { showDashedLines, dataHovered } = this.state;
+    const { dataHovered } = this.state;
 
     return (
       <g className="token-graph-overlay"
@@ -49,12 +41,11 @@ class TokenGraphOverlay extends React.Component {
         <rect className="token-graph-overlay-rect"
           width={width}
           height={height}
-          onMouseEnter={this.handleMouseEnter}
           onMouseMove={this.handleMouseMove}
           onMouseOut={this.handleMouseOut}
           ></rect>
         {
-          showDashedLines && dataHovered !== null &&
+          dataHovered !== null &&
           <g className="token-graph-dashed-lines">
             <text
               x="-50"

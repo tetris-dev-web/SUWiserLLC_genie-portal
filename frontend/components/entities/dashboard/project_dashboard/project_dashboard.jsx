@@ -39,15 +39,15 @@ class ProjectDashboard extends React.Component {
         currentGraph = <div></div>;
         break;
       case 0:
+      break;
+      case 1:
+      currentGraph = <VotesGraph />;
+      break;
+      case 2:
         currentGraph = <ProjectGraph
           currentUser={this.props.currentUser}
           fetchProjects={this.props.fetchProjects}
           data={this.props.projects} />;
-        break;
-      case 1:
-        currentGraph = <VotesGraph />;
-        break;
-      case 2:
         break;
       default:
         break;
