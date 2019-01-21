@@ -23,10 +23,12 @@ class BylawsModal extends React.Component {
 
   openModal() {
     this.setState({ openModal: true });
+    this.props.toggle('BylawsModalToggle');
   }
 
   closeModal() {
     this.setState({ openModal: false });
+    this.props.toggle('BylawsModalToggle');
   }
 
   render() {

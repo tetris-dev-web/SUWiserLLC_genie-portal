@@ -23,10 +23,12 @@ class DeveloperInfoButton extends React.Component{
 
   openModal() {
     this.setState({openModal: true});
+    this.props.toggle('DeveloperInfoButtonToggle');
   }
 
   closeModal(){
     this.setState({openModal: false});
+    this.props.toggle('DeveloperInfoButtonToggle');
   }
 
 

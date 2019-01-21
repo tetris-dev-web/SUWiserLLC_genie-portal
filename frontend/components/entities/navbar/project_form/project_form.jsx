@@ -442,7 +442,6 @@ class ProjectForm extends React.Component {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
 
-<<<<<<< HEAD
     const geojsons = [];
     const fileId = ["file1", "file2", "file3", "file4", "file5"];
     for (let i = 0; i < 5; i++) {
@@ -473,14 +472,10 @@ class ProjectForm extends React.Component {
       );
     }
 
-    let { title, latitude, longitude, model_id
-=======
-    let { title, latitude, longitude, model_id, currentQuarter, description
->>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
+    let { title, latitude, longitude, model_id, currentQuarter, description} = this.state.projectData;
       // revenue, valuation, description, model_id, city, country, continent, icon
-    } = this.state.projectData;
 
-    let { currentQuarter } = this.state;
+
 
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
@@ -534,12 +529,9 @@ class ProjectForm extends React.Component {
 
         {this.renderLatLngErrors(this.state.drop_pin_clicked)}
 
-<<<<<<< HEAD
             <div className="style2">{"$" + this.state.projectData.valuation}</div>
             <div className="style2">{"$" + this.state.projectData.capital_required}</div>
             <span>capital <br />  required</span>
-          </div>
-=======
         <div className="form-box-container">
           <h1 className="form-box-title with-border">HOW MUCH MONEY WILL IT MAKE?</h1>
           <div className="form-box-border-layer">
@@ -585,7 +577,6 @@ class ProjectForm extends React.Component {
                 </span>
               </DivWithCorners>
             </div>
->>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
 
             <div className="rates-box">
               <div className="discounts-box">

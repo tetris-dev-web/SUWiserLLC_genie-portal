@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let web3Provider;
   let provider;
   let preloadedState = {};
-
   if (window.currentUser) {
     preloadedState = { session: { currentUser: window.currentUser }};
     delete window.currentUser;

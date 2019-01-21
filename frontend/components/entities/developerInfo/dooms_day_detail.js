@@ -69,11 +69,15 @@ class DoomsDayDetail extends React.Component {
   let timeRangeMin = new Date(data[0][0].date.getTime());
 
   // sort data to have project with longest time be last
-  data.sort((a,b) =>  a[1].date - b[1].date);
-
+  let tempData = data.slice(0);
+  tempData.sort((a,b) =>  a[1].date - b[1].date);
+  // debugger;
 
   //determine portal sleep date
-  let sleepDate = new Date(data[data.length-1][1].date.getTime());
+  let sleepDate = new Date(tempData[tempData.length - 1][1].date.getTime());
+
+  //then sort data back to sort projects by start date... refactor this
+  // data.sort((a, b) => a[1].date - b[1].date);
 
   let todayDate = new Date();
 
@@ -97,7 +101,7 @@ class DoomsDayDetail extends React.Component {
       {'project': 'top',   'date': new Date(timeRangeMin), 'type': 'top'},
       {'project': 'top',   'date': new Date(sleepDate), 'type': 'top'}
     ]
-  )
+  );
 
 
   data.push(
@@ -106,7 +110,7 @@ class DoomsDayDetail extends React.Component {
       {'project': 'x-axis',   'date': new Date(timeRangeMin), 'type': 'x-axis'},
       {'project': 'x-axis',   'date': new Date(sleepDate), 'type': 'x-axis'}
     ]
-  )
+  );
 
   //pass this to line generator to create a horizontal line
   data.push(
@@ -114,7 +118,7 @@ class DoomsDayDetail extends React.Component {
       {'project': 'top', 'date': new Date(), 'type': 'today-date'},
       {'project': 'x-axis', 'date': new Date(), 'type': 'today-date'}
     ]
-  )
+  );
 
   const xScale = d3.scaleTime()
                   .domain([timeRangeMin, sleepDate])
@@ -141,7 +145,7 @@ class DoomsDayDetail extends React.Component {
           {'project': currProject.project,   'date': new Date(currProject.end_date), 'type': 'token'},
           {'project': currProject.project,   'date': new Date(tokenDate), 'type': 'token'}
         ]
-      )
+      );
     }
     return arr;
   })());
@@ -245,15 +249,15 @@ class DoomsDayDetail extends React.Component {
   let todayDateText = (() => {
     let days = Math.floor((sleepDate.getTime() - todayDate.getTime()) / (1000*60*60*24));
     return `${days} days`;
-  })()
+  })();
 
   graph.selectAll('text')
     .data([
-      {x: 0, y: yScale(updatedData[1][0].project) + 10, text: 'Projects', fill: '#1F6D6C', font_size: '15px'},
+      {x: 0, y: yScale(updatedData[1][0].project) - 10, text: 'projects', fill: '#1F6D6C', font_size: '15px'},
       {x: xScale(todayDate) - 17, y: height - 25, text: todayDateText, fill: '#DEDBCF', font_size: '12px'},
       {x: xScale(todayDate) - 17, y: height - 5, text: 'til close', fill: '#DEDBCF', font_size: '12px'},
-      {x: xScale(sleepDate) - 15, y: height - 25, text: 'portal sleep date', fill: '#DEDBCF', font_size: '12px'},
-      {x: xScale(sleepDate) - 5, y: height - 5, text: updatedSleepDate, fill: '#DEDBCF', font_size: '12px'}
+      {x: xScale(sleepDate) - 30, y: height - 25, text: 'portal sleep date', fill: '#DEDBCF', font_size: '12px'},
+      {x: xScale(sleepDate) - 18, y: height - 5, text: updatedSleepDate, fill: '#DEDBCF', font_size: '12px'}
       ])
     .enter().append('text')
     .text(d => d.text)

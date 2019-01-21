@@ -1,5 +1,5 @@
 const Token = artifacts.require("Token");
-const InvestorList = artifacts.require("InvestorList");
+// const InvestorList = artifacts.require("InvestorList");
 const GNITokenCrowdsale = artifacts.require("GNITokenCrowdsale");
 const GNITokenCrowdsaleMock = artifacts.require("GNITokenCrowdsaleMock");
 const Dividends = artifacts.require("Dividends");
@@ -9,7 +9,7 @@ const ECRecovery = artifacts.require("ECRecovery");
 const Voting = artifacts.require("Voting");
 
 let tokenInstance;
-let investorListInst;
+// let investorListInst;
 let votingInstance;
 
 module.exports = function (deployer, network, accounts) {
@@ -74,25 +74,25 @@ module.exports = function (deployer, network, accounts) {
                 Voting.address
             );
         })
-        .then(() => {
-          tokenInstance = Token.at(Token.address);
-          return tokenInstance.initializeDividendWallet(Dividends.address);
-        })
-        .then(() => {
-          votingInstance = Voting.at(Voting.address);
-          return votingInstance.transferOwnership(GNITokenCrowdsale.address);
-        })
-        .then(() => {
-          const projectLeaderBoardInst = ProjectLeaderTracker.at(ProjectLeaderTracker.address);
-          return projectLeaderBoardInst.transferOwnership(GNITokenCrowdsale.address);
-        })
-        .then(() => {
-          return tokenInstance.transferOwnership(GNITokenCrowdsale.address);
-        })
-        .then(() => {
-          const reimbursementsInst = Reimbursements.at(Reimbursements.address);
-          return reimbursementsInst.transferOwnership(GNITokenCrowdsale.address);
-        });
+        // .then(() => {
+        //   tokenInstance = Token.at(Token.address);
+        //   return tokenInstance.initializeDividendWallet(Dividends.address);
+        // })
+        // .then(() => {
+        //   votingInstance = Voting.at(Voting.address);
+        //   return votingInstance.transferOwnership(GNITokenCrowdsale.address);
+        // })
+        // .then(() => {
+        //   const projectLeaderBoardInst = ProjectLeaderTracker.at(ProjectLeaderTracker.address);
+        //   return projectLeaderBoardInst.transferOwnership(GNITokenCrowdsale.address);
+        // })
+        // .then(() => {
+        //   return tokenInstance.transferOwnership(GNITokenCrowdsale.address);
+        // })
+        // .then(() => {
+        //   const reimbursementsInst = Reimbursements.at(Reimbursements.address);
+        //   return reimbursementsInst.transferOwnership(GNITokenCrowdsale.address);
+        // });
 };
 // .then(() => {
 //   investorListInst = InvestorList.at(InvestorList.address);

@@ -16,12 +16,9 @@ class ProjectDashboard extends React.Component {
     };
 
     this.toggleView = this.toggleView.bind(this);
-<<<<<<< HEAD
     // this.toggleTextShowing = this.toggleTextShowing.bind(this);
     this.watchProjectPitch = this.watchProjectPitch.bind(this);
     this.filterPitchedProjects = this.filterPitchedProjects.bind(this);
-=======
->>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
   }
 
   toggleView (currentViewId) {
