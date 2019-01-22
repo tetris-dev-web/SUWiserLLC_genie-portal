@@ -53,7 +53,7 @@ export const userData = [
     "balance": 5900,
     "earnings": 508,
     "tokens": 32,
-    'active_tokens': 10
+    'active_tokens': 27
   },
 ]
 

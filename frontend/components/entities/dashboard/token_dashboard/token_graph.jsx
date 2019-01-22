@@ -6,6 +6,10 @@ import TokenDashboardRect from './token_dashboard_rect';
 class TokenGraph extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      projectIndex: null,
+      tokenData: null
+     }
 
     this.handleMousemove = this.handleMousemove.bind(this);
     this.drawChart = this.drawChart.bind(this);
@@ -23,7 +27,7 @@ class TokenGraph extends React.Component {
   }
 
   shouldComponentUpdate() {
-    return false;
+    return true;
   }
 
   drawChart() {
@@ -114,6 +118,7 @@ class TokenGraph extends React.Component {
         this.focus2.style('display', null);
       })
       .on('mouseout', () => {
+        this.setState({ projectIndex: null })
         this.focus1.style('display', 'none');
         this.focus2.style('display', 'none');
       })
@@ -126,6 +131,11 @@ class TokenGraph extends React.Component {
 
     let x0 = this.x.invert(d3.mouse(overlay)[0]);
     let i = this.bisectDate(data, x0, 1);
+    // console.log("this.bisectDate(data) aka i is: ", i);
+    this.setState({projectIndex: i})
+    if(this.state.projectIndex){
+      this.calculateTokenData()
+    }
     let d0 = data[i - 1];
     let d1 = data[i];
     let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
@@ -194,17 +204,22 @@ class TokenGraph extends React.Component {
 
   calculateTokenData(){
     let { data } = this.props;
-    let recentActiveTokens = data[data.length-1].active_tokens;
-    let recentTotalTokens = data[data.length-1].tokens;
-    let activeTokenRatio = (recentActiveTokens / recentTotalTokens) * 100;
-    let tokenData = { activeTokenRatio, recentActiveTokens, recentTotalTokens };
-    return tokenData
+    let { projectIndex } = this.state
+    // projectIndex = projectIndex || data.length-1;
+    if(projectIndex){
+      let hoveredActiveTokens = data[projectIndex].active_tokens;
+      let hoveredTotalTokens = data[projectIndex].tokens;
+      let hoveredActiveTokenRatio = (hoveredActiveTokens / hoveredTotalTokens) * 100;
+      let tokenData = { hoveredActiveTokenRatio, hoveredActiveTokens, hoveredTotalTokens };
+      this.setState({tokenData})
+      return tokenData
+
+    }
     // return `${activeTokenRatio}%`;
 
   }
 
   render() {
-
     return (
       <div className="series content graph" id='token'>
         <TokenDashboardRect
@@ -212,10 +227,11 @@ class TokenGraph extends React.Component {
                         y={0}
                         width={100}
                         height={this.height ? this.height : 430}
-                        tokenData={this.calculateTokenData()}
+                        tokenData={this.state.tokenData}
                         color={"rgba(170, 122, 96, 1)"}
                         opaqueColor={"rgba(170, 122, 96, .3)"}
-                        tokenRect={true}/>
+                        tokenRect={true}
+                        id="Gradient1"/>
       </div>
   );
   }
@@ -224,12 +240,15 @@ class TokenGraph extends React.Component {
 
 export default TokenGraph;
 
+
+
+
 // <TokenDashboardRect
-//   x={window.innerWidth-100}
+//   x={window.innerWidth-90}
 //   y={0}
 //   width={100}
 //   height={430}
 //   tokenData={this.calculateTokenData()}
 //   color={"rgba(97, 171, 169, 1)"}
-//   opaqueColor={"rgba(97, 171, 169, .3)"}
-//   />
+//   opaqueColor={"rgba(97, 171, 169, 1)"}
+//   id="Gradient2" />
