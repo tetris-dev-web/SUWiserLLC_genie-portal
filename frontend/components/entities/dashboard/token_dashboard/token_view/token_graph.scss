@@ -14,12 +14,14 @@
       stroke: black;
       stroke-width: 1px;
       fill: none;
+      transition: all 0.5s;
     }
 
     &.active-tokens path {
       stroke: $rosy-brown;
       stroke-width: 3px;
       fill: none;
+      transition: all 0.5s;
     }
   }
   // x axis
@@ -48,15 +50,26 @@
 
   .token-graph-dashed-lines {
     line {
-      stroke-dasharray: 8 8;
+      pointer-events: none;
     }
 
     .total-tokens-line {
       stroke: $tan;
+      stroke-dasharray: 8 8;
+    }
+
+    .vertical-time-line {
+      stroke: black;
     }
 
     .active-tokens-line {
       stroke: $rosy-brown;
+      stroke-dasharray: 8 8;
+    }
+
+    .earnings-line {
+      stroke: $teal;
+      stroke-dasharray: 8 8;
     }
   }
 }

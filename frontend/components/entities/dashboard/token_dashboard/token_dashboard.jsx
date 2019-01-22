@@ -1,6 +1,6 @@
 import React from 'react';
 import ToggleOptions from '../dashboard_toggle_options/toggle_options';
-import TokenGraphContainer from './token_view/token_graph_container';
+import TokenGraph from './token_view/token_graph';
 
 class TokenDashboard extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class TokenDashboard extends React.Component {
         currentGraph = <div></div>;
         break;
       case 0:
-        currentGraph = <TokenGraphContainer 
+        currentGraph = <TokenGraph 
           currentUser={this.props.currentUser} />;
         break;
       case 1:

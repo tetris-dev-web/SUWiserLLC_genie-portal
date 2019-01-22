@@ -47,28 +47,45 @@ class TokenGraphOverlay extends React.Component {
         {
           dataHovered !== null &&
           <g className="token-graph-dashed-lines">
-            <text
-              x="-50"
-              y={yScaleTokens(data[dataHovered].totalTokens) - 10}>
-              <tspan>{`${data[dataHovered].totalTokens}`}</tspan>
-            </text>
             <line
               className="total-tokens-line"
               x1="-200"
               y1={yScaleTokens(data[dataHovered].totalTokens)}
               x2={xScale(data[dataHovered].date)}
               y2={yScaleTokens(data[dataHovered].totalTokens)}></line>
-            <text
-              x="-50"
-              y={yScaleTokens(data[dataHovered].activeTokens) - 10}>
-              <tspan>{`${data[dataHovered].activeTokens}`}</tspan>
-            </text>
             <line
               className="active-tokens-line"
               x1="-200"
               y1={yScaleTokens(data[dataHovered].activeTokens)}
               x2={xScale(data[dataHovered].date)}
               y2={yScaleTokens(data[dataHovered].activeTokens)}></line>
+            <line
+              className="earnings-line"
+              x1={xScale(data[dataHovered].date)}
+              y1={yScaleEarnings(data[dataHovered].earnings)}
+              x2={width + 200}
+              y2={yScaleEarnings(data[dataHovered].earnings)}></line>
+            <text
+              x="-70"
+              y={yScaleTokens(data[dataHovered].totalTokens) - 10}>
+              <tspan>{`${data[dataHovered].totalTokens} tokens held`}</tspan>
+            </text>
+            <text
+              x="-70"
+              y={yScaleTokens(data[dataHovered].activeTokens) + 25}>
+              <tspan>{`${data[dataHovered].activeTokens} active tokens`}</tspan>
+            </text>
+            <text
+              x={width + 5}
+              y={yScaleEarnings(data[dataHovered].earnings) - 10}>
+              <tspan>{`$${data[dataHovered].earnings} in earnings`}</tspan>
+            </text>
+            <line
+              className="vertical-time-line"
+              x1={xScale(data[dataHovered].date)}
+              y1="0"
+              x2={xScale(data[dataHovered].date)}
+              y2={height}></line>
           </g>
         }
       </g>
