@@ -132,13 +132,15 @@ class TokenGraph extends React.Component {
     let x0 = this.x.invert(d3.mouse(overlay)[0]);
     let i = this.bisectDate(data, x0, 1);
     // console.log("this.bisectDate(data) aka i is: ", i);
-    this.setState({projectIndex: i})
-    if(this.state.projectIndex){
-      this.calculateTokenData()
-    }
     let d0 = data[i - 1];
     let d1 = data[i];
     let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+    let projectIndex = x0 - d0.date > d1.date - x0 ? i : i-1;
+    this.setState({projectIndex: projectIndex})
+    if(this.state.projectIndex){
+      this.calculateTokenData()
+    }
 
     d3.selectAll(".focus").selectAll('line.x, line.y')
       .attr('x1', 0)
