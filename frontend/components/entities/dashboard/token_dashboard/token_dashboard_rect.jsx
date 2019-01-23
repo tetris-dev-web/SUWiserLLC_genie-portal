@@ -13,15 +13,15 @@ class TokenDashboardRect extends React.Component{
   }
 
   handleMouseOver(){
-    console.log(this.state);
     this.props.tokenRect && this.setState({ tokenSquareHovered: true });
+    console.log(this.state);
   }
   handleMouseLeave(){
     this.props.tokenRect && this.setState({ tokenSquareHovered: false });
   }
 
   render(){
-    let { x, y, width, height, tokenData, color, opaqueColor, id } = this.props;
+    let { x, y, width, height, tokenData, color, opaqueColor, id, earningsData } = this.props;
     if(tokenData){
       var { hoveredActiveTokenRatio, hoveredTotalTokens, hoveredActiveTokens } = tokenData;
       var activeTokenPercentage = `${hoveredActiveTokenRatio}%`;
@@ -29,15 +29,22 @@ class TokenDashboardRect extends React.Component{
       var inactiveTokenRatio = 100 - hoveredActiveTokenRatio
     }
 
+    if (earningsData) {
+      var earningsPercentage = `${(100-(earningsData.hoveredEarnings/earningsData.totalEarnings)*100)}%`
+    }
+
+    let fillPercentage = earningsData ? earningsPercentage : inactiveTokenPercentage
+
     return(
       <React.Fragment>
         <svg width={width} height={height} x={0} y={0}
         style={{position:"absolute", left: "-1%", overflow: "visible"}}>
-          { tokenData &&
+          {
+            // tokenData &&
             (<defs>
             <linearGradient id={id} x1="0" x2="0%" y1="0" y2="100%">
-              <stop offset={inactiveTokenPercentage} stopColor={opaqueColor}/>
-              <stop offset={inactiveTokenPercentage} stopColor={color}/>
+              <stop offset={fillPercentage} stopColor={opaqueColor}/>
+              <stop offset={fillPercentage} stopColor={color}/>
               <stop offset="100%" stopColor={color}/>
             </linearGradient>
           </defs>)
@@ -49,7 +56,7 @@ class TokenDashboardRect extends React.Component{
             y={y}
             width={width}
             height={height}
-            fill={tokenData ? `url(#${id})` : color}
+            fill={`url(#${id})`}
             rx="20"
             ry="20"
             stroke="black"

@@ -8,12 +8,14 @@ class TokenGraph extends React.Component {
     super(props);
     this.state = {
       projectIndex: null,
-      tokenData: null
+      tokenData: null,
+      earningsData: null
      }
 
     this.handleMousemove = this.handleMousemove.bind(this);
     this.drawChart = this.drawChart.bind(this);
-    this.calculateTokenData = this.calculateTokenData.bind(this)
+    this.calculateTokenData = this.calculateTokenData.bind(this);
+    this.calculateEarningsData = this.calculateEarningsData.bind(this);
   }
 
   componentDidMount() {
@@ -137,9 +139,16 @@ class TokenGraph extends React.Component {
     let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 
     let projectIndex = x0 - d0.date > d1.date - x0 ? i : i-1;
+    // console.log("x0 - d0.date: ", new Date(x0 - d0.date).toDateString());
+    // console.log("d1.date - x0: ", new Date(d1.date - x0).toDateString());
+    // console.log("x0: ", x0);
+    // console.log("d1.date: ", d1.date);
+    // console.log("d0.date: ", d0.date);
     this.setState({projectIndex: projectIndex})
+    // console.log(projectIndex);
     if(this.state.projectIndex){
-      this.calculateTokenData()
+      this.calculateTokenData();
+      this.calculateEarningsData();
     }
 
     d3.selectAll(".focus").selectAll('line.x, line.y')
@@ -207,6 +216,7 @@ class TokenGraph extends React.Component {
   calculateTokenData(){
     let { data } = this.props;
     let { projectIndex } = this.state
+    console.log(projectIndex);
     // projectIndex = projectIndex || data.length-1;
     if(projectIndex){
       let hoveredActiveTokens = data[projectIndex].active_tokens;
@@ -219,6 +229,20 @@ class TokenGraph extends React.Component {
     }
     // return `${activeTokenRatio}%`;
 
+  }
+
+  calculateEarningsData(){
+    let { data } = this.props;
+    let { projectIndex } = this.state;
+
+    if(projectIndex){
+      let hoveredEarnings = data[projectIndex].earnings;
+      let totalEarnings = data[data.length-1].earnings;
+      let earningsData = { hoveredEarnings, totalEarnings };
+      console.log(earningsData);
+      this.setState({earningsData})
+      return earningsData
+    }
   }
 
   render() {
@@ -234,6 +258,15 @@ class TokenGraph extends React.Component {
                         opaqueColor={"rgba(170, 122, 96, .3)"}
                         tokenRect={true}
                         id="Gradient1"/>
+        <TokenDashboardRect
+          x={window.innerWidth-90}
+          y={0}
+          width={100}
+          height={430}
+          color={"rgba(97, 171, 169, 1)"}
+          opaqueColor={"rgba(97, 171, 169, .3)"}
+          id="Gradient2"
+          earningsData={this.state.earningsData} />
       </div>
   );
   }
@@ -241,16 +274,3 @@ class TokenGraph extends React.Component {
 }
 
 export default TokenGraph;
-
-
-
-
-// <TokenDashboardRect
-//   x={window.innerWidth-90}
-//   y={0}
-//   width={100}
-//   height={430}
-//   tokenData={this.calculateTokenData()}
-//   color={"rgba(97, 171, 169, 1)"}
-//   opaqueColor={"rgba(97, 171, 169, 1)"}
-//   id="Gradient2" />
