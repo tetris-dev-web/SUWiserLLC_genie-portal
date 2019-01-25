@@ -23,7 +23,8 @@ class StrategyModal extends React.Component {
     this.closeModal = this.closeModal.bind(this);
   }
 
-  openModal() {
+  openModal(e) {
+    e.stopPropagation();
     this.setState({ openModal: true });
     this.props.toggle('StrategyModalToggle');
   }

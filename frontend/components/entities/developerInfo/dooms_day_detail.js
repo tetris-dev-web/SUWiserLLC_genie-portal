@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import './dooms_day_detail.scss';
 
 const width = 700;
-const height = 300;
+const height = 350;
 
 
 
@@ -26,20 +26,20 @@ class DoomsDayDetail extends React.Component {
   }
 
 
-  failDate(date, tokens){
+  failDate(date){
     let sleepDate = new Date(date.getTime() + (9*30) * 86400000);
     return sleepDate;
   }
   formatData(data){
     return data.map(d => {
-      let sleepDate = new Date(d.end_date.getTime() + (d.tokens * 6) * 86400000)
+      let sleepDate = new Date(d.end_date.getTime() + (d.tokens * 6) * 86400000);
       return (
         [
-          {'project': d.project, 'date': new Date(d.date.getTime()), 'type': 'project'},
-          {'project': d.project, 'date': new Date(sleepDate), 'type': 'project'}
+          { 'project': d.project, 'date': new Date(d.date.getTime()), 'type': 'project', tokens: d.tokens},
+          { 'project': d.project, 'date': new Date(sleepDate), 'type': 'project', tokens: d.tokens}
         ]
       );
-    })
+    });
   }
   //not necessary if no interactions with the doomsday clock - will have hover effects
   componentDidMount(){
@@ -122,7 +122,7 @@ class DoomsDayDetail extends React.Component {
 
   const xScale = d3.scaleTime()
                   .domain([timeRangeMin, sleepDate])
-                  .range([75,width-50]);
+                  .range([75,width-100]);
 
   const yScale = d3.scaleBand()
   .domain((() => {
@@ -139,17 +139,17 @@ class DoomsDayDetail extends React.Component {
     let arr = [];
     for(let i = 0; i < dataPassedIn.projects.length; i++){
       let currProject = dataPassedIn.projects[i];
-      let tokenDate = new Date(currProject.end_date.getTime() + (6 * currProject.tokens) * 86400000)
+      let tokenDate = new Date(currProject.end_date.getTime() + (6 * currProject.tokens) * 86400000);
       arr.push(
         [
-          {'project': currProject.project,   'date': new Date(currProject.end_date), 'type': 'token'},
-          {'project': currProject.project,   'date': new Date(tokenDate), 'type': 'token'}
+          { 'project': currProject.project, 'date': new Date(currProject.end_date), 'type': 'token'},
+          { 'project': currProject.project, 'date': new Date(tokenDate), 'type': 'token'}
         ]
       );
     }
     return arr;
   })());
-  console.log('updatedData', updatedData)
+  // console.log('updatedData', updatedData)
 
   //range for hover rectangle will change depending on the number of projects passed in
   let rangeForHover = yScale(data[1]) - yScale(data[0])
@@ -164,9 +164,10 @@ class DoomsDayDetail extends React.Component {
     let width = x2 - x1;
     let height = rangeForHover;
     let project = d[0].project;
+    let tokens = d[0].tokens;
     return (
-      {x1, x2, y1, width, height, project}
-    )
+      {x1, x2, y1, width, height, project, tokens}
+    );
   });
 
 
@@ -176,7 +177,7 @@ class DoomsDayDetail extends React.Component {
     .enter().append("g")
     .on('mouseover', function(d,i){
           d3.select(this).append("text")
-              .text(d => d.project)
+            .text(d => `${d.project} - ${d.tokens} tokens`)
               .attr('x', d => d.x2 + 15)
               .attr('y', d => d.y1)
               .style("z-index", "10")
@@ -218,7 +219,7 @@ class DoomsDayDetail extends React.Component {
           fill: fillColor,
           path: lineGenerator.y(d => yScale(d.project))(data)
         }
-      )
+      );
     }
     )
   )());
@@ -257,7 +258,8 @@ class DoomsDayDetail extends React.Component {
       {x: xScale(todayDate) - 17, y: height - 25, text: todayDateText, fill: '#DEDBCF', font_size: '12px'},
       {x: xScale(todayDate) - 17, y: height - 5, text: 'til close', fill: '#DEDBCF', font_size: '12px'},
       {x: xScale(sleepDate) - 30, y: height - 25, text: 'portal sleep date', fill: '#DEDBCF', font_size: '12px'},
-      {x: xScale(sleepDate) - 18, y: height - 5, text: updatedSleepDate, fill: '#DEDBCF', font_size: '12px'}
+      {x: xScale(sleepDate) - 18, y: height - 5, text: updatedSleepDate, fill: '#DEDBCF', font_size: '12px'},
+      { x: xScale(sleepDate) + 30, y: yScale(updatedData[1][0].project) - 30, text: '50k dedicated', fill: '#1F6D6C', font_size: '15px'}
       ])
     .enter().append('text')
     .text(d => d.text)
@@ -266,7 +268,7 @@ class DoomsDayDetail extends React.Component {
     // .style("z-index", "10")
     .style('font-size', d => d.font_size)
     .style('fill', d => d.fill)
-    .attr('font-weight', 'bold')
+    .attr('font-weight', 'bold');
 
 
 }

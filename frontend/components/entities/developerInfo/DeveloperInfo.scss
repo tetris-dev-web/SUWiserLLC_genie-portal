@@ -5,19 +5,21 @@
 
 
 .devinfo-container {
+  transition: transform 400ms ease-in;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   // padding: 10px;
-  height: 150px;
   width: 100px;
+  height: 180px;
   background-color: $tanTransparent;
   border-radius: 0 10px 10px 0px;
 
   & .devinfo-button {
-
+    text-align: center;
     .overSubButtonText{
-      padding-left: 15px;
+      padding-right: 15px;
+      text-align: right;
     }
     //margin: 0 0px 0 5px;
     background-color: $tan;
@@ -33,10 +35,12 @@
     -o-transform-origin : 50% 100%;
     -ms-transform-origin : 50% 100%;
     transform-origin : 50% 100%;
-    &:hover {
+    &:hover{
       cursor: pointer;
       color: $white;
-
+    }
+    &.dropdown:hover {
+      
       // -webkit-transform : scale(1, 1.2);
       // -moz-transform : scale(1, 1.2);
       // -o-transform : scale(1, 1.2);
@@ -51,6 +55,17 @@
       // padding-right: 10px;
       transform: scaleX(1.1);
       transform-origin:left center;
+    }
+    &.dropdown-active{
+      
+      // height: 180px;
+      transform: translateY(180px);
+      background-color: rgba(155, 146, 135, 0.3);
+      & .devinfo-span{
+        display: block;
+        height: 30px;
+        transition: transform 500ms ease-in-out;
+      }
     }
     &.modal-active{
       background-color: black;

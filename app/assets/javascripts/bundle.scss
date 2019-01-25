@@ -666,14 +666,16 @@
   min-height: 50vh; }
 
 .devinfo-container {
+  transition: transform 400ms ease-in;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
-  height: 150px;
   width: 100px;
+  height: 180px;
   background-color: rgba(155, 146, 135, 0.3);
   border-radius: 0 10px 10px 0px; }
   .devinfo-container .devinfo-button {
+    text-align: center;
     background-color: #9b9287;
     padding: 10px 0 10px 0;
     color: white;
@@ -685,16 +687,25 @@
     -ms-transform-origin: 50% 100%;
     transform-origin: 50% 100%; }
     .devinfo-container .devinfo-button .overSubButtonText {
-      padding-left: 15px; }
+      padding-right: 15px;
+      text-align: right; }
     .devinfo-container .devinfo-button:hover {
       cursor: pointer;
-      color: white;
+      color: white; }
+    .devinfo-container .devinfo-button.dropdown:hover {
       -webkit-transform: scaleX(1.1);
       -moz-transform: scaleX(1.1);
       -o-transform: scaleX(1.1);
       -ms-transform: scaleX(1.1);
       transform: scaleX(1.1);
       transform-origin: left center; }
+    .devinfo-container .devinfo-button.dropdown-active {
+      transform: translateY(180px);
+      background-color: rgba(155, 146, 135, 0.3); }
+      .devinfo-container .devinfo-button.dropdown-active .devinfo-span {
+        display: block;
+        height: 30px;
+        transition: transform 500ms ease-in-out; }
     .devinfo-container .devinfo-button.modal-active {
       background-color: black;
       z-index: 11;

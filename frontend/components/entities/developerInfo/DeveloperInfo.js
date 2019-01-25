@@ -18,13 +18,11 @@ class DeveloperInfo extends React.Component {
       AboutToggle: false
     };
     this.toggle = this.toggle.bind(this);
+    this.toggleDrop = this.toggleDrop.bind(this);
   
   }
   toggle(modalToggle){
     switch (modalToggle) {
-      case 'DeveloperInfoButtonToggle':
-        this.setState({ DeveloperInfoButtonToggle: !this.state.DeveloperInfoButtonToggle });
-        break;
       case 'BylawsModalToggle':
         this.setState({ BylawsModalToggle: !this.state.BylawsModalToggle });
         break;
@@ -39,24 +37,35 @@ class DeveloperInfo extends React.Component {
     }
     
   }
+  toggleDrop(){
+    this.setState({ DeveloperInfoButtonToggle: !this.state.DeveloperInfoButtonToggle });
+  }
 
   render() {
     const { DeveloperInfoButtonToggle, BylawsModalToggle, StrategyModalToggle, AboutToggle } = this.state;
     // let className = 'devinfo-button';
     // if(this.state.DeveloperInfoButtonToggle) className += ' modal-active';
+    // onClick = { this.toggle('DeveloperInfoButtonToggle') }
     return (
         <div className="devinfo-container">
-        <div className={`devinfo-button ${DeveloperInfoButtonToggle ? 'modal-active': ''}` }>
-            <DeveloperInfoButton toggle={this.toggle}/>
-          </div>
-        <div className={`devinfo-button ${BylawsModalToggle ? 'modal-active' : ''}`}>
-          <BylawsModal toggle={this.toggle}/>
-          </div>
-        <div className={`devinfo-button ${StrategyModalToggle ? 'modal-active' : ''}`}>
-          <StrategyModal toggle={this.toggle}/>
-          </div>
-        <div className={`devinfo-button ${AboutToggle ? 'modal-active' : ''}`}>
-            <div className="overSubButtonText">ABOUT</div>
+          <div className={`devinfo-button ${DeveloperInfoButtonToggle ? 'dropdown-active' : ''}`} onClick={this.toggleDrop}>DEVELOPER INFO
+            <span className='devinfo-span'></span>
+            {
+              DeveloperInfoButtonToggle === true ? 
+              <div>
+                <div className={`devinfo-button dropdown ${BylawsModalToggle ? 'modal-active' : ''}`}>
+                  <BylawsModal toggle={this.toggle} />
+                </div>
+                <div className={`devinfo-button dropdown ${StrategyModalToggle ? 'modal-active' : ''}`}>
+                  <StrategyModal toggle={this.toggle} />
+                </div>
+                <div className={`devinfo-button dropdown ${AboutToggle ? 'modal-active' : ''}`}>
+                  <div className="overSubButtonText">ABOUT</div>
+                </div>
+              </div>
+              :
+              null
+            }
           </div>
         </div>
     );
