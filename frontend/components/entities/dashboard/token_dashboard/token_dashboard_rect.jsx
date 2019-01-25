@@ -21,7 +21,7 @@ class TokenDashboardRect extends React.Component{
   }
 
   render(){
-    let { x, y, width, height, tokenData, color, opaqueColor, id, earningsData } = this.props;
+    let { x, y, width, height, tokenData, color, opaqueColor, id, earningsData, className } = this.props;
     if(tokenData){
       var { hoveredActiveTokenRatio, hoveredTotalTokens, hoveredActiveTokens } = tokenData;
       var activeTokenPercentage = `${hoveredActiveTokenRatio}%`;
@@ -38,7 +38,7 @@ class TokenDashboardRect extends React.Component{
     return(
       <React.Fragment>
         <svg width={width} height={height} x={0} y={0}
-        style={{position:"absolute", left: "-1%", overflow: "visible"}}>
+        className={className}>
           {
             // tokenData &&
             (<defs>
@@ -64,6 +64,9 @@ class TokenDashboardRect extends React.Component{
             onMouseEnter={this.handleMouseOver}
             onMouseLeave={this.handleMouseLeave} />
             {
+              // <rect fill={color} width={width} height={"70px"} x={width+20} y={height - 70} rx="20" ry="20"/>
+            }
+            {
               // this.state.tokenSquareHovered &&
               tokenData &&
               (
@@ -71,6 +74,14 @@ class TokenDashboardRect extends React.Component{
                 inactiveTokenRatio={inactiveTokenRatio}
                 hoveredActiveTokens={hoveredActiveTokens}
                 hoveredTotalTokens={hoveredTotalTokens} />
+              )
+            }
+
+            {
+              earningsData &&
+              (
+                  <TokenDashBoardRectText
+                  earningsData={earningsData} />
               )
             }
           </g>

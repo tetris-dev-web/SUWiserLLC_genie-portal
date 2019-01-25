@@ -239,7 +239,6 @@ class TokenGraph extends React.Component {
       let hoveredEarnings = data[projectIndex].earnings;
       let totalEarnings = data[data.length-1].earnings;
       let earningsData = { hoveredEarnings, totalEarnings };
-      console.log(earningsData);
       this.setState({earningsData})
       return earningsData
     }
@@ -257,16 +256,18 @@ class TokenGraph extends React.Component {
                         color={"rgba(170, 122, 96, 1)"}
                         opaqueColor={"rgba(170, 122, 96, .3)"}
                         tokenRect={true}
-                        id="Gradient1"/>
+                        id="Gradient1"
+                        className={"token-rect"}/>
         <TokenDashboardRect
-          x={window.innerWidth-90}
+          x={0}
           y={0}
           width={100}
           height={430}
           color={"rgba(97, 171, 169, 1)"}
           opaqueColor={"rgba(97, 171, 169, .3)"}
           id="Gradient2"
-          earningsData={this.state.earningsData} />
+          earningsData={this.state.earningsData}
+          className={"earnings-rect"} />
       </div>
   );
   }
