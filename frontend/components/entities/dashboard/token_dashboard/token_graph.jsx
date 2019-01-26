@@ -17,7 +17,7 @@ class TokenGraph extends React.Component {
     this.calculateTokenData = this.calculateTokenData.bind(this);
     this.calculateEarningsData = this.calculateEarningsData.bind(this);
     this.calculateMaxTokens = this.calculateMaxTokens.bind(this);
-    this.calculateMaxEarnings = this.calculateMaxTokens.bind(this);
+    this.calculateMaxEarnings = this.calculateMaxEarnings.bind(this);
   }
 
   componentDidMount() {
@@ -230,6 +230,7 @@ calculateMaxTokens(){
   let tokenValues = data.map(userData => {
     return userData.tokens
   });
+  console.log(tokenValues);
   let maxTokens = Math.max(...tokenValues);
   return maxTokens;
 }
@@ -248,18 +249,24 @@ calculateMaxTokens(){
   }
 
   calculateMaxEarnings(){
+    console.log("in Max earnings function");
     let { data } = this.props;
     let earningsValues = data.map(userData => {
-      return userData.tokens;
+      return userData.earnings;
     });
+    console.log("Earnings values are: ", earningsValues);
     let maxEarnings = Math.max(...earningsValues);
     return maxEarnings;
   }
 
   render() {
     let { tokenData } = this.state;
-    let userMaxEarnings = this.calculateMaxEarnings()
-    let userMaxTokens = this.calculateMaxTokens()
+    console.log(this.calculateMaxEarnings());
+    let userMaxEarnings = this.calculateMaxEarnings();
+    let userMaxTokens = this.calculateMaxTokens();
+
+    // console.log(userMaxTokens);
+    // console.log("user earnings", userMaxEarnings);
 
     return (
       <div className="series content graph" id='token'>
