@@ -16,6 +16,8 @@ class TokenGraph extends React.Component {
     this.drawChart = this.drawChart.bind(this);
     this.calculateTokenData = this.calculateTokenData.bind(this);
     this.calculateEarningsData = this.calculateEarningsData.bind(this);
+    this.calculateMaxTokens = this.calculateMaxTokens.bind(this);
+    this.calculateMaxEarnings = this.calculateMaxTokens.bind(this);
   }
 
   componentDidMount() {
@@ -133,17 +135,13 @@ class TokenGraph extends React.Component {
 
     let x0 = this.x.invert(d3.mouse(overlay)[0]);
     let i = this.bisectDate(data, x0, 1);
-    // console.log("this.bisectDate(data) aka i is: ", i);
+
     let d0 = data[i - 1];
     let d1 = data[i];
     let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 
     let projectIndex = x0 - d0.date > d1.date - x0 ? i : i-1;
-    // console.log("x0 - d0.date: ", new Date(x0 - d0.date).toDateString());
-    // console.log("d1.date - x0: ", new Date(d1.date - x0).toDateString());
-    // console.log("x0: ", x0);
-    // console.log("d1.date: ", d1.date);
-    // console.log("d0.date: ", d0.date);
+
     this.setState({projectIndex: projectIndex})
     // console.log(projectIndex);
     if(this.state.projectIndex){
@@ -216,8 +214,7 @@ class TokenGraph extends React.Component {
   calculateTokenData(){
     let { data } = this.props;
     let { projectIndex } = this.state
-    console.log(projectIndex);
-    // projectIndex = projectIndex || data.length-1;
+
     if(projectIndex){
       let hoveredActiveTokens = data[projectIndex].active_tokens;
       let hoveredTotalTokens = data[projectIndex].tokens;
@@ -227,9 +224,15 @@ class TokenGraph extends React.Component {
       return tokenData
 
     }
-    // return `${activeTokenRatio}%`;
-
   }
+calculateMaxTokens(){
+  let { data } = this.props;
+  let tokenValues = data.map(userData => {
+    return userData.tokens
+  });
+  let maxTokens = Math.max(...tokenValues);
+  return maxTokens;
+}
 
   calculateEarningsData(){
     let { data } = this.props;
@@ -244,7 +247,20 @@ class TokenGraph extends React.Component {
     }
   }
 
+  calculateMaxEarnings(){
+    let { data } = this.props;
+    let earningsValues = data.map(userData => {
+      return userData.tokens;
+    });
+    let maxEarnings = Math.max(...earningsValues);
+    return maxEarnings;
+  }
+
   render() {
+    let { tokenData } = this.state;
+    let userMaxEarnings = this.calculateMaxEarnings()
+    let userMaxTokens = this.calculateMaxTokens()
+
     return (
       <div className="series content graph" id='token'>
         <TokenDashboardRect
@@ -257,7 +273,8 @@ class TokenGraph extends React.Component {
                         opaqueColor={"rgba(170, 122, 96, .3)"}
                         tokenRect={true}
                         id="Gradient1"
-                        className={"token-rect"}/>
+                        className={"token-rect"}
+                        userMaxTokens={userMaxTokens}/>
         <TokenDashboardRect
           x={0}
           y={0}
@@ -267,7 +284,8 @@ class TokenGraph extends React.Component {
           opaqueColor={"rgba(97, 171, 169, .3)"}
           id="Gradient2"
           earningsData={this.state.earningsData}
-          className={"earnings-rect"} />
+          className={"earnings-rect"}
+          userMaxEarnings={userMaxEarnings}/>
       </div>
   );
   }

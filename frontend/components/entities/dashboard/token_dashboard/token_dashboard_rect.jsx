@@ -21,7 +21,7 @@ class TokenDashboardRect extends React.Component{
   }
 
   render(){
-    let { x, y, width, height, tokenData, color, opaqueColor, id, earningsData, className } = this.props;
+    let { x, y, width, height, tokenData, color, opaqueColor, id, earningsData, className, userMaxTokens, userMaxEarnings } = this.props;
     if(tokenData){
       var { hoveredActiveTokenRatio, hoveredTotalTokens, hoveredActiveTokens } = tokenData;
       var activeTokenPercentage = `${hoveredActiveTokenRatio}%`;
