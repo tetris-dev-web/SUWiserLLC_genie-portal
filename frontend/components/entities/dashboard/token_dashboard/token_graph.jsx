@@ -230,7 +230,6 @@ calculateMaxTokens(){
   let tokenValues = data.map(userData => {
     return userData.tokens
   });
-  console.log(tokenValues);
   let maxTokens = Math.max(...tokenValues);
   return maxTokens;
 }
