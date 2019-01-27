@@ -272,7 +272,6 @@ calculateMaxTokens(){
                         color={"rgba(170, 122, 96, 1)"}
                         opaqueColor={"rgba(170, 122, 96, .3)"}
                         tokenRect={true}
-                        id="Gradient1"
                         className={"token-rect"}
                         userMaxTokens={userMaxTokens}/>
         <TokenDashboardRect
@@ -282,7 +281,6 @@ calculateMaxTokens(){
           height={430}
           color={"rgba(97, 171, 169, 1)"}
           opaqueColor={"rgba(97, 171, 169, .3)"}
-          id="Gradient2"
           earningsData={this.state.earningsData}
           className={"earnings-rect"}
           userMaxEarnings={userMaxEarnings}/>
