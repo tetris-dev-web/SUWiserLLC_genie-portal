@@ -36,9 +36,10 @@ class TokenDashboardRect extends React.Component{
     }
 
     if (earningsData) {
-      var earningsPercentage = `${(100-(earningsData.hoveredEarnings/userMaxEarnings)*100)}%`
-      var earningsRatio = `${(100-(earningsData.hoveredEarnings/userMaxEarnings)*100)}`
+      var earningsPercentage = `${((earningsData.hoveredEarnings/userMaxEarnings)*100)}%`
+      var earningsRatio = `${((earningsData.hoveredEarnings/userMaxEarnings)*100)}`
       var earningsRectY = `${height - (height * (earningsRatio/100))}`
+      console.log(earningsPercentage);
     }
 
     let fillPercentage = earningsData ? earningsPercentage : hoveredTotalTokensHeight
