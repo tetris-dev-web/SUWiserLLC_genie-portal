@@ -26,28 +26,38 @@ class TokenDashboardRect extends React.Component{
       var { hoveredActiveTokenRatio, hoveredTotalTokens, hoveredActiveTokens } = tokenData;
       var activeTokenPercentage = `${hoveredActiveTokenRatio}%`;
       var inactiveTokenPercentage = `${100 - hoveredActiveTokenRatio}%`;
-      var inactiveTokenRatio = 100 - hoveredActiveTokenRatio
+      var inactiveTokenRatio = 100 - hoveredActiveTokenRatio;
+
+      var hoveredTotalTokensHeight = `${hoveredTotalTokens/userMaxTokens * height}`;
+      var hoveredTotalTokensY = `${height - hoveredTotalTokensHeight}`;
+      var hoveredActiveTokensHeight = `${hoveredActiveTokens/userMaxTokens * height}`;
+      var hoveredActiveTokensY = `${height - hoveredActiveTokensHeight}`;
+      var inactiveTokenVsMaxRatio = `${hoveredActiveTokens / userMaxTokens * 100}%`;
     }
 
     if (earningsData) {
-      var earningsPercentage = `${(100-(earningsData.hoveredEarnings/earningsData.totalEarnings)*100)}%`
+      var earningsPercentage = `${(100-(earningsData.hoveredEarnings/userMaxEarnings)*100)}%`
+      var earningsRatio = `${(100-(earningsData.hoveredEarnings/userMaxEarnings)*100)}`
+      var earningsRectY = `${height - (height * (earningsRatio/100))}`
     }
 
-    let fillPercentage = earningsData ? earningsPercentage : inactiveTokenPercentage
+    let fillPercentage = earningsData ? earningsPercentage : hoveredTotalTokensHeight
+
+    let subFillPercentage = earningsData ? inactiveTokenVsMaxRatio :inactiveTokenVsMaxRatio
 
     return(
       <React.Fragment>
         <svg width={width} height={height} x={0} y={0}
         className={className}>
           {
-            // tokenData &&
-            (<defs>
-            <linearGradient id={id} x1="0" x2="0%" y1="0" y2="100%">
-              <stop offset={fillPercentage} stopColor={opaqueColor}/>
-              <stop offset={fillPercentage} stopColor={color}/>
-              <stop offset="100%" stopColor={color}/>
-            </linearGradient>
-          </defs>)
+          //   false &&
+          //   (<defs>
+          //   <linearGradient id={id} x1="0" x2="0%" y1="0" y2="100%">
+          //     <stop offset={fillPercentage} stopColor={opaqueColor}/>
+          //     <stop offset={fillPercentage} stopColor={color}/>
+          //     <stop offset="100%" stopColor={color}/>
+          //   </linearGradient>
+          // </defs>)
         }
           <g>
             <rect
@@ -56,7 +66,7 @@ class TokenDashboardRect extends React.Component{
             y={y}
             width={width}
             height={height}
-            fill={`url(#${id})`}
+            fill={"transparent"}
             rx="20"
             ry="20"
             stroke="black"
@@ -64,7 +74,16 @@ class TokenDashboardRect extends React.Component{
             onMouseEnter={this.handleMouseOver}
             onMouseLeave={this.handleMouseLeave} />
             {
-              // <rect fill={color} width={width} height={"70px"} x={width+20} y={height - 70} rx="20" ry="20"/>
+              //console.log(parseInt(fillPercentage.slice(0,fillPercentage.length-1)))
+            }
+            {
+              <rect fill={earningsData ? color : opaqueColor} width={width} height={fillPercentage} x={x} y={tokenData ? hoveredTotalTokensY : earningsRectY} rx="20" ry="20"/>
+            }
+            {
+              tokenData &&
+              (
+                <rect fill={color} width={width} height={subFillPercentage} x={x} y={tokenData ? hoveredActiveTokensY : height - fillPercentage} rx="20" ry="20"/>
+              )
             }
             {
               // this.state.tokenSquareHovered &&

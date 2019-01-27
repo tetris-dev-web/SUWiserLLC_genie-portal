@@ -13,7 +13,7 @@ export const userData = [
     "balance": 3000,
     "earnings": 250,
     "tokens": 20,
-    'active_tokens': 10
+    'active_tokens': 12
   },
   {
     "date": "2/1/18",
@@ -21,7 +21,7 @@ export const userData = [
     "balance": 3900,
     "earnings": 300,
     "tokens": 22,
-    'active_tokens': 10
+    'active_tokens': 14
   },
   {
     "date": "3/1/18",
@@ -37,7 +37,7 @@ export const userData = [
     "balance": 5108,
     "earnings": 400,
     "tokens": 27,
-    'active_tokens': 10
+    'active_tokens': 17
   },
   {
     "date": "5/1/18",
@@ -45,7 +45,7 @@ export const userData = [
     "balance": 5365,
     "earnings": 496,
     "tokens": 29,
-    'active_tokens': 10
+    'active_tokens': 14
   },
   {
     "date": "6/1/18",
