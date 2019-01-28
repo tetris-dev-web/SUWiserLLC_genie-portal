@@ -257,7 +257,9 @@ const mapStateToProps = () => {
   };
 };
 
-export class VotesGraph extends React.Component {
+// will move mapStateToProps to a new file when backend is hooked up
+
+class VotesGraph extends React.Component {
   constructor() {
     super();
 

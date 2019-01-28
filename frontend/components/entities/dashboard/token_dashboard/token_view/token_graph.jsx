@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import * as d3 from 'd3';
 import { userData, totalData } from '../../../../../util/token_data_util';
 import './token_graph.scss';
@@ -6,32 +7,38 @@ import TokenGraphTokenPath from './token_graph_token_path';
 import TokenGraphXAxis from './token_graph_x_axis';
 import TokenGraphOverlay from './token_graph_overlay';
 
+
+const mapStateToProps = (state, ownProps) => {
+  const parseTime = d3.timeParse("%m/%d/%y");
+  userData.forEach(d => {
+    /* It will try to parse twice if relogging in, resulting in null,
+    so you must check if it's a string */
+    if (typeof d.date === 'string') d.date = parseTime(d.date);
+    d.price = +d.price;
+    d.balance = +d.balance;
+    d.totalTokens = +d.totalTokens;
+    d.activeTokens = +d.activeTokens;
+  });
+
+  totalData.forEach(d => {
+    if (typeof d.date === 'string') d.date = parseTime(d.date);
+    d.price = +d.price;
+    d.balance = +d.balance;
+    d.totalTokens = +d.totalTokens;
+    d.activeTokens = +d.activeTokens;
+  });
+  
+  return {
+    data: ownProps.currentViewType === "BY USER"? userData : totalData 
+  };
+};
+// will move mapStateToProps to a new file when backend is hooked up
+
 class TokenGraph extends React.Component {
-  constructor(props){
-    super(props);
-
-    const parseTime = d3.timeParse("%m/%d/%y");
-
-    userData.forEach(d => {
-      /* It will try to parse twice if relogging in, resulting in null,
-      so you must check if it's a string */
-      if (typeof d.date === 'string') d.date = parseTime(d.date);
-      d.price = +d.price;
-      d.balance = +d.balance;
-      d.totalTokens = +d.totalTokens;
-      d.activeTokens = +d.activeTokens;
-    });
-
-    totalData.forEach(d => {
-      if (typeof d.date === 'string') d.date = parseTime(d.date);
-      d.price = +d.price;
-      d.balance = +d.balance;
-      d.tokens = +d.tokens;
-    });
+  constructor(){
+    super();
 
     this.state = {
-      data: userData,
-      totalData: totalData,
       showTimeAxis: false,
     };
 
@@ -62,8 +69,9 @@ class TokenGraph extends React.Component {
   }
 
   render() {
-    const { data, showTimeAxis } = this.state;
-    
+    const { data } = this.props;
+    const { showTimeAxis } = this.state;
+
     const xScale = d3.scaleTime()
       .range([0, this.width])
       .domain([data[0].date, data[data.length - 1].date]);
@@ -125,4 +133,4 @@ class TokenGraph extends React.Component {
   }
 }
 
-export default TokenGraph;
+export default connect(mapStateToProps)(TokenGraph);

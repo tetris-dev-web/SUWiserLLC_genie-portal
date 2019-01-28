@@ -25,10 +25,10 @@ class TokenDashboard extends React.Component {
         currentGraph = <div></div>;
         break;
       case 0:
-        currentGraph = <TokenGraph 
-          currentUser={this.props.currentUser} />;
-        break;
       case 1:
+        currentGraph = <TokenGraph 
+          currentUser={this.props.currentUser} 
+          currentViewType={this.viewTypes[this.state.currentViewId]}/>;
         break;
       case 2:
         break;
