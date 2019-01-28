@@ -15,10 +15,8 @@ module.exports = {
     paddingBottom   : 0,
     right           : 0,
     borderRadius    : '0 0 0 15px',
-    backgroundColor : 'rgba(49, 124, 123, 0.7)',
-    // zIndex          : 101,
+    backgroundColor : '#4a7a7b',
     color           : 'white',
-    minHeight       : '480px',
-    height          : '90%',
+    maxHeight       : '100vh'
   },
 };

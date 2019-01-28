@@ -1,0 +1,185 @@
+@import "./frontend/util/_variables.scss";
+
+.toggle-view-options {
+  position: relative;
+  display: inline-flex;
+  background-color: $tan;
+  color: white;
+
+  .toggle-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .toggle-icon {
+      fill: white;
+      width: 30px;
+
+      #active {
+        transform: rotate(90deg);
+      }
+
+      svg {
+        display: block;
+      }
+    }
+
+    .toggle-button {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      border-radius: 25px;
+      background-color: white;
+
+      &:hover {
+        background-color: $teal;
+      }
+
+      &.project {
+        margin-bottom: 8px;
+      }
+
+      &.token {
+        margin-top: 8px;
+      }
+    }
+
+    #selected-button {
+      background-color: $grey;
+    }
+  }
+}
+
+.toggle-view-options-container {
+  text-align: center;
+  width: 100%;
+
+  .toggle-view-options-border-layer {
+    height: 0;
+  }
+
+  .toggle-view-options {
+    &.token {
+    }
+    
+    &.project {
+      padding: 8px 8px 20px 8px;
+      border-radius: 15px 15px 0 0;
+      transition: border-radius 1s,
+      padding 1s,
+      cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
+    }
+    
+    &.token {
+      padding: 20px 8px 8px 8px;
+      border-radius: 0 0 15px 15px;
+      transition: border-radius 1s,
+      padding 1s,
+      cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
+
+      transform: translateY(-260px);
+      // potentially move this to react since 260px is hardcoded
+    }
+
+    .toggle-view-title {
+      position: absolute;
+      font-weight: 700;
+      font-size: 15px;
+      top: 50%;
+      right: calc(100% + 20px);
+      transform: translateY(-50%);
+      color: black;
+      white-space: nowrap;
+    }
+
+    .toggle-view-current-view {
+      position: absolute;
+      font-weight: 700;
+      font-size: 15px;
+      top: 50%;
+      left: calc(100% + 20px);
+      transform: translateY(-50%);
+      color: black;
+      white-space: nowrap;
+    }
+  }
+}
+
+.toggle-view-options-container-graph-hidden {
+  text-align: center;
+  width: 100%;
+  
+  .toggle-view-options-border-layer {
+    width: 70%;
+    margin: auto;
+    
+    &.project {
+      padding-top: 25px;
+    }
+    
+    &.token {
+      padding-bottom: 25px;
+    }
+  }
+  
+  .toggle-view-options {
+    &.project,
+    &.token {
+      border-radius: 15px;
+      padding: 8px 8px 12px 8px;
+      transition: border-radius 1s,
+      padding 1s,
+      cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
+    }
+    
+    .toggle-view-title,
+    .toggle-view-next-view,
+    .toggle-view-dashboard-description {
+      font-size: 15px;
+      color: black;
+      position: absolute;
+      font-weight: 700;
+      top: 100%;
+      right: 50%;
+      transform: translateX(50%);
+      white-space: nowrap;
+    }
+
+    .toggle-view-title {
+      &.project {
+        padding-top: 10px;
+      }
+
+      &.token {
+        padding-bottom: 10px;
+        top: -30px;
+      }
+    }
+
+    .toggle-view-next-view {
+      &.project {
+        top: calc(100% + 40px);
+        font-size: 12px;
+        color: $teal;
+      }
+
+      &.token {
+        top: -70px;
+        font-size: 12px;
+        color: $teal;
+      }
+    }
+
+    .toggle-view-dashboard-description {
+      &.project {
+        top: calc(100% + 40px);
+        font-size: 12px;
+      }
+
+      &.token {
+        top: -70px;
+        font-size: 12px;
+      }
+    }
+  }
+}
