@@ -5,7 +5,13 @@ import VotesViewCapitalRaisedPath from './votes_view_capital_raised_path';
 import VotesViewCapitalRaisedLine from './votes_view_capital_raised_line';
 import VotesViewCapitalRaisedCircle from './votes_view_capital_raised_circle';
 import VotesViewCapitalRaisedRectText from './votes_view_capital_raised_text';
+<<<<<<< HEAD
 import colors from  "../../../../../../util/_variables.scss";
+=======
+import colors from  "/Users/ryanowusu/Desktop/Projects/genie-portal/frontend/util/_variables.scss";
+
+
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
 
 class VotesViewCapitalRaised extends React.Component {
   constructor(props) {

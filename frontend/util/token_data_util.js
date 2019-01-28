@@ -5,8 +5,12 @@ export const userData = [
     "balance": 2000,
     "earnings": 200,
     "tokens": 25,
+<<<<<<< HEAD
     "totalTokens": 25,
     "activeTokens": 0
+=======
+    'active_tokens': 10
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
   },
   {
     "date": "1/1/18",
@@ -14,8 +18,12 @@ export const userData = [
     "balance": 3000,
     "earnings": 250,
     "tokens": 20,
+<<<<<<< HEAD
     "totalTokens": 30,
     "activeTokens": 5
+=======
+    'active_tokens': 12
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
   },
   {
     "date": "2/1/18",
@@ -23,8 +31,12 @@ export const userData = [
     "balance": 3900,
     "earnings": 300,
     "tokens": 22,
+<<<<<<< HEAD
     "totalTokens": 28,
     "activeTokens": 5
+=======
+    'active_tokens': 14
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
   },
   {
     "date": "3/1/18",
@@ -32,8 +44,12 @@ export const userData = [
     "balance": 4500,
     "earnings": 350,
     "tokens": 24,
+<<<<<<< HEAD
     "totalTokens": 40,
     "activeTokens": 20
+=======
+    'active_tokens': 10
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
   },
   {
     "date": "4/1/18",
@@ -41,8 +57,12 @@ export const userData = [
     "balance": 5108,
     "earnings": 400,
     "tokens": 27,
+<<<<<<< HEAD
     "totalTokens": 60,
     "activeTokens": 20
+=======
+    'active_tokens': 17
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
   },
   {
     "date": "5/1/18",
@@ -50,8 +70,12 @@ export const userData = [
     "balance": 5365,
     "earnings": 496,
     "tokens": 29,
+<<<<<<< HEAD
     "totalTokens": 80,
     "activeTokens": 50
+=======
+    'active_tokens': 14
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
   },
   {
     "date": "6/1/18",
@@ -59,8 +83,12 @@ export const userData = [
     "balance": 5900,
     "earnings": 508,
     "tokens": 32,
+<<<<<<< HEAD
     "totalTokens": 120,
     "activeTokens": 70
+=======
+    'active_tokens': 27
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
   },
 ];
 

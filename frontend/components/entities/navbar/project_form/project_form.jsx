@@ -42,10 +42,10 @@ class ProjectForm extends React.Component {
       cashflowJSONName: '',
       accumulatedRevenue: '',
       capital_required: '',
-      planFilePDF: '',
       planFilePDFDataURL: '',
       planFilePDFName: '',
       drop_pin_clicked: false,
+      modelId: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -57,10 +57,6 @@ class ProjectForm extends React.Component {
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
-    // this.parseCashflowData = this.parseCashflowData.bind(this);
-    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
-    this.dropPinClick = this.dropPinClick.bind(this);
-    this.updateLatLng = this.updateLatLng.bind(this);
     // this.parseCashflowData = this.parseCashflowData.bind(this);
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
@@ -85,9 +81,10 @@ class ProjectForm extends React.Component {
 
     const file = this.state.imageFile;
     const data = new FormData();
+    const {drizzle, drizzleState} = this.props;
+    const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
 
     const projectData = Object.assign({}, this.state)
-    const capitalRequired = this.calculateCapitalRequired();
 
 
     if (file) data.append("project[file]", file);
@@ -101,18 +98,17 @@ class ProjectForm extends React.Component {
     data.append("project[continent]", this.state.continent);
 
     data.append("project[valuation]", this.state.valuation);
-    data.append("project[cashflow]", this.state.cashflow);
+    data.append("project[cashflow]", JSON.stringify(this.state.cashflow));
     data.append("project[creator_id]", this.props.currentUser.id);
 
     data.append("project[model_id]", this.state.model_id);
     data.append("project[summary]", this.state.summary);
-    data.append("project[capital_required]", capitalRequired);
+    data.append("project[capital_required]", (this.calculateCapitalRequired()));
     data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow));
     data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow));
     data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow));
     data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow));
     data.append("project[revenue]", this.state.revenue);
-    data.append("project[pdf_file]", this.state.planFilePDF);
     // data.append("project[planFilePDFDataURL]", this.state.planFilePDFDataURL)
     //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
     //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving
@@ -124,15 +120,15 @@ class ProjectForm extends React.Component {
 
     // Moved until data is properly structured
     // this.props.createProject(projectData);
-    this.props.createProject(data).then( () => {
-      return this.props.crowdsaleInstance.pitchProject(this.state.title, capitalRequired, this.state.valuation, this.state.latitude, this.state.longitude, {from: this.props.account});
-    }).then(() => {
-      if (this.props.errors.length == 0) {
-        this.props.closeModal();
-        window.location.reload();
-        // console.log();
-      }
-    });
+    this.props.createProject(data);
+    // .then( () => {
+    //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
+    // });
+    if (this.props.errors.length == 0) {
+      this.props.closeModal();
+      window.location.reload();
+      // console.log();
+    }
   }
 
   dropPinClick() {
@@ -183,9 +179,8 @@ class ProjectForm extends React.Component {
 
   calculateTotalCapitalDeployed(){
     let capital = 0;
-    
     Object.values(this.props.projects).forEach((project) => {
-      if (project.cashflow) {
+      if(project.cashflow){
         let jsonProjectCashflow = processCashData(project.cashflow);
         if (jsonProjectCashflow["1"]) {
           let quarters = Object.keys(jsonProjectCashflow).sort();
@@ -196,7 +191,6 @@ class ProjectForm extends React.Component {
         }
       }
     });
-
     return capital;
   }
 
@@ -206,7 +200,7 @@ class ProjectForm extends React.Component {
     return min * -1;
     // this.setState({capital_required: min});
   }
-
+;
   calculateDiscountFactor(){
     // console.log("Failed Projects are: ", this.getFailedProjects());
     let capitalDeployed = this.calculateTotalCapitalDeployed();
@@ -305,13 +299,13 @@ class ProjectForm extends React.Component {
                 currentQuarter: this.findCurrentQuarter(quarters, cashflow),
               },
               parsedData
-            ));
-          });
+            )
+            // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
+          ); })
           break;
         case "planFilePDF":
           this.parseInputFile(file).then(planFilePDFDataURL => {
             this.setState({
-              planFilePDF: file,
               planFilePDFDataURL,
               planFilePDFName: file.name
             });
@@ -400,16 +394,53 @@ class ProjectForm extends React.Component {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
 
+<<<<<<< HEAD
     let { title, latitude, longitude, model_id, currentQuarter, description
+=======
+    const geojsons = [];
+    const fileId = ["file1", "file2", "file3", "file4", "file5"];
+    for (let i = 0; i < 5; i++) {
+      geojsons.push(
+        <div className="geo-row-container" key={i}>
+          <div className="file-container">
+            <input id={fileId[i]}
+              name={fileId[i]}
+              className="file-input"
+              type="file" />
+            <label htmlFor={fileId[i]}>
+              <span>choose geojson</span>
+            </label>
+          </div>
+          <select className="heir-input">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+          <input className="opacity-input"
+            type="number"
+            min="0"
+            max="1"
+            placeholder="0.5" />
+        </div>
+      );
+    }
+
+    let { title, latitude, longitude, modelId, currentQuarter
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
       // revenue, valuation, description, model_id, city, country, continent, icon
     } = this.state;
 
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
+        <div className="pitch-button-container">
+          <div className="pitch-button" onClick={this.props.closeModal}>PITCH</div>
+        </div>
         <div className="text-input-container project-title-input-container">
           <input className="text-input project-title-input"
             type="text"
-            placeholder="project name"
+            placeholder="WHAT'S IT'S NAME"
             value={title}
             onChange={this.update('title')} />
         </div>
@@ -456,6 +487,7 @@ class ProjectForm extends React.Component {
 
         {this.renderLatLngErrors(this.state.drop_pin_clicked)}
 
+<<<<<<< HEAD
         <div className="form-box-container">
           <h1 className="form-box-title with-border">HOW MUCH MONEY WILL IT MAKE?</h1>
           <div className="form-box-border-layer">
@@ -501,6 +533,12 @@ class ProjectForm extends React.Component {
                 </span>
               </DivWithCorners>
             </div>
+=======
+            <div className="style2">{this.state.projected_cashflow ? "$" + this.calculateNetPresentValue(Object.values(this.state.projected_cashflow).slice(this.state.currentQuarter - 1)) : 'input info'}</div>
+            <div className="style2">{this.state.accumulatedRevenue ? "$" + this.calculateCapitalRequired() : "input info"}</div>
+            <span>capital <br />  required</span>
+          </div>
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
 
             <div className="rates-box">
               <div className="discounts-box">
@@ -573,6 +611,16 @@ class ProjectForm extends React.Component {
             
           </div>
         </div>
+<<<<<<< HEAD
+=======
+        <div className="flexed model-id-section">
+          <div className="text-input-container model-id-container">
+            <input className="text-input model-id-input"
+              placeholder="model id"
+              value={modelId}
+              onChange={this.update('modelId')} />
+          </div>
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
 
         <div className="form-box-container">
           <div className="description-section">
@@ -583,6 +631,12 @@ class ProjectForm extends React.Component {
           </div>
         </div>
 
+<<<<<<< HEAD
+=======
+        <textarea className="summary-area" value={this.state.value} onChange={this.update('summary')} ></textarea>
+        <input type="submit" value="Pitch"/>
+        {this.renderErrors()}
+>>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
       </form>
@@ -708,15 +762,15 @@ export default ProjectForm;
 //
 const sampleProject = {
   "1": {
-    "cashFlow": 50000,
+    "cashFlow": -50000,
     "isActuals": true
   },
   "2": {
-    "cashFlow": 40018,
+    "cashFlow": -40018,
     "isActuals": true
   },
   "3": {
-    "cashFlow": 16857,
+    "cashFlow": -16857,
     "isActuals": true
   },
   "4": {
@@ -724,7 +778,7 @@ const sampleProject = {
     "isActuals": true
   },
   "5": {
-    "cashFlow": 20325,
+    "cashFlow": -20325,
     "isActuals": true
   },
   "6": {

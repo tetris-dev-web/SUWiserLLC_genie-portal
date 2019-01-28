@@ -7,7 +7,7 @@ const VotesViewCapitalRaisedPath = ({xScale, yScale, lineData, opacity}) => {
 		.y(d => yScale(d.capital));
 
 	return (
-		<path 
+		<path
 			d={lineScale(lineData)}
 			opacity={opacity}></path>
 	);
