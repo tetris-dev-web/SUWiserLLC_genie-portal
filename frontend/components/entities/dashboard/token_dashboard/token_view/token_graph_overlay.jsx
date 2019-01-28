@@ -1,5 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
+import TokenGraphSideBars from './token_graph_side_bars';
 
 class TokenGraphOverlay extends React.Component {
   constructor(props) {
@@ -88,6 +89,24 @@ class TokenGraphOverlay extends React.Component {
               y2={height}></line>
           </g>
         }
+        <TokenGraphSideBars 
+          width={100}
+          x="-240"
+          backgroundHeight={height}
+          totalTokensHeight={dataHovered === null ? 0 : height - yScaleTokens(data[dataHovered].totalTokens)}
+          totalTokensY={dataHovered === null ? height : yScaleTokens(data[dataHovered].totalTokens)}
+          activeTokensHeight={dataHovered === null ? 0 : height - yScaleTokens(data[dataHovered].activeTokens)}
+          activeTokensY={dataHovered === null ? height : yScaleTokens(data[dataHovered].activeTokens)}
+          className={"token-graph-side-bars left"}
+        />
+        <TokenGraphSideBars
+          width={100}
+          x="1000"
+          backgroundHeight={height}
+          earningsHeight={dataHovered === null ? 0 : height - yScaleEarnings(data[dataHovered].earnings)}
+          earningsY={dataHovered === null ? height : yScaleEarnings(data[dataHovered].earnings)}
+          className={"token-graph-side-bars right"}
+        />
       </g>
     );
   }

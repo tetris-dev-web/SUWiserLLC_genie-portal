@@ -2,12 +2,15 @@
 
 .token-graph {
   text-align: center;
+
+  svg {
+    overflow: visible !important;
+  }
 }
 
 .token-svg {
   width: 75%;
   height: 75%;
-  overflow: visible !important;
 
   .token-graph-token-path {
     &.total-tokens path {
@@ -40,6 +43,33 @@
       }
     }
   }
+
+  .token-graph-side-bars {
+    rect {
+      rx: 20;
+      ry: 20;
+    }
+
+    .token-graph-total-tokens-rect {
+      fill: $rosy-brown;
+      opacity: 0.5;
+    }
+
+    .token-graph-active-tokens-rect {
+      fill: $rosy-brown;
+    }
+
+    .token-graph-earnings-rect {
+      fill: $teal;
+    }
+  }
+
+  .earnings-rect {
+    position: absolute;
+    right: -1.5%;
+    overflow: visible !important;
+  }
+
 }
 
 .token-graph-overlay {

@@ -400,9 +400,6 @@ class ProjectForm extends React.Component {
 
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
-        <div className="pitch-button-container">
-          <div className="pitch-button" onClick={this.props.closeModal}>PITCH</div>
-        </div>
         <div className="text-input-container project-title-input-container">
           <input className="text-input project-title-input"
             type="text"
