@@ -52,7 +52,7 @@ class TokenDashboardRect extends React.Component{
                   strokeWidth=".5px"
                   strokeDasharray="5, 5" />
                 {
-                  projectIndex &&
+                  (projectIndex || projectIndex === 0) &&
             <rect
                   fill={earningsData ? color : opaqueColor}
                   width={width}
