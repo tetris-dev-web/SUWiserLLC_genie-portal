@@ -121,12 +121,12 @@ class TokenGraph extends React.Component {
         this.focus1.style('display', null);
         this.focus2.style('display', null);
       })
+      .on('mousemove', this.handleMousemove)
       .on('mouseout', () => {
         this.setState({ projectIndex: null })
         this.focus1.style('display', 'none');
         this.focus2.style('display', 'none');
-      })
-      .on('mousemove', this.handleMousemove);
+      });
   }
 
   handleMousemove() {
@@ -142,8 +142,8 @@ class TokenGraph extends React.Component {
 
     let projectIndex = x0 - d0.date > d1.date - x0 ? i : i-1;
 
-    this.setState({projectIndex: projectIndex})
-    // console.log(projectIndex);
+    this.setState({projectIndex: projectIndex});
+
     if(this.state.projectIndex){
       this.calculateTokenData();
       this.calculateEarningsData();
@@ -257,7 +257,7 @@ calculateMaxTokens(){
   }
 
   render() {
-    let { tokenData } = this.state;
+    let { tokenData, earningsData, projectIndex } = this.state;
     let userMaxEarnings = this.calculateMaxEarnings();
     let userMaxTokens = this.calculateMaxTokens();
 
@@ -268,12 +268,12 @@ calculateMaxTokens(){
                         y={0}
                         width={100}
                         height={this.height ? this.height : 430}
-                        tokenData={this.state.tokenData}
+                        tokenData={tokenData}
                         color={"rgba(170, 122, 96, 1)"}
                         opaqueColor={"rgba(170, 122, 96, .3)"}
-                        tokenRect={true}
                         className={"token-rect"}
-                        userMaxTokens={userMaxTokens}/>
+                        userMaxTokens={userMaxTokens}
+                        projectIndex={projectIndex}/>
         <TokenDashboardRect
           x={0}
           y={0}
@@ -281,9 +281,10 @@ calculateMaxTokens(){
           height={430}
           color={"rgba(97, 171, 169, 1)"}
           opaqueColor={"rgba(97, 171, 169, .3)"}
-          earningsData={this.state.earningsData}
+          earningsData={earningsData}
           className={"earnings-rect"}
-          userMaxEarnings={userMaxEarnings}/>
+          userMaxEarnings={userMaxEarnings}
+          projectIndex={projectIndex}/>
       </div>
   );
   }

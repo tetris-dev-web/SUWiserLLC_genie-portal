@@ -7,7 +7,7 @@ class TokenDashboardRect extends React.Component{
   }
 
   render(){
-    let { x, y, width, height, tokenData, color, opaqueColor, earningsData, className, userMaxTokens, userMaxEarnings } = this.props;
+    let { x, y, width, height, tokenData, color, opaqueColor, earningsData, className, userMaxTokens, userMaxEarnings, projectIndex } = this.props;
 
     if(tokenData){
       var { hoveredActiveTokenRatio, hoveredTotalTokens, hoveredActiveTokens } = tokenData;
@@ -24,11 +24,15 @@ class TokenDashboardRect extends React.Component{
       var earningsPercentage = `${((earningsData.hoveredEarnings/userMaxEarnings)*100)}%`;
       var earningsRatio = `${((earningsData.hoveredEarnings/userMaxEarnings)*100)}`;
       var earningsRectY = `${height - (height * (earningsRatio/100))}`;
+    } else {
+      var earningRectY;
     }
 
     let fillPercentage = earningsData ? earningsPercentage : hoveredTotalTokensHeight;
 
     let subFillPercentage = earningsData ? inactiveTokenVsMaxRatio :inactiveTokenVsMaxRatio;
+
+    let subRectY = tokenData ? hoveredTotalTokensY : earningsRectY
 
     return(
       <React.Fragment>
@@ -47,16 +51,19 @@ class TokenDashboardRect extends React.Component{
                   stroke="black"
                   strokeWidth=".5px"
                   strokeDasharray="5, 5" />
+                {
+                  projectIndex &&
             <rect
                   fill={earningsData ? color : opaqueColor}
                   width={width}
                   height={fillPercentage}
                   x={x}
-                  y={tokenData ? hoveredTotalTokensY : earningsRectY}
+                  y={subRectY}
                   rx="20"
                   ry="20"/>
+                }
             {
-              tokenData &&
+              tokenData && projectIndex &&
               (
                 <rect
                       fill={color}
@@ -69,7 +76,7 @@ class TokenDashboardRect extends React.Component{
               )
             }
             {
-              tokenData &&
+              tokenData && projectIndex &&
               (
                 <TokenDashBoardRectText
                 inactiveTokenRatio={inactiveTokenRatio}
@@ -79,7 +86,7 @@ class TokenDashboardRect extends React.Component{
             }
 
             {
-              earningsData &&
+              earningsData && projectIndex &&
               (
                   <TokenDashBoardRectText
                   earningsData={earningsData} />
