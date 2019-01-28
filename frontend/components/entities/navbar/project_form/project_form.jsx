@@ -394,41 +394,7 @@ class ProjectForm extends React.Component {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
 
-<<<<<<< HEAD
     let { title, latitude, longitude, model_id, currentQuarter, description
-=======
-    const geojsons = [];
-    const fileId = ["file1", "file2", "file3", "file4", "file5"];
-    for (let i = 0; i < 5; i++) {
-      geojsons.push(
-        <div className="geo-row-container" key={i}>
-          <div className="file-container">
-            <input id={fileId[i]}
-              name={fileId[i]}
-              className="file-input"
-              type="file" />
-            <label htmlFor={fileId[i]}>
-              <span>choose geojson</span>
-            </label>
-          </div>
-          <select className="heir-input">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-          <input className="opacity-input"
-            type="number"
-            min="0"
-            max="1"
-            placeholder="0.5" />
-        </div>
-      );
-    }
-
-    let { title, latitude, longitude, modelId, currentQuarter
->>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
       // revenue, valuation, description, model_id, city, country, continent, icon
     } = this.state;
 
@@ -487,7 +453,6 @@ class ProjectForm extends React.Component {
 
         {this.renderLatLngErrors(this.state.drop_pin_clicked)}
 
-<<<<<<< HEAD
         <div className="form-box-container">
           <h1 className="form-box-title with-border">HOW MUCH MONEY WILL IT MAKE?</h1>
           <div className="form-box-border-layer">
@@ -533,12 +498,6 @@ class ProjectForm extends React.Component {
                 </span>
               </DivWithCorners>
             </div>
-=======
-            <div className="style2">{this.state.projected_cashflow ? "$" + this.calculateNetPresentValue(Object.values(this.state.projected_cashflow).slice(this.state.currentQuarter - 1)) : 'input info'}</div>
-            <div className="style2">{this.state.accumulatedRevenue ? "$" + this.calculateCapitalRequired() : "input info"}</div>
-            <span>capital <br />  required</span>
-          </div>
->>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
 
             <div className="rates-box">
               <div className="discounts-box">
@@ -611,16 +570,6 @@ class ProjectForm extends React.Component {
             
           </div>
         </div>
-<<<<<<< HEAD
-=======
-        <div className="flexed model-id-section">
-          <div className="text-input-container model-id-container">
-            <input className="text-input model-id-input"
-              placeholder="model id"
-              value={modelId}
-              onChange={this.update('modelId')} />
-          </div>
->>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
 
         <div className="form-box-container">
           <div className="description-section">
@@ -631,12 +580,6 @@ class ProjectForm extends React.Component {
           </div>
         </div>
 
-<<<<<<< HEAD
-=======
-        <textarea className="summary-area" value={this.state.value} onChange={this.update('summary')} ></textarea>
-        <input type="submit" value="Pitch"/>
-        {this.renderErrors()}
->>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
       </form>

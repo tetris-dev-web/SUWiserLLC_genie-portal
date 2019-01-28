@@ -1,13 +1,6 @@
 import React from 'react';
-<<<<<<< HEAD
 import ToggleOptions from '../dashboard_toggle_options/toggle_options';
 import TokenGraph from './token_view/token_graph';
-=======
-import TokenGraph from './token_graph';
-import { userData, totalData } from '../../../../util/token_data_util';
-import * as d3 from 'd3';
-import TokenDashboardRect from './token_dashboard_rect';
->>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
 
 class TokenDashboard extends React.Component {
   constructor(props) {
@@ -72,10 +65,4 @@ class TokenDashboard extends React.Component {
   }
 }
 
-<<<<<<< HEAD
 export default TokenDashboard;
-=======
-export default TokenDashboard;
-
-// <TokenDashboardRect x={} y={} width={} height={}/>
->>>>>>> be89bea93c94fdfb4238785fbf0927a020081c9c
