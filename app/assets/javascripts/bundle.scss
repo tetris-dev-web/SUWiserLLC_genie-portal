@@ -525,6 +525,11 @@
   .token-svg .token-graph-side-bars rect {
     rx: 20;
     ry: 20; }
+  .token-svg .token-graph-side-bars .token-graph-background-rect {
+    fill: transparent;
+    stroke: black;
+    stroke-width: .5px;
+    stroke-dasharray: 5, 5; }
   .token-svg .token-graph-side-bars .token-graph-total-tokens-rect {
     fill: #AB7A5E;
     opacity: 0.5; }
@@ -559,31 +564,45 @@
   stroke: #61aba9;
   stroke-dasharray: 8 8; }
 
-.focus .circle-earnings {
-  fill: black;
-  z-index: 999; }
+.price-graph {
+  text-align: center; }
+  .price-graph .token-svg {
+    width: 90%;
+    height: 90%;
+    overflow: visible !important; }
+  .price-graph .x .domain {
+    stroke: none; }
+  .price-graph .x .tick line {
+    stroke: none; }
+  .price-graph .x .tick text {
+    fill: #736566; }
+  .price-graph .line {
+    fill: none;
+    stroke: #1a1919; }
+  .price-graph .focus .circle-earnings {
+    fill: black;
+    z-index: 999; }
+  .price-graph .focus .x {
+    stroke: #9b9287;
+    stroke-dasharray: 8 8; }
+  .price-graph .focus .price {
+    fill: #9b9287; }
+  .price-graph .focus .earnings {
+    fill: black; }
+  .price-graph .focus2 .x {
+    stroke: #384778; }
+  .price-graph .focus2 .y {
+    stroke: rgba(56, 71, 120, 0.4); }
+  .price-graph .focus2 .balance {
+    fill: #384778; }
+  .price-graph .focus2 .tokens {
+    fill: #384778; }
+  .price-graph .overlay {
+    fill: none;
+    pointer-events: all; }
 
-.focus .x {
-  stroke: #9b9287;
-  stroke-dasharray: 8 8; }
-
-.focus .price {
-  fill: #9b9287; }
-
-.focus .earnings {
-  fill: black; }
-
-.focus2 .x {
-  stroke: #384778; }
-
-.focus2 .y {
-  stroke: rgba(56, 71, 120, 0.4); }
-
-.focus2 .balance {
-  fill: #384778; }
-
-.focus2 .tokens {
-  fill: #384778; }
+.token-dashboard {
+  min-height: 20vh; }
 
 
 
@@ -696,6 +715,9 @@
 
 .project-dashboard {
   min-height: 50vh; }
+  .project-dashboard .graph-container {
+    height: 0;
+    transition: height cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
 
 .devinfo-container {
   display: flex;

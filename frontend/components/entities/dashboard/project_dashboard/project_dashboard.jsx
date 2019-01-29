@@ -20,6 +20,13 @@ class ProjectDashboard extends React.Component {
 
   toggleView (currentViewId) {
     this.setState({currentViewId: currentViewId === this.state.currentViewId ? null : currentViewId});
+    if (currentViewId === this.state.currentViewId) {
+      this.graphContainer.style.height = "0";
+    } else if (currentViewId === 1) {
+      this.graphContainer.style.height = "320px";
+    } else if (currentViewId === 2) {
+      this.graphContainer.style.height = "500px";
+    }
   }
 
   componentDidMount() { //where is this being used?
@@ -56,7 +63,8 @@ class ProjectDashboard extends React.Component {
     if (this.props.currentUser) {
       return (
         <div className="project-dashboard">
-          <div className="graph-container">
+          <div className="graph-container"
+            ref={node => this.graphContainer = node}>
             {currentGraph}
           </div>
           <ToggleOptions

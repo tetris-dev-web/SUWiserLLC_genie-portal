@@ -1,13 +1,13 @@
 import React from 'react';
 import * as d3 from 'd3';
-import TokenGraphSideBars from './token_graph_side_bars';
+import TokenGraphSideBar from './token_graph_side_bar';
 
 class TokenGraphOverlay extends React.Component {
   constructor(props) {
     super(props);
 
     this.state ={
-      dataHovered: null
+      indexHovered: null
     };
 
     this.tickIntervalInPixel = this.props.width / (this.props.data.length - 1);
@@ -17,24 +17,52 @@ class TokenGraphOverlay extends React.Component {
   }
   
   handleMouseMove(e) {
-    const { dataHovered } = this.state;
+    const { indexHovered } = this.state;
     const [x, y] = d3.clientPoint(e.currentTarget, e);
-    const currentDataHovered = Math.round(x / this.tickIntervalInPixel);
+    const currentindexHovered = Math.round(x / this.tickIntervalInPixel);
 
-    if (currentDataHovered !== dataHovered) {
-      this.setState({ dataHovered: currentDataHovered });
+    if (currentindexHovered !== indexHovered) {
+      this.setState({ indexHovered: currentindexHovered });
     }
   }
 
   handleMouseOut() {
     this.setState({
-      dataHovered: null
+      indexHovered: null
     });
   }
 
   render() {
     const { width, height, transform, data, xScale, yScaleTokens, yScaleEarnings } = this.props;
-    const { dataHovered } = this.state;
+    const { indexHovered } = this.state;
+
+    const TokenGraphLeftBar = <TokenGraphSideBar
+      width={100}
+      x="-240"
+      backgroundHeight={height}
+      onHoverOverlaySubRects={indexHovered === null ? null : [
+        { height: height - yScaleTokens(data[indexHovered].totalTokens), y: yScaleTokens(data[indexHovered].totalTokens), className: "token-graph-total-tokens-rect" },
+        { height: height - yScaleTokens(data[indexHovered].activeTokens), y: yScaleTokens(data[indexHovered].activeTokens), className: "token-graph-active-tokens-rect" }
+      ]}
+      onHoverSideBarSubRects={[
+        { height: height - yScaleTokens(data[data.length - 1].totalTokens), y: yScaleTokens(data[data.length - 1].totalTokens), className: "token-graph-total-tokens-rect", text: `Total Tokens: ${data[data.length - 1].totalTokens}` },
+        { height: height - yScaleTokens(data[data.length - 1].activeTokens), y: yScaleTokens(data[data.length - 1].activeTokens), className: "token-graph-active-tokens-rect", text: `Active Tokens: ${data[data.length - 1].activeTokens}` }
+      ]}
+      side="left"
+    />;
+
+    const TokenGraphRightBar = <TokenGraphSideBar
+      width={100}
+      x="1000"
+      backgroundHeight={height}
+      onHoverOverlaySubRects={indexHovered === null ? null : [
+        { height: height - yScaleEarnings(data[indexHovered].earnings), y: yScaleEarnings(data[indexHovered].earnings), className: "token-graph-earnings-rect" },
+      ]}
+      onHoverSideBarSubRects={[
+        { height: height - yScaleEarnings(data[data.length - 1].earnings), y: yScaleEarnings(data[data.length - 1].earnings), className: "token-graph-earnings-rect", text: `Earnings: $${data[data.length - 1].earnings}` },
+      ]}
+      side="right"
+    />;
 
     return (
       <g className="token-graph-overlay"
@@ -46,67 +74,51 @@ class TokenGraphOverlay extends React.Component {
           onMouseOut={this.handleMouseOut}
           ></rect>
         {
-          dataHovered !== null &&
+          indexHovered !== null &&
           <g className="token-graph-dashed-lines">
             <line
               className="total-tokens-line"
               x1="-200"
-              y1={yScaleTokens(data[dataHovered].totalTokens)}
-              x2={xScale(data[dataHovered].date)}
-              y2={yScaleTokens(data[dataHovered].totalTokens)}></line>
+              y1={yScaleTokens(data[indexHovered].totalTokens)}
+              x2={xScale(data[indexHovered].date)}
+              y2={yScaleTokens(data[indexHovered].totalTokens)}></line>
             <line
               className="active-tokens-line"
               x1="-200"
-              y1={yScaleTokens(data[dataHovered].activeTokens)}
-              x2={xScale(data[dataHovered].date)}
-              y2={yScaleTokens(data[dataHovered].activeTokens)}></line>
+              y1={yScaleTokens(data[indexHovered].activeTokens)}
+              x2={xScale(data[indexHovered].date)}
+              y2={yScaleTokens(data[indexHovered].activeTokens)}></line>
             <line
               className="earnings-line"
-              x1={xScale(data[dataHovered].date)}
-              y1={yScaleEarnings(data[dataHovered].earnings)}
+              x1={xScale(data[indexHovered].date)}
+              y1={yScaleEarnings(data[indexHovered].earnings)}
               x2={width + 200}
-              y2={yScaleEarnings(data[dataHovered].earnings)}></line>
+              y2={yScaleEarnings(data[indexHovered].earnings)}></line>
             <text
               x="-70"
-              y={yScaleTokens(data[dataHovered].totalTokens) - 10}>
-              <tspan>{`${data[dataHovered].totalTokens} tokens held`}</tspan>
+              y={yScaleTokens(data[indexHovered].totalTokens) - 10}>
+              <tspan>{`${data[indexHovered].totalTokens} tokens held`}</tspan>
             </text>
             <text
               x="-70"
-              y={yScaleTokens(data[dataHovered].activeTokens) + 25}>
-              <tspan>{`${data[dataHovered].activeTokens} active tokens`}</tspan>
+              y={yScaleTokens(data[indexHovered].activeTokens) + 25}>
+              <tspan>{`${data[indexHovered].activeTokens} active tokens`}</tspan>
             </text>
             <text
               x={width + 5}
-              y={yScaleEarnings(data[dataHovered].earnings) - 10}>
-              <tspan>{`$${data[dataHovered].earnings} in earnings`}</tspan>
+              y={yScaleEarnings(data[indexHovered].earnings) - 10}>
+              <tspan>{`$${data[indexHovered].earnings} in earnings`}</tspan>
             </text>
             <line
               className="vertical-time-line"
-              x1={xScale(data[dataHovered].date)}
+              x1={xScale(data[indexHovered].date)}
               y1="0"
-              x2={xScale(data[dataHovered].date)}
+              x2={xScale(data[indexHovered].date)}
               y2={height}></line>
           </g>
         }
-        <TokenGraphSideBars 
-          width={100}
-          x="-240"
-          backgroundHeight={height}
-          totalTokensHeight={dataHovered === null ? 0 : height - yScaleTokens(data[dataHovered].totalTokens)}
-          totalTokensY={dataHovered === null ? height : yScaleTokens(data[dataHovered].totalTokens)}
-          activeTokensHeight={dataHovered === null ? 0 : height - yScaleTokens(data[dataHovered].activeTokens)}
-          activeTokensY={dataHovered === null ? height : yScaleTokens(data[dataHovered].activeTokens)}
-          className={"token-graph-side-bars left"}
-        />
-        <TokenGraphSideBars
-          width={100}
-          x="1000"
-          backgroundHeight={height}
-          earningsHeight={dataHovered === null ? 0 : height - yScaleEarnings(data[dataHovered].earnings)}
-          earningsY={dataHovered === null ? height : yScaleEarnings(data[dataHovered].earnings)}
-          className={"token-graph-side-bars right"}
-        />
+        {TokenGraphLeftBar}
+        {TokenGraphRightBar}
       </g>
     );
   }
