@@ -3,6 +3,8 @@ import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 // import Web3 from 'web3';
 
+
+
 class DeveloperInfoButton extends React.Component{
   constructor(props){
     super(props);

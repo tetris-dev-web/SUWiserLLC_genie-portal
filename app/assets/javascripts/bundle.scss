@@ -665,56 +665,6 @@
 .project-dashboard {
   min-height: 50vh; }
 
-.devinfo-container {
-  transition: transform 400ms ease-in;
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  width: 100px;
-  height: 180px;
-  background-color: rgba(155, 146, 135, 0.3);
-  border-radius: 0 10px 10px 0px; }
-  .devinfo-container .devinfo-button {
-    text-align: center;
-    background-color: #9b9287;
-    padding: 10px 0 10px 0;
-    color: white;
-    border-radius: 0 15px 15px 0;
-    transition: all .1s ease-in-out;
-    -webkit-transform-origin: 50% 100%;
-    -moz-transform-origin: 50% 100%;
-    -o-transform-origin: 50% 100%;
-    -ms-transform-origin: 50% 100%;
-    transform-origin: 50% 100%; }
-    .devinfo-container .devinfo-button .overSubButtonText {
-      padding-right: 15px;
-      text-align: right; }
-    .devinfo-container .devinfo-button:hover {
-      cursor: pointer;
-      color: white; }
-    .devinfo-container .devinfo-button.dropdown:hover {
-      -webkit-transform: scaleX(1.1);
-      -moz-transform: scaleX(1.1);
-      -o-transform: scaleX(1.1);
-      -ms-transform: scaleX(1.1);
-      transform: scaleX(1.1);
-      transform-origin: left center; }
-    .devinfo-container .devinfo-button.dropdown-active {
-      transform: translateY(180px);
-      background-color: rgba(155, 146, 135, 0.3); }
-      .devinfo-container .devinfo-button.dropdown-active .devinfo-span {
-        display: block;
-        height: 30px;
-        transition: transform 500ms ease-in-out; }
-    .devinfo-container .devinfo-button.modal-active {
-      background-color: black;
-      z-index: 11;
-      transform: scaleX(1.1);
-      transform-origin: left center; }
-    .devinfo-container .devinfo-button a {
-      color: white;
-      text-decoration: none; }
-
 .ft-el-cont {
   display: flex;
   flex-direction: column; }
@@ -758,6 +708,51 @@
 
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(179, 185, 207, 0.4); }
+
+.dev-container {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100px;
+  border-radius: 0 10px 10px 0px; }
+  .dev-container:hover {
+    cursor: pointer; }
+  .dev-container.active-dropdown {
+    background-color: rgba(155, 146, 135, 0.3);
+    height: 190px; }
+  .dev-container > ul {
+    position: relative; }
+    .dev-container > ul li:not(:first-child) {
+      position: absolute;
+      width: 100%;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      transition-property: transform; }
+    .dev-container > ul li:first-child div.active-dropdown {
+      border: none;
+      background-color: transparent; }
+    .dev-container > ul li.active-dropdown.strategy {
+      transform: translateY(60px);
+      transition-duration: .4s;
+      z-index: 1; }
+    .dev-container > ul li div.modal-active {
+      z-index: 11;
+      background-color: black; }
+    .dev-container > ul li.active-dropdown.bylaws {
+      transform: translateY(105px);
+      transition-duration: .4s;
+      z-index: 1; }
+    .dev-container > ul li.active-dropdown.about {
+      transform: translateY(150px);
+      transition-duration: .4s;
+      z-index: 1; }
+    .dev-container > ul li > div {
+      text-align: center;
+      background-color: #9b9287;
+      padding: 10px 0 10px 0;
+      color: white;
+      border-radius: 0 15px 15px 0; }
 
 .current-voting-cycle-container .current-cycle-capital {
   background-color: #d3bcaf; }

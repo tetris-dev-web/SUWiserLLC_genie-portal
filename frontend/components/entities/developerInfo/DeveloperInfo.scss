@@ -1,86 +1,5 @@
 @import "./frontend/util/_variables.scss";
 
-
-
-
-
-.devinfo-container {
-  transition: transform 400ms ease-in;
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  // padding: 10px;
-  width: 100px;
-  height: 180px;
-  background-color: $tanTransparent;
-  border-radius: 0 10px 10px 0px;
-
-  & .devinfo-button {
-    text-align: center;
-    .overSubButtonText{
-      padding-right: 15px;
-      text-align: right;
-    }
-    //margin: 0 0px 0 5px;
-    background-color: $tan;
-    // padding-top: 6px;
-    // padding-bottom: 6px;
-    padding: 10px 0 10px 0;
-    color: white;
-    border-radius: 0 15px 15px 0;
-    transition: all .1s ease-in-out;
-
-    -webkit-transform-origin : 50% 100%;
-    -moz-transform-origin : 50% 100%;
-    -o-transform-origin : 50% 100%;
-    -ms-transform-origin : 50% 100%;
-    transform-origin : 50% 100%;
-    &:hover{
-      cursor: pointer;
-      color: $white;
-    }
-    &.dropdown:hover {
-      
-      // -webkit-transform : scale(1, 1.2);
-      // -moz-transform : scale(1, 1.2);
-      // -o-transform : scale(1, 1.2);
-      // -ms-transform : scale(1, 1.2);
-      -webkit-transform : scaleX(1.1);
-      -moz-transform : scaleX(1.1);
-      -o-transform : scaleX(1.1);
-      -ms-transform : scaleX(1.1);
-      // transform: scale(1, 1);
-      // transform: scaleX(1.2);
-      // transform: translate(10px, 0px);
-      // padding-right: 10px;
-      transform: scaleX(1.1);
-      transform-origin:left center;
-    }
-    &.dropdown-active{
-      
-      // height: 180px;
-      transform: translateY(180px);
-      background-color: rgba(155, 146, 135, 0.3);
-      & .devinfo-span{
-        display: block;
-        height: 30px;
-        transition: transform 500ms ease-in-out;
-      }
-    }
-    &.modal-active{
-      background-color: black;
-      z-index: 11;
-      transform: scaleX(1.1);
-      transform-origin:left center;
-    }
-    a {
-      color: white;
-      text-decoration: none;
-    }
-  }
-}
-
-
 // bylaws specific
 .ft-el-cont {
   display: flex;
@@ -143,4 +62,62 @@
 }
 ::-webkit-scrollbar-thumb:window-inactive {
   background: $lb-fade2;
+}
+
+
+// sidebar css
+.dev-container{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100px;
+  border-radius: 0 10px 10px 0px;
+  &:hover {
+    cursor: pointer;
+  }
+  &.active-dropdown{
+  background-color: $tanTransparent;
+  height: 190px;
+  }
+  & > ul{
+    position: relative;
+    & li:not(:first-child) {
+      position: absolute;
+      width:100%;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      transition-property: transform;
+    }
+    & li:first-child div.active-dropdown{
+      border: none;
+      background-color: transparent;
+    }
+    & li.active-dropdown.strategy{
+      transform: translateY(60px);
+      transition-duration: .4s;
+      z-index: 1;
+    }
+    & li div.modal-active{
+      z-index: 11;
+      background-color: black;
+    }
+    & li.active-dropdown.bylaws{
+      transform: translateY(105px);
+      transition-duration: .4s;
+      z-index: 1;
+    }
+    & li.active-dropdown.about{
+      transform: translateY(150px);
+      transition-duration: .4s;
+      z-index: 1;
+    }
+    & li > div {
+      text-align: center;
+      background-color: $tan;
+      padding: 10px 0 10px 0;
+      color: $white;
+      border-radius: 0 15px 15px 0;
+    }
+  }
 }

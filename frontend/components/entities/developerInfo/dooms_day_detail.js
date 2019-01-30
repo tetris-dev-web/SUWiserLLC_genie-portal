@@ -44,11 +44,7 @@ class DoomsDayDetail extends React.Component {
   //not necessary if no interactions with the doomsday clock - will have hover effects
   componentDidMount(){
     const graph = this.startGraph();
-   // {project: 'Genus', date: new Date('01-25-2015'), dateExp: new Date('09-25-2015')},
-   // {project: 'coolGym', date: new Date('02-25-2015'), dateExp: new Date('10-25-2015')}
-  // todos - data passed in need to be organic - passed as props, do derive state from props
-  // todos - function that takes the end date of one project and maps a line from that going down,               on the same day
-  // CREATE XAXIS
+  
   const dataPassedIn =
   {
     //assumptions : data is passed in order of data created?
@@ -171,7 +167,7 @@ class DoomsDayDetail extends React.Component {
   });
 
 
-  //trying stuff here
+  // create transparent bars that will show text when hovered over
   var bar = graph.selectAll("g")
       .data(rectData)
     .enter().append("g")
@@ -187,7 +183,7 @@ class DoomsDayDetail extends React.Component {
              })
    .on('mouseout', function(d){
      d3.select(this).select('text').remove()
-    })
+    });
 
 
 
