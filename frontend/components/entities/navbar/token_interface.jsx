@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import UserDropdownContainer from './user_dropdown/user_dropdown_container';
-import TransferModal from './transfer/transfer_modal';
+import BuyFormModal from './buy_form/buy_form_modal';
 import ProjectFormModal from './project_form/project_form_modal';
 
 // import getWeb3 from './getWeb3.js';
@@ -109,7 +109,7 @@ class TokenInterface extends React.Component {
           <div className="user-container">
           </div>
           <UserDropdownContainer />
-          <TransferModal />
+          <BuyFormModal />
           <ProjectFormModal />
         </div>
       </nav>

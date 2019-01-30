@@ -26,8 +26,8 @@ class BuyForm extends React.Component {
     this.setState({bylaw_agreement: !this.state.bylaw_agreement});
   }
 
-  handleSubmit() {
-
+  handleSubmit(e) {
+    e.preventDefault();
   }
 
   render() {

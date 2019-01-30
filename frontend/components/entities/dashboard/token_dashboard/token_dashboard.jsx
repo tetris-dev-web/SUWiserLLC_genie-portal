@@ -9,7 +9,7 @@ class TokenDashboard extends React.Component {
     super(props);
     this.viewTypes = ["BY USER", "BY ALL", "BY PRICE"];
     this.state = {
-      currentViewId: 0
+      currentViewId: null
     };
 
     this.toggleView = this.toggleView.bind(this);

@@ -5,7 +5,7 @@ import DrizzleConsumer from '../../../drizzle/drizzleConsumer';
 import BuyForm from './buy_form';
 import ModalStyle from './modal_style';
 
-class TransferModal extends React.Component {
+class BuyFormModal extends React.Component {
   constructor(props) {
 
     super(props);
@@ -53,4 +53,4 @@ class TransferModal extends React.Component {
 // contract={this.props.contract}
 
 // <DrizzleConsumer props={{closeModal: this.closeModal}} component={Transfer}/>
-export default TransferModal;
+export default BuyFormModal;
