@@ -42,6 +42,14 @@ ActiveRecord::Schema.define(version: 2019_01_15_181158) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
+  create_table "block_chain_accounts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "address"
+    t.string "private_key"
+    t.string "public_key"
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "title", null: false
     t.decimal "valuation", null: false
