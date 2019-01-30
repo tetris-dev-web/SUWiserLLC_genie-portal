@@ -36,6 +36,7 @@ export class SummaryAndPlan extends React.Component{
       const project = this.state;
       editProject(project)();
       closeModal();
+      window.location.reload();
     }
   }
 
