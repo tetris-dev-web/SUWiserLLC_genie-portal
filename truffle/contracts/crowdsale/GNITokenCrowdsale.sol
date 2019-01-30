@@ -75,7 +75,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);
-   Token(token).mint(address(this), investorTokens);
+   Token(token).mint(this, investorTokens);
 
     address  projectAddr = address(new Project(_title, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng));
     projectLeaderTracker.handleProjectPitch();

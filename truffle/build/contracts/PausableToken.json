@@ -383,9 +383,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity >=0.4.22 <0.6.0;\n\nimport \"./StandardToken.sol\";\nimport \"../../utility/Pausable.sol\";\n\n\n/**\n * @title Pausable token\n * @dev StandardToken modified with pausable transfers.\n **/\ncontract PausableToken is StandardToken, Pausable {\n\n  function transfer(\n    address _to,\n    uint256 _value\n  )\n    public\n    whenNotPaused\n    returns (bool)\n  {\n    return super.transfer(_to, _value);\n  }\n\n  function transferFrom(\n    address _from,\n    address _to,\n    uint256 _value\n  )\n    public\n    whenNotPaused\n    returns (bool)\n  {\n    return super.transferFrom(_from, _to, _value);\n  }\n\n  function approve(\n    address _spender,\n    uint256 _value\n  )\n    public\n    whenNotPaused\n    returns (bool)\n  {\n    return super.approve(_spender, _value);\n  }\n\n  function increaseApproval(\n    address _spender,\n    uint _addedValue\n  )\n    public\n    whenNotPaused\n    returns (bool success)\n  {\n    return super.increaseApproval(_spender, _addedValue);\n  }\n\n  function decreaseApproval(\n    address _spender,\n    uint _subtractedValue\n  )\n    public\n    whenNotPaused\n    returns (bool success)\n  {\n    return super.decreaseApproval(_spender, _subtractedValue);\n  }\n}\n",
-  "sourcePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/PausableToken.sol",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/PausableToken.sol",
   "ast": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/PausableToken.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/PausableToken.sol",
     "exportedSymbols": {
       "PausableToken": [
         4947
@@ -409,7 +409,7 @@
         "src": "0:32:27"
       },
       {
-        "absolutePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/StandardToken.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/StandardToken.sol",
         "file": "./StandardToken.sol",
         "id": 4848,
         "nodeType": "ImportDirective",
@@ -420,7 +420,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/Pausable.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/Pausable.sol",
         "file": "../../utility/Pausable.sol",
         "id": 4849,
         "nodeType": "ImportDirective",
@@ -1659,7 +1659,7 @@
     "src": "0:1171:27"
   },
   "legacyAST": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/PausableToken.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/PausableToken.sol",
     "exportedSymbols": {
       "PausableToken": [
         4947
@@ -1683,7 +1683,7 @@
         "src": "0:32:27"
       },
       {
-        "absolutePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/StandardToken.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/StandardToken.sol",
         "file": "./StandardToken.sol",
         "id": 4848,
         "nodeType": "ImportDirective",
@@ -1694,7 +1694,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/Pausable.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/Pausable.sol",
         "file": "../../utility/Pausable.sol",
         "id": 4849,
         "nodeType": "ImportDirective",
@@ -2937,6 +2937,38 @@
     "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.2",
-  "updatedAt": "2019-01-29T22:43:43.029Z"
+  "schemaVersion": "3.0.0-beta.2",
+  "updatedAt": "2019-01-30T17:47:00.342Z",
+  "devdoc": {
+    "methods": {
+      "allowance(address,address)": {
+        "details": "Function to check the amount of tokens that an owner allowed to a spender.",
+        "params": {
+          "_owner": "address The address which owns the funds.",
+          "_spender": "address The address which will spend the funds."
+        },
+        "return": "A uint256 specifying the amount of tokens still available for the spender."
+      },
+      "pause()": {
+        "details": "called by the owner to pause, triggers stopped state"
+      },
+      "renounceOwnership()": {
+        "details": "Allows the current owner to relinquish control of the contract."
+      },
+      "totalSupply()": {
+        "details": "Total number of tokens in existence"
+      },
+      "unpause()": {
+        "details": "called by the owner to unpause, returns to normal state"
+      }
+    },
+    "title": "Pausable token"
+  },
+  "userdoc": {
+    "methods": {
+      "renounceOwnership()": {
+        "notice": "Renouncing to ownership will leave the contract without an owner. It will not be possible to call the functions with the `onlyOwner` modifier anymore."
+      }
+    }
+  }
 }

@@ -116,7 +116,7 @@ contract ActivatableToken is MintableToken {
   }
 
   function transferInactive(address _to, uint256 _value) external onlyOwner {
-    require(_value != 0);
+    /* require(_value != 0);
     require(inactiveBalanceOf(msg.sender) >= _value);
     require(freedUpBalanceOf(msg.sender) >= _value);
 
@@ -127,7 +127,7 @@ contract ActivatableToken is MintableToken {
 
 
     balances[msg.sender].inactive = balances[msg.sender].inactive.sub(_value);
-    balances[_to].inactive = balances[_to].inactive.add(_value);
+    balances[_to].inactive = balances[_to].inactive.add(_value); */
   }
 
   function transferActive(address _from, address _to, uint256 _value) internal {
