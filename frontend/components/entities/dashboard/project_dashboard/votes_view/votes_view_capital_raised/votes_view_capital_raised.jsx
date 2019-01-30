@@ -16,6 +16,7 @@ class VotesViewCapitalRaised extends React.Component {
   }
 
   componentDidMount() {
+    console.log("colors specific: ", colors.rosyBrown)
     window.onresize = () => {
       this.setState({currentWindowWidth: window.innerWidth});
     };

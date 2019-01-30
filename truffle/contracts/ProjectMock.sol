@@ -4,7 +4,6 @@ import './Project.sol';
 
 contract ProjectMock is Project {
   constructor (
-    uint256 _id,
     string _name,
     address _developer,
     address _dividendWallet,
@@ -13,9 +12,10 @@ contract ProjectMock is Project {
     uint256 _developerTokens,
     uint256 _investorTokens,
     string _lat,
-    string _lng
+    string _lng,
+    bytes32 _voteForHash,
+    bytes32 _voteAgainstHash
     ) public Project(
-      _id,
       _name,
       _developer,
       _dividendWallet,
@@ -24,7 +24,9 @@ contract ProjectMock is Project {
       _developerTokens,
       _investorTokens,
       _lat,
-      _lng
+      _lng,
+      _voteForHash,
+      _voteAgainstHash
       ) {}
 
   function removeMockVoter (address addr) public {

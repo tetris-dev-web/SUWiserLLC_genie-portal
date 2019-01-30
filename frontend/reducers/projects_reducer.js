@@ -1,6 +1,5 @@
-// import merge from 'lodash/merge';
-// import values from 'lodash/values';
 import { merge, values } from 'lodash';
+
 import {
   RECEIVE_PROJECTS,
   RECEIVE_PROJECT
@@ -13,7 +12,7 @@ const projectsReducer = (state = {}, action) => {
       // return values(action.projects);
       return (action.projects);
     case RECEIVE_PROJECT:
-      return merge({}, state, { [action.project.id]: action.project });
+      return merge({}, state, { [action.project.title]: action.project });
     default:
       return state;
   }

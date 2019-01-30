@@ -1,4 +1,5 @@
 json.extract! project,  :id,
+                        :address,
                         :title,
                         :revenue,
                         :valuation,
@@ -30,4 +31,4 @@ json.extract! project,  :id,
 if project.pdf_file.attached?
     json.pdfUrl url_for(project.pdf_file)
 end
-json.file asset_path(project.file.url)
+# json.file asset_path(project.file.url)

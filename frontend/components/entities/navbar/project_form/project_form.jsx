@@ -6,7 +6,7 @@ import CashFlowModal from './cashflow_modal/cashflow_modal';
 import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
-import { calculateAccumulatedRevenue, processCashData, calculateCashflowData } from '../../../../util/project_api_util';
+import { formatProjectData, processCashData } from '../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
 import { merge } from 'lodash';
 import './project_form.scss';
@@ -17,28 +17,32 @@ class ProjectForm extends React.Component {
     super(props);
 
     this.state = {
-      title: '',
-      latitude: '',
-      longitude: '',
-      revenue: '10',
-      valuation: '1',
-      model_id: '870fb9d9-b5d2-4565-a6dd-65f9a1f4d00e',
-      city: 'New York',
-      country: 'USA',
-      continent: 'North America',
+      projectData: {
+        title: '',
+        latitude: '',
+        longitude: '',
+        city: 'New York',
+        country: 'USA',
+        continent: 'North America',
+        valuation: '1',
+        cashflow: '',
+        creator_id: this.props.currentUser.id,
+        model_id: '870fb9d9-b5d2-4565-a6dd-65f9a1f4d00e',
+        summary: 'summary',
+        capital_required: '',
+        actual_cashflow: '',
+        accum_projected_cashflow: '',
+        accum_actual_cashflow: '',
+        projected_cashflow: '',
+        revenue: .1,
+        description: 'hkopt'
+      },
       icon: '',
-      description: '',
       imageUrl: '',
       coins: '****',
       status: 'pitched',
-      summary: 'summary',
       openModal: false,
       currentQuarter: '',
-      actual_cashflow: '',
-      accum_actual_cashflow: '',
-      projected_cashflow: '',
-      accum_projected_cashflow: '',
-      cashflow: '',
       cashflowJSONName: '',
       accumulatedRevenue: '',
       capital_required: '',
@@ -69,7 +73,7 @@ class ProjectForm extends React.Component {
   }
 
   componentDidMount() {
-    this.renderFileName();
+    // this.renderFileName();
   }
 
   componentWillUnmount() {
@@ -136,21 +140,23 @@ class ProjectForm extends React.Component {
   }
 
   renderLatLngErrors(clicked) {
-    if (this.state.latitude == '' && this.state.longitude == '' && clicked) {
+    if (this.state.projectData.latitude == '' && this.state.projectData.longitude == '' && clicked) {
       return (
         <ul className="project-errors">
-          <li>Latitude and Longitude can't be blank</li>
+          <li> Latitude and Longitude can't be blank </li>
         </ul>
       );
     }
   }
 
   updateLatLng(pos) {
-    this.setState({latitude: parseFloat(pos.lat), longitude: parseFloat(pos.lng)});
+    const projectData = merge({}, this.state.projectData, {latitude: parseFloat(pos.lat), longitude: parseFloat(pos.lng)});
+    this.setState(projectData);
   }
 
   storeAddress(city, continent) {
-    this.setState({city, continent});
+    const projectData = merge({}, this.state.projectData, {city, continent});
+    this.setState(projectData);
   }
 
   getFailedProjects(){
@@ -165,7 +171,7 @@ class ProjectForm extends React.Component {
     return failedProjectCount;
   }
 
-  findCurrentQuarter(quarters, cashflow = this.state.cashflow) {
+  findCurrentQuarter(quarters, cashflow = this.state.projectData.cashflow) {
     let currentQuarter;
     quarters.some(quarter => {
       if (!cashflow[quarter.toString()]["isActuals"]) {
@@ -194,8 +200,9 @@ class ProjectForm extends React.Component {
     return capital;
   }
 
-  calculateCapitalRequired() {
-    let valuesArray = Object.values(this.state.accumulatedRevenue);
+  calculateCapitalRequired(accumulatedRevenue) {
+    console.log(accumulatedRevenue);
+    let valuesArray = Object.values(accumulatedRevenue);
     let min = Math.min(...valuesArray);
     return min * -1;
     // this.setState({capital_required: min});
@@ -231,17 +238,12 @@ class ProjectForm extends React.Component {
 
   update(property) {
     return (e) => {
-      this.setState({ [property]: e.currentTarget.value });
-
-      // const { revenue } = this.state;
-      // const price = 70;
-      // const coins = roundToTwo(revenue / price);
-      //
-      // if (revenue || revenue > 0) {
-      //   this.setState({ coins });
-      // } else {
-      //   this.setState({ coins: '****' });
-      // }
+      if (this.state.hasOwnProperty(property)) {
+        this.setState({ [property]: e.currentTarget.value });
+      } else {
+        const projectData = merge({}, this.state.projectData, { [property]: e.currentTarget.value });
+        this.setState({projectData});
+      }
     };
   }
 
@@ -249,7 +251,7 @@ class ProjectForm extends React.Component {
     // Needed to update project state with cashflow state
     return e => {
       e.preventDefault();
-      this.setState({ cashflow });
+      this.setState({ projectData: cashflow });
     };
   }
 
@@ -258,18 +260,23 @@ class ProjectForm extends React.Component {
     console.log("Is the cashflow value being updated?");
     return e => {
       e.preventDefault();
-      let cashflow = merge({}, this.state.cashflow);
+      let cashflow = merge({}, this.state.projectData.cashflow);
       cashflow[quarter].cashFlow = parseInt(e.currentTarget.value);
       const accumulatedRevenue = calculateAccumulatedRevenue(cashflow);
-      this.setState({ cashflow, accumulatedRevenue });
+      const projectData = merge({}, this.state.projectData, { cashflow });
+      this.setState({
+        projectData,
+        accumulatedRevenue
+      });
     };
   }
 
   updateActuals(quarter) {
       console.log('i have second entried');
-      let cashflow = merge({}, this.state.cashflow);
+      let cashflow = merge({}, this.state.projectData.cashflow);
       cashflow[quarter].isActuals = !cashflow[quarter].isActuals;
-      this.setState({cashflow});
+      const projectData = merge({}, this.state.projectData, { cashflow });
+      this.setState({ projectData });
   }
 
   updateFile(fileType) {
@@ -288,12 +295,40 @@ class ProjectForm extends React.Component {
             // console.log('quarters is:', quarters);
             // console.log('Cashflow is:', cashflow);
 
-            const parsedData = this.receiveCashflowData(cashflow)
-            // let {  }
+            // const data = formatProjectData(cashflow);
+            // const currentQuarter = this.findCurrentQuarter(quarters, cashflow);
+            // const capital_required = this.calculateCapitalRequired(data.accumulated_revenue);
+            // const valuation = this.calculateNetPresentValue(Object.values(data.projected_cashflow).slice(currentQuarter - 1));
+            //
+            // const newProjectData = merge({}, data, { cashflow, capital_required, valuation });
+            // const projectData = merge({}, this.state.projectData, newProjectData);
 
-            this.setState(Object.assign({},
+
+            const {
+              projected_cashflow,
+              actual_cashflow,
+              accum_actual_cashflow,
+              accum_projected_cashflow,
+              accumulated_revenue
+            } = formatProjectData(cashflow);
+
+            const currentQuarter = this.findCurrentQuarter(quarters, cashflow);
+            const capital_required = this.calculateCapitalRequired(accumulated_revenue);
+            const valuation = this.calculateNetPresentValue(Object.values(projected_cashflow).slice(currentQuarter - 1));
+            const projectData = merge({}, this.state.projectData,
               {
                 cashflow,
+                projected_cashflow,
+                actual_cashflow,
+                accum_actual_cashflow,
+                accum_projected_cashflow,
+                capital_required,
+                valuation
+            });
+
+            this.setState(merge({},
+              {
+                projectData,
                 cashflowJSONName: file.name,
                 accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
                 currentQuarter: this.findCurrentQuarter(quarters, cashflow),
@@ -360,33 +395,32 @@ class ProjectForm extends React.Component {
     }
   }
 
-  renderFileName() {
-    const inputs = document.querySelectorAll( '.file-input' );
-    Array.prototype.forEach.call( inputs, function( input ) {
-      const label	 = input.nextElementSibling;
-      const labelVal = label.innerHTML;
-
-      input.addEventListener('change', function(e) {
-        let fileName = e.target.value.split( '\\' ).pop();
-        // let fileName = '';
-        // if (this.files && this.files.length > 1 ) {
-        //   fileName = ( this.getAttribute('data-multiple-caption' ) || '')
-        //                 .replace('{count}', this.files.length);
-        // } else {
-        //   fileName = e.target.value.split( '\\' ).pop();
-        // }
-
-        if (fileName) {
-          label.querySelector('span').innerHTML = fileName;
-        } else {
-          label.innerHTML = labelVal;
-        }
-      });
-    });
-  }
+  // renderFileName() {
+  //   const inputs = document.querySelectorAll( '.file-input' );
+  //   Array.prototype.forEach.call( inputs, function( input ) {
+  //     const label	 = input.nextElementSibling;
+  //     const labelVal = label.innerHTML;
+  //
+  //     input.addEventListener('change', function(e) {
+  //       let fileName = e.target.value.split( '\\' ).pop();
+  //       // let fileName = '';
+  //       // if (this.files && this.files.length > 1 ) {
+  //       //   fileName = ( this.getAttribute('data-multiple-caption' ) || '')
+  //       //                 .replace('{count}', this.files.length);
+  //       // } else {
+  //       //   fileName = e.target.value.split( '\\' ).pop();
+  //       // }
+  //
+  //       if (fileName) {
+  //         label.querySelector('span').innerHTML = fileName;
+  //       } else {
+  //         label.innerHTML = labelVal;
+  //       }
+  //     });
+  //   });
+  // }
 
   render() {
-
     let modelLink;
     if (this.state.modelId === "") {
       modelLink = "https://poly.google.com"
@@ -394,9 +428,40 @@ class ProjectForm extends React.Component {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
 
-    let { title, latitude, longitude, model_id, currentQuarter, description
+    const geojsons = [];
+    const fileId = ["file1", "file2", "file3", "file4", "file5"];
+    for (let i = 0; i < 5; i++) {
+      geojsons.push(
+        <div className="geo-row-container" key={i}>
+          <div className="file-container">
+            <input id={fileId[i]}
+              name={fileId[i]}
+              className="file-input"
+              type="file" />
+            <label htmlFor={fileId[i]}>
+              <span>choose geojson</span>
+            </label>
+          </div>
+          <select className="heir-input">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+          <input className="opacity-input"
+            type="number"
+            min="0"
+            max="1"
+            placeholder="0.5" />
+        </div>
+      );
+    }
+
+    let { title, latitude, longitude, model_id, currentQuarter, description} = this.state.projectData;
       // revenue, valuation, description, model_id, city, country, continent, icon
-    } = this.state;
+
+
 
     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
@@ -450,6 +515,9 @@ class ProjectForm extends React.Component {
 
         {this.renderLatLngErrors(this.state.drop_pin_clicked)}
 
+            <div className="style2">{"$" + this.state.projectData.valuation}</div>
+            <div className="style2">{"$" + this.state.projectData.capital_required}</div>
+            <span>capital <br />  required</span>
         <div className="form-box-container">
           <h1 className="form-box-title with-border">HOW MUCH MONEY WILL IT MAKE?</h1>
           <div className="form-box-border-layer">
@@ -564,7 +632,7 @@ class ProjectForm extends React.Component {
                 </div>
               </DivWithCorners>
             </div>
-            
+
           </div>
         </div>
 

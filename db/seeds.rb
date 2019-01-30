@@ -287,6 +287,8 @@ user_account3 = UserAccount.create!(
   user_id: user2.id,account_id:developer.id
 )
 
+#BlockChainAccounts
+BlockChainAccount.create!(private_key: 'B93CCB911EAD59F21CE693ACB2AAEC2B1377F1FFD029F1AC3E48B531F54F3236', address: '0xEF898fd948F50D5010d3Ec20233faE23D89a1a51')
 
 # projects
 

@@ -16,6 +16,9 @@ class ProjectDashboard extends React.Component {
     };
 
     this.toggleView = this.toggleView.bind(this);
+    // this.toggleTextShowing = this.toggleTextShowing.bind(this);
+    this.watchProjectPitch = this.watchProjectPitch.bind(this);
+    this.filterPitchedProjects = this.filterPitchedProjects.bind(this);
   }
 
   toggleView (currentViewId) {
@@ -29,10 +32,30 @@ class ProjectDashboard extends React.Component {
     }
   }
 
-  componentDidMount() { //where is this being used?
-    this.props.fetchProjects();
+  componentDidMount() {
+    if (this.props.web3){this.watchProjectPitch();}
+
   }
 
+  watchProjectPitch() { //event listener for pitched projects
+    this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
+      const address = event.args.projectAddress;
+      const title = event.args.name;
+      const project = this.props.projects[title];
+      project.instance = this.props.projectContract.at(address);
+      this.props.receiveProject(project);
+    });
+  }
+
+  filterPitchedProjects () {
+    return Object.keys(this.props.projects).reduce((pitchedProjects, projectTitle) => {
+      const project = this.props.projects[projectTitle];
+      if (project.instance) {
+        pitchedProjects[projectTitle] = project;
+      }
+      return pitchedProjects;
+    }, {});
+  }
 
   handleKeyPress(e) {
     alert('PRESSED');

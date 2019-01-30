@@ -15,11 +15,13 @@ import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import GNITokenCrowdsale from '../../truffle/build/contracts/GNITokenCrowdsale.json';
 import Token from '../../truffle/build/contracts/Token.json';
+import { connect } from 'react-redux';
+import {processVotes} from '../actions/chain_actions/vote_actions';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
+    this.voteTest = this.voteTest.bind(this);
     // if (typeof web3 != 'undefined') {
     //   this.web3Provider = web3.currentProvider;
     // } else {
@@ -53,6 +55,28 @@ class App extends React.Component {
   //   });
   // }
 
+  componentDidMount () {
+    if(this.props.web3){
+      this.props.votingInstance.VoteChange().watch((error, event) => {
+        console.log(event); //TODO log to state
+      });
+    }
+  }
+
+  voteTest () {
+    this.props.processVotes({
+      vote_additions: [
+        {project_address: this.props.account, voter_address: this.props.account, votes: 1, type: 'addition', signed_message: 'defkweofmk'},
+        {project_address: this.props.account, voter_address: this.props.account, votes: 2, type: 'addition', signed_message: 'defkweofmk'}
+      ],
+      vote_removals: [
+        {project_address: this.props.account, voter_address: this.props.account, votes: 3, type: 'removal', signed_message: 'defkweofmk'},
+        {project_address: this.props.account, voter_address: this.props.account, votes: 4, type: 'removal', signed_message: 'defkweofmk'}
+      ]
+    });
+  }
+
+
   render() {
     return (
       <div style={{height: "100%"}}>
@@ -69,5 +93,19 @@ class App extends React.Component {
   }
 }
 
+const mapStateToProps  = state => {
+  return {
+    account: state.network.account,
+    web3: state.network.web3,
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    votingInstance: state.network.votingInstance
+  };
+};
 
-export default App;
+const mapDispatchToProps = dispatch => {
+  return {
+    processVotes: vote_data => dispatch(processVotes(vote_data))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

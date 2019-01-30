@@ -13,31 +13,43 @@ contract TimedCrowdsale is Crowdsale {
 
   uint256 public openingTime;
   uint256 public doomsDay;
-
+  bool public canReOpen;
+  address public reimbursements;
   /**
    * @dev Reverts if not in crowdsale time range.
    */
   modifier onlyWhileOpen {
     // solium-disable-next-line security/no-block-members
-    uint timestamp = block.timestamp;
+    /* uint timestamp = block.timestamp;
     uint time1 = openingTime;
-    uint time2 = doomsDay;
+    uint time2 = doomsDay; */
     require(block.timestamp >= openingTime && block.timestamp <= doomsDay);
     _;
   }
+
+  modifier canExtendDoomsDay {
+    /* uint timestamp = block.timestamp;
+    uint time1 = openingTime;
+    uint time2 = doomsDay; */
+    require((block.timestamp >= openingTime && block.timestamp <= doomsDay) || canReOpen);
+    _;
+  }
+
+  //can extend doomsDay....
 
   /**
    * @dev Constructor, takes crowdsale opening and closing times.
    * @param _openingTime Crowdsale opening time
    * @param _doomsDay Crowdsale closing time
    */
-  constructor(uint256 _openingTime, uint256 _doomsDay) public {
+  constructor(uint256 _openingTime, uint256 _doomsDay, address _reimbursements) public {
     // solium-disable-next-line security/no-block-members
     require(_openingTime >= block.timestamp);
     require(_doomsDay >= _openingTime);
 
     openingTime = _openingTime;
     doomsDay = _doomsDay;
+    reimbursements = _reimbursements;
   }
 
   /**
@@ -49,12 +61,18 @@ contract TimedCrowdsale is Crowdsale {
     return block.timestamp > doomsDay;
   }
 
+  //need tests for this
+  function allowReOpening () external {
+    require(msg.sender == reimbursements && hasClosed());
+    canReOpen = true;
+  }
+
   /**
    * @dev Extend parent behavior requiring to be within contributing period
    * @param _beneficiary Token purchaser
    * @param _weiAmount Amount of wei contributed
    */
-  function _preValidatePurchase(
+  /* function _preValidatePurchase(
     address _beneficiary,
     uint256 _weiAmount
   )
@@ -62,6 +80,6 @@ contract TimedCrowdsale is Crowdsale {
     onlyWhileOpen
   {
     super._preValidatePurchase(_beneficiary, _weiAmount);
-  }
+  } */
 
 }
