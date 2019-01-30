@@ -80,7 +80,7 @@ export const fetchTokenPurchaseLogs = async (crowdsale, web3) => {
 //     console.log(logs)
 //     return logs;
 //   })
-}
+// }
 
 export const pitchProject = async (crowdsale, data, account) => {
   let { title, capital_required, valuation, latitude, longitude } = data;
