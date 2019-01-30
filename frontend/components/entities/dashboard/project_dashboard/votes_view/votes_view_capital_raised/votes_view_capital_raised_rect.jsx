@@ -5,33 +5,40 @@ import React from 'react';
 //
 // const capRaisedTextToDisplay = (capitalRaised) => `$ ${Number(capitalRaised/1000.0).toLocaleString()} k`
 
+class VotesViewCapitalRaisedRect extends React.Component {
+	constructor() {
+		super();
 
+		this.state = {
+			showText: false
+		};
 
+		this.handleHover = this.handleHover.bind(this);
+	}
 
-const VotesViewCapitalRaisedRect = ({x, y, height, fill, opacity, setHoveredStateOnEnter, setHoveredStateOnLeave, capRaisedTextToDisplay, hovered}) => (
-  <g>
-    <rect
-			x={x} y={y}
-			width="100%"
-			height={height}
-			fill={fill}
-			opacity={opacity}
-      onMouseEnter={setHoveredStateOnEnter}
-			onMouseLeave={setHoveredStateOnLeave}>
-		</rect>
+	handleHover() {
+		this.setState({showText: !this.state.showText});
+	}
 
-	   { hovered && (
-        <text
-					x={"89%"}
-					y={ y + height/2 }
-					className="votes-view-capital-raised-text-right">
-              <tspan dx="0" dy="1.4em">{capRaisedTextToDisplay.text}</tspan>
-              <tspan dx="-5.5em" dy="1.4em">{capRaisedTextToDisplay.amount}</tspan>
-        </text>
-	     )
-     }
+	render() {
+		const { x, y, height, fill, opacity, textToDisplay } = this.props;
+		const { showText } = this.state;
 
-  </g>
-);
+		return (
+			<g
+				onMouseEnter={this.handleHover}
+				onMouseLeave={this.handleHover}>
+				<rect
+					x={x} y={y}
+					width="100%"
+					height={height}
+					fill={fill}
+					opacity={opacity}>
+				</rect>
+				{showText && textToDisplay()}
+			</g>
+		);
+	}
+}
 
 export default VotesViewCapitalRaisedRect;
