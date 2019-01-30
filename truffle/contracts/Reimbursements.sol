@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 
 import './token/ERC20/Token.sol';
 import './utility/SafeMath.sol';
@@ -11,18 +11,18 @@ contract Reimbursements is Ownable {
   uint256 public weiToReimburse;
   Token public token;
 
-  constructor (Token _token) payable {
+  constructor (Token _token) public payable {
     token = _token;
   }
 
-  function () public payable {}
+  function () external payable {}
   //this needs to be only accessible by crowdsal
   function recordReimbursement () public payable onlyOwner {
     inactiveTokensAtClosing = Token(token).totalInactiveSupply().sub(Token(token).totalPendingActivations());
     weiToReimburse = msg.value;
   }
 
-  function claimReimbursement (address account) public {
+  function claimReimbursement (address  account) public {
     require(weiToReimburse != 0 && address(this).balance != 0);
     uint256 inactiveTokens = Token(token).inactiveBalanceOf(account);
     uint256 pendingActivations = Token(token).pendingActivations(account);
@@ -32,7 +32,7 @@ contract Reimbursements is Ownable {
 
     if (address(this).balance == 0) {
       weiToReimburse = 0;
-      GNITokenCrowdsale(owner).allowReOpening();
+      GNITokenCrowdsale(uint160(owner)).allowReOpening();
     }
   }
 }

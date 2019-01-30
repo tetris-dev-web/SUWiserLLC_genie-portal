@@ -1,25 +1,23 @@
-pragma solidity ^0.4.23;
+pragma solidity >=0.4.22 <0.6.0;
 import './Project.sol';
 import './ContractStub.sol';
 
 contract ProjectStub is Project, ContractStub {
   constructor (
-    string _name,
+    string memory _title,
     address _developer,
     address _dividendWallet,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
     uint256 _investorTokens,
-    string _lat,
-    string _lng,
-    uint256 _mockVotes,
-    bytes32 _voteHash,
-    bytes32 _voteAgainstHash
+    string memory _lat,
+    string memory _lng,
+    uint256 _mockVotes
     )
     public
     Project(
-      _name,
+      _title,
       _developer,
       _dividendWallet,
       _valuation,
@@ -27,9 +25,7 @@ contract ProjectStub is Project, ContractStub {
       _developerTokens,
       _investorTokens,
       _lat,
-      _lng,
-      _voteHash,
-      _voteAgainstHash
+      _lng
       )
       {
     totalVotes = _mockVotes;

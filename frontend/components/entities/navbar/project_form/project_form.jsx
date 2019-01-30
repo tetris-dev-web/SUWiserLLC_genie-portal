@@ -35,7 +35,7 @@ class ProjectForm extends React.Component {
         accum_actual_cashflow: '',
         projected_cashflow: '',
         revenue: .1,
-        description: 'hkopt'
+        description: 'hkopt',
       },
       icon: '',
       imageUrl: '',
@@ -45,10 +45,10 @@ class ProjectForm extends React.Component {
       currentQuarter: '',
       cashflowJSONName: '',
       accumulatedRevenue: '',
-      planFilePDF: '',
-      planFilePDFDataURL: '',
-      planFilePDFName: '',
       drop_pin_clicked: false,
+      pdf_file: '',
+      planFilePDFDataURL: '',
+      planFilePDFName: ''
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -130,18 +130,57 @@ class ProjectForm extends React.Component {
 
 
     // pdf_file: this.state.planFilePDF,
-    const projectData = Object.assign(
-      {},
-      this.state.projectData,
-      {
-        cashflow: JSON.stringify(this.state.projectData.cashflow),
-        actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
-        projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
-        accum_projected_cashflow: JSON.stringify(this.state.projectData.accum_projected_cashflow),
-        accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
-     });
+    // const projectData = Object.assign(
+    //   {},
+    //   this.state.projectData,
+    //   {
+    //     cashflow: JSON.stringify(this.state.projectData.cashflow),
+    //     actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
+    //     projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
+    //     accum_projected_cashflow: JSON.stringify(this.state.projectData.accum_projected_cashflow),
+    //     accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
+    //  });
 
-    this.props.createProject(this.props.crowdsaleInstance, projectData, this.props.account).then(() => {
+    let {
+        title,
+        latitude,
+        longitude,
+        summary,
+        description,
+        city,
+        country,
+        continent,
+        capital_required,
+        valuation,
+        creator_id
+      } = this.state.projectData
+
+      const railsParams = {
+          title,
+          city,
+          country,
+          continent,
+          summary,
+          description,
+          creator_id,
+          cashflow: JSON.stringify(this.state.projectData.cashflow),
+          actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
+          projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
+          accum_projected_cashflow: JSON.stringify(this.state.projectData.accum_projected_cashflow),
+          accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
+        }
+
+      const blockchainParams = {
+        title,
+        valuation,
+        capital_required,
+        latitude,
+        longitude
+      }
+
+
+    // console.log("project data: ", projectData);
+    this.props.createProject(this.props.crowdsaleInstance, railsParams, blockchainParams, this.state.pdf_file, this.props.account).then(() => {
       if (this.props.errors.length == 0) {
         this.props.closeModal();
         // window.location.reload();
@@ -353,8 +392,14 @@ class ProjectForm extends React.Component {
           break;
         case "planFilePDF":
           this.parseInputFile(file).then(planFilePDFDataURL => {
+            // const PlanData = {
+            //   pdf_file: file,
+            // }
+
+            // const newProjectDataWithPlan = merge({},this.state.projectData, PlanData)
             this.setState({
-              planFilePDF: file,
+              pdf_file: file,
+              // projectData: newProjectDataWithPlan,
               planFilePDFDataURL,
               planFilePDFName: file.name
             });
@@ -442,47 +487,11 @@ class ProjectForm extends React.Component {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
 
-<<<<<<< HEAD
-    const geojsons = [];
-    const fileId = ["file1", "file2", "file3", "file4", "file5"];
-    for (let i = 0; i < 5; i++) {
-      geojsons.push(
-        <div className="geo-row-container" key={i}>
-          <div className="file-container">
-            <input id={fileId[i]}
-              name={fileId[i]}
-              className="file-input"
-              type="file" />
-            <label htmlFor={fileId[i]}>
-              <span>choose geojson</span>
-            </label>
-          </div>
-          <select className="heir-input">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-          <input className="opacity-input"
-            type="number"
-            min="0"
-            max="1"
-            placeholder="0.5" />
-        </div>
-      );
-    }
-
-    let { title, latitude, longitude, model_id
-=======
     let { title, latitude, longitude, model_id, currentQuarter, description
->>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
       // revenue, valuation, description, model_id, city, country, continent, icon
     } = this.state.projectData;
 
-    let { currentQuarter } = this.state;
-
-    return (
+     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
         <div className="text-input-container project-title-input-container">
           <input className="text-input project-title-input"
@@ -534,12 +543,6 @@ class ProjectForm extends React.Component {
 
         {this.renderLatLngErrors(this.state.drop_pin_clicked)}
 
-<<<<<<< HEAD
-            <div className="style2">{"$" + this.state.projectData.valuation}</div>
-            <div className="style2">{"$" + this.state.projectData.capital_required}</div>
-            <span>capital <br />  required</span>
-          </div>
-=======
         <div className="form-box-container">
           <h1 className="form-box-title with-border">HOW MUCH MONEY WILL IT MAKE?</h1>
           <div className="form-box-border-layer">
@@ -585,7 +588,6 @@ class ProjectForm extends React.Component {
                 </span>
               </DivWithCorners>
             </div>
->>>>>>> f8b11f837da06c518dcd3a366c9ae9a747d121ec
 
             <div className="rates-box">
               <div className="discounts-box">

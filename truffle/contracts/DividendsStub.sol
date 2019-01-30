@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 import './utility/SafeMath.sol';
 import './token/ERC20/Token.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
@@ -7,10 +7,10 @@ import './ContractStub.sol';
 contract DividendsStub is Dividends, ContractStub {
   using SafeMath for uint256;
 
-  constructor (Token token_, address developer_) public
+  constructor (Token token_, address  developer_) public
   Dividends(token_, developer_) {}
 
-  function distributeDividend(address account) public returns (bool) {
+  function distributeDividend(address  account) external returns (bool) {
     CallData storage methodState = method['distributeDividend'];
     methodState.called = true;
     methodState.firstAddress = account;

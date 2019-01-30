@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 
 import "../token/ERC20/ERC20.sol";
 import '../utility/SafeMath.sol';
@@ -25,7 +25,7 @@ contract Crowdsale {
 
   Token public token;
 
-  address internal developer;
+  address  public developer;
   // How many token units a buyer gets per wei.
   // The rate is the conversion between wei and the smallest and indivisible token unit.
   // So, if you are using a rate of 1 with a DetailedERC20 token with 3 decimals called TOK
@@ -54,7 +54,7 @@ contract Crowdsale {
    * @param _developer Address where collected funds will be forwarded to
    * @param _token Address of the token being sold
    */
-  constructor(uint256 _rate, address _developer, Token _token) public {
+  constructor(uint256 _rate, address  _developer, Token _token) public {
     require(_rate > 0);
     require(_developer != address(0));
 
@@ -70,14 +70,14 @@ contract Crowdsale {
   /**
    * @dev fallback function ***DO NOT OVERRIDE***
    */
-  function () public payable {
+  function () external payable {
     /* buyTokens(msg.sender); */
   }
   /**
    * @dev low level token purchase ***DO NOT OVERRIDE***
    * @param _beneficiary Address performing the token purchase
    */
-  function buyTokens(address _beneficiary) public payable returns (uint256) {
+  function buyTokens(address  _beneficiary) public payable returns (uint256) {
     uint256 weiAmount = msg.value;
     require(_beneficiary != address(0));
     require(weiAmount != 0);

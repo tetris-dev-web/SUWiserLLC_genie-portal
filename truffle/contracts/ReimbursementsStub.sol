@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 import './Reimbursements.sol';
 import './utility/SafeMath.sol';
 import './ContractStub.sol';
@@ -13,7 +13,7 @@ contract ReimbursementsStub is Reimbursements, ContractStub {
     _;
   }
 
-  function () public payable {}
+  function () external payable {}
 
   function recordReimbursement () public payable onlyOwner {
     CallData storage methodState = method['recordReimbursement'];

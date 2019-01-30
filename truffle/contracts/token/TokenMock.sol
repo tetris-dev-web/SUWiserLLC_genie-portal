@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 
 import './ERC20/Token.sol';
 import './../ContractStub.sol';
@@ -20,11 +20,11 @@ contract TokenMock is Token, ContractStub {
     return lastActivationPoints[account];
   }
 
-  function activate_ (address account, uint256 amount) public {
+  function activate_ (address  account, uint256 amount) public {
     super.activate(account, amount);
   }
 
-  function activate (address account, uint256 amount) internal {
+  function activate (address  account, uint256 amount) internal {
     super.activate(account, amount);
     CallData storage methodState = method['activate'];
     methodState.called = true;

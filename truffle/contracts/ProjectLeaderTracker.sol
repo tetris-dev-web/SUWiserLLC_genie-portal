@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 import './Project.sol';
 import './utility/Ownable.sol';
 import './utility/SafeMath.sol';
@@ -6,7 +6,7 @@ import './utility/SafeMath.sol';
 contract ProjectLeaderTracker is Ownable {
   using SafeMath for uint256;
   uint256 public candidateCount;
-  address public tentativeLeaderAddr;
+  address  public tentativeLeaderAddr;
   uint256 public leadingVoteCount;
 
   struct ProjectsChecked {
@@ -17,7 +17,7 @@ contract ProjectLeaderTracker is Ownable {
   uint256 internal currentCheckCycle;
   mapping(uint256 => ProjectsChecked) internal checkCycle;
 
-  function tentativeLeader () external view returns (address, bool) {
+  function tentativeLeader () external view returns (address , bool) {
     return (tentativeLeaderAddr, tentativeLeaderConfirmed());
   }
 
@@ -37,7 +37,7 @@ contract ProjectLeaderTracker is Ownable {
     candidateCount = candidateCount.add(1);
   }
 
-  function trackProject (address projectAddr) public { //we need more tests for new functionality (when its implemented)
+  function trackProject (address  projectAddr) public { //we need more tests for new functionality (when its implemented)
     require(projectAddr != address(0) && !Project(projectAddr).active());
 
     if(Project(projectAddr).open()) {
@@ -47,14 +47,14 @@ contract ProjectLeaderTracker is Ownable {
     recordCheck(projectAddr);
   }
 
-  function recordCheck (address projectAddr) internal {
+  function recordCheck (address  projectAddr) internal {
     if (!alreadyChecked(projectAddr)) {
      checkCycle[currentCheckCycle].totalChecked = checkCycle[currentCheckCycle].totalChecked.add(1);
      checkCycle[currentCheckCycle].isChecked[projectAddr] = true;
     }
   }
 
-  function updateTentativeLeader (address projectAddr) internal {
+  function updateTentativeLeader (address  projectAddr) internal {
     bool _leaderExists = leaderExists();
     bool _isLeader;
     bool _currentLeaderClosed;
@@ -81,11 +81,11 @@ contract ProjectLeaderTracker is Ownable {
     return tentativeLeaderAddr != address(0);
   }
 
-  function isLeader (address projAddr) internal view returns (bool) {
+  function isLeader (address  projAddr) internal view returns (bool) {
     return projAddr == tentativeLeaderAddr;
   }
 
-  function beatsLeader (address projAddr) internal view returns (bool) {
+  function beatsLeader (address  projAddr) internal view returns (bool) {
     return Project(projAddr).totalVotes_() > leadingVoteCount;
   }
 
@@ -95,7 +95,7 @@ contract ProjectLeaderTracker is Ownable {
     checkCycle[currentCheckCycle] = newProjectsChecked;
   }
 
-  function setTentativeLeader(address newLeaderAddr) internal {
+  function setTentativeLeader(address  newLeaderAddr) internal {
     tentativeLeaderAddr = newLeaderAddr;
     setLeadingVoteCount();
   }
@@ -116,7 +116,7 @@ contract ProjectLeaderTracker is Ownable {
     return !Project(tentativeLeaderAddr).open();
   }
 
-  function alreadyChecked (address projectAddr) internal view returns (bool) {
+  function alreadyChecked (address  projectAddr) internal view returns (bool) {
     return checkCycle[currentCheckCycle].isChecked[projectAddr];
   }
 

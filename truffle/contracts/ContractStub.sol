@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 
 contract ContractStub {
   struct CallData {
@@ -20,12 +20,12 @@ contract ContractStub {
 
   mapping(string => CallData) internal method;
 
-  function addMethod (string methodName) public {
+  function addMethod (string memory methodName) public {
     CallData memory newCallData;
     method[methodName] = newCallData;
   }
 
-  function resetMethod (string methodName) public {
+  function resetMethod (string memory methodName) public {
     CallData storage data = method[methodName];
 
     data.firstUint = 0;
@@ -44,13 +44,13 @@ contract ContractStub {
     data.correctCallOrder = false;
   }
 
-  function callHistory (string methodName) public view returns (
+  function callHistory (string memory methodName) public view returns (
     uint256,
     uint256,
     uint256,
-    string,
-    string,
-    string,
+    string memory,
+    string memory,
+    string memory, 
     address,
     address,
     address,

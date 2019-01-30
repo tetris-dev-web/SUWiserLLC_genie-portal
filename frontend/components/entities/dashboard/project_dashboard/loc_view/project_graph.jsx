@@ -24,7 +24,7 @@ class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-    //  projects:{},
+      projects:{},
       isModalOpen: false,
       projectClicked:{},
       doIHaveData: ''
@@ -40,6 +40,7 @@ class ProjectGraph extends React.Component {
   }
 
   componentDidMount(){
+    console.log("hi")
     this.props.fetchProjects(this.props.crowdsaleInstance, this.props.projectContract).then(() => {
       this.setUp();
     });
@@ -211,7 +212,7 @@ class ProjectGraph extends React.Component {
                          .distance(50);
 
     simulation.force("links", forceLinks);
-    this.addDragHandlers( simulation,circle, innerCircle, continentSquares, citySquares );
+    this.addDragHandlers( simulation,circle,innerCircle,continentSquares,citySquares );
     simulation.on('tick', () => this.tickActions(circle, circleText,continentText,cityText, link, innerCircle, scales.vScale,continentSquares,citySquares));
   }
 
@@ -284,13 +285,13 @@ class ProjectGraph extends React.Component {
               .nodes(allData)
               .force("charge_force", d3.forceManyBody())
               .force("center_force", d3.forceCenter(width / 2, height / 2))
-              .force("collide", d3.forceCollide(100).radius(function(d) {
+              .force("collide", d3.forceCollide(50).radius(function(d) {
                 if (d.valuation) {
                     return rscale(Number(d.valuation)) + 5;
                   } else {
                     return 10 + 20;
                   }
-                }).strength(4));
+                }).strength(2));
   }
 
   tickActions(circle, text,continentText,cityText, link, innerCircle, scale, continent,citySquares) {

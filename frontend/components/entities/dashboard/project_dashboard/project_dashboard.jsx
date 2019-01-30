@@ -26,16 +26,23 @@ class ProjectDashboard extends React.Component {
   }
 
   componentDidMount() {
+<<<<<<< HEAD
     if (this.props.web3){this.watchProjectPitch();}
+=======
+    if (this.props.web3){this.watchProjectPitch()}
+>>>>>>> ecf55fb940deb008e9fac2f88a6c197f47df8b81
   }
 
   watchProjectPitch() { //event listener for pitched projects
+    console.log("instance", this.props.crowdsaleInstance)
     this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
-      const address = event.args.projectAddress;
-      const title = event.args.name;
-      const project = this.props.projects[title];
-      project.instance = this.props.projectContract.at(address);
-      this.props.receiveProject(project);
+    console.log("projectInfo", this.props.projects)
+    console.log("event", event)
+    const address = event.args.projectAddress;
+    const title = event.args.title;
+    const project = this.props.projects[title];
+    project.instance = this.props.projectContract.at(address);
+    this.props.receiveProject(project);
     });
   }
 
@@ -106,6 +113,7 @@ class ProjectDashboard extends React.Component {
 
   }
 }
+// <div onClick={() => this.props.fetchTokenPurchaseLogs(this.props.crowdsaleInstance, this.props.web3)}>YYYYOO</div>
 
 // Add this in after fullstack refactoring of cashflow
 // <CashFlowGraph

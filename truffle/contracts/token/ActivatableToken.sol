@@ -1,10 +1,10 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 import './ERC20/MintableToken.sol';
 import '../Dividends.sol';
 import '../ContractStub.sol';
 
 contract ActivatableToken is MintableToken {
-  address public dividendWallet;
+  address  public dividendWallet;
   struct InactiveTokenCycle {
     mapping(address => bool) updated;
   }
@@ -13,7 +13,7 @@ contract ActivatableToken is MintableToken {
   mapping(uint256 => InactiveTokenCycle) internal inactiveTokenCycle;
 
   //should only be callable by the crowdsale
-  function resetInactiveTokenCycle (address developer) public {
+  function resetInactiveTokenCycle (address  developer) public {
     totalSupply_ = totalSupply_.sub(totalInactiveSupply());
     currentInactiveTokenCycle = currentInactiveTokenCycle.add(1);
 
@@ -25,7 +25,7 @@ contract ActivatableToken is MintableToken {
     updateAccountCycle(developer);
   }
 
-  function initializeDividendWallet(address _dividendWallet) public onlyOwner {
+  function initializeDividendWallet(address  _dividendWallet) external onlyOwner {
     dividendWallet = _dividendWallet;
   }
 
@@ -72,7 +72,8 @@ contract ActivatableToken is MintableToken {
       return balances[account].freedUp;
     }
     return activeBalanceOf(account); */
-    return balanceOf(account).sub(assignedBalanceOf(account));
+    uint256 totalBalance = balanceOf(account);
+    return totalBalance.sub(assignedBalanceOf(account));
   }
 
   mapping(address => uint256) internal lastActivationPoints;
@@ -80,11 +81,11 @@ contract ActivatableToken is MintableToken {
   uint256 public totalPendingActivations;
   uint256 internal activationMultiplier = 10e30;
 
-  function distributeOwedDividend(address account) internal {
+  function distributeOwedDividend(address  account) internal {
     Dividends(dividendWallet).distributeDividend(account);
   }
 
-  function activate(address account, uint256 amount) internal {
+  function activate(address  account, uint256 amount) internal {
     require(inactiveBalanceOf(account) >= amount);
     distributeOwedDividend(account);
 
@@ -93,13 +94,13 @@ contract ActivatableToken is MintableToken {
     totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
 
-  function pendingActivations(address account) public returns (uint256) {
+  function pendingActivations(address  account) public view returns (uint256) {
     uint256 pendingActivationPoints = totalActivationPoints.sub(lastActivationPoints[account]);
     uint256 inactiveAccountTokens = inactiveBalanceOf(account);
     return inactiveAccountTokens.mul(pendingActivationPoints).div(activationMultiplier);
   }
 
-  function activatePending (address account) external returns (bool) {
+  function activatePending (address  account) external returns (bool) {
     uint256 tokens = pendingActivations(account);
     activate(account, tokens);
     lastActivationPoints[account] = totalActivationPoints;
@@ -118,11 +119,12 @@ contract ActivatableToken is MintableToken {
     require(_value != 0);
     require(inactiveBalanceOf(msg.sender) >= _value);
     require(freedUpBalanceOf(msg.sender) >= _value);
-    super.transfer(_to, _value);//we should change this
 
     if (!accountCycleUpdated(_to)) {
       updateAccountCycle(_to);
     }
+    super.transfer(_to, _value);//we should change this
+
 
     balances[msg.sender].inactive = balances[msg.sender].inactive.sub(_value);
     balances[_to].inactive = balances[_to].inactive.add(_value);
@@ -138,7 +140,6 @@ contract ActivatableToken is MintableToken {
 
   function freeUp (address account, uint256 amount) public onlyOwner {
     require(amount != 0 && assignedBalanceOf(account) >= amount);
-
     //if we reach here, it means the account must be updated with the current cycle bc otherwise assignedBalanceOf returns 0
     balances[account].assigned = balances[account].assigned.sub(amount);
   }
@@ -161,7 +162,7 @@ contract ActivatableToken is MintableToken {
     inactiveTokenCycle[currentInactiveTokenCycle].updated[account] = true;
   }
 
-  function accountCycleUpdated (address account) internal returns (bool) {
-    return inactiveTokenCycle[currentInactiveTokenCycle].updated[account] == true;
+  function accountCycleUpdated (address account) internal view returns (bool) {
+    return inactiveTokenCycle[currentInactiveTokenCycle].updated[account] == true || currentInactiveTokenCycle == 0;
   }
 }

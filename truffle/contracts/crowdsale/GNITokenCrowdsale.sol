@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 import '../Project.sol';
@@ -15,19 +15,19 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   /* InvestorList public investorList; */
   ProjectLeaderTracker public projectLeaderTracker;
   Voting public voting;
-  address public dividendWallet;
+  address  public dividendWallet;
 
   constructor
       (
         uint256 _openingTime,
         uint256 _doomsDay,
         uint256 _rate,
-        address _developer,
-        address _dividendWallet,
+        address  _developer,
+        address  _dividendWallet,
         Token _token,
         /* InvestorList _investorList, */
         ProjectLeaderTracker _projectLeaderTracker,
-        address _reimbursements,
+        address  _reimbursements,
         Voting _voting
       )
       public
@@ -42,9 +42,9 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   event ProjectPitch (
     address projectAddress,
     address developer,
-    string name,
-    string lat,
-    string lng,
+    string  title,
+    string  lat,
+    string  lng,
     uint256 capitalRequired,
     uint256 valuation,
     uint256 developerTokens,
@@ -55,31 +55,37 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   /* mapping(address => bytes32) public voteHash;
   mapping(address => bytes32) public removeVoteHash; */
 
-  mapping(uint256 => address) internal projectAddress;
+  mapping(uint256 => address ) internal projectAddress;
   uint256 internal totalProjectCount;
 
   function totalProjectCount_() public view returns (uint256) {
     return totalProjectCount;
   }
 
-  function projectById (uint256 id) public view returns (address) {
+  function projectById (uint256 id) public view returns (address ) {
     return projectAddress[id];
   }
 
-  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng, bytes32 _voteForHash, bytes32 _voteAgainstHash) public {//should only be callable by developer. may need more tests
+  function pitchProject(string memory _title, uint256 capitalRequired, uint256 _valuation, string memory _lat, string memory _lng, bytes32 _voteForHash, bytes32 _voteAgainstHash) public returns (address ) {//should only be callable by developer. may need more tests
+   _extendDoomsDay(90);
+    return _pitchProject(_title, capitalRequired, _valuation, _lat, _lng, _voteForHash, _voteAgainstHash);
+  }
+
+  function _pitchProject(string memory _title, uint256 capitalRequired, uint256 _valuation, string memory _lat, string memory _lng, bytes32 _voteForHash, bytes32 _voteAgainstHash) internal returns (address ) {//should only be callable by developer. may need more tests
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);
-   Token(token).mint(this, investorTokens);
+   Token(token).mint(address(this), investorTokens);
 
-   _extendDoomsDay(90);
-
-    address projectAddr = new Project(_name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng, _voteForHash, _voteAgainstHash);
+    address  projectAddr = address(new Project(_title, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng));
     projectLeaderTracker.handleProjectPitch();
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
+    Project(projectAddr).transferOwnership(developer);
+    /* Project proj = Project(projectAddr); */
 
-    emit ProjectPitch(projectAddr, developer, _name, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
+    emit ProjectPitch(projectAddr, developer, _title, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
+    return projectAddr;
   }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
@@ -91,7 +97,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  function buyTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
    Token(token).activatePending(msg.sender);
 
-   uint256 voteCredit = super.buyTokens(msg.sender);
+   super.buyTokens(msg.sender);
    _extendDoomsDay(90);
   }
 
@@ -104,7 +110,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  function activateProject () public { //we need more tests for added functionality
    (
-     address tentativeLeaderAddr,
+     address  tentativeLeaderAddr,
      bool tentativeLeaderConfirmed
    ) = projectLeaderTracker.tentativeLeader();
 

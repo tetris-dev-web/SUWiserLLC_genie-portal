@@ -1,4 +1,4 @@
- pragma solidity ^0.4.24;
+ pragma solidity >=0.4.22 <0.6.0;
  import './ProjectLeaderTracker.sol';
 
  contract ProjectLeaderTrackerMock is ProjectLeaderTracker {
@@ -10,7 +10,7 @@
      return checkCycle[currentCheckCycle].isChecked[projectAddr];
    }
 
-   function setMockCheckedStatus (address projectAddr, bool status) public {
+   function setMockCheckedStatus (address  projectAddr, bool status) public {
      checkCycle[currentCheckCycle].isChecked[projectAddr] = status;
    }
 
@@ -22,7 +22,7 @@
      checkCycle[currentCheckCycle].totalChecked = num;
    }
 
-   function setMockTentativeLeader (address mockAddr) public {
+   function setMockTentativeLeader (address  mockAddr) public {
      tentativeLeaderAddr = mockAddr;
    }
 

@@ -4,6 +4,7 @@ import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capit
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
 import VoteShiftTool from './vote_shift_tool';
 import './votes_graph.scss';
+import { fetchVotesViewData } from '../../../../../actions/chain_actions/data_loaders';
 
 const deployedProjectsValuationMinMax = (projects) => {
   const projectValuations = projects.map(project => project.valuation);
@@ -11,8 +12,14 @@ const deployedProjectsValuationMinMax = (projects) => {
   return [Math.min(...projectValuations), Math.max(...projectValuations)];
 };
 
-const mapStateToProps = () => {
+const mapStateToProps = state => {
+
+
   return {
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    projectContract: state.network.projectContract,
+    web3: state.network.web3,
+
     pitchedProjects: [
       {
         id: 1,
@@ -257,6 +264,12 @@ const mapStateToProps = () => {
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchVotesViewData: (crowdsale, projectContract) => dispatch(fetchVotesViewData(crowdsale, projectContract, web3))
+  }
+}
+
 export class VotesGraph extends React.Component {
   constructor() {
     super();
@@ -264,14 +277,21 @@ export class VotesGraph extends React.Component {
     this.state = {
       selectedProject: null
     };
+
+    this.fetchVotesViewData = this.fetchVotesViewData.bind(this);
+  }
+
+  fetchVotesViewData () {
+    this.props.fetchVotesViewData(this.props.crowdsaleInstance, this.props.projectContract, this.props.web3);
   }
 
   render() {
     const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
     return (
       <div className="votes-graph" style={{ marginTop: maxValuation / 24000 }}>
+        <div onClick={this.fetchVotesViewData}>FETCH VOTE GRAPH DATA</div>
         <div className="vote-shift-tool-container"
-          ref={node => this.voteShiftTool = node} 
+          ref={node => this.voteShiftTool = node}
           style={{ top: -maxValuation / 24000 }}>
           {
             this.state.selectedProject &&
@@ -293,4 +313,4 @@ export class VotesGraph extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(VotesGraph);
+export default connect(mapStateToProps, mapDispatchToProps)(VotesGraph);

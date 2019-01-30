@@ -20,6 +20,8 @@ export const fetchProject = id => {
 };
 
 export const createProject = formData => {
+  console.log("form data: ", formData);
+
   return $.ajax({
     method: 'POST',
     url: 'api/projects',
@@ -27,6 +29,17 @@ export const createProject = formData => {
     // contentType: false,
     // dataType: 'json',
     data: {project: formData}
+  });
+};
+
+export const uploadPDF = (project, pdf_file) => {
+  return $.ajax({
+    method: 'PATCH',
+    processData: false,
+    contentType: false,
+    url: `api/projects/${project.id}`,
+    data: {project:{pdf_file}},
+    dataType: 'json',
   });
 };
 

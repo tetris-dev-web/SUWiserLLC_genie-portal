@@ -14,11 +14,25 @@ export const fetchProjects  = (crowdsale, projectContract) => {
   };
 };
 
-export const createProject = (crowdsale, projectData, account) => {
+export const fetchProjectActivationLogs = (crowdsale, web3) => {
   return dispatch => {
-    return APIUtil.createProject(projectData).then(project => {
-      dispatch(receiveProject(project));
-      return ChainUtil.pitchProject(crowdsale, projectData, account);
-    });
+    return ChainUtil.fetchProjectActivationLogs(crowdsale, web3)
+  }
+}
+
+// export const fetchCrowdsaleLogs = (crowdsale, web3) => {
+//   return dispatch => {
+//     return ChainUtil.fetchProjectActivationLogs(crowdsale, web3)
+//   }
+// }
+
+export const createProject = (crowdsale, railsParams, blockchainParams, pdf_file, account) => {
+  return dispatch => {
+    return APIUtil.createProject(railsParams).then(project => {
+      // return APIUtil.uploadPDF(project, pdf_file).then(()=>{
+        dispatch(receiveProject(project));
+        return ChainUtil.pitchProject(crowdsale, blockchainParams, account);
+      })
+    // });
   };
 };

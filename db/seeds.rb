@@ -286,6 +286,45 @@ BlockChainAccount.create!(private_key: 'B93CCB911EAD59F21CE693ACB2AAEC2B1377F1FF
 
 # projects
 
+project0  = Project.create!(
+  title: "HamInn",
+  description: "An chill place to stay in NYC.",
+  creator_id: user2.id,
+  continent: "North America",
+  city: "New York"
+)
+
+project2  = Project.create!(
+  title: "Matt\'s Mansion",
+  description: "A super big house.",
+  creator_id: user2.id,
+  continent: "South America",
+  city: "Rio"
+)
+
+project3  = Project.create!(
+  title: "Steven\'s Skyscraper",
+  description: "A really tall building named after a really awesome guy.",
+  creator_id: user2.id,
+  continent: "Europe",
+  city: "Rome"
+)
+
+project4  = Project.create!(
+  title: "Liam\'s Lounge",
+  description: "Low-key lounge for a low-key dude.",
+  creator_id: user2.id,
+  continent: "Asia",
+  city: "Shanghai"
+)
+
+project5  = Project.create!(
+  title: "Ryan\'s Rooftop",
+  description: "Where you go to live like a king.",
+  creator_id: user2.id,
+  continent: "Africa",
+  city: "Accra"
+)
 # project0 = Project.create!(
 #   title: "Genesis",
 #   revenue: 250000,
