@@ -130,18 +130,57 @@ class ProjectForm extends React.Component {
 
 
     // pdf_file: this.state.planFilePDF,
-    const projectData = Object.assign(
-      {},
-      this.state.projectData,
-      {
-        cashflow: JSON.stringify(this.state.projectData.cashflow),
-        actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
-        projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
-        accum_projected_cashflow: JSON.stringify(this.state.projectData.accum_projected_cashflow),
-        accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
-     });
-    console.log("project data: ", projectData);
-    this.props.createProject(this.props.crowdsaleInstance, projectData, this.state.pdf_file, this.props.account).then(() => {
+    // const projectData = Object.assign(
+    //   {},
+    //   this.state.projectData,
+    //   {
+    //     cashflow: JSON.stringify(this.state.projectData.cashflow),
+    //     actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
+    //     projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
+    //     accum_projected_cashflow: JSON.stringify(this.state.projectData.accum_projected_cashflow),
+    //     accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
+    //  });
+
+    let {
+        title,
+        latitude,
+        longitude,
+        summary,
+        description,
+        city,
+        country,
+        continent,
+        capital_required,
+        valuation,
+        creator_id
+      } = this.state.projectData
+
+      const railsParams = {
+          title,
+          city,
+          country,
+          continent,
+          summary,
+          description,
+          creator_id,
+          cashflow: JSON.stringify(this.state.projectData.cashflow),
+          actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
+          projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
+          accum_projected_cashflow: JSON.stringify(this.state.projectData.accum_projected_cashflow),
+          accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
+        }
+
+      const blockchainParams = {
+        title,
+        valuation,
+        capital_required,
+        latitude,
+        longitude
+      }
+
+
+    // console.log("project data: ", projectData);
+    this.props.createProject(this.props.crowdsaleInstance, railsParams, blockchainParams, this.state.pdf_file, this.props.account).then(() => {
       if (this.props.errors.length == 0) {
         this.props.closeModal();
         // window.location.reload();

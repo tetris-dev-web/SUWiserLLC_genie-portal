@@ -1,12 +1,12 @@
-pragma solidity ^0.4.23;
+pragma solidity >=0.4.22 <0.6.0;
 import './utility/SafeMath.sol';
 import './utility/Ownable.sol';
 import './Dividends.sol';
-import './ECRecovery.sol';
+/* import './ECRecovery.sol'; */
 
 contract Project is Ownable {
   using SafeMath for uint256;
-  using ECRecovery for bytes32;
+  /* using ECRecovery for bytes32; */
   //these will all need to be private so they cannot be set arbitrarily
   //we'll make read methods when necessary
   string private title;
@@ -22,21 +22,18 @@ contract Project is Ownable {
   uint256 internal totalVotes;
   bool public active;
   uint256 public activationTime;
-  bytes32 private voteForHash;
-  bytes32 private voteAgainstHash;
   constructor (
-    string _title,
+    string memory _title,
     address _developer,
     address _dividendWallet,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
     uint256 _investorTokens,
-    string _lat,
-    string _lng,
-    bytes32 _voteForHash,
-    bytes32 _voteAgainstHash
-    ) public {
+    string memory _lat,
+    string memory _lng
+    ) public
+    {
       title = _title;
       developer = _developer;
       dividendWallet = _dividendWallet;
@@ -49,8 +46,6 @@ contract Project is Ownable {
       totalVotes = 0;
       active = false;
       closingTime = now + 86600 * 240;
-      voteForHash = _voteForHash;
-      voteAgainstHash = _voteAgainstHash;
   }
   event LogProject (
       address addr,
@@ -96,7 +91,7 @@ contract Project is Ownable {
   /* function id_ () public view returns (uint256) {
     return id;
   } */
-  function title_ () public view returns (string) {
+  function title_ () public view returns (string memory) {
     return title;
   }
 
@@ -145,6 +140,8 @@ contract Project is Ownable {
 
   mapping(address => bool) internal managers;
 
+  function () external payable {}
+
   modifier authorize () {
     require(managers[msg.sender] == true || msg.sender == developer);
     _;
@@ -164,10 +161,10 @@ contract Project is Ownable {
     dividendWallet = wallet;
   }
 
-  function vote (address voter, uint256 voteAmount, bytes _signedMessage) external onlyOwner {
+  function vote (address voter, uint256 voteAmount) external onlyOwner {
     //maybe require that its open and not active
-    address recoveredVoter = voteForHash.recover(_signedMessage);
-    require(recoveredVoter == voter);
+    /* address recoveredVoter = voteForHash.recover(_signedMessage);
+    require(recoveredVoter == voter); */
     votes[voter] = votes[voter].add(voteAmount);
     totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
@@ -175,9 +172,9 @@ contract Project is Ownable {
     /* emit VoteChange(address(this), title, totalVotes); */
   }
 
-  function voteAgainst (address voter, uint256 voteAmount, bytes _signedMessage) onlyOwner {
-    address recoveredVoter = voteAgainstHash.recover(_signedMessage);
-    require(recoveredVoter == voter);
+  function voteAgainst (address voter, uint256 voteAmount) external onlyOwner {
+    /* address recoveredVoter = voteAgainstHash.recover(_signedMessage);
+    require(recoveredVoter == voter); */
     removeVotes_(voter, voteAmount);
   }
 
@@ -206,7 +203,7 @@ contract Project is Ownable {
     /* emit ProjectActivation(address(this), title, active, capitalRequired, valuation); */
   }
 
-  function beats (address otherProject) public view returns (bool) {
+  function beats (address  otherProject) public view returns (bool) {
     return totalVotes > 0 && totalVotes >= Project(otherProject).totalVotes_();
   }
 }

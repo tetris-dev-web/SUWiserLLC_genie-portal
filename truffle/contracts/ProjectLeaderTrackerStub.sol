@@ -1,16 +1,16 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 import './ProjectLeaderTracker.sol';
 import './ContractStub.sol';
 
 contract ProjectLeaderTrackerStub is ProjectLeaderTracker, ContractStub {
   address addr;
-  function trackProject (address projectAddr) public { //we need more tests for new functionality (when its implemented)
+  function trackProject (address  projectAddr) public { //we need more tests for new functionality (when its implemented)
     CallData storage methodState = method['trackProject'];
     methodState.firstAddress = projectAddr;
     methodState.called = true;
   }
 
-  function tentativeLeader () external view returns (address, bool) {
+  function tentativeLeader () external view returns (address , bool) {
     return (address(0), true);
   }
 

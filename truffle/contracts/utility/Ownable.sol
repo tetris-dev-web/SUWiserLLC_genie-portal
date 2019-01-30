@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 
 
 /**
@@ -33,6 +33,9 @@ contract Ownable {
     _;
   }
 
+  function _owner () public view returns (address) {
+    return owner;
+  }
   /**
    * @dev Allows the current owner to relinquish control of the contract.
    * @notice Renouncing to ownership will leave the contract without an owner.
@@ -48,7 +51,10 @@ contract Ownable {
    * @dev Allows the current owner to transfer control of the contract to a newOwner.
    * @param _newOwner The address to transfer ownership to.
    */
+
+  uint256 check;
   function transferOwnership(address _newOwner) public onlyOwner {
+    check = 5;
     _transferOwnership(_newOwner);
   }
 

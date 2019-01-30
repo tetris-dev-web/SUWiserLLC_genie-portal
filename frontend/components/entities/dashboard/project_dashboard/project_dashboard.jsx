@@ -26,7 +26,7 @@ class ProjectDashboard extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.web3){this.watchProjectPitch();}
+    if (this.props.web3){this.watchProjectPitch()}
   }
 
   watchProjectPitch() { //event listener for pitched projects
@@ -84,6 +84,7 @@ class ProjectDashboard extends React.Component {
     if (this.props.currentUser) {
       return (
         <div className="project-dashboard">
+          <div onClick={() => this.props.fetchTokenPurchaseLogs(this.props.crowdsaleInstance, this.props.web3)}>YYYYOO</div>
           <div className="graph-container">
             {currentGraph}
           </div>

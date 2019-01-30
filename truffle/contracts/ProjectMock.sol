@@ -1,20 +1,18 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 
 import './Project.sol';
 
 contract ProjectMock is Project {
   constructor (
-    string _name,
+    string memory _name,
     address _developer,
     address _dividendWallet,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
     uint256 _investorTokens,
-    string _lat,
-    string _lng,
-    bytes32 _voteForHash,
-    bytes32 _voteAgainstHash
+    string memory _lat,
+    string memory _lng
     ) public Project(
       _name,
       _developer,
@@ -24,9 +22,7 @@ contract ProjectMock is Project {
       _developerTokens,
       _investorTokens,
       _lat,
-      _lng,
-      _voteForHash,
-      _voteAgainstHash
+      _lng
       ) {}
 
   function removeMockVoter (address addr) public {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_19_200806) do
+ActiveRecord::Schema.define(version: 2019_01_23_191717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,32 +52,22 @@ ActiveRecord::Schema.define(version: 2019_01_19_200806) do
 
   create_table "projects", force: :cascade do |t|
     t.string "title", null: false
-    t.decimal "valuation", null: false
-    t.string "model_id"
     t.string "icon"
     t.text "description"
     t.integer "creator_id", null: false
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "file_file_name"
     t.string "file_content_type"
     t.integer "file_file_size"
     t.datetime "file_updated_at"
-    t.decimal "revenue"
     t.string "city"
     t.string "country"
     t.string "continent"
-    t.string "status"
     t.string "bus_plan_link"
     t.string "sketch_link"
     t.jsonb "cashflow"
     t.date "start_date"
-    t.decimal "latitude", precision: 10, scale: 6
-    t.decimal "longitude", precision: 10, scale: 6
     t.string "summary"
-    t.float "capital_required"
-    t.datetime "close_date"
-    t.jsonb "votes"
     t.jsonb "actual_cashflow"
     t.jsonb "accum_actual_cashflow"
     t.jsonb "projected_cashflow"
@@ -118,5 +108,4 @@ ActiveRecord::Schema.define(version: 2019_01_19_200806) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
 end

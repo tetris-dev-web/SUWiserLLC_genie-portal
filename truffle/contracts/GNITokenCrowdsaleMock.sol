@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 
 import './token/ERC20/Token.sol';
 import './crowdsale/GNITokenCrowdsale.sol';
@@ -14,12 +14,12 @@ constructor
     uint256 _openingTime,
     uint256 _doomsDay,
     uint256 _rate,
-    address _developer,
-    address _dividendWallet,
+    address  _developer,
+    address  _dividendWallet,
     TokenStub _token,
     /* InvestorListStub _investorList, */
     ProjectLeaderTracker _projectLeaderTracker,
-    address _reimbursements,
+    address  _reimbursements,
     Voting _voting
   )
   public

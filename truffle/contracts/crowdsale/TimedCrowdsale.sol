@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 
 import '../utility/SafeMath.sol';
 import "./Crowdsale.sol";
@@ -14,7 +14,7 @@ contract TimedCrowdsale is Crowdsale {
   uint256 public openingTime;
   uint256 public doomsDay;
   bool public canReOpen;
-  address public reimbursements;
+  address  public reimbursements;
   /**
    * @dev Reverts if not in crowdsale time range.
    */
@@ -42,7 +42,7 @@ contract TimedCrowdsale is Crowdsale {
    * @param _openingTime Crowdsale opening time
    * @param _doomsDay Crowdsale closing time
    */
-  constructor(uint256 _openingTime, uint256 _doomsDay, address _reimbursements) public {
+  constructor(uint256 _openingTime, uint256 _doomsDay, address  _reimbursements) public {
     // solium-disable-next-line security/no-block-members
     require(_openingTime >= block.timestamp);
     require(_doomsDay >= _openingTime);
