@@ -30,19 +30,17 @@ export class SummaryAndPlan extends React.Component{
   // TODO create indication of text being edited by highlighting outline of div and flashing save in small text in same color
 
   handleKeyPress(event){
-    const { editProject } = this.props;
+    const { editProject, closeModal } = this.props;
     // event.preventDefault();
-    console.log(event.charCode);
     if(event.charCode === 13){
-      console.log("calling edit project!");
-      const project = this.state
-      console.log(editProject(project));
+      const project = this.state;
       editProject(project)();
-    };
+      closeModal();
+    }
   }
 
   render(){
-    const { isInvestor, summary, bus_plan_link,  } = this.props
+    const { isInvestor, bus_plan_link,  } = this.props
     return (
       <div className="project-description">
 

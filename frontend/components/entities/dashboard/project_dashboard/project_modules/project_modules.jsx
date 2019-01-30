@@ -36,7 +36,7 @@ class ProjectModules extends React.Component {
 
   render() {
 
-      const { projectClicked, isInvestor, isModalOpen, closeModalOnClick, doIHaveData} = this.props
+      const { projectClicked, isInvestor, isModalOpen, closeModalOnClick, doIHaveData, closeModal } = this.props
       const {model_link,showText} = this.state
       const noDataComponent = <h1 className="nodata-text">No data available</h1>
 
@@ -74,7 +74,8 @@ class ProjectModules extends React.Component {
                                       summary = {projectClicked.summary}
                                       bus_plan_link = {projectClicked.bus_plan_link}
                                       editProject={editProject}
-                                      id={projectClicked.id} />
+                                      id={projectClicked.id}
+                                      closeModal={closeModal} />
 
                     <ProjectMap       projectClicked={ projectClicked } />
 

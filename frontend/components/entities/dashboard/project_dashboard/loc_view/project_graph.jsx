@@ -36,6 +36,7 @@ class ProjectGraph extends React.Component {
     this.createSVG = this.createSVG.bind(this);
     this.tickActions = this.tickActions.bind(this);
     this.toggleModalonClickandPassProject = this.toggleModalonClickandPassProject.bind(this);
+    this.closeModal = this.closeModal.bind(this);
 
   }
 
@@ -60,6 +61,10 @@ class ProjectGraph extends React.Component {
       : this.setState( {doIHaveData:false })
 
     };
+
+    closeModal(){
+      this.setState({ isModalOpen: false });
+    }
 
 
 
@@ -448,6 +453,7 @@ class ProjectGraph extends React.Component {
                   isModalOpen = {this.state.isModalOpen}
                   closeModalOnClick = {this.toggleModalonClickandPassProject}
                   doIHaveData = {this.state.doIHaveData}
+                  closeModal={this.closeModal}
                   />
         </div>)
     }
