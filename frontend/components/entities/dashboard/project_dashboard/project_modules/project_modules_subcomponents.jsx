@@ -16,40 +16,58 @@ export function Title (props){
 }
 
 
-export function SummaryAndPlan (props){
+export class SummaryAndPlan extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      id: this.props.id,
+      summary: this.props.summary
+    };
+
+    this.handleKeyPress = this.handleKeyPress.bind(this)
+  }
   // TODO figure out how to submit div text based on which key is pressed (Enter)
   // TODO create indication of text being edited by highlighting outline of div and flashing save in small text in same color
 
-  // handleKeyPress(event) {
-  //   event.preventDefault()
-  //   console.log("event value: ", event.value)
-  //   if(event.key == 'Enter'){
-  //     props.editProject({id: this.state.projectClicked.id, summary: event.value});
-  //   }
-  // }
+  handleKeyPress(event){
+    const { editProject } = this.props;
+    // event.preventDefault();
+    console.log(event.charCode);
+    if(event.charCode === 13){
+      console.log("calling edit project!");
+      const project = this.state
+      console.log(editProject(project));
+      editProject(project)();
+    };
+  }
 
-  return (
-    <div className="project-description">
+  render(){
+    const { isInvestor, summary, bus_plan_link,  } = this.props
+    return (
+      <div className="project-description">
 
-      <div className="project-text">
-        <textarea onChange={null}
-                  disabled={props.isInvestor}
-                  className="project-summary"
-                  value={props.summary}/>
-      </div>
+        <div className="project-text">
+          <textarea onKeyPress={this.handleKeyPress}
+            onChange={(event)=> this.setState({summary: event.target.value})}
+            disabled={isInvestor}
+            className="project-summary"
+            value={this.state.summary}/>
+        </div>
 
-      <div className="bus-plan-download">
-        <a  target="_blank"
+        <div className="bus-plan-download">
+          <a  target="_blank"
             rel="noopener noreferrer"
-            href={ `${props.bus_plan_link}` }>
-          <i className="fas fa-file-contract">
-            <span>business plan</span>
-          </i>
-        </a>
-      </div>
+            href={ `${bus_plan_link}` }>
+            <i className="fas fa-file-contract">
+              <span>business plan</span>
+            </i>
+          </a>
+        </div>
 
-    </div>
-  )
+      </div>
+    )
+
+  }
 }
 
 

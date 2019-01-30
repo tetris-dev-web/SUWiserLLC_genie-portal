@@ -5,6 +5,7 @@ import ProjectMap from './project_modules_map';
 import ProjectThermo from './project_modules_thermo';
 import CashFlowGraph from './project_modules_cashflow';
 import {Title, IframeFor3dModel, CloseButton, SummaryAndPlan } from './project_modules_subcomponents';
+import { editProject } from '../../../../../actions/project_actions'
 
 
 class ProjectModules extends React.Component {
@@ -71,7 +72,9 @@ class ProjectModules extends React.Component {
                                       handleKeyPress = {null}
                                       isInvestor = {isInvestor}
                                       summary = {projectClicked.summary}
-                                      bus_plan_link = {projectClicked.bus_plan_link} />
+                                      bus_plan_link = {projectClicked.bus_plan_link}
+                                      editProject={editProject}
+                                      id={projectClicked.id} />
 
                     <ProjectMap       projectClicked={ projectClicked } />
 
