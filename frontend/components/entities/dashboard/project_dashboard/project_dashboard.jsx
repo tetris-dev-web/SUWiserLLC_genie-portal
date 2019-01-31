@@ -26,7 +26,7 @@ class ProjectDashboard extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.web3){this.watchProjectPitch()}
+    if (this.props.web3){this.watchProjectPitch();}
   }
 
   watchProjectPitch() { //event listener for pitched projects
