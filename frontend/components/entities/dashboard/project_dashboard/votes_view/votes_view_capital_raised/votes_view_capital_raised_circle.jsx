@@ -1,4 +1,5 @@
 import React from 'react';
+import ProjectModules from '../../project_modules/project_modules';
 
 class VotesViewCapitalRaisedCircle extends React.Component {
 	constructor() {
@@ -18,9 +19,14 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 
 	render() {
 		const { xScale, yScale, circleScale, project, opacity } = this.props;
-
 		return (
 			<React.Fragment>
+				<ProjectModules
+					projectClicked={project}
+					isModalOpen={"filler"}
+					closeModalOnClick={"filler"}
+					doIHaveData={true}
+					closeModal={"filler"} />
 				<circle
 					fill="#bdc4c9"
 					cx={xScale(project.time)}

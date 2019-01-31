@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
 import VoteShiftTool from './vote_shift_tool';
+import ProjectModules from '../project_modules/project_modules_subcomponents';
+import { calculateCashflowData } from '../../../../../util/project_api_util'
 import './votes_graph.scss';
 
 const deployedProjectsValuationMinMax = (projects) => {
@@ -217,19 +219,37 @@ const mapStateToProps = () => {
         title: 'proj1',
         time: 3369600,
         capital: 1900000,
-        valuation: 3000000
+        valuation: 3000000,
+        cashflow: cashflow,
+        accumActualCashflow: accumActualCashflow,
+        projectedCashflow: projectedCashflow,
+        actualCashflow: actualCashflow,
+        accumProjectedCashflow: accumProjectedCashflow,
+        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
       },
       {
         title: 'proj2',
         time: 6825600,
         capital: 2500000,
-        valuation: 4000000
+        valuation: 4000000,
+        cashflow: cashflow,
+        accumActualCashflow: accumActualCashflow,
+        projectedCashflow: projectedCashflow,
+        actualCashflow: actualCashflow,
+        accumProjectedCashflow: accumProjectedCashflow,
+        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
       },
       {
         title: 'proj3',
         time: 11318400,
         capital: 4436961,
-        valuation: 6000000
+        valuation: 6000000,
+        cashflow: cashflow,
+        accumActualCashflow: accumActualCashflow,
+        projectedCashflow: projectedCashflow,
+        actualCashflow: actualCashflow,
+        accumProjectedCashflow: accumProjectedCashflow,
+        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
       }
     ],
     deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(
@@ -273,7 +293,7 @@ class VotesGraph extends React.Component {
     return (
       <div className="votes-graph" style={{ marginTop: maxValuation / 24000 }}>
         <div className="vote-shift-tool-container"
-          ref={node => this.voteShiftTool = node} 
+          ref={node => this.voteShiftTool = node}
           style={{ top: -maxValuation / 24000 }}>
           {
             this.state.selectedProject &&
@@ -296,3 +316,124 @@ class VotesGraph extends React.Component {
 }
 
 export default connect(mapStateToProps)(VotesGraph);
+
+const cashflow = {
+  "1": {
+    "cashFlow": -36974,
+    "isActuals": true
+  },
+  "2": {
+    "cashFlow": -40018,
+    "isActuals": true
+  },
+  "3": {
+    "cashFlow": -16857,
+    "isActuals": true
+  },
+  "4": {
+    "cashFlow": -2915,
+    "isActuals": true
+  },
+  "5": {
+    "cashFlow": -20325,
+    "isActuals": true
+  },
+  "6": {
+    "cashFlow": 7864,
+    "isActuals": true
+  },
+  "7": {
+    "cashFlow": 25360,
+    "isActuals": true
+  },
+  "8": {
+    "cashFlow": 28107,
+    "isActuals": true
+  },
+  "9": {
+    "cashFlow": 28942,
+    "isActuals": false
+  },
+  "10": {
+    "cashFlow": 28696,
+    "isActuals": false
+  },
+  "11": {
+    "cashFlow": 29356,
+    "isActuals": false
+  },
+  "12": {
+    "cashFlow": 28854,
+    "isActuals": false
+  },
+  "13": {
+    "cashFlow": 28588,
+    "isActuals": false
+  },
+  "14": {
+    "cashFlow": 30781,
+    "isActuals": false
+  },
+  "15": {
+    "cashFlow": 29081,
+    "isActuals": false
+  },
+  "16": {
+    "cashFlow": 31887,
+    "isActuals": false
+  },
+  "17": {
+    "cashFlow": 51887,
+    "isActuals": false
+  },
+  "18": {
+    "cashFlow": 71887,
+    "isActuals": false
+  },
+  "19": {
+    "cashFlow": 30339,
+    "isActuals": false
+  },
+  "20": {
+    "cashFlow": 30718,
+    "isActuals": false
+  },
+  "21": {
+    "cashFlow": 31102,
+    "isActuals": false
+  },
+  "22": {
+    "cashFlow": 31491,
+    "isActuals": false
+  },
+  "23": {
+    "cashFlow": 31885,
+    "isActuals": false
+  },
+  "24": {
+    "cashFlow": 32283,
+    "isActuals": false
+  },
+  "25": {
+    "cashFlow": 32687,
+    "isActuals": false
+  },
+  "26": {
+    "cashFlow": 33096,
+    "isActuals": false
+  },
+  "27": {
+    "cashFlow": 33509,
+    "isActuals": false
+  },
+  "28": {
+    "cashFlow": 33928,
+    "isActuals": false
+  }
+};
+
+const cashflowData = calculateCashflowData(cashflow);
+const projectedCashflow = cashflowData.projected_cashflow;
+const actualCashflow = cashflowData.actual_cashflow;
+const accumProjectedCashflow = cashflowData.accum_projected_cashflow;
+const accumActualCashflow = cashflowData.accum_actual_cashflow;

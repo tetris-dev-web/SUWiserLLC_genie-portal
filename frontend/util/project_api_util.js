@@ -53,7 +53,7 @@ export const calculateAccumulatedRevenue = (cashflow) => {
     accumulatedSum += cashflow[quarter.toString()]['cashFlow'];
     accumulatedRevenue[quarter.toString()] = accumulatedSum;
   });
-  console.log('accrev:', accumulatedRevenue)
+  // console.log('accrev:', accumulatedRevenue)
   return accumulatedRevenue;
 };
 
@@ -66,7 +66,7 @@ export const calculateCashflowData = (cashflow) => {
   let projectedSum = 0
 
   for (var quarter in cashflow){
-    console.log("Quarter is: ", cashflow[quarter]);
+    // console.log("Quarter is: ", cashflow[quarter]);
     accumProjectedCashflow[quarter] = {}
     projectedCashflow[quarter] = {}
     actualCashflow[quarter] = {}
