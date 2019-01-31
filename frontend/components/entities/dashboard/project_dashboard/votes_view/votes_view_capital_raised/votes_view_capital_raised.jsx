@@ -4,7 +4,6 @@ import VotesViewCapitalRaisedRect from './votes_view_capital_raised_rect';
 import VotesViewCapitalRaisedPath from './votes_view_capital_raised_path';
 import VotesViewCapitalRaisedLine from './votes_view_capital_raised_line';
 import VotesViewCapitalRaisedCircle from './votes_view_capital_raised_circle';
-import VotesViewCapitalRaisedRectText from './votes_view_capital_raised_text';
 import colors from  "../../../../../../util/_variables.scss";
 
 class VotesViewCapitalRaised extends React.Component {
@@ -12,13 +11,8 @@ class VotesViewCapitalRaised extends React.Component {
     super(props);
 
     this.state = {
-      currentWindowWidth: window.innerWidth,
       capBeingRaisedHovered: false,
-      timerOn: false,
-      capRaisedHovered: false
     };
-    this.setHoveredStateOnEnter.bind(this);
-    this.setHoveredStateOnLeave.bind(this);
   }
 
   componentDidMount() {
@@ -27,22 +21,8 @@ class VotesViewCapitalRaised extends React.Component {
     };
   }
 
-  setHoveredStateOnEnter(component){
-    if(!this.state.timerOn) {
-      setTimeout( () => {
-        this.setState({[component]: false});
-        this.setState({timerOn:false});
-       }, 10000);
-      this.setState({timerOn:true});
-    }
-    return () => this.setState({[component]: true });
-  }
-  setHoveredStateOnLeave(component){
-    return () => this.setState({[component]: false });
-  }
-
   render() {
-    const { maxValuation, capitalBeingRaised, capitalTotal, lineData, startTime, endTime, deployedProjects, deployedProjectsValuationMinMax, selectedProject } = this.props;
+    const { capitalBeingRaised, capitalTotal, lineData, startTime, endTime, deployedProjects, deployedProjectsValuationMinMax, selectedProject } = this.props;
     const xScale = d3.scaleLinear()
       .domain([startTime, endTime])
       .range([0, window.innerWidth]);
@@ -55,7 +35,7 @@ class VotesViewCapitalRaised extends React.Component {
       .domain(deployedProjectsValuationMinMax)
       .range([.5, 1.5]);
 
-    const lines = deployedProjects.map((project, idx) => (
+    const Lines = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedLine key={idx}
         xScale={xScale}
         yScale={yScale}
@@ -63,7 +43,7 @@ class VotesViewCapitalRaised extends React.Component {
         opacity={selectedProject ? "0.2" : "1"}/>
     ));
 
-    const circles = deployedProjects.map((project, idx) => (
+    const Circles = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedCircle key={idx}
         xScale={xScale}
         yScale={yScale}
@@ -72,81 +52,62 @@ class VotesViewCapitalRaised extends React.Component {
         opacity={selectedProject ? "0.2" : "1"}/>
     ));
 
-    const CapRaisedAmounts = deployedProjects.map((project, idx) => (
-      <VotesViewCapitalRaisedRectText
+    const Path = <VotesViewCapitalRaisedPath
+      xScale={xScale}
+      yScale={yScale}
+      opacity={selectedProject ? "0.2" : "1"}
+      lineData={lineData} />;
+    
+    const heightOfCapitalBeingRaisedRect = capitalBeingRaised / 24000;
+    const CapitalBeingRaisedRect = <VotesViewCapitalRaisedRect
+      x="0" y="0"
+      fill={colors.rosyBrown}
+      height={heightOfCapitalBeingRaisedRect}
+      opacity={selectedProject ? "0.1" : "0.3"} 
+      textToDisplay={() => (
+        <g>
+          <text className="votes-view-capital-raised-text"
+            x="93%" y={heightOfCapitalBeingRaisedRect / 2}>
+            <tspan dy=".4em">capital being raised</tspan>
+          </text>
+          <text className="votes-view-capital-raised-text"
+            x="7%" y={heightOfCapitalBeingRaisedRect / 2}>
+            <tspan dy=".4em">{`$ ${Number(capitalBeingRaised / 1000.0).toLocaleString()} k`}</tspan>
+          </text>
+        </g>
+      )}/>;
+
+    const heightOfCapitalRaisedPrevRect = (capitalTotal - capitalBeingRaised) / 24000;
+    const capRaisedAmounts = deployedProjects.map((project, idx) => (
+      <text className="votes-view-capital-raised-text"
         key={idx}
-        project={project}
         x={"7%"}
-        y={idx ? yScale((project.capital + deployedProjects[idx-1].capital)/2) : yScale((project.capital + ((capitalTotal - capitalBeingRaised) / 24000) + (capitalBeingRaised / 24000))/2 )}/>
+        y={idx ? yScale((project.capital + deployedProjects[idx-1].capital)/2) : yScale((project.capital + ((capitalTotal - capitalBeingRaised) / 24000) + (capitalBeingRaised / 24000))/2 )}>
+        <tspan dy=".4em">{`$ ${Number(project.capital / 1000.0).toLocaleString()} k`}</tspan>
+      </text>
     ));
-
-    const CapBeingRaisedAmounts = (props) => {
-      const yScaleFunction = capitalBeingRaised / 24000;
-      return (
-        <text
-          className={"votes-view-capital-raised-text"}
-          x={"7%"}
-          y={yScaleFunction/2}>
-          <tspan
-            dy={".4em"}>
-            {`$ ${Number(capitalBeingRaised/1000.0).toLocaleString()} k`}
-          </tspan>
-        </text>
-      );
-    };
-
-
-
-    const CapitalBeingRaisedRect = (props) => {
-      const heightOfRect = capitalBeingRaised / 24000;
-
-      return (<VotesViewCapitalRaisedRect
-        x="0" y="0"
-        height={heightOfRect}
-        fill={colors.rosyBrown}
-        capRaisedTextToDisplay = {{"text":"capital being raised"}}
-        setHoveredStateOnEnter={this.setHoveredStateOnEnter("capBeingRaisedHovered")}
-        setHoveredStateOnLeave= {this.setHoveredStateOnLeave("capBeingRaisedHovered")}
-        opacity={selectedProject ? "0.1" : "0.3"}
-        hovered={this.state.capBeingRaisedHovered}/>);
-    };
-
-
-    const CapitalRaisedPrevRect = (props) => {
-      const heightOfRect = (capitalTotal - capitalBeingRaised) / 24000;
-      const textToDisplay = {
-        "text": "capital that has been raised" ,
-        "amount": Number(capitalBeingRaised/1000.0).toLocaleString()
-      };
-      return (<VotesViewCapitalRaisedRect
-        x="0" y={capitalBeingRaised / 24000}
-        height={heightOfRect}
-        fill= {colors.teal}
-        opacity={selectedProject ? "0.1" : "0.3"}
-        capRaisedTextToDisplay =  {textToDisplay}
-        setHoveredStateOnEnter={this.setHoveredStateOnEnter("capRaisedHovered")}
-        setHoveredStateOnLeave= {this.setHoveredStateOnLeave("capRaisedHovered")}
-        hovered={this.state.capRaisedHovered}/>);
-    };
-
-
+    const CapitalRaisedPrevRect = <VotesViewCapitalRaisedRect
+      x="0" y={capitalBeingRaised / 24000}
+      fill={colors.teal}
+      height={heightOfCapitalRaisedPrevRect}
+      opacity={selectedProject ? "0.1" : "0.3"} 
+      textToDisplay={() => (
+        <g>
+          <text className="votes-view-capital-raised-text"
+            x="93%" y={capitalBeingRaised / 24000 + heightOfCapitalRaisedPrevRect / 2}>
+            <tspan dy=".4em">capital that has been raised</tspan>
+          </text>
+          {capRaisedAmounts}
+        </g>
+      )}/>;
 
     return (
       <g className="votes-view-capital-raised">
-
-        <CapitalBeingRaisedRect />
-        <CapitalRaisedPrevRect />
-
-        <VotesViewCapitalRaisedPath
-          xScale={xScale}
-          yScale={yScale}
-          opacity={selectedProject ? "0.2" : "1"}
-          lineData={lineData} />
-
-        {lines}
-        {circles}
-        {this.state.capRaisedHovered && CapRaisedAmounts}
-        {this.state.capBeingRaisedHovered && <CapBeingRaisedAmounts/>}
+        {CapitalBeingRaisedRect}
+        {CapitalRaisedPrevRect}
+        {Path}
+        {Lines}
+        {Circles}
       </g>
     );
   }

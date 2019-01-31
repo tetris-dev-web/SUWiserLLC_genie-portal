@@ -2,10 +2,10 @@ import React from 'react';
 import Modal from 'react-modal';
 import DrizzleConsumer from '../../../drizzle/drizzleConsumer';
 
-import Transfer from './transfer';
+import BuyForm from './buy_form';
 import ModalStyle from './modal_style';
 
-class TransferModal extends React.Component {
+class BuyFormModal extends React.Component {
   constructor(props) {
 
     super(props);
@@ -34,7 +34,7 @@ class TransferModal extends React.Component {
 
     return (
       <div className="modal-button-cont">
-        <div className="modal-button" onClick={this.openModal}>Transfer</div>
+        <div className={this.state.openModal ? "modal-button-modal-open" : "modal-button"} onClick={this.openModal}>BUY</div>
 
         <Modal
           isOpen={this.state.openModal}
@@ -42,6 +42,8 @@ class TransferModal extends React.Component {
           style={ModalStyle}
           contentLabel="Transfer Modal"
           className="modal-container">
+          <BuyForm 
+            closeModal={this.closeModal}/>
         </Modal>
       </div>
     );
@@ -51,4 +53,4 @@ class TransferModal extends React.Component {
 // contract={this.props.contract}
 
 // <DrizzleConsumer props={{closeModal: this.closeModal}} component={Transfer}/>
-export default TransferModal;
+export default BuyFormModal;

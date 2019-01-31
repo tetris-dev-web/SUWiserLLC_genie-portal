@@ -1,13 +1,15 @@
 import React from 'react';
 import ToggleOptions from '../dashboard_toggle_options/toggle_options';
 import TokenGraph from './token_view/token_graph';
+import PriceGraph from './price_view/price_graph';
+import './token_dashboard.scss';
 
 class TokenDashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.viewTypes = ["BY USER", "BY ALL", "BY LOCATION"];
+    this.viewTypes = ["BY USER", "BY ALL", "BY PRICE"];
     this.state = {
-      currentViewId: 0
+      currentViewId: null
     };
 
     this.toggleView = this.toggleView.bind(this);
@@ -31,6 +33,8 @@ class TokenDashboard extends React.Component {
           currentViewType={this.viewTypes[this.state.currentViewId]}/>;
         break;
       case 2:
+        currentGraph = <PriceGraph
+          currentUser={this.props.currentUser} />;
         break;
       default:
         break;
