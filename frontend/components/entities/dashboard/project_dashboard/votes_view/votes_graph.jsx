@@ -264,19 +264,28 @@ class VotesGraph extends React.Component {
     super();
 
     this.state = {
-      selectedProject: null
+      selectedProject: null,
+      componentVisible: "invisible"
     };
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({componentVisible: ""});
+    }, this.props.wait);
   }
 
   render() {
     const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
+    const { selectedProject, componentVisible } = this.state;
+
     return (
-      <div className="votes-graph" style={{ marginTop: maxValuation / 24000 }}>
+      <div className={`votes-graph ${componentVisible}`} style={{ marginTop: maxValuation / 24000 }}>
         <div className="vote-shift-tool-container"
           ref={node => this.voteShiftTool = node} 
           style={{ top: -maxValuation / 24000 }}>
           {
-            this.state.selectedProject &&
+            selectedProject &&
             <VoteShiftTool />
           }
         </div>

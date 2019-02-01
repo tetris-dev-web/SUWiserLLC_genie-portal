@@ -18,7 +18,10 @@ class BuyForm extends React.Component {
 
   update(field) {
     return (e) => {
-      this.setState({[field]: e.currentTarget.value});
+      this.setState({
+        [field]: e.currentTarget.value,
+        value: e.currentTarget.value * this.state.price
+      });
     };
   }
 
@@ -38,7 +41,7 @@ class BuyForm extends React.Component {
         <div className="price-breakdown">
           <div className="transfer-input-cont">
             <input
-              type="text"
+              type="number"
               placeholder="#| of shares"
               value={shares}
               className="transfer-input"

@@ -530,17 +530,24 @@
 .toggle-view-options-container {
   text-align: center;
   width: 100%; }
+  .toggle-view-options-container.token {
+    position: relative;
+    top: -110px;
+    transition: cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
   .toggle-view-options-container .toggle-view-options-border-layer {
     height: 0; }
+    .toggle-view-options-container .toggle-view-options-border-layer.token {
+      padding-bottom: 0; }
+    .toggle-view-options-container .toggle-view-options-border-layer.project {
+      padding-top: 25px; }
   .toggle-view-options-container .toggle-view-options.project {
     padding: 8px 8px 20px 8px;
     border-radius: 15px 15px 0 0;
-    transition: border-radius 1s, padding 1s, cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
+    transition: border-radius 1s, padding 1s; }
   .toggle-view-options-container .toggle-view-options.token {
     padding: 20px 8px 8px 8px;
     border-radius: 0 0 15px 15px;
-    transition: border-radius 1s, padding 1s, cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
-    transform: translateY(-260px); }
+    transition: border-radius 1s, padding 1s; }
   .toggle-view-options-container .toggle-view-options .toggle-view-title {
     position: absolute;
     font-weight: 700;
@@ -563,13 +570,21 @@
 .toggle-view-options-container-graph-hidden {
   text-align: center;
   width: 100%; }
+  .toggle-view-options-container-graph-hidden.token {
+    position: relative;
+    top: calc(50vh - 110px - 101px);
+    transition: cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
   .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer {
     width: 70%;
     margin: auto; }
+    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer.token {
+      padding-bottom: 25px; }
+    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer.project {
+      padding-top: 25px; }
   .toggle-view-options-container-graph-hidden .toggle-view-options.project, .toggle-view-options-container-graph-hidden .toggle-view-options.token {
     border-radius: 15px;
     padding: 8px 8px 12px 8px;
-    transition: border-radius 1s, padding 1s, cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
+    transition: border-radius 1s, padding 1s; }
   .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-title,
   .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-next-view,
   .toggle-view-options-container-graph-hidden .toggle-view-options .toggle-view-dashboard-description {
@@ -601,66 +616,67 @@
     top: -70px;
     font-size: 12px; }
 
-.token-graph .token-svg {
-  width: 75%;
-  height: 75%;
-  margin: 0 auto; }
-  .token-graph .token-svg .token-graph-token-path.total-tokens path {
-    stroke: black;
-    stroke-width: 1px;
+.token-graph {
+  transition: opacity 0.3s;
+  visibility: visible;
+  opacity: 1; }
+  .token-graph.invisible {
+    visibility: hidden;
+    opacity: 0; }
+  .token-graph .token-svg {
+    width: 75%;
+    height: 75%;
+    margin: 0 auto; }
+    .token-graph .token-svg .token-graph-token-path.total-tokens path {
+      stroke: black;
+      stroke-width: 1px;
+      fill: none;
+      transition: all 0.5s; }
+    .token-graph .token-svg .token-graph-token-path.active-tokens path {
+      stroke: #AB7A5E;
+      stroke-width: 3px;
+      fill: none;
+      transition: all 0.5s; }
+    .token-graph .token-svg .token-graph-x-axis .domain {
+      stroke: none; }
+    .token-graph .token-svg .token-graph-x-axis .tick line {
+      stroke: none; }
+    .token-graph .token-svg .token-graph-x-axis .tick text {
+      fill: #736566; }
+    .token-graph .token-svg .token-graph-side-bars rect {
+      rx: 20;
+      ry: 20; }
+    .token-graph .token-svg .token-graph-side-bars .token-graph-background-rect {
+      fill: transparent;
+      stroke: black;
+      stroke-width: .5px;
+      stroke-dasharray: 5, 5; }
+    .token-graph .token-svg .token-graph-side-bars .token-graph-total-tokens-rect {
+      fill: #AB7A5E;
+      opacity: 0.5; }
+    .token-graph .token-svg .token-graph-side-bars .token-graph-active-tokens-rect {
+      fill: #AB7A5E; }
+    .token-graph .token-svg .token-graph-side-bars .token-graph-earnings-rect {
+      fill: #61aba9; }
+    .token-graph .token-svg .earnings-rect {
+      position: absolute;
+      right: -1.5%; }
+  .token-graph .token-graph-overlay .token-graph-overlay-rect {
     fill: none;
-    transition: all 0.5s; }
-  .token-graph .token-svg .token-graph-token-path.active-tokens path {
+    pointer-events: all; }
+  .token-graph .token-graph-overlay .token-graph-dashed-lines line {
+    pointer-events: none; }
+  .token-graph .token-graph-overlay .token-graph-dashed-lines .total-tokens-line {
+    stroke: #9b9287;
+    stroke-dasharray: 8 8; }
+  .token-graph .token-graph-overlay .token-graph-dashed-lines .vertical-time-line {
+    stroke: black; }
+  .token-graph .token-graph-overlay .token-graph-dashed-lines .active-tokens-line {
     stroke: #AB7A5E;
-    stroke-width: 3px;
-    fill: none;
-    transition: all 0.5s; }
-  .token-graph .token-svg .token-graph-x-axis .domain {
-    stroke: none; }
-  .token-graph .token-svg .token-graph-x-axis .tick line {
-    stroke: none; }
-  .token-graph .token-svg .token-graph-x-axis .tick text {
-    fill: #736566; }
-  .token-graph .token-svg .token-graph-side-bars rect {
-    rx: 20;
-    ry: 20; }
-  .token-graph .token-svg .token-graph-side-bars .token-graph-background-rect {
-    fill: transparent;
-    stroke: black;
-    stroke-width: .5px;
-    stroke-dasharray: 5, 5; }
-  .token-graph .token-svg .token-graph-side-bars .token-graph-total-tokens-rect {
-    fill: #AB7A5E;
-    opacity: 0.5; }
-  .token-graph .token-svg .token-graph-side-bars .token-graph-active-tokens-rect {
-    fill: #AB7A5E; }
-  .token-graph .token-svg .token-graph-side-bars .token-graph-earnings-rect {
-    fill: #61aba9; }
-  .token-graph .token-svg .earnings-rect {
-    position: absolute;
-    right: -1.5%; }
-
-.token-graph .token-graph-overlay .token-graph-overlay-rect {
-  fill: none;
-  pointer-events: all; }
-
-.token-graph .token-graph-overlay .token-graph-dashed-lines line {
-  pointer-events: none; }
-
-.token-graph .token-graph-overlay .token-graph-dashed-lines .total-tokens-line {
-  stroke: #9b9287;
-  stroke-dasharray: 8 8; }
-
-.token-graph .token-graph-overlay .token-graph-dashed-lines .vertical-time-line {
-  stroke: black; }
-
-.token-graph .token-graph-overlay .token-graph-dashed-lines .active-tokens-line {
-  stroke: #AB7A5E;
-  stroke-dasharray: 8 8; }
-
-.token-graph .token-graph-overlay .token-graph-dashed-lines .earnings-line {
-  stroke: #61aba9;
-  stroke-dasharray: 8 8; }
+    stroke-dasharray: 8 8; }
+  .token-graph .token-graph-overlay .token-graph-dashed-lines .earnings-line {
+    stroke: #61aba9;
+    stroke-dasharray: 8 8; }
 
 .price-graph .token-svg {
   width: 90%;
@@ -711,7 +727,7 @@
   pointer-events: all; }
 
 .token-dashboard {
-  padding-bottom: 25px; }
+  min-height: calc(50vh - 110px); }
 
 
 
@@ -791,7 +807,13 @@
       border-color: #384778; }
 
 .votes-graph {
-  position: relative; }
+  position: relative;
+  transition: opacity 0.3s;
+  visibility: visible;
+  opacity: 1; }
+  .votes-graph.invisible {
+    visibility: hidden;
+    opacity: 0; }
   .votes-graph .votes-view {
     top: 0;
     position: absolute;
@@ -822,10 +844,9 @@
     pointer-events: none; }
 
 .project-dashboard {
-  padding-top: 25px; }
+  min-height: 50vh; }
   .project-dashboard .graph-container {
-    height: 0;
-    transition: height cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
+    transition: min-height cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
 
 .ft-el-cont {
   display: flex;
@@ -857,12 +878,18 @@
   justify-content: flex-start;
   flex-direction: column;
   width: 100px;
-  border-radius: 0 10px 10px 0px; }
+  border-radius: 0 10px 10px 0px;
+  position: absolute;
+  left: 0;
+  top: 100px; }
   .dev-container:hover {
     cursor: pointer; }
   .dev-container.active-dropdown {
     background-color: rgba(155, 146, 135, 0.3);
-    height: 190px; }
+    height: 190px;
+    position: absolute;
+    left: 0;
+    top: 100px; }
   .dev-container > ul {
     position: relative; }
     .dev-container > ul li:not(:first-child) {

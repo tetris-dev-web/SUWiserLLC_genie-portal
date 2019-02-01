@@ -11,12 +11,10 @@ class VotesViewCapitalRaised extends React.Component {
     super(props);
 
     this.state = {
-      capBeingRaisedHovered: false,
     };
   }
 
   componentDidMount() {
-    console.log("colors specific: ", colors.rosyBrown)
     window.onresize = () => {
       this.setState({currentWindowWidth: window.innerWidth});
     };
