@@ -46,7 +46,6 @@ class TokenGraph extends React.Component {
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
     this.width = 960 - this.margin.left - this.margin.right;
     this.height = 500 - this.margin.top - this.margin.bottom;
-    this.bisectDate = d3.bisector(d => d.date).left;
 
     this.toggleData = this.toggleData.bind(this);
     this.toggleTimeAxis = this.toggleTimeAxis.bind(this);

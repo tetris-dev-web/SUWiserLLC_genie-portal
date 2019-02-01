@@ -267,6 +267,9 @@ class VotesGraph extends React.Component {
       selectedProject: null,
       componentVisible: "invisible"
     };
+
+    this.width = 960;
+    this.height = 500;
   }
 
   componentDidMount() {
@@ -289,7 +292,9 @@ class VotesGraph extends React.Component {
             <VoteShiftTool />
           }
         </div>
-        <svg className="votes-view-svg" height={capitalTotal / 24000}>
+        <svg className="votes-view-svg"
+          height={capitalTotal / 24000}
+          preserveAspectRatio="xMinYMin meet">
           <VotesViewCapitalRaised
             {...this.props}
             {...this.state}/>
