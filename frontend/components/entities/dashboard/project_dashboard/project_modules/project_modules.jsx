@@ -14,6 +14,7 @@ class ProjectModules extends React.Component {
     this.state = {
       projectClicked: {},
       model_link: "",
+      modalState: false,
     };
   }
 
@@ -32,6 +33,7 @@ class ProjectModules extends React.Component {
     }
     convert3dModelIDtoLink()
   }
+
 
 
   render() {

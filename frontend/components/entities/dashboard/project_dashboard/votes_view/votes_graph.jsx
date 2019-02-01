@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
 import VoteShiftTool from './vote_shift_tool';
-import ProjectModules from '../project_modules/project_modules_subcomponents';
-import { calculateCashflowData } from '../../../../../util/project_api_util'
+// import ProjectModules from '../project_modules/project_modules_subcomponents';
+import { calculateCashflowData } from '../../../../../util/project_api_util';
 import './votes_graph.scss';
 
 const deployedProjectsValuationMinMax = (projects) => {
@@ -221,11 +221,13 @@ const mapStateToProps = () => {
         capital: 1900000,
         valuation: 3000000,
         cashflow: cashflow,
-        accumActualCashflow: accumActualCashflow,
-        projectedCashflow: projectedCashflow,
-        actualCashflow: actualCashflow,
-        accumProjectedCashflow: accumProjectedCashflow,
+        accum_actual_cashflow: accum_actual_cashflow,
+        projected_cashflow: projected_cashflow,
+        actual_cashflow: actual_cashflow,
+        accum_projected_cashflow: accum_projected_cashflow,
         summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        latitude: 40.836370,
+        longitude: -73.944585,
       },
       {
         title: 'proj2',
@@ -233,11 +235,13 @@ const mapStateToProps = () => {
         capital: 2500000,
         valuation: 4000000,
         cashflow: cashflow,
-        accumActualCashflow: accumActualCashflow,
-        projectedCashflow: projectedCashflow,
-        actualCashflow: actualCashflow,
-        accumProjectedCashflow: accumProjectedCashflow,
+        accum_actual_cashflow: accum_actual_cashflow,
+        projected_cashflow: projected_cashflow,
+        actual_cashflow: actual_cashflow,
+        accum_projected_cashflow: accum_projected_cashflow,
         summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        latitude: 40.836370,
+        longitude: -73.944585,
       },
       {
         title: 'proj3',
@@ -245,11 +249,13 @@ const mapStateToProps = () => {
         capital: 4436961,
         valuation: 6000000,
         cashflow: cashflow,
-        accumActualCashflow: accumActualCashflow,
-        projectedCashflow: projectedCashflow,
-        actualCashflow: actualCashflow,
-        accumProjectedCashflow: accumProjectedCashflow,
+        accum_actual_cashflow: accum_actual_cashflow,
+        projected_cashflow: projected_cashflow,
+        actual_cashflow: actual_cashflow,
+        accum_projected_cashflow: accum_projected_cashflow,
         summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        latitude: 40.836370,
+        longitude: -73.944585,
       }
     ],
     deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(
@@ -433,7 +439,9 @@ const cashflow = {
 };
 
 const cashflowData = calculateCashflowData(cashflow);
-const projectedCashflow = cashflowData.projected_cashflow;
-const actualCashflow = cashflowData.actual_cashflow;
-const accumProjectedCashflow = cashflowData.accum_projected_cashflow;
-const accumActualCashflow = cashflowData.accum_actual_cashflow;
+const { actual_cashflow, accum_actual_cashflow, accum_projected_cashflow, projected_cashflow } = cashflowData;
+
+// const projected_cashflow = cashflowData.projected_cashflow;
+// const actual_cashflow = cashflowData.actual_cashflow;
+// const accum_projected_cashflow = cashflowData.accum_projected_cashflow;
+// const accum_actual_cashflow = cashflowData.accum_actual_cashflow;
