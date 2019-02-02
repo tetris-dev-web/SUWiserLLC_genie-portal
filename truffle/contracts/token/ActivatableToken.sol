@@ -2,8 +2,9 @@ pragma solidity >=0.4.22 <0.6.0;
 import './ERC20/MintableToken.sol';
 import '../Dividends.sol';
 import '../ContractStub.sol';
+import '../utility/Secondary.sol';
 
-contract ActivatableToken is MintableToken {
+contract ActivatableToken is MintableToken, Secondary {
   address  public dividendWallet;
   struct InactiveTokenCycle {
     mapping(address => bool) updated;
@@ -12,7 +13,6 @@ contract ActivatableToken is MintableToken {
   uint256 internal currentInactiveTokenCycle;
   mapping(uint256 => InactiveTokenCycle) internal inactiveTokenCycle;
 
-  //should only be callable by the crowdsale
   function resetInactiveTokenCycle (address  developer) public {
     totalSupply_ = totalSupply_.sub(totalInactiveSupply());
     currentInactiveTokenCycle = currentInactiveTokenCycle.add(1);
@@ -60,7 +60,6 @@ contract ActivatableToken is MintableToken {
   }
 
   function assignedBalanceOf (address account) public view returns (uint256) {
-    /* return balanceOf(account).sub(freedUpBalanceOf(account)); */
     if (accountCycleUpdated(account)) {
       return balances[account].assigned;
     }
@@ -68,12 +67,7 @@ contract ActivatableToken is MintableToken {
   }
 
   function freedUpBalanceOf (address account) public view returns (uint256) {
-    /* if (accountCycleUpdated(account)) {
-      return balances[account].freedUp;
-    }
-    return activeBalanceOf(account); */
-    uint256 totalBalance = balanceOf(account);
-    return totalBalance.sub(assignedBalanceOf(account));
+    return balanceOf(account).sub(assignedBalanceOf(account));
   }
 
   mapping(address => uint256) internal lastActivationPoints;
@@ -138,13 +132,12 @@ contract ActivatableToken is MintableToken {
     balances[_to].active = balances[_to].active.add(_value);
   }
 
-  function freeUp (address account, uint256 amount) public onlyOwner {
+  function freeUp (address account, uint256 amount) public onlyPrimary {
     require(amount != 0 && assignedBalanceOf(account) >= amount);
-    //if we reach here, it means the account must be updated with the current cycle bc otherwise assignedBalanceOf returns 0
     balances[account].assigned = balances[account].assigned.sub(amount);
   }
 
-  function assign (address account, uint256 amount) public onlyOwner {
+  function assign (address account, uint256 amount) public onlyPrimary {
     require(freedUpBalanceOf(account) >= amount);
 
     if (!accountCycleUpdated(account)) {
@@ -153,8 +146,6 @@ contract ActivatableToken is MintableToken {
 
     balances[account].assigned = balances[account].assigned.add(amount);
   }
-
-
 
   function updateAccountCycle (address account) internal {
     balances[account].inactive = 0;

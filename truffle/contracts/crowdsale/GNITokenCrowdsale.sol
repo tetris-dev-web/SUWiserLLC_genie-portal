@@ -11,8 +11,6 @@ import '../Voting.sol';
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
-  /* using ECRecovery for bytes32; */
-  /* InvestorList public investorList; */
   ProjectLeaderTracker public projectLeaderTracker;
   Voting public voting;
   address  public dividendWallet;
@@ -25,7 +23,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         address  _developer,
         address  _dividendWallet,
         Token _token,
-        /* InvestorList _investorList, */
         ProjectLeaderTracker _projectLeaderTracker,
         address  _reimbursements,
         Voting _voting
@@ -33,7 +30,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       public
       Crowdsale(_rate, _developer, _token)
       TimedCrowdsale(_openingTime, _doomsDay, _reimbursements) {
-        /* investorList = InvestorList(_investorList); */
         voting = _voting;
         projectLeaderTracker = ProjectLeaderTracker(_projectLeaderTracker);
         dividendWallet = _dividendWallet;
@@ -51,9 +47,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 investorTokens,
     uint256 totalProjectCount
   );
-
-  /* mapping(address => bytes32) public voteHash;
-  mapping(address => bytes32) public removeVoteHash; */
 
   mapping(uint256 => address ) internal projectAddress;
   uint256 internal totalProjectCount;
@@ -82,7 +75,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
     Project(projectAddr).transferOwnership(developer);
-    /* Project proj = Project(projectAddr); */
 
     emit ProjectPitch(projectAddr, developer, _title, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
     return projectAddr;
@@ -121,15 +113,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
      capitalRequired <= weiRaised &&
      project.open()
      ) {
-     uint256 time = project.activate();
+     /* uint256 time = project.activate(); */
      //set the number of project votes to 0. */
 
-     developer.transfer(capitalRequired);
+     /* developer.transfer(capitalRequired);
      weiRaised = weiRaised.sub(capitalRequired);
 
      projectLeaderTracker.handleProjectActivation();
      Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
-     emit ProjectActivation(tentativeLeaderAddr, capitalRequired, time);
+     emit ProjectActivation(tentativeLeaderAddr, capitalRequired, time); */
     }
   }
 
@@ -140,47 +132,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Token(token).resetInactiveTokenCycle(developer);
    projectLeaderTracker.reset();
  }
-
-//we need to see if it creates a different hash every time...if the hash is exposed to the frontend it is not secure and anyone can use it to sign this transaction
-/* function voteForProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
-  require(Token(token).existingAccount(_voter));
-
-  Project(_project).vote(_voter, votes, _signedMessage);
-  Token(token).assign(_voter, votes);
-  _extendDoomsDay(6);//this can be called externally
-  updateProjects(_project);
-}
-
-function voteAgainstProject(address _project, address _voter, uint256 votes, bytes _signedMessage) public {
-  Project(_project).voteAgainst(_voter, votes, _signedMessage);
-  handleVoteRemoval(_voter, _project, votes);
-}
-
- //this is for adding vote credit for each investor from the frontend after a project has been activated
- //call this function removeVotesFromIneligibleProject
- function removeVotesFromProject (address account, address fromProjectAddr) external {
-   uint256 votes = Project(fromProjectAddr).votesOf(account);
-   Project(fromProjectAddr).removeVotes(account, votes);
-   handleVoteRemoval(account, fromProjectAddr, votes);
- }
-
- function handleVoteRemoval (address account, address fromProjectAddr, uint256 votes) internal {
-   Token(token).freeUp(account, votes);
-   doomsDay = doomsDay.sub(43200);
-   updateProjects(fromProjectAddr);
-} */
-
- //we will test this separately
- /* function authenticateVoter(bytes _signedMessage, address voter, bytes32 unsignedMessage) internal {
-   address recoveredVoter = unsignedMessage.recover(_signedMessage);
-   require(recoveredVoter == voter);
-   /* require(investorList.validAccount(voter));//token.existingAccount */
- /* }  */
-
- /* function updateProjects (address votedForProj) internal {
-   projectLeaderTracker.trackProject(votedForProj);
-   /* activateProject(); */
- /* }  */
 
  //tests need to be updated
 
@@ -201,21 +152,7 @@ function voteAgainstProject(address _project, address _voter, uint256 votes, byt
    require(msg.sender == address(Voting(voting)));
    doomsDay = doomsDay.sub(_days.mul(1728000));
  }
-  /* function forwardFunds (address _to, uint256 amount) internal {
-    _to.transfer(amount);
-  } */
 }
-
-/* function transferVotes (address fromProjectAddr, address toProjectAddr, uint256 votes) external {
-  Project fromProj = Project(fromProjectAddr);
-  Project toProj = Project(toProjectAddr);
-
-  fromProj.removeVotes(msg.sender, votes);
-  toProj.vote(msg.sender, votes);
-
-  fromProj.log();
-  toProj.log();
-} */
 
 /* function getInfo(uint256 id) public view returns(address) {
     /* string, uint256, uint256, uint256, uint256, bool, uint256, uint256, address */
@@ -233,16 +170,3 @@ function voteAgainstProject(address _project, address _voter, uint256 votes, byt
       /* projectAddr */
       /* ); */
     /* }  */
-
-    /* event VoteAddition (
-      uint256 voteAdditions,
-      uint256 num
-    );
-
-
-    event VoteRemoval (
-      uint256 voteRemovals
-    );
-
-    uint256 voteAdditions;
-    uint256 voteRemovals; */

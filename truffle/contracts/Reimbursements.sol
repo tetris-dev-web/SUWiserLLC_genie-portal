@@ -16,7 +16,6 @@ contract Reimbursements is Ownable {
   }
 
   function () external payable {}
-  //this needs to be only accessible by crowdsal
   function recordReimbursement () public payable onlyOwner {
     inactiveTokensAtClosing = Token(token).totalInactiveSupply().sub(Token(token).totalPendingActivations());
     weiToReimburse = msg.value;
@@ -32,7 +31,7 @@ contract Reimbursements is Ownable {
 
     if (address(this).balance == 0) {
       weiToReimburse = 0;
-      GNITokenCrowdsale(uint160(owner)).allowReOpening();
+      GNITokenCrowdsale(owner).allowReOpening();
     }
   }
 }

@@ -60,20 +60,6 @@ contract Project is Ownable {
       bool active
   );
 
-  /* event VoteChange (
-    address addr,
-    string title,
-    uint256 totalVotes
-  ); */
-
-  /* event ProjectActivation (
-    address addr,
-    string title,
-    bool activationStatus,
-    uint256 capitalRequired,
-    uint256 valuation
-  ); */
-
   mapping(address => uint256) internal votes;
 
   function votesOf(address voter) public view returns (uint256) {
@@ -162,19 +148,12 @@ contract Project is Ownable {
   }
 
   function vote (address voter, uint256 voteAmount) external onlyOwner {
-    //maybe require that its open and not active
-    /* address recoveredVoter = voteForHash.recover(_signedMessage);
-    require(recoveredVoter == voter); */
     votes[voter] = votes[voter].add(voteAmount);
     totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
-
-    /* emit VoteChange(address(this), title, totalVotes); */
   }
 
   function voteAgainst (address voter, uint256 voteAmount) external onlyOwner {
-    /* address recoveredVoter = voteAgainstHash.recover(_signedMessage);
-    require(recoveredVoter == voter); */
     removeVotes_(voter, voteAmount);
   }
 
@@ -190,9 +169,7 @@ contract Project is Ownable {
 
     votes[voter] = votes[voter].sub(voteAmount);
     totalVotes = totalVotes.sub(voteAmount);
-    closingTime = closingTime.sub(43200);
-
-    /* emit VoteChange(address(this), title, totalVotes); */
+    closingTime = closingTime.sub(43200);//we need to handle the case that the project closed
   }
 
   function activate () external onlyOwner returns(uint256) {
@@ -200,10 +177,5 @@ contract Project is Ownable {
     //we should set totalVotes to 0
     activationTime = now;
     return activationTime;
-    /* emit ProjectActivation(address(this), title, active, capitalRequired, valuation); */
-  }
-
-  function beats (address  otherProject) public view returns (bool) {
-    return totalVotes > 0 && totalVotes >= Project(otherProject).totalVotes_();
   }
 }

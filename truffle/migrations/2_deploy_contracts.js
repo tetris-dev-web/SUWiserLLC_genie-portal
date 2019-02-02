@@ -136,6 +136,9 @@ module.exports = function (deployer, network, accounts) {
           return tokenInstance.transferOwnership(crowdsaleInstance.address);
         })
         .then(() => {
+          return tokenInstance.transferPrimary(votingInstance.address);
+        })
+        .then(() => {
           return Reimbursements.at(Reimbursements.address);
         })
         .then(reimbursementsInst => {

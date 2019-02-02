@@ -12,6 +12,6 @@ contract SeedableVoting is Voting {
 
   function seed (address _project, address _voter, uint256 votes) public {
     require(Token(token).existingAccount(_voter));
-    /* _voteForProject(_project, _voter, votes); */
+    _voteForProject(_project, _voter, votes);
   }
 }
