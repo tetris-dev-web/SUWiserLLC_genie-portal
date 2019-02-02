@@ -15,9 +15,9 @@ class VotesViewCapitalRaised extends React.Component {
   }
 
   componentDidMount() {
-    window.onresize = () => {
-      this.setState({currentWindowWidth: window.innerWidth});
-    };
+    // window.onresize = () => {
+    //   this.setState({currentWindowWidth: window.innerWidth});
+    // };
   }
 
   render() {

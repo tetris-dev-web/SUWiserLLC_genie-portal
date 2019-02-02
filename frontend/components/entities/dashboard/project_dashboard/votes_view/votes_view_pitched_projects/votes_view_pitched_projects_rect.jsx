@@ -9,6 +9,8 @@ class VotesViewPitchedProjectsRect extends React.Component {
 		};
 
 		this.handleClick = this.handleClick.bind(this);
+		this.outlineWidth = 2;
+		this.votesBreakdownRectHeight = 30;
 	}
 
 	handleHover(boolean) {
@@ -36,42 +38,42 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	}
 
 	render() {
-		const { selectedProject, maxValuation, capitalRaised, project} = this.props;
-		const { fill, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
+		const { selectedProject, maxValuation, capitalRaised, project, SVGYScale } = this.props;
+		const { fill, marginWidth, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
 		return(
 			<g className="votes-view-project-group" 
 				onClick={this.handleClick}
 				ref={node => this.projectGroup = node}>
 				<rect
-					width={`${projectWidth}%`}
+					width={projectWidth}
 					height={projectValutionHeight}
-					x={`${projectStartX}%`}
+					x={projectStartX}
 					y={projectValutionStartY}
 					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "0.3"}
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></rect>
 				<rect
-					width={`${projectWidth}%`}
+					width={projectWidth}
 					height={projectCapitalRequiredHeight}
-					x={`${projectStartX}%`}
+					x={projectStartX}
 					y={projectCapitalRequiredStartY}
 					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></rect>
 				<rect
-					width={`${projectWidth + 1}%`}
-					height="30"
-					x={`${projectStartX - .5}%`}
-					y={capitalRaised / 24000}
+					width={projectWidth + marginWidth}
+					height={this.votesBreakdownRectHeight}
+					x={projectStartX - .5 * marginWidth}
+					y={SVGYScale(capitalRaised)}
 					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></rect>
 				<text className="votes-view-percentage-breakdown"
-					x={`${projectRectCenter}%`}
-					y={capitalRaised / 24000 + 20}
+					x={projectRectCenter}
+					y={SVGYScale(capitalRaised) + 20}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}>
 					<tspan>{`${voteShare * 100}%`}</tspan>
 				</text>
@@ -79,31 +81,31 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					this.state.showHoverEffect &&
 					<g className="votes-view-onhover-group">
 						<g className="votes-view-onhover-text-group">
-							<text className="votes-view-project-title" x={`${projectRectCenter}%`} y={-(maxValuation - capitalRaised) / 24000 * 1.75} fill="#aa7a60">
+							<text className="votes-view-project-title" x={projectRectCenter} y={-SVGYScale(maxValuation - capitalRaised) * 1.75} fill="#aa7a60">
 								<tspan>{title}</tspan>
 							</text>
-							<text x={`${projectRectCenter}%`} y={projectValutionStartY - 25} fill={fill}>
+							<text x={projectRectCenter} y={projectValutionStartY - 25} fill={fill}>
 								<tspan>valuation</tspan>
 							</text>
-							<text x={`${projectRectCenter}%`} y={projectValutionStartY - 10} fill={fill}>
+							<text x={projectRectCenter} y={projectValutionStartY - 10} fill={fill}>
 								<tspan>{valuation}</tspan>
 							</text>
-							<text x={`${projectRectCenter}%`} y={projectCapitalRequiredStartY + 20} fill="#fff">
+							<text x={projectRectCenter} y={projectCapitalRequiredStartY + 20} fill="#fff">
 								<tspan>capital needs</tspan>
 							</text>
-							<text x={`${projectRectCenter}%`} y={projectCapitalRequiredStartY + 35} fill="#fff">
+							<text x={projectRectCenter} y={projectCapitalRequiredStartY + 35} fill="#fff">
 								<tspan>{capitalRequired}</tspan>
 							</text>
 						</g>
 						<g className="votes-view-onhover-project-outlines-group">
-							<rect x={`${projectStartX}%`} y={projectValutionStartY} width={`${projectWidth}%`} height={2}></rect>
-							<rect x={`${projectStartX + projectWidth}%`} y={projectValutionStartY} width={2} height={valuation / 24000}></rect>
-							<rect x={`${projectStartX + projectWidth}%`} y={capitalRaised / 24000} width="0.5%" height={2}></rect>
-							<rect x={`${projectStartX + projectWidth + 0.35}%`} y={capitalRaised / 24000} width={2} height={30}></rect>
-							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / 24000 + 28} width={`${projectWidth + 1}%`} height={2}></rect>
-							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / 24000} width={2} height={30}></rect>
-							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / 24000} width="0.5%" height={2}></rect>
-							<rect x={`${projectStartX}%`} y={projectValutionStartY + 2} width={2} height={valuation / 24000}></rect>
+							<rect x={projectStartX} y={projectValutionStartY} width={projectWidth} height={this.outlineWidth}></rect>
+							<rect x={projectStartX + projectWidth - this.outlineWidth} y={projectValutionStartY} width={this.outlineWidth} height={SVGYScale(valuation)}></rect>
+							<rect x={projectStartX + projectWidth - this.outlineWidth} y={SVGYScale(capitalRaised)} width={.5 * marginWidth + this.outlineWidth} height={this.outlineWidth}></rect>
+							<rect x={projectStartX + projectWidth + marginWidth - this.outlineWidth * 3.5} y={SVGYScale(capitalRaised)} width={this.outlineWidth} height={this.votesBreakdownRectHeight}></rect>
+							<rect x={projectStartX - .5 * marginWidth} y={SVGYScale(capitalRaised) + this.votesBreakdownRectHeight - this.outlineWidth} width={projectWidth + marginWidth} height={this.outlineWidth}></rect>
+							<rect x={projectStartX - .5 * marginWidth} y={SVGYScale(capitalRaised)} width={this.outlineWidth} height={this.votesBreakdownRectHeight}></rect>
+							<rect x={projectStartX - .5 * marginWidth} y={SVGYScale(capitalRaised)} width={.5 * marginWidth} height={this.outlineWidth}></rect>
+							<rect x={projectStartX} y={projectValutionStartY + this.outlineWidth} width={this.outlineWidth} height={SVGYScale(valuation)}></rect>
 						</g>
 					</g>
 				}

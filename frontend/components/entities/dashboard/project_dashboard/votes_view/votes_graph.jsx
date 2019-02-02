@@ -1,4 +1,5 @@
 import React from 'react';
+import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
@@ -268,8 +269,8 @@ class VotesGraph extends React.Component {
       componentVisible: "invisible"
     };
 
-    this.width = 960;
-    this.height = 500;
+    this.SVGWidth = 960;
+    this.SVGHeight = 500;
   }
 
   componentDidMount() {
@@ -279,8 +280,13 @@ class VotesGraph extends React.Component {
   }
 
   render() {
-    const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
+    const { maxValuation, capitalBeingRaised, capitalTotal, lineData, deployedProjectsValuationMinMax } = this.props;
     const { selectedProject, componentVisible } = this.state;
+
+    const SVGYScale = d3.scaleLinear()
+      .range([0, this.SVGHeight])
+      .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]);
+    const yOffset = SVGYScale(deployedProjectsValuationMinMax[1] - capitalBeingRaised);
 
     return (
       <div className={`votes-graph ${componentVisible}`} style={{ marginTop: maxValuation / 24000 }}>
@@ -293,16 +299,23 @@ class VotesGraph extends React.Component {
           }
         </div>
         <svg className="votes-view-svg"
-          height={capitalTotal / 24000}
-          preserveAspectRatio="xMinYMin meet">
-          <VotesViewCapitalRaised
-            {...this.props}
-            {...this.state}/>
-          <VotesViewPitchedProjects
-            {...this.props}
-            {...this.state}
-            voteShiftTool={this.voteShiftTool}
-            toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
+          preserveAspectRatio="xMinYMin meet"
+          viewBox="0 0 960 500">
+          <g className="votes-view-container-group"
+            transform={`translate(0, ${yOffset})`}>
+            <VotesViewCapitalRaised
+              {...this.props}
+              {...this.state}
+              SVGYScale={SVGYScale}
+              SVGWidth={this.SVGWidth} />
+            <VotesViewPitchedProjects
+              {...this.props}
+              {...this.state}
+              SVGYScale={SVGYScale}
+              SVGWidth={this.SVGWidth}
+              voteShiftTool={this.voteShiftTool}
+              toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
+          </g>
         </svg>
       </div>
     );
