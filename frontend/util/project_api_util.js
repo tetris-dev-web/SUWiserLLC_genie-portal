@@ -115,6 +115,47 @@ export const parseCashflows = cashflow => {
   });
 }
 
+export const calculateCashflowData = (cashflow) => {
+  const projectedCashflow = {}
+  const actualCashflow = {}
+  const accumActualCashflow = {}
+  const accumProjectedCashflow = {};
+  let actualSum = 0;
+  let projectedSum = 0
+
+  for (var quarter in cashflow){
+    // console.log("Quarter is: ", cashflow[quarter]);
+    accumProjectedCashflow[quarter] = {}
+    projectedCashflow[quarter] = {}
+    actualCashflow[quarter] = {}
+    accumActualCashflow[quarter] = {}
+    if (cashflow[quarter]["isActuals"] === true){
+      projectedCashflow[quarter] = 0
+      actualCashflow[quarter] = cashflow[quarter]["cashFlow"]
+      actualSum += cashflow[quarter]["cashFlow"]
+      accumActualCashflow[quarter] = actualSum
+      accumProjectedCashflow[quarter] = 0
+
+    } else {
+      projectedCashflow[quarter] = cashflow[quarter]["cashFlow"]
+      actualCashflow[quarter] = 0
+      accumActualCashflow[quarter] = 0
+      projectedSum += cashflow[quarter]["cashFlow"]
+      accumProjectedCashflow[quarter] = projectedSum
+    }
+  }
+
+  // cashflow.forEach((quarter) => {
+  //
+  // })
+  return {
+    projected_cashflow: projectedCashflow,
+    actual_cashflow: actualCashflow,
+    accum_projected_cashflow: accumProjectedCashflow,
+    accum_actual_cashflow: accumActualCashflow
+  };
+};
+
 // export const calculateAccumulatedRevenue = (cashflow) => {
 //   const accumulatedRevenue = {};
 //   let accumulatedSum = 0;

@@ -33,11 +33,14 @@ class ProjectDashboard extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.web3){this.watchProjectPitch();}
+    if (this.props.web3){
+      this.props.fetchProjects(this.props.crowdsaleInstance, this.props.projectContract)
+      this.watchProjectPitch()
+    }
   }
 
   watchProjectPitch() { //event listener for pitched projects
-    console.log("instance", this.props.crowdsaleInstance)
+    // console.log("instance", this.props.crowdsaleInstance)
     this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
     console.log("projectInfo", this.props.projects)
     console.log("event", event)
