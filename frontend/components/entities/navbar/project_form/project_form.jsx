@@ -45,10 +45,11 @@ class ProjectForm extends React.Component {
       currentQuarter: '',
       cashflowJSONName: '',
       accumulatedRevenue: '',
-      drop_pin_clicked: false,
-      pdf_file: '',
+      capital_required: '',
       planFilePDFDataURL: '',
-      planFilePDFName: ''
+      planFilePDFName: '',
+      drop_pin_clicked: false,
+      modelId: '',
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -60,10 +61,6 @@ class ProjectForm extends React.Component {
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
-    // this.parseCashflowData = this.parseCashflowData.bind(this);
-    this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
-    this.dropPinClick = this.dropPinClick.bind(this);
-    this.updateLatLng = this.updateLatLng.bind(this);
     // this.parseCashflowData = this.parseCashflowData.bind(this);
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
     this.dropPinClick = this.dropPinClick.bind(this);
@@ -240,7 +237,7 @@ class ProjectForm extends React.Component {
     let capital = 0;
 
     Object.values(this.props.projects).forEach((project) => {
-      if (project.cashflow) {
+      if(project.cashflow){
         let jsonProjectCashflow = processCashData(project.cashflow);
         if (jsonProjectCashflow["1"]) {
           let quarters = Object.keys(jsonProjectCashflow).sort();
@@ -251,7 +248,6 @@ class ProjectForm extends React.Component {
         }
       }
     });
-
     return capital;
   }
 
@@ -262,7 +258,7 @@ class ProjectForm extends React.Component {
     return min * -1;
     // this.setState({capital_required: min});
   }
-
+;
   calculateDiscountFactor(){
     // console.log("Failed Projects are: ", this.getFailedProjects());
     let capitalDeployed = this.calculateTotalCapitalDeployed();
@@ -496,7 +492,7 @@ class ProjectForm extends React.Component {
         <div className="text-input-container project-title-input-container">
           <input className="text-input project-title-input"
             type="text"
-            placeholder="project name"
+            placeholder="WHAT'S IT'S NAME"
             value={title}
             onChange={this.update('title')} />
         </div>
@@ -795,15 +791,15 @@ export default ProjectForm;
 //
 const sampleProject = {
   "1": {
-    "cashFlow": 50000,
+    "cashFlow": -50000,
     "isActuals": true
   },
   "2": {
-    "cashFlow": 40018,
+    "cashFlow": -40018,
     "isActuals": true
   },
   "3": {
-    "cashFlow": 16857,
+    "cashFlow": -16857,
     "isActuals": true
   },
   "4": {
@@ -811,7 +807,7 @@ const sampleProject = {
     "isActuals": true
   },
   "5": {
-    "cashFlow": 20325,
+    "cashFlow": -20325,
     "isActuals": true
   },
   "6": {

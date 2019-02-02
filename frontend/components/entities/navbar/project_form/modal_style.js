@@ -11,7 +11,7 @@ module.exports = {
   content : {
     position        : 'fixed',
     width           : '320px',
-    padding         : '10px',
+    padding         : '0px',
     paddingBottom   : 0,
     right           : 0,
     borderRadius    : '0 0 0 15px',

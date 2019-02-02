@@ -36,6 +36,7 @@ class ProjectGraph extends React.Component {
     this.createSVG = this.createSVG.bind(this);
     this.tickActions = this.tickActions.bind(this);
     this.toggleModalonClickandPassProject = this.toggleModalonClickandPassProject.bind(this);
+    this.closeModal = this.closeModal.bind(this);
 
   }
 
@@ -61,6 +62,10 @@ class ProjectGraph extends React.Component {
       : this.setState( {doIHaveData:false })
 
     };
+
+    closeModal(){
+      this.setState({ isModalOpen: false });
+    }
 
 
 
@@ -109,19 +114,6 @@ class ProjectGraph extends React.Component {
 
     const ProjectNodeData = this.formatData(projectKeys);
     const projectData = projectKeys.map(key => {
-        // if (typeof this.props.data[key].cashflow === 'string') {
-        //   console.log(this.props.data[key].cashflow);
-        //   this.props.data[key].cashflow = JSON.parse(this.props.data[key].cashflow);
-        // }
-        // if (typeof this.props.data[key].accum_actual_cashflow === 'string')
-        // this.props.data[key].accum_actual_cashflow = JSON.parse(this.props.data[key].accum_actual_cashflow)
-        // if (typeof this.props.data[key].accum_projected_cashflow === 'string')
-        // this.props.data[key].accum_projected_cashflow = JSON.parse(this.props.data[key].accum_projected_cashflow)
-        // if (typeof this.props.data[key].actual_cashflow === 'string')
-        // this.props.data[key].actual_cashflow = JSON.parse(this.props.data[key].actual_cashflow)
-
-      // console.log("This.props.data[key] is: ", this.props.data[key]);
-      // console.log(this.props.data[key]);
       return this.props.data[key];
     });
     const cities = ProjectNodeData.cities;
@@ -449,6 +441,7 @@ class ProjectGraph extends React.Component {
                   isModalOpen = {this.state.isModalOpen}
                   closeModalOnClick = {this.toggleModalonClickandPassProject}
                   doIHaveData = {this.state.doIHaveData}
+                  closeModal={this.closeModal}
                   />
         </div>)
     }

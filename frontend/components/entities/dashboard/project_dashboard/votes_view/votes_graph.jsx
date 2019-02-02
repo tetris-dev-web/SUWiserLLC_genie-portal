@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
 import VoteShiftTool from './vote_shift_tool';
+// import ProjectModules from '../project_modules/project_modules_subcomponents';
+import { calculateCashflowData } from '../../../../../util/project_api_util';
 import './votes_graph.scss';
 import { fetchVotesViewData } from '../../../../../actions/chain_actions/data_loaders';
 
@@ -224,19 +226,43 @@ const mapStateToProps = state => {
         title: 'proj1',
         time: 3369600,
         capital: 1900000,
-        valuation: 3000000
+        valuation: 3000000,
+        cashflow: cashflow,
+        accum_actual_cashflow: accum_actual_cashflow,
+        projected_cashflow: projected_cashflow,
+        actual_cashflow: actual_cashflow,
+        accum_projected_cashflow: accum_projected_cashflow,
+        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        latitude: 40.836370,
+        longitude: -73.944585,
       },
       {
         title: 'proj2',
         time: 6825600,
         capital: 2500000,
-        valuation: 4000000
+        valuation: 4000000,
+        cashflow: cashflow,
+        accum_actual_cashflow: accum_actual_cashflow,
+        projected_cashflow: projected_cashflow,
+        actual_cashflow: actual_cashflow,
+        accum_projected_cashflow: accum_projected_cashflow,
+        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        latitude: 40.836370,
+        longitude: -73.944585,
       },
       {
         title: 'proj3',
         time: 11318400,
         capital: 4436961,
-        valuation: 6000000
+        valuation: 6000000,
+        cashflow: cashflow,
+        accum_actual_cashflow: accum_actual_cashflow,
+        projected_cashflow: projected_cashflow,
+        actual_cashflow: actual_cashflow,
+        accum_projected_cashflow: accum_projected_cashflow,
+        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        latitude: 40.836370,
+        longitude: -73.944585,
       }
     ],
     deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(

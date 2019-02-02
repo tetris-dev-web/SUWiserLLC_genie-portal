@@ -58,6 +58,7 @@ export const getFailedProjects = () => {
   });
 };
 
+<<<<<<< HEAD
 
 
 export const formatProjectData = (cashflow) => {
@@ -76,16 +77,45 @@ export const formatProjectData = (cashflow) => {
     accum_projected_cashflow,
     accumulated_revenue
   };
+=======
+export const calculateAccumulatedRevenue = (cashflow) => {
+  const accumulatedRevenue = {};
+  let accumulatedSum = 0;
+  const quarters = keys(cashflow).map(Number).sort((a, b) => (a - b));
+  quarters.forEach(quarter => {
+    accumulatedSum += cashflow[quarter.toString()]['cashFlow'];
+    accumulatedRevenue[quarter.toString()] = accumulatedSum;
+  });
+  // console.log('accrev:', accumulatedRevenue)
+  return accumulatedRevenue;
+>>>>>>> 5688e5296474dfd3fb5028852fcaa340ba35ca1c
 };
 
 export const parseCashflows = cashflow => {
   let accumulatedSum = 0;
   let actualSum = 0;
+<<<<<<< HEAD
   let projectedSum = 0;
 
   return Object.keys(cashflow).reduce((result, quarter) => {
     accumulatedSum += cashflow[quarter]["cashFlow"];
     result.accumulated_revenue[quarter] = accumulatedSum;
+=======
+  let projectedSum = 0
+
+  for (var quarter in cashflow){
+    // console.log("Quarter is: ", cashflow[quarter]);
+    accumProjectedCashflow[quarter] = {}
+    projectedCashflow[quarter] = {}
+    actualCashflow[quarter] = {}
+    accumActualCashflow[quarter] = {}
+    if (cashflow[quarter]["isActuals"] === true){
+      projectedCashflow[quarter] = 0
+      actualCashflow[quarter] = cashflow[quarter]["cashFlow"]
+      actualSum += cashflow[quarter]["cashFlow"]
+      accumActualCashflow[quarter] = actualSum
+      accumProjectedCashflow[quarter] = 0
+>>>>>>> 5688e5296474dfd3fb5028852fcaa340ba35ca1c
 
     if (cashflow[quarter]["isActuals"]) {
       actualSum += cashflow[quarter]["cashFlow"];

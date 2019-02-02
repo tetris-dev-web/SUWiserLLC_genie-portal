@@ -23,6 +23,13 @@ class ProjectDashboard extends React.Component {
 
   toggleView (currentViewId) {
     this.setState({currentViewId: currentViewId === this.state.currentViewId ? null : currentViewId});
+    if (currentViewId === this.state.currentViewId) {
+      this.graphContainer.style.height = "0";
+    } else if (currentViewId === 1) {
+      this.graphContainer.style.height = "320px";
+    } else if (currentViewId === 2) {
+      this.graphContainer.style.height = "500px";
+    }
   }
 
   componentDidMount() {
@@ -64,18 +71,15 @@ class ProjectDashboard extends React.Component {
         currentGraph = <div></div>;
         break;
       case 0:
-        currentGraph =  <ProjectGraph
-                        showText = {this.state.showText}
-                        currentUser={this.props.currentUser}
-                        crowdsaleInstance={this.props.crowdsaleInstance}
-                        projectContract={this.props.projectContract}
-                        fetchProjects={this.props.fetchProjects}
-                        data={this.filterPitchedProjects()} />
-        break;
+      break;
       case 1:
-        currentGraph = <VotesGraph />;
-        break;
+      currentGraph = <VotesGraph />;
+      break;
       case 2:
+        currentGraph = <ProjectGraph
+          currentUser={this.props.currentUser}
+          fetchProjects={this.props.fetchProjects}
+          data={this.props.projects} />;
         break;
       default:
         break;
@@ -84,7 +88,8 @@ class ProjectDashboard extends React.Component {
     if (this.props.currentUser) {
       return (
         <div className="project-dashboard">
-          <div className="graph-container">
+          <div className="graph-container"
+            ref={node => this.graphContainer = node}>
             {currentGraph}
           </div>
           <ToggleOptions
