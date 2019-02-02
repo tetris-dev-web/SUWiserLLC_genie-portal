@@ -17,7 +17,7 @@ const mapStateToProps = () => {
     pitchedProjects: [
       {
         id: 1,
-        valuation: 5000000,
+        valuation: 6000000,
         capitalRequired: 3500000,
         voteShare: .15,
         title: "Ryan and Liam"
@@ -280,16 +280,21 @@ class VotesGraph extends React.Component {
   }
 
   render() {
-    const { maxValuation, capitalBeingRaised, capitalTotal, lineData, deployedProjectsValuationMinMax } = this.props;
+    const { maxValuation, capitalBeingRaised, capitalTotal, startTime, endTime, lineData, deployedProjectsValuationMinMax } = this.props;
     const { selectedProject, componentVisible } = this.state;
 
-    const SVGYScale = d3.scaleLinear()
+    const SVGHeightScale = d3.scaleLinear()
       .range([0, this.SVGHeight])
       .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]);
-    const yOffset = SVGYScale(deployedProjectsValuationMinMax[1] - capitalBeingRaised);
+    const SVGYScale = d3.scaleLinear()
+      .range([this.SVGHeight, 0])
+      .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]);
+    const SVGTimeXScale = d3.scaleLinear()
+      .domain([startTime, endTime])
+      .range([0, this.SVGWidth]);
 
     return (
-      <div className={`votes-graph ${componentVisible}`} style={{ marginTop: maxValuation / 24000 }}>
+      <div className={`votes-graph ${componentVisible}`}>
         <div className="vote-shift-tool-container"
           ref={node => this.voteShiftTool = node} 
           style={{ top: -maxValuation / 24000 }}>
@@ -301,21 +306,20 @@ class VotesGraph extends React.Component {
         <svg className="votes-view-svg"
           preserveAspectRatio="xMinYMin meet"
           viewBox="0 0 960 500">
-          <g className="votes-view-container-group"
-            transform={`translate(0, ${yOffset})`}>
             <VotesViewCapitalRaised
               {...this.props}
               {...this.state}
               SVGYScale={SVGYScale}
-              SVGWidth={this.SVGWidth} />
+              SVGHeightScale={SVGHeightScale}
+              SVGTimeXScale={SVGTimeXScale} />
             <VotesViewPitchedProjects
               {...this.props}
               {...this.state}
               SVGYScale={SVGYScale}
+              SVGHeightScale={SVGHeightScale}
               SVGWidth={this.SVGWidth}
               voteShiftTool={this.voteShiftTool}
               toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
-          </g>
         </svg>
       </div>
     );

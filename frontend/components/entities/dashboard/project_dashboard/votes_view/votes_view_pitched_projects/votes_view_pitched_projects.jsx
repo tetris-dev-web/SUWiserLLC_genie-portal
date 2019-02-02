@@ -4,7 +4,7 @@ import VotesViewPitchedProjectsRect from './votes_view_pitched_projects_rect';
 class VotesViewPitchedProjects extends React.Component {
 
 	processProjectData() {
-		const { capitalBeingRaised, pitchedProjects, SVGYScale, SVGWidth } = this.props;
+		const { capitalBeingRaised, capitalTotal, pitchedProjects, SVGYScale, SVGHeightScale, SVGWidth } = this.props;
 		const numberOfProjects = this.props.pitchedProjects.length;
 		const totalWidth = .6 * SVGWidth;
 		const marginWidth = .01 * SVGWidth;
@@ -18,10 +18,10 @@ class VotesViewPitchedProjects extends React.Component {
 				marginWidth,
 				projectStartX,
 				projectWidth,
-				projectValutionHeight: SVGYScale(project.valuation - project.capitalRequired),
-				projectValutionStartY: SVGYScale(capitalBeingRaised - project.valuation),
-				projectCapitalRequiredHeight: SVGYScale(project.capitalRequired),
-				projectCapitalRequiredStartY: SVGYScale(capitalBeingRaised - project.capitalRequired),
+				projectValutionHeight: SVGHeightScale(project.valuation),
+				projectValutionStartY: SVGYScale(project.valuation + capitalTotal - capitalBeingRaised),
+				projectCapitalRequiredHeight: SVGHeightScale(project.capitalRequired),
+				projectCapitalRequiredStartY: SVGYScale(project.capitalRequired + capitalTotal - capitalBeingRaised),
 				projectRectCenter: projectStartX + projectWidth / 2
 			});
 			projectStartX += (marginWidth + projectWidth);
