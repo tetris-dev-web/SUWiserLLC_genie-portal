@@ -6,7 +6,6 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 
 		this.state = {
 			showText: false,
-
 		};
 
 		this.handleHover = this.handleHover.bind(this);
