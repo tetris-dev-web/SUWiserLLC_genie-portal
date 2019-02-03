@@ -1,5 +1,5 @@
 import * as ChainUtil from '../../util/chain_util';
-const RECEIVE_TOKEN_PURCHASES = "RECEIVE_TOKEN_PURCHASES";
+export const RECEIVE_TOKEN_PURCHASES = "RECEIVE_TOKEN_PURCHASES";
 
 
 export const receiveTokenPurchases = tokenPurchases => {
@@ -14,11 +14,8 @@ export const buyTokens = (crowdsale, account, value) => {
   return ChainUtil.buyTokens(crowdsale, account, value)
 }
 
-export const fetchTokenPurchaseLogs  = (crowdsale, web3) => {
-  console.log('action hit')
+export const fetchTokenPurchaseLogs  = (crowdsale) => {
   return dispatch => {
-    return ChainUtil.fetchTokenPurchaseLogs(crowdsale, web3).then((tokenPurchases) => {
-      return dispatch(receiveTokenPurchases(tokenPurchases));
-    });
+    return ChainUtil.fetchTokenPurchaseLogs(crowdsale, dispatch, receiveTokenPurchases)
   };
 };

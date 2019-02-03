@@ -23,7 +23,7 @@ const seed = async (_crowdsale, _token, _voting, _developer, _account1, _account
   // // const account = web3.currentProvider.addresses[0];
   // const address = web3.currentProvider.addresses[0];
   // console.log("address", address)
-  // const account = web3.eth.accounts.privateKeyToAccount("B93CCB911EAD59F21CE693ACB2AAEC2B1377F1FFD029F1AC3E48B531F54F3236");
+  // const account = web3.eth.accounts.privateKeyToAccount();
   // const crowdsaleABI =
   // const developer = _dev;
   // const account1 =
@@ -51,7 +51,7 @@ const seed = async (_crowdsale, _token, _voting, _developer, _account1, _account
   //     to: to,
   //     data: data,
   //     gas: 400000
-  //   }, 'B93CCB911EAD59F21CE693ACB2AAEC2B1377F1FFD029F1AC3E48B531F54F3236')
+  //   }, )
   //   console.log("signed")
   //   console.log("signedTx", signedTx)
   //   console.log("transaction signed")

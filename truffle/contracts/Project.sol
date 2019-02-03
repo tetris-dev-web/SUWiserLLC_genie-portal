@@ -13,7 +13,7 @@ contract Project is Ownable {
   address private developer;
   address public dividendWallet;
   uint256 internal closingTime;
-  uint256 private valuation;
+  uint256 public valuation;
   uint256 private capitalRequired;
   uint256 private developerTokens;
   uint256 private investorTokens;

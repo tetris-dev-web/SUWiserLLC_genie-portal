@@ -15,12 +15,15 @@ export const integrateProjectsData = async (crowdsale, projectContract, initialP
     return await Promise.all(projectAddresses);
   };
 
-  const formatProjectData = async (instance, address, initialProjectsData) => {
+  const formatProjectData = async (instance, address, initialProjectsData, id) => {
     //combine functions into one on the blockchain
     const title = await instance.title_();
     const project = initialProjectsData[title];
     project.instance = instance;
     project.active = await instance.active_();
+    project.valuation = await instance.valuation();
+    project.capitalRequired = await instance.capitalRequired_();
+    project.id = id;
 
     if (project.active) {
       project.votes = 0;
@@ -34,9 +37,9 @@ export const integrateProjectsData = async (crowdsale, projectContract, initialP
 
   const projectAddresses = await getProjectAddresses(crowdsale);
 
-  const projectsData = projectAddresses.map(address => {
+  const projectsData = projectAddresses.map((address, i) => {
     const instance = projectContract.at(address);
-    return formatProjectData(instance, address, initialProjectsData);
+    return formatProjectData(instance, address, initialProjectsData, i + 1);
   });
 
   return Promise.all(projectsData).then(resolvedProjectsData => {
@@ -47,7 +50,7 @@ export const integrateProjectsData = async (crowdsale, projectContract, initialP
   });
 };
 
-export const fetchTokenPurchaseLogs = async (crowdsale, web3) => {
+export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPurchases) => {
   console.log('about to fetch token purchases')
   const events = await crowdsale.TokenPurchase(
     {},
@@ -55,11 +58,23 @@ export const fetchTokenPurchaseLogs = async (crowdsale, web3) => {
       fromBlock: 0,
       toBlock: 'latest'
     }
-  )
+  );
 
-  return await events.get((err, result) => {
-    console.log(result)
-    return result
+  events.get((err, purchases) => {
+     const capitalHistory = purchases.reduce((capitalHistory, purchase) => {
+      const block = purchase.blockNumber;
+      const value = purchase.args.value.toNumber();
+
+      if (capitalHistory[block]) {
+        capitalHistory[block] += value;
+      } else {
+        capitalHistory[block] = value;
+      }
+
+      return capitalHistory;
+    }, {})
+
+    dispatch(receiveTokenPurchases(capitalHistory));
   })
 }
 
