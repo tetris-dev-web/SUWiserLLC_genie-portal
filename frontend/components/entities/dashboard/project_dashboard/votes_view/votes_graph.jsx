@@ -296,8 +296,7 @@ class VotesGraph extends React.Component {
     return (
       <div className={`votes-graph ${componentVisible}`}>
         <div className="vote-shift-tool-container"
-          ref={node => this.voteShiftTool = node} 
-          style={{ top: -maxValuation / 24000 }}>
+          ref={node => this.voteShiftTool = node}>
           {
             selectedProject &&
             <VoteShiftTool />

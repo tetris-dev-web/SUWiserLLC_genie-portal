@@ -25,7 +25,7 @@ class VotesViewCapitalRaised extends React.Component {
     
     const circleScale = d3.scaleLinear()
       .domain(deployedProjectsValuationMinMax)
-      .range([.5, 1.5]);
+      .range([5, 10]);
 
     const Lines = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedLine key={idx}
@@ -60,34 +60,35 @@ class VotesViewCapitalRaised extends React.Component {
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"
-            x="93%" y={heightOfCapitalBeingRaisedRect / 2}>
+            x="93%" y={yOfCapitalBeingRaisedRect + heightOfCapitalBeingRaisedRect / 2}>
             <tspan dy=".4em">capital being raised</tspan>
           </text>
           <text className="votes-view-capital-raised-text"
-            x="7%" y={heightOfCapitalBeingRaisedRect / 2}>
+            x="7%" y={yOfCapitalBeingRaisedRect + heightOfCapitalBeingRaisedRect / 2}>
             <tspan dy=".4em">{`$ ${Number(capitalBeingRaised / 1000.0).toLocaleString()} k`}</tspan>
           </text>
         </g>
       )}/>;
 
     const heightOfCapitalRaisedPrevRect = SVGHeightScale(capitalTotal - capitalBeingRaised);
+    const yOfCapitalRaisedPrevRect = heightOfCapitalBeingRaisedRect + yOfCapitalBeingRaisedRect;
     const capRaisedAmounts = deployedProjects.map((project, idx) => (
       <text className="votes-view-capital-raised-text"
         key={idx}
         x={"7%"}
-        y={idx ? SVGYScale((project.capital + deployedProjects[idx - 1].capital) / 2) : SVGYScale((project.capital + capitalTotal) / 2)}>
+        y={idx ? SVGYScale((project.capital + deployedProjects[idx - 1].capital) / 2) : (SVGYScale(project.capital) + yOfCapitalRaisedPrevRect + heightOfCapitalRaisedPrevRect) / 2}>
         <tspan dy=".4em">{`$ ${Number(project.capital / 1000.0).toLocaleString()} k`}</tspan>
       </text>
     ));
     const CapitalRaisedPrevRect = <VotesViewCapitalRaisedRect
-      x="0" y={heightOfCapitalBeingRaisedRect + yOfCapitalBeingRaisedRect}
+      x="0" y={yOfCapitalRaisedPrevRect}
       fill={colors.teal}
       height={heightOfCapitalRaisedPrevRect}
       opacity={selectedProject ? "0.1" : "0.3"} 
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"
-            x="93%" y={SVGYScale(capitalBeingRaised) + heightOfCapitalRaisedPrevRect / 2}>
+            x="93%" y={yOfCapitalRaisedPrevRect + heightOfCapitalRaisedPrevRect / 2}>
             <tspan dy=".4em">capital that has been raised</tspan>
           </text>
           {capRaisedAmounts}
