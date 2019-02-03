@@ -74,7 +74,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     projectLeaderTracker.handleProjectPitch();
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
-    Project(projectAddr).transferOwnership(developer);
+    Project(projectAddr).transferOwnership(address(Voting(voting)));
 
     emit ProjectPitch(projectAddr, developer, _title, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
     return projectAddr;
