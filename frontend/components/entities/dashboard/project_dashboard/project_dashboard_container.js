@@ -4,7 +4,7 @@ import {
   editProject,
   receiveProject
 } from '../../../../actions/project_actions';
-import { fetchProjects } from '../../../../actions/chain_actions/project_actions';
+import { fetchProjects } from '../../../../actions/project_actions';
 import ProjectDashboard from './project_dashboard';
 
 const mapStateToProps = state => {
@@ -29,7 +29,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     receiveProject: project => dispatch(receiveProject(project)),
-    fetchProjects: (crowdsaleInstance, projectContract) => dispatch(fetchProjects(crowdsaleInstance, projectContract)),
+    fetchProjects: () => dispatch(fetchProjects()),
     fetchProject: project => dispatch(fetchProject(project)),
     editProject: project => dispatch(editProject(project))
   };

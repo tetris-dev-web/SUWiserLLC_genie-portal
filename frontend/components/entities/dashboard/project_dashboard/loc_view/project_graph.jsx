@@ -28,7 +28,8 @@ class ProjectGraph extends React.Component {
       isModalOpen: false,
       projectClicked:{},
       doIHaveData: ''
-    }
+    };
+
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     this.formatData = this.formatData.bind(this);
@@ -40,7 +41,7 @@ class ProjectGraph extends React.Component {
   }
 
   componentDidMount(){
-    this.props.fetchProjects(this.props.crowdsaleInstance, this.props.projectContract).then(() => {
+    this.props.fetchProjects().then(() => {
       this.setUp();
     });
   }
