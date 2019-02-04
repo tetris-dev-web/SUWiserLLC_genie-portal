@@ -29,7 +29,7 @@ class VotesViewCapitalRaised extends React.Component {
 
     const yScale = d3.scaleLinear()
       .domain([0, capitalTotal])
-      .range([capitalTotal / 24000, 0]);
+      .range([capitalTotal / this.props.scalingConstant, 0]);
 
     const circleScale = d3.scaleLinear()
       .domain(deployedProjectsValuationMinMax)
@@ -57,13 +57,16 @@ class VotesViewCapitalRaised extends React.Component {
       yScale={yScale}
       opacity={selectedProject ? "0.2" : "1"}
       lineData={lineData} />;
-    
-    const heightOfCapitalBeingRaisedRect = capitalBeingRaised / 24000;
+
+    const heightOfCapitalBeingRaisedRect = capitalBeingRaised / this.props.scalingConstant;
+    console.log("capitalBeingRaised", capitalBeingRaised)
+    console.log("heightOfCapitalBeingRaisedRect", heightOfCapitalBeingRaisedRect)
     const CapitalBeingRaisedRect = <VotesViewCapitalRaisedRect
+      scalingConstant={this.props.scalingConstant}
       x="0" y="0"
       fill={colors.rosyBrown}
       height={heightOfCapitalBeingRaisedRect}
-      opacity={selectedProject ? "0.1" : "0.3"} 
+      opacity={selectedProject ? "0.1" : "0.3"}
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"
@@ -77,24 +80,25 @@ class VotesViewCapitalRaised extends React.Component {
         </g>
       )}/>;
 
-    const heightOfCapitalRaisedPrevRect = (capitalTotal - capitalBeingRaised) / 24000;
+    const heightOfCapitalRaisedPrevRect = (capitalTotal - capitalBeingRaised) / this.props.scalingConstant;
     const capRaisedAmounts = deployedProjects.map((project, idx) => (
       <text className="votes-view-capital-raised-text"
         key={idx}
         x={"7%"}
-        y={idx ? yScale((project.capital + deployedProjects[idx-1].capital)/2) : yScale((project.capital + ((capitalTotal - capitalBeingRaised) / 24000) + (capitalBeingRaised / 24000))/2 )}>
+        y={idx ? yScale((project.capital + deployedProjects[idx-1].capital)/2) : yScale((project.capital + ((capitalTotal - capitalBeingRaised) / this.props.scalingConstant) + (capitalBeingRaised / this.props.scalingConstant))/2 )}>
         <tspan dy=".4em">{`$ ${Number(project.capital / 1000.0).toLocaleString()} k`}</tspan>
       </text>
     ));
     const CapitalRaisedPrevRect = <VotesViewCapitalRaisedRect
-      x="0" y={capitalBeingRaised / 24000}
+      scalingConstant={this.props.scalingConstant}
+      x="0" y={capitalBeingRaised / this.props.scalingConstant}
       fill={colors.teal}
       height={heightOfCapitalRaisedPrevRect}
-      opacity={selectedProject ? "0.1" : "0.3"} 
+      opacity={selectedProject ? "0.1" : "0.3"}
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"
-            x="93%" y={capitalBeingRaised / 24000 + heightOfCapitalRaisedPrevRect / 2}>
+            x="93%" y={capitalBeingRaised / this.props.scalingConstant + heightOfCapitalRaisedPrevRect / 2}>
             <tspan dy=".4em">capital that has been raised</tspan>
           </text>
           {capRaisedAmounts}

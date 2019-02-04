@@ -38,8 +38,13 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	render() {
 		const { selectedProject, maxValuation, capitalRaised, project} = this.props;
 		const { fill, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
+		console.log("projectValutionHeight", projectValutionHeight)
+		console.log("projectCapitalRequiredHeight", projectCapitalRequiredHeight)
+		console.log("capitalRaised", capitalRaised)
+		console.log("CONSTANT", this.props.scalingConstant)
+		console.log("y", capitalRaised / this.props.scalingConstant)
 		return(
-			<g className="votes-view-project-group" 
+			<g className="votes-view-project-group"
 				onClick={this.handleClick}
 				ref={node => this.projectGroup = node}>
 				<rect
@@ -64,14 +69,14 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					width={`${projectWidth + 1}%`}
 					height="30"
 					x={`${projectStartX - .5}%`}
-					y={capitalRaised / 24000}
+					y={capitalRaised / this.props.scalingConstant}
 					fill={fill}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></rect>
 				<text className="votes-view-percentage-breakdown"
 					x={`${projectRectCenter}%`}
-					y={capitalRaised / 24000 + 20}
+					y={capitalRaised / this.props.scalingConstant + 20}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}>
 					<tspan>{`${voteShare * 100}%`}</tspan>
 				</text>
@@ -79,7 +84,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					this.state.showHoverEffect &&
 					<g className="votes-view-onhover-group">
 						<g className="votes-view-onhover-text-group">
-							<text className="votes-view-project-title" x={`${projectRectCenter}%`} y={-(maxValuation - capitalRaised) / 24000 * 1.75} fill="#aa7a60">
+							<text className="votes-view-project-title" x={`${projectRectCenter}%`} y={-(maxValuation - capitalRaised) / this.props.scalingConstant * 1.75} fill="#aa7a60">
 								<tspan>{title}</tspan>
 							</text>
 							<text x={`${projectRectCenter}%`} y={projectValutionStartY - 25} fill={fill}>
@@ -97,13 +102,13 @@ class VotesViewPitchedProjectsRect extends React.Component {
 						</g>
 						<g className="votes-view-onhover-project-outlines-group">
 							<rect x={`${projectStartX}%`} y={projectValutionStartY} width={`${projectWidth}%`} height={2}></rect>
-							<rect x={`${projectStartX + projectWidth}%`} y={projectValutionStartY} width={2} height={valuation / 24000}></rect>
-							<rect x={`${projectStartX + projectWidth}%`} y={capitalRaised / 24000} width="0.5%" height={2}></rect>
-							<rect x={`${projectStartX + projectWidth + 0.35}%`} y={capitalRaised / 24000} width={2} height={30}></rect>
-							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / 24000 + 28} width={`${projectWidth + 1}%`} height={2}></rect>
-							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / 24000} width={2} height={30}></rect>
-							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / 24000} width="0.5%" height={2}></rect>
-							<rect x={`${projectStartX}%`} y={projectValutionStartY + 2} width={2} height={valuation / 24000}></rect>
+							<rect x={`${projectStartX + projectWidth}%`} y={projectValutionStartY} width={2} height={valuation / this.props.scalingConstant}></rect>
+							<rect x={`${projectStartX + projectWidth}%`} y={capitalRaised / this.props.scalingConstant} width="0.5%" height={2}></rect>
+							<rect x={`${projectStartX + projectWidth + 0.35}%`} y={capitalRaised / this.props.scalingConstant} width={2} height={30}></rect>
+							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / this.props.scalingConstant + 28} width={`${projectWidth + 1}%`} height={2}></rect>
+							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / this.props.scalingConstant} width={2} height={30}></rect>
+							<rect x={`${projectStartX - 0.5}%`} y={capitalRaised / this.props.scalingConstant} width="0.5%" height={2}></rect>
+							<rect x={`${projectStartX}%`} y={projectValutionStartY + 2} width={2} height={valuation / this.props.scalingConstant}></rect>
 						</g>
 					</g>
 				}

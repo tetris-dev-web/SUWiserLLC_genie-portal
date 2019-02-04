@@ -15,47 +15,116 @@ const deployedProjectsValuationMinMax = (projects) => {
 };
 
 const mapStateToProps = state => {
-  const lineData = Object.keys(state.entities.capitalHistory).map(block => {
-    return {
-      date: block,
-      capital: state.entities.capitalHistory[block]
-    }
-  })
-
-  const allProjects = Object.keys(state.entities.projects).reduce((projects, projectTitle) => {
-    if (!projects.deployedProjects) {
-      projects.deployedProjects = [];
-      projects.pitchedProjects = [];
-      projects.totalVotes = 0;
+  const projectPropsData = Object.keys(state.entities.projects).reduce((propsData, projectTitle) => {
+    if (!propsData.deployedProjects) {
+      propsData.deployedProjects = [];
+      propsData.pitchedProjects = [];
+      propsData.totalVotes = 0;
+      propsData.maxValuation = 0;
+      propsData.lastDeploymentTime = 0;
     }
 
     const project = state.entities.projects[projectTitle];
-    projects.totalVotes += project.votes;
+    propsData.totalVotes += project.votes;
 
-    if (project.activationTime) {
-      projects.deployedProjects.push(project);
-    } else {
-      projects.pitchedProjects.push(project);
+    const deploymentTime = project.activationTime;
+    if (deploymentTime) {
+      propsData.deployedProjects.push(project);
+
+      if (propsData.lastDeploymentTime > deploymentTime) {
+        propsData.lastDeploymentTime = deploymentTime;
+      }
+    }
+    else {
+      propsData.pitchedProjects.push(project);
     }
 
-    return projects;
-  }, {})
+    if (project.valuation > propsData.maxValuation) {
+      propsData.maxValuation = project.valuation;
+    }
 
-  const pitchedProjects = allProjects.pitchedProjects.map(project => {
-    project.voteShare = project.votes / allProjects.totalVotes;
+    return propsData;
+  }, {});
+
+  const {
+    deployedProjects,
+    totalVotes,
+    maxValuation,
+    lastDeploymentTime
+  } = projectPropsData;
+
+  console.log("maxValuation", maxValuation)
+  let scalingConstant;
+  if (maxValuation >= 2500000) {
+    scalingConstant = 24000;
+  } else if (maxValuation >= 250000) {
+    scalingConstant = 2400;
+  } else if (maxValuation >= 25000) {
+    scalingConstant = 240
+  } else if (maxValuation >= 2500) {
+    scalingConstant = 24
+  } else if (maxValuation >= 250) {
+    scalingConstant = 2.4
+  } else {
+    scalingConstant = .24;
+  }
+
+  const pitchedProjects = projectPropsData.pitchedProjects.map(project => {
+    project.voteShare = project.votes / totalVotes;
     return project;
   }).sort((a, b) => b.voteShare - a.voteShare);
-  
-  const deployedProjects = allProjects.deployedProjects;
+
+  const capitalPropsData = Object.keys(state.entities.capitalHistory).reduce((propsData, block) => {
+    if (!propsData.lineData) {
+      propsData.lineData = [];
+      propsData.capitalTotal = 0;
+      propsData.capitalBeingRaised = 0;
+      propsData.startTime = block;
+      propsData.endTime = block;
+    }
+
+    const capital = state.entities.capitalHistory[block];
+
+    propsData.lineData.push({
+      date: Number(block),
+      capital
+    });
+    propsData.capitalTotal += capital;
+    if (block >= lastDeploymentTime) {
+      propsData.capitalBeingRaised += capital;
+    }
+    if (block < propsData.startTime) {
+      propsData.startTime = block;
+    }
+    if (block > propsData.endTime) {
+      propsData.endTime = block;
+    }
+
+    return propsData;
+  }, {});
+console.log("capitalPropsData", capitalPropsData)
+  const {
+    lineData,
+    capitalTotal,
+    capitalBeingRaised,
+    startTime,
+    endTime
+  } = capitalPropsData;
 
   return {
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract,
     web3: state.network.web3,
-    lineData,
     pitchedProjects,
     deployedProjects,
-    deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(deployedProjects)
+    maxValuation,
+    deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(deployedProjects),
+    lineData,
+    capitalTotal,
+    capitalBeingRaised,
+    startTime,
+    endTime,
+    scalingConstant
     // pitchedProjects: [
     //   {
     //     id: 1,
@@ -347,30 +416,34 @@ export class VotesGraph extends React.Component {
 
   render() {
     const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
-    return (
-      <div className="votes-graph" style={{ marginTop: maxValuation / 24000 }}>
-        <div className="vote-shift-tool-container"
-          ref={node => this.voteShiftTool = node}
-          style={{ top: -maxValuation / 24000 }}>
-          {
-            this.state.selectedProject &&
-            <VoteShiftTool />
-          }
-        </div>
-        <svg className="votes-view-svg" height={capitalTotal / 24000}>
-          <VotesViewCapitalRaised
-            {...this.props}
-            {...this.state}/>
-          <VotesViewPitchedProjects
-            {...this.props}
-            {...this.state}
-            voteShiftTool={this.voteShiftTool}
-            toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
-        </svg>
-      </div>
-    );
+      if (this.props.lineData) {
+        return (
+          <div className="votes-graph" style={{ marginTop: maxValuation / this.props.scalingConstant }}>
+            <div className="vote-shift-tool-container"
+              ref={node => this.voteShiftTool = node}
+              style={{ top: -maxValuation / this.props.scalingConstant }}>
+              {
+                this.state.selectedProject &&
+                <VoteShiftTool />
+              }
+            </div>
+            <svg className="votes-view-svg" height={capitalTotal / this.props.scalingConstant}>
+              <VotesViewCapitalRaised
+                {...this.props}
+                {...this.state}/>
+              <VotesViewPitchedProjects
+                {...this.props}
+                {...this.state}
+                voteShiftTool={this.voteShiftTool}
+                toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
+            </svg>
+          </div>
+        );
+      }
+
+      return [];
+    }
   }
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(VotesGraph);
 

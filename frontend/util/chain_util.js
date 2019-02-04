@@ -19,17 +19,22 @@ export const integrateProjectsData = async (crowdsale, projectContract, initialP
     //combine functions into one on the blockchain
     const title = await instance.title_();
     const project = initialProjectsData[title];
-    project.instance = instance;
+    const capitalRequired = await instance.capitalRequired_();
+    const valuation = await instance.valuation();
+
+    project.capitalRequired = capitalRequired.toNumber();
+    project.valuation = valuation.toNumber();
     project.active = await instance.active_();
-    project.valuation = await instance.valuation();
-    project.capitalRequired = await instance.capitalRequired_();
     project.id = id;
+    project.instance = instance;
 
     if (project.active) {
       project.votes = 0;
-      project.activationTime = await instance.activationTime_();
+      const activationTime = await instance.activationTime_();
+      project.activationTime = activationTime.toNumber();
     } else {
-      project.votes = await instance.totalVotes_();
+      const votes = await instance.totalVotes_();
+      project.votes = votes.toNumber();
     }
 
     return project;
@@ -51,7 +56,6 @@ export const integrateProjectsData = async (crowdsale, projectContract, initialP
 };
 
 export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPurchases) => {
-  console.log('about to fetch token purchases')
   const events = await crowdsale.TokenPurchase(
     {},
     {

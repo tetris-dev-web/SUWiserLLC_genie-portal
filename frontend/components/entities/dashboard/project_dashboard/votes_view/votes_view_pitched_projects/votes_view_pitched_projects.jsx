@@ -20,10 +20,10 @@ class VotesViewPitchedProjects extends React.Component {
 				fill: capitalBeingRaised < project.capitalRequired ? "#aa7a60" : "#61aba9",
 				projectStartX,
 				projectWidth,
-				projectValutionHeight: (project.valuation - project.capitalRequired) / 24000,
-				projectValutionStartY: (capitalBeingRaised - project.valuation) / 24000,
-				projectCapitalRequiredHeight: project.capitalRequired / 24000,
-				projectCapitalRequiredStartY: (capitalBeingRaised - project.capitalRequired) / 24000,
+				projectValutionHeight: (project.valuation - project.capitalRequired) / this.props.scalingConstant,
+				projectValutionStartY: (capitalBeingRaised - project.valuation) / this.props.scalingConstant,
+				projectCapitalRequiredHeight: project.capitalRequired / this.props.scalingConstant,
+				projectCapitalRequiredStartY: (capitalBeingRaised - project.capitalRequired) / this.props.scalingConstant,
 				projectRectCenter: projectStartX + projectWidth / 2
 			});
 			projectStartX += (1 + projectWidth);
@@ -32,10 +32,11 @@ class VotesViewPitchedProjects extends React.Component {
 	}
 
 	render() {
-		const { maxValuation, capitalBeingRaised, selectedProject, toggleSelectedProject, voteShiftTool } = this.props;
+		const { maxValuation, capitalBeingRaised, selectedProject, toggleSelectedProject, voteShiftTool, scalingConstant } = this.props;
 
 		const rects = this.processProjectData().map((project, idx) => (
 			<VotesViewPitchedProjectsRect key={idx}
+				scalingConstant={scalingConstant}
 				project={project}
 				maxValuation={maxValuation}
 				capitalRaised={capitalBeingRaised}

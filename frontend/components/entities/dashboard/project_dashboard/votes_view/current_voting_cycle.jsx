@@ -63,13 +63,13 @@ class VotesView2 extends React.Component{
       .append("svg")
       .classed("votes-view-svg", true)
       .attr("width", "100%")
-      .attr("height", maxValuation/24000);
+      .attr("height", maxValuation/this.props.scalingConstant);
 
     this.svg.append("g")
       .append("rect")
       .classed("current-cycle-capital", true)
       .attr("width", "100%")
-      .attr("height", capitalRaised / 24000)
+      .attr("height", capitalRaised / this.props.scalingConstant)
       .attr("fill", "#aa7a60")
       .style("opacity", .5);
 
@@ -156,7 +156,7 @@ class VotesView2 extends React.Component{
       .attr("height", 30)
       .attr("fill", project => project.fill)
       .attr("x", project => `${project.projectStartX - .5}%`)
-      .attr("y", capitalRaised / 24000);
+      .attr("y", capitalRaised / this.props.scalingConstant);
       // .style("stroke", "white")
       // .style("stroke-width", 2);
 
@@ -166,7 +166,7 @@ class VotesView2 extends React.Component{
       .append("text")
       .attr("class", "vote-percentage-text")
       .attr("x", project => `${project.projectRectCenter}%`)
-      .attr("y", capitalRaised / 24000 + 20)
+      .attr("y", capitalRaised / this.props.scalingConstant + 20)
       .style("font-size", "18px")
       .style("fill", "#fff")
       .style("text-anchor", "middle")
@@ -186,10 +186,10 @@ class VotesView2 extends React.Component{
         projectStartX,
         projectWidth,
         fill: capitalRaised < project.capitalRequired ? "#aa7a60" : "#61aba9",
-        projectValutionHeight: (project.valuation - project.capitalRequired) / 24000,
-        projectValutionStartY: (capitalRaised - project.valuation) / 24000,
-        projectCapitalRequiredHeight: project.capitalRequired / 24000,
-        projectCapitalRequiredStartY: (capitalRaised - project.capitalRequired) / 24000,
+        projectValutionHeight: (project.valuation - project.capitalRequired) / this.props.scalingConstant,
+        projectValutionStartY: (capitalRaised - project.valuation) / this.props.scalingConstant,
+        projectCapitalRequiredHeight: project.capitalRequired / this.props.scalingConstant,
+        projectCapitalRequiredStartY: (capitalRaised - project.capitalRequired) / this.props.scalingConstant,
         projectRectCenter: projectStartX + projectWidth / 2
       });
       projectStartX += (1 + projectWidth);
@@ -226,15 +226,15 @@ class VotesView2 extends React.Component{
       appendTextToRect(project.capitalRequired, "white", "12px", `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY + 15);
       appendTextToRect("valution", project.fill, "12px", `${project.projectRectCenter}%`, project.projectValutionStartY - 7);
       appendTextToRect("capital needs", "white", "12px", `${project.projectRectCenter}%`, project.projectCapitalRequiredStartY - 7);
-      appendTextToRect(project.title, "#aa7a60", "15px", `${project.projectRectCenter}%`, -(maxValuation - capitalRaised) / 24000 * 1.5);
+      appendTextToRect(project.title, "#aa7a60", "15px", `${project.projectRectCenter}%`, -(maxValuation - capitalRaised) / this.props.scalingConstant * 1.5);
       appendOutLines(`${project.projectStartX}%`, project.projectValutionStartY, `${project.projectWidth}%`, 2);
-      appendOutLines(`${project.projectStartX + project.projectWidth}%`, project.projectValutionStartY, 2, project.valuation / 24000);
-      appendOutLines(`${project.projectStartX + project.projectWidth}%`, capitalRaised / 24000, "0.5%", 2);
-      appendOutLines(`${project.projectStartX + project.projectWidth + 0.5}%`, capitalRaised / 24000, 2, 30);
-      appendOutLines(`${project.projectStartX - 0.5}%`, capitalRaised / 24000 + 28, `${project.projectWidth + 1}%`, 2);
-      appendOutLines(`${project.projectStartX - 0.5}%`, capitalRaised / 24000, 2, 30);
-      appendOutLines(`${project.projectStartX - 0.5}%`, capitalRaised / 24000, "0.5%", 2);
-      appendOutLines(`${project.projectStartX}%`, project.projectValutionStartY + 2, 2, project.valuation / 24000);
+      appendOutLines(`${project.projectStartX + project.projectWidth}%`, project.projectValutionStartY, 2, project.valuation / this.props.scalingConstant);
+      appendOutLines(`${project.projectStartX + project.projectWidth}%`, capitalRaised / this.props.scalingConstant, "0.5%", 2);
+      appendOutLines(`${project.projectStartX + project.projectWidth + 0.5}%`, capitalRaised / this.props.scalingConstant, 2, 30);
+      appendOutLines(`${project.projectStartX - 0.5}%`, capitalRaised / this.props.scalingConstant + 28, `${project.projectWidth + 1}%`, 2);
+      appendOutLines(`${project.projectStartX - 0.5}%`, capitalRaised / this.props.scalingConstant, 2, 30);
+      appendOutLines(`${project.projectStartX - 0.5}%`, capitalRaised / this.props.scalingConstant, "0.5%", 2);
+      appendOutLines(`${project.projectStartX}%`, project.projectValutionStartY + 2, 2, project.valuation / this.props.scalingConstant);
     };
   }
 
@@ -263,7 +263,7 @@ class VotesView2 extends React.Component{
   render(){
     const { maxValuation, capitalRaised } = this.props;
     return(
-      <div className="votes-view" style={{marginTop: (maxValuation - capitalRaised) / 24000 * 2}}>
+      <div className="votes-view" style={{marginTop: (maxValuation - capitalRaised) / this.props.scalingConstant * 2}}>
         {this.state.showVoteShiftTool && <VoteShiftTool project={this.state.selectedProject}/>}
       </div>
     );
