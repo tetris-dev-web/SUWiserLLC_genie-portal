@@ -49,7 +49,6 @@ class ProjectModules extends React.Component {
 
               <CloseButton closeModal = {closeModalOnClick} />
 
-              { !doIHaveData? noDataComponent :
 
                 <React.Fragment>
                   <Title nameOfProject={projectClicked.title}/>
@@ -77,7 +76,6 @@ class ProjectModules extends React.Component {
 
                   </div>
                 </React.Fragment>
-              }
             </Modal>
       );
     }

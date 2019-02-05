@@ -24,10 +24,9 @@ class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
     this.state={
-    //  projects:{},
       isModalOpen: false,
       projectClicked:{},
-      doIHaveData: ''
+      // doIHaveData: ''
     };
 
     this.simulation = this.simulation.bind(this);
@@ -54,13 +53,20 @@ class ProjectGraph extends React.Component {
       projectClicked.accum_actual_cashflow = JSON.parse(projectClicked.accum_actual_cashflow)
       projectClicked.projected_cashflow = JSON.parse(projectClicked.projected_cashflow)
     }
-    this.state.isModalOpen === false ? (this.setState({ isModalOpen: true, projectClicked}))
-      : (this.setState({ isModalOpen: false}))
 
-    projectClicked.id > 0 ? this.setState( {doIHaveData:true })
-      : this.setState( {doIHaveData:false })
+    if (this.state.isModalOpen === false) {
+      this.setState({ 
+        isModalOpen: true,
+        projectClicked 
+      });
+    } else {
+      this.setState({ isModalOpen: false });
+    }
 
-    };
+    // projectClicked.id > 0 ? this.setState( {doIHaveData:true })
+    //   : this.setState( {doIHaveData:false })
+
+  }
 
 
 
@@ -426,8 +432,6 @@ class ProjectGraph extends React.Component {
   }
 
   render() {
-
-
     let data = '';
     if (this.props.data) {
       data = Object.keys(this.props.data).map(key => {
@@ -435,23 +439,22 @@ class ProjectGraph extends React.Component {
         return <li key={project.id}>{project.title} {project.created_at}</li>;
       });
     }
-    console.log("graph state", this.state)
 
-
-      return (
-        <div className='graph-container'>
-          <div className="series content graph" id='project'>
-            <div id="graph"></div>
-          </div>
-                <ProjectModules
-                  projectClicked={this.state.projectClicked}
-                  currentUser={this.props.currentUser}
-                  isModalOpen = {this.state.isModalOpen}
-                  closeModalOnClick = {this.toggleModalonClickandPassProject}
-                  doIHaveData = {this.state.doIHaveData}
-                  />
-        </div>)
-    }
+    return (
+      <div className='graph-container'>
+        <div className="series content graph" id='project'>
+          <div id="graph"></div>
+        </div>
+              <ProjectModules
+                projectClicked={this.state.projectClicked}
+                currentUser={this.props.currentUser}
+                isModalOpen = {this.state.isModalOpen}
+                closeModalOnClick = {this.toggleModalonClickandPassProject}
+                doIHaveData = {this.state.doIHaveData}
+                />
+      </div>
+    );
+  }
 }
 
 ProjectGraph.defaultProps = {

@@ -292,6 +292,9 @@ class VotesGraph extends React.Component {
     const SVGTimeXScale = d3.scaleLinear()
       .domain([startTime, endTime])
       .range([0, this.SVGWidth]);
+    const circleScale = d3.scaleLinear()
+      .domain(deployedProjectsValuationMinMax)
+      .range([5, 10]);
 
     return (
       <div className={`votes-graph ${componentVisible}`}>
@@ -310,13 +313,15 @@ class VotesGraph extends React.Component {
               {...this.state}
               SVGYScale={SVGYScale}
               SVGHeightScale={SVGHeightScale}
-              SVGTimeXScale={SVGTimeXScale} />
+              SVGTimeXScale={SVGTimeXScale}
+              circleScale={circleScale} />
             <VotesViewPitchedProjects
               {...this.props}
               {...this.state}
               SVGYScale={SVGYScale}
               SVGHeightScale={SVGHeightScale}
               SVGWidth={this.SVGWidth}
+              circleScale={circleScale}
               voteShiftTool={this.voteShiftTool}
               toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
         </svg>

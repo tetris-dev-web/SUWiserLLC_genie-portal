@@ -30,14 +30,13 @@ class VotesViewPitchedProjects extends React.Component {
 	}
 
 	render() {
-		const { maxValuation, capitalBeingRaised, selectedProject, toggleSelectedProject, voteShiftTool, SVGYScale } = this.props;
+		const { selectedProject, toggleSelectedProject, voteShiftTool, SVGYScale, circleScale } = this.props;
 
 		const rects = this.processProjectData().map((project, idx) => (
 			<VotesViewPitchedProjectsRect key={idx}
-				SVGYScale={SVGYScale}
 				project={project}
-				maxValuation={maxValuation}
-				capitalRaised={capitalBeingRaised}
+				SVGYScale={SVGYScale}
+				circleScale={circleScale}
 				selectedProject={selectedProject}
 				toggleSelectedProject={toggleSelectedProject}
 				voteShiftTool={voteShiftTool} />

@@ -20,7 +20,7 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 
 		return (
 			<React.Fragment>
-				<circle
+				<circle className="votes-view-project-circle"
 					fill="#bdc4c9"
 					cx={xScale(project.time)}
 					cy={yScale(project.capital)}

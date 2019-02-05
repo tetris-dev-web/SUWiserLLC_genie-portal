@@ -21,11 +21,7 @@ class VotesViewCapitalRaised extends React.Component {
   }
 
   render() {
-    const { SVGYScale, SVGHeightScale, SVGTimeXScale, capitalBeingRaised, capitalTotal, lineData, startTime, endTime, deployedProjects, deployedProjectsValuationMinMax, selectedProject } = this.props;
-    
-    const circleScale = d3.scaleLinear()
-      .domain(deployedProjectsValuationMinMax)
-      .range([5, 10]);
+    const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, capitalTotal, lineData, startTime, endTime, deployedProjects, deployedProjectsValuationMinMax, selectedProject } = this.props;
 
     const Lines = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedLine key={idx}
