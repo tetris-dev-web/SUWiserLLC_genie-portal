@@ -42,12 +42,9 @@ class CashFlowGraph extends React.Component {
   addData(graph, cssClass, points, xAxisScale, yAxisScale) {
     const lineConstructor = d3.line()
               .x( function (d,i){
-                  console.log("i : ", i)
                   return xAxisScale(i);
               })
               .y( function(d) {
-                console.log("d.y: ", d.y)
-                console.log("yScale: ", yAxisScale(d.y))
                 return yAxisScale(d.y)
               })
               .defined(function(d){
@@ -136,7 +133,6 @@ class CashFlowGraph extends React.Component {
       const {numQuarters, minExpectedValueAccuProj, maxValue, minValue} = getGraphParameters()
 
       const defineScale = (inputsMin, inputsMax, outputsMin, outputsMax) => {
-        console.log("inputs: ", inputsMin, inputsMax, outputsMin, outputsMax)
         return d3.scaleLinear().domain([inputsMin, inputsMax]).range([outputsMin, outputsMax]);
       }
 

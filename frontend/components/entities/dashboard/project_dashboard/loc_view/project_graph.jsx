@@ -1,8 +1,6 @@
 import React from 'react';
-import ProjectModules from './../project_modules/project_modules';
-
-
 import * as d3 from 'd3';
+import ProjectModules from './../project_modules/project_modules';
 import {event as currentEvent} from 'd3-selection';
 
 const margin = {top: 20, right: 20, bottom: 30, left: 50};
@@ -23,12 +21,13 @@ const darkGrey = "#A59A91";
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      isModalOpen: false,
-      projectClicked:{},
-      // doIHaveData: ''
-    };
 
+    this.projectClicked = null;
+
+    this.state={
+      openModal: false
+    };
+    
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     this.formatData = this.formatData.bind(this);
@@ -36,7 +35,6 @@ class ProjectGraph extends React.Component {
     this.createSVG = this.createSVG.bind(this);
     this.tickActions = this.tickActions.bind(this);
     this.toggleModalonClickandPassProject = this.toggleModalonClickandPassProject.bind(this);
-
   }
 
   componentDidMount(){
@@ -53,23 +51,15 @@ class ProjectGraph extends React.Component {
       projectClicked.accum_actual_cashflow = JSON.parse(projectClicked.accum_actual_cashflow)
       projectClicked.projected_cashflow = JSON.parse(projectClicked.projected_cashflow)
     }
-
-    if (this.state.isModalOpen === false) {
-      this.setState({ 
-        isModalOpen: true,
-        projectClicked 
-      });
+    
+    if (this.state.openModal === false) {
+      this.projectClicked = projectClicked;
+      this.setState({ openModal: true });
     } else {
-      this.setState({ isModalOpen: false });
+      this.projectClicked = null;
+      this.setState({ openModal: false });
     }
-
-    // projectClicked.id > 0 ? this.setState( {doIHaveData:true })
-    //   : this.setState( {doIHaveData:false })
-
   }
-
-
-
 
   formatData(projectKeys) {
     const listData = (data) => {
@@ -432,26 +422,23 @@ class ProjectGraph extends React.Component {
   }
 
   render() {
-    let data = '';
-    if (this.props.data) {
-      data = Object.keys(this.props.data).map(key => {
-        const project = this.props.data[key];
-        return <li key={project.id}>{project.title} {project.created_at}</li>;
-      });
-    }
-
+    // let data = '';
+    // if (this.props.data) {
+    //   data = Object.keys(this.props.data).map(key => {
+    //     const project = this.props.data[key];
+    //     return <li key={project.id}>{project.title} {project.created_at}</li>;
+    //   });
+    // }
     return (
       <div className='graph-container'>
         <div className="series content graph" id='project'>
           <div id="graph"></div>
         </div>
-              <ProjectModules
-                projectClicked={this.state.projectClicked}
-                currentUser={this.props.currentUser}
-                isModalOpen = {this.state.isModalOpen}
-                closeModalOnClick = {this.toggleModalonClickandPassProject}
-                doIHaveData = {this.state.doIHaveData}
-                />
+          <ProjectModules
+            projectClicked={this.projectClicked}
+            currentUser={this.props.currentUser}
+            openModal={this.state.openModal}
+            closeModalOnClick={this.toggleModalonClickandPassProject}/>
       </div>
     );
   }

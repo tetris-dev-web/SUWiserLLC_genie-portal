@@ -32,7 +32,7 @@ export function SummaryAndPlan (props){
     <div className="project-description">
 
       <div className="project-text">
-        <textarea onChange={null}
+        <textarea onChange={() => {}}
                   disabled={props.isInvestor}
                   className="project-summary"
                   value={props.summary}/>
