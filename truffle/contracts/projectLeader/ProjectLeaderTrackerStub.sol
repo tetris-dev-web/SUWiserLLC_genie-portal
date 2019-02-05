@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './ProjectLeaderTracker.sol';
-import './ContractStub.sol';
+import '../ContractStub.sol';
 
 contract ProjectLeaderTrackerStub is ProjectLeaderTracker, ContractStub {
   address addr;

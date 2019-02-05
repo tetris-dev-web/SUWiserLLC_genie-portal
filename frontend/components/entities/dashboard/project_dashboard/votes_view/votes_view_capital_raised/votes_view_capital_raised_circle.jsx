@@ -39,7 +39,7 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 				}
 				<circle
 					fill="#bdc4c9"
-					cx={xScale(project.time)}
+					cx={xScale(project.activationTime)}
 					cy={yScale(project.capital)}
 					r={`${circleScale(project.valuation)}%`}
 					opacity={opacity}
@@ -49,7 +49,7 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 				{
 					this.state.showText &&
 					<text className="votes-view-capital-raised-text"
-						x={xScale(project.time)}
+						x={xScale(project.activationTime)}
 						y={yScale(project.capital) + 30}><tspan>{project.title}</tspan>
 					</text>
 				}

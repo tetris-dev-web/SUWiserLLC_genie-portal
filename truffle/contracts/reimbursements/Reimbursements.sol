@@ -1,9 +1,9 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import './token/ERC20/Token.sol';
-import './utility/SafeMath.sol';
-import './utility/Ownable.sol';
-import './crowdsale/GNITokenCrowdsale.sol';
+import '../token/ERC20/Token.sol';
+import '../utility/SafeMath.sol';
+import '../utility/Ownable.sol';
+import '../crowdsale/GNITokenCrowdsale.sol';
 
 contract Reimbursements is Ownable {
   using SafeMath for uint256;

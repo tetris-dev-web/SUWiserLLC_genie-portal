@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './ERC20/MintableToken.sol';
-import '../Dividends.sol';
+import '../dividends/Dividends.sol';
 import '../ContractStub.sol';
 import '../utility/Secondary.sol';
 

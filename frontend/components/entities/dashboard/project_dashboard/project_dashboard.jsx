@@ -26,21 +26,21 @@ class ProjectDashboard extends React.Component {
     if (currentViewId === this.state.currentViewId) {
       this.graphContainer.style.height = "0";
     } else if (currentViewId === 1) {
-      this.graphContainer.style.height = "320px";
+      this.graphContainer.style.height = "32vh";
     } else if (currentViewId === 2) {
-      this.graphContainer.style.height = "500px";
+      this.graphContainer.style.height = "47vh";
     }
   }
 
   componentDidMount() {
     if (this.props.web3){
-      this.props.fetchProjects(this.props.crowdsaleInstance, this.props.projectContract)
-      this.watchProjectPitch()
+      this.props.fetchProjects(this.props.crowdsaleInstance,this.props.projectContract)
+      this.watchProjectPitch();
     }
   }
 
-  watchProjectPitch() { //event listener for pitched projects
-    // console.log("instance", this.props.crowdsaleInstance)
+  watchProjectPitch () { //event listener for pitched projects
+    console.log("instance", this.props.crowdsaleInstance)
     this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
     console.log("projectInfo", this.props.projects)
     console.log("event", event)

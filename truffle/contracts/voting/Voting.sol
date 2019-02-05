@@ -1,10 +1,10 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './utility/Ownable.sol';
-import './Project.sol';
-import './crowdsale/GNITokenCrowdsale.sol';
-import './token/ERC20/Token.sol';
-import './ProjectLeaderTracker.sol';
-import './ECRecovery.sol';
+import '../utility/Ownable.sol';
+import '../project/Project.sol';
+import '../crowdsale/GNITokenCrowdsale.sol';
+import '../token/ERC20/Token.sol';
+import '../projectLeader/ProjectLeaderTracker.sol';
+import '../ECRecovery.sol';
 
 contract Voting is Ownable {
   using ECRecovery for bytes32;

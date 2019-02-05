@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './token/ERC20/Token.sol';
-import './ContractStub.sol';
+import './ERC20/Token.sol';
+import '../ContractStub.sol';
 
 contract TokenStub is Token, ContractStub {
   address mockInvestorA;

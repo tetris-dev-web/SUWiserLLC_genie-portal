@@ -1,6 +1,6 @@
 import sigUtil from "eth-sig-util"
 // import abi from "ethereumjs-abi"
-import abiDecoder from 'abi-decoder';
+
 export const integrateProjectsData = async (crowdsale, projectContract, initialProjectsData) => {
 
   const getProjectAddresses = async crowdsale => {
@@ -82,23 +82,6 @@ export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPu
   })
 }
 
-// export const fetchProjectActivationLogs = async (crowdsale, web3) => {
-//   // console.log('about to fetch token purchases')
-//   const filter = await web3.eth.filter({
-//     fromBlock:0,
-//     toBlock: 'latest',
-//     address: crowdsale.address,
-//     'topics':[
-//         web3.sha3('ProjectActivation(address,uint256,uint256)')
-//     ]
-//   });
-//   console.log('about to filter')
-//   return await filter.get((error, logs) => {
-//     console.log("done filtering")
-//     console.log(logs)
-//     return logs;
-//   })
-// }
 
 export const pitchProject = async (crowdsale, data, account) => {
   let { title, capital_required, valuation, latitude, longitude } = data;

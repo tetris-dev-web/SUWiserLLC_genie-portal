@@ -1,12 +1,13 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
-import '../Project.sol';
-import '../ProjectStub.sol';
+import '../project/Project.sol';
+import '../project/ProjectStub.sol';
 import '../token/ERC20/Token.sol';
-import '../Reimbursements.sol';
-import '../ProjectLeaderTracker.sol';
-import '../Voting.sol';
+import '../projectLeader/ProjectLeaderTracker.sol';
+import '../voting/Voting.sol';
+import '../reimbursements/Reimbursements.sol';
+
 
 
 contract GNITokenCrowdsale is TimedCrowdsale {

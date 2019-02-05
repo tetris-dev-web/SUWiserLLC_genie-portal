@@ -15,6 +15,7 @@ const deployedProjectsValuationMinMax = (projects) => {
 };
 
 const mapStateToProps = state => {
+  let capitalDeployed = 0;
   const projectPropsData = Object.keys(state.entities.projects).reduce((propsData, projectTitle) => {
     if (!propsData.deployedProjects) {
       propsData.deployedProjects = [];
@@ -24,11 +25,14 @@ const mapStateToProps = state => {
       propsData.lastDeploymentTime = 0;
     }
 
+
     const project = state.entities.projects[projectTitle];
     propsData.totalVotes += project.votes;
 
     const deploymentTime = project.activationTime;
     if (deploymentTime) {
+      capitalDeployed += project.valuation;
+      project.capital = capitalDeployed;
       propsData.deployedProjects.push(project);
 
       if (propsData.lastDeploymentTime > deploymentTime) {
@@ -53,7 +57,7 @@ const mapStateToProps = state => {
     lastDeploymentTime
   } = projectPropsData;
 
-  let scalingConstant;
+  let scalingConstant; //will remove this after create a static scaling option
   if (maxValuation >= 2500000) {
     scalingConstant = 24000;
   } else if (maxValuation >= 250000) {
@@ -77,7 +81,7 @@ const mapStateToProps = state => {
     if (!propsData.lineData) {
       propsData.lineData = [];
       propsData.capitalTotal = 0;
-      propsData.capitalBeingRaised = 0;
+      // propsData.capitalBeingRaised = 0;
       propsData.startTime = block;
       propsData.endTime = block;
     }
@@ -89,9 +93,9 @@ const mapStateToProps = state => {
       capital
     });
     propsData.capitalTotal += capital;
-    if (block >= lastDeploymentTime) {
-      propsData.capitalBeingRaised += capital;
-    }
+    // if (block > lastDeploymentTime) {
+    //   propsData.capitalBeingRaised += capital;
+    // }
     if (block < propsData.startTime) {
       propsData.startTime = block;
     }
@@ -101,11 +105,11 @@ const mapStateToProps = state => {
 
     return propsData;
   }, {});
-  
+
   const {
     lineData,
     capitalTotal,
-    capitalBeingRaised,
+    // capitalBeingRaised,
     startTime,
     endTime
   } = capitalPropsData;
@@ -120,7 +124,7 @@ const mapStateToProps = state => {
     deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(deployedProjects),
     lineData,
     capitalTotal,
-    capitalBeingRaised,
+    capitalBeingRaised : capitalTotal - capitalDeployed,
     startTime,
     endTime,
     scalingConstant
@@ -415,6 +419,7 @@ export class VotesGraph extends React.Component {
 
   render() {
     const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
+    console.log(this.props.deployedProjects);
       if (this.props.lineData) {
         return (
           <div className="votes-graph" style={{ marginTop: maxValuation / this.props.scalingConstant }}>

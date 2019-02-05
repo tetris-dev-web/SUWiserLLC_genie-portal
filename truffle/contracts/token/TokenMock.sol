@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.6.0;
 
 import './ERC20/Token.sol';
-import './../ContractStub.sol';
+import '../ContractStub.sol';
 
 contract TokenMock is Token, ContractStub {
   function setMockTotalActivationPonts (uint256 newTokens, uint256 inactiveSupply) public {

@@ -7,7 +7,6 @@ export const fetchProjects  = (crowdsale, projectContract) => {
   return dispatch => {
     return APIUtil.fetchProjects().then(projects => {
       return ChainUtil.integrateProjectsData(crowdsale, projectContract, projects).then((projectsData) => {
-        debugger
         return dispatch(receiveProjects(projectsData));
       });
     });
@@ -20,11 +19,6 @@ export const fetchProjectActivationLogs = (crowdsale, web3) => {
   }
 }
 
-// export const fetchCrowdsaleLogs = (crowdsale, web3) => {
-//   return dispatch => {
-//     return ChainUtil.fetchProjectActivationLogs(crowdsale, web3)
-//   }
-// }
 
 export const createProject = (crowdsale, railsParams, blockchainParams, pdf_file, account) => {
   return dispatch => {

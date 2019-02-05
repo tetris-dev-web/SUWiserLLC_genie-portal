@@ -59,8 +59,7 @@ class VotesViewCapitalRaised extends React.Component {
       lineData={lineData} />;
 
     const heightOfCapitalBeingRaisedRect = capitalBeingRaised / this.props.scalingConstant;
-    console.log("capitalBeingRaised", capitalBeingRaised)
-    console.log("heightOfCapitalBeingRaisedRect", heightOfCapitalBeingRaisedRect)
+
     const CapitalBeingRaisedRect = <VotesViewCapitalRaisedRect
       scalingConstant={this.props.scalingConstant}
       x="0" y="0"
@@ -81,6 +80,9 @@ class VotesViewCapitalRaised extends React.Component {
       )}/>;
 
     const heightOfCapitalRaisedPrevRect = (capitalTotal - capitalBeingRaised) / this.props.scalingConstant;
+
+    console.log("heightOfCapitalRaisedPrevRect", heightOfCapitalRaisedPrevRect, "capitalTotal", capitalTotal,"capitalBeingRaised", capitalBeingRaised);
+
     const capRaisedAmounts = deployedProjects.map((project, idx) => (
       <text className="votes-view-capital-raised-text"
         key={idx}

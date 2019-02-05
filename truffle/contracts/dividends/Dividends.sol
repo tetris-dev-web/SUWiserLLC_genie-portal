@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './utility/SafeMath.sol';
-import './token/ERC20/Token.sol';
-import './crowdsale/GNITokenCrowdsale.sol';
+import '../utility/SafeMath.sol';
+import '../token/ERC20/Token.sol';
+import '../crowdsale/GNITokenCrowdsale.sol';
 
 contract Dividends {
   using SafeMath for uint256;

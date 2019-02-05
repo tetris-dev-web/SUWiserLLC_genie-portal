@@ -1,9 +1,9 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './Voting.sol';
-import './Project.sol';
-import './crowdsale/GNITokenCrowdsale.sol';
-import './token/ERC20/Token.sol';
-import './ProjectLeaderTracker.sol';
+import '../project/Project.sol';
+import '../crowdsale/GNITokenCrowdsale.sol';
+import '../token/ERC20/Token.sol';
+import '../projectLeader/ProjectLeaderTracker.sol';
 
 contract SeedableVoting is Voting {
  constructor (Token _token, ProjectLeaderTracker _projectLeaderTracker)

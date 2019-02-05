@@ -1,8 +1,8 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './Reimbursements.sol';
-import './utility/SafeMath.sol';
-import './ContractStub.sol';
-import './token/ERC20/Token.sol';
+import '../reimbursements/Reimbursements.sol';
+import '../utility/SafeMath.sol';
+import '../ContractStub.sol';
+import '../token/ERC20/Token.sol';
 
 contract ReimbursementsStub is Reimbursements, ContractStub {
   using SafeMath for uint256;

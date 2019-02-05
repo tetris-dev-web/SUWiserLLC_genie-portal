@@ -1,8 +1,8 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './utility/SafeMath.sol';
-import './utility/Ownable.sol';
-import './utility/Secondary.sol';
-import './Dividends.sol';
+import '../utility/SafeMath.sol';
+import '../utility/Ownable.sol';
+import '../utility/Secondary.sol';
+import '../dividends/Dividends.sol';
 /* import './ECRecovery.sol'; */
 
 contract Project is Ownable, Secondary {

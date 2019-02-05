@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './Project.sol';
-import './ContractStub.sol';
+import '../ContractStub.sol';
 
 contract ProjectStub is Project, ContractStub {
   constructor (

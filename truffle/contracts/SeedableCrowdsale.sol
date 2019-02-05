@@ -1,9 +1,9 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './GNITokenCrowdsale.sol';
-import '../token/ERC20/Token.sol';
-import '../ProjectLeaderTracker.sol';
-import '../Reimbursements.sol';
-import '../Voting.sol';
+import './crowdsale/GNITokenCrowdsale.sol';
+import './token/ERC20/Token.sol';
+import './projectLeader/ProjectLeaderTracker.sol';
+import './reimbursements/Reimbursements.sol';
+import './voting/Voting.sol';
 
 contract SeedableCrowdsale is GNITokenCrowdsale {
   constructor

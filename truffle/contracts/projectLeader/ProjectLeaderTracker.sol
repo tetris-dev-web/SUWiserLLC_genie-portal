@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './Project.sol';
-import './utility/Ownable.sol';
-import './utility/SafeMath.sol';
+import '../project/Project.sol';
+import '../utility/Ownable.sol';
+import '../utility/SafeMath.sol';
 
 contract ProjectLeaderTracker is Ownable {
   using SafeMath for uint256;

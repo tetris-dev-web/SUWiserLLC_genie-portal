@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './Dividends.sol';
-import './token/ERC20/Token.sol';
+import '../token/ERC20/Token.sol';
 
 contract DividendsMock is Dividends {
 

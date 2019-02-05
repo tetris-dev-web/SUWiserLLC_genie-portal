@@ -237,6 +237,7 @@ hamInn_cashflow = {
   "27P": 33509,
   "28P": 33928
 }
+
 hamInn_summary = "We work hard to set accurate expectations in our listings of our unique experience, and we
 work hard to meet or exceed those expectations. However, we have no control over such
 things as our location and the level of street noise around us, and we urge you to consider

@@ -12,14 +12,13 @@ const SeedableVoting = artifacts.require("SeedableVoting");
 const { seed } = require('../seeds');
 
 let tokenInstance;
-let investorListInst;
 let votingInstance;
 let crowdsaleInstance;
 
 module.exports = function (deployer, network, accounts) {
   console.log("NETWORK", network)
-    const rate = 10000;
-    const developer = accounts[0];
+    const rate = 1; //changed this to 1 from 10000 (subject to change still)
+    const developer = accounts[0];  //will need to make this variable and import from the interface on first deployment of a developer's site (Progeny)
 
     return deployer
         .then(() => {
@@ -53,19 +52,11 @@ module.exports = function (deployer, network, accounts) {
           return deployer.link(ECRecovery, Voting)
         })
         .then(() => {
-
           if(network === 'ropsten') {
             return deployer.deploy(SeedableVoting, Token.address, ProjectLeaderTracker.address);
           }
-
           return deployer.deploy(Voting, Token.address, ProjectLeaderTracker.address);
         })
-        // .then(() => {
-        //   return deployer.link(ECRecovery, GNITokenCrowdsale);
-        // })
-        // .then(() => {
-        //   return deployer.link(ECRecovery, GNITokenCrowdsaleMock);
-        // })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {
@@ -104,7 +95,7 @@ module.exports = function (deployer, network, accounts) {
                 Reimbursements.address,
                 votingAddr
             );
-        })
+        }) //organize around seeding, ownership designation and contract instanciation / contract references
         .then(() => {
           return network === 'ropsten' ?  SeedableCrowdsale.at(SeedableCrowdsale.address) : GNITokenCrowdsale.at(GNITokenCrowdsale.address);
         })
@@ -149,6 +140,9 @@ module.exports = function (deployer, network, accounts) {
             // console.log("voting", votingInstance)
             return seed(crowdsaleInstance, tokenInstance, votingInstance, developer, accounts[1], accounts[2]);
           }
+        })
+        .then(()=>{
+          console.log("crowdsaleInstance: ", crowdsaleInstance.address, "tokenInstance: ", tokenInstance.address, "votingInstance: ", votingInstance.address)
         });
 };
 // .then(() => {
