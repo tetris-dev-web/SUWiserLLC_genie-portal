@@ -53,7 +53,6 @@ const mapStateToProps = state => {
     lastDeploymentTime
   } = projectPropsData;
 
-  console.log("maxValuation", maxValuation)
   let scalingConstant;
   if (maxValuation >= 2500000) {
     scalingConstant = 24000;
@@ -102,7 +101,7 @@ const mapStateToProps = state => {
 
     return propsData;
   }, {});
-console.log("capitalPropsData", capitalPropsData)
+  
   const {
     lineData,
     capitalTotal,

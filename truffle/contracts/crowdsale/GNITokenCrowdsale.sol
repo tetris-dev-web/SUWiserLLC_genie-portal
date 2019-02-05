@@ -113,15 +113,15 @@ contract GNITokenCrowdsale is TimedCrowdsale {
      capitalRequired <= weiRaised &&
      project.open()
      ) {
-     /* uint256 time = project.activate(); */
-     //set the number of project votes to 0. */
+     uint256 time = project.activate();
+     //set the number of project votes to 0.
 
-     /* developer.transfer(capitalRequired);
+     developer.transfer(capitalRequired);
      weiRaised = weiRaised.sub(capitalRequired);
 
      projectLeaderTracker.handleProjectActivation();
      Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
-     emit ProjectActivation(tentativeLeaderAddr, capitalRequired, time); */
+     emit ProjectActivation(tentativeLeaderAddr, capitalRequired, time);
     }
   }
 

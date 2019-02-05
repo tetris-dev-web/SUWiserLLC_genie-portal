@@ -1,10 +1,11 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './utility/SafeMath.sol';
 import './utility/Ownable.sol';
+import './utility/Secondary.sol';
 import './Dividends.sol';
 /* import './ECRecovery.sol'; */
 
-contract Project is Ownable {
+contract Project is Ownable, Secondary {
   using SafeMath for uint256;
   /* using ECRecovery for bytes32; */
   //these will all need to be private so they cannot be set arbitrarily
@@ -172,7 +173,7 @@ contract Project is Ownable {
     closingTime = closingTime.sub(43200);//we need to handle the case that the project closed
   }
 
-  function activate () external onlyOwner returns(uint256) {
+  function activate () external onlyPrimary returns(uint256) {
     active = true;
     //we should set totalVotes to 0
     activationTime = now;
