@@ -7,18 +7,6 @@ import VotesViewCapitalRaisedCircle from './votes_view_capital_raised_circle';
 import colors from  "../../../../../../util/_variables.scss";
 
 class VotesViewCapitalRaised extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-    };
-  }
-
-  componentDidMount() {
-    // window.onresize = () => {
-    //   this.setState({currentWindowWidth: window.innerWidth});
-    // };
-  }
 
   render() {
     const { SVGYScale, SVGHeightScale, SVGTimeXScale, capitalBeingRaised, capitalTotal, lineData, startTime, endTime, deployedProjects, deployedProjectsValuationMinMax, selectedProject } = this.props;

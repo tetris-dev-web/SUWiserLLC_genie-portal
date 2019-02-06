@@ -23,57 +23,75 @@ class VotesGraph extends React.Component {
     setTimeout(() => {
       this.setState({componentVisible: ""});
     }, this.props.wait);
+
+    this.props.fetchTokenPurchaseLogs(this.props.crowdsaleInstance);
+  }
+
+  createScales(){
+    const {capitalBeingRaised, capitalTotal, startTime, endTime, lineData, deployedProjectsValuationMinMax} = this.props;
+    return {
+      SVGHeightScale : d3.scaleLinear()
+        .range([0, this.SVGHeight])
+        .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
+      SVGYScale : d3.scaleLinear()
+        .range([this.SVGHeight, 0])
+        .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
+      SVGTimeXScale: d3.scaleLinear()
+        .domain([startTime, endTime])
+        .range([0, this.SVGWidth]),
+    }
+  }
+
+  dataHasLoaded(){
+    return this.props.lineData
+  }
+
+  renderGraph() {
+    const { SVGHeightScale, SVGYScale, SVGTimeXScale } = this.createScales();
+    const { selectedProject, componentVisible } = this.state;
+    return (
+      <div className={`votes-graph ${componentVisible}`}>
+          <div className="vote-shift-tool-container"
+            ref={node => this.voteShiftTool = node}>
+            {
+              selectedProject &&
+              <VoteShiftTool />
+            }
+          </div>
+          <svg className="votes-view-svg"
+            preserveAspectRatio="xMinYMin meet"
+            viewBox="0 0 960 500">
+              <VotesViewCapitalRaised
+                {...this.props}
+                {...this.state}
+                SVGYScale={SVGYScale}
+                SVGHeightScale={SVGHeightScale}
+                SVGTimeXScale={SVGTimeXScale} />
+              <VotesViewPitchedProjects
+                {...this.props}
+                {...this.state}
+                SVGYScale={SVGYScale}
+                SVGHeightScale={SVGHeightScale}
+                SVGWidth={this.SVGWidth}
+                voteShiftTool={this.voteShiftTool}
+                toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
+          </svg>
+        </div>
+      )
   }
 
   render() {
-    const {capitalBeingRaised, capitalTotal, startTime, endTime, lineData, deployedProjectsValuationMinMax} = this.props;
-    console.log("props", this.props)
-
-    const { selectedProject, componentVisible } = this.state;
-
-    const SVGHeightScale = d3.scaleLinear()
-      .range([0, this.SVGHeight])
-      .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]);
-    const SVGYScale = d3.scaleLinear()
-      .range([this.SVGHeight, 0])
-      .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]);
-    const SVGTimeXScale = d3.scaleLinear()
-      .domain([startTime, endTime])
-      .range([0, this.SVGWidth]);
-
-    return (
-      <div className={`votes-graph ${componentVisible}`}>
-        <div className="vote-shift-tool-container"
-          ref={node => this.voteShiftTool = node}>
-          {
-            selectedProject &&
-            <VoteShiftTool />
-          }
-        </div>
-        <svg className="votes-view-svg"
-          preserveAspectRatio="xMinYMin meet"
-          viewBox="0 0 960 500">
-            <VotesViewCapitalRaised
-              {...this.props}
-              {...this.state}
-              SVGYScale={SVGYScale}
-              SVGHeightScale={SVGHeightScale}
-              SVGTimeXScale={SVGTimeXScale} />
-            <VotesViewPitchedProjects
-              {...this.props}
-              {...this.state}
-              SVGYScale={SVGYScale}
-              SVGHeightScale={SVGHeightScale}
-              SVGWidth={this.SVGWidth}
-              voteShiftTool={this.voteShiftTool}
-              toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
-        </svg>
-      </div>
-    );
+    return this.dataHasLoaded() ? renderGraph() : null
   }
 }
 
 export default VotesGraph;
+
+
+
+
+
+
 //
 // const cashflow = {
 //   "1": {

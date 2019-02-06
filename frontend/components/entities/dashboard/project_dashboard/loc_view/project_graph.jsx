@@ -42,10 +42,7 @@ class ProjectGraph extends React.Component {
   }
 
   componentDidMount(){
-    console.log("hi")
-    // this.props.fetchProjects(this.props.crowdsaleInstance, this.props.projectContract).then(() => {
-    //   this.setUp();
-    // });
+    this.setUp();
   }
 
   toggleModalonClickandPassProject(projectClicked) {
@@ -110,6 +107,7 @@ class ProjectGraph extends React.Component {
   }
 
   setUp () {
+    console.log("PROPS", this.props)
     const projectKeys = Object.keys(this.props.data);
     const svg = this.createSVG();
 
