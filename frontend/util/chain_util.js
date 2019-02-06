@@ -15,6 +15,7 @@ export const integrateProjectsData = async (crowdsale, projectContract, initialP
   };
 
   const formatProjectData = async (instance, address, initialProjectsData, id) => {
+
     //combine functions into one on the blockchain
     const title = await instance.title_();
     const project = initialProjectsData[title];

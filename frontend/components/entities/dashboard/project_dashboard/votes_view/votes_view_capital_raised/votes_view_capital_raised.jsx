@@ -10,7 +10,6 @@ class VotesViewCapitalRaised extends React.Component {
 
   render() {
     const { SVGYScale, SVGHeightScale, SVGTimeXScale, capitalBeingRaised, capitalTotal, lineData, startTime, endTime, deployedProjects, deployedProjectsValuationMinMax, selectedProject } = this.props;
-
     const circleScale = d3.scaleLinear()
       .domain(deployedProjectsValuationMinMax)
       .range([5, 10]);
@@ -40,6 +39,8 @@ class VotesViewCapitalRaised extends React.Component {
 
     const heightOfCapitalBeingRaisedRect = SVGHeightScale(capitalBeingRaised);
     const yOfCapitalBeingRaisedRect = SVGYScale(capitalTotal);
+    console.log("capitalBeingRaised", capitalBeingRaised)
+    console.log("heightOfCapitalBeingRaisedRect", heightOfCapitalBeingRaisedRect)
     const CapitalBeingRaisedRect = <VotesViewCapitalRaisedRect
       x="0" y={yOfCapitalBeingRaisedRect}
       fill={colors.rosyBrown}

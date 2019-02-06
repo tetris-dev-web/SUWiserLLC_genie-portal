@@ -33,7 +33,7 @@ contract Voting is Ownable {
 
   function voteForProject(address  _project, address _voter, uint256 votes, bytes memory _signedMessage) public {
     require(Token(token).existingAccount(_voter));
-    //verifications
+
     bytes32 unsignedMessage = voteForHash[_project];
     address recoveredVoter = unsignedMessage.recover(_signedMessage);
 

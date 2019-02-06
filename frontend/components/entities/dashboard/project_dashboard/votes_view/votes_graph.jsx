@@ -28,14 +28,14 @@ class VotesGraph extends React.Component {
   }
 
   createScales(){
-    const {capitalBeingRaised, capitalTotal, startTime, endTime, lineData, deployedProjectsValuationMinMax} = this.props;
+    const {capitalBeingRaised, capitalTotal, startTime, endTime, lineData, maxValuation, deployedProjectsValuationMinMax} = this.props;
     return {
       SVGHeightScale : d3.scaleLinear()
         .range([0, this.SVGHeight])
-        .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
+        .domain([0, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
       SVGYScale : d3.scaleLinear()
         .range([this.SVGHeight, 0])
-        .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
+        .domain([0, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
       SVGTimeXScale: d3.scaleLinear()
         .domain([startTime, endTime])
         .range([0, this.SVGWidth]),
@@ -49,6 +49,7 @@ class VotesGraph extends React.Component {
   renderGraph() {
     const { SVGHeightScale, SVGYScale, SVGTimeXScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
+
     return (
       <div className={`votes-graph ${componentVisible}`}>
           <div className="vote-shift-tool-container"
@@ -81,7 +82,7 @@ class VotesGraph extends React.Component {
   }
 
   render() {
-    return this.dataHasLoaded() ? renderGraph() : null
+    return this.dataHasLoaded() ? this.renderGraph() : null
   }
 }
 

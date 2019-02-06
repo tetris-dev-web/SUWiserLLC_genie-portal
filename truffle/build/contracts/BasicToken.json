@@ -118,9 +118,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity >=0.4.22 <0.6.0;\nimport \"./ERC20Basic.sol\";\nimport '../../utility/SafeMath.sol';\n\n\n/**\n * @title Basic token\n * @dev Basic version of StandardToken, with no allowances.\n */\ncontract BasicToken is ERC20Basic {\n  using SafeMath for uint256;\n\n  /* mapping(address => uint256) internal balances; */\n\n  struct Balance {\n    uint256 active;\n    uint256 inactive;\n    uint256 assigned;\n    bool exists;\n  }\n\n  mapping(address => Balance) internal balances;\n\n  mapping(uint256 => address) internal accounts;\n  uint256 internal totalAccounts_;\n\n  uint256 internal totalSupply_;\n\n  /**\n  * @dev Total number of tokens in existence\n  */\n\n\n  function totalSupply() public view returns (uint256) {\n    return totalSupply_;\n  }\n\n  function totalAccounts () public view returns (uint256) {\n    return totalAccounts_;\n  }\n\n  function existingAccount (address account) public view returns (bool) {\n    return balances[account].exists;\n  }\n\n  function initAccount (address account) internal {\n    if (!existingAccount(account)) {\n      Balance memory newBalance;\n      newBalance.exists = true;\n      balances[account] = newBalance;\n\n      accounts[totalAccounts_] = account;\n      totalAccounts_ = totalAccounts_.add(1);\n    }\n  }\n\n  /**\n  * @dev Transfer token for a specified address\n  * @param _to The address to transfer to.\n  * @param _value The amount to be transferred.\n  */\n  function transfer(address _to, uint256 _value) public returns (bool) {\n\n    require(_value <= balanceOf(msg.sender));\n    require(_to != address(0));\n\n    initAccount(_to);\n\n    /* balances[msg.sender].total = balances[msg.sender].total.sub(_value); */\n    /* balances[_to].total = balances[_to].total.add(_value); */\n    emit Transfer(msg.sender, _to, _value);\n    return true;\n  }\n\n  /**\n  * @dev Gets the balance of the specified address.\n  * @param _owner The address to query the the balance of.\n  * @return An uint256 representing the amount owned by the passed address.\n  */\n  /* function balanceOf(address _owner) public view returns (uint256) {\n    //if it is not 0\n    return balances[_owner];\n    //else return active balance of owner\n  } */\n\n}\n",
-  "sourcePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/BasicToken.sol",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/BasicToken.sol",
   "ast": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/BasicToken.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/BasicToken.sol",
     "exportedSymbols": {
       "BasicToken": [
         3907
@@ -144,7 +144,7 @@
         "src": "0:32:20"
       },
       {
-        "absolutePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/ERC20Basic.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/ERC20Basic.sol",
         "file": "./ERC20Basic.sol",
         "id": 3770,
         "nodeType": "ImportDirective",
@@ -155,7 +155,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/SafeMath.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/SafeMath.sol",
         "file": "../../utility/SafeMath.sol",
         "id": 3771,
         "nodeType": "ImportDirective",
@@ -1870,7 +1870,7 @@
     "src": "0:2139:20"
   },
   "legacyAST": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/BasicToken.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/BasicToken.sol",
     "exportedSymbols": {
       "BasicToken": [
         3907
@@ -1894,7 +1894,7 @@
         "src": "0:32:20"
       },
       {
-        "absolutePath": "/Users/steven/genie-portal/truffle/contracts/token/ERC20/ERC20Basic.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/token/ERC20/ERC20Basic.sol",
         "file": "./ERC20Basic.sol",
         "id": 3770,
         "nodeType": "ImportDirective",
@@ -1905,7 +1905,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/SafeMath.sol",
+        "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/SafeMath.sol",
         "file": "../../utility/SafeMath.sol",
         "id": 3771,
         "nodeType": "ImportDirective",
@@ -3625,5 +3625,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-02-06T00:33:30.182Z"
+  "updatedAt": "2019-02-06T20:12:46.467Z"
 }
