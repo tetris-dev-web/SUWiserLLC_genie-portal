@@ -24,7 +24,7 @@ class ProjectGraph extends React.Component {
 
     this.projectClicked = null;
 
-    this.state={
+    this.state = {
       openModal: false
     };
     
@@ -436,7 +436,6 @@ class ProjectGraph extends React.Component {
         </div>
           <ProjectModules
             projectClicked={this.projectClicked}
-            currentUser={this.props.currentUser}
             openModal={this.state.openModal}
             closeModalOnClick={this.toggleModalonClickandPassProject}/>
       </div>
