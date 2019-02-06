@@ -105,7 +105,6 @@ const mapStateToProps = state => {
     endTime
   } = capitalPropsData;
 
-  console.log("LINEDATA", lineData)
   return {
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract,
@@ -410,6 +409,8 @@ export class VotesGraph extends React.Component {
   }
 
   render() {
+    console.log("PROJECTS", this.props.deployedProjects)
+    console.log(this.props.pitchedProjects)
     const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
       if (this.props.lineData) {
         return (
