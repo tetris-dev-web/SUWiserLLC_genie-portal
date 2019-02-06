@@ -46,7 +46,8 @@ contract Crowdsale {
     address indexed purchaser,
     address indexed beneficiary,
     uint256 value,
-    uint256 amount
+    uint256 amount,
+    uint256 time
   );
 
   /**
@@ -95,7 +96,8 @@ contract Crowdsale {
       msg.sender,
       _beneficiary,
       weiAmount,
-      tokens
+      tokens,
+      now
     );
 
     return tokens;

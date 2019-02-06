@@ -22,7 +22,6 @@ const mapStateToProps = state => {
       propsData.pitchedProjects = [];
       propsData.totalVotes = 0;
       propsData.maxValuation = 0;
-      propsData.lastDeploymentTime = 0;
     }
 
 
@@ -31,13 +30,9 @@ const mapStateToProps = state => {
 
     const deploymentTime = project.activationTime;
     if (deploymentTime) {
-      capitalDeployed += project.valuation;
+      capitalDeployed += project.capitalRequired;
       project.capital = capitalDeployed;
       propsData.deployedProjects.push(project);
-
-      if (propsData.lastDeploymentTime > deploymentTime) {
-        propsData.lastDeploymentTime = deploymentTime;
-      }
     }
     else {
       propsData.pitchedProjects.push(project);
@@ -53,8 +48,7 @@ const mapStateToProps = state => {
   const {
     deployedProjects,
     totalVotes,
-    maxValuation,
-    lastDeploymentTime
+    maxValuation
   } = projectPropsData;
 
   let scalingConstant; //will remove this after create a static scaling option
@@ -77,30 +71,28 @@ const mapStateToProps = state => {
     return project;
   }).sort((a, b) => b.voteShare - a.voteShare);
 
-  const capitalPropsData = Object.keys(state.entities.capitalHistory).reduce((propsData, block) => {
+  const capitalPropsData = Object.keys(state.entities.capitalHistory).reduce((propsData, time) => {
     if (!propsData.lineData) {
       propsData.lineData = [];
       propsData.capitalTotal = 0;
-      // propsData.capitalBeingRaised = 0;
-      propsData.startTime = block;
-      propsData.endTime = block;
+      propsData.startTime = time;
+      propsData.endTime = time;
     }
 
-    const capital = state.entities.capitalHistory[block];
+    const capital = state.entities.capitalHistory[time];
+    propsData.capitalTotal += capital;
+
 
     propsData.lineData.push({
-      date: Number(block),
-      capital
+      date: Number(time),
+      capital: propsData.capitalTotal
     });
-    propsData.capitalTotal += capital;
-    // if (block > lastDeploymentTime) {
-    //   propsData.capitalBeingRaised += capital;
-    // }
-    if (block < propsData.startTime) {
-      propsData.startTime = block;
+
+    if (time < propsData.startTime) {
+      propsData.startTime = time;
     }
-    if (block > propsData.endTime) {
-      propsData.endTime = block;
+    if (time > propsData.endTime) {
+      propsData.endTime = time;
     }
 
     return propsData;
@@ -109,11 +101,11 @@ const mapStateToProps = state => {
   const {
     lineData,
     capitalTotal,
-    // capitalBeingRaised,
     startTime,
     endTime
   } = capitalPropsData;
 
+  console.log("LINEDATA", lineData)
   return {
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract,
@@ -124,7 +116,7 @@ const mapStateToProps = state => {
     deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(deployedProjects),
     lineData,
     capitalTotal,
-    capitalBeingRaised : capitalTotal - capitalDeployed,
+    capitalBeingRaised: capitalTotal - capitalDeployed,
     startTime,
     endTime,
     scalingConstant
@@ -419,7 +411,6 @@ export class VotesGraph extends React.Component {
 
   render() {
     const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
-    console.log(this.props.deployedProjects);
       if (this.props.lineData) {
         return (
           <div className="votes-graph" style={{ marginTop: maxValuation / this.props.scalingConstant }}>

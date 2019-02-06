@@ -17,7 +17,7 @@ let crowdsaleInstance;
 
 module.exports = function (deployer, network, accounts) {
   console.log("NETWORK", network)
-    const rate = 1; //changed this to 1 from 10000 (subject to change still)
+    const rate = 1000; //changed this to 1 from 10000 (subject to change still)
     const developer = accounts[0];  //will need to make this variable and import from the interface on first deployment of a developer's site (Progeny)
 
     return deployer
@@ -141,9 +141,7 @@ module.exports = function (deployer, network, accounts) {
             return seed(crowdsaleInstance, tokenInstance, votingInstance, developer, accounts[1], accounts[2]);
           }
         })
-        .then(()=>{
-          console.log("crowdsaleInstance: ", crowdsaleInstance.address, "tokenInstance: ", tokenInstance.address, "votingInstance: ", votingInstance.address)
-        });
+
 };
 // .then(() => {
 //   investorListInst = InvestorList.at(InvestorList.address);

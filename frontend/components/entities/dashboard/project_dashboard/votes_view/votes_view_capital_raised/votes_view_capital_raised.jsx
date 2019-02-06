@@ -59,7 +59,8 @@ class VotesViewCapitalRaised extends React.Component {
       lineData={lineData} />;
 
     const heightOfCapitalBeingRaisedRect = capitalBeingRaised / this.props.scalingConstant;
-
+    console.log("heightOfCapitalBeingRaisedRect", heightOfCapitalBeingRaisedRect)
+    console.log("capitalBeingRaised", capitalBeingRaised)
     const CapitalBeingRaisedRect = <VotesViewCapitalRaisedRect
       scalingConstant={this.props.scalingConstant}
       x="0" y="0"

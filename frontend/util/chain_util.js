@@ -65,14 +65,15 @@ export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPu
   );
 
   events.get((err, purchases) => {
+    console.log("PURCHASES", purchases)
      const capitalHistory = purchases.reduce((capitalHistory, purchase) => {
-      const block = purchase.blockNumber;
+      const time = purchase.args.time.toNumber();
       const value = purchase.args.value.toNumber();
 
-      if (capitalHistory[block]) {
-        capitalHistory[block] += value;
+      if (capitalHistory[time]) {
+        capitalHistory[time] += value;
       } else {
-        capitalHistory[block] = value;
+        capitalHistory[time] = value;
       }
 
       return capitalHistory;
