@@ -24,11 +24,9 @@ class ProjectDashboard extends React.Component {
   toggleView (currentViewId) {
     this.setState({currentViewId: currentViewId === this.state.currentViewId ? null : currentViewId});
     if (currentViewId === this.state.currentViewId) {
-      this.graphContainer.style.height = "0";
-    } else if (currentViewId === 1) {
-      this.graphContainer.style.height = "32vh";
-    } else if (currentViewId === 2) {
-      this.graphContainer.style.height = "47vh";
+      this.graphContainer.style.minHeight = "0";
+    } else {
+      this.graphContainer.style.minHeight = "50vh";
     }
   }
 
@@ -67,17 +65,19 @@ class ProjectDashboard extends React.Component {
   }
 
   render() {
+    const { currentViewId } = this.state;
     let currentGraph;
 
-    switch (this.state.currentViewId) {
+    switch (currentViewId) {
       case null:
         currentGraph = <div></div>;
         break;
       case 0:
       break;
       case 1:
-      currentGraph = <VotesGraph />;
-      break;
+        currentGraph = <VotesGraph
+          wait={500}/>;
+        break;
       case 2:
         currentGraph = <ProjectGraph
           currentUser={this.props.currentUser}
@@ -100,7 +100,7 @@ class ProjectDashboard extends React.Component {
             dashboardTitle="PROJECT DASHBOARD"
             dashboardDescription="The project dashboard tracks the performance of the projects providing investors a comparative framework to provide direction on which investments to focus on."
             toggleView={this.toggleView}
-            currentViewId={this.state.currentViewId}
+            currentViewId={currentViewId}
             viewTypes={this.viewTypes}
             optionIcons={[
               <svg id="active" viewBox="0 0 288 288"><path d="M0,207l288-0.2V81H0V207z M270,98.9v90l-108,0v-90L270,98.9z" /></svg>,

@@ -1,42 +1,40 @@
 import React from 'react';
-import * as d3 from 'd3';
 import VotesViewPitchedProjectsRect from './votes_view_pitched_projects_rect';
 
 class VotesViewPitchedProjects extends React.Component {
-	constructor() {
-		super();
-	}
 
 	processProjectData() {
-		const { capitalBeingRaised, pitchedProjects } = this.props;
+		const { capitalBeingRaised, capitalTotal, pitchedProjects, SVGYScale, SVGHeightScale, SVGWidth } = this.props;
 		const numberOfProjects = this.props.pitchedProjects.length;
-		const percentOfScreen = 60;
-		const projectWidthPercentage = percentOfScreen - (numberOfProjects - 1);
-		let projectStartX = 20;
+		const totalWidth = .6 * SVGWidth;
+		const marginWidth = .01 * SVGWidth;
+		const totalProjectWidth = totalWidth - (numberOfProjects - 1) * marginWidth;
+		let projectStartX = .2 * SVGWidth;
 
 		return pitchedProjects.map(project => {
-			const projectWidth = project.voteShare * projectWidthPercentage;
+			const projectWidth = project.voteShare * totalProjectWidth;
 			const newProject = Object.assign({}, project, {
 				fill: capitalBeingRaised < project.capitalRequired ? "#aa7a60" : "#61aba9",
+				marginWidth,
 				projectStartX,
 				projectWidth,
-				projectValutionHeight: (project.valuation - project.capitalRequired) / this.props.scalingConstant,
-				projectValutionStartY: (capitalBeingRaised - project.valuation) / this.props.scalingConstant,
-				projectCapitalRequiredHeight: project.capitalRequired / this.props.scalingConstant,
-				projectCapitalRequiredStartY: (capitalBeingRaised - project.capitalRequired) / this.props.scalingConstant,
+				projectValutionHeight: SVGHeightScale(project.valuation),
+				projectValutionStartY: SVGYScale(project.valuation + capitalTotal - capitalBeingRaised),
+				projectCapitalRequiredHeight: SVGHeightScale(project.capitalRequired),
+				projectCapitalRequiredStartY: SVGYScale(project.capitalRequired + capitalTotal - capitalBeingRaised),
 				projectRectCenter: projectStartX + projectWidth / 2
 			});
-			projectStartX += (1 + projectWidth);
+			projectStartX += (marginWidth + projectWidth);
 			return newProject;
 		});
 	}
 
 	render() {
-		const { maxValuation, capitalBeingRaised, selectedProject, toggleSelectedProject, voteShiftTool, scalingConstant } = this.props;
+		const { maxValuation, capitalBeingRaised, selectedProject, toggleSelectedProject, voteShiftTool, SVGYScale } = this.props;
 
 		const rects = this.processProjectData().map((project, idx) => (
 			<VotesViewPitchedProjectsRect key={idx}
-				scalingConstant={scalingConstant}
+				SVGYScale={SVGYScale}
 				project={project}
 				maxValuation={maxValuation}
 				capitalRaised={capitalBeingRaised}

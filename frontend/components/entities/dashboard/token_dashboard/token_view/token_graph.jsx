@@ -40,15 +40,21 @@ class TokenGraph extends React.Component {
 
     this.state = {
       showTimeAxis: false,
+      componentVisible: "invisible"
     };
 
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
     this.width = 960 - this.margin.left - this.margin.right;
     this.height = 500 - this.margin.top - this.margin.bottom;
-    this.bisectDate = d3.bisector(d => d.date).left;
 
     this.toggleData = this.toggleData.bind(this);
     this.toggleTimeAxis = this.toggleTimeAxis.bind(this);
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ componentVisible: "" });
+    }, this.props.wait);
   }
 
   toggleData() {
@@ -70,7 +76,7 @@ class TokenGraph extends React.Component {
 
   render() {
     const { data } = this.props;
-    const { showTimeAxis } = this.state;
+    const { showTimeAxis, componentVisible } = this.state;
 
     const xScale = d3.scaleTime()
       .range([0, this.width])
@@ -112,7 +118,7 @@ class TokenGraph extends React.Component {
       transform={`translate(${this.margin.left}, ${this.height + this.margin.bottom + this.margin.top})`} />;
 
     return (
-      <div className="token-graph"
+      <div className={`token-graph ${componentVisible}`}
         onMouseEnter={this.toggleTimeAxis}
         onMouseLeave={this.toggleTimeAxis}>
         <svg className="token-svg" viewBox="0 0 960 500" preserveAspectRatio="xMinYMin meet">

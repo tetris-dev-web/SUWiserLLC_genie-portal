@@ -1,4 +1,5 @@
 import React from 'react';
+import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
@@ -407,46 +408,63 @@ export class VotesGraph extends React.Component {
     super();
 
     this.state = {
-      selectedProject: null
+      selectedProject: null,
+      componentVisible: "invisible"
     };
 
-    // this.fetchVotesViewData = this.fetchVotesViewData.bind(this);
+    this.SVGWidth = 960;
+    this.SVGHeight = 500;
   }
 
-  componentDidMount () {
-    this.props.fetchTokenPurchaseLogs(this.props.crowdsaleInstance);
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({componentVisible: ""});
+    }, this.props.wait);
   }
 
   render() {
-    const { maxValuation, capitalBeingRaised, capitalTotal } = this.props;
-    console.log(this.props.deployedProjects);
-      if (this.props.lineData) {
-        return (
-          <div className="votes-graph" style={{ marginTop: maxValuation / this.props.scalingConstant }}>
-            <div className="vote-shift-tool-container"
-              ref={node => this.voteShiftTool = node}
-              style={{ top: -maxValuation / this.props.scalingConstant }}>
-              {
-                this.state.selectedProject &&
-                <VoteShiftTool />
-              }
-            </div>
-            <svg className="votes-view-svg" height={capitalTotal / this.props.scalingConstant}>
-              <VotesViewCapitalRaised
-                {...this.props}
-                {...this.state}/>
-              <VotesViewPitchedProjects
-                {...this.props}
-                {...this.state}
-                voteShiftTool={this.voteShiftTool}
-                toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
-            </svg>
-          </div>
-        );
-      }
+    const { maxValuation, capitalBeingRaised, capitalTotal, startTime, endTime, lineData, deployedProjectsValuationMinMax } = this.props;
+    const { selectedProject, componentVisible } = this.state;
 
-      return [];
-    }
+    const SVGHeightScale = d3.scaleLinear()
+      .range([0, this.SVGHeight])
+      .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]);
+    const SVGYScale = d3.scaleLinear()
+      .range([this.SVGHeight, 0])
+      .domain([lineData[0].capital, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]);
+    const SVGTimeXScale = d3.scaleLinear()
+      .domain([startTime, endTime])
+      .range([0, this.SVGWidth]);
+
+    return (
+      <div className={`votes-graph ${componentVisible}`}>
+        <div className="vote-shift-tool-container"
+          ref={node => this.voteShiftTool = node}>
+          {
+            selectedProject &&
+            <VoteShiftTool />
+          }
+        </div>
+        <svg className="votes-view-svg"
+          preserveAspectRatio="xMinYMin meet"
+          viewBox="0 0 960 500">
+            <VotesViewCapitalRaised
+              {...this.props}
+              {...this.state}
+              SVGYScale={SVGYScale}
+              SVGHeightScale={SVGHeightScale}
+              SVGTimeXScale={SVGTimeXScale} />
+            <VotesViewPitchedProjects
+              {...this.props}
+              {...this.state}
+              SVGYScale={SVGYScale}
+              SVGHeightScale={SVGHeightScale}
+              SVGWidth={this.SVGWidth}
+              voteShiftTool={this.voteShiftTool}
+              toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
+        </svg>
+      </div>
+    );
   }
 
 export default connect(mapStateToProps, mapDispatchToProps)(VotesGraph);

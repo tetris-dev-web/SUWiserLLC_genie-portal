@@ -11,8 +11,6 @@ contract ContractStub {
     address firstAddress;
     address secondAddress;
     address thirdAddress;
-    bytes firstBytes;
-    bytes32 firstBytes32;
     bool called;
     uint256 callCount;
     bool correctCallOrder;
@@ -37,8 +35,6 @@ contract ContractStub {
     data.firstAddress = address(0);
     data.secondAddress = address(0);
     data.thirdAddress = address(0);
-    data.firstBytes = '';
-    data.firstBytes32 = '';
     data.called = false;
     data.callCount = 0;
     data.correctCallOrder = false;

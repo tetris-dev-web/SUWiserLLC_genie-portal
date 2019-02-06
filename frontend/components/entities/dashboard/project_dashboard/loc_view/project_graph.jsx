@@ -28,7 +28,8 @@ class ProjectGraph extends React.Component {
       isModalOpen: false,
       projectClicked:{},
       doIHaveData: ''
-    }
+    };
+
     this.simulation = this.simulation.bind(this);
     this.setUp = this.setUp.bind(this);
     this.formatData = this.formatData.bind(this);

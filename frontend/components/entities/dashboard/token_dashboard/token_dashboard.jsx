@@ -37,8 +37,9 @@ class TokenDashboard extends React.Component {
 
   render() {
     let currentGraph;
+    const { currentViewId } = this.state;
 
-    switch (this.state.currentViewId) {
+    switch (currentViewId) {
       case null:
         currentGraph = <div></div>;
         break;
@@ -46,7 +47,8 @@ class TokenDashboard extends React.Component {
       case 1:
         currentGraph = <TokenGraph
           currentUser={this.props.currentUser}
-          currentViewType={this.viewTypes[this.state.currentViewId]}/>;
+          currentViewType={this.viewTypes[currentViewId]}
+          wait={500}/>;
         break;
       case 2:
         currentGraph = <PriceGraph
@@ -65,7 +67,7 @@ class TokenDashboard extends React.Component {
             dashboardTitle="TOKEN DASHBOARD"
             dashboardDescription="The project dashboard tracks the performance of the projects providing investors a comparative framework to provide direction on which investments to focus on."
             toggleView={this.toggleView}
-            currentViewId={this.state.currentViewId}
+            currentViewId={currentViewId}
             viewTypes={this.viewTypes}
             optionIcons={[
               <svg viewBox="0 0 95 95"><g><circle cx="47.5" cy="32.1" r="23.2"/><path d="M47.5,86.1c18.2,0,32.9-6.3,32.9-10.5c0-6.9-8.5-16.8-20.5-21.2c-3.7,2.1-7.9,3.2-12.4,3.2c-4.5,0-8.7-1.2-12.4-3.2c-12,4.4-20.5,14.3-20.5,21.2C14.6,79.9,29.3,86.1,47.5,86.1z"/></g></svg>,

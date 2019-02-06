@@ -485,7 +485,6 @@ class ProjectForm extends React.Component {
 
     let { title, latitude, longitude, model_id, currentQuarter, description
       // revenue, valuation, description, model_id, city, country, continent, icon
-    } = this.state.projectData;
 
      return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>

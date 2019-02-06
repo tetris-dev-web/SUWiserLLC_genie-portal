@@ -7,8 +7,7 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 
 		this.state = {
 			showText: false,
-			moduleState: false,
-
+			moduleState: false,// may remove
 		};
 
 		this.handleHover = this.handleHover.bind(this);
@@ -41,16 +40,15 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 					fill="#bdc4c9"
 					cx={xScale(project.activationTime)}
 					cy={yScale(project.capital)}
-					r={`${circleScale(project.valuation)}%`}
+					r={circleScale(project.valuation)}
 					opacity={opacity}
 					onMouseOver={this.handleHover}
-					onMouseLeave={this.handleHover}
-					onClick={()=> this.setState({moduleState: true})}></circle>
+					onMouseLeave={this.handleHover}></circle>
 				{
 					this.state.showText &&
 					<text className="votes-view-capital-raised-text"
-						x={xScale(project.activationTime)}
-						y={yScale(project.capital) + 30}><tspan>{project.title}</tspan>
+						x={xScale(project.time)}
+						y={yScale(project.capital) + circleScale(project.valuation) + 20}><tspan>{project.title}</tspan>
 					</text>
 				}
 			</React.Fragment>

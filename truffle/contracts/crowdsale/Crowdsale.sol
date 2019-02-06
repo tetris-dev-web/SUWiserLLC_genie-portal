@@ -79,16 +79,15 @@ contract Crowdsale {
    */
   function buyTokens(address  _beneficiary) public payable returns (uint256) {
     uint256 weiAmount = msg.value;
-    require(_beneficiary != address(0));
-    require(weiAmount != 0);
+    _preValidatePurchase(_beneficiary, weiAmount);
 
     // calculate token amount to be created
-    uint256 tokens = weiAmount.mul(rate);
+    uint256 tokens = _getTokenAmount(weiAmount);
 
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    Token(token).transferInactive(_beneficiary, tokens);//we can call all the account/voting logic through this function
+    Token(token).transferInactive(_beneficiary, tokens);
     /* _processPurchase(_beneficiary, tokens); */
 
     emit TokenPurchase(
@@ -122,7 +121,7 @@ contract Crowdsale {
    * @param _beneficiary Address performing the token purchase
    * @param _weiAmount Value in wei involved in the purchase
    */
-  /* function _preValidatePurchase(
+  function _preValidatePurchase(
     address _beneficiary,
     uint256 _weiAmount
   )
@@ -130,7 +129,7 @@ contract Crowdsale {
   {
     require(_beneficiary != address(0));
     require(_weiAmount != 0);
-  } */
+  }
 
   /**
    * @dev Validation of an executed purchase. Observe state and use revert statements to undo rollback when valid conditions are not met.
@@ -193,11 +192,11 @@ contract Crowdsale {
    * @param _weiAmount Value in wei to be converted into tokens
    * @return Number of tokens that can be purchased with the specified _weiAmount
    */
-  /* function _getTokenAmount(uint256 _weiAmount)
+  function _getTokenAmount(uint256 _weiAmount)
     internal view returns (uint256)
   {
     return _weiAmount.mul(rate);
-  } */
+  }
 
   /**
    * @dev Determines how ETH is stored/forwarded on purchases.
