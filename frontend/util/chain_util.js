@@ -5,7 +5,6 @@ export const integrateProjectsData = async (crowdsale, projectContract, initialP
 
   const getProjectAddresses = async crowdsale => {
     const totalProjectCount = await crowdsale.totalProjectCount_();
-    console.log("totalProjectCount", totalProjectCount.toNumber())
     const projectAddresses = [];
 
     for (let i = 1; i <= totalProjectCount.toNumber(); i++) {

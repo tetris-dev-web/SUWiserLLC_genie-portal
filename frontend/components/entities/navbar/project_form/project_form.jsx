@@ -483,7 +483,7 @@ class ProjectForm extends React.Component {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
 
-    let { title, latitude, longitude, model_id, currentQuarter, description
+    let { title, latitude, longitude, model_id, currentQuarter, description } = this.props
       // revenue, valuation, description, model_id, city, country, continent, icon
 
      return (

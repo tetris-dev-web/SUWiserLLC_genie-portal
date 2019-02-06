@@ -2,8 +2,7 @@ import * as ChainUtil from '../../util/chain_util';
 export const RECEIVE_TOKEN_PURCHASES = "RECEIVE_TOKEN_PURCHASES";
 
 
-export const receiveTokenPurchases = tokenPurchases => {
-  console.log("tokenPurchases", tokenPurchases)
+export const receiveTokenPurchases = tokenPurchases => { //no need to export?
   return {
     type: RECEIVE_TOKEN_PURCHASES,
     tokenPurchases
