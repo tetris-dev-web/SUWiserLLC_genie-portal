@@ -1,12 +1,8 @@
-pragma solidity ^0.4.24;
-import './token/ERC20/Token.sol';
-import './InvestorList.sol';
-import './ContractStub.sol';
+pragma solidity >=0.4.22 <0.6.0;
+import './ERC20/Token.sol';
+import '../ContractStub.sol';
 
 contract TokenStub is Token, ContractStub {
-  constructor(InvestorList _investorList) public
-  Token(_investorList) {}
-
   address mockInvestorA;
   address mockInvestorB;
   address mockInvestorC;
@@ -53,7 +49,7 @@ contract TokenStub is Token, ContractStub {
 
   mapping(address => uint256) stubPending;
 
-  function pendingActivations(address account) public returns(uint256) {
+  function pendingActivations(address  account) public view returns(uint256) {
     return stubPending[account];
   }
 
@@ -105,7 +101,13 @@ contract TokenStub is Token, ContractStub {
     return true;
   }
 
-  function activatePending (address account) external returns (bool) {
+  function resetInactiveTokenCycle (address  developer) public {
+    CallData storage methodState = method['resetInactiveTokenCycle'];
+    methodState.firstAddress = developer;
+    methodState.called = true;
+  }
+
+  function activatePending (address  account) external returns (bool) {
     CallData storage methodState = method['activatePending'];
     methodState.firstAddress = account;
     methodState.called = true;

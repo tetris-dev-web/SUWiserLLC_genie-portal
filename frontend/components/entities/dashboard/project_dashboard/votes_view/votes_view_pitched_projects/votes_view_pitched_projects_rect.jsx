@@ -42,7 +42,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 		const { selectedProject, project, circleScale } = this.props;
 		const { fill, marginWidth, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
 		return(
-			<g className="votes-view-project-group" 
+			<g className="votes-view-project-group"
 				onClick={this.handleClick}
 				ref={node => this.projectGroup = node}>
 				<rect

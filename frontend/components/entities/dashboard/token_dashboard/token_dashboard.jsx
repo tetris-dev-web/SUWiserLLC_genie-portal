@@ -13,10 +13,26 @@ class TokenDashboard extends React.Component {
     };
 
     this.toggleView = this.toggleView.bind(this);
+    this.buyTest = this.buyTest.bind(this);
+    this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
+  }
+
+  componentDidMount () {
+    this.watchTokenPurchase()
   }
 
   toggleView(currentViewId) {
     this.setState({ currentViewId: currentViewId === this.state.currentViewId ? null : currentViewId });
+  }
+
+  buyTest () {
+    this.props.buyTokens(this.props.crowdsale, this.props.account, 5000);
+  }
+
+  watchTokenPurchase () {
+    this.props.crowdsale.TokenPurchase().watch((error, event) => {
+      console.log(event)
+    })
   }
 
   render() {
@@ -29,8 +45,8 @@ class TokenDashboard extends React.Component {
         break;
       case 0:
       case 1:
-        currentGraph = <TokenGraph 
-          currentUser={this.props.currentUser} 
+        currentGraph = <TokenGraph
+          currentUser={this.props.currentUser}
           currentViewType={this.viewTypes[currentViewId]}
           wait={500}/>;
         break;
@@ -41,11 +57,12 @@ class TokenDashboard extends React.Component {
       default:
         break;
     }
-    
+
     if (this.props.currentUser) {
       return(
         <div className="token-dashboard">
-          <ToggleOptions 
+          <div onClick={this.buyTest}>BUY TEST</div>
+          <ToggleOptions
             dashboardType="token"
             dashboardTitle="TOKEN DASHBOARD"
             dashboardDescription="The project dashboard tracks the performance of the projects providing investors a comparative framework to provide direction on which investments to focus on."

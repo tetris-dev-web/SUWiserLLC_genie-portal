@@ -4,8 +4,9 @@ import {
   editProject,
   receiveProject
 } from '../../../../actions/project_actions';
-import { fetchProjects } from '../../../../actions/project_actions';
+import { fetchProjects } from '../../../../actions/chain_actions/project_actions';
 import ProjectDashboard from './project_dashboard';
+import { fetchTokenPurchaseLogs } from '../../../../actions/chain_actions/token_actions';
 
 const mapStateToProps = state => {
   const currentUser = state.session.currentUser;
@@ -28,8 +29,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    fetchTokenPurchaseLogs: (crowdsale, web3) => dispatch(fetchTokenPurchaseLogs(crowdsale, web3)),
     receiveProject: project => dispatch(receiveProject(project)),
-    fetchProjects: () => dispatch(fetchProjects()),
+    fetchProjects: (crowdsaleInstance, projectContract) => dispatch(fetchProjects(crowdsaleInstance, projectContract)),
     fetchProject: project => dispatch(fetchProject(project)),
     editProject: project => dispatch(editProject(project))
   };

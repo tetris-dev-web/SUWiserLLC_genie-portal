@@ -35,7 +35,7 @@ class ProjectForm extends React.Component {
         accum_actual_cashflow: '',
         projected_cashflow: '',
         revenue: .1,
-        description: 'hkopt'
+        description: 'hkopt',
       },
       icon: '',
       imageUrl: '',
@@ -83,37 +83,37 @@ class ProjectForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    const file = this.state.imageFile;
-    const data = new FormData();
-    const {drizzle, drizzleState} = this.props;
-    const GNITokenCrowdsale = drizzle.contracts.GNITokenCrowdsale;
-
-    const projectData = Object.assign({}, this.state)
-
-
-    if (file) data.append("project[file]", file);
-    data.append("project[title]", this.state.title);
-
-    data.append("project[latitude]", this.state.latitude);
-    data.append("project[longitude]", this.state.longitude);
-
-    data.append("project[city]", this.state.city);
-    data.append("project[country]", this.state.country);
-    data.append("project[continent]", this.state.continent);
-
-    data.append("project[valuation]", this.state.valuation);
-    data.append("project[cashflow]", JSON.stringify(this.state.cashflow));
-    data.append("project[creator_id]", this.props.currentUser.id);
-
-    data.append("project[model_id]", this.state.model_id);
-    data.append("project[summary]", this.state.summary);
-    data.append("project[capital_required]", (this.calculateCapitalRequired()));
-    data.append("project[actual_cashflow]", JSON.stringify(this.state.actual_cashflow));
-    data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.accum_projected_cashflow));
-    data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.accum_actual_cashflow));
-    data.append("project[projected_cashflow]", JSON.stringify(this.state.projected_cashflow));
-    data.append("project[revenue]", this.state.revenue);
-    // data.append("project[planFilePDFDataURL]", this.state.planFilePDFDataURL)
+    // const file = this.state.imageFile;
+    // const data = new FormData();
+    //
+    // // const projectData = merge({}, this.state);
+    //
+    //
+    // if (file) data.append("project[file]", file);
+    // data.append("project[title]", this.state.projectData.title);
+    // data.append("project[description]", this.state.projectData.description);
+    //
+    // data.append("project[latitude]", this.state.projectData.latitude);
+    // data.append("project[longitude]", this.state.projectData.longitude);
+    //
+    // data.append("project[city]", this.state.projectData.city);
+    // data.append("project[country]", this.state.projectData.country);
+    // data.append("project[continent]", this.state.projectData.continent);
+    //
+    // data.append("project[valuation]", this.state.projectData.valuation);
+    // data.append("project[cashflow]", this.state.projectData.cashflow);
+    // data.append("project[creator_id]", this.state.projectData.creator_id);
+    //
+    // data.append("project[model_id]", this.state.projectData.model_id);
+    // data.append("project[summary]", this.state.projectData.summary);
+    // data.append("project[capital_required]", this.state.projectData.capital_required);
+    // data.append("project[cashflow]", JSON.stringify(this.state.projectData.cashflow));
+    // data.append("project[actual_cashflow]", JSON.stringify(this.state.projectData.actual_cashflow));
+    // data.append("project[accum_projected_cashflow]", JSON.stringify(this.state.projectData.accum_projected_cashflow));
+    // data.append("project[accum_actual_cashflow]", JSON.stringify(this.state.projectData.accum_actual_cashflow));
+    // data.append("project[projected_cashflow]", JSON.stringify(this.state.projectData.projected_cashflow));
+    // data.append("project[revenue]", this.state.projectData.revenue);
+    // data.append("project[pdf_file]", this.state.planFilePDF);
     //FormData objects append JavaScript objects as the string, "[object, Object]", therefore
     //all data is lost when sent to the backend. Recommend JSON.stringigying object, and retreiving
     //Object in frontend with JSON.parse
@@ -124,15 +124,65 @@ class ProjectForm extends React.Component {
 
     // Moved until data is properly structured
     // this.props.createProject(projectData);
-    this.props.createProject(data);
-    // .then( () => {
-    //   const pitchedProject = GNITokenCrowdsale.methods.pitchProject.cacheSend(this.state.titlethis.state.valuation, { from: drizzleState.accounts[0] });
-    // });
-    if (this.props.errors.length == 0) {
-      this.props.closeModal();
-      window.location.reload();
-      // console.log();
-    }
+
+
+    // pdf_file: this.state.planFilePDF,
+    // const projectData = Object.assign(
+    //   {},
+    //   this.state.projectData,
+    //   {
+    //     cashflow: JSON.stringify(this.state.projectData.cashflow),
+    //     actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
+    //     projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
+    //     accum_projected_cashflow: JSON.stringify(this.state.projectData.accum_projected_cashflow),
+    //     accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
+    //  });
+
+    let {
+        title,
+        latitude,
+        longitude,
+        summary,
+        description,
+        city,
+        country,
+        continent,
+        capital_required,
+        valuation,
+        creator_id
+      } = this.state.projectData
+
+      const railsParams = {
+          title,
+          city,
+          country,
+          continent,
+          summary,
+          description,
+          creator_id,
+          cashflow: JSON.stringify(this.state.projectData.cashflow),
+          actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
+          projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
+          accum_projected_cashflow: JSON.stringify(this.state.projectData.accum_projected_cashflow),
+          accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
+        }
+
+      const blockchainParams = {
+        title,
+        valuation,
+        capital_required,
+        latitude,
+        longitude
+      }
+
+
+    // console.log("project data: ", projectData);
+    this.props.createProject(this.props.crowdsaleInstance, railsParams, blockchainParams, this.state.pdf_file, this.props.account).then(() => {
+      if (this.props.errors.length == 0) {
+        this.props.closeModal();
+        // window.location.reload();
+      }
+    });
   }
 
   dropPinClick() {
@@ -185,6 +235,7 @@ class ProjectForm extends React.Component {
 
   calculateTotalCapitalDeployed(){
     let capital = 0;
+
     Object.values(this.props.projects).forEach((project) => {
       if(project.cashflow){
         let jsonProjectCashflow = processCashData(project.cashflow);
@@ -330,17 +381,21 @@ class ProjectForm extends React.Component {
               {
                 projectData,
                 cashflowJSONName: file.name,
-                accumulatedRevenue: calculateAccumulatedRevenue(cashflow),
-                currentQuarter: this.findCurrentQuarter(quarters, cashflow),
-              },
-              parsedData
-            )
-            // this.setState({currentQuarter: this.findCurrentQuarter(quarters)});
-          ); })
+                currentQuarter
+              }
+            ));
+          });
           break;
         case "planFilePDF":
           this.parseInputFile(file).then(planFilePDFDataURL => {
+            // const PlanData = {
+            //   pdf_file: file,
+            // }
+
+            // const newProjectDataWithPlan = merge({},this.state.projectData, PlanData)
             this.setState({
+              pdf_file: file,
+              // projectData: newProjectDataWithPlan,
               planFilePDFDataURL,
               planFilePDFName: file.name
             });
@@ -428,42 +483,10 @@ class ProjectForm extends React.Component {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
 
-    const geojsons = [];
-    const fileId = ["file1", "file2", "file3", "file4", "file5"];
-    for (let i = 0; i < 5; i++) {
-      geojsons.push(
-        <div className="geo-row-container" key={i}>
-          <div className="file-container">
-            <input id={fileId[i]}
-              name={fileId[i]}
-              className="file-input"
-              type="file" />
-            <label htmlFor={fileId[i]}>
-              <span>choose geojson</span>
-            </label>
-          </div>
-          <select className="heir-input">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-          </select>
-          <input className="opacity-input"
-            type="number"
-            min="0"
-            max="1"
-            placeholder="0.5" />
-        </div>
-      );
-    }
-
-    let { title, latitude, longitude, model_id, currentQuarter, description} = this.state.projectData;
+    let { title, latitude, longitude, model_id, currentQuarter, description } = this.props
       // revenue, valuation, description, model_id, city, country, continent, icon
 
-
-
-    return (
+     return (
       <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
         <div className="text-input-container project-title-input-container">
           <input className="text-input project-title-input"

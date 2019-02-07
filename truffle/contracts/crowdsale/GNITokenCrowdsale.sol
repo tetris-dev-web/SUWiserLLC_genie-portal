@@ -1,69 +1,84 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
-import '../Project.sol';
-import '../ProjectStub.sol';
+import '../project/Project.sol';
+import '../project/ProjectStub.sol';
 import '../token/ERC20/Token.sol';
-import '../InvestorList.sol';
-import '../Reimbursements.sol';
+import '../projectLeader/ProjectLeaderTracker.sol';
+import '../voting/Voting.sol';
+import '../reimbursements/Reimbursements.sol';
+
 
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
-  uint256 public totalValuation;
-  InvestorList public investorList;
-  address public dividendWallet;
-  address public reimbursements;
+  ProjectLeaderTracker public projectLeaderTracker;
+  Voting public voting;
+  address  public dividendWallet;
 
   constructor
       (
         uint256 _openingTime,
         uint256 _doomsDay,
         uint256 _rate,
-        address _developer,
-        address _dividendWallet,
+        address  _developer,
+        address  _dividendWallet,
         Token _token,
-        InvestorList _investorList,
-        address _reimbursements
+        ProjectLeaderTracker _projectLeaderTracker,
+        address  _reimbursements,
+        Voting _voting
       )
       public
       Crowdsale(_rate, _developer, _token)
-      TimedCrowdsale(_openingTime, _doomsDay) {
-        investorList = InvestorList(_investorList);
-        totalValuation = 0;
+      TimedCrowdsale(_openingTime, _doomsDay, _reimbursements) {
+        voting = _voting;
+        projectLeaderTracker = ProjectLeaderTracker(_projectLeaderTracker);
         dividendWallet = _dividendWallet;
-        reimbursements = _reimbursements;
   }
 
-  address[] public projectAddrs;
-  uint256 public inactiveProjectCount;
-
-  event NewProject (
-      uint id,
-      string name,
-      uint256 valuation,
-      uint256 capitalRequired,
-      uint256 developerTokens,
-      uint256 investorTokens,
-      string lat,
-      string lng
+  event ProjectPitch (
+    address projectAddress,
+    address developer,
+    string  title,
+    string  lat,
+    string  lng,
+    uint256 capitalRequired,
+    uint256 valuation,
+    uint256 developerTokens,
+    uint256 investorTokens,
+    uint256 totalProjectCount
   );
 
-  function pitchProject(string _name, uint256 capitalRequired, uint256 _valuation, string _lat, string _lng) public {//we need more tests for this
+  mapping(uint256 => address ) internal projectAddress;
+  uint256 internal totalProjectCount;
+
+  function totalProjectCount_() public view returns (uint256) {
+    return totalProjectCount;
+  }
+
+  function projectById (uint256 id) public view returns (address ) {
+    return projectAddress[id];
+  }
+
+  function pitchProject(string memory _title, uint256 capitalRequired, uint256 _valuation, string memory _lat, string memory _lng, bytes32 _voteForHash, bytes32 _voteAgainstHash) public returns (address ) {//should only be callable by developer. may need more tests
+   _extendDoomsDay(90);
+    return _pitchProject(_title, capitalRequired, _valuation, _lat, _lng, _voteForHash, _voteAgainstHash);
+  }
+
+  function _pitchProject(string memory _title, uint256 capitalRequired, uint256 _valuation, string memory _lat, string memory _lng, bytes32 _voteForHash, bytes32 _voteAgainstHash) internal returns (address ) {//should only be callable by developer. may need more tests
    (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
 
    Token(token).mint(developer, developerTokens);
    Token(token).mint(this, investorTokens);
 
-   totalValuation = totalValuation.add(_valuation);
+    address  projectAddr = address(new Project(_title, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng));
+    projectLeaderTracker.handleProjectPitch();
+    totalProjectCount = totalProjectCount.add(1);
+    projectAddress[totalProjectCount] = projectAddr;
+    Project(projectAddr).transferOwnership(address(Voting(voting)));
 
-   _extendDoomsDay(90);
-
-    uint256 _id = inactiveProjectCount;
-    address projectAddr = new Project(_id, _name, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
-    projectAddrs.push(projectAddr);
-    inactiveProjectCount = inactiveProjectCount.add(1);
-    emit NewProject(_id, _name, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng);
+    emit ProjectPitch(projectAddr, developer, _title, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
+    return projectAddr;
   }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
@@ -72,153 +87,72 @@ contract GNITokenCrowdsale is TimedCrowdsale {
  }
 
  //before this, we need to execute any pending token activations with the modifier above for the sender account. We need to do this so that the correct number of tokens are activated
- function buyTokensAndVote (uint256 _projectVotedForId) public payable {//we need more tests for this
+ function buyTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
    Token(token).activatePending(msg.sender);
 
-   uint256 tokens = buyTokens(msg.sender);
-   investorList.addInvestor(msg.sender);
-
-   address projAddr = projectAddrs[_projectVotedForId];
-   Project(projAddr).vote(msg.sender, tokens);
-
+   super.buyTokens(msg.sender);
    _extendDoomsDay(90);
-
-   updateProjects(_projectVotedForId);
   }
 
- address public tentativeLeaderAddr;
- uint256 public tentativeLeaderCapRequired;
- bool public tentativeLeaderConfirmed;
+  event ProjectActivation (
+    address addr,
+    uint256 capitalRequired,
+    uint256 time
+  );
 
- struct ProjectsChecked {
-   mapping(address => bool) isChecked;
-   uint256 totalChecked;
- }
 
- uint256 internal currentCheckCycle;
- mapping(uint256 => ProjectsChecked) internal checkCycle;
+ function activateProject () public { //we need more tests for added functionality
+   (
+     address  tentativeLeaderAddr,
+     bool tentativeLeaderConfirmed
+   ) = projectLeaderTracker.tentativeLeader();
 
- function considerTentativeLeaderShip (uint256 _projectId) public {
-   address projectAddr = projectAddrs[_projectId];
-
-   require(Project(projectAddr).open() && !Project(projectAddr).active());
-
+   Project project = Project(projectById(1));
+   uint256 capitalRequired = project.capitalRequired_();
    if (
-     tentativeLeaderAddr == address(0) ||
-     Project(projectAddr).totalVotes_() > Project(tentativeLeaderAddr).totalVotes_() ||
-     !Project(tentativeLeaderAddr).open()
-     )
-   {
-     updateTentativeLeader(projectAddr);
-   }
-
-   recordCheck(projectAddr);
-
-   if (checkCycle[currentCheckCycle].totalChecked == inactiveProjectCount){
-     tentativeLeaderConfirmed = true;
-   }
- }
-
- function recordCheck (address projectAddr) internal {
-   bool hasBeenChecked = checkCycle[currentCheckCycle].isChecked[projectAddr];
-
-   if (!hasBeenChecked) {
-    checkCycle[currentCheckCycle].totalChecked = checkCycle[currentCheckCycle].totalChecked.add(1);
-    checkCycle[currentCheckCycle].isChecked[projectAddr] = true;
-   }
- }
-
- function updateTentativeLeader (address newLeaderAddr) internal {
-   //if its overtaking a project that is open, that means it has more votes and we dont need to reset all the checks
-   if (tentativeLeaderAddr != address(0) && !Project(tentativeLeaderAddr).open()) {
-     resetProjectsChecked();
-   }
-   setTentativeLeader(newLeaderAddr);
- }
-
- function resetProjectsChecked() internal {
-   ProjectsChecked memory newProjectsChecked;
-   currentCheckCycle = currentCheckCycle.add(1);
-   checkCycle[currentCheckCycle] = newProjectsChecked;
-   inactiveProjectCount = inactiveProjectCount.sub(1);
- }
-
- function setTentativeLeader(address newLeaderAddr) internal {
-   Project newLeader = Project(newLeaderAddr);
-
-   tentativeLeaderAddr = newLeaderAddr;
-   tentativeLeaderCapRequired = newLeader.capitalRequired_();
-   tentativeLeaderConfirmed = false;
- }
-
- function attemptProjectActivation () public {
-   if (
-     tentativeLeaderCapRequired <= weiRaised &&
      tentativeLeaderConfirmed &&
-     Project(tentativeLeaderAddr).open()
+     capitalRequired <= weiRaised &&
+     project.open()
      ) {
-     activateProject();
-   }
- }
+     uint256 time = project.activate();
+     //set the number of project votes to 0.
 
- function activateProject () internal {
-   Project project = Project(tentativeLeaderAddr);
-   project.activate();
+     developer.transfer(capitalRequired);
+     weiRaised = weiRaised.sub(capitalRequired);
 
-   forwardFunds(developer, tentativeLeaderCapRequired);
-   weiRaised = weiRaised.sub(tentativeLeaderCapRequired);
-   inactiveProjectCount = inactiveProjectCount.sub(1);
-   Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
- }
+     projectLeaderTracker.handleProjectActivation();
+     Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
+     emit ProjectActivation(tentativeLeaderAddr, capitalRequired, time);
+    }
+  }
 
  function reimburseFunds () public {
    require(hasClosed());
-   reimbursements.transfer(weiRaised);
+   Reimbursements(reimbursements).recordReimbursement.value(weiRaised)();
+   weiRaised = 0;
+   Token(token).resetInactiveTokenCycle(developer);
+   projectLeaderTracker.reset();
  }
 
- function transferVotes (uint256 fromProjectId, uint256 toProjectId, uint256 votes) external {
-   address fromAddr = projectAddrs[fromProjectId];
-   address toAddr = projectAddrs[toProjectId];
-   Project(fromAddr).removeVotes(msg.sender, votes);
-   Project(toAddr).vote(msg.sender, votes);
+ //tests need to be updated
+
+ function extendDoomsDay (uint256 _days) external {
+   require(msg.sender == address(Voting(voting)));
+   _extendDoomsDay(_days);
  }
 
- function addVoteCredit (uint256 fromProjectId, uint256 votes) external {
-   addVoteCredit_(msg.sender, fromProjectId, votes);
+ function _extendDoomsDay(uint256 _days) internal canExtendDoomsDay {
+    uint256 newDoomsDay = now.add(_days.mul(1728000));
+    if (newDoomsDay > doomsDay) {
+      doomsDay = newDoomsDay;
+      canReOpen = false;
+    }
  }
 
- //this is for adding vote credit for each investor from the frontend after a project has been activated
- function addVoteCreditTo (address account, uint256 fromProjectId) external {
-   Project project = Project(projectAddrs[fromProjectId]);
-   require(!project.open() || project.active_());
-   uint256 votes = project.votesOf(account);
-   addVoteCredit_(account, fromProjectId, votes);
+ function reduceDoomsDay (uint256 _days) public canExtendDoomsDay {
+   require(msg.sender == address(Voting(voting)));
+   doomsDay = doomsDay.sub(_days.mul(1728000));
  }
-
- function addVoteCredit_ (address account, uint256 fromProjectId, uint256 votes) internal {
-   address projAddr = projectAddrs[fromProjectId];
-   Project(projAddr).removeVotes(account, votes);
-   investorList.addVoteCredit(account, votes);
- }
-
- function voteWithCredit (uint256 toProjectId, uint256 votes) external {
-   address projAddr = projectAddrs[toProjectId];
-   investorList.removeVoteCredit(msg.sender, votes);
-   Project(projAddr).vote(msg.sender, votes);
- }
-
- function updateProjects (uint256 _projectId) internal {
-   considerTentativeLeaderShip(_projectId);
-   attemptProjectActivation();
- }
-
- function _extendDoomsDay(uint256 _days) internal onlyWhileOpen {
-    doomsDay = doomsDay.add(_days.mul(1728000));
- }
-
-  function forwardFunds (address _to, uint256 amount) internal {
-    _to.transfer(amount);
-  }
 }
 
 /* function getInfo(uint256 id) public view returns(address) {

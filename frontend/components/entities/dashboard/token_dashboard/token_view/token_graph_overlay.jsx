@@ -15,7 +15,7 @@ class TokenGraphOverlay extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
   }
-  
+
   handleMouseMove(e) {
     const { indexHovered } = this.state;
     const [x, y] = d3.clientPoint(e.currentTarget, e);
@@ -35,7 +35,7 @@ class TokenGraphOverlay extends React.Component {
   render() {
     const { width, height, transform, data, xScale, yScaleTokens, yScaleEarnings } = this.props;
     const { indexHovered } = this.state;
-
+  // make this a function, bitch
     const TokenGraphLeftBar = <TokenGraphSideBar
       width={100}
       x="-240"
@@ -50,7 +50,7 @@ class TokenGraphOverlay extends React.Component {
       ]}
       side="left"
     />;
-
+  // make this a function, bitch
     const TokenGraphRightBar = <TokenGraphSideBar
       width={100}
       x="1000"

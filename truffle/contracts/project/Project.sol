@@ -1,15 +1,20 @@
-pragma solidity ^0.4.23;
-import './utility/SafeMath.sol';
-contract Project {
+pragma solidity >=0.4.22 <0.6.0;
+import '../utility/SafeMath.sol';
+import '../utility/Ownable.sol';
+import '../utility/Secondary.sol';
+import '../dividends/Dividends.sol';
+/* import './ECRecovery.sol'; */
+
+contract Project is Ownable, Secondary {
   using SafeMath for uint256;
+  /* using ECRecovery for bytes32; */
   //these will all need to be private so they cannot be set arbitrarily
   //we'll make read methods when necessary
-  uint256 private id; //this should be public?
-  string private name;
+  string private title;
   address private developer;
   address public dividendWallet;
   uint256 internal closingTime;
-  uint256 private valuation;
+  uint256 public valuation;
   uint256 private capitalRequired;
   uint256 private developerTokens;
   uint256 private investorTokens;
@@ -17,20 +22,20 @@ contract Project {
   string private lng;
   uint256 internal totalVotes;
   bool public active;
+  uint256 public activationTime;
   constructor (
-    uint256 _id,
-    string _name,
+    string memory _title,
     address _developer,
     address _dividendWallet,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
     uint256 _investorTokens,
-    string _lat,
-    string _lng
-    ) public {
-      id = _id;
-      name = _name;
+    string memory _lat,
+    string memory _lng
+    ) public
+    {
+      title = _title;
       developer = _developer;
       dividendWallet = _dividendWallet;
       valuation = _valuation;
@@ -44,8 +49,8 @@ contract Project {
       closingTime = now + 86600 * 240;
   }
   event LogProject (
-      uint id,
-      string name,
+      address addr,
+      string title,
       uint256 valuation,
       uint256 capitalRequired,
       uint256 developerTokens,
@@ -63,19 +68,26 @@ contract Project {
   }
 
   function log () public {
-    emit LogProject(id, name, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, totalVotes, active);
+    emit LogProject(address(this), title, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, totalVotes, active);
   }
 
   function open () public view returns (bool) {
     return closingTime > now;
   }
 
-  function id_ () public view returns (uint256) {
+  /* function id_ () public view returns (uint256) {
     return id;
+  } */
+  function title_ () public view returns (string memory) {
+    return title;
   }
 
   function active_ () public view returns (bool) {
     return active;
+  }
+
+  function activationTime_ () public view returns (uint256) {
+    return activationTime;
   }
 
   function totalVotes_ () public view returns (uint256) {
@@ -102,7 +114,7 @@ contract Project {
       string, uint256, uint256, uint256, uint256, bool, uint256, uint256
       ) {
       return (
-          name,
+          title,
           valuation,
           capitalRequired,
           developerTokens,
@@ -115,6 +127,8 @@ contract Project {
 
   mapping(address => bool) internal managers;
 
+  function () external payable {}
+
   modifier authorize () {
     require(managers[msg.sender] == true || msg.sender == developer);
     _;
@@ -123,7 +137,7 @@ contract Project {
   function deposit () public payable {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
-    dividendWallet.transfer(weiAmount);
+    Dividends(dividendWallet).receiveDividends.value(weiAmount)();
   }
 
   function addManager (address manager) public authorize {
@@ -133,33 +147,36 @@ contract Project {
   function setDividendWallet (address wallet) public authorize {
     dividendWallet = wallet;
   }
-  //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
-  function vote (address voter, uint256 voteAmount) external {
-    //maybe require that its open and not active
+
+  function vote (address voter, uint256 voteAmount) external onlyOwner {
     votes[voter] = votes[voter].add(voteAmount);
     totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
   }
 
-  //for security, we will make this contract owned by GNITokenCrowdsale and require that msg.sender is the owner for update and activate
-  function removeVotes (address voter, uint256 voteAmount) external {
+  function voteAgainst (address voter, uint256 voteAmount) external onlyOwner {
+    removeVotes_(voter, voteAmount);
+  }
+
+  //when the project has closed
+  function removeVotes (address voter, uint256 voteAmount) external onlyOwner {
+    require(!open() || active);
+    removeVotes_(voter, voteAmount);
+  }
+
+  function removeVotes_ (address voter, uint256 voteAmount) internal {
     require(voteAmount <= totalVotes);
     require(voteAmount <= votes[voter]);
 
     votes[voter] = votes[voter].sub(voteAmount);
     totalVotes = totalVotes.sub(voteAmount);
-    closingTime = closingTime.sub(43200);
+    closingTime = closingTime.sub(43200);//we need to handle the case that the project closed
   }
 
-  function activate () external {
+  function activate () external onlyPrimary returns(uint256) {
     active = true;
-    log();
-  }
-
-  function beats (address otherProject) public view returns (bool) {
-    return totalVotes > 0 && totalVotes >= Project(otherProject).totalVotes_();
-      /* open() && *///we dont need this if we remove all votes for projects that are closed
-      /* totalVotes >= Project(otherProject).totalVotes_() */
-      //we dont need to check if the competitor is active because an active project always has 0 votes
+    //we should set totalVotes to 0
+    activationTime = now;
+    return activationTime;
   }
 }

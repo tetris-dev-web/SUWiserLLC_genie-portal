@@ -1,6 +1,6 @@
 import React from 'react';
 import ProjectGraph from './loc_view/project_graph';
-import VotesGraph from './votes_view/votes_graph';
+import VotesGraphContainer from './votes_view/votes_graph_container';
 import ToggleOptions from '../dashboard_toggle_options/toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
 import './project_dashboard.scss';
@@ -16,7 +16,6 @@ class ProjectDashboard extends React.Component {
     };
 
     this.toggleView = this.toggleView.bind(this);
-    // this.toggleTextShowing = this.toggleTextShowing.bind(this);
     this.watchProjectPitch = this.watchProjectPitch.bind(this);
     this.filterPitchedProjects = this.filterPitchedProjects.bind(this);
   }
@@ -31,17 +30,19 @@ class ProjectDashboard extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.web3){this.watchProjectPitch();}
-
+    if (this.props.web3){
+      this.props.fetchProjects(this.props.crowdsaleInstance,this.props.projectContract)
+      this.watchProjectPitch();
+    }
   }
 
-  watchProjectPitch() { //event listener for pitched projects
+  watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
     this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
-      const address = event.args.projectAddress;
-      const title = event.args.name;
-      const project = this.props.projects[title];
-      project.instance = this.props.projectContract.at(address);
-      this.props.receiveProject(project);
+    const address = event.args.projectAddress;
+    const title = event.args.title;
+    const project = this.props.projects[title];
+    project.instance = this.props.projectContract.at(address);
+    this.props.receiveProject(project);
     });
   }
 
@@ -70,8 +71,10 @@ class ProjectDashboard extends React.Component {
       case 0:
       break;
       case 1:
-        currentGraph = <VotesGraph 
-          wait={500}/>;
+        currentGraph = <VotesGraphContainer
+                          wait={500}
+                          projects={this.props.projects}
+                          />;
         break;
       case 2:
         currentGraph = <ProjectGraph
@@ -112,6 +115,7 @@ class ProjectDashboard extends React.Component {
 
   }
 }
+// <div onClick={() => this.props.fetchTokenPurchaseLogs(this.props.crowdsaleInstance, this.props.web3)}>YYYYOO</div>
 
 // Add this in after fullstack refactoring of cashflow
 // <CashFlowGraph

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 
 import "../token/ERC20/ERC20.sol";
 import '../utility/SafeMath.sol';
@@ -25,7 +25,7 @@ contract Crowdsale {
 
   Token public token;
 
-  address internal developer;
+  address  public developer;
   // How many token units a buyer gets per wei.
   // The rate is the conversion between wei and the smallest and indivisible token unit.
   // So, if you are using a rate of 1 with a DetailedERC20 token with 3 decimals called TOK
@@ -46,7 +46,8 @@ contract Crowdsale {
     address indexed purchaser,
     address indexed beneficiary,
     uint256 value,
-    uint256 amount
+    uint256 amount,
+    uint256 time
   );
 
   /**
@@ -54,7 +55,7 @@ contract Crowdsale {
    * @param _developer Address where collected funds will be forwarded to
    * @param _token Address of the token being sold
    */
-  constructor(uint256 _rate, address _developer, Token _token) public {
+  constructor(uint256 _rate, address  _developer, Token _token) public {
     require(_rate > 0);
     require(_developer != address(0));
 
@@ -70,31 +71,33 @@ contract Crowdsale {
   /**
    * @dev fallback function ***DO NOT OVERRIDE***
    */
-  function () public payable {
+  function () external payable {
     /* buyTokens(msg.sender); */
   }
   /**
    * @dev low level token purchase ***DO NOT OVERRIDE***
    * @param _beneficiary Address performing the token purchase
    */
-  function buyTokens(address _beneficiary) public payable returns (uint256) {
+  function buyTokens(address  _beneficiary) public payable returns (uint256) {
     uint256 weiAmount = msg.value;
-    _preValidatePurchase(_beneficiary, weiAmount);
+    require(_beneficiary != address(0));
+    require(weiAmount != 0);
 
     // calculate token amount to be created
-    uint256 tokens = _getTokenAmount(weiAmount);
+    uint256 tokens = weiAmount.mul(rate);
 
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    Token(token).transferInactive(_beneficiary, tokens);
+    Token(token).transferInactive(_beneficiary, tokens);//we can call all the account/voting logic through this function
     /* _processPurchase(_beneficiary, tokens); */
 
     emit TokenPurchase(
       msg.sender,
       _beneficiary,
       weiAmount,
-      tokens
+      tokens,
+      now
     );
 
     return tokens;
@@ -121,7 +124,7 @@ contract Crowdsale {
    * @param _beneficiary Address performing the token purchase
    * @param _weiAmount Value in wei involved in the purchase
    */
-  function _preValidatePurchase(
+  /* function _preValidatePurchase(
     address _beneficiary,
     uint256 _weiAmount
   )
@@ -129,7 +132,7 @@ contract Crowdsale {
   {
     require(_beneficiary != address(0));
     require(_weiAmount != 0);
-  }
+  } */
 
   /**
    * @dev Validation of an executed purchase. Observe state and use revert statements to undo rollback when valid conditions are not met.
@@ -192,11 +195,11 @@ contract Crowdsale {
    * @param _weiAmount Value in wei to be converted into tokens
    * @return Number of tokens that can be purchased with the specified _weiAmount
    */
-  function _getTokenAmount(uint256 _weiAmount)
+  /* function _getTokenAmount(uint256 _weiAmount)
     internal view returns (uint256)
   {
     return _weiAmount.mul(rate);
-  }
+  } */
 
   /**
    * @dev Determines how ETH is stored/forwarded on purchases.

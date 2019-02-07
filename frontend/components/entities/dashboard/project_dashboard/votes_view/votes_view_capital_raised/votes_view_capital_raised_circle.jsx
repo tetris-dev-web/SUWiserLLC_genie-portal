@@ -1,4 +1,5 @@
 import React from 'react';
+import ProjectModules from '../../project_modules/project_modules';
 
 class VotesViewCapitalRaisedCircle extends React.Component {
 	constructor() {
@@ -6,23 +7,29 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 
 		this.state = {
 			showText: false,
+			moduleState: false,// may remove
 		};
 
 		this.handleHover = this.handleHover.bind(this);
+		this.closeModal = this.closeModal.bind(this);
 	}
 
 	handleHover() {
 		this.setState({showText: !this.state.showText});
 	}
 
+	closeModal(){
+		this.setState({moduleState: false});
+	}
+
 	render() {
 		const { xScale, yScale, circleScale, project, opacity } = this.props;
-
+		const { moduleState } = this.state;
 		return (
 			<React.Fragment>
 				<circle className="votes-view-project-circle"
 					fill="#bdc4c9"
-					cx={xScale(project.time)}
+					cx={xScale(project.activationTime)}
 					cy={yScale(project.capital)}
 					r={circleScale(project.valuation)}
 					opacity={opacity}
@@ -41,3 +48,10 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 }
 
 export default VotesViewCapitalRaisedCircle;
+
+// <ProjectModules
+// 	projectClicked={project}
+// 	isModalOpen={false}
+// 	closeModalOnClick={"filler"}
+// 	doIHaveData={true}
+// 	closeModal={"filler"} />

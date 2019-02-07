@@ -6,9 +6,11 @@ import merge from 'lodash/merge';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';
+import SeedableCrowdsale from '../truffle/build/contracts/SeedableCrowdsale.json';
 import Token from '../truffle/build/contracts/Token.json';
 import Project from '../truffle/build/contracts/Project.json';
 import Voting from '../truffle/build/contracts/Voting.json';
+import SeedableVoting from '../truffle/build/contracts/SeedableVoting.json';
 
 document.addEventListener('DOMContentLoaded', () => {
   let store;
@@ -22,16 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (typeof web3 != 'undefined') {
     web3Provider = web3.currentProvider;
-
+    // web3Provider.enable();
     provider = new Web3(web3Provider);
 
     const token = TruffleContract(Token);
     token.setProvider(web3Provider);
-
-    const crowdsale = TruffleContract(GNITokenCrowdsale);
+    console.log("version", web3Provider.networkVersion)
+    // console.log(provider._proivder.networkVersion)
+    const crowdsale = TruffleContract(SeedableCrowdsale);
     crowdsale.setProvider(web3Provider);
 
-    const voting = TruffleContract(Voting);
+    const voting = TruffleContract(SeedableVoting);
     voting.setProvider(web3Provider);
 
     const projectContract = TruffleContract(Project);

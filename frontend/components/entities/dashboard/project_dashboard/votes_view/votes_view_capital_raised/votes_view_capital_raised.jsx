@@ -7,21 +7,12 @@ import VotesViewCapitalRaisedCircle from './votes_view_capital_raised_circle';
 import colors from  "../../../../../../util/_variables.scss";
 
 class VotesViewCapitalRaised extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-    };
-  }
-
-  componentDidMount() {
-    // window.onresize = () => {
-    //   this.setState({currentWindowWidth: window.innerWidth});
-    // };
-  }
 
   render() {
-    const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, capitalTotal, lineData, startTime, endTime, deployedProjects, deployedProjectsValuationMinMax, selectedProject } = this.props;
+    const { SVGYScale, SVGHeightScale, SVGTimeXScale, capitalBeingRaised, capitalTotal, lineData, startTime, endTime, deployedProjects, deployedProjectsValuationMinMax, selectedProject } = this.props;
+    const circleScale = d3.scaleLinear()
+      .domain(deployedProjectsValuationMinMax)
+      .range([5, 10]);
 
     const Lines = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedLine key={idx}
@@ -45,14 +36,14 @@ class VotesViewCapitalRaised extends React.Component {
       yScale={SVGYScale}
       opacity={selectedProject ? "0.2" : "1"}
       lineData={lineData} />;
-    
+
     const heightOfCapitalBeingRaisedRect = SVGHeightScale(capitalBeingRaised);
     const yOfCapitalBeingRaisedRect = SVGYScale(capitalTotal);
     const CapitalBeingRaisedRect = <VotesViewCapitalRaisedRect
       x="0" y={yOfCapitalBeingRaisedRect}
       fill={colors.rosyBrown}
       height={heightOfCapitalBeingRaisedRect}
-      opacity={selectedProject ? "0.1" : "0.3"} 
+      opacity={selectedProject ? "0.1" : "0.3"}
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"
@@ -80,7 +71,7 @@ class VotesViewCapitalRaised extends React.Component {
       x="0" y={yOfCapitalRaisedPrevRect}
       fill={colors.teal}
       height={heightOfCapitalRaisedPrevRect}
-      opacity={selectedProject ? "0.1" : "0.3"} 
+      opacity={selectedProject ? "0.1" : "0.3"}
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"

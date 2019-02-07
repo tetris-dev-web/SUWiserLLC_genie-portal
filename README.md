@@ -10,6 +10,12 @@ Real estate blockchain token portal engine
     ```
 - Create a branch, named in according with the [GenusDev Programming Conventions](https://docs.google.com/document/d/1-PGffrw-B1d9P5A_zfo5gJrW8dK28kqx5j-xxKOMPLY) e.g. `git checkout -b JohnR-readme-edit-0903`
 
+remember to git ignore all the same folders, if you are having problems with folders still pushing, use the following command:
+
+```bash
+    git rm -r --cached ./truffle/build
+   ```
+
 ## System Dependencies
 
 ### Backend

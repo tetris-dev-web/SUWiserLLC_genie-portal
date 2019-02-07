@@ -38,9 +38,7 @@ class ProjectGraph extends React.Component {
   }
 
   componentDidMount(){
-    this.props.fetchProjects().then(() => {
-      this.setUp();
-    });
+    this.setUp();
   }
 
   toggleModalonClickandPassProject(projectClicked) {
@@ -100,24 +98,12 @@ class ProjectGraph extends React.Component {
   }
 
   setUp () {
+    console.log("PROPS", this.props)
     const projectKeys = Object.keys(this.props.data);
     const svg = this.createSVG();
 
     const ProjectNodeData = this.formatData(projectKeys);
     const projectData = projectKeys.map(key => {
-        // if (typeof this.props.data[key].cashflow === 'string') {
-        //   console.log(this.props.data[key].cashflow);
-        //   this.props.data[key].cashflow = JSON.parse(this.props.data[key].cashflow);
-        // }
-        // if (typeof this.props.data[key].accum_actual_cashflow === 'string')
-        // this.props.data[key].accum_actual_cashflow = JSON.parse(this.props.data[key].accum_actual_cashflow)
-        // if (typeof this.props.data[key].accum_projected_cashflow === 'string')
-        // this.props.data[key].accum_projected_cashflow = JSON.parse(this.props.data[key].accum_projected_cashflow)
-        // if (typeof this.props.data[key].actual_cashflow === 'string')
-        // this.props.data[key].actual_cashflow = JSON.parse(this.props.data[key].actual_cashflow)
-
-      // console.log("This.props.data[key] is: ", this.props.data[key]);
-      // console.log(this.props.data[key]);
       return this.props.data[key];
     });
     const cities = ProjectNodeData.cities;
@@ -208,7 +194,7 @@ class ProjectGraph extends React.Component {
                          .distance(50);
 
     simulation.force("links", forceLinks);
-    this.addDragHandlers( simulation,circle, innerCircle, continentSquares, citySquares );
+    this.addDragHandlers( simulation,circle,innerCircle,continentSquares,citySquares );
     simulation.on('tick', () => this.tickActions(circle, circleText,continentText,cityText, link, innerCircle, scales.vScale,continentSquares,citySquares));
   }
 
@@ -281,13 +267,13 @@ class ProjectGraph extends React.Component {
               .nodes(allData)
               .force("charge_force", d3.forceManyBody())
               .force("center_force", d3.forceCenter(width / 2, height / 2))
-              .force("collide", d3.forceCollide(100).radius(function(d) {
+              .force("collide", d3.forceCollide(50).radius(function(d) {
                 if (d.valuation) {
                     return rscale(Number(d.valuation)) + 5;
                   } else {
                     return 10 + 20;
                   }
-                }).strength(4));
+                }).strength(2));
   }
 
   tickActions(circle, text,continentText,cityText, link, innerCircle, scale, continent,citySquares) {

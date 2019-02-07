@@ -1,15 +1,14 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.22 <0.6.0;
 import './Dividends.sol';
-import './token/ERC20/Token.sol';
-import './InvestorList.sol';
+import '../token/ERC20/Token.sol';
 
 contract DividendsMock is Dividends {
 
-  constructor (Token token_, address developer_, InvestorList investorList_)
+  constructor (Token token_, address  developer_)
   public
-  Dividends(token_, developer_, investorList_) {}
+  Dividends(token_, developer_) {}
 
-  function init (address dev) public {
+  function init (address  dev) public {
     developer = dev;
   }
 
