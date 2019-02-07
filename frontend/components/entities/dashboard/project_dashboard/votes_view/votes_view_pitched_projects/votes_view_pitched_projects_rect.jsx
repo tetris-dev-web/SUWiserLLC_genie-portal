@@ -75,7 +75,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 				<g onClick={e => e.stopPropagation()}>
 					<VotesViewPitchedProjectsCircle 
 						cx={projectRectCenter}
-						cy={projectValutionStartY + projectValutionHeight - 12}
+						cy={50}
 						r={circleScale(project.valuation)}
 						opacity={selectedProject ? "0.2" : "1"}
 						project={project} />

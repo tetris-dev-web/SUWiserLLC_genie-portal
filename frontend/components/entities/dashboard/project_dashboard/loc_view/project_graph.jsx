@@ -430,15 +430,15 @@ class ProjectGraph extends React.Component {
     //   });
     // }
     return (
-      <div className='graph-container'>
+      <React.Fragment>
         <div className="series content graph" id='project'>
           <div id="graph"></div>
         </div>
-          <ProjectModules
-            projectClicked={this.projectClicked}
-            openModal={this.state.openModal}
-            closeModalOnClick={this.toggleModalonClickandPassProject}/>
-      </div>
+        <ProjectModules
+          projectClicked={this.projectClicked}
+          openModal={this.state.openModal}
+          closeModalOnClick={this.toggleModalonClickandPassProject}/>
+      </React.Fragment>
     );
   }
 }
