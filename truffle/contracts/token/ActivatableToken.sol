@@ -88,13 +88,14 @@ contract ActivatableToken is MintableToken, Secondary {
     totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
 
-  function pendingActivations(address  account) public view returns (uint256) {
+  function pendingActivations(address account) public view returns (uint256) {
+    require(account != owner);
     uint256 pendingActivationPoints = totalActivationPoints.sub(lastActivationPoints[account]);
     uint256 inactiveAccountTokens = inactiveBalanceOf(account);
     return inactiveAccountTokens.mul(pendingActivationPoints).div(activationMultiplier);
   }
 
-  function activatePending (address  account) external returns (bool) {
+  function activatePending (address account) external returns (bool) {
     uint256 tokens = pendingActivations(account);
     activate(account, tokens);
     lastActivationPoints[account] = totalActivationPoints;
@@ -103,7 +104,7 @@ contract ActivatableToken is MintableToken, Secondary {
   }
 
   function increasePendingActivations(uint256 amount) external {//should only be callable by activation
-    uint256 inactiveSupply = totalInactiveSupply().sub(totalPendingActivations);
+    uint256 inactiveSupply = totalInactiveSupply().sub(inactiveBalanceOf(owner)).sub(totalPendingActivations);
     uint256 newActivationPoints = amount.mul(activationMultiplier).div(inactiveSupply);
     totalActivationPoints = totalActivationPoints.add(newActivationPoints);
     totalPendingActivations = totalPendingActivations.add(amount);
