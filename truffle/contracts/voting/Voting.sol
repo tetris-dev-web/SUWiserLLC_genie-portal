@@ -45,7 +45,7 @@ contract Voting is Ownable {
   function _voteForProject (address  _project, address _voter, uint256 votes) internal {
     Project(_project).vote(_voter, votes);
     Token(token).assign(_voter, votes);
-    GNITokenCrowdsale(uint160(owner)).extendDoomsDay(6);//this can be called externally
+    GNITokenCrowdsale(owner).extendDoomsDay(6);//this can be called externally
     handleVoteChange(_project);
   }
 
@@ -71,13 +71,13 @@ contract Voting is Ownable {
 
    function handleVoteRemoval (address account, address  fromProjectAddr, uint256 votes) internal {
      Token(token).freeUp(account, votes);
-     GNITokenCrowdsale(uint160(owner)).reduceDoomsDay(6);
+     GNITokenCrowdsale(owner).reduceDoomsDay(6);
      handleVoteChange(fromProjectAddr);
   }
 
   function handleVoteChange (address  votedForProj) internal {
     projectLeaderTracker.trackProject(votedForProj);
-    GNITokenCrowdsale(uint160(owner)).activateProject();
+    GNITokenCrowdsale(owner).transferOnActivation();
     emit VoteChange(votedForProj, Project(votedForProj).totalVotes_());
   }
 }

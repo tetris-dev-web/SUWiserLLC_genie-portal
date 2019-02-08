@@ -299,8 +299,8 @@ project2  = Project.create!(
   title: "Matt\'s Mansion",
   description: "A super big house.",
   creator_id: user2.id,
-  continent: "South America",
-  city: "Rio"
+  continent: "North America",
+  city: "New York"
 )
 
 project3  = Project.create!(
@@ -326,6 +326,16 @@ project5  = Project.create!(
   continent: "Africa",
   city: "Accra"
 )
+
+project6  = Project.create!(
+  title: "Kyle\'s Kale Farm",
+  description: "Full of green stuff",
+  creator_id: user2.id,
+  continent: "North America",
+  city: "Philadelphia"
+)
+
+
 # project0 = Project.create!(
 #   title: "Genesis",
 #   revenue: 250000,

@@ -32,6 +32,12 @@ module.exports = {
       network_id: "*", // Match any network id
       gasLimit: 10000000
     },
+    // rinkeby: {
+    //   provider: () => new HDWalletProvider(process.env.MNEMONIC, "https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY),
+    //   network_id: 4,
+    //   gas: 7000000,
+    //   gasPrice: 10000000000
+    // },
     ropsten: {
          provider: () => new HDWalletProvider(process.env.MNEMONIC, "https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY),
          network_id: 3,

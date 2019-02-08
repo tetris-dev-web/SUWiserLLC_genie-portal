@@ -5,6 +5,7 @@ import './token/TokenStub.sol';
 import './ContractStub.sol';
 import './projectLeader/ProjectLeaderTracker.sol';
 import './voting/Voting.sol';
+import './crowdsale/Activation.sol';
 
 
 contract GNITokenCrowdsaleMock is GNITokenCrowdsale, ContractStub {
@@ -19,10 +20,11 @@ constructor
     /* InvestorListStub _investorList, */
     ProjectLeaderTracker _projectLeaderTracker,
     address  _reimbursements,
-    Voting _voting
+    Voting _voting,
+    Activation _activation
   )
   public
-  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _projectLeaderTracker, _reimbursements, _voting) {}
+  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _projectLeaderTracker, _reimbursements, _voting, _activation) {}
 
   /* function receiveMockWei () external payable {
 

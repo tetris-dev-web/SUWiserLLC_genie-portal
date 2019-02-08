@@ -2,17 +2,18 @@ pragma solidity >=0.4.22 <0.6.0;
 import './TimedCrowdsale.sol';
 import '../utility/SafeMath.sol';
 import '../project/Project.sol';
-import '../project/ProjectStub.sol';
 import '../token/ERC20/Token.sol';
 import '../projectLeader/ProjectLeaderTracker.sol';
 import '../voting/Voting.sol';
 import '../reimbursements/Reimbursements.sol';
+import './Activation.sol';
 
 
 
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   ProjectLeaderTracker public projectLeaderTracker;
+  Activation public activation;
   Voting public voting;
   address  public dividendWallet;
 
@@ -26,15 +27,18 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         Token _token,
         ProjectLeaderTracker _projectLeaderTracker,
         address  _reimbursements,
-        Voting _voting
+        Voting _voting,
+        Activation _activation
       )
       public
       Crowdsale(_rate, _developer, _token)
-      TimedCrowdsale(_openingTime, _doomsDay, _reimbursements) {
+      TimedCrowdsale(_openingTime, _doomsDay, _reimbursements)
+      {
         voting = _voting;
         projectLeaderTracker = ProjectLeaderTracker(_projectLeaderTracker);
         dividendWallet = _dividendWallet;
-  }
+        activation = Activation(_activation);
+      }
 
   event ProjectPitch (
     address projectAddress,
@@ -49,7 +53,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 totalProjectCount
   );
 
-  mapping(uint256 => address ) internal projectAddress;
+  mapping(uint256 => address) internal projectAddress;
   uint256 internal totalProjectCount;
 
   function totalProjectCount_() public view returns (uint256) {
@@ -76,8 +80,12 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
     Project(projectAddr).transferOwnership(address(Voting(voting)));
+    Project(projectAddr).transferPrimary(address(Activation(activation)));
 
     emit ProjectPitch(projectAddr, developer, _title, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
+    if (capitalRequired == 0) {
+      activation.activateProject(projectAddr);
+    }
     return projectAddr;
   }
 
@@ -101,30 +109,22 @@ contract GNITokenCrowdsale is TimedCrowdsale {
   );
 
 
- function activateProject () public { //we need more tests for added functionality
+ function transferOnActivation () public { //we need more tests for added functionality
    (
      address  tentativeLeaderAddr,
      bool tentativeLeaderConfirmed
    ) = projectLeaderTracker.tentativeLeader();
 
-   Project project = Project(projectById(1));
-   uint256 capitalRequired = project.capitalRequired_();
-   if (
-     tentativeLeaderConfirmed &&
-     capitalRequired <= weiRaised &&
-     project.open()
-     ) {
-     uint256 time = project.activate();
-     //set the number of project votes to 0.
 
+   (bool didActivate, uint256 capitalRequired) = activation.tryActivateProject(tentativeLeaderAddr, tentativeLeaderConfirmed, weiRaised);
+
+   if (didActivate) {
      developer.transfer(capitalRequired);
      weiRaised = weiRaised.sub(capitalRequired);
-
-     projectLeaderTracker.handleProjectActivation();
-     Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
-     emit ProjectActivation(tentativeLeaderAddr, capitalRequired, time);
-    }
+   }
   }
+
+
 
  function reimburseFunds () public {
    require(hasClosed());

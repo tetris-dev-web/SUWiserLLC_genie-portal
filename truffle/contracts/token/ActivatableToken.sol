@@ -13,7 +13,7 @@ contract ActivatableToken is MintableToken, Secondary {
   uint256 internal currentInactiveTokenCycle;
   mapping(uint256 => InactiveTokenCycle) internal inactiveTokenCycle;
 
-  function resetInactiveTokenCycle (address  developer) public {
+  function resetInactiveTokenCycle (address  developer) public {//should only be callable by crowdsale
     totalSupply_ = totalSupply_.sub(totalInactiveSupply());
     currentInactiveTokenCycle = currentInactiveTokenCycle.add(1);
 
@@ -102,7 +102,7 @@ contract ActivatableToken is MintableToken, Secondary {
     return true;
   }
 
-  function increasePendingActivations(uint256 amount) external {
+  function increasePendingActivations(uint256 amount) external {//should only be callable by activation
     uint256 inactiveSupply = totalInactiveSupply().sub(totalPendingActivations);
     uint256 newActivationPoints = amount.mul(activationMultiplier).div(inactiveSupply);
     totalActivationPoints = totalActivationPoints.add(newActivationPoints);

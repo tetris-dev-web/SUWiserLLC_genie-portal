@@ -9,15 +9,18 @@ const ProjectLeaderTracker = artifacts.require("ProjectLeaderTracker");
 const ECRecovery = artifacts.require("ECRecovery");
 const Voting = artifacts.require("Voting");
 const SeedableVoting = artifacts.require("SeedableVoting");
+const Activation = artifacts.require("Activation");
 const { seed } = require('../seeds');
 
 let tokenInstance;
 let votingInstance;
 let crowdsaleInstance;
+let activationInstance;
+let projectLeaderTrackerInst;
 
 module.exports = function (deployer, network, accounts) {
   console.log("NETWORK", network)
-    const rate = 1000; //changed this to 1 from 10000 (subject to change still)
+    const rate = 1; //changed this to 1 from 10000 (subject to change still)
     const developer = accounts[0];  //will need to make this variable and import from the interface on first deployment of a developer's site (Progeny)
 
     return deployer
@@ -40,6 +43,13 @@ module.exports = function (deployer, network, accounts) {
         .then(() => {
           return deployer.deploy(
             ProjectLeaderTracker
+          )
+        })
+        .then(() => {
+          return deployer.deploy(
+            Activation,
+            Token.address,
+            ProjectLeaderTracker.address
           )
         })
         .then(() => {
@@ -80,7 +90,8 @@ module.exports = function (deployer, network, accounts) {
                 Token.address,
                 ProjectLeaderTracker.address,
                 Reimbursements.address,
-                votingAddr
+                votingAddr,
+                Activation.address
             );
           }
             return deployer.deploy(
@@ -93,7 +104,8 @@ module.exports = function (deployer, network, accounts) {
                 Token.address,
                 ProjectLeaderTracker.address,
                 Reimbursements.address,
-                votingAddr
+                votingAddr,
+                Activation.address
             );
         }) //organize around seeding, ownership designation and contract instanciation / contract references
         .then(() => {
@@ -120,8 +132,18 @@ module.exports = function (deployer, network, accounts) {
           return ProjectLeaderTracker.at(ProjectLeaderTracker.address);
         })
         .then(_projectLeaderTrackerInst => {
-          const projectLeaderTrackerInst = _projectLeaderTrackerInst;
+          projectLeaderTrackerInst = _projectLeaderTrackerInst;
           return projectLeaderTrackerInst.transferOwnership(crowdsaleInstance.address);
+        })
+        .then(() => {
+          return Activation.at(Activation.address)
+        })
+        .then(_activationInstance => {
+          activationInstance = _activationInstance;
+          return activationInstance.transferOwnership(crowdsaleInstance.address)
+        })
+        .then(() => {
+          return projectLeaderTrackerInst.transferPrimary(activationInstance.address)
         })
         .then(() => {
           return tokenInstance.transferOwnership(crowdsaleInstance.address);
