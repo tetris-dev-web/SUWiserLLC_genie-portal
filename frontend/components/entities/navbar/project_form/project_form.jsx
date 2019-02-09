@@ -152,14 +152,16 @@ class ProjectForm extends React.Component {
         creator_id
       } = this.state.projectData
 
-      const railsParams = {
+      const params = {
           title,
           city,
           country,
           continent,
           summary,
           description,
-          creator_id,
+          capital_required,
+          latitude,
+          longitude,
           cashflow: JSON.stringify(this.state.projectData.cashflow),
           actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
           projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
@@ -167,17 +169,17 @@ class ProjectForm extends React.Component {
           accum_actual_cashflow: JSON.stringify(this.state.projectData.accum_actual_cashflow)
         }
 
-      const blockchainParams = {
-        title,
-        valuation,
-        capital_required,
-        latitude,
-        longitude
-      }
+      // const blockchainParams = {
+      //   title,
+      //   valuation,
+      //   capital_required,
+      //   latitude,
+      //   longitude
+      // }
 
 
     // console.log("project data: ", projectData);
-    this.props.createProject(this.props.crowdsaleInstance, railsParams, blockchainParams, this.state.pdf_file, this.props.account).then(() => {
+    this.props.createProject(this.props.crowdsaleInstance, params, this.state.pdf_file, this.props.account).then(() => {
       if (this.props.errors.length == 0) {
         this.props.closeModal();
         // window.location.reload();

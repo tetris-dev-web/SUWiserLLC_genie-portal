@@ -13,7 +13,7 @@ contract ActivatableToken is MintableToken, Secondary {
   uint256 internal currentInactiveTokenCycle;
   mapping(uint256 => InactiveTokenCycle) internal inactiveTokenCycle;
 
-  function resetInactiveTokenCycle (address  developer) public {
+  function resetInactiveTokenCycle (address  developer) public {//should only be callable by crowdsale
     totalSupply_ = totalSupply_.sub(totalInactiveSupply());
     currentInactiveTokenCycle = currentInactiveTokenCycle.add(1);
 
@@ -88,13 +88,14 @@ contract ActivatableToken is MintableToken, Secondary {
     totalActiveSupply_ = totalActiveSupply_.add(amount);
   }
 
-  function pendingActivations(address  account) public view returns (uint256) {
+  function pendingActivations(address account) public view returns (uint256) {
+    require(account != owner);
     uint256 pendingActivationPoints = totalActivationPoints.sub(lastActivationPoints[account]);
     uint256 inactiveAccountTokens = inactiveBalanceOf(account);
     return inactiveAccountTokens.mul(pendingActivationPoints).div(activationMultiplier);
   }
 
-  function activatePending (address  account) external returns (bool) {
+  function activatePending (address account) external returns (bool) {
     uint256 tokens = pendingActivations(account);
     activate(account, tokens);
     lastActivationPoints[account] = totalActivationPoints;
@@ -102,8 +103,8 @@ contract ActivatableToken is MintableToken, Secondary {
     return true;
   }
 
-  function increasePendingActivations(uint256 amount) external {
-    uint256 inactiveSupply = totalInactiveSupply().sub(totalPendingActivations);
+  function increasePendingActivations(uint256 amount) external {//should only be callable by activation
+    uint256 inactiveSupply = totalInactiveSupply().sub(inactiveBalanceOf(owner)).sub(totalPendingActivations);
     uint256 newActivationPoints = amount.mul(activationMultiplier).div(inactiveSupply);
     totalActivationPoints = totalActivationPoints.add(newActivationPoints);
     totalPendingActivations = totalPendingActivations.add(amount);

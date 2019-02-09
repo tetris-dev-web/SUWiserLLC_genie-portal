@@ -20,13 +20,12 @@ export const fetchProjectActivationLogs = (crowdsale, web3) => {
 }
 
 
-export const createProject = (crowdsale, railsParams, blockchainParams, pdf_file, account) => {
-  return dispatch => {
-    return APIUtil.createProject(railsParams).then(project => {
-      // return APIUtil.uploadPDF(project, pdf_file).then(()=>{
-        dispatch(receiveProject(project));
-        return ChainUtil.pitchProject(crowdsale, blockchainParams, account);
-      })
+export const createProject = (crowdsale, railsParams, params, pdf_file, account) => {
+  // return dispatch => {
+    // return APIUtil.createProject(railsParams).then(project => {
+    //   // return APIUtil.uploadPDF(project, pdf_file).then(()=>{
+    //     dispatch(receiveProject(project));
+        return ChainUtil.pitchProject(crowdsale, params, account);
+      // })
     // });
-  };
 };

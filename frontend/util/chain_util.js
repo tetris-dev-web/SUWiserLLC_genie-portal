@@ -85,7 +85,22 @@ export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPu
 
 
 export const pitchProject = async (crowdsale, data, account) => {
-  let { title, capital_required, valuation, latitude, longitude } = data;
+  let {
+      title,
+      city,
+      country,
+      continent,
+      summary,
+      description,
+      capital_required,
+      latitude,
+      longitude,
+      cashflow,
+      actual_cashflow,
+      projected_cashflow,
+      accum_projected_cashflow,
+      accum_actual_cashflow
+    } = data;
 
   const voteForHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote for ${title}`}])
   const voteAgainstHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote against ${title}`}])
@@ -93,7 +108,25 @@ export const pitchProject = async (crowdsale, data, account) => {
   // console.log("account", account)
   console.log("crowdsale", crowdsale)
   console.log("crowdsale address", crowdsale.address)
-  return await crowdsale.pitchProject(title, capital_required, valuation, latitude, longitude, voteForHash, voteAgainstHash, {from: account});
+  return await crowdsale.pitchProject(
+    title,
+    city,
+    country,
+    continent,
+    summary,
+    description,
+    capital_required,
+    latitude,
+    longitude,
+    cashflow,
+    actual_cashflow,
+    projected_cashflow,
+    accum_projected_cashflow,
+    accum_actual_cashflow,
+    voteForHash,
+    voteAgainstHash,
+    {from: account}
+  );
 };
 
 export const buyTokens = async (crowdsale, account, weiAmount) => {

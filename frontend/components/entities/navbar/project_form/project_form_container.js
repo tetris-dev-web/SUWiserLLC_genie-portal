@@ -25,7 +25,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    createProject: (crowdsale, railsParams, blockchainParams, pdf_file, account) => dispatch(createProject(crowdsale, railsParams, blockchainParams, pdf_file, account)),
+    createProject: (crowdsale, params, pdf_file, account) => dispatch(createProject(crowdsale, params, pdf_file, account)),
     clearProjectErrors: () => dispatch(clearProjectErrors())
   };
 };

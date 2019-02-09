@@ -61,7 +61,6 @@ class TokenDashboard extends React.Component {
     if (this.props.currentUser) {
       return(
         <div className="token-dashboard">
-          <div onClick={this.buyTest}>BUY TEST</div>
           <ToggleOptions
             dashboardType="token"
             dashboardTitle="TOKEN DASHBOARD"

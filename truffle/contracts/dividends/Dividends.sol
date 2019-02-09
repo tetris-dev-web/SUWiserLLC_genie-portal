@@ -6,7 +6,7 @@ import '../crowdsale/GNITokenCrowdsale.sol';
 contract Dividends {
   using SafeMath for uint256;
   Token token;
-  address  developer;
+  address  developer;//we can remove this as we are not using it
 
   constructor (Token token_, address  developer_) public {
     token = token_;
