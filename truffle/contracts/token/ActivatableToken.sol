@@ -25,7 +25,7 @@ contract ActivatableToken is MintableToken, Secondary {
     updateAccountCycle(developer);
   }
 
-  function initializeDividendWallet(address  _dividendWallet) external onlyOwner {
+  function initializeDividendWallet(address _dividendWallet) external onlyOwner {
     dividendWallet = _dividendWallet;
   }
 
@@ -79,7 +79,7 @@ contract ActivatableToken is MintableToken, Secondary {
     Dividends(dividendWallet).distributeDividend(account);
   }
 
-  function activate(address  account, uint256 amount) internal {
+  function activate(address account, uint256 amount) internal {
     require(inactiveBalanceOf(account) >= amount);
     distributeOwedDividend(account);
 

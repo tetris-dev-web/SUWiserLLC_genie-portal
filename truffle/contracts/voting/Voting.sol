@@ -78,6 +78,6 @@ contract Voting is Ownable {
   function handleVoteChange (address  votedForProj) internal {
     projectLeaderTracker.trackProject(votedForProj);
     GNITokenCrowdsale(owner).transferOnActivation();
-    emit VoteChange(votedForProj, Project(votedForProj).totalVotes_());
+    emit VoteChange(votedForProj, Project(votedForProj).totalVotes());
   }
 }

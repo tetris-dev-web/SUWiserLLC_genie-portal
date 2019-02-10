@@ -32,7 +32,7 @@ contract Activation is Ownable {
 
    function tryActivateProject (address tentativeLeaderAddr, bool tentativeLeaderConfirmed, uint256 weiRaised) external onlyOwner returns ( bool , uint256) { //we need more tests for added functionality
      Project project = Project(tentativeLeaderAddr);
-     uint256 capitalRequired = project.capitalRequired_();
+     uint256 capitalRequired = project.capitalRequired();
      if (
        tentativeLeaderConfirmed &&
        capitalRequired <= weiRaised &&
@@ -53,8 +53,8 @@ contract Activation is Ownable {
       Project project = Project(projectAddress);
       uint256 time = project.activate();
       projectLeaderTracker.handleProjectActivation();
-      Token(token).increasePendingActivations(project.developerTokens_().add(project.investorTokens_()));
-      emit ProjectActivation(projectAddress, project.capitalRequired_(), time);
+      Token(token).increasePendingActivations(project.developerTokens().add(project.investorTokens()));
+      emit ProjectActivation(projectAddress, project.capitalRequired(), time);
     }
 
 }

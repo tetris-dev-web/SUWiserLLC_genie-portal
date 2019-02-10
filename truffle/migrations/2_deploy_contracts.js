@@ -5,6 +5,7 @@ const SeedableCrowdsale = artifacts.require("SeedableCrowdsale");
 const GNITokenCrowdsaleMock = artifacts.require("GNITokenCrowdsaleMock");
 const Dividends = artifacts.require("Dividends");
 const Reimbursements = artifacts.require("Reimbursements");
+const ProjectFactory = artifacts.require("ProjectFactory");
 const ProjectLeaderTracker = artifacts.require("ProjectLeaderTracker");
 const ECRecovery = artifacts.require("ECRecovery");
 const Voting = artifacts.require("Voting");
@@ -17,6 +18,7 @@ let votingInstance;
 let crowdsaleInstance;
 let activationInstance;
 let projectLeaderTrackerInst;
+let projectFactoryInst;
 
 module.exports = function (deployer, network, accounts) {
   console.log("NETWORK", network)
@@ -67,6 +69,10 @@ module.exports = function (deployer, network, accounts) {
           }
           return deployer.deploy(Voting, Token.address, ProjectLeaderTracker.address);
         })
+        .then(() => {
+          const votingAddr = network === 'ropsten' ? SeedableVoting.address : Voting.address
+          return deployer.deploy(ProjectFactory, Activation.address, votingAddr, Dividends.address);
+        })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
                 web3.eth.getBlock('latest', (err, time) => {
@@ -88,6 +94,7 @@ module.exports = function (deployer, network, accounts) {
                 developer,
                 Dividends.address,
                 Token.address,
+                ProjectFactory.address,
                 ProjectLeaderTracker.address,
                 Reimbursements.address,
                 votingAddr,
@@ -102,6 +109,7 @@ module.exports = function (deployer, network, accounts) {
                 developer,
                 Dividends.address,
                 Token.address,
+                ProjectFactory.address,
                 ProjectLeaderTracker.address,
                 Reimbursements.address,
                 votingAddr,
@@ -113,6 +121,13 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(_crowdsaleInstance => {
           crowdsaleInstance = _crowdsaleInstance
+        })
+        .then(() => {
+          return ProjectFactory.at(ProjectFactory.address);
+        })
+        .then(_projectFactoryInst => {
+          projectFactoryInst = _projectFactoryInst;
+          return projectFactoryInst.transferOwnership(crowdsaleInstance.address);
         })
         .then(() => {
           return Token.at(Token.address);
@@ -160,7 +175,7 @@ module.exports = function (deployer, network, accounts) {
         .then(() => {
           if (network === 'ropsten') {
             // console.log("voting", votingInstance)
-            return seed(crowdsaleInstance, tokenInstance, votingInstance, developer, accounts[1], accounts[2]);
+            return seed(crowdsaleInstance, projectFactoryInst, tokenInstance, votingInstance, developer, accounts[1], accounts[2]);
           }
         })
 

@@ -88,7 +88,7 @@ contract ProjectLeaderTracker is Ownable, Secondary {
   }
 
   function beatsLeader (address  projAddr) internal view returns (bool) {
-    return Project(projAddr).totalVotes_() > leadingVoteCount;
+    return Project(projAddr).totalVotes() > leadingVoteCount;
   }
 
   function resetProjectsChecked() internal {
@@ -106,7 +106,7 @@ contract ProjectLeaderTracker is Ownable, Secondary {
     if (tentativeLeaderAddr == address(0)) {
       leadingVoteCount = 0;
     } else {
-      leadingVoteCount = Project(tentativeLeaderAddr).totalVotes_();
+      leadingVoteCount = Project(tentativeLeaderAddr).totalVotes();
     }
   }
 
