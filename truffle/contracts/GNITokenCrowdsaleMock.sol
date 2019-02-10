@@ -18,13 +18,14 @@ constructor
     address  _dividendWallet,
     TokenStub _token,
     /* InvestorListStub _investorList, */
+    ProjectFactory _projectFactory,
     ProjectLeaderTracker _projectLeaderTracker,
     address  _reimbursements,
     Voting _voting,
     Activation _activation
   )
   public
-  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _projectLeaderTracker, _reimbursements, _voting, _activation) {}
+  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _projectFactory, _projectLeaderTracker, _reimbursements, _voting, _activation) {}
 
   /* function receiveMockWei () external payable {
 

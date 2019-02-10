@@ -3,63 +3,46 @@ import '../utility/SafeMath.sol';
 import '../utility/Ownable.sol';
 import '../utility/Secondary.sol';
 import '../dividends/Dividends.sol';
+import '../projectFactory/ProjectFactory.sol';
 /* import './ECRecovery.sol'; */
 
 contract Project is Ownable, Secondary {
   using SafeMath for uint256;
-  /* using ECRecovery for bytes32; */
-  //these will all need to be private so they cannot be set arbitrarily
-  //we'll make read methods when necessary
-  string private title;
-  address private developer;
+  string public projectInfo;
+  address public developer;
+  string public cashflow;
   address public dividendWallet;
-  uint256 internal closingTime;
+  uint256 public closingTime;
   uint256 public valuation;
-  uint256 private capitalRequired;
-  uint256 private developerTokens;
-  uint256 private investorTokens;
-  string public lat;
-  string private lng;
-  uint256 internal totalVotes;
+  uint256 public capitalRequired;
+  uint256 public developerTokens;
+  uint256 public investorTokens;
+  string public cashFlow;
+  uint256 public totalVotes;
   bool public active;
   uint256 public activationTime;
   constructor (
-    string memory _title,
+    string memory _projectInfo,
     address _developer,
-    address _dividendWallet,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
     uint256 _investorTokens,
-    string memory _lat,
-    string memory _lng
+    string _cashFlow
     ) public
     {
-      title = _title;
+      projectInfo = _projectInfo;
       developer = _developer;
-      dividendWallet = _dividendWallet;
       valuation = _valuation;
       capitalRequired = _capitalRequired;
       developerTokens = _developerTokens;
       investorTokens = _investorTokens;
-      lat = _lat;
-      lng = _lng;
+      cashFlow = _cashFlow;
       totalVotes = 0;
       active = false;
       closingTime = now + 86600 * 240;
+      dividendWallet = ProjectFactory(msg.sender).dividendWallet();
   }
-  event LogProject (
-      address addr,
-      string title,
-      uint256 valuation,
-      uint256 capitalRequired,
-      uint256 developerTokens,
-      uint256 investorTokens,
-      string lat,
-      string lng,
-      uint256 totalVotes,
-      bool active
-  );
 
   mapping(address => uint256) internal votes;
 
@@ -67,63 +50,9 @@ contract Project is Ownable, Secondary {
     return votes[voter];
   }
 
-  function log () public {
-    emit LogProject(address(this), title, valuation, capitalRequired, developerTokens, investorTokens, lat, lng, totalVotes, active);
-  }
-
   function open () public view returns (bool) {
     return closingTime > now;
   }
-
-  /* function id_ () public view returns (uint256) {
-    return id;
-  } */
-  function title_ () public view returns (string memory) {
-    return title;
-  }
-
-  function active_ () public view returns (bool) {
-    return active;
-  }
-
-  function activationTime_ () public view returns (uint256) {
-    return activationTime;
-  }
-
-  function totalVotes_ () public view returns (uint256) {
-    return totalVotes;
-  }
-
-  function closingTime_ () public view returns (uint256) {
-    return closingTime;
-  }
-
-  function developerTokens_ () public view returns (uint256) {
-    return developerTokens;
-  }
-
-  function investorTokens_ () public view returns (uint256) {
-    return investorTokens;
-  }
-
-  function capitalRequired_ () public view returns (uint256) {
-    return capitalRequired;
-  }
-
-  /* function getInfo() public view returns(
-      string, uint256, uint256, uint256, uint256, bool, uint256, uint256
-      ) {
-      return (
-          title,
-          valuation,
-          capitalRequired,
-          developerTokens,
-          investorTokens,
-          active,
-          totalVotes,
-          closingTime
-      );
-  } */
 
   mapping(address => bool) internal managers;
 

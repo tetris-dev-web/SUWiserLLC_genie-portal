@@ -4,25 +4,21 @@ import './Project.sol';
 
 contract ProjectMock is Project {
   constructor (
-    string memory _name,
+    string memory _projectInfo,
     address _developer,
-    address _dividendWallet,
     uint256 _valuation,
     uint256 _capitalRequired,
     uint256 _developerTokens,
     uint256 _investorTokens,
-    string memory _lat,
-    string memory _lng
+    string _cashFlow
     ) public Project(
-      _name,
+      _projectInfo,
       _developer,
-      _dividendWallet,
       _valuation,
       _capitalRequired,
       _developerTokens,
       _investorTokens,
-      _lat,
-      _lng
+      _cashFlow
       ) {}
 
   function removeMockVoter (address addr) public {

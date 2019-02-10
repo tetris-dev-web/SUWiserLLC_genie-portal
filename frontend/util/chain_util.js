@@ -90,16 +90,11 @@ export const pitchProject = async (crowdsale, data, account) => {
       city,
       country,
       continent,
-      summary,
       description,
       capital_required,
       latitude,
       longitude,
-      cashflow,
-      actual_cashflow,
-      projected_cashflow,
-      accum_projected_cashflow,
-      accum_actual_cashflow
+      cashflow
     } = data;
 
   const voteForHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote for ${title}`}])
@@ -113,16 +108,11 @@ export const pitchProject = async (crowdsale, data, account) => {
     city,
     country,
     continent,
-    summary,
     description,
     capital_required,
     latitude,
     longitude,
     cashflow,
-    actual_cashflow,
-    projected_cashflow,
-    accum_projected_cashflow,
-    accum_actual_cashflow,
     voteForHash,
     voteAgainstHash,
     {from: account}

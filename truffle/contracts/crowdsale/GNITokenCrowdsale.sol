@@ -4,6 +4,7 @@ import '../utility/SafeMath.sol';
 import '../project/Project.sol';
 import '../token/ERC20/Token.sol';
 import '../projectLeader/ProjectLeaderTracker.sol';
+import '../projectFactory/ProjectFactory.sol';
 import '../voting/Voting.sol';
 import '../reimbursements/Reimbursements.sol';
 import './Activation.sol';
@@ -13,9 +14,10 @@ import './Activation.sol';
 contract GNITokenCrowdsale is TimedCrowdsale {
   using SafeMath for uint256;
   ProjectLeaderTracker public projectLeaderTracker;
+  ProjectFactory public projectFactory;
   Activation public activation;
   Voting public voting;
-  address  public dividendWallet;
+  address public dividendWallet;
 
   constructor
       (
@@ -25,6 +27,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         address  _developer,
         address  _dividendWallet,
         Token _token,
+        ProjectFactory _projectFactory,
         ProjectLeaderTracker _projectLeaderTracker,
         address  _reimbursements,
         Voting _voting,
@@ -36,60 +39,62 @@ contract GNITokenCrowdsale is TimedCrowdsale {
       {
         voting = _voting;
         projectLeaderTracker = ProjectLeaderTracker(_projectLeaderTracker);
+        projectFactory = ProjectFactory(_projectFactory);
         dividendWallet = _dividendWallet;
         activation = Activation(_activation);
       }
 
-  event ProjectPitch (
-    address projectAddress,
-    address developer,
-    string  title,
-    string  lat,
-    string  lng,
-    uint256 capitalRequired,
-    uint256 valuation,
-    uint256 developerTokens,
-    uint256 investorTokens,
-    uint256 totalProjectCount
-  );
-
-  mapping(uint256 => address) internal projectAddress;
-  uint256 internal totalProjectCount;
-
-  function totalProjectCount_() public view returns (uint256) {
-    return totalProjectCount;
-  }
-
-  function projectById (uint256 id) public view returns (address ) {
-    return projectAddress[id];
-  }
-
-  function pitchProject(string memory _title, uint256 capitalRequired, uint256 _valuation, string memory _lat, string memory _lng, bytes32 _voteForHash, bytes32 _voteAgainstHash) public returns (address ) {//should only be callable by developer. may need more tests
+  function pitchProject(
+    string memory _projectInfo,
+    uint256 _capitalRequired,
+    uint256 _valuation,
+    string _cashflow,
+    bytes32 _voteForHash,
+    bytes32 _voteAgainstHash
+    ) public {//should only be callable by developer. may need more tests
    _extendDoomsDay(90);
-    return _pitchProject(_title, capitalRequired, _valuation, _lat, _lng, _voteForHash, _voteAgainstHash);
+  _pitchProject(
+      _projectInfo,
+      _capitalRequired,
+      _valuation,
+      _cashflow,
+      _voteForHash,
+      _voteAgainstHash
+    );
   }
 
-  function _pitchProject(string memory _title, uint256 capitalRequired, uint256 _valuation, string memory _lat, string memory _lng, bytes32 _voteForHash, bytes32 _voteAgainstHash) internal returns (address ) {//should only be callable by developer. may need more tests
+  function _pitchProject(
+      string memory _projectInfo,
+      uint256 _capitalRequired,
+      uint256 _valuation,
+      string _cashFlow,
+      bytes32 _voteForHash,
+      bytes32 _voteAgainstHash
+    ) internal {//should only be callable by developer. may need more tests
     require(msg.sender == developer);//we need a test for this
     Token(token).activatePending(msg.sender);//we need a test for this
 
-   (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, capitalRequired);
+   (uint256 developerTokens, uint256 investorTokens) = tokensToMint(_valuation, _capitalRequired);
 
    Token(token).mint(developer, developerTokens);
    Token(token).mint(this, investorTokens);
 
-    address projectAddr = address(new Project(_title, developer, dividendWallet, _valuation, capitalRequired, developerTokens, investorTokens, _lat, _lng));
-    projectLeaderTracker.handleProjectPitch();
-    totalProjectCount = totalProjectCount.add(1);
-    projectAddress[totalProjectCount] = projectAddr;
-    Project(projectAddr).transferOwnership(address(Voting(voting)));
-    Project(projectAddr).transferPrimary(address(Activation(activation)));
+   address projectAddr = projectFactory.createProject(
+     _projectInfo,
+     developer,
+     _valuation,
+     _capitalRequired,
+     developerTokens,
+     investorTokens,
+     _cashFlow
+    );
 
-    emit ProjectPitch(projectAddr, developer, _title, _lat, _lng, capitalRequired, _valuation, developerTokens, investorTokens, totalProjectCount);
-    if (capitalRequired == 0) {
+    projectLeaderTracker.handleProjectPitch();
+    Voting(voting).addProject(projectAddr, _voteForHash, _voteAgainstHash);
+
+    if (_capitalRequired == 0) {
       activation.activateProject(projectAddr);
     }
-    return projectAddr;
   }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
@@ -157,20 +162,3 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    doomsDay = doomsDay.sub(_days.mul(1728000));
  }
 }
-
-/* function getInfo(uint256 id) public view returns(address) {
-    /* string, uint256, uint256, uint256, uint256, bool, uint256, uint256, address */
-    /* address projectAddr = projectAddrs[id]; */
-    /* return ( */
-      /* return Project(projectAddr).dividendWallet(); */
-      /* Project(projectAddr).name(),
-      Project(projectAddr).valuation(),
-      Project(projectAddr).capitalRequired(),
-      Project(projectAddr).developerTokens(),
-      Project(projectAddr).investorTokens(),
-      Project(projectAddr).active(),
-      Project(projectAddr).totalVotes(),
-      /* Project(projectAddr).closingTime(), */
-      /* projectAddr */
-      /* ); */
-    /* }  */
