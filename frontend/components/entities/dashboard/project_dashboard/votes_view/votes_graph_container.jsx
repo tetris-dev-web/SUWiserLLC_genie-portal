@@ -22,15 +22,17 @@ const mapStateToProps = state => {
 
 
     const project = state.entities.projects[projectTitle];
-    propsData.totalVotes += project.votes;
 
     const deploymentTime = project.activationTime;
-    if (deploymentTime) {
+    console.log("deploymentTime", deploymentTime)
+    if (deploymentTime !== 0) {
       capitalDeployed += project.capitalRequired;
       project.capital = capitalDeployed;
       propsData.deployedProjects.push(project);
     }
     else {
+      console.log("adding a pitched project")
+      propsData.totalVotes += project.votes;
       propsData.pitchedProjects.push(project);
     }
 

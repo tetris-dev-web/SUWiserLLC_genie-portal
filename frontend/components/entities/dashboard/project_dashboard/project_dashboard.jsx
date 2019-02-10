@@ -31,18 +31,21 @@ class ProjectDashboard extends React.Component {
 
   componentDidMount() {
     if (this.props.web3){
-      this.props.fetchProjects(this.props.crowdsaleInstance,this.props.projectContract)
+      this.props.fetchProjects(this.props.projectFactoryInstance,this.props.projectContract)
       this.watchProjectPitch();
     }
   }
 
   watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
-    this.props.crowdsaleInstance.ProjectPitch().watch((error, event) => {
-    const address = event.args.projectAddress;
-    const title = event.args.title;
-    const project = this.props.projects[title];
-    project.instance = this.props.projectContract.at(address);
-    this.props.receiveProject(project);
+    const { projectFactoryInstance, projectContract } = this.props;
+    projectFactoryInstance.ProjectPitch().watch((error, event) => {
+      const address = event.args.projectAddress;
+      const id = event.args.projectId;
+      this.props.fetchProject(projectFactoryInstance, projectContract, id, address);
+    // const title = event.args.title;
+    // const project = this.props.projects[title];
+    // project.instance = this.props.projectContract.at(address);
+    // this.props.receiveProject(project);
     });
   }
 
