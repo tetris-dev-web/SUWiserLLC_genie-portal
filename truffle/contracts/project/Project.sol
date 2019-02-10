@@ -10,7 +10,6 @@ contract Project is Ownable, Secondary {
   using SafeMath for uint256;
   string public projectInfo;
   address public developer;
-  string public cashflow;
   address public dividendWallet;
   uint256 public closingTime;
   uint256 public valuation;
@@ -45,6 +44,22 @@ contract Project is Ownable, Secondary {
   }
 
   mapping(address => uint256) internal votes;
+
+  function getData() public view returns (
+    address,
+    string,
+    uint256,
+    uint256,
+    string
+    ) {
+      return (
+        address(this),
+        projectInfo,
+        capitalRequired,
+        valuation,
+        cashFlow
+        );
+    }
 
   function votesOf(address voter) public view returns (uint256) {
     return votes[voter];

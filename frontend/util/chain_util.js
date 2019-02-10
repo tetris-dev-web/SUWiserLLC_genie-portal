@@ -1,58 +1,110 @@
 import sigUtil from "eth-sig-util"
 // import abi from "ethereumjs-abi"
 
-export const integrateProjectsData = async (crowdsale, projectContract, initialProjectsData) => {
+export const getProjectData = async (projectFactoryInstance, projectContract, id, address = null) => {
+  if (!address) {
+    address = await projectFactoryInstance.projectById(id);
+  }
 
-  const getProjectAddresses = async crowdsale => {
-    const totalProjectCount = await crowdsale.totalProjectCount_();
-    const projectAddresses = [];
-
-    for (let i = 1; i <= totalProjectCount.toNumber(); i++) {
-      let projectAddress = crowdsale.projectById(i);
-      projectAddresses.push(projectAddress);
-    }
-    return await Promise.all(projectAddresses);
+  const projectInstance = projectContract.at(address);
+  // const projectInfo = await projectInstance.projectInfo();
+  // const { title, lat, lng, description } = JSON.parse(projectInfo);
+  // const capitalRequired = await projectInstance.capitalRequired();
+  // const valuation = await projectInstance.valuation();
+  // const cashFlowString = await projectInstance.cashFlow();
+  // const cashFlow = JSON.parse(cashFlowString);
+  const activationTimeBN = await projectInstance.activationTime();
+  const activationTime = activationTimeBN.toNumber();
+  const votesBN = await projectInstance.totalVotes();
+  const votes = await votesBN.toNumber();
+  const projectData = await projectInstance.getData();
+  const { title, lat, lng, busLink, description } = JSON.parse(projectData[1]);
+  return {
+    id,
+    address,
+    instance: projectInstance,
+    title,
+    lat,
+    lng,
+    description,
+    busLink,
+    activationTime,
+    votes,
+    capitalRequired: projectData[2].toNumber(),
+    valuation: projectData[3].toNumber(),
+    cashFlow: JSON.parse(projectData[4])
   };
 
-  const formatProjectData = async (instance, address, initialProjectsData, id) => {
+  // return {
+  //   id,
+  //   address,
+  //   instance: projectInstance,
+  //   title,
+  //   lat,
+  //   lng,
+  //   description,
+  //   capitalRequired,
+  //   valuation,
+  //   cashFlow
+  // };
+};
 
-    //combine functions into one on the blockchain
-    const title = await instance.title_();
-    const project = initialProjectsData[title];
-    const capitalRequired = await instance.capitalRequired_();
-    const valuation = await instance.valuation();
+export const integrateProjectsData = async (projectFactoryInstance, projectContract) => {
 
-    project.capitalRequired = capitalRequired.toNumber();
-    project.valuation = valuation.toNumber();
-    project.active = await instance.active_();
-    project.id = id;
-    project.instance = instance;
+  const totalProjectCount = await projectFactoryInstance.totalProjectCount();
+  const projectsData = [];
 
-    if (project.active) {
-      project.votes = 0;
-      const activationTime = await instance.activationTime_();
-      project.activationTime = activationTime.toNumber();
-    } else {
-      const votes = await instance.totalVotes_();
-      project.votes = votes.toNumber();
-    }
-
-    return project;
-  };
-
-  const projectAddresses = await getProjectAddresses(crowdsale);
-
-  const projectsData = projectAddresses.map((address, i) => {
-    const instance = projectContract.at(address);
-    return formatProjectData(instance, address, initialProjectsData, i + 1);
-  });
+  for (let i = 1; i <= totalProjectCount.toNumber(); i++) {
+    let projectData = getProjectData(projectFactoryInstance, projectContract, i);
+    projectsData.push(projectData);
+  }
 
   return Promise.all(projectsData).then(resolvedProjectsData => {
     return resolvedProjectsData.reduce((projects, project) => {
-      projects[project.title] = project;
+      projects[project.id] = project;
       return projects;
     }, {});
   });
+  // const formatProjectData = async (instance, address, initialProjectsData, id) => {
+  //
+  //   //combine functions into one on the blockchain
+  //   const projectInfo = await instance.projectInfo();
+  //   const { title, lat, lng, description } = JSON.parse(projectInfo);
+  //   const capitalRequired = await instance.capitalRequired();
+  //   const valuation = await instance.valuation();
+  //
+  //   project.tit
+  //   project.capitalRequired = capitalRequired.toNumber();
+  //   project.valuation = valuation.toNumber();
+  //   project.active = await instance.active_();
+  //   project.id = id;
+  //   project.instance = instance;
+  //
+  //   if (project.active) {
+  //     project.votes = 0;
+  //     const activationTime = await instance.activationTime_();
+  //     project.activationTime = activationTime.toNumber();
+  //   } else {
+  //     const votes = await instance.totalVotes_();
+  //     project.votes = votes.toNumber();
+  //   }
+  //
+  //   return project;
+  // };
+
+  // const projectAddresses = await getProjectAddresses(projectFactoryInstance);
+  //
+  // const projectsData = projectAddresses.map((address, i) => {
+  //   const instance = projectContract.at(address);
+  //   return formatProjectData(instance, address, initialProjectsData, i + 1);
+  // });
+  //
+  // return Promise.all(projectsData).then(resolvedProjectsData => {
+  //   return resolvedProjectsData.reduce((projects, project) => {
+  //     projects[project.title] = project;
+  //     return projects;
+  //   }, {});
+  // });
 };
 
 export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPurchases) => {

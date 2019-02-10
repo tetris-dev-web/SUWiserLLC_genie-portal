@@ -9,6 +9,7 @@ import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json
 import SeedableCrowdsale from '../truffle/build/contracts/SeedableCrowdsale.json';
 import Token from '../truffle/build/contracts/Token.json';
 import Project from '../truffle/build/contracts/Project.json';
+import ProjectFactory from '../truffle/build/contracts/ProjectFactory.json'
 import Voting from '../truffle/build/contracts/Voting.json';
 import SeedableVoting from '../truffle/build/contracts/SeedableVoting.json';
 
@@ -37,6 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const voting = TruffleContract(SeedableVoting);
     voting.setProvider(web3Provider);
 
+    const projectFactory = TruffleContract(ProjectFactory);
+    projectFactory.setProvider(web3Provider);
+
     const projectContract = TruffleContract(Project);
     projectContract.setProvider(web3Provider);
 
@@ -44,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let tokenInstance;
     let crowdsaleInstance;
     let votingInstance;
+    let projectFactoryInstance;
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
       console.log("tokenInst: ", token)
@@ -57,9 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       })
       .then(() => {
+        return projectFactory.deployed().then((_projectFactoryInstance)=> {
+          projectFactoryInstance = _projectFactoryInstance;
+        })
+      })
+      .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {
           crowdsaleInstance = _crowdsaleInstance;
-          preloadedState = merge({}, preloadedState, { network: {account, tokenInstance, votingInstance, crowdsaleInstance, projectContract, web3 } });
+          preloadedState = merge({}, preloadedState, { network: {account, tokenInstance, votingInstance, crowdsaleInstance, projectFactoryInstance, projectContract, web3 } });
           store = configureStore(preloadedState);
           window.getState = store.getState; //just for development purposes - remove later - use logger
           const root = document.getElementById('root');

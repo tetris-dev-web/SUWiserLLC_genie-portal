@@ -19,7 +19,8 @@ contract ProjectFactory is Ownable {
   }
 
   event ProjectPitch (
-    address projectAddress
+    address projectAddress,
+    uint256 projectId
   );
 
   mapping(uint256 => address) internal projectAddress;
@@ -57,7 +58,7 @@ contract ProjectFactory is Ownable {
     Project(projectAddr).transferOwnership(address(Voting(voting)));
     Project(projectAddr).transferPrimary(address(Activation(activation)));
 
-    emit ProjectPitch(projectAddr);
+    emit ProjectPitch(projectAddr, totalProjectCount);
     return projectAddr;
   }
 }

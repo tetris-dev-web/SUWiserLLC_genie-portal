@@ -1,10 +1,13 @@
 import { connect } from 'react-redux';
+// import {
+//   fetchProject,
+//   editProject,
+//   receiveProject
+// } from '../../../../actions/project_actions';
 import {
-  fetchProject,
-  editProject,
-  receiveProject
-} from '../../../../actions/project_actions';
-import { fetchProjects } from '../../../../actions/chain_actions/project_actions';
+  fetchProjects,
+  fetchProject
+} from '../../../../actions/chain_actions/project_actions';
 import ProjectDashboard from './project_dashboard';
 import { fetchTokenPurchaseLogs } from '../../../../actions/chain_actions/token_actions';
 
@@ -22,6 +25,7 @@ const mapStateToProps = state => {
     projects: state.entities.projects,
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract,
+    projectFactoryInstance: state.network.projectFactoryInstance,
     currentUser,
     isInvestor
   };
@@ -30,10 +34,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchTokenPurchaseLogs: (crowdsale, web3) => dispatch(fetchTokenPurchaseLogs(crowdsale, web3)),
-    receiveProject: project => dispatch(receiveProject(project)),
-    fetchProjects: (crowdsaleInstance, projectContract) => dispatch(fetchProjects(crowdsaleInstance, projectContract)),
-    fetchProject: project => dispatch(fetchProject(project)),
-    editProject: project => dispatch(editProject(project))
+    // receiveProject: project => dispatch(receiveProject(project)),
+    fetchProjects: (projectFactoryInstance, projectContract) => dispatch(fetchProjects(projectFactoryInstance, projectContract)),
+    fetchProject: (projectFactoryInstance, projectContract, id, address) => dispatch(fetchProject(projectFactoryInstance, projectContract, id, address)),
+    // editProject: project => dispatch(editProject(project))
   };
 };
 
