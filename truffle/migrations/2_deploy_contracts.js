@@ -54,24 +54,24 @@ module.exports = function (deployer, network, accounts) {
             ProjectLeaderTracker.address
           )
         })
+        // .then(() => {
+        //   return deployer.deploy(ECRecovery);
+        // })
+        // .then(() => {
+        //   if (network === 'ropsten') {
+        //     return deployer.link(ECRecovery, SeedableVoting)
+        //   }
+        //   return deployer.link(ECRecovery, Voting)
+        // })
         .then(() => {
-          return deployer.deploy(ECRecovery);
-        })
-        .then(() => {
-          if (network === 'ropsten') {
-            return deployer.link(ECRecovery, SeedableVoting)
-          }
-          return deployer.link(ECRecovery, Voting)
-        })
-        .then(() => {
-          if(network === 'ropsten') {
-            return deployer.deploy(SeedableVoting, Token.address, ProjectLeaderTracker.address, Activation.address);
-          }
+          // if(network === 'ropsten') {
+          //   return deployer.deploy(SeedableVoting, Token.address, ProjectLeaderTracker.address, Activation.address);
+          // }
           return deployer.deploy(Voting, Token.address, ProjectLeaderTracker.address, Activation.address);
         })
         .then(() => {
-          const votingAddr = network === 'ropsten' ? SeedableVoting.address : Voting.address
-          return deployer.deploy(ProjectFactory, Activation.address, votingAddr, ProjectLeaderTracker.address, Dividends.address);
+          // const votingAddr = network === 'ropsten' ? SeedableVoting.address : Voting.address
+          return deployer.deploy(ProjectFactory, Activation.address, Voting.address, ProjectLeaderTracker.address, Dividends.address);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
@@ -136,13 +136,14 @@ module.exports = function (deployer, network, accounts) {
           return tokenInstance.initializeDividendWallet(Dividends.address);
         })
         .then(() => {
-          return network === 'ropsten' ? SeedableVoting.at(SeedableVoting.address) : Voting.at(Voting.address);
-        })
-        .then(() => {
-          votingInstance.setCrowdsale(crowdsaleInstance.address);
+          // return network === 'ropsten' ? SeedableVoting.at(SeedableVoting.address) : Voting.at(Voting.address);
+          return Voting.at(Voting.address);
         })
         .then(_votingInstance => {
           votingInstance = _votingInstance;
+          votingInstance.setCrowdsale(crowdsaleInstance.address);
+        })
+        .then(() => {
           return votingInstance.transferOwnership(projectFactoryInst.address);
         })
         .then(() => {
@@ -154,9 +155,6 @@ module.exports = function (deployer, network, accounts) {
         .then(_projectLeaderTrackerInst => {
           projectLeaderTrackerInst = _projectLeaderTrackerInst;
           return projectLeaderTrackerInst.transferOwnership(crowdsaleInstance.address);
-        })
-        .then(() => {
-          return projectLeaderTrackerInst.transferPrimary(activationInstance.address)
         })
         .then(() => {
           return projectLeaderTrackerInst.transferTertiary(projectFactoryInst.address);
@@ -175,6 +173,9 @@ module.exports = function (deployer, network, accounts) {
           return activationInstance.transferPrimary(projectFactoryInst.address);
         })
         .then(() => {
+          return projectLeaderTrackerInst.transferPrimary(activationInstance.address)
+        })
+        .then(() => {
           return crowdsaleInstance.transferPrimary(activationInstance.address);
         })
         .then(() => {
@@ -184,7 +185,7 @@ module.exports = function (deployer, network, accounts) {
           return tokenInstance.transferPrimary(votingInstance.address);
         })
         .then(() => {
-          return tokenInstance.transferSecondary(activationInstance.address);
+          return tokenInstance.transferTertiary(activationInstance.address);
         })
         .then(() => {
           return Reimbursements.at(Reimbursements.address);

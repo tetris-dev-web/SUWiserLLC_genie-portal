@@ -61,7 +61,6 @@ contract ProjectFactory is Ownable {
     Project(projectAddr).transferPrimary(address(Activation(activation)));
 
     ProjectLeaderTracker(projectLeaderTracker).handleProjectPitch();
-    Voting(voting).addProject(projectAddr, _voteForHash, _voteAgainstHash);
 
     if (_capitalRequired == 0) {
       activation.activateProject(projectAddr, _capitalRequired);

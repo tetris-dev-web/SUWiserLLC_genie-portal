@@ -40,8 +40,8 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
         lng
       })
       const cashflow = JSON.stringify(sampleCashflow);
-      const voteForHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote for ${title}`}])
-      const voteAgainstHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote against ${title}`}])
+      // const voteForHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote for ${title}`}])
+      // const voteAgainstHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote against ${title}`}])
       // const data = crowdsale.seedProject.getData(
       //   projectInfo,
       //   description,
@@ -60,8 +60,6 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
         capitalRequired,
         valuation,
         cashflow,
-        voteForHash,
-        voteAgainstHash,
         {
           from: developer
         }
@@ -174,22 +172,22 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
   }
 
   const createVotes = async () => {
-    const castVote = async (projectAddress, voterAddress, voteAmount) => {
+    const castVote = async (projectAddress, voteAmount) => {
       console.log("inner vote")
       console.log("projectAddress: ", projectAddress)
       console.log("voterAddress: ", voterAddress)
       console.log("voteAmount: ", voteAmount)
-      await voting.seed(projectAddress, voterAddress, voteAmount);
+      await voting.voteForProject(projectAddress, voteAmount, {from: developer});
     }
 
     console.log("outer vote")
     // await castVote(projAddr1, developer, 30);//4
 
-    await castVote(projAddr2, developer, 50);//2
-    await castVote(projAddr3, developer, 70);//1
-    await castVote(projAddr5, developer, 50);//2
-    await castVote(projAddr6, developer, 60);//2
-    await castVote(projAddr4, developer, 40);//1
+    await castVote(projAddr2, 50);//2
+    await castVote(projAddr3, 70);//1
+    await castVote(projAddr5, 50);//2
+    await castVote(projAddr6, 60);//2
+    await castVote(projAddr4, 40);//1
   }
 
 

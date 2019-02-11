@@ -39,18 +39,14 @@ contract GNITokenCrowdsale is TimedCrowdsale, Ownable, Secondary {
     string memory _projectInfo,
     uint256 _capitalRequired,
     uint256 _valuation,
-    string _cashflow,
-    bytes32 _voteForHash,
-    bytes32 _voteAgainstHash
+    string _cashflow
     ) public {//should only be callable by developer. may need more tests
    _extendDoomsDay(90);
   _pitchProject(
       _projectInfo,
       _capitalRequired,
       _valuation,
-      _cashflow,
-      _voteForHash,
-      _voteAgainstHash
+      _cashflow
     );
   }
 
@@ -58,9 +54,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, Ownable, Secondary {
       string memory _projectInfo,
       uint256 _capitalRequired,
       uint256 _valuation,
-      string _cashFlow,
-      bytes32 _voteForHash,
-      bytes32 _voteAgainstHash
+      string _cashFlow
     ) internal {//should only be callable by developer. may need more tests
     require(msg.sender == developer);//we need a test for this
     Token(token).activatePending(msg.sender);//we need a test for this
@@ -101,7 +95,6 @@ contract GNITokenCrowdsale is TimedCrowdsale, Ownable, Secondary {
   );
 
  function transferCapitalToDeveloper (uint256 capitalRequired) public onlyPrimary { //we need more tests for added functionality
-   require(msg.sender == address(activation));
    developer.transfer(capitalRequired);
    weiRaised = weiRaised.sub(capitalRequired);
   }
@@ -126,7 +119,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, Ownable, Secondary {
       doomsDay = newDoomsDay;
       canReOpen = false;
     }
- }
+ } 
 
  function reduceDoomsDay (uint256 _days) public canExtendDoomsDay onlyOwner {
    doomsDay = doomsDay.sub(_days.mul(1728000));

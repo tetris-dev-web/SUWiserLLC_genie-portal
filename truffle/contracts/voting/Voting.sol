@@ -8,7 +8,7 @@ import '../crowdsale/Activation.sol';
 import '../ECRecovery.sol';
 
 contract Voting is Ownable {
-  using ECRecovery for bytes32;
+  /* using ECRecovery for bytes32; */
   Token public token;
   ProjectLeaderTracker public projectLeaderTracker;
   Activation public activation;
@@ -25,8 +25,8 @@ contract Voting is Ownable {
     uint256 totalVotes
   );
 
-  mapping(address => bytes32) private voteForHash;
-  mapping(address => bytes32) private voteAgainstHash;
+  /* mapping(address => bytes32) private voteForHash;
+  mapping(address => bytes32) private voteAgainstHash; */
 
   function () external payable {}
 
@@ -34,12 +34,7 @@ contract Voting is Ownable {
     crowdsale = _crowdsale;
   }
 
-  function addProject (address  _project, bytes32 _voteForHash, bytes32 _voteAgainstHash) external onlyOwner {
-    voteForHash[_project] = _voteForHash;
-    voteAgainstHash[_project] = _voteAgainstHash;
-  }
-
-  function voteForProject(address  _project, address _voter, uint256 votes, bytes memory _signedMessage) public {
+  /* function voteForProject(address  _project, address _voter, uint256 votes, bytes memory _signedMessage) public {
     require(Token(token).existingAccount(_voter));
 
     bytes32 unsignedMessage = voteForHash[_project];
@@ -48,30 +43,29 @@ contract Voting is Ownable {
     require(recoveredVoter == _voter);
 
     _voteForProject(_project, _voter, votes);
+  } */
+
+  modifier onlyRegisteredVoters () {
+    require(Token(token).existingAccount(msg.sender));
+    _;
   }
 
-  function _voteForProject (address  _project, address _voter, uint256 votes) internal {
-    Project(_project).vote(_voter, votes);
-    Token(token).assign(_voter, votes);
+  function voteForProject (address _project, uint256 votes) external onlyRegisteredVoters {
+    Project(_project).vote(msg.sender, votes);
+    Token(token).assign(msg.sender, votes);
     GNITokenCrowdsale(crowdsale).extendDoomsDay(6);//this can be called externally
     handleVoteChange(_project);
   }
 
-  function voteAgainstProject(address  _project, address _voter, uint256 votes, bytes memory _signedMessage) public {
-    require(Token(token).existingAccount(_voter));
-
-    bytes32 unsignedMessage = voteAgainstHash[_project];
-    address recoveredVoter = unsignedMessage.recover(_signedMessage);
-
-    require(recoveredVoter == _voter);
-
-    Project(_project).voteAgainst(_voter, votes);
-    handleVoteRemoval(_voter, _project, votes);
+  function voteAgainstProject(address  _project, uint256 votes) external onlyRegisteredVoters {
+    require(Token(token).existingAccount(msg.sender));
+    Project(_project).voteAgainst(msg.sender, votes);
+    handleVoteRemoval(msg.sender, _project, votes);
   }
 
    //this is for adding vote credit for each investor from the frontend after a project has been activated
    //call this function removeVotesFromIneligibleProject
-   function removeVotesFromProject (address account, address  fromProjectAddr) public {
+   function removeVotesFromIneligibleProject (address account, address fromProjectAddr) public {
      uint256 votes = Project(fromProjectAddr).votesOf(account);
      Project(fromProjectAddr).removeVotes(account, votes);
      handleVoteRemoval(account, fromProjectAddr, votes);

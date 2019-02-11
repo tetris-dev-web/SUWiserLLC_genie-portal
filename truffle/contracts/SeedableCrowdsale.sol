@@ -20,23 +20,24 @@ contract SeedableCrowdsale is GNITokenCrowdsale {
       Activation _activation */
     )
     public
-    GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _projectFactory, _projectLeaderTracker, _reimbursements, _voting) {}
+    GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _projectFactory, _projectLeaderTracker, _reimbursements) {}
 
   function seedProject (
     string memory _projectInfo,
     uint256 _capitalRequired,
     uint256 _valuation,
-    string _cashflow,
-    bytes32 _voteForHash,
-    bytes32 _voteAgainstHash
+    string _cashflow
     ) public {
+    uint256 newDoomsDay = now.add(155520000);
+    if (newDoomsDay > doomsDay) {
+      doomsDay = newDoomsDay;
+      canReOpen = false;
+    }
     _pitchProject(
           _projectInfo,
           _capitalRequired,
           _valuation,
-          _cashflow,
-          _voteForHash,
-          _voteAgainstHash
+          _cashflow
         );
   }
 }
