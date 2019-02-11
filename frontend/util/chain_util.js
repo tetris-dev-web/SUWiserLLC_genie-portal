@@ -171,6 +171,13 @@ export const pitchProject = async (crowdsale, data, account) => {
   );
 };
 
+export const fetchWeiRaised = async (crowdsaleInstance) => {
+  console.log("fetch weiRaised function", crowdsaleInstance)
+  const weiRaisedBN = await crowdsaleInstance.weiRaised_();
+  console.log("weiRaisedBN", weiRaisedBN)
+  return weiRaisedBN.toNumber();
+}
+
 export const buyTokens = async (crowdsale, account, weiAmount) => {
   await crowdsale.buyTokens({from: account, value: 10})
 };

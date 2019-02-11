@@ -11,13 +11,10 @@ import './Activation.sol';
 
 
 
-contract GNITokenCrowdsale is TimedCrowdsale {
+contract GNITokenCrowdsale is TimedCrowdsale, Ownable, Secondary {
   using SafeMath for uint256;
   ProjectLeaderTracker public projectLeaderTracker;
   ProjectFactory public projectFactory;
-  Activation public activation;
-  Voting public voting;
-  address public dividendWallet;
 
   constructor
       (
@@ -25,23 +22,17 @@ contract GNITokenCrowdsale is TimedCrowdsale {
         uint256 _doomsDay,
         uint256 _rate,
         address  _developer,
-        address  _dividendWallet,
         Token _token,
         ProjectFactory _projectFactory,
         ProjectLeaderTracker _projectLeaderTracker,
-        address  _reimbursements,
-        Voting _voting,
-        Activation _activation
+        address  _reimbursements
       )
       public
       Crowdsale(_rate, _developer, _token)
       TimedCrowdsale(_openingTime, _doomsDay, _reimbursements)
       {
-        voting = _voting;
         projectLeaderTracker = ProjectLeaderTracker(_projectLeaderTracker);
         projectFactory = ProjectFactory(_projectFactory);
-        dividendWallet = _dividendWallet;
-        activation = Activation(_activation);
       }
 
   function pitchProject(
@@ -79,7 +70,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
    Token(token).mint(developer, developerTokens);
    Token(token).mint(this, investorTokens);
 
-   address projectAddr = projectFactory.createProject(
+   projectFactory.createProject(
      _projectInfo,
      developer,
      _valuation,
@@ -88,13 +79,6 @@ contract GNITokenCrowdsale is TimedCrowdsale {
      investorTokens,
      _cashFlow
     );
-
-    projectLeaderTracker.handleProjectPitch();
-    Voting(voting).addProject(projectAddr, _voteForHash, _voteAgainstHash);
-
-    if (_capitalRequired == 0) {
-      activation.activateProject(projectAddr);
-    }
   }
 
  function tokensToMint (uint256 valuation, uint256 investorValue) private view returns (uint256, uint256) {
@@ -116,23 +100,11 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     uint256 time
   );
 
-
- function transferOnActivation () public { //we need more tests for added functionality
-   (
-     address  tentativeLeaderAddr,
-     bool tentativeLeaderConfirmed
-   ) = projectLeaderTracker.tentativeLeader();
-
-
-   (bool didActivate, uint256 capitalRequired) = activation.tryActivateProject(tentativeLeaderAddr, tentativeLeaderConfirmed, weiRaised);
-
-   if (didActivate) {
-     developer.transfer(capitalRequired);
-     weiRaised = weiRaised.sub(capitalRequired);
-   }
+ function transferCapitalToDeveloper (uint256 capitalRequired) public onlyPrimary { //we need more tests for added functionality
+   require(msg.sender == address(activation));
+   developer.transfer(capitalRequired);
+   weiRaised = weiRaised.sub(capitalRequired);
   }
-
-
 
  function reimburseFunds () public {
    require(hasClosed());
@@ -144,8 +116,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
 
  //tests need to be updated
 
- function extendDoomsDay (uint256 _days) external {
-   require(msg.sender == address(Voting(voting)));
+ function extendDoomsDay (uint256 _days) external onlyOwner {
    _extendDoomsDay(_days);
  }
 
@@ -157,8 +128,7 @@ contract GNITokenCrowdsale is TimedCrowdsale {
     }
  }
 
- function reduceDoomsDay (uint256 _days) public canExtendDoomsDay {
-   require(msg.sender == address(Voting(voting)));
+ function reduceDoomsDay (uint256 _days) public canExtendDoomsDay onlyOwner {
    doomsDay = doomsDay.sub(_days.mul(1728000));
  }
 }

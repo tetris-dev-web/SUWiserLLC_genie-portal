@@ -112,7 +112,7 @@ console.log({
   deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(deployedProjects),
   lineData,
   capitalTotal,
-  capitalBeingRaised: capitalTotal - capitalDeployed,
+  capitalBeingRaised: state.entities.capitalBeingRaised,
   startTime,
   endTime,
   scalingConstant

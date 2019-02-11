@@ -2,10 +2,11 @@ pragma solidity >=0.4.22 <0.6.0;
 import '../project/Project.sol';
 import '../utility/Ownable.sol';
 import '../utility/Secondary.sol';
+import '../utility/Tertiary.sol';
 import '../utility/SafeMath.sol';
 
 
-contract ProjectLeaderTracker is Ownable, Secondary {
+contract ProjectLeaderTracker is Ownable, Secondary, Tertiary {
   using SafeMath for uint256;
   uint256 public candidateCount;
   address  public tentativeLeaderAddr;
@@ -35,7 +36,7 @@ contract ProjectLeaderTracker is Ownable, Secondary {
     decrementCandidateCount();
   }
 
-  function handleProjectPitch () onlyOwner external {
+  function handleProjectPitch () onlyTertiary external {
     candidateCount = candidateCount.add(1);
   }
 

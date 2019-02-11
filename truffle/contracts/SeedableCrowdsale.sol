@@ -12,16 +12,15 @@ contract SeedableCrowdsale is GNITokenCrowdsale {
       uint256 _doomsDay,
       uint256 _rate,
       address  _developer,
-      address  _dividendWallet,
       Token _token,
       ProjectFactory _projectFactory,
       ProjectLeaderTracker _projectLeaderTracker,
-      address  _reimbursements,
-      Voting _voting,
-      Activation _activation
+      address  _reimbursements
+      /* Voting _voting,
+      Activation _activation */
     )
     public
-    GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _dividendWallet, _token, _projectFactory, _projectLeaderTracker, _reimbursements, _voting, _activation) {}
+    GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _projectFactory, _projectLeaderTracker, _reimbursements, _voting) {}
 
   function seedProject (
     string memory _projectInfo,

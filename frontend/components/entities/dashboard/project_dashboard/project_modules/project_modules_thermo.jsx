@@ -20,10 +20,10 @@ class ProjectThermo extends React.Component {
 
   render() {
     //change vote expectation to capital raised
-    const { project} = this.props
-    const { current_capital, capital_required, start_date, close_date } = project;
+    const { project, capitalBeingRaised } = this.props
+    const { capital_required, start_date, close_date } = project;
 
-    const percentCompleted = (current_capital*100) / capital_required;
+    const percentCompleted = (capitalBeingRaised*100) / capital_required;
 
     const rectDems = {
           Width : 22,
@@ -46,7 +46,7 @@ class ProjectThermo extends React.Component {
     const oneDay = 24*60*60*1000;
     const daysToClose = Math.round(Math.abs((formattedCloseDate.getTime() - timeNow.getTime())/(oneDay)));
     let jsonVotes;
-    if(project.votest) {
+    if(project.votes) {
       jsonVotes = JSON.parse(project.votes);
     }else{
       jsonVotes = {};
@@ -79,7 +79,7 @@ class ProjectThermo extends React.Component {
     // TODO structure all lines as variables with names
     // TODO shift stylings to SCSS and make label text more transparent than number text
     // TODO make line draw on hover as an animation
-
+    console.log("cap raised line values", lineStartX, filledRectStartingY, filledRectStartingY)
     const CapRaisedLine = () => <Line
                 points={[lineStartX,filledRectStartingY,190,filledRectStartingY]}
                 stroke={'#00FFFF'}
@@ -93,7 +93,7 @@ class ProjectThermo extends React.Component {
                 />
 
 
-
+              console.log("current day line values", daysToCloseLineX, daysToCloseLineX);
     const CurrentDayLine = () => <Line
                 points={[daysToCloseLineX,55,daysToCloseLineX,160]}
                 stroke={'#00FFFF'}
@@ -125,7 +125,7 @@ class ProjectThermo extends React.Component {
                 <Text
                   x={rectDems.StartingX-35}
                   y={filledRectStartingY}
-                  text={ current_capital + '\n' + 'raised' }
+                  text={ capitalBeingRaised + '\n' + 'raised' }
                   fontSize={12}
                   fontFamily={'open sans condensed'}
                   fill={'#00FFFF'}

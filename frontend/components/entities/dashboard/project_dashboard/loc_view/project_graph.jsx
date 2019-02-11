@@ -436,6 +436,7 @@ class ProjectGraph extends React.Component {
           </div>
                 <ProjectModules
                   projectClicked={this.state.projectClicked}
+                  current_capital={this.props.capitalBeingRaised}
                   currentUser={this.props.currentUser}
                   isModalOpen = {this.state.isModalOpen}
                   closeModalOnClick = {this.toggleModalonClickandPassProject}

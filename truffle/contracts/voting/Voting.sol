@@ -4,16 +4,20 @@ import '../project/Project.sol';
 import '../crowdsale/GNITokenCrowdsale.sol';
 import '../token/ERC20/Token.sol';
 import '../projectLeader/ProjectLeaderTracker.sol';
+import '../crowdsale/Activation.sol';
 import '../ECRecovery.sol';
 
 contract Voting is Ownable {
   using ECRecovery for bytes32;
-  Token internal token;
-  ProjectLeaderTracker internal projectLeaderTracker;
+  Token public token;
+  ProjectLeaderTracker public projectLeaderTracker;
+  Activation public activation;
+  GNITokenCrowdsale public crowdsale;
 
-  constructor (Token _token, ProjectLeaderTracker _projectLeaderTracker) public {
+  constructor (Token _token, ProjectLeaderTracker _projectLeaderTracker, Activation _activation) public {
     token = _token;
     projectLeaderTracker = _projectLeaderTracker;
+    activation = _activation;
   }
 
   event VoteChange (
@@ -25,6 +29,10 @@ contract Voting is Ownable {
   mapping(address => bytes32) private voteAgainstHash;
 
   function () external payable {}
+
+  function setCrowdsale (GNITokenCrowdsale _crowdsale) public onlyOwner {
+    crowdsale = _crowdsale;
+  }
 
   function addProject (address  _project, bytes32 _voteForHash, bytes32 _voteAgainstHash) external onlyOwner {
     voteForHash[_project] = _voteForHash;
@@ -45,7 +53,7 @@ contract Voting is Ownable {
   function _voteForProject (address  _project, address _voter, uint256 votes) internal {
     Project(_project).vote(_voter, votes);
     Token(token).assign(_voter, votes);
-    GNITokenCrowdsale(owner).extendDoomsDay(6);//this can be called externally
+    GNITokenCrowdsale(crowdsale).extendDoomsDay(6);//this can be called externally
     handleVoteChange(_project);
   }
 
@@ -71,13 +79,13 @@ contract Voting is Ownable {
 
    function handleVoteRemoval (address account, address  fromProjectAddr, uint256 votes) internal {
      Token(token).freeUp(account, votes);
-     GNITokenCrowdsale(owner).reduceDoomsDay(6);
+     GNITokenCrowdsale(crowdsale).reduceDoomsDay(6);
      handleVoteChange(fromProjectAddr);
   }
 
   function handleVoteChange (address  votedForProj) internal {
     projectLeaderTracker.trackProject(votedForProj);
-    GNITokenCrowdsale(owner).transferOnActivation();
+    Activation(activation).tryActivateProject();
     emit VoteChange(votedForProj, Project(votedForProj).totalVotes());
   }
 }

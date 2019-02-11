@@ -108,7 +108,7 @@ contract Crowdsale {
     /* _postValidatePurchase(_beneficiary, weiAmount); */
   }
 
-  function weiRaised_() public returns(uint256) {
+  function weiRaised_() public view returns(uint256) {
     return weiRaised;
   }
 

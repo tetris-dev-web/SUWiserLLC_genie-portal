@@ -65,13 +65,13 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(() => {
           if(network === 'ropsten') {
-            return deployer.deploy(SeedableVoting, Token.address, ProjectLeaderTracker.address);
+            return deployer.deploy(SeedableVoting, Token.address, ProjectLeaderTracker.address, Activation.address);
           }
-          return deployer.deploy(Voting, Token.address, ProjectLeaderTracker.address);
+          return deployer.deploy(Voting, Token.address, ProjectLeaderTracker.address, Activation.address);
         })
         .then(() => {
           const votingAddr = network === 'ropsten' ? SeedableVoting.address : Voting.address
-          return deployer.deploy(ProjectFactory, Activation.address, votingAddr, Dividends.address);
+          return deployer.deploy(ProjectFactory, Activation.address, votingAddr, ProjectLeaderTracker.address, Dividends.address);
         })
         .then(() => { // establish start time variable
             return new Promise((resolve, reject) => {
@@ -84,7 +84,7 @@ module.exports = function (deployer, network, accounts) {
         })
         .then((openingTime) => {
           const doomsDay = openingTime + 86400 * 240; // 240 days
-          const votingAddr = network === 'ropsten' ? SeedableVoting.address : Voting.address
+          // const votingAddr = network === 'ropsten' ? SeedableVoting.address : Voting.address
           if (network === 'ropsten') {
             return deployer.deploy(
                 SeedableCrowdsale,
@@ -92,13 +92,12 @@ module.exports = function (deployer, network, accounts) {
                 doomsDay,
                 rate,
                 developer,
-                Dividends.address,
                 Token.address,
                 ProjectFactory.address,
                 ProjectLeaderTracker.address,
                 Reimbursements.address,
-                votingAddr,
-                Activation.address
+                // votingAddr,
+                // Activation.address
             );
           }
             return deployer.deploy(
@@ -107,15 +106,15 @@ module.exports = function (deployer, network, accounts) {
                 doomsDay,
                 rate,
                 developer,
-                Dividends.address,
                 Token.address,
                 ProjectFactory.address,
                 ProjectLeaderTracker.address,
                 Reimbursements.address,
-                votingAddr,
-                Activation.address
+                // votingAddr,//only needed for access control
+                // Activation.address//only needed for access control
             );
         }) //organize around seeding, ownership designation and contract instanciation / contract references
+        //activation and voting will deploy after crowdsale
         .then(() => {
           return network === 'ropsten' ?  SeedableCrowdsale.at(SeedableCrowdsale.address) : GNITokenCrowdsale.at(GNITokenCrowdsale.address);
         })
@@ -139,9 +138,15 @@ module.exports = function (deployer, network, accounts) {
         .then(() => {
           return network === 'ropsten' ? SeedableVoting.at(SeedableVoting.address) : Voting.at(Voting.address);
         })
+        .then(() => {
+          votingInstance.setCrowdsale(crowdsaleInstance.address);
+        })
         .then(_votingInstance => {
           votingInstance = _votingInstance;
-          return votingInstance.transferOwnership(crowdsaleInstance.address);
+          return votingInstance.transferOwnership(projectFactoryInst.address);
+        })
+        .then(() => {
+          return crowdsaleInstance.transferOwnership(votingInstance.address);
         })
         .then(() => {
           return ProjectLeaderTracker.at(ProjectLeaderTracker.address);
@@ -151,20 +156,35 @@ module.exports = function (deployer, network, accounts) {
           return projectLeaderTrackerInst.transferOwnership(crowdsaleInstance.address);
         })
         .then(() => {
+          return projectLeaderTrackerInst.transferPrimary(activationInstance.address)
+        })
+        .then(() => {
+          return projectLeaderTrackerInst.transferTertiary(projectFactoryInst.address);
+        })
+        .then(() => {
           return Activation.at(Activation.address)
         })
         .then(_activationInstance => {
           activationInstance = _activationInstance;
-          return activationInstance.transferOwnership(crowdsaleInstance.address)
+          return activationInstance.setCrowdsale(crowdsaleInstance.address);
         })
         .then(() => {
-          return projectLeaderTrackerInst.transferPrimary(activationInstance.address)
+          return activationInstance.transferOwnership(votingInstance.address);
+        })
+        .then(() => {
+          return activationInstance.transferPrimary(projectFactoryInst.address);
+        })
+        .then(() => {
+          return crowdsaleInstance.transferPrimary(activationInstance.address);
         })
         .then(() => {
           return tokenInstance.transferOwnership(crowdsaleInstance.address);
         })
         .then(() => {
           return tokenInstance.transferPrimary(votingInstance.address);
+        })
+        .then(() => {
+          return tokenInstance.transferSecondary(activationInstance.address);
         })
         .then(() => {
           return Reimbursements.at(Reimbursements.address);

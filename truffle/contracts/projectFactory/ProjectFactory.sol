@@ -10,11 +10,13 @@ contract ProjectFactory is Ownable {
   using SafeMath for uint256;
   Activation public activation;
   Voting public voting;
+  ProjectLeaderTracker public projectLeaderTracker;
   address public dividendWallet;
 
-  constructor (Activation _activation, Voting _voting, address _dividendWallet) public {
+  constructor (Activation _activation, Voting _voting, ProjectLeaderTracker _projectLeaderTracker, address _dividendWallet) public {
     activation = _activation;
     voting = _voting;
+    projectLeaderTracker = _projectLeaderTracker;
     dividendWallet = _dividendWallet;
   }
 
@@ -57,6 +59,13 @@ contract ProjectFactory is Ownable {
 
     Project(projectAddr).transferOwnership(address(Voting(voting)));
     Project(projectAddr).transferPrimary(address(Activation(activation)));
+
+    ProjectLeaderTracker(projectLeaderTracker).handleProjectPitch();
+    Voting(voting).addProject(projectAddr, _voteForHash, _voteAgainstHash);
+
+    if (_capitalRequired == 0) {
+      activation.activateProject(projectAddr, _capitalRequired);
+    }
 
     emit ProjectPitch(projectAddr, totalProjectCount);
     return projectAddr;

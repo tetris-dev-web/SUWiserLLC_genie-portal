@@ -3,8 +3,9 @@ import './ERC20/MintableToken.sol';
 import '../dividends/Dividends.sol';
 import '../ContractStub.sol';
 import '../utility/Secondary.sol';
+import '../utility/Tertiary.sol';
 
-contract ActivatableToken is MintableToken, Secondary {
+contract ActivatableToken is MintableToken, Secondary, Tertiary {
   address  public dividendWallet;
   struct InactiveTokenCycle {
     mapping(address => bool) updated;
@@ -103,7 +104,7 @@ contract ActivatableToken is MintableToken, Secondary {
     return true;
   }
 
-  function increasePendingActivations(uint256 amount) external {//should only be callable by activation
+  function increasePendingActivations(uint256 amount) external onlyTertiary {//should only be callable by activation
     uint256 inactiveSupply = totalInactiveSupply().sub(inactiveBalanceOf(owner)).sub(totalPendingActivations);
     uint256 newActivationPoints = amount.mul(activationMultiplier).div(inactiveSupply);
     totalActivationPoints = totalActivationPoints.add(newActivationPoints);

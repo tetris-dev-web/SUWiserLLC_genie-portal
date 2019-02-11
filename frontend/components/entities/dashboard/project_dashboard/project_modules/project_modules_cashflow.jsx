@@ -117,6 +117,7 @@ class CashFlowGraph extends React.Component {
   }
 
   defineScales() { //make this a method
+    console.log('cashflow modules props', this.props)
       const getGraphParameters = () => {
         const numQuarters = Object.keys(this.props.accum_projected_cashflow).length
         const minExpectedValueAccuAct = d3.min(Object.values(this.props.accum_actual_cashflow))
@@ -136,7 +137,7 @@ class CashFlowGraph extends React.Component {
       const {numQuarters, minExpectedValueAccuProj, maxValue, minValue} = getGraphParameters()
 
       const defineScale = (inputsMin, inputsMax, outputsMin, outputsMax) => {
-        console.log("inputs: ", inputsMin, inputsMax, outputsMin, outputsMax)
+        // console.log("inputs: ", inputsMin, inputsMax, outputsMin, outputsMax)
         return d3.scaleLinear().domain([inputsMin, inputsMax]).range([outputsMin, outputsMax]);
       }
 

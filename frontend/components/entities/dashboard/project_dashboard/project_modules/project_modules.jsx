@@ -6,6 +6,7 @@ import ProjectThermo from './project_modules_thermo';
 import CashFlowGraph from './project_modules_cashflow';
 import {Title, IframeFor3dModel, CloseButton, SummaryAndPlan } from './project_modules_subcomponents';
 import { editProject } from '../../../../../actions/project_actions'
+import { calculateCashflowData } from '../../../../../util/project_api_util';
 
 
 class ProjectModules extends React.Component {
@@ -40,6 +41,7 @@ class ProjectModules extends React.Component {
 
       const { projectClicked, isInvestor, isModalOpen, closeModalOnClick, doIHaveData, closeModal } = this.props
       const {model_link,showText} = this.state
+      const { actual_cashflow, accum_actual_cashflow, accum_projected_cashflow, projected_cashflow } = calculateCashflowData(projectClicked.cashFlow);
       const noDataComponent = <h1 className="nodata-text">No data available</h1>
       console.log(projectClicked)
       return (
@@ -60,13 +62,14 @@ class ProjectModules extends React.Component {
 
                     <IframeFor3dModel projectClicked={projectClicked}
                                       model_link ={model_link}/>
-                    <ProjectThermo    project={projectClicked}/>
+                    <ProjectThermo    project={projectClicked}
+                                      capitalBeingRaised={this.props.capitalBeingRaised}/>
 
                     <CashFlowGraph
-                                      actual_cashflow = {projectClicked.actual_cashflow}
-                                      accum_actual_cashflow = {projectClicked.accum_actual_cashflow}
-                                      projected_cashflow = {projectClicked.projected_cashflow}
-                                      accum_projected_cashflow ={projectClicked.accum_projected_cashflow}
+                                      actual_cashflow = {actual_cashflow}
+                                      accum_actual_cashflow = {accum_actual_cashflow}
+                                      projected_cashflow = {projected_cashflow}
+                                      accum_projected_cashflow ={accum_projected_cashflow}
                                       height={200}
                                       width={300}/>
 
@@ -74,7 +77,7 @@ class ProjectModules extends React.Component {
                                       handleKeyPress = {null}
                                       isInvestor = {isInvestor}
                                       summary = {projectClicked.summary}
-                                      bus_plan_link = {projectClicked.bus_plan_link}
+                                      bus_plan_link = {projectClicked.busLink}
                                       editProject={editProject}
                                       id={projectClicked.id}
                                       closeModal={closeModal} />

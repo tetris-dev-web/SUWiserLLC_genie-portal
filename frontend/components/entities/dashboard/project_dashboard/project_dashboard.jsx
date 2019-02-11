@@ -31,7 +31,7 @@ class ProjectDashboard extends React.Component {
 
   componentDidMount() {
     if (this.props.web3){
-      this.props.fetchProjects(this.props.projectFactoryInstance,this.props.projectContract)
+      this.props.fetchProjectsAndCapitalRaised(this.props.projectFactoryInstance,this.props.projectContract,this.props.crowdsaleInstance)
       this.watchProjectPitch();
     }
   }
@@ -83,7 +83,8 @@ class ProjectDashboard extends React.Component {
         currentGraph = <ProjectGraph
           currentUser={this.props.currentUser}
           fetchProjects={this.props.fetchProjects}
-          data={this.props.projects} />;
+          data={this.props.projects}
+          capitalBeingRaised={this.props.capitalBeingRaised}/>;
         break;
       default:
         break;

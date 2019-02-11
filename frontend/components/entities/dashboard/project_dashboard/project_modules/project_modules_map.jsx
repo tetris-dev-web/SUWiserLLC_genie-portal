@@ -8,8 +8,8 @@ class ProjectMap extends React.Component {
     const project = this.props.projectClicked;
     this.state = {
       project: this.props.projectClicked,
-      lat: parseFloat(project.latitude),
-      lng: parseFloat(project.longitude),
+      lat: parseFloat(project.lat),
+      lng: parseFloat(project.lng),
       zoom: 14,
     };
   }

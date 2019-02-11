@@ -7,12 +7,14 @@ import '../project/Project.sol';
 import '../token/ERC20/Token.sol';
 import '../projectLeader/ProjectLeaderTracker.sol';
 
+//owner will be Voting
+//secondary will be project factory
 
-
-contract Activation is Ownable {
+contract Activation is Ownable, Secondary {
   using SafeMath for uint256;
   Token public token;
   ProjectLeaderTracker public projectLeaderTracker;
+  GNITokenCrowdsale public crowdsale;
 
   constructor
       (
@@ -30,30 +32,38 @@ contract Activation is Ownable {
     uint256 time
   );
 
-   function tryActivateProject (address tentativeLeaderAddr, bool tentativeLeaderConfirmed, uint256 weiRaised) external onlyOwner returns ( bool , uint256) { //we need more tests for added functionality
+  function setCrowdsale (GNITokenCrowdsale _crowdsale) public onlyOwner {
+    crowdsale = _crowdsale;
+  }
+
+   function tryActivateProject () external onlyOwner returns ( bool , uint256) { //we need more tests for added functionality
+     (
+       address  tentativeLeaderAddr,
+       bool tentativeLeaderConfirmed
+     ) = projectLeaderTracker.tentativeLeader();
+
      Project project = Project(tentativeLeaderAddr);
      uint256 capitalRequired = project.capitalRequired();
      if (
        tentativeLeaderConfirmed &&
-       capitalRequired <= weiRaised &&
+       capitalRequired <= crowdsale.weiRaised_() &&
        project.open()
        ) {
        //set the number of project votes to 0.
-       _activateProject(tentativeLeaderAddr);
-       return (true, capitalRequired);
+       _activateProject(tentativeLeaderAddr, capitalRequired);
       }
-      return (false, 0);
     }
 
-    function activateProject (address projectAddress) external onlyOwner {
-      _activateProject (projectAddress);
+    function activateProject (address projectAddress, uint256 capitalRequired) external onlyPrimary {
+      _activateProject (projectAddress, capitalRequired);
     }
 
-    function _activateProject (address projectAddress) internal {
+    function _activateProject (address projectAddress, uint256 capitalRequired) internal {
       Project project = Project(projectAddress);
       uint256 time = project.activate();
       projectLeaderTracker.handleProjectActivation();
       Token(token).increasePendingActivations(project.developerTokens().add(project.investorTokens()));
+      crowdsale.transferCapitalToDeveloper(capitalRequired);
       emit ProjectActivation(projectAddress, project.capitalRequired(), time);
     }
 
