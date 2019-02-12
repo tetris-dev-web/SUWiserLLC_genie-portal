@@ -28,7 +28,7 @@ class VotesGraph extends React.Component {
   }
 
   createScales(){
-    const {capitalBeingRaised, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax} = this.props;
+    const { capitalBeingRaised, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax, allProjectsValuationMinMax } = this.props;
 
     return {
       SVGHeightScale: d3.scaleLinear()
@@ -41,7 +41,7 @@ class VotesGraph extends React.Component {
         .domain([startTime, endTime])
         .range([0, this.SVGWidth]),
       circleScale: d3.scaleLinear()
-        .domain(pitchedProjectsValuationMinMax)
+        .domain(allProjectsValuationMinMax)
         .range([5, 10])
     };
   }

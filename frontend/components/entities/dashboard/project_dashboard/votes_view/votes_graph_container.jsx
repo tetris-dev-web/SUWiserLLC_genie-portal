@@ -85,6 +85,7 @@ const mapStateToProps = state => {
     pitchedProjects,
     deployedProjects,
     pitchedProjectsValuationMinMax: getArrayOfObjectsMinMax(pitchedProjects, "valuation"),
+    allProjectsValuationMinMax: getArrayOfObjectsMinMax(Object.values(state.entities.projects), "valuation"),
     lineData,
     capitalTotal,
     capitalBeingRaised: capitalTotal - capitalDeployed,
