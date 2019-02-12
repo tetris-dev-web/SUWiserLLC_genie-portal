@@ -13,26 +13,29 @@ class VotesViewCapitalRaised extends React.Component {
 
     const Lines = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedLine key={idx}
-        xScale={SVGTimeXScale}
-        yScale={SVGYScale}
-        project={project}
-        opacity={selectedProject ? "0.2" : "1"}/>
+        x1="0" y1={SVGYScale(project.capital)}
+        x2={SVGTimeXScale(project.activationTime)} y2={SVGYScale(project.capital)}
+        opacity={selectedProject ? "0.2" : "1"} />
     ));
 
     const Circles = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedCircle key={idx}
-        xScale={SVGTimeXScale}
-        yScale={SVGYScale}
-        circleScale={circleScale}
+        fill="#bdc4c9"
+        cx={SVGTimeXScale(project.activationTime)}
+        cy={SVGYScale(project.capital)}
+        r={circleScale(project.valuation)}
+        x={SVGTimeXScale(project.time)}
+        y={SVGYScale(project.capital) + circleScale(project.valuation) + 20}
         project={project}
-        opacity={selectedProject ? "0.2" : "1"}/>
+        opacity={selectedProject ? "0.2" : "1"} />
     ));
 
+    const lineScale = d3.line()
+      .x(d => SVGTimeXScale(d.date))
+      .y(d => SVGYScale(d.capital));
     const Path = <VotesViewCapitalRaisedPath
-      xScale={SVGTimeXScale}
-      yScale={SVGYScale}
-      opacity={selectedProject ? "0.2" : "1"}
-      lineData={lineData} />;
+      d={lineScale(lineData)}
+      opacity={selectedProject ? "0.2" : "1"} />;
 
     const heightOfCapitalBeingRaisedRect = SVGHeightScale(capitalBeingRaised);
     const yOfCapitalBeingRaisedRect = SVGYScale(capitalTotal);

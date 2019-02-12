@@ -260,7 +260,6 @@ class ProjectGraph extends React.Component {
     drag_handler(citySquares);
   }
 
-
   simulation (nodesData,continentData,cityData, rscale) {
     const allData = nodesData.concat(continentData).concat(cityData);
     return d3.forceSimulation()

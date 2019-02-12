@@ -75,9 +75,8 @@ class ProjectDashboard extends React.Component {
       break;
       case 1:
         currentGraph = <VotesGraphContainer
-                          wait={500}
-                          projects={this.props.projects}
-                          />;
+          wait={500}
+          projects={this.props.projects} />;
         break;
       case 2:
         currentGraph = <ProjectGraph
