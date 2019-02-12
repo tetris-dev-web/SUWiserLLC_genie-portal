@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const token = TruffleContract(Token);
     token.setProvider(web3Provider);
-    console.log("version", web3Provider.networkVersion)
+    // console.log("version", web3Provider.networkVersion)
     // console.log(provider._proivder.networkVersion)
     const crowdsale = TruffleContract(SeedableCrowdsale);
     crowdsale.setProvider(web3Provider);
@@ -51,20 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
     let projectFactoryInstance;
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
-      console.log("tokenInst: ", token)
+      // console.log("tokenInst: ", token)
       token.deployed().then((_tokenInstance) => {
-        console.log("tokenInst: ", _tokenInstance)
+        // console.log("tokenInst: ", _tokenInstance)
         tokenInstance = _tokenInstance;
       })
       .then(() => {
         return voting.deployed().then((_votingInstance) => {
           votingInstance = _votingInstance;
-        })
+        });
       })
       .then(() => {
         return projectFactory.deployed().then((_projectFactoryInstance)=> {
           projectFactoryInstance = _projectFactoryInstance;
-        })
+        });
       })
       .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {

@@ -31,15 +31,18 @@ class VotesGraph extends React.Component {
     const {capitalBeingRaised, capitalTotal, startTime, endTime, deployedProjectsValuationMinMax} = this.props;
     
     return {
-      SVGHeightScale : d3.scaleLinear()
+      SVGHeightScale: d3.scaleLinear()
         .range([0, this.SVGHeight])
         .domain([0, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
-      SVGYScale : d3.scaleLinear()
+      SVGYScale: d3.scaleLinear()
         .range([this.SVGHeight, 0])
         .domain([0, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
       SVGTimeXScale: d3.scaleLinear()
         .domain([startTime, endTime])
         .range([0, this.SVGWidth]),
+      circleScale: d3.scaleLinear()
+        .domain(deployedProjectsValuationMinMax)
+        .range([5, 10])
     };
   }
 
@@ -48,7 +51,7 @@ class VotesGraph extends React.Component {
   }
 
   renderGraph() {
-    const { SVGHeightScale, SVGYScale, SVGTimeXScale } = this.createScales();
+    const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
 
     return (
@@ -75,6 +78,7 @@ class VotesGraph extends React.Component {
               SVGYScale={SVGYScale}
               SVGHeightScale={SVGHeightScale}
               SVGWidth={this.SVGWidth}
+              circleScale={circleScale}
               voteShiftTool={this.voteShiftTool}
               toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
         </svg>

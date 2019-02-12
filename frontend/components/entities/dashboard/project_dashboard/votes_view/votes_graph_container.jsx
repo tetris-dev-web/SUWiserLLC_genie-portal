@@ -100,21 +100,7 @@ const mapStateToProps = state => {
     startTime,
     endTime
   } = capitalPropsData;
-console.log({
-  crowdsaleInstance: state.network.crowdsaleInstance,
-  projectContract: state.network.projectContract,
-  web3: state.network.web3,
-  pitchedProjects,
-  deployedProjects,
-  maxValuation,
-  deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(deployedProjects),
-  lineData,
-  capitalTotal,
-  capitalBeingRaised: capitalTotal - capitalDeployed,
-  startTime,
-  endTime,
-  scalingConstant
-})
+
   return {
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract,
@@ -129,14 +115,14 @@ console.log({
     startTime,
     endTime,
     scalingConstant
-  }
-}
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchTokenPurchaseLogs: (crowdsale) => dispatch(fetchTokenPurchaseLogs(crowdsale))
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(VotesGraph)
 

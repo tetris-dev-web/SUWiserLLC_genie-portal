@@ -9,7 +9,7 @@ import {
 import Navbar from './entities/navbar/navbar_container';
 import Landing from './entities/landing/landing';
 import Dashboard from './entities/dashboard/dashboard';
-import DeveloperInfo from './entities/developerInfo/DeveloperInfo';
+import DeveloperInfo from './entities/developerInfo/developerInfo';
 // import Footer from './entities/footer/footer';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';

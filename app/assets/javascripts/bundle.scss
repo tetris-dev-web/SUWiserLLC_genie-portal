@@ -421,7 +421,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 40px; }
+  margin-bottom: 60px; }
   .navbar-container .navbar-left {
     font-size: 18.5px;
     display: flex;
@@ -532,7 +532,7 @@
   width: 100%; }
   .toggle-view-options-container.token {
     position: relative;
-    top: -110px;
+    top: -130px;
     transition: cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
   .toggle-view-options-container .toggle-view-options-border-layer {
     height: 0; }
@@ -726,7 +726,7 @@
   pointer-events: all; }
 
 .token-dashboard {
-  min-height: calc(50vh - 110px); }
+  min-height: calc(50vh - 130px); }
 
 
 
@@ -877,83 +877,52 @@
   border: 5px solid white;
   margin-top: 20px; }
 
-.dev-container {
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
+.dev-info-container {
   width: 100px;
-  border-radius: 0 10px 10px 0px;
   position: absolute;
   left: 0;
-  top: 70px;
-  z-index: 10; }
-  .dev-container:hover {
-    cursor: pointer; }
-  .dev-container.active-dropdown {
-    background-color: rgba(155, 146, 135, 0.3);
-    height: 190px;
+  top: 85px;
+  z-index: 5; }
+  .dev-info-container .button-text {
+    cursor: pointer;
+    text-align: center;
+    background-color: #9b9287;
+    padding: 10px 0 10px 0;
+    color: white;
+    border-radius: 0 10px 10px 0px; }
+    .dev-info-container .button-text.selected {
+      background-color: black; }
+  .dev-info-container .dev-info-list {
     position: absolute;
+    z-index: -1;
+    top: 0;
     left: 0;
-    top: 70px;
-    z-index: 10; }
-  .dev-container > ul {
-    position: relative; }
-    .dev-container > ul li:not(:first-child) {
+    height: 0;
+    width: 100%;
+    margin: 0;
+    transition: height .4s;
+    border-radius: 0 10px 10px 0px; }
+    .dev-info-container .dev-info-list li {
       position: absolute;
       width: 100%;
       z-index: -1;
       top: 0;
       left: 0;
-      transition-property: transform; }
-    .dev-container > ul li:first-child div.active-dropdown {
-      border: none;
-      background-color: transparent; }
-    .dev-container > ul li.active-dropdown.strategy {
+      transition-duration: .4s; }
+  .dev-info-container.active-dropdown .dev-dropdown-button {
+    background-color: transparent; }
+  .dev-info-container.active-dropdown .dev-info-list {
+    background-color: rgba(155, 146, 135, 0.3);
+    height: 190px; }
+    .dev-info-container.active-dropdown .dev-info-list .strategy {
       transform: translateY(60px);
-      transition-duration: .4s;
       z-index: 1; }
-    .dev-container > ul li div.modal-active {
-      z-index: 11;
-      background-color: black; }
-    .dev-container > ul li.active-dropdown.bylaws {
+    .dev-info-container.active-dropdown .dev-info-list .bylaws {
       transform: translateY(105px);
-      transition-duration: .4s;
       z-index: 1; }
-    .dev-container > ul li.active-dropdown.about {
+    .dev-info-container.active-dropdown .dev-info-list .about {
       transform: translateY(150px);
-      transition-duration: .4s;
       z-index: 1; }
-    .dev-container > ul li > div {
-      text-align: center;
-      background-color: #9b9287;
-      padding: 10px 0 10px 0;
-      color: white;
-      border-radius: 0 15px 15px 0; }
-
-.current-voting-cycle-container .current-cycle-capital {
-  background-color: #d3bcaf; }
-
-.current-voting-cycle-container .pitched-project {
-  display: flex;
-  flex-direction: column; }
-  .current-voting-cycle-container .pitched-project .project-sub-bar-div {
-    display: flex;
-    flex-direction: column;
-    margin-left: 1%;
-    margin-right: 1%; }
-    .current-voting-cycle-container .pitched-project .project-sub-bar-div .project-sub-bar-svg {
-      border: 2px solid white;
-      border-bottom: #aa7a60;
-      border-top: none;
-      height: 20%; }
-
-.ReactModal__Content.ReactModal__Content--after-open.modal-container.strategy-container {
-  overflow: auto; }
-
-.doomsday-style {
-  display: flex;
-  flex-direction: column;
-  align-items: center; }
 
 #doomsday-container {
   display: flex;
