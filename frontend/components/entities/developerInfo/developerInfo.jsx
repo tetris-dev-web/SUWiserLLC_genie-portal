@@ -1,7 +1,7 @@
 import React from 'react';
 import './developerInfo.scss';
-import BylawsModal from './bylaws_modal';
-import StrategyModal from './strategy_modal';
+import BylawsModal from './bylaws_modal/bylaws_modal';
+import StrategyModal from './strategy_modal/strategy_modal';
 
 class DeveloperInfo extends React.Component {
   constructor(props) {

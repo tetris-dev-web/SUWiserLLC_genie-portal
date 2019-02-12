@@ -117,7 +117,6 @@ export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPu
   );
 
   events.get((err, purchases) => {
-    console.log("PURCHASES", purchases)
      const capitalHistory = purchases.reduce((capitalHistory, purchase) => {
       const time = purchase.args.time.toNumber();
       const value = purchase.args.value.toNumber();
@@ -129,12 +128,11 @@ export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPu
       }
 
       return capitalHistory;
-    }, {})
+    }, {});
 
     dispatch(receiveTokenPurchases(capitalHistory));
-  })
-}
-
+  });
+};
 
 export const pitchProject = async (crowdsale, data, account) => {
   let {
@@ -151,10 +149,7 @@ export const pitchProject = async (crowdsale, data, account) => {
 
   const voteForHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote for ${title}`}])
   const voteAgainstHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote against ${title}`}])
-  // console.log("pitching!: ",title,voteAgainstHash,voteForHash)
-  // console.log("account", account)
-  console.log("crowdsale", crowdsale)
-  console.log("crowdsale address", crowdsale.address)
+
   return await crowdsale.pitchProject(
     title,
     city,
@@ -172,5 +167,5 @@ export const pitchProject = async (crowdsale, data, account) => {
 };
 
 export const buyTokens = async (crowdsale, account, weiAmount) => {
-  await crowdsale.buyTokens({from: account, value: 10})
+  await crowdsale.buyTokens({from: account, value: 10});
 };

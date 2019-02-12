@@ -28,20 +28,20 @@ class VotesGraph extends React.Component {
   }
 
   createScales(){
-    const {capitalBeingRaised, capitalTotal, startTime, endTime, deployedProjectsValuationMinMax} = this.props;
-    
+    const {capitalBeingRaised, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax} = this.props;
+
     return {
       SVGHeightScale: d3.scaleLinear()
         .range([0, this.SVGHeight])
-        .domain([0, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
+        .domain([0, capitalTotal + (pitchedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
       SVGYScale: d3.scaleLinear()
         .range([this.SVGHeight, 0])
-        .domain([0, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
+        .domain([0, capitalTotal + (pitchedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
       SVGTimeXScale: d3.scaleLinear()
         .domain([startTime, endTime])
         .range([0, this.SVGWidth]),
       circleScale: d3.scaleLinear()
-        .domain(deployedProjectsValuationMinMax)
+        .domain(pitchedProjectsValuationMinMax)
         .range([5, 10])
     };
   }
@@ -71,7 +71,8 @@ class VotesGraph extends React.Component {
               {...this.state}
               SVGYScale={SVGYScale}
               SVGHeightScale={SVGHeightScale}
-              SVGTimeXScale={SVGTimeXScale} />
+              SVGTimeXScale={SVGTimeXScale}
+              circleScale={circleScale} />
             <VotesViewPitchedProjects
               {...this.props}
               {...this.state}

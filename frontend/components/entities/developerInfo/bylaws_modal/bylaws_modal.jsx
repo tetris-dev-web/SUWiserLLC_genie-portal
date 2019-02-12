@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
-import ModalStyle from './modal_style';
+import ModalStyle from '../modal_style';
+import './bylaws_modal.scss';
 
 class BylawsModal extends React.Component {
 
@@ -36,7 +37,8 @@ class BylawsModal extends React.Component {
           style={ModalStyle}
           contentLabel="Bylaws Modal"
           className="modal-container">
-          <div ref={node => this.props.setRef(node)}>
+          <div className="modal-layer"
+            ref={node => this.props.setRef(node)}>
             <div className="black-close-modal-button close-modal-button"
               onClick={this.closeModal}>&times;</div>
             <div className="ft-modal-header-cont">

@@ -41,6 +41,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	render() {
 		const { selectedProject, project, circleScale } = this.props;
 		const { fill, marginWidth, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
+		// debugger
 		return(
 			<g className="votes-view-project-group"
 				onClick={this.handleClick}
