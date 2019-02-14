@@ -2,27 +2,29 @@ pragma solidity >=0.4.22 <0.6.0;
 
 import '../utility/SafeMath.sol';
 import '../utility/Ownable.sol';
-import '../utility/Secondary.sol';
+import '../utility/VotingLocked.sol';
+import '../utility/ProjectFactoryLocked.sol';
 import '../project/Project.sol';
-import '../token/ERC20/Token.sol';
+import '../token/InactiveToken.sol';
 import '../projectLeader/ProjectLeaderTracker.sol';
+import './GNITokenCrowdsale.sol';
 
 //owner will be Voting
 //secondary will be project factory
 
-contract Activation is Ownable, Secondary {
+contract Activation is Ownable, ProjectFactoryLocked {
   using SafeMath for uint256;
-  Token public token;
+  InactiveToken public inactiveToken;
   ProjectLeaderTracker public projectLeaderTracker;
   GNITokenCrowdsale public crowdsale;
 
   constructor
       (
-        Token _token,
+        InactiveToken _inactiveToken,
         ProjectLeaderTracker _projectLeaderTracker
       )
       public {
-        token = Token(_token);
+        inactiveToken = InactiveToken(_inactiveToken);
         projectLeaderTracker = ProjectLeaderTracker(_projectLeaderTracker);
       }
 
@@ -36,7 +38,7 @@ contract Activation is Ownable, Secondary {
     crowdsale = _crowdsale;
   }
 
-   function tryActivateProject () external onlyOwner returns ( bool , uint256) { //we need more tests for added functionality
+   function tryActivateProject () external returns ( bool , uint256) { //we need more tests for added functionality
      (
        address  tentativeLeaderAddr,
        bool tentativeLeaderConfirmed
@@ -54,7 +56,7 @@ contract Activation is Ownable, Secondary {
       }
     }
 
-    function activateProject (address projectAddress, uint256 capitalRequired) external onlyPrimary {
+    function activateProject (address projectAddress, uint256 capitalRequired) external onlyProjectFactory {
       _activateProject (projectAddress, capitalRequired);
     }
 
@@ -62,7 +64,7 @@ contract Activation is Ownable, Secondary {
       Project project = Project(projectAddress);
       uint256 time = project.activate();
       projectLeaderTracker.handleProjectActivation();
-      Token(token).increasePendingActivations(project.developerTokens().add(project.investorTokens()));
+      InactiveToken(inactiveToken).increasePendingActivations(project.developerTokens().add(project.investorTokens()));
       crowdsale.transferCapitalToDeveloper(capitalRequired);
       emit ProjectActivation(projectAddress, project.capitalRequired(), time);
     }

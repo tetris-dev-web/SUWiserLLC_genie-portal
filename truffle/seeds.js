@@ -10,9 +10,6 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
   const account1 = _account1; //add ether to these to differentiate
   const account2 = _account2;
 
-  console.log(_account1)
-  console.log(_account2)
-
 
   let projAddr1;
   let projAddr2;
@@ -31,11 +28,13 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
           id
       ) => {
       const description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-      const busLink = 'awsomeBusinessPlanLinkYOOOOOOOOOOO.com/imAReallyAwesomeBusinessPlanYo';
+      const busLink = 'https://drive.google.com/open?id=1zxY4cZcdaAMpinQpdZmTb8Zy2i9dh2iZ';
+      const model_id = "7syizSLPN60";
       const projectInfo = JSON.stringify({
         title,
         description,
         busLink,
+        model_id,
         lat,
         lng
       })
@@ -55,20 +54,18 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
       //   to: crowdsale.address,
       //   data
       // });
-      await crowdsale.seedProject(
+      await projectFactory.createProject(
         projectInfo,
-        capitalRequired,
         valuation,
+        capitalRequired,
         cashflow,
         {
           from: developer
         }
       );
-      console.log("project created")
       return await projectFactory.projectById.call(id);
     }
 
-    console.log("about to create projects")
     projAddr1 = await createProject(
       'HamInn',
       0,
@@ -77,9 +74,6 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
       '74.0060',
       1
      );
-    console.log("p1", projAddr1)
-    let inactiveBalance = await token.inactiveBalanceOf.call(developer);
-    console.log("inactiveBalance", inactiveBalance.toNumber());
     // console.log(Project.at(projAddr1))
     projAddr2 = await createProject(
       'Matt\'s Mansion',
@@ -89,9 +83,6 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
       '74.0060',
       2
     );
-    console.log("p2", projAddr2)
-    inactiveBalance = await token.inactiveBalanceOf.call(developer);
-    console.log("inactiveBalance", inactiveBalance.toNumber());
     projAddr3 = await createProject(
       'Steven\'s Skyscraper',
       400,
@@ -100,9 +91,6 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
       '12.4964',
       3
     );
-    console.log("p3", projAddr3)
-    inactiveBalance = await token.inactiveBalanceOf.call(developer);
-    console.log("inactiveBalance", inactiveBalance.toNumber());
     projAddr4 = await createProject(
       'Liam\'s Lounge',
       600,
@@ -111,9 +99,6 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
       '121.4737',
       4
     );
-    console.log("p4", projAddr4)
-    inactiveBalance = await token.inactiveBalanceOf.call(developer);
-    console.log("inactiveBalance", inactiveBalance.toNumber());
     projAddr5 = await createProject(
       'Ryan\'s Rooftop',
       500,
@@ -122,9 +107,6 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
       '0.1870',
       5
     );
-    console.log("p5", projAddr5)
-    inactiveBalance = await token.inactiveBalanceOf.call(developer);
-    console.log("inactiveBalance", inactiveBalance.toNumber());
     projAddr6 = await createProject(
       'Kyle\'s Kale Farm',
       300,
@@ -133,34 +115,13 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
       '74.0060',
       6
     );
-    console.log("p6", projAddr6)
-    inactiveBalance = await token.inactiveBalanceOf.call(developer);
-    console.log("inactiveBalance", inactiveBalance.toNumber());
   }
 
   const createTokenPurchases = async () => {
     const createTokenPurchase = async (address, weiAmount) => {
-      console.log("inner purchase")
-      console.log("address", address)
-      console.log("weiAmount", weiAmount)
       await crowdsale.buyTokens({from: address, value: weiAmount});
     }
 
-    console.log("outer purchase")
-
-    let totalInactiveSupply = await token.totalInactiveSupply.call();
-    console.log("totalInactiveSupply", totalInactiveSupply.toNumber());
-    let inactiveBalance = await token.inactiveBalanceOf.call(developer);
-    console.log("inactiveBalance", inactiveBalance.toNumber());
-    let pendingActivations = await token.pendingActivations.call(developer);
-    console.log("pendingActivations", pendingActivations.toNumber());
-    await createTokenPurchase(developer, 100);
-    totalInactiveSupply = await token.totalInactiveSupply.call();
-    console.log("totalInactiveSupply", totalInactiveSupply.toNumber());
-    inactiveBalance = await token.inactiveBalanceOf.call(developer);
-    console.log("inactiveBalance", inactiveBalance.toNumber());
-    pendingActivations = await token.pendingActivations.call(developer);
-    console.log("pendingActivations", pendingActivations.toNumber());
     await createTokenPurchase(developer, 200);
     await createTokenPurchase(developer, 100);
     await createTokenPurchase(developer, 100);
@@ -173,14 +134,8 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
 
   const createVotes = async () => {
     const castVote = async (projectAddress, voteAmount) => {
-      console.log("inner vote")
-      console.log("projectAddress: ", projectAddress)
-      console.log("voterAddress: ", voterAddress)
-      console.log("voteAmount: ", voteAmount)
       await voting.voteForProject(projectAddress, voteAmount, {from: developer});
     }
-
-    console.log("outer vote")
     // await castVote(projAddr1, developer, 30);//4
 
     await castVote(projAddr2, 50);//2

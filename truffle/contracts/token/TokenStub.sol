@@ -1,8 +1,8 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './ERC20/Token.sol';
-import '../ContractStub.sol';
+/* import './ERC20/Token.sol';
+import '../ContractStub.sol'; */
 
-contract TokenStub is Token, ContractStub {
+/* contract TokenStub is Token, ContractStub {
   address mockInvestorA;
   address mockInvestorB;
   address mockInvestorC;
@@ -126,4 +126,4 @@ contract TokenStub is Token, ContractStub {
 
     methodState.correctCallOrder = method['activatePending'].called == true;
   }
-}
+} */

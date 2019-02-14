@@ -1,9 +1,9 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import './ERC20/Token.sol';
-import '../ContractStub.sol';
+/* import './ERC20/Token.sol';
+import '../ContractStub.sol'; */
 
-contract TokenMock is Token, ContractStub {
+/* contract TokenMock is Token, ContractStub {
   function setMockTotalActivationPonts (uint256 newTokens, uint256 inactiveSupply) public {
     totalActivationPoints = newTokens.mul(activationMultiplier).div(inactiveSupply);
   }
@@ -71,4 +71,4 @@ contract TokenMock is Token, ContractStub {
   function getMockCycleUpdateStatus (address account) public returns (bool) {
     return inactiveTokenCycle[currentInactiveTokenCycle].updated[account];
   }
-}
+} */

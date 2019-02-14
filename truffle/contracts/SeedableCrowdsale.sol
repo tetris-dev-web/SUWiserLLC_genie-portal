@@ -1,6 +1,6 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './crowdsale/GNITokenCrowdsale.sol';
-import './token/ERC20/Token.sol';
+import './token/InactiveToken.sol';
 import './projectLeader/ProjectLeaderTracker.sol';
 import './reimbursements/Reimbursements.sol';
 import './voting/Voting.sol';
@@ -12,17 +12,14 @@ contract SeedableCrowdsale is GNITokenCrowdsale {
       uint256 _doomsDay,
       uint256 _rate,
       address  _developer,
-      Token _token,
-      ProjectFactory _projectFactory,
+      InactiveToken _token,
       ProjectLeaderTracker _projectLeaderTracker,
       address  _reimbursements
-      /* Voting _voting,
-      Activation _activation */
     )
     public
-    GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _projectFactory, _projectLeaderTracker, _reimbursements) {}
+    GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _projectLeaderTracker, _reimbursements) {}
 
-  function seedProject (
+  /* function seedProject (
     string memory _projectInfo,
     uint256 _capitalRequired,
     uint256 _valuation,
@@ -39,5 +36,13 @@ contract SeedableCrowdsale is GNITokenCrowdsale {
           _valuation,
           _cashflow
         );
+  } */
+
+  function _extendDoomsDay (uint256 _days) internal {
+    uint256 newDoomsDay = now.add(_days.mul(1728000));
+    if (newDoomsDay > doomsDay) {
+      doomsDay = newDoomsDay;
+      canReOpen = false;
+    }
   }
 }

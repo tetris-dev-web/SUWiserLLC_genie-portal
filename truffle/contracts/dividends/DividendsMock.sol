@@ -1,16 +1,13 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './Dividends.sol';
-import '../token/ERC20/Token.sol';
+import '../token/ActiveToken.sol';
 
 contract DividendsMock is Dividends {
 
-  constructor (Token token_, address  developer_)
+  constructor (ActiveToken token_)
   public
-  Dividends(token_, developer_) {}
+  Dividends(token_) {}
 
-  function init (address  dev) public {
-    developer = dev;
-  }
 
   function lastDividendPointsOf(address account) public view returns(uint256) {
     return lastDividendPoints[account];

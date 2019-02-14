@@ -2,12 +2,12 @@ pragma solidity >=0.4.22 <0.6.0;
 import '../reimbursements/Reimbursements.sol';
 import '../utility/SafeMath.sol';
 import '../ContractStub.sol';
-import '../token/ERC20/Token.sol';
+import '../token/InactiveToken.sol';
 
 contract ReimbursementsStub is Reimbursements, ContractStub {
   using SafeMath for uint256;
 
-  constructor (Token _token) public Reimbursements(_token) payable {}
+  constructor (InactiveToken _token) public Reimbursements(_token) payable {}
 
   modifier onlyOwner {
     _;

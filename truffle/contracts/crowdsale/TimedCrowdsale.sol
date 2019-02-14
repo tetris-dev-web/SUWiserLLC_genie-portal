@@ -27,7 +27,7 @@ contract TimedCrowdsale is Crowdsale {
     _;
   }
 
-  modifier canExtendDoomsDay {
+  modifier canModifyDoomsDay {
     /* uint timestamp = block.timestamp;
     uint time1 = openingTime;
     uint time2 = doomsDay; */

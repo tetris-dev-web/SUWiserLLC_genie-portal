@@ -2,20 +2,20 @@ pragma solidity >=0.4.22 <0.6.0;
 import '../utility/Ownable.sol';
 import '../project/Project.sol';
 import '../crowdsale/GNITokenCrowdsale.sol';
-import '../token/ERC20/Token.sol';
+import '../token/VotingToken.sol';
 import '../projectLeader/ProjectLeaderTracker.sol';
 import '../crowdsale/Activation.sol';
 import '../ECRecovery.sol';
 
 contract Voting is Ownable {
   /* using ECRecovery for bytes32; */
-  Token public token;
+  VotingToken public votingToken;
   ProjectLeaderTracker public projectLeaderTracker;
   Activation public activation;
   GNITokenCrowdsale public crowdsale;
 
-  constructor (Token _token, ProjectLeaderTracker _projectLeaderTracker, Activation _activation) public {
-    token = _token;
+  constructor (VotingToken _votingToken, ProjectLeaderTracker _projectLeaderTracker, Activation _activation) public {
+    votingToken = _votingToken;
     projectLeaderTracker = _projectLeaderTracker;
     activation = _activation;
   }
@@ -45,20 +45,15 @@ contract Voting is Ownable {
     _voteForProject(_project, _voter, votes);
   } */
 
-  modifier onlyRegisteredVoters () {
-    require(Token(token).existingAccount(msg.sender));
-    _;
-  }
 
-  function voteForProject (address _project, uint256 votes) external onlyRegisteredVoters {
+  function voteForProject (address _project, uint256 votes) external {
     Project(_project).vote(msg.sender, votes);
-    Token(token).assign(msg.sender, votes);
+    VotingToken(votingToken).assign(msg.sender, votes);
     GNITokenCrowdsale(crowdsale).extendDoomsDay(6);//this can be called externally
     handleVoteChange(_project);
   }
 
-  function voteAgainstProject(address  _project, uint256 votes) external onlyRegisteredVoters {
-    require(Token(token).existingAccount(msg.sender));
+  function voteAgainstProject(address  _project, uint256 votes) external {
     Project(_project).voteAgainst(msg.sender, votes);
     handleVoteRemoval(msg.sender, _project, votes);
   }
@@ -72,7 +67,7 @@ contract Voting is Ownable {
    }
 
    function handleVoteRemoval (address account, address  fromProjectAddr, uint256 votes) internal {
-     Token(token).freeUp(account, votes);
+     VotingToken(votingToken).freeUp(account, votes);
      GNITokenCrowdsale(crowdsale).reduceDoomsDay(6);
      handleVoteChange(fromProjectAddr);
   }

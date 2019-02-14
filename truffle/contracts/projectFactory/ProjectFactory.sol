@@ -5,18 +5,31 @@ import '../projectLeader/ProjectLeaderTracker.sol';
 import '../voting/Voting.sol';
 import '../crowdsale/Activation.sol';
 import '../utility/Ownable.sol';
-
-contract ProjectFactory is Ownable {
+import '../utility/CrowdsaleLocked.sol';
+import '../crowdsale/GNITokenCrowdsale.sol';
+//this will know developer and Crowdsale
+contract ProjectFactory is CrowdsaleLocked {
   using SafeMath for uint256;
   Activation public activation;
   Voting public voting;
   ProjectLeaderTracker public projectLeaderTracker;
+  GNITokenCrowdsale public crowdsale;
+  address public developer;
   address public dividendWallet;
 
-  constructor (Activation _activation, Voting _voting, ProjectLeaderTracker _projectLeaderTracker, address _dividendWallet) public {
+  constructor (
+    Activation _activation,
+    Voting _voting,
+    ProjectLeaderTracker _projectLeaderTracker,
+    GNITokenCrowdsale _crowdsale,
+    address _developer,
+    address _dividendWallet
+    ) public {
     activation = _activation;
     voting = _voting;
     projectLeaderTracker = _projectLeaderTracker;
+    crowdsale = _crowdsale;
+    developer = _developer;
     dividendWallet = _dividendWallet;
   }
 
@@ -34,27 +47,29 @@ contract ProjectFactory is Ownable {
 
   function createProject (
     string _projectInfo,
-    address _developer,
     uint256 _valuation,
     uint256 _capitalRequired,
-    uint256 _developerTokens,
-    uint256 _investorTokens,
     string _cashFlow
-  ) external onlyOwner
+  ) external //make this developer instead
     returns (address)
   {
+    /* require(msg.sender == developer); */
+    /* (uint256 _developerTokens, uint256 _investorTokens) = GNITokenCrowdsale(crowdsale).mintNewProjectTokensAndExtendDoomsDay(_capitalRequired, _valuation); */
+/*
     address projectAddr = address(
       new Project(
         _projectInfo,
-        _developer,
+        developer,
         _valuation,
         _capitalRequired,
-        _developerTokens,
-        _investorTokens,
-        _cashFlow
-      ));
+        1000,
+        1000, */
+        /* _developerTokens, */
+        /* _investorTokens, */
+        /* _cashFlow
+      )); */
 
-    totalProjectCount = totalProjectCount.add(1);
+    /* totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
 
     Project(projectAddr).transferOwnership(address(Voting(voting)));
@@ -66,7 +81,8 @@ contract ProjectFactory is Ownable {
       activation.activateProject(projectAddr, _capitalRequired);
     }
 
-    emit ProjectPitch(projectAddr, totalProjectCount);
-    return projectAddr;
+    emit ProjectPitch(projectAddr, totalProjectCount); */
+    /* return projectAddr; */
+    return address(0);
   }
 }

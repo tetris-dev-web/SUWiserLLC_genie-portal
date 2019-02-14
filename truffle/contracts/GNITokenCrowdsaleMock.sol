@@ -1,30 +1,30 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-import './crowdsale/GNITokenCrowdsale.sol';
+/* import './crowdsale/GNITokenCrowdsale.sol';
 import './token/TokenStub.sol';
 import './ContractStub.sol';
 import './projectLeader/ProjectLeaderTracker.sol';
 import './voting/Voting.sol';
-import './crowdsale/Activation.sol';
+import './crowdsale/Activation.sol'; */
 
 
-contract GNITokenCrowdsaleMock is GNITokenCrowdsale, ContractStub {
+/* contract GNITokenCrowdsaleMock is GNITokenCrowdsale, ContractStub {
 constructor
-  (
-    uint256 _openingTime,
+  ( */
+    /* uint256 _openingTime,
     uint256 _doomsDay,
     uint256 _rate,
     address  _developer,
-    TokenStub _token,
+    TokenStub _token, */
     /* InvestorListStub _investorList, */
-    ProjectFactory _projectFactory,
+    /* ProjectFactory _projectFactory,
     ProjectLeaderTracker _projectLeaderTracker,
-    address  _reimbursements
+    address  _reimbursements */
     /* Voting _voting,
     Activation _activation */
-  )
-  public
-  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _projectFactory, _projectLeaderTracker, _reimbursements) {}
+  /* ) */
+  /* public
+  GNITokenCrowdsale(_openingTime, _doomsDay, _rate, _developer, _token, _projectFactory, _projectLeaderTracker, _reimbursements) {} */
 
   /* function receiveMockWei () external payable {
 
@@ -114,4 +114,4 @@ constructor
   function setMockReOpening (bool status) public {
     canReOpen = status;
   } */
-}
+/* } */

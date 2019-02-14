@@ -1,26 +1,26 @@
 pragma solidity >=0.4.22 <0.6.0;
 import '../utility/SafeMath.sol';
-import '../token/ERC20/Token.sol';
+import '../token/ActiveToken.sol';
 import '../crowdsale/GNITokenCrowdsale.sol';
 
 contract Dividends {
   using SafeMath for uint256;
-  Token token;
-  address  developer;//we can remove this as we are not using it
+  ActiveToken token;
 
-  constructor (Token token_, address  developer_) public {
+  constructor (ActiveToken token_) public {
     token = token_;
-    developer = developer_;
   }
 
   mapping(address => uint256) public lastDividendPoints;
+
+  event ReceiveDividends(uint256 weiAmount, uint256 time);
 
   uint256 public totalDividendPoints;
   uint256 internal pointMultiplier = 10e30;
 
   function dividendOwedTo(address  account) internal view returns (uint256) {
     uint256 owedDividendPoints = totalDividendPoints.sub(lastDividendPoints[account]);
-    uint256 accountTokens = Token(token).activeBalanceOf(account);
+    uint256 accountTokens = ActiveToken(token).balanceOf(account);
     return accountTokens.mul(owedDividendPoints).div(pointMultiplier);
   }
 
@@ -32,10 +32,11 @@ contract Dividends {
   }
 
   function receiveDividends () external payable {
-    uint256 totalTokens = Token(token).totalActiveSupply();
+    uint256 totalTokens = ActiveToken(token).totalSupply();
     uint256 weiAmount = msg.value;
 
     uint256 newDividendPoints = weiAmount.mul(pointMultiplier).div(totalTokens);
     totalDividendPoints = totalDividendPoints.add(newDividendPoints);
+    ReceiveDividends(msg.value, now);
   }
 }

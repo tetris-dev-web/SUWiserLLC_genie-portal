@@ -45,6 +45,8 @@ contract Project is Ownable, Secondary {
 
   mapping(address => uint256) internal votes;
 
+  event ReceiveCashFlow (uint256 weiAmount, uint256 time);
+
   function getData() public view returns (
     address,
     string,
@@ -81,6 +83,7 @@ contract Project is Ownable, Secondary {
   function deposit () public payable {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
+    ReceiveCashFlow(msg.value, now);
     Dividends(dividendWallet).receiveDividends.value(weiAmount)();
   }
 

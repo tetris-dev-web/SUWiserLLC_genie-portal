@@ -1,12 +1,12 @@
 pragma solidity >=0.4.22 <0.6.0;
 import '../project/Project.sol';
-import '../utility/Ownable.sol';
-import '../utility/Secondary.sol';
-import '../utility/Tertiary.sol';
+import '../utility/CrowdsaleLocked.sol';
+import '../utility/ActivationLocked.sol';
+import '../utility/ProjectFactoryLocked.sol';
 import '../utility/SafeMath.sol';
 
 
-contract ProjectLeaderTracker is Ownable, Secondary, Tertiary {
+contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFactoryLocked {
   using SafeMath for uint256;
   uint256 public candidateCount;
   address  public tentativeLeaderAddr;
@@ -24,19 +24,19 @@ contract ProjectLeaderTracker is Ownable, Secondary, Tertiary {
     return (tentativeLeaderAddr, tentativeLeaderConfirmed());
   }
 
-  function reset () onlyOwner external {
+  function reset () onlyCrowdsale external {
     resetProjectsChecked();
     setTentativeLeader(address(0));
     candidateCount = 0;
   }
 
-  function handleProjectActivation () onlyPrimary external {
+  function handleProjectActivation () onlyActivation external {
     resetProjectsChecked();
     setTentativeLeader(address(0));
     decrementCandidateCount();
   }
 
-  function handleProjectPitch () onlyTertiary external {
+  function handleProjectPitch () onlyProjectFactory external {
     candidateCount = candidateCount.add(1);
   }
 
