@@ -3,19 +3,17 @@ import './Amendment.sol';
 import './AmendmentModificationProposal.sol';
 import './NewAmendmentProposal.sol';
 import './utility/SafeMath.sol';
+import './Cooperative.sol'
 //we need logic to stop adding new proposals and open up the polls
 
-contract CoOp {
+contract Cooperative0.0 is Cooperative {
   using SafeMath for uint256;
-  uint256 public developer;
   AmendmentPoll public _amendmentPoll;
 
-  constructor(address _developer, AmendmentPoll _amendmentPoll) public {
+  constructor(address _developer, AmendmentPoll _amendmentPoll) public
+  Board(_developer) {
     developer = _developer;
   }
-
-  uint256 public totalAmendmentCount;
-  mapping(uint256 => Amendment) public amendmentById;
 
   struct Proposals {
     bool notAcceptingNewProposals;
@@ -28,24 +26,45 @@ contract CoOp {
     mapping(uint256 => AmendmentModificationProposal) modificationProposal;
     mapping(address => bool) modificationProposalExists;
 
+    uint256 totalAmendmentRemovals;
+    mapping(uint256 => AmendmentRemovalProposal) removalProposal;
+    mapping(address => bool) removalProposalExists;
+
     uint256 totalCompleteAdoptions;
   }
+
+  struct NewCooperative {
+    Cooperative newCooperative;
+    uint256 totalAmendmentsMigrated;
+    mapping(uint => bool) migrated;
+    bool exists;
+  }
+
+  NewCooperative public newCooperative;
 
   uint256 public currentProposalsId;
   mapping(uint256 => Proposals) public proposalsById;//uses the currentProposalsId
 
+  bool public canInitElection;
+
   function initNewProposals () external {
     require(msg.sender == developer);
-    require(adoptionsComplete() || !amendmentPoll.proposalsPassed());//proposals passed will throw if the election has not been determined yet
+    require(
+      !newCooperative.exists &&
+      (adoptionsComplete() || amendmentPoll.proposalsFailed())
+    );
     currentProposalsId = currentProposalsId.add(1);
     Proposals memory newProposals;
     proposalsById[currentProposalsId] = newProposals;
+    cantInitElection = true;
   }
 
   function initElection () external {
     require(msg.sender == developer);
+    require(canInitElection);
     proposalsById[currentProposalsId].notAcceptingNewProposals = true;
     amendmentPoll.openPoll();
+    canInitElection = false;
   }
 
   function proposeAmendmentModification (uint256 amendmentId) external {
@@ -68,6 +87,47 @@ contract CoOp {
     proposalsById[currentProposalsId].newProposalExists[proposalAddress];
   }
 
+  function proposeAmendmentRemoval (uint256 amendmentId) external {
+    require(msg.sender == developer && currentProposalsId != 0);
+    require(!proposalsById[currentProposalsId].notAcceptingNewProposals);
+    address proposalAddress = new AmendmentRemovalProposal(newAmendment);
+    AmendmentRemovalProposal removeProposal = AmendmentRemovalProposal(proposalAddress);
+    proposalsById[currentProposalsId].totalAmendmentRemovals = proposalsById[currentProposalsId].totalAmendmentRemovals.add(1);
+    proposalsById[currentProposalsId].removalProposal[proposalsById[currentProposalsId].totalAmendmentRemovals] = removalProposal;
+    proposalsById[currentProposalsId].removalProposalExists[proposalAddress];
+  }
+
+  function proposeNewCooperative (Cooperative _newCooperative) external {
+    require(msg.sender == developer && currentProposalsId != 0);
+    require(!proposalsById[currentProposalsId].notAcceptingNewProposals);
+    NewCooperative memory newCooperative_;
+    newCooperative_.newCooperative = _newCooperative;
+    newCooperative_.exists = true;
+    newCooperative = newCooperative_;
+  }
+
+  function migrateAmendmentToNewCooperative (uint256 amendmentId) external {
+    require(newCooperative.exists);
+    require(newCooperative.migrated[amendmentId])
+    require(amendmentPoll.proposalsPassed());
+    require(adoptionsComplete());
+
+    Amendment amendmentToMigrate = amendmentById[amendmentId];
+
+    if (!amendmentToMigrate.depricated()) {
+      newCooperative.newCooperative.migrateAmendment(amendmentToMigrate);
+      amendmentToMigrate.transferCooperative(newCooperative.newCooperative);
+    }
+    
+    newCooperative.migrated[amendmentId] = true;
+    newCooperative.totalAmendmentsMigrated = newCooperative.totalAmendmentsMigrated.add(1);
+
+    if (newCooperative.totalAmendmentsMigrated == totalAmendmentCount) {
+      newCooperative.newCooperative.completeMigrations();
+      newCooperative.newCooperative.renounceOwnership();
+    }
+  }
+
   function adoptAmendmentModification (
     uint256 amendmentId,
     uint256 coAmendmentToUpdateId,
@@ -85,15 +145,23 @@ contract CoOp {
   }
 
   function adoptNewAmendment (Amendment newAmendment) external {
-    require(amendment.proposalsPassed());
+    require(amendmentPoll.proposalsPassed());
     require(currentProposals.newProposalExists[msg.sender]);
 
     totalAmendmentCount = totalAmendmentCount.add(1);
     amendmentById[totalAmendmentCount] = newAmendment;
 
     updateCompleteAdoptions(true);
+  }
 
-    return totalAmendmentCount;
+  function adoptAmendmentRemoval (uint256 amendmentId) external {
+    require(amendment.proposalsPassed());
+    require(currentProposals.removalProposalExists[msg.sender]);
+
+    Amendment amendmentToRemove = amendmentById[amendmentId];
+    amendmentToRemove.closeFunctionality();
+
+    updateCompleteAdoptions(true);
   }
 
   function updateCompleteAdoptions (bool canUpdate) internal {
@@ -105,7 +173,7 @@ contract CoOp {
   function adoptionsComplete () internal returns (bool) {
     Proposals currentProposals = proposalsById[currentProposalsId];
 
-    return currentProposals.totalCompleteAdoptions == currentProposals.totalNewAmendments.add(currentProposals.totalAmendmentProposals);
+    return currentProposals.totalCompleteAdoptions == currentProposals.totalNewAmendments.add(currentProposals.totalAmendmentModifications).add(currentProposals.totalAmendmentRemovals);
   }
 }
 

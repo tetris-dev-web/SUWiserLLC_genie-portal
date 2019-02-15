@@ -15,6 +15,7 @@ contract AmendmentModificationProposal is Ownable {
 
   uint256 public totalModifications;
   uint256 public totalModificationsExecuted;
+
   struct Modification {
     Amendment newAmendment,
     bool executed;
@@ -39,7 +40,7 @@ contract AmendmentModificationProposal is Ownable {
     Amendment newCoAmendment = modificationByCoAmendment[coAmendmentId].newAmendment;
     bool finalModification = totalModificationsExecuted == totalModifications;
 
-    CoOp(owner).adoptAmendmentModification(
+    Cooperative(owner).adoptAmendmentModification(
       amendmentId,
       coAmendmentmentId,
       newCoAmendment,
