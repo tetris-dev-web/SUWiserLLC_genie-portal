@@ -106,7 +106,7 @@ contract ERC20Base is IERC20 {
 contract ActiveToken is ERC20Base, Ownable {
   Dividends public dividendWallet;
   address public minter;
-
+  //we need to distribute dividends in the transfer function
 
   constructor (VotingToken _votingToken) public
   ERC20Base(_votingToken) {
@@ -129,4 +129,6 @@ contract ActiveToken is ERC20Base, Ownable {
     dividendWallet.distributeDividend(account);
     _mint(account, value);
   }
+
+  function transfer 
 }

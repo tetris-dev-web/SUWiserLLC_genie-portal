@@ -4,7 +4,7 @@ import '../utility/CrowdsaleLocked.sol';
 import '../utility/ActivationLocked.sol';
 import './ActiveToken.sol';
 
-
+//we need to activate pending on transfer
 contract InactiveToken is ERC20Base, CrowdsaleLocked, ActivationLocked {
   ActiveToken public activeToken;
 

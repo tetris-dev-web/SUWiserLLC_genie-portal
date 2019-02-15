@@ -24,7 +24,7 @@ contract Dividends {
     return accountTokens.mul(owedDividendPoints).div(pointMultiplier);
   }
 
-  function distributeDividend(address  account) external returns (bool) {
+  function distributeDividend(address account) external returns (bool) {
     uint256 dividend = dividendOwedTo(account);
     account.transfer(dividend);
     lastDividendPoints[account] = totalDividendPoints;

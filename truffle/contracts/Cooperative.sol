@@ -18,7 +18,7 @@ contract Cooperative is Ownable {
   }
 
   function migrateAmendment (Amendment amendment) onlyOwner {
-    require(!initializationComplete);
+    require(!migrationsComplete);
     totalAmendmentCount = totalAmendmentCount.add(1);
     amendmentById[totalAmendmentCount] = amendment;
   }

@@ -72,8 +72,6 @@ contract GNITokenCrowdsale is TimedCrowdsale, ActivationLocked, VotingLocked, Pr
    projectLeaderTracker.reset();
  }
 
- //tests need to be updated
-
  function extendDoomsDay (uint256 _days) external onlyVoting {
    _extendDoomsDay(_days);
  }
