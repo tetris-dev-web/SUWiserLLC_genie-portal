@@ -24,16 +24,13 @@ contract ERC20Base is IERC20 {
         return _totalSupply;
     }
 
-
     function balanceOf(address owner) public view returns (uint256) {
         return _balances[owner];
     }
 
-
     function allowance(address owner, address spender) public view returns (uint256) {
         return _allowed[owner][spender];
     }
-
 
     function transfer(address to, uint256 value) public returns (bool) {
         require(votingToken.freedUpBalanceOf(to) >= value);
@@ -41,12 +38,10 @@ contract ERC20Base is IERC20 {
         return true;
     }
 
-
     function approve(address spender, uint256 value) public returns (bool) {
         _approve(msg.sender, spender, value);
         return true;
     }
-
 
     function transferFrom(address from, address to, uint256 value) public returns (bool) {
         _transfer(from, to, value);
@@ -54,18 +49,15 @@ contract ERC20Base is IERC20 {
         return true;
     }
 
-
     function increaseAllowance(address spender, uint256 addedValue) public returns (bool) {
         _approve(msg.sender, spender, _allowed[msg.sender][spender].add(addedValue));
         return true;
     }
 
-
     function decreaseAllowance(address spender, uint256 subtractedValue) public returns (bool) {
         _approve(msg.sender, spender, _allowed[msg.sender][spender].sub(subtractedValue));
         return true;
     }
-
 
     function _transfer(address from, address to, uint256 value) internal {
         require(to != address(0));
@@ -75,7 +67,6 @@ contract ERC20Base is IERC20 {
         emit Transfer(from, to, value);
     }
 
-
     function _mint(address account, uint256 value) internal {
         require(account != address(0));
 
@@ -84,7 +75,6 @@ contract ERC20Base is IERC20 {
         emit Transfer(address(0), account, value);
     }
 
-
     function _burn(address account, uint256 value) internal {
         require(account != address(0));
 
@@ -92,7 +82,6 @@ contract ERC20Base is IERC20 {
         _balances[account] = _balances[account].sub(value);
         emit Transfer(account, address(0), value);
     }
-
 
     function _approve(address owner, address spender, uint256 value) internal {
         require(spender != address(0));
@@ -130,5 +119,5 @@ contract ActiveToken is ERC20Base, Ownable {
     _mint(account, value);
   }
 
-  function transfer 
+  function transfer
 }
