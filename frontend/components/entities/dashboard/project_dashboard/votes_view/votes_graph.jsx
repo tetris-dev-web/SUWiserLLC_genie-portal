@@ -5,7 +5,6 @@ import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_p
 import VoteShiftTool from './vote_shift_tool';
 import './votes_graph.scss';
 
-
 class VotesGraph extends React.Component {
   constructor() {
     super();

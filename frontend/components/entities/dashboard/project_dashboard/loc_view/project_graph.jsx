@@ -1,7 +1,9 @@
 import React from 'react';
 import * as d3 from 'd3';
+import { connect } from 'react-redux';
+import { merge } from 'lodash';
 import ProjectModules from './../project_modules/project_modules';
-import {event as currentEvent} from 'd3-selection';
+import LocGraphContainer from './loc_graph_container';
 
 const margin = {top: 20, right: 20, bottom: 30, left: 50};
 const width = 960 - margin.left - margin.right;
@@ -17,6 +19,11 @@ const rosyBrown = "#AB7A5E";
 const lightGrey = "#DEDBCF";
 const darkGrey = "#A59A91";
 
+const mapStateToProps = state => {
+  return {
+    projects: merge({}, state.entities.projects)
+  };
+};
 
 class ProjectGraph extends React.Component {
   constructor(props) {
@@ -66,11 +73,10 @@ class ProjectGraph extends React.Component {
       });
     };
 
-
     const extractData = () => {
       return projectKeys.reduce((_projectData, _key) => {
-        const city = this.props.data[_key].city;
-        const continent = this.props.data[_key].continent;
+        const city = this.props.projects[_key].city;
+        const continent = this.props.projects[_key].continent;
         const cityData = {
           title: city,
           continent
@@ -98,13 +104,12 @@ class ProjectGraph extends React.Component {
   }
 
   setUp () {
-    console.log("PROPS", this.props)
-    const projectKeys = Object.keys(this.props.data);
+    const projectKeys = Object.keys(this.props.projects);
     const svg = this.createSVG();
 
     const ProjectNodeData = this.formatData(projectKeys);
     const projectData = projectKeys.map(key => {
-      return this.props.data[key];
+      return this.props.projects[key];
     });
     const cities = ProjectNodeData.cities;
     const continents = ProjectNodeData.continents;
@@ -253,7 +258,7 @@ class ProjectGraph extends React.Component {
     .on("start", drag_start)
     .on("drag", drag_drag)
     .on("end", drag_end);
-
+    
     drag_handler(circle);
     drag_handler(innerCircle);
     drag_handler(continentSquares);
@@ -408,9 +413,9 @@ class ProjectGraph extends React.Component {
 
   render() {
     // let data = '';
-    // if (this.props.data) {
-    //   data = Object.keys(this.props.data).map(key => {
-    //     const project = this.props.data[key];
+    // if (this.props.projects) {
+    //   data = Object.keys(this.props.projects).map(key => {
+    //     const project = this.props.projects[key];
     //     return <li key={project.id}>{project.title} {project.created_at}</li>;
     //   });
     // }
@@ -423,6 +428,7 @@ class ProjectGraph extends React.Component {
           projectClicked={this.projectClicked}
           openModal={this.state.openModal}
           closeModalOnClick={this.toggleModalonClickandPassProject}/>
+        <LocGraphContainer />
       </React.Fragment>
     );
   }
@@ -432,4 +438,4 @@ ProjectGraph.defaultProps = {
   chart: 'loading'
 };
 
-export default ProjectGraph;
+export default connect(mapStateToProps)(ProjectGraph);
