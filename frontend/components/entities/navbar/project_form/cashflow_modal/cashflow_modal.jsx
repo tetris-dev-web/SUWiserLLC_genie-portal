@@ -12,12 +12,6 @@ class CashFlowModal extends React.Component {
       openModal: false
     };
 
-    window.SessionOpenModal = () => {
-      this.setState({openModal: true});
-    };
-
-    window.SessionOpenModal = window.SessionOpenModal.bind(this);
-
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
@@ -32,7 +26,6 @@ class CashFlowModal extends React.Component {
 
   openModal() {
     this.setState({openModal: true});
-    console.log();
   }
 
   closeModal(e) {

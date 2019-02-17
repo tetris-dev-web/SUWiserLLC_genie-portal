@@ -6,14 +6,14 @@ class VotesViewPitchedProjectsCircle extends React.Component {
     super();
 
     this.state = {
-      openModal: false
+      isModalOpen: false
     };
 
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
-    this.setState({ openModal: !this.state.openModal });
+    this.setState({ isModalOpen: !this.state.isModalOpen });
   }
 
   render() {
@@ -29,7 +29,7 @@ class VotesViewPitchedProjectsCircle extends React.Component {
           onClick={this.handleClick}></circle>
         <ProjectModuels 
           projectClicked={project}
-          openModal={this.state.openModal}
+          isModalOpen={this.state.isModalOpen}
           closeModalOnClick={this.handleClick}/>
       </React.Fragment>
     );

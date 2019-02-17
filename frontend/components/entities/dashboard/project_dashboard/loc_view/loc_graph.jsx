@@ -11,10 +11,6 @@ class LocGraph extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      openModal: false
-    };
-
     this.width = 960;
     this.height = 700;
     this.cityNodeSide = 15;

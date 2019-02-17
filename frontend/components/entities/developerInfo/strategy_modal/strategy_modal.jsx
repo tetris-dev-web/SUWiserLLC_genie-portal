@@ -8,38 +8,33 @@ class StrategyModal extends React.Component {
     super(props);
 
     this.state = {
-      openModal: false,
+      isModalOpen: false,
     };
 
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
-  openModal() {
-    this.setState({ openModal: true });
-  }
-
-  closeModal() {
-    this.setState({ openModal: false });
+  handleClick() {
+    this.setState({ isModalOpen: !this.state.isModalOpen });
   }
 
   render() {
-    const { openModal } = this.state;
+    const { isModalOpen } = this.state;
 
     return(
       <React.Fragment>
-        <div className={`button-text strategy-button ${openModal ? "selected" : ""}`} 
-          onClick={this.openModal}>STRATEGY</div>
+        <div className={`button-text strategy-button ${isModalOpen ? "selected" : ""}`} 
+          onClick={this.handleClick}>STRATEGY</div>
         <Modal
-          isOpen={openModal}
-          onRequestClose={this.closeModal}
+          isOpen={isModalOpen}
+          onRequestClose={this.handleClick}
           style={ModalStyle}
           contentLabel="Strategy Modal"
           className="modal-container strategy-container">
           <div className="modal-layer"
             ref={node => this.props.setRef(node)}>
             <div className="black-close-modal-button close-modal-button"
-              onClick={this.closeModal}>&times;</div>
+              onClick={this.handleClick}>&times;</div>
             <div className="ft-modal-header-cont">
               <div className="ft-modal-header">
                 Strategy

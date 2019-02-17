@@ -16,7 +16,7 @@ class ProjectModules extends React.Component {
     };
   }
 
-  componentWillUpdate (prevProps, prevState) {
+  UNSAFE_componentWillUpdate (prevProps, prevState) {
     const { projectClicked } = this.props;
 
     const convert3dModelIDtoLink = () => {
@@ -33,13 +33,13 @@ class ProjectModules extends React.Component {
   }
 
   render() {
-      const { projectClicked, isInvestor, openModal, closeModalOnClick } = this.props;
+      const { projectClicked, isInvestor, isModalOpen, closeModalOnClick } = this.props;
       const { model_link } = this.state;
       // const noDataComponent = <h1 className="nodata-text">No data available</h1>
 
       return (
         <Modal
-          isOpen={openModal}
+          isOpen={isModalOpen}
           onRequestClose={closeModalOnClick}
           contentLabel="Project Graph Modal"
           style={ModalStyle}
