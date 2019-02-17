@@ -16,11 +16,20 @@ class LocGraphRect extends React.Component {
   }
 
   render() {
-    const { className, x, y } = this.props;
+    const { className, transform, text } = this.props;
+    const { showText } = this.state;
 
     return (
-      <rect className={className}
-        x={x} y={y}></rect>
+      <g className={`${className}-group`}
+      transform={transform}>
+        <rect className={className}
+          onMouseEnter={this.handleHover(true)}
+          onMouseLeave={this.handleHover(false)}></rect>
+        {
+          // showText &&
+          <text y={-10}>{text}</text>
+        }
+      </g>
     );
   }
 }

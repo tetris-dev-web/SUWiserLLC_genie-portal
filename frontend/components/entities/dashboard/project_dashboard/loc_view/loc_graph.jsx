@@ -129,21 +129,22 @@ class LocGraph extends React.Component {
     const cityNodes = cities.map((city, idx) => (
       <LocGraphRect key={idx}
         className="loc-svg-city-node"
-        city={city}
-        x={city.x - .5 * this.cityNodeSide} y={city.y - .5 * this.cityNodeSide} />
+        transform={`translate(${city.x - .5 * this.cityNodeSide}, ${city.y - .5 * this.cityNodeSide})`}
+        text={city.name} />
     ));
 
     const continentNodes = continents.map((continent, idx) => (
       <LocGraphRect key={idx}
         className="loc-svg-continent-node"
-        continent={continent}
-        x={continent.x - .5 * this.continentNodeSide} y={continent.y - .5 * this.continentNodeSide} />
+        transform={`translate(${continent.x - .5 * this.continentNodeSide}, ${continent.y - .5 * this.continentNodeSide})`}
+        text={continent.name} />
     ));
 
     const projectNodes = projects.map((project, idx) => (
       <LocGraphCircle key={idx}
         className="loc-svg-project-node"
         transform={`translate(${project.x}, ${project.y})`}
+        text={project.title}
         r={outterCircleScale(project.valuation)}
         fill={project.activationTime ? lightBlue : rosyBrown} />
     ));
