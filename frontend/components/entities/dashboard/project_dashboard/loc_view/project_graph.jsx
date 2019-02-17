@@ -3,7 +3,6 @@ import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import { merge } from 'lodash';
 import ProjectModules from './../project_modules/project_modules';
-import LocGraphContainer from './loc_graph_container';
 
 const margin = {top: 20, right: 20, bottom: 30, left: 50};
 const width = 960 - margin.left - margin.right;
@@ -428,7 +427,6 @@ class ProjectGraph extends React.Component {
           projectClicked={this.projectClicked}
           openModal={this.state.openModal}
           closeModalOnClick={this.toggleModalonClickandPassProject}/>
-        <LocGraphContainer />
       </React.Fragment>
     );
   }

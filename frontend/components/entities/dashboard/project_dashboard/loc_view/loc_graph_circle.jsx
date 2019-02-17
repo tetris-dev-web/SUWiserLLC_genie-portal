@@ -16,7 +16,7 @@ class LocGraphCircle extends React.Component {
   }
 
   render() {
-    const { className, transform, r, fill, text } = this.props;
+    const { className, transform, r, fill, project } = this.props;
     const { showText } = this.state;
 
     return (
@@ -32,7 +32,7 @@ class LocGraphCircle extends React.Component {
           fill="white"></circle>
         {
           showText &&
-          <text y={-r - 10}>{text}</text>
+          <text y={-r - 10}>{project.title}</text>
         }
       </g>
     );

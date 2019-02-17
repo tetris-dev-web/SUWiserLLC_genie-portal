@@ -1,7 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
 import './loc_graph.scss';
-import ProjectModules from './../project_modules/project_modules';
 import LocGraphRect from './loc_graph_rect';
 import LocGraphCircle from './loc_graph_circle';
 
@@ -11,8 +10,6 @@ const lightBlue = "#5EABAA";
 class LocGraph extends React.Component {
   constructor(props) {
     super(props);
-
-    this.projectClicked = null;
 
     this.state = {
       openModal: false
@@ -42,6 +39,11 @@ class LocGraph extends React.Component {
   shouldComponentUpdate(nextProps) {
     this.simulation = this.configureSimulation(nextProps);
     
+    // const { projects, cities, continents } = nextProps;
+    // this.addDragHandlers(d3.selectAll(".loc-svg-city-node").data(cities));
+    // this.addDragHandlers(d3.selectAll(".loc-svg-continent-node").data(continents));
+    // this.addDragHandlers(d3.selectAll(".loc-svg-project-node-group").data(projects));
+
     return true;
     // may add conditional to stop extra re-rendering
   }
@@ -144,7 +146,7 @@ class LocGraph extends React.Component {
       <LocGraphCircle key={idx}
         className="loc-svg-project-node"
         transform={`translate(${project.x}, ${project.y})`}
-        text={project.title}
+        project={project}
         r={outterCircleScale(project.valuation)}
         fill={project.activationTime ? lightBlue : rosyBrown} />
     ));
