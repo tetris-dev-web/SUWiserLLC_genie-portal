@@ -8,12 +8,12 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 		this.state = {
 			showText: false,
 		};
-
-		this.handleHover = this.handleHover.bind(this);
 	}
 
-	handleHover() {
-		this.setState({showText: !this.state.showText});
+	handleHover(boolean) {
+		return () => {
+			this.setState({showText: boolean});
+		};
 	}
 
 	render() {
@@ -27,8 +27,8 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 					cy={cy}
 					r={r}
 					opacity={opacity}
-					onMouseOver={this.handleHover}
-					onMouseLeave={this.handleHover}></circle>
+					onMouseOver={this.handleHover(true)}
+					onMouseLeave={this.handleHover(false)}></circle>
 				{
 					this.state.showText &&
 					<text className="votes-view-capital-raised-text"

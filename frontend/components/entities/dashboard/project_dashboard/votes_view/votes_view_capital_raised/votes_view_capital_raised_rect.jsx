@@ -12,12 +12,12 @@ class VotesViewCapitalRaisedRect extends React.Component {
 		this.state = {
 			showText: false
 		};
-
-		this.handleHover = this.handleHover.bind(this);
 	}
 
-	handleHover() {
-		this.setState({showText: !this.state.showText});
+	handleHover(boolean) {
+		return () => {
+			this.setState({ showText: boolean });
+		};
 	}
 
 	render() {
@@ -26,8 +26,8 @@ class VotesViewCapitalRaisedRect extends React.Component {
 
 		return (
 			<g
-				onMouseEnter={this.handleHover}
-				onMouseLeave={this.handleHover}>
+				onMouseEnter={this.handleHover(true)}
+				onMouseLeave={this.handleHover(false)}>
 				<rect
 					x={x} y={y}
 					width="100%"

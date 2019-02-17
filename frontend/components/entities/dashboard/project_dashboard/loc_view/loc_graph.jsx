@@ -1,7 +1,9 @@
 import React from 'react';
 import * as d3 from 'd3';
-import ProjectModules from './../project_modules/project_modules';
 import './loc_graph.scss';
+import ProjectModules from './../project_modules/project_modules';
+import LocGraphRect from './loc_graph_rect';
+import LocGraphCircle from './loc_graph_circle';
 
 const rosyBrown = "#AB7A5E";
 const lightBlue = "#5EABAA";
@@ -125,28 +127,25 @@ class LocGraph extends React.Component {
     ));
 
     const cityNodes = cities.map((city, idx) => (
-      <rect key={idx}
+      <LocGraphRect key={idx}
         className="loc-svg-city-node"
-        x={city.x - .5 * this.cityNodeSide} y={city.y - .5 * this.cityNodeSide}></rect>
+        city={city}
+        x={city.x - .5 * this.cityNodeSide} y={city.y - .5 * this.cityNodeSide} />
     ));
 
     const continentNodes = continents.map((continent, idx) => (
-      <rect key={idx}
+      <LocGraphRect key={idx}
         className="loc-svg-continent-node"
-        x={continent.x - .5 * this.continentNodeSide} y={continent.y - .5 * this.continentNodeSide}></rect>
+        continent={continent}
+        x={continent.x - .5 * this.continentNodeSide} y={continent.y - .5 * this.continentNodeSide} />
     ));
 
     const projectNodes = projects.map((project, idx) => (
-      <React.Fragment key={idx}
-        className="loc-svg-project-node-group"
-        transform={`translate(${project.x}, ${project.y})`}>
-        <circle className="loc-svg-project-node outter"
-          r={outterCircleScale(project.valuation)}
-          fill={project.activationTime ? lightBlue : rosyBrown}></circle>
-        <circle className="loc-svg-project-node inner"
-          r="10"
-          fill="white"></circle>
-      </React.Fragment>
+      <LocGraphCircle key={idx}
+        className="loc-svg-project-node"
+        transform={`translate(${project.x}, ${project.y})`}
+        r={outterCircleScale(project.valuation)}
+        fill={project.activationTime ? lightBlue : rosyBrown} />
     ));
 
     return (
