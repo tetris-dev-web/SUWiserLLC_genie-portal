@@ -53,23 +53,21 @@ contract ProjectFactory is CrowdsaleLocked {
   ) external //make this developer instead
     returns (address)
   {
-    /* require(msg.sender == developer); */
-    /* (uint256 _developerTokens, uint256 _investorTokens) = GNITokenCrowdsale(crowdsale).mintNewProjectTokensAndExtendDoomsDay(_capitalRequired, _valuation); */
-/*
+    require(msg.sender == developer);
+    (uint256 _developerTokens, uint256 _investorTokens) = GNITokenCrowdsale(crowdsale).mintNewProjectTokensAndExtendDoomsDay(_capitalRequired, _valuation);
+
     address projectAddr = address(
       new Project(
         _projectInfo,
         developer,
         _valuation,
         _capitalRequired,
-        1000,
-        1000, */
-        /* _developerTokens, */
-        /* _investorTokens, */
-        /* _cashFlow
-      )); */
+        _developerTokens,
+        _investorTokens,
+       _cashFlow
+      ));
 
-    /* totalProjectCount = totalProjectCount.add(1);
+    totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
 
     Project(projectAddr).transferOwnership(address(Voting(voting)));
@@ -81,7 +79,7 @@ contract ProjectFactory is CrowdsaleLocked {
       activation.activateProject(projectAddr, _capitalRequired);
     }
 
-    emit ProjectPitch(projectAddr, totalProjectCount); */
+    emit ProjectPitch(projectAddr, totalProjectCount);
     /* return projectAddr; */
     return address(0);
   }

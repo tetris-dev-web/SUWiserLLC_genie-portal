@@ -33,7 +33,6 @@ contract ERC20Base is IERC20 {
     }
 
     function transfer(address to, uint256 value) public returns (bool) {
-        require(votingToken.freedUpBalanceOf(to) >= value);
         _transfer(msg.sender, to, value);
         return true;
     }
@@ -61,7 +60,7 @@ contract ERC20Base is IERC20 {
 
     function _transfer(address from, address to, uint256 value) internal {
         require(to != address(0));
-
+        require(votingToken.freedUpBalanceOf(to) >= value);
         _balances[from] = _balances[from].sub(value);
         _balances[to] = _balances[to].add(value);
         emit Transfer(from, to, value);
@@ -119,5 +118,18 @@ contract ActiveToken is ERC20Base, Ownable {
     _mint(account, value);
   }
 
-  function transfer
+  function transfer (address to, uint256 value) public returns (bool) {
+    prepareTransfer(msg.sender, to);
+    return transfer(to, value);
+  }
+
+  function transferFrom (address from, address to, uint256 value) public returns (bool) {
+    prepareTransfer(from, to);
+    return super.transferFrom(from, to, value);
+  }
+
+  function prepareTransfer (address from, address to) internal {
+    dividendWallet.distributeDividend(from);
+    dividendWallet.distributeDividend(to);
+  }
 }

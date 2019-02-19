@@ -21,7 +21,7 @@ contract Reimbursements is CrowdsaleLocked {
     weiToReimburse = msg.value;
   }
 
-  function claimReimbursement (address  account) public {
+  function claimReimbursement (address account) public {
     require(weiToReimburse != 0 && address(this).balance != 0);
     uint256 inactiveTokens = InactiveToken(token).balanceOf(account);
     uint256 pendingActivations = InactiveToken(token).pendingActivations(account);

@@ -40,7 +40,7 @@ contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFacto
     candidateCount = candidateCount.add(1);
   }
 
-  function trackProject (address  projectAddr) public { //we need more tests for new functionality (when its implemented)
+  function trackProject (address projectAddr) external { //we need more tests for new functionality (when its implemented)
     require(projectAddr != address(0) && !Project(projectAddr).active());
 
     if(Project(projectAddr).open()) {
@@ -57,7 +57,7 @@ contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFacto
     }
   }
 
-  function updateTentativeLeader (address  projectAddr) internal {
+  function updateTentativeLeader (address projectAddr) internal {
     bool _leaderExists = leaderExists();
     bool _isLeader;
     bool _currentLeaderClosed;

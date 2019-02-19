@@ -96,12 +96,14 @@ contract Project is Ownable, Secondary {
   }
 
   function vote (address voter, uint256 voteAmount) external onlyOwner {
+    require(open());
     votes[voter] = votes[voter].add(voteAmount);
     totalVotes = totalVotes.add(voteAmount);
     closingTime = closingTime.add(43200);
   }
 
   function voteAgainst (address voter, uint256 voteAmount) external onlyOwner {
+    require(open());
     removeVotes_(voter, voteAmount);
   }
 

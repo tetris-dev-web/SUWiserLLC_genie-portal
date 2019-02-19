@@ -26,8 +26,7 @@ contract AmendmentPoll is Ownable {
 
   function proposalsPassed () public returns (bool) {
     return (
-      totalInFavorWeighted.mul(voteMultiplier) > token.totalSupply().mul(voteMultiplier).mul(8).div(10) &&
-      totalInFavor
+      totalInFavorWeighted.mul(voteMultiplier) > token.totalSupply().mul(voteMultiplier).mul(8).div(10)
       );
     ;
   }

@@ -36,7 +36,6 @@ contract GNITokenCrowdsale is TimedCrowdsale, ActivationLocked, VotingLocked, Pr
     }
 
   function mintNewProjectTokensAndExtendDoomsDay (uint256 capitalRequired, uint256 valuation) external onlyProjectFactory returns (uint256, uint256){
-    InactiveToken(token).activatePending(developer);
     (uint256 developerTokens, uint256 investorTokens) = tokensToMint(valuation, capitalRequired);
 
     InactiveToken(token).mint(developer, developerTokens);
@@ -53,8 +52,6 @@ contract GNITokenCrowdsale is TimedCrowdsale, ActivationLocked, VotingLocked, Pr
 
  //before this, we need to execute any pending token activations with the modifier above for the sender account. We need to do this so that the correct number of tokens are activated
  function buyTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
-   InactiveToken(token).activatePending(msg.sender);
-
    super.buyTokens(msg.sender);
    _extendDoomsDay(90);
   }

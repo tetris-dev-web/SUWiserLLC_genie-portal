@@ -38,7 +38,7 @@ contract Activation is Ownable, ProjectFactoryLocked {
     crowdsale = _crowdsale;
   }
 
-   function tryActivateProject () external returns ( bool , uint256) { //we need more tests for added functionality
+   function tryActivateProject () external { //we need more tests for added functionality
      (
        address  tentativeLeaderAddr,
        bool tentativeLeaderConfirmed
