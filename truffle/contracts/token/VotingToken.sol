@@ -24,7 +24,6 @@ contract VotingToken is VotingLocked, Ownable {
     return inactiveToken.balanceOf(_who).add(activeToken.balanceOf(_who));
   }
 
-  //TODO: update 
   function assignedBalanceOf (address _who) public view returns (uint256) {
     if (inactiveToken.accountCycleUpdated(_who)) {
       return assigned[_who];
@@ -46,8 +45,9 @@ contract VotingToken is VotingLocked, Ownable {
 
     if (!inactiveToken.accountCycleUpdated(account)) {
       inactiveToken.updateAccountCycle(account);
+      assigned[account] = amount;
+    } else {
+      assigned[account] = assigned[account].add(amount);
     }
-
-    assigned[account] = assigned[account].add(amount);
   }
 }

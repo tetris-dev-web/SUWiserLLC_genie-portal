@@ -115,7 +115,7 @@ contract InactiveToken is ERC20Base, CrowdsaleLocked, ActivationLocked {
   }
 
   function updateAccountCycle (address account) public {
-    require(!accountCycleUpdated(account));
+    require(!accountCycleUpdated(account));//maybe this should just be a conditional statement instead?
 
     activatePending(account);
     _balances[account] = 0;
