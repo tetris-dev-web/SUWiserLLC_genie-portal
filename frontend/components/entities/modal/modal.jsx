@@ -1,10 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { closeModal } from '../../actions/modal_actions';
+import { closeModal } from '../../../actions/modal_actions';
+import StrategyModal from '../developerInfo/strategy_modal/strategy_modal';
+import BylawModal from '../developerInfo/bylaws_modal/bylaws_modal';
+import './modal.scss';
 
 const mapStateToProps = state => {
   return {
-    modal: state.ui.modal
+    modals: state.ui.modals
   };
 };
 
@@ -14,21 +17,36 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const Modal = ({ modal, closeModal }) => {
-  if (!modal.length) return null;
+const Modal = ({ modals, closeModal }) => {
+  if (!modals.length) return null;
 
-  
+  const modalArray = modals.map((modal, idx) => {
+    let component;
 
-  return (
-    <div
-      className="modal-background"
-      onClick={closeModal}>
-      <div className={`${formType}-modal-child`} onClick={e => e.stopPropagation()}>
-        {component}
-      <button className='modal-close' onClick={() => closeModal()}>&times;</button>
+    switch (modal.type) {
+      case 'bylaw':
+        component = <BylawModal />;
+        break;
+      case 'strategy':
+        component = <StrategyModal />;
+        break;
+      default:
+        return null;
+    }
+
+    return (
+      <div key={idx}
+        className="modal-background"
+        onClick={closeModal}>
+        <div className={`modal-child ${modal.type}-modal`} onClick={e => e.stopPropagation()}>
+          {component}
+          <div className='close-modal-button' onClick={() => closeModal()}>&times;</div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  });
+
+  return modalArray;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Modal);

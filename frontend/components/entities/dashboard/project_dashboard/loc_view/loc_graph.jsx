@@ -19,29 +19,23 @@ class LocGraph extends React.Component {
   }
   
   componentDidMount() {
-    const { projects, cities, continents } = this.props;
-    const that = this;
-    
-    this.addDragHandlers(d3.selectAll(".loc-svg-city-node").data(cities));
-    this.addDragHandlers(d3.selectAll(".loc-svg-continent-node").data(continents));
-    this.addDragHandlers(d3.selectAll(".loc-svg-project-node-group").data(projects));
-    
+    this.addDragHandlers();    
     this.simulation.on("tick", () => {
-      that.forceUpdate();
+      this.forceUpdate();
       // bypass shouldComponentUpdate
     });
   }
   
-  shouldComponentUpdate(nextProps) {
-    this.simulation = this.configureSimulation(nextProps);
-    
-    // const { projects, cities, continents } = nextProps;
-    // this.addDragHandlers(d3.selectAll(".loc-svg-city-node").data(cities));
-    // this.addDragHandlers(d3.selectAll(".loc-svg-continent-node").data(continents));
-    // this.addDragHandlers(d3.selectAll(".loc-svg-project-node-group").data(projects));
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    const { projects, cities, continents, linksData, center } = nextProps;
 
-    return true;
-    // may add conditional to stop extra re-rendering
+    this.simulation.nodes(projects.concat(continents).concat(cities).concat([center]))
+      .force("link", d3.forceLink(linksData).distance(20));
+    this.simulation.alpha(1).restart();
+  }
+
+  componentDidUpdate() {
+    this.addDragHandlers();
   }
   
   configureSimulation(props) {
@@ -87,7 +81,9 @@ class LocGraph extends React.Component {
     };
   }
 
-  addDragHandlers(nodes) {
+  addDragHandlers() {
+    const { projects, cities, continents } = this.props;
+
     const dragStart = (d) => {
       if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
@@ -110,7 +106,9 @@ class LocGraph extends React.Component {
       .on("drag", dragging)
       .on("end", dragEnd);
 
-    handleDrag(nodes);
+    handleDrag(d3.selectAll(".loc-svg-city-node").data(cities));
+    handleDrag(d3.selectAll(".loc-svg-continent-node").data(continents));
+    handleDrag(d3.selectAll(".loc-svg-project-node-group").data(projects));
   }
   
   render() {
@@ -152,7 +150,7 @@ class LocGraph extends React.Component {
         <svg className="loc-svg"
           preserveAspectRatio="xMinYMin meet"
           viewBox="0 0 960 700">
-          <g>{links}</g>
+          <links/>
           <g>{cityNodes}</g>
           <g>{continentNodes}</g>
           <g>{projectNodes}</g>

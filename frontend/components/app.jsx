@@ -18,6 +18,8 @@ import Token from '../../truffle/build/contracts/Token.json';
 import { connect } from 'react-redux';
 import {processVotes} from '../actions/chain_actions/vote_actions';
 
+import Modal from '../components/entities/modal/modal';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -80,6 +82,7 @@ class App extends React.Component {
   render() {
     return (
       <div style={{height: "100%"}}>
+        <Modal />
         <Navbar />
         <DeveloperInfo />
         <RedirectedRoute />
