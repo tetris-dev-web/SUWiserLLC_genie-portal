@@ -1,20 +1,25 @@
 
 const path = require("path");
 const webpack = require("webpack");
-const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 module.exports = {
   context: __dirname,
   entry: ["@babel/polyfill", "./frontend/entry.jsx"],
   output: {
      path: path.resolve(__dirname, 'dist'),
-     publicPath: '/',
      filename: 'bundle.js'
    },
   plugins: [
-    new miniCssExtractPlugin({
+    new MiniCssExtractPlugin({
       path: path.resolve(__dirname, "stylesheets"),
       filename: 'bundle.scss'
+    }),
+    new HtmlWebpackPlugin({
+      template: "./public/index.html",
+      favicon: "./public/favicon.ico"
     })
   ],
   mode: 'development',
@@ -31,7 +36,7 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          miniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader'
         ]
