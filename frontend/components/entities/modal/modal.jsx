@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { closeModal } from '../../../actions/modal_actions';
 import StrategyModal from '../developerInfo/strategy_modal/strategy_modal';
 import BylawModal from '../developerInfo/bylaws_modal/bylaws_modal';
+import ProjectModules from '../dashboard/project_dashboard/project_modules/project_modules';
 import './modal.scss';
 
 const mapStateToProps = state => {
@@ -29,6 +30,9 @@ const Modal = ({ modals, closeModal }) => {
         break;
       case 'strategy':
         component = <StrategyModal />;
+        break;
+      case 'project_module':
+        component = <ProjectModules />;
         break;
       default:
         return null;

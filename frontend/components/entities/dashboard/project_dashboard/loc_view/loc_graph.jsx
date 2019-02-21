@@ -25,7 +25,7 @@ class LocGraph extends React.Component {
       // bypass shouldComponentUpdate
     });
   }
-  
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { projects, cities, continents, linksData, center } = nextProps;
 
@@ -150,7 +150,7 @@ class LocGraph extends React.Component {
         <svg className="loc-svg"
           preserveAspectRatio="xMinYMin meet"
           viewBox="0 0 960 700">
-          <links/>
+          <g>{links}</g>
           <g>{cityNodes}</g>
           <g>{continentNodes}</g>
           <g>{projectNodes}</g>

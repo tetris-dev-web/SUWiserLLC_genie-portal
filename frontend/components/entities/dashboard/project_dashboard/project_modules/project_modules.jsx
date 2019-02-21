@@ -33,21 +33,21 @@ class ProjectModules extends React.Component {
   }
 
   render() {
-      const { projectClicked, isInvestor, isModalOpen, closeModalOnClick } = this.props;
+      const { project, isInvestor, isModalOpen, closeModalOnClick } = this.props;
       const { model_link } = this.state;
       // const noDataComponent = <h1 className="nodata-text">No data available</h1>
 
       return (
-        <Modal
-          isOpen={isModalOpen}
-          onRequestClose={closeModalOnClick}
-          contentLabel="Project Graph Modal"
-          style={ModalStyle}
-          className="modal-container">
+        // <Modal
+        //   isOpen={isModalOpen}
+        //   onRequestClose={closeModalOnClick}
+        //   contentLabel="Project Graph Modal"
+        //   style={ModalStyle}
+        //   className="modal-container">
 
-          <CloseButton closeModal = {closeModalOnClick} />
+        //   <CloseButton closeModal = {closeModalOnClick} />
 
-          { projectClicked &&
+          // { projectClicked &&
             <React.Fragment>
               <Title nameOfProject={projectClicked.title}/>
               <div className="project-modal-grid">
@@ -74,8 +74,8 @@ class ProjectModules extends React.Component {
 
               </div>
             </React.Fragment>
-          }
-        </Modal>
+          // }
+        // </Modal>
       );
     }
 }

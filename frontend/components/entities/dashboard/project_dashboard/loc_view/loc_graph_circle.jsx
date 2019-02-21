@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-
-
 import { openModal } from '../../../../../actions/modal_actions';
+
 const mapDispatchToProps = dispatch => {
   return {
     openModal: modal => dispatch(openModal(modal))
@@ -34,7 +33,7 @@ class LocGraphCircle extends React.Component {
         transform={transform}
         onMouseEnter={this.handleHover(true)}
         onMouseLeave={this.handleHover(false)}
-        onClick={() => openModal({})}>
+        onClick={() => openModal({ type: "project_module", project })}>
         <circle className={`${className} outter`}
           r={r}
           fill={fill}></circle>

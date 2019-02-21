@@ -1,11 +1,21 @@
 import React from 'react';
 import './developerInfo.scss';
 import { connect } from 'react-redux';
-import { openModal } from '../../../actions/modal_actions';
+import { 
+  openModal,
+  closeModal
+ } from '../../../actions/modal_actions';
+
+const mapPropsToState = state => {
+  return {
+    modals: state.ui.modals
+  };
+};
 
 const mapDispatchToState = dispatch => {
   return {
-    openModal: modal => dispatch(openModal(modal))
+    openModal: modal => dispatch(openModal(modal)),
+    closeModal: () => dispatch(closeModal())
   };
 };
 
@@ -37,23 +47,28 @@ class DeveloperInfo extends React.Component {
   }
 
   handleClick(type) {
+    const { modals, openModal, closeModal } = this.props;
     return (
-      () => this.props.openModal({ type })
+      () => {
+        if (modals.length) closeModal();
+        openModal({ type });
+      }
     );
   }
  
   render() {
+    const { modals } = this.props;
     const { showDropdown } = this.state;
     let activeDropdown = showDropdown ? 'active-dropdown' : '';
     
     const showSidebarOptions = (
       <React.Fragment>
         <li className="strategy">
-          <div className={`button-text strategy-button`}
+          <div className={`button-text strategy-button ${modals[0] && modals[0].type === "strategy" ? "selected" : ""}`}
             onClick={this.handleClick("strategy")}>STRATEGY</div>
         </li>
         <li className="bylaws">
-          <div className={`button-text bylaw-button`}
+          <div className={`button-text bylaw-button ${modals[0] && modals[0].type === "bylaw" ? "selected" : ""}`}
             onClick={this.handleClick("bylaw")}>BYLAWS</div>
         </li>
         <li className="about">
@@ -73,4 +88,4 @@ class DeveloperInfo extends React.Component {
   }
 }
 
-export default connect(null, mapDispatchToState)(DeveloperInfo);
+export default connect(mapPropsToState, mapDispatchToState)(DeveloperInfo);
