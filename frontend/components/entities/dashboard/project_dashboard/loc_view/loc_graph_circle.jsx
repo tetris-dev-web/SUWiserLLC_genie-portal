@@ -13,8 +13,7 @@ class LocGraphCircle extends React.Component {
     super();
 
     this.state = {
-      showText: false,
-      isModalOpen: false
+      showText: false
     };
   }
 

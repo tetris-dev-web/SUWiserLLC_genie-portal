@@ -49,28 +49,28 @@ class ProjectModules extends React.Component {
 
           // { projectClicked &&
             <React.Fragment>
-              <Title nameOfProject={projectClicked.title}/>
+              <Title nameOfProject={project.title}/>
               <div className="project-modal-grid">
 
-                <IframeFor3dModel projectClicked={projectClicked}
+                <IframeFor3dModel projectClicked={project}
                                   model_link ={model_link}/>
-                <ProjectThermo    project={projectClicked}/>
+                <ProjectThermo    project={project}/>
 
                 <CashFlowGraph
-                                  actual_cashflow = {projectClicked.actual_cashflow}
-                                  accum_actual_cashflow = {projectClicked.accum_actual_cashflow}
-                                  projected_cashflow = {projectClicked.projected_cashflow}
-                                  accum_projected_cashflow ={projectClicked.accum_projected_cashflow}
+                                  actual_cashflow = {project.actual_cashflow}
+                                  accum_actual_cashflow = {project.accum_actual_cashflow}
+                                  projected_cashflow = {project.projected_cashflow}
+                                  accum_projected_cashflow ={project.accum_projected_cashflow}
                                   height={200}
                                   width={300}/>
 
                 <SummaryAndPlan
                                   handleKeyPress = {null}
                                   isInvestor = {isInvestor}
-                                  summary = {projectClicked.summary}
-                                  bus_plan_link = {projectClicked.bus_plan_link} />
+                                  summary = {project.summary}
+                                  bus_plan_link = {project.bus_plan_link} />
 
-                <ProjectMap       projectClicked={ projectClicked } />
+                <ProjectMap       projectClicked={ project } />
 
               </div>
             </React.Fragment>
