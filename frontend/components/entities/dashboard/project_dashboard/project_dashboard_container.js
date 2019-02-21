@@ -1,11 +1,16 @@
 import { connect } from 'react-redux';
+// import {
+//   fetchProject,
+//   editProject,
+//   receiveProject
+// } from '../../../../actions/project_actions';
+import { fetchProjectsAndCapitalRaised } from '../../../../actions/chain_actions/crowdsale_actions';
 import {
-  fetchProject,
-  editProject,
-  receiveProject
-} from '../../../../actions/project_actions';
-import { fetchProjects } from '../../../../actions/chain_actions/project_actions';
+  fetchProjects,
+  fetchProject
+} from '../../../../actions/chain_actions/project_actions';
 import ProjectDashboard from './project_dashboard';
+import { fetchTokenPurchaseLogs } from '../../../../actions/chain_actions/token_actions';
 
 const mapStateToProps = state => {
   const currentUser = state.session.currentUser;
@@ -17,9 +22,12 @@ const mapStateToProps = state => {
 
 
   return {
+    web3: state.network.web3,
     projects: state.entities.projects,
     crowdsaleInstance: state.network.crowdsaleInstance,
-    projectContract: state.network.project,
+    projectContract: state.network.projectContract,
+    projectFactoryInstance: state.network.projectFactoryInstance,
+    capitalBeingRaised: state.entities.capitalBeingRaised,
     currentUser,
     isInvestor
   };
@@ -27,10 +35,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    receiveProject: project => dispatch(receiveProject(project)),
-    fetchProjects: (crowdsaleInstance, projectContract) => dispatch(fetchProjects(crowdsaleInstance, projectContract)),
-    fetchProject: project => dispatch(fetchProject(project)),
-    editProject: project => dispatch(editProject(project))
+    fetchTokenPurchaseLogs: (crowdsale, web3) => dispatch(fetchTokenPurchaseLogs(crowdsale, web3)),
+    // receiveProject: project => dispatch(receiveProject(project)),
+    fetchProjectsAndCapitalRaised: (projectFactoryInstance, projectContract, crowdsaleInstance) => dispatch(fetchProjectsAndCapitalRaised(projectFactoryInstance, projectContract, crowdsaleInstance)),
+    fetchProject: (projectFactoryInstance, projectContract, id, address) => dispatch(fetchProject(projectFactoryInstance, projectContract, id, address)),
+    // editProject: project => dispatch(editProject(project))
   };
 };
 

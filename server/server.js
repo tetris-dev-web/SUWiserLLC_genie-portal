@@ -32,6 +32,4 @@ app.get('/', (req, res) => {
 
 const server = app.listen(8080, () => {
   console.log("listening")
-}, (err) => {
-  console.log(`ERR ${err}`)
 })

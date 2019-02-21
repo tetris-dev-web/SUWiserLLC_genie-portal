@@ -55,9 +55,6 @@ module.exports = {
     ]
   },
   devtool: 'source-map',
-  // devServer: {
-  //   publicPath: '/public', port: 8080
-  // },
   devServer: {
     port: 3000,
     open: true,

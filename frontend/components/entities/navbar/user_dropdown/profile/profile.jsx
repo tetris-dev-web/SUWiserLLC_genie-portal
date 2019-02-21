@@ -1,5 +1,4 @@
 import React from 'react';
-import './profile.scss';
 
 class Profile extends React.Component {
   constructor(props) {

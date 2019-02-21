@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
+import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_modules/project_modules_cashflow';
 import CashFlowInputSheet from './cashflow_input_sheet';
-import CashFlowGraph from '../../../dashboard/project_dashboard/project_cashflow_graph.jsx';
 import ModalStyle from './modal_style';
 
 class CashFlowModal extends React.Component {

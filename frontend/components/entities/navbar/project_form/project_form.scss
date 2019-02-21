@@ -1,0 +1,413 @@
+@import "../../../../util/variables";
+$cornerSize: 5px;
+
+.text-input-container {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
+
+.text-input {
+  width: 100%;
+  padding: 2px 3px;
+  color: $black;
+
+  &::-webkit-input-placeholder {
+    color: $db-fade3;
+  }
+}
+
+.file-input-container {
+  display: flex;
+  align-items: center
+}
+
+.file-input {
+  overflow: hidden;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  margin-right: 20px;
+
+  input {
+    -moz-opacity: 0.01;
+    opacity: 0.01;
+    position: absolute;
+    width: 100%;
+    right: 0;
+    top: 0;
+  }
+
+  svg {
+    width: 100%;
+  }
+
+  .st0 {
+    fill: none;
+    stroke: #FFFFFF;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .st1 {
+    clip-path: url(#SVGID_2_);
+    fill: #FFFFFF;
+  }
+}
+
+.form-box {
+  margin-top: 50px;
+  
+  label {
+    margin: 0;
+  }
+  
+  .form-box-title {
+    font-size: 18px;
+    margin: 0;
+
+    &.with-border {
+      padding-left: 5px;
+      border-left: 1px dotted white;
+    }
+  }
+  
+  .form-box-container {
+    width: 85%;
+    margin: 10px auto 0 auto;
+  }
+
+  .form-box-border-layer {
+    position: relative;
+
+    &:before {
+      content: "";
+      position: absolute;
+      border-top: 1px dotted white;
+      border-bottom: 1px dotted white;
+      border-left: 1px dotted white;
+      width: 20px;
+      top: 0;
+      left: 0;
+      height: 100%;
+    }
+  }
+
+  .project-title-input-container {
+    width: 70%;
+    background-color: $white;
+    margin: 10px auto;
+    
+    &:before {
+      content: "";
+      border-right: 2px solid $db-fade3;
+      color: $db-fade3;
+      width: 25px;
+      height: 14px;
+    }
+  }
+  
+  .form-box-lat-long-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 10px 30px;
+
+    .lat-input-container,
+    .long-input-container {
+      background-color: $white;
+      font-size: 10px;
+      width: 55px;
+  
+      &:before {
+        content: "";
+        border-right: 2px solid $db-fade3;
+        color: $db-fade3;
+        width: 20px;
+        height: 14px;
+      }
+    }
+
+    .long-input-container {
+      margin-top: 5px;
+    }
+  }
+
+  .cashflows-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 10px 30px;
+
+    .current-quarter-input-container {
+      margin-top: 5px;
+  
+      .current-quarter-input {
+        color:black;
+        padding-left: 10px;
+        margin-right: 10px;
+        width: 30px;
+        background-color: #fff;
+        border-radius: 5px;
+      }
+    }
+  }
+
+  .pdf-section,
+  .model-id-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px 0 30px;
+
+    .model-id-container {
+      background-color: $white;
+      font-size: 10px;
+      width: 100px;
+  
+      &:before {
+        content: "";
+        border-right: 2px solid $db-fade3;
+        color: $db-fade3;
+        width: 20px;
+        height: 14px;
+      }
+    }
+  }
+
+  .description-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .description-area {
+      color: black;
+      resize: none;
+      width: 90%;
+      height: 100px;
+      border-radius: 8px;
+      border-color: transparent;
+    }
+
+    .submit-button {
+      background-color: white;
+      color: black;
+      padding: 5px 40px;
+      margin-top: 10px;
+    }
+  }
+}
+
+.cornered-container {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: white;
+    .project-form-button-icons {
+      fill: black;
+    }
+  }
+
+  .top-left-corner,
+  .top-right-corner,
+  .bottom-left-corner,
+  .bottom-right-corner {
+    position: absolute;
+    height: $cornerSize;
+    width: $cornerSize;
+  }
+
+  .top-left-corner{
+    top: 0;
+    left: 0;
+    border-top: solid 1px white;
+    border-left: solid 1px white;
+  }
+
+  .top-right-corner{
+    top: 0;
+    right: 0;
+    border-top: solid 1px white;
+    border-right: solid 1px white;
+  }
+
+  .bottom-left-corner{
+    bottom: 0;
+    left: 0;
+    border-bottom: solid 1px white;
+    border-left: solid 1px white;
+  }
+
+  .bottom-right-corner{
+    bottom: 0;
+    right: 0;
+    border-bottom: solid 1px white;
+    border-right: solid 1px white;
+  }
+
+  .project-form-button {
+    position: relative;
+
+    &.drop-pin:hover:after {
+      content: "drop pin";
+      left: 50%;
+      bottom: -20px;
+      transform: translateX(-50%);
+      display: block;
+      position: absolute;
+      white-space: nowrap;
+    }
+
+    &.cashflow:hover:after {
+      content: "cashflows";
+      left: 50%;
+      bottom: -15px;
+      transform: translateX(-50%);
+      display: block;
+      position: absolute;
+      white-space: nowrap;
+    }
+
+    &.pdf:hover:after {
+      content: "plan";
+      right: -30px;
+      top: 40%;
+      transform: translateY(-50%);
+      display: block;
+      position: absolute;
+      white-space: nowrap;
+    }
+
+    &.model-id:hover:after {
+      content: "poly model";
+      right: -60px;
+      top: 40%;
+      transform: translateY(-50%);
+      display: block;
+      position: absolute;
+      white-space: nowrap;
+    }
+  }
+
+  .project-form-button-icons {
+    display: block;
+    fill: white;
+    width: 100%;
+  }
+}
+
+.project-errors {
+  margin-top: 10px;
+  text-align: center;
+  background-color: $lightblue;
+  color: $error-color;
+}
+
+.rates-box{
+  margin: 5px 10px;
+
+  .coins{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .amount-box{
+    width: 25px;
+    height: 25px;
+    background: white;
+    color: grey;
+    text-align: center;
+  }
+
+  .discounts-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cap-row{
+    margin: 6px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .style2 {
+    background: none;
+    border: 1px solid #939DA6;
+    width: 50px;
+    height: 25px;
+    min-width: 30px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.drop-pin-flex {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  .address {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1.5 0 0;
+    height: 100%;
+    color: white;
+    div {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .address-inner {
+      display: flex;
+      flex: 1 0 0;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 70%;
+      font-size: 20px;
+      .city,
+      .continent {
+        display: flex;
+        flex-direction: column;
+        flex: 1 0 0;
+        align-items: center;
+        justify-content: center;
+
+        div:last-child {
+          color: rgb(153, 245, 254);
+        }
+      }
+      input {
+        display: flex;
+        flex: .2 0 0;
+        border-radius: 5px;
+        width: 50%;
+        background: white;
+        color: black;
+        margin: 0 auto;
+      }
+    }
+    input {
+      flex: .2 0 0;
+      width: 50%;
+      background: white;
+      color: black;
+      margin: 0 auto;
+      margin-bottom: 10%;
+    }
+  }
+
+  .drop-pin-container {
+    flex: 5 0 0;
+  }
+}
