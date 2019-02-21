@@ -17,7 +17,8 @@ module.exports = {
     height          : '80%',
     width           : '80%',
     borderRadius    : '10px',
-    padding         : '0px',
+    padding         : '10px',
+    backgroundColor : 'black',
     zIndex          : 101,
     color           : 'white'
   },

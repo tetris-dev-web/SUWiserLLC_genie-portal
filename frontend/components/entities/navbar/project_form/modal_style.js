@@ -11,12 +11,14 @@ module.exports = {
   content : {
     position        : 'fixed',
     width           : '320px',
-    padding         : '0px',
+    padding         : '10px',
     paddingBottom   : 0,
     right           : 0,
     borderRadius    : '0 0 0 15px',
-    backgroundColor : '#4a7a7b',
+    backgroundColor : 'rgba(56, 71, 120, 0.7)',
+    // zIndex          : 101,
     color           : 'white',
-    maxHeight       : '100vh'
+    minHeight       : '480px',
+    height          : '90%',
   },
 };

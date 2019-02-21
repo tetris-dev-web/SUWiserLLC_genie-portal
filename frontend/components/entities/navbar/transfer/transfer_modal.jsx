@@ -1,11 +1,13 @@
 import React from 'react';
 import Modal from 'react-modal';
-import ProjectForm from './project_form_container';
+import DrizzleConsumer from '../../../drizzle/drizzleConsumer';
+
+import Transfer from './transfer';
 import ModalStyle from './modal_style';
 
-
-class ProjectFormModal extends React.Component {
+class TransferModal extends React.Component {
   constructor(props) {
+
     super(props);
 
     this.state = { openModal: false };
@@ -20,11 +22,6 @@ class ProjectFormModal extends React.Component {
     this.closeModal = this.closeModal.bind(this);
   }
 
-  // solves 'Warning: react-modal: App element is not defined'
-  UNSAFE_componentWillMount() {
-    Modal.setAppElement('body');
-  }
-
   openModal() {
     this.setState({openModal: true});
   }
@@ -37,22 +34,21 @@ class ProjectFormModal extends React.Component {
 
     return (
       <div className="modal-button-cont">
-        <div className="modal-button" onClick={this.openModal}>Manage</div>
+        <div className="modal-button" onClick={this.openModal}>Transfer</div>
 
         <Modal
           isOpen={this.state.openModal}
           onRequestClose={this.closeModal}
           style={ModalStyle}
-          contentLabel="Manage Modal"
+          contentLabel="Transfer Modal"
           className="modal-container">
-        <ProjectForm
-          closeModal={this.closeModal}
-          drizzleState={this.props.drizzleState}
-          />
         </Modal>
       </div>
     );
   }
 }
+// account={this.props.account}
+// contract={this.props.contract}
 
-export default ProjectFormModal;
+// <DrizzleConsumer props={{closeModal: this.closeModal}} component={Transfer}/>
+export default TransferModal;

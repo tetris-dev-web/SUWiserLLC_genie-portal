@@ -9,8 +9,7 @@ import {
 import Navbar from './entities/navbar/navbar_container';
 import Landing from './entities/landing/landing';
 import Dashboard from './entities/dashboard/dashboard';
-import DeveloperInfo from './entities/developerInfo/DeveloperInfo';
-// import Footer from './entities/footer/footer';
+import Footer from './entities/footer/footer';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import GNITokenCrowdsale from '../../truffle/build/contracts/GNITokenCrowdsale.json';
@@ -56,11 +55,14 @@ class App extends React.Component {
   // }
 
   componentDidMount () {
-    if(this.props.web3){
-      this.props.votingInstance.VoteChange().watch((error, event) => {
-        console.log(event); //TODO log to state
-      });
-    }
+    this.props.crowdsaleInstance.VoteAddition().watch((error, event) => {
+        console.log(event);
+    });
+
+    this.props.crowdsaleInstance.VoteRemoval().watch((error, event) => {
+      console.log(event)
+    });
+    
   }
 
   voteTest () {
@@ -79,15 +81,15 @@ class App extends React.Component {
 
   render() {
     return (
-      <div style={{height: "100%"}}>
+      <div className="">
+        <div onClick={this.voteTest}>VoteTest</div>
         <Navbar />
-        <DeveloperInfo />
         <RedirectedRoute />
         <Switch>
           <AuthRoute path="/login" component={Landing} />
           <ProtectedRoute path="/dashboard" component={Dashboard} />
         </Switch>
-        {/* <Footer /> */}
+        <Footer />
       </div>
     );
   }
@@ -96,9 +98,7 @@ class App extends React.Component {
 const mapStateToProps  = state => {
   return {
     account: state.network.account,
-    web3: state.network.web3,
-    crowdsaleInstance: state.network.crowdsaleInstance,
-    votingInstance: state.network.votingInstance
+    crowdsaleInstance: state.network.crowdsaleInstance
   };
 };
 

@@ -1,5 +1,3 @@
-//will remove eventually
-
 import * as APIUtil from '../util/project_api_util';
 
 export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS'; //seems redundant

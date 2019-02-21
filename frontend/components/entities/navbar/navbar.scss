@@ -1,4 +1,4 @@
-@import "./frontend/util/_variables.scss";
+@import "../../variables";
 
 .navbar-container {
   width: 100%;
@@ -42,9 +42,7 @@
   margin-right: 20px;
 }
 
-.modal-button,
-.modal-button-modal-open {
-  cursor: pointer;
+.modal-button {
   text-transform: uppercase;
   background-color: $white;
   height: 45px;
@@ -58,6 +56,7 @@
   margin: 0 8px;
   transition: all .2s ease-in-out;
   &:hover {
+    cursor: pointer;
     color: $lightblue;
     transform: scale(1, 1.1);
   }
@@ -66,17 +65,21 @@
   }
 }
 
-.modal-button-modal-open {
-  position: relative;
-  z-index: 50;
-  color: $green;
-}
-
 .modal-container {
   &:focus {
     outline: none;
   }
 }
+
+.form-box {
+  padding: 5px;
+  // font-size: $font-md;
+  align-items: center;
+
+}
+
+
+
 
 // Session form
 .session-button-cont {
@@ -95,6 +98,61 @@
     outline: none;
   }
 }
+
+.form-box {
+  display: flex;
+  flex-direction: column;
+  .errors {
+    color: #C33131;
+    margin-bottom: 8px;
+  }
+  .form-header {
+    margin-bottom: 10px;
+    text-transform: lowercase;
+  }
+  .session-input {
+    background-color: $white;
+    margin-bottom: 8px;
+    border-radius: 9px;
+    padding: 3px 3px 4px 5px;
+    width: 150px;
+    color: $black;
+  }
+  .checkbox-container {
+    margin-top: 10px;
+    display: flex;
+    .checkbox-text {
+      margin-left: 10px;
+      width: 225px;
+      margin-top: -2px;
+    }
+  }
+  .submit-button {
+    margin-top: 15px;
+    background-color: $db-fade;
+    padding: 5px 25px;
+    // border-radius: 13px;
+    color: $white;
+    text-transform: lowercase;
+    transition: all 0.5s ease-in-out;
+    &:hover {
+      background-color: $darkblue;
+      transform: translateY(-1px);
+    }
+    &:active {
+
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+  .confirmed {
+    margin: 5px 0 0 10px;
+    font-size: $font-sm;
+    width: 225px;
+  }
+}
+
 
 // // // Larger than 768px
 // // @media only screen and (min-width: 768px) {
