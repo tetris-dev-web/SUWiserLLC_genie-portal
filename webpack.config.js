@@ -1,3 +1,4 @@
+
 const path = require("path");
 const webpack = require("webpack");
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -6,12 +7,13 @@ module.exports = {
   context: __dirname,
   entry: ["@babel/polyfill", "./frontend/entry.jsx"],
   output: {
-    path: path.resolve(__dirname, "app", "assets", "javascripts"),
-    filename: "bundle.js"
-  },
+     path: path.resolve(__dirname, 'dist'),
+     publicPath: '/',
+     filename: 'bundle.js'
+   },
   plugins: [
     new miniCssExtractPlugin({
-      path: path.resolve(__dirname, "app", "assets", "stylesheets"),
+      path: path.resolve(__dirname, "stylesheets"),
       filename: 'bundle.scss'
     })
   ],
@@ -48,9 +50,16 @@ module.exports = {
     ]
   },
   devtool: 'source-map',
+  // devServer: {
+  //   publicPath: '/public', port: 8080
+  // },
   devServer: {
-    publicPath: '/public', port: 8080
-  },
+    port: 3000,
+    open: true,
+    proxy: {
+        "/api": "http://localhost:8080"
+    }
+},
   resolve: {
     extensions: [".js", ".jsx", "*"]
   }
