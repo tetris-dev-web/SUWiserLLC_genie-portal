@@ -1,6 +1,4 @@
 import React from 'react';
-import Modal from 'react-modal';
-import ModalStyle from './modal_style';
 import ProjectMap from './project_modules_map';
 import ProjectThermo from './project_modules_thermo';
 import CashFlowGraph from './project_modules_cashflow';
