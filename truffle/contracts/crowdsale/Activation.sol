@@ -8,11 +8,12 @@ import '../project/Project.sol';
 import '../token/InactiveToken.sol';
 import '../projectLeader/ProjectLeaderTracker.sol';
 import './GNITokenCrowdsale.sol';
+import '../Amendment.sol';
 
 //owner will be Voting
 //secondary will be project factory
 
-contract Activation is Ownable, ProjectFactoryLocked {
+contract Activation is Ownable, ProjectFactoryLocked, Amendment {
   using SafeMath for uint256;
   InactiveToken public inactiveToken;
   ProjectLeaderTracker public projectLeaderTracker;

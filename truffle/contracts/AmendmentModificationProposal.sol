@@ -1,23 +1,27 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './Amendment.sol'
-import './utility/Ownable.sol'
-import './utility/SafeMath.sol'
+import './Amendment.sol';
+import './AmendmentPoll.sol';
+import './utility/Ownable.sol';
+import './utility/SafeMath.sol';
+import './Cooperative0.sol';
 
 contract AmendmentModificationProposal is Ownable {
   using SafeMath for uint256;
   uint256 public amendmentId;
   AmendmentPoll public amendmentPoll;
+  address developer;
 
-  constructor(uint256 _amendmentId, AmendmentPoll _amendmentPoll) public {
+  constructor(uint256 _amendmentId, AmendmentPoll _amendmentPoll, address _developer) public {
     amendmentId = _amendmentId;
     amendmentPoll = AmendmentPoll(_amendmentPoll);
+    developer = _developer;
   }
 
   uint256 public totalModifications;
   uint256 public totalModificationsExecuted;
 
   struct Modification {
-    Amendment newAmendment,
+    address newAmendment;
     bool executed;
     bool exists;
   }
@@ -26,10 +30,11 @@ contract AmendmentModificationProposal is Ownable {
 
   function addModification (uint256 coAmendmentId, Amendment newCoAmendment) external {
     require(msg.sender == developer);
-    require(amendmentPoll.open());
+    require(Cooperative0(owner).canModify(coAmendmentId));
+    require(!amendmentPoll.open());
     totalModifications = totalModifications.add(1);
     Modification memory newModification;
-    newModification.newAmendment = newCoAmendment;
+    newModification.newAmendment = address(newCoAmendment);
     newModification.exists = true;
     modificationByCoAmendment[coAmendmentId] = newModification;
   }
@@ -37,12 +42,12 @@ contract AmendmentModificationProposal is Ownable {
   function executeModification (uint256 coAmendmentId) external {
     require(modificationByCoAmendment[coAmendmentId].exists);
     totalModificationsExecuted = totalModificationsExecuted.add(1);
-    Amendment newCoAmendment = modificationByCoAmendment[coAmendmentId].newAmendment;
+    address newCoAmendment = modificationByCoAmendment[coAmendmentId].newAmendment;
     bool finalModification = totalModificationsExecuted == totalModifications;
 
-    Cooperative(owner).adoptAmendmentModification(
+    Cooperative0(owner).adoptAmendmentModification(
       amendmentId,
-      coAmendmentmentId,
+      coAmendmentId,
       newCoAmendment,
       finalModification
       );

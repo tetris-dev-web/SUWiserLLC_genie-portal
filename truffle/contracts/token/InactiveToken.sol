@@ -2,15 +2,98 @@ pragma solidity >=0.4.22 <0.6.0;
 
 import '../utility/CrowdsaleLocked.sol';
 import '../utility/ActivationLocked.sol';
+import '../utility/SafeMath.sol';
+import './VotingToken.sol';
 import './ActiveToken.sol';
 
 //we need to activate pending on transfer
-contract InactiveToken is ERC20Base, CrowdsaleLocked, ActivationLocked {
+contract InactiveToken is CrowdsaleLocked, ActivationLocked {
+  using SafeMath for uint256;
+  VotingToken public votingToken;
   ActiveToken public activeToken;
 
   constructor (VotingToken _votingToken, ActiveToken _activeToken) public
-  ERC20Base(_votingToken) {
+  {
+    votingToken = VotingToken(_votingToken);
     activeToken = ActiveToken(_activeToken);
+  }
+
+  event Transfer(address indexed from, address indexed to, uint256 value);
+
+  event Approval(address indexed owner, address indexed spender, uint256 value);
+
+  mapping (address => uint256) internal _balances;
+
+  mapping (address => mapping (address => uint256)) internal _allowed;
+
+  uint256 internal _totalSupply;
+
+
+  function totalSupply() public view returns (uint256) {
+      return _totalSupply;
+  }
+
+  function allowance(address owner, address spender) public view returns (uint256) {
+      return _allowed[owner][spender];
+  }
+
+  function transfer(address to, uint256 value) public returns (bool) {
+      _transfer(msg.sender, to, value);
+      return true;
+  }
+
+  function approve(address spender, uint256 value) public returns (bool) {
+      _approve(msg.sender, spender, value);
+      return true;
+  }
+
+  function transferFrom(address from, address to, uint256 value) public returns (bool) {
+      _transfer(from, to, value);
+      _approve(from, msg.sender, _allowed[from][msg.sender].sub(value));
+      return true;
+  }
+
+  function increaseAllowance(address spender, uint256 addedValue) public returns (bool) {
+      _approve(msg.sender, spender, _allowed[msg.sender][spender].add(addedValue));
+      return true;
+  }
+
+  function decreaseAllowance(address spender, uint256 subtractedValue) public returns (bool) {
+      _approve(msg.sender, spender, _allowed[msg.sender][spender].sub(subtractedValue));
+      return true;
+  }
+
+  function _transfer(address from, address to, uint256 value) internal {
+      require(to != address(0));
+      require(votingToken.freedUpBalanceOf(to) >= value);
+      prepareTransfer(from, to);
+      _balances[from] = _balances[from].sub(value);
+      _balances[to] = _balances[to].add(value);
+      emit Transfer(from, to, value);
+  }
+
+  function _mint(address account, uint256 value) internal {
+      require(account != address(0));
+
+      _totalSupply = _totalSupply.add(value);
+      _balances[account] = _balances[account].add(value);
+      emit Transfer(address(0), account, value);
+  }
+
+  function _burn(address account, uint256 value) internal {
+      require(account != address(0));
+
+      _totalSupply = _totalSupply.sub(value);
+      _balances[account] = _balances[account].sub(value);
+      emit Transfer(account, address(0), value);
+  }
+
+  function _approve(address owner, address spender, uint256 value) internal {
+      require(spender != address(0));
+      require(owner != address(0));
+
+      _allowed[owner][spender] = value;
+      emit Approval(owner, spender, value);
   }
 
   struct InactiveTokenCycle {
@@ -37,19 +120,9 @@ contract InactiveToken is ERC20Base, CrowdsaleLocked, ActivationLocked {
 
   function balanceOf(address _who) public view returns (uint256) {
     if (accountCycleUpdated(_who)) {
-      return super.balanceOf(_who);
+      return _balances[_who];
     }
     return 0;
-  }
-
-  function transfer (address _to,  uint256 _value) public returns (bool) {
-    prepareTransfer(msg.sender, _to);
-    return super.transfer(_to, _value);
-  }
-
-  function transferFrom (address from, address to, uint256 value) public returns (bool) {
-    prepareTransfer(from, to);
-    return super.transferFrom(from, to, value);
   }
 
   function prepareTransfer (address from, address to) internal {
@@ -59,8 +132,8 @@ contract InactiveToken is ERC20Base, CrowdsaleLocked, ActivationLocked {
   }
 
   function mint(address account, uint256 value) external onlyCrowdsale {
-    prepareForBalanceChange(account);
-    recordAccount(_to);
+    prepareBalanceChange(account);
+    recordAccount(account);
     _mint(account, value);
   }
 
@@ -76,14 +149,14 @@ contract InactiveToken is ERC20Base, CrowdsaleLocked, ActivationLocked {
   }
 
   function pendingActivations(address account) public view returns (uint256) {
-    require(account != crowdsale);
+    require(account != crowdsale());
     uint256 pendingActivationPoints = totalActivationPoints.sub(lastActivationPoints[account]);
-    uint256 inactiveAccountTokens = super.balanceOf(account);
+    uint256 inactiveAccountTokens = _balances[account];
     return inactiveAccountTokens.mul(pendingActivationPoints).div(activationMultiplier);
   }
 
   function activatePending (address account) public returns (bool) {
-    if (account != crowdsale) {
+    if (account != crowdsale()) {
       uint256 tokens = pendingActivations(account);
       activate(account, tokens);
       lastActivationPoints[account] = totalActivationPoints;
@@ -99,15 +172,15 @@ contract InactiveToken is ERC20Base, CrowdsaleLocked, ActivationLocked {
     );
 
     uint256 inactiveSupply = totalSupply().sub(balanceOf(crowdsale())).sub(totalPendingActivations);
-    require(totalPendingActivations.add(amount) < inactiveSupply());
+    require(totalPendingActivations.add(amount) <= totalSupply().sub(totalPendingActivations));
 
     uint256 newActivationPoints = amount.mul(activationMultiplier).div(inactiveSupply);
     totalActivationPoints = totalActivationPoints.add(newActivationPoints);
     totalPendingActivations = totalPendingActivations.add(amount);
   }
 
-  function recordAccount (account) internal {
-    if (inactiveTokenCycle[currentInactiveTokenCycle].idByAccount[_to] == 0) {
+  function recordAccount (address account) internal {
+    if (inactiveTokenCycle[currentInactiveTokenCycle].idByAccount[account] == 0) {
       inactiveTokenCycle[currentInactiveTokenCycle].totalAccounts = inactiveTokenCycle[currentInactiveTokenCycle].totalAccounts.add(1);
       inactiveTokenCycle[currentInactiveTokenCycle].idByAccount[account] = inactiveTokenCycle[currentInactiveTokenCycle].totalAccounts;
       inactiveTokenCycle[currentInactiveTokenCycle].accountById[inactiveTokenCycle[currentInactiveTokenCycle].totalAccounts] = account;
@@ -122,7 +195,7 @@ contract InactiveToken is ERC20Base, CrowdsaleLocked, ActivationLocked {
     inactiveTokenCycle[currentInactiveTokenCycle].updated[account] = true;
 
     if (inactiveTokenCycle[currentInactiveTokenCycle.sub(1)].idByAccount[account] != 0) {
-      inactiveTokenCycle.totalUpdated = inactiveTokenCycle.totalUpdated.add(1);
+      inactiveTokenCycle[currentInactiveTokenCycle].totalUpdated = inactiveTokenCycle[currentInactiveTokenCycle].totalUpdated.add(1);
     }
   }
 

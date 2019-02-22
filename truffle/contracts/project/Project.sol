@@ -83,7 +83,7 @@ contract Project is Ownable, Secondary {
   function deposit () public payable {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
-    ReceiveCashFlow(msg.value, now);
+    emit ReceiveCashFlow(msg.value, now);
     Dividends(dividendWallet).receiveDividends.value(weiAmount)();
   }
 
@@ -107,7 +107,6 @@ contract Project is Ownable, Secondary {
     removeVotes_(voter, voteAmount);
   }
 
-  //when the project has closed
   function removeVotes (address voter, uint256 voteAmount) external onlyOwner {
     require(!open() || active);
     removeVotes_(voter, voteAmount);
@@ -119,12 +118,11 @@ contract Project is Ownable, Secondary {
 
     votes[voter] = votes[voter].sub(voteAmount);
     totalVotes = totalVotes.sub(voteAmount);
-    closingTime = closingTime.sub(43200);//we need to handle the case that the project closed
+    closingTime = closingTime.sub(43200);
   }
 
   function activate () external onlyPrimary returns(uint256) {
     active = true;
-    //we should set totalVotes to 0
     activationTime = now;
     return activationTime;
   }

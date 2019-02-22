@@ -1,17 +1,18 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './Amendment.sol';
-import './AmendmentModificationProposal.sol';
-import './NewAmendmentProposal.sol';
 import './utility/SafeMath.sol';
-import './Cooperative.sol'
+import './Cooperative.sol';
+import './AmendmentPoll.sol';
+import './Proposals.sol';
 
-contract Cooperative0.0 is Cooperative {
+contract Cooperative0 is Cooperative {
   using SafeMath for uint256;
-  AmendmentPoll public _amendmentPoll;
+  AmendmentPoll public amendmentPoll;
 
   constructor(address _developer, AmendmentPoll _amendmentPoll) public
   Cooperative(_developer) {
     developer = _developer;
+    amendmentPoll = AmendmentPoll(_amendmentPoll);
   }
 
   Proposals public currentProposals;
@@ -23,10 +24,10 @@ contract Cooperative0.0 is Cooperative {
       newCooperative == address(0) &&
       (adoptionsComplete() || amendmentPoll.proposalsFailed())
     );
-    address newProposals = new Proposals();
+    address newProposals = new Proposals(developer, amendmentPoll);
     currentProposals = Proposals(newProposals);
     totalCompleteAdoptions = 0;
-    cantInitElection = true;
+    canInitElection = true;
   }
 
   function initElection () external {
@@ -37,7 +38,7 @@ contract Cooperative0.0 is Cooperative {
     canInitElection = false;
   }
 
-  uint256 totalCompleteAdoptions;
+  uint256 public totalCompleteAdoptions;
 
   address public newCooperative;
   uint256 totalAmendmentsMigrated;
@@ -52,15 +53,15 @@ contract Cooperative0.0 is Cooperative {
 
   function migrateAmendmentToNewCooperative (uint256 amendmentId) external {
     require(newCooperative != address(0));
-    require(!migrated[amendmentId])
+    require(!migrated[amendmentId]);
     require(adoptionsComplete());
 
     Amendment amendmentToMigrate = amendmentById[amendmentId];
     Cooperative _newCooperative = Cooperative(newCooperative);
 
     if (!amendmentToMigrate.depricated()) {
-      newCooperative.newCooperative.migrateAmendment(amendmentToMigrate);
-      amendmentToMigrate.transferCooperative(newCooperative.newCooperative);
+      _newCooperative.migrateAmendment(amendmentToMigrate, replacable[amendmentId]);
+      amendmentToMigrate.transferOwnership(newCooperative);
     }
 
     migrated[amendmentId] = true;
@@ -75,32 +76,35 @@ contract Cooperative0.0 is Cooperative {
   function adoptAmendmentModification (
     uint256 amendmentId,
     uint256 coAmendmentToUpdateId,
-    Amendment newReferenceAmendment,
+    address newReferenceAmendment,
     bool finalModification
     ) external {
     require(amendmentPoll.proposalsPassed());
-    require(currentProposals.modificationPropsalExists(msg.sender));// or its a new amendment and the new amendmnet has been added already
+    require(currentProposals.modificationProposalExists(msg.sender));// or its a new amendment and the new amendmnet has been added already
 
     Amendment amendmentToModify = amendmentById[amendmentId];
     amendmentToModify.modifyAmendment(coAmendmentToUpdateId, newReferenceAmendment);
-    currentProposals.recordModificationAdoption(msg.sender);//prevent reentrancy
+
+    if (finalModification) {
+      currentProposals.recordModificationAdoption(msg.sender);//prevent reentrancy
+    }
 
     updateCompleteAdoptions(finalModification);
   }
 
-  function adoptNewAmendment (Amendment newAmendment) external {
+  function adoptNewAmendment (address newAmendment) external {
     require(amendmentPoll.proposalsPassed());
-    require(currentProposals.newProposalExists(msg.sender));
+    require(currentProposals.newProposalExists(newAmendment));
 
     totalAmendmentCount = totalAmendmentCount.add(1);
-    amendmentById[totalAmendmentCount] = newAmendment;
+    amendmentById[totalAmendmentCount] = Amendment(newAmendment);
     currentProposals.recordNewAdoption(msg.sender);
-    
+
     updateCompleteAdoptions(true);
   }
 
   function adoptAmendmentRemoval (uint256 amendmentId) external {
-    require(amendment.proposalsPassed());
+    require(amendmentPoll.proposalsPassed());
     require(currentProposals.removalProposalExists(msg.sender));
 
     Amendment amendmentToRemove = amendmentById[amendmentId];
@@ -116,7 +120,8 @@ contract Cooperative0.0 is Cooperative {
     }
   }
 
-  function adoptionsComplete () internal returns (bool) {
-    return totalCompleteAdoptions == currentProposals.totalNewAmendments().add(currentProposals.totalAmendmentModifications).add(currentProposals.totalAmendmentRemovals());
+  function adoptionsComplete () internal view returns (bool) {
+    /* return true; */
+    return totalCompleteAdoptions == currentProposals.totalNewAmendments().add(currentProposals.totalAmendmentModifications()).add(currentProposals.totalAmendmentRemovals());
   }
 }

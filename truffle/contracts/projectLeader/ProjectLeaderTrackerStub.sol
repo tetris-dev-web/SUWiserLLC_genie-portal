@@ -4,7 +4,7 @@ import '../ContractStub.sol';
 
 contract ProjectLeaderTrackerStub is ProjectLeaderTracker, ContractStub {
   address addr;
-  function trackProject (address  projectAddr) public { //we need more tests for new functionality (when its implemented)
+  function trackProject (address  projectAddr) external { //we need more tests for new functionality (when its implemented)
     CallData storage methodState = method['trackProject'];
     methodState.firstAddress = projectAddr;
     methodState.called = true;

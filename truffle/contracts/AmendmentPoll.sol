@@ -1,5 +1,5 @@
 pragma solidity >=0.4.22 <0.6.0;
-import './utility/Ownable.sol'
+import './utility/Ownable.sol';
 import './utility/SafeMath.sol';
 import './token/ActiveToken.sol';
 
@@ -16,7 +16,7 @@ contract AmendmentPoll is Ownable {
   }
 
   uint256 public currentPollId;
-  mapping(uint256 => VoterRecord) public voteRecordByPoll;
+  mapping(uint256 => VoteRecord) voteRecordByPoll;
   uint256 public totalInFavorWeighted;
   uint256 public totalAgainstWeighted;
   uint256 public totalInFavor;
@@ -24,28 +24,29 @@ contract AmendmentPoll is Ownable {
 
   uint256 private voteMultiplier = 10e30;
 
-  function proposalsPassed () public returns (bool) {
-    return (
-      totalInFavorWeighted.mul(voteMultiplier) > token.totalSupply().mul(voteMultiplier).mul(8).div(10)
-      );
-    ;
+  function proposalsPassed () public view returns (bool) {
+    return totalInFavorWeighted.mul(voteMultiplier) > token.totalSupply().mul(voteMultiplier).mul(8).div(10);
   }
 
-  function proposalsFailed () public returns (bool) {
+  function proposalsFailed () public view returns (bool) {
     return totalAgainstWeighted.mul(voteMultiplier) >= token.totalSupply().mul(voteMultiplier).mul(2).div(10);
   }
 
-  function openPoll () external onylOwner {
+  function open () public view returns (bool) {
+    return !(proposalsFailed() || proposalsPassed());
+  }
+
+  function openPoll () external onlyOwner {
     totalInFavorWeighted = 0;
     totalAgainstWeighted = 0;
-    currrentPollId = currentPollId.add(1);
-    VoterRecord memory newVoteRecord;
+    currentPollId = currentPollId.add(1);
+    VoteRecord memory newVoteRecord;
     voteRecordByPoll[currentPollId] = newVoteRecord;
   }
 
   function castVote (bool inFavor) external {
     require(currentPollId != 0);
-    require(!voteRecordByPoll[currentPollId].voteCast[msg.sender])
+    require(!voteRecordByPoll[currentPollId].voteCast[msg.sender]);
 
     uint256 voteAmount = token.balanceOf(msg.sender);
 

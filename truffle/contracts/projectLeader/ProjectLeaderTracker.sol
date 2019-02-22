@@ -4,9 +4,10 @@ import '../utility/CrowdsaleLocked.sol';
 import '../utility/ActivationLocked.sol';
 import '../utility/ProjectFactoryLocked.sol';
 import '../utility/SafeMath.sol';
+import '../Amendment.sol';
 
 
-contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFactoryLocked {
+contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFactoryLocked, Amendment {
   using SafeMath for uint256;
   uint256 public candidateCount;
   address  public tentativeLeaderAddr;

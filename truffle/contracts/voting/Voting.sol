@@ -6,8 +6,9 @@ import '../token/VotingToken.sol';
 import '../projectLeader/ProjectLeaderTracker.sol';
 import '../crowdsale/Activation.sol';
 import '../ECRecovery.sol';
+import '../Amendment.sol';
 
-contract Voting is Ownable {
+contract Voting is Ownable, Amendment {
   /* using ECRecovery for bytes32; */
   VotingToken public votingToken;
   ProjectLeaderTracker public projectLeaderTracker;

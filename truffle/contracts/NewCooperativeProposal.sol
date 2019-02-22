@@ -1,16 +1,16 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './Amendment.sol';
 import './utility/Ownable.sol';
-import './Cooperative.sol';
+import './Cooperative0.sol';
 
-contract NewAmendmentProposal is Ownable {
-  Cooperative public newCooperative;
+contract NewCooperativeProposal is Ownable {
+  address public newCooperative;
 
   constructor (address _newCooperative) public {
     newCooperative = _newCooperative;
   }
 
   function executeAmendment () public {
-    Cooperative(owner).adoptNewCooperative(newCooperative);
+    Cooperative0(owner).adoptNewCooperative(newCooperative);
   }
 }

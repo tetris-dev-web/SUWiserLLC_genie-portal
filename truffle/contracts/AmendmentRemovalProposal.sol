@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.6.0;
 import './Amendment.sol';
 import './utility/Ownable.sol';
-import './Cooperative.sol';
+import './Cooperative0.sol';
 
 contract AmendmentRemovalProposal is Ownable {
   uint256 amendmentId;
@@ -11,6 +11,6 @@ contract AmendmentRemovalProposal is Ownable {
   }
 
   function executeRemoval () public {
-    Cooperative(owner).adoptAmendmentRemoval(amendmentId);
+    Cooperative0(owner).adoptAmendmentRemoval(amendmentId);
   }
 }

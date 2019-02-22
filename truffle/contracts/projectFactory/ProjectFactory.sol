@@ -7,6 +7,7 @@ import '../crowdsale/Activation.sol';
 import '../utility/Ownable.sol';
 import '../utility/CrowdsaleLocked.sol';
 import '../crowdsale/GNITokenCrowdsale.sol';
+import './ProjectFactoryHelper.sol';
 //this will know developer and Crowdsale
 contract ProjectFactory is CrowdsaleLocked {
   using SafeMath for uint256;
@@ -16,18 +17,15 @@ contract ProjectFactory is CrowdsaleLocked {
   GNITokenCrowdsale public crowdsale;
   address public developer;
   address public dividendWallet;
+  ProjectFactoryHelper public projectFactoryHelper;
 
   constructor (
-    Activation _activation,
-    Voting _voting,
-    ProjectLeaderTracker _projectLeaderTracker,
+    ProjectFactoryHelper _projectFactoryHelper,
     GNITokenCrowdsale _crowdsale,
     address _developer,
     address _dividendWallet
     ) public {
-    activation = _activation;
-    voting = _voting;
-    projectLeaderTracker = _projectLeaderTracker;
+    projectFactoryHelper = _projectFactoryHelper;
     crowdsale = _crowdsale;
     developer = _developer;
     dividendWallet = _dividendWallet;
@@ -51,7 +49,6 @@ contract ProjectFactory is CrowdsaleLocked {
     uint256 _capitalRequired,
     string _cashFlow
   ) external //make this developer instead
-    returns (address)
   {
     require(msg.sender == developer);
     (uint256 _developerTokens, uint256 _investorTokens) = GNITokenCrowdsale(crowdsale).mintNewProjectTokensAndExtendDoomsDay(_capitalRequired, _valuation);
@@ -69,18 +66,7 @@ contract ProjectFactory is CrowdsaleLocked {
 
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
-
-    Project(projectAddr).transferOwnership(address(Voting(voting)));
-    Project(projectAddr).transferPrimary(address(Activation(activation)));
-
-    ProjectLeaderTracker(projectLeaderTracker).handleProjectPitch();
-
-    if (_capitalRequired == 0) {
-      activation.activateProject(projectAddr, _capitalRequired);
-    }
-
+    projectFactoryHelper.handleNewProject(projectAddr);
     emit ProjectPitch(projectAddr, totalProjectCount);
-    /* return projectAddr; */
-    return address(0);
   }
 }

@@ -2,26 +2,35 @@ pragma solidity >=0.4.22 <0.6.0;
 import './utility/Ownable.sol';
 import './AmendmentRemovalProposal.sol';
 import './AmendmentModificationProposal.sol';
-import './NewAmendmentProposal.sol';
+import './AmendmentPoll.sol';
+import './Cooperative0.sol';
 
 contract Proposals is Ownable {
-  bool notAcceptingNewProposals;
+  address public developer;
+  AmendmentPoll public amendmentPoll;
 
-  uint256 totalNewAmendments;
-  mapping(uint256 => NewAmendmentProposal) newProposal;
-  mapping(address => bool) newProposalExists;
+  constructor(address _developer, AmendmentPoll _amendmentPoll) public {
+    developer = _developer;
+    amendmentPoll = AmendmentPoll(_amendmentPoll);
+  }
 
-  uint256 totalAmendmentModifications;
-  mapping(uint256 => AmendmentModificationProposal) modificationProposal;
-  mapping(address => bool) modificationProposalExists;
+  bool public notAcceptingNewProposals;
 
-  uint256 totalAmendmentRemovals;
-  mapping(uint256 => AmendmentRemovalProposal) removalProposal;
-  mapping(address => bool) removalProposalExists;
+  uint256 public totalNewAmendments;
+  mapping(uint256 => address) internal newProposal;
+  mapping(address => bool) internal _newProposalExists;
+
+  uint256 public totalAmendmentModifications;
+  mapping(uint256 => AmendmentModificationProposal) internal modificationProposal;
+  mapping(address => bool) internal _modificationProposalExists;
+
+  uint256 public totalAmendmentRemovals;
+  mapping(uint256 => AmendmentRemovalProposal) internal removalProposal;
+  mapping(address => bool) internal _removalProposalExists;
 
   address public newCooperative;
 
-  function newCooperativeProposalExists (address _newCooperative) public {
+  function newCooperativeProposalExists (address _newCooperative) public returns (bool) {
     return newCooperative == _newCooperative;
   }
 
@@ -33,37 +42,50 @@ contract Proposals is Ownable {
     require(msg.sender == developer);
     require(newCooperative == address(0));
     require(!notAcceptingNewProposals);
-    newCooperative = new NewCooperative(_newCooperative);
+    newCooperative = _newCooperative;
   }
 
   function proposeAmendmentModification (uint256 amendmentId) external {
     require(msg.sender == developer);
     require(!notAcceptingNewProposals);
-    address proposalAddress = new AmendmentModificationProposal(amendmentId, address(amendmentPoll));
-    AmendmentModificationProposal newProposal = AmendmentModificationProposal(proposalAddress);
-    totalAmendmentModifications = totalAmendmentModifications.add(1);
-    modificationProposal[totalAmendmentModifications] = newProposal;
-    modificationProposalExists[proposalAddress];
+    address proposalAddress = new AmendmentModificationProposal(amendmentId, amendmentPoll, developer);
+    AmendmentModificationProposal _newProposal = AmendmentModificationProposal(proposalAddress);
+    _newProposal.transferOwnership(_owner());
+    totalAmendmentModifications = totalAmendmentModifications + 1;
+    modificationProposal[totalAmendmentModifications] = _newProposal;
+    _modificationProposalExists[proposalAddress];
   }
 
   function proposeNewAmendment (Amendment newAmendment) external {
     require(msg.sender == developer);
     require(!notAcceptingNewProposals);
-    address proposalAddress = new NewAmendmentProposal(newAmendment);
-    NewAmendmentProposal newProposal = NewAmendmentProposal(proposalAddress);
-    totalNewAmendments = totalNewAmendments.add(1);
-    newProposal[totalNewAmendments] = newProposal;
-    newProposalExists[proposalAddress];
+    totalNewAmendments = totalNewAmendments + 1;
+    newProposal[totalNewAmendments] = address(newAmendment);
+    _newProposalExists[newAmendment];
   }
 
   function proposeAmendmentRemoval (uint256 amendmentId) external {
     require(msg.sender == developer);
+    require(Cooperative0(owner).canModify(amendmentId));
     require(!notAcceptingNewProposals);
-    address proposalAddress = new AmendmentRemovalProposal(newAmendment);
-    AmendmentRemovalProposal removeProposal = AmendmentRemovalProposal(proposalAddress);
-    totalAmendmentRemovals = totalAmendmentRemovals.add(1);
-    removalProposal[totalAmendmentRemovals] = removalProposal;
-    removalProposalExists[proposalAddress];
+    address proposalAddress = new AmendmentRemovalProposal(amendmentId);
+    AmendmentRemovalProposal _removalProposal = AmendmentRemovalProposal(proposalAddress);
+    _removalProposal.transferOwnership(_owner());
+    totalAmendmentRemovals = totalAmendmentRemovals + 1;
+    removalProposal[totalAmendmentRemovals] = _removalProposal;
+    _removalProposalExists[proposalAddress];
+  }
+
+  function modificationProposalExists(address _modificationProposal) external returns (bool) {
+    return _modificationProposalExists[_modificationProposal];
+  }
+
+  function removalProposalExists(address _removalProposal) external returns (bool) {
+    return _removalProposalExists[_removalProposal];
+  }
+
+  function newProposalExists(address _newProposal) external returns (bool) {
+    return _newProposalExists[_newProposal];
   }
 
   function recordCooperativeAdoption() external onlyOwner {
@@ -71,14 +93,14 @@ contract Proposals is Ownable {
   }
 
   function recordModificationAdoption(address _modificationProposal) external onlyOwner {
-    modificationPropsalExists[_modificationProposal] = false;
+    _modificationProposalExists[_modificationProposal] = false;
   }
 
   function recordNewAdoption(address _newProposal) external onlyOwner {
-    newPropsalExists[_newProposal] = false;
+    _newProposalExists[_newProposal] = false;
   }
 
   function recordRemovalAdoption(address _removalProposal) external onlyOwner {
-    removalPropsalExists[_removalProposal] = false;
+    _removalProposalExists[_removalProposal] = false;
   }
 }

@@ -10,13 +10,12 @@ import '../projectLeader/ProjectLeaderTracker.sol';
 import '../voting/Voting.sol';
 import '../reimbursements/Reimbursements.sol';
 import './Activation.sol';
+import '../Amendment.sol';
+import './TokenPurchaseHelper.sol';
 
-
-
-contract GNITokenCrowdsale is TimedCrowdsale, ActivationLocked, VotingLocked, ProjectFactoryLocked {
+//we can change the names of activation locked and voting locked
+contract GNITokenCrowdsale is TimedCrowdsale, ProjectFactoryLocked, Amendment {
   using SafeMath for uint256;
-  ProjectLeaderTracker public projectLeaderTracker;
-  ProjectFactory public projectFactory;
 
   constructor
     (
@@ -25,15 +24,12 @@ contract GNITokenCrowdsale is TimedCrowdsale, ActivationLocked, VotingLocked, Pr
       uint256 _rate,
       address  _developer,
       InactiveToken _token,
-      ProjectLeaderTracker _projectLeaderTracker,
       address _reimbursements
     )
     public
     Crowdsale(_rate, _developer, _token)
     TimedCrowdsale(_openingTime, _doomsDay, _reimbursements)
-    {
-      projectLeaderTracker = ProjectLeaderTracker(_projectLeaderTracker);
-    }
+    Amendment(false){}//need projectleader tracker, tokenpurchase helper, voting, activation
 
   function mintNewProjectTokensAndExtendDoomsDay (uint256 capitalRequired, uint256 valuation) external onlyProjectFactory returns (uint256, uint256){
     (uint256 developerTokens, uint256 investorTokens) = tokensToMint(valuation, capitalRequired);
@@ -54,9 +50,11 @@ contract GNITokenCrowdsale is TimedCrowdsale, ActivationLocked, VotingLocked, Pr
  function buyTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
    super.buyTokens(msg.sender);
    _extendDoomsDay(90);
+   TokenPurchaseHelper(amendmentById[1]).handleTokenPurchase(msg.sender, msg.value);//TokenPurchaseHelper
   }
 
- function transferCapitalToDeveloper (uint256 capitalRequired) public onlyActivation { //we need more tests for added functionality
+ function transferCapitalToDeveloper (uint256 capitalRequired) public { //we need more tests for added functionality
+   require(msg.sender == amendmentById[3]);//activation
    developer.transfer(capitalRequired);
    weiRaised = weiRaised.sub(capitalRequired);
   }
@@ -66,14 +64,16 @@ contract GNITokenCrowdsale is TimedCrowdsale, ActivationLocked, VotingLocked, Pr
    Reimbursements(reimbursements).recordReimbursement.value(weiRaised)();
    weiRaised = 0;
    InactiveToken(token).resetInactiveTokenCycle();
-   projectLeaderTracker.reset();
+   ProjectLeaderTracker(amendmentById[2]).reset();//projectLeaderTracker
  }
 
- function extendDoomsDay (uint256 _days) external onlyVoting {
+ function extendDoomsDay (uint256 _days) external {
+   require(msg.sender == amendmentById[4]);//Voting
    _extendDoomsDay(_days);
  }
 
  function _extendDoomsDay(uint256 _days) internal canModifyDoomsDay {
+   require(msg.sender == amendmentById[4]);
     uint256 newDoomsDay = now.add(_days.mul(1728000));
     if (newDoomsDay > doomsDay) {
       doomsDay = newDoomsDay;
@@ -81,7 +81,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, ActivationLocked, VotingLocked, Pr
     }
  }
 
- function reduceDoomsDay (uint256 _days) public canModifyDoomsDay onlyVoting {
+ function reduceDoomsDay (uint256 _days) public canModifyDoomsDay {
    doomsDay = doomsDay.sub(_days.mul(1728000));
  }
 }
