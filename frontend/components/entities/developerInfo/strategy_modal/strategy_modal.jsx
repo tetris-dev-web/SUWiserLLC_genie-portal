@@ -1,5 +1,6 @@
 import React from 'react';
 import DoomsDayDetail from './dooms_day_detail';
+import './strategy_modal.scss';
 
 class StrategyModal extends React.Component {
   constructor() {
