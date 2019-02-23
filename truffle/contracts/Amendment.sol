@@ -39,7 +39,7 @@ contract Amendment is Ownable {
       finishedAddingCoAmendments = true;
     }
 
-    function modifyAmendment(uint256 coAmendmentToUpdateId, address newReferenceAmendment) external onlyOwner onlyIfReplaceable {
+    function modifyAmendment(uint256 coAmendmentToUpdateId, address newReferenceAmendment) external onlyOwner {
       _amendmentById[coAmendmentToUpdateId] = newReferenceAmendment;
     }
 

@@ -80,12 +80,21 @@ contract("Amendment", async (_accounts) => {
     describe("when the sender is the owner", async () => {
       let coAmendmentT1;
       before(async () => {
-        coAmendmentT1 = await amendmentById(1);
+        coAmendmentT1 = await amendment.amendmentById(1);
+        await amendment.modifyAmendment(1, accounts[1]);
+      })
+
+      it("modifies the coAmendment indicated by the passed id", async () => {
+        const coAmendmentT2 = await amendment.amendmentById(1);
+        assert.equal(coAmendmentT2, accounts[1], "coAmendment should be equal to the passed amendment");
+        assert(coAmendmentT2 !== coAmendmentT1, "coAmendment should be modified")
       })
     })
 
     describe("when the sender is not the owner", async () => {
-
+      it("reverts", async () => {
+        await exceptions.catchRevert(amendment.modifyAmendment(1, accounts[1], {from: accounts[1]}));
+      })
     })
   })
 })
