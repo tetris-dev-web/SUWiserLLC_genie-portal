@@ -50,11 +50,11 @@ contract GNITokenCrowdsale is TimedCrowdsale, ProjectFactoryLocked, Amendment {
  function buyTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
    super.buyTokens(msg.sender);
    _extendDoomsDay(90);
-   TokenPurchaseHelper(amendmentById[1]).handleTokenPurchase(msg.sender, msg.value);//TokenPurchaseHelper
+   TokenPurchaseHelper(_amendmentById[1]).handleTokenPurchase(msg.sender, msg.value);//TokenPurchaseHelper
   }
 
  function transferCapitalToDeveloper (uint256 capitalRequired) public { //we need more tests for added functionality
-   require(msg.sender == amendmentById[3]);//activation
+   require(msg.sender == _amendmentById[3]);//activation
    developer.transfer(capitalRequired);
    weiRaised = weiRaised.sub(capitalRequired);
   }
@@ -64,16 +64,16 @@ contract GNITokenCrowdsale is TimedCrowdsale, ProjectFactoryLocked, Amendment {
    Reimbursements(reimbursements).recordReimbursement.value(weiRaised)();
    weiRaised = 0;
    InactiveToken(token).resetInactiveTokenCycle();
-   ProjectLeaderTracker(amendmentById[2]).reset();//projectLeaderTracker
+   ProjectLeaderTracker(_amendmentById[2]).reset();//projectLeaderTracker
  }
 
  function extendDoomsDay (uint256 _days) external {
-   require(msg.sender == amendmentById[4]);//Voting
+   require(msg.sender == _amendmentById[4]);//Voting
    _extendDoomsDay(_days);
  }
 
  function _extendDoomsDay(uint256 _days) internal canModifyDoomsDay {
-   require(msg.sender == amendmentById[4]);
+   require(msg.sender == _amendmentById[4]);
     uint256 newDoomsDay = now.add(_days.mul(1728000));
     if (newDoomsDay > doomsDay) {
       doomsDay = newDoomsDay;

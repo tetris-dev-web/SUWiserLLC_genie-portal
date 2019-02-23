@@ -23,7 +23,7 @@ const callHistory = async (stub, methodName) => {
     thirdAddress: data[8],
     called: data[9],
     callCount: parseBN(data[10]),
-    correctCallOrder: data[11]
+    firstBool: data[11]
   }
 }
 

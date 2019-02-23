@@ -45,7 +45,11 @@ contract ProposalsStub is Proposals, ContractStub {
   function removalProposalExists (address a) external returns (bool) {
     return a == proposal;
   }
-  
+
+  function newCooperativeProposalExists (address a) public returns (bool) {
+    return a == proposal;
+  }
+
   function recordModificationAdoption (address adopted) external {
     CallData storage methodState = method['recordModificationAdoption'];
     methodState.firstAddress = adopted;
@@ -61,6 +65,11 @@ contract ProposalsStub is Proposals, ContractStub {
   function recordRemovalAdoption (address adopted) external {
     CallData storage methodState = method['recordRemovalAdoption'];
     methodState.firstAddress = adopted;
+    methodState.called = true;
+  }
+
+  function recordCooperativeAdoption () external {
+    CallData storage methodState = method['recordCooperativeAdoption'];
     methodState.called = true;
   }
 }

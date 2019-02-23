@@ -3,9 +3,9 @@ import './utility/Ownable.sol';
 
 contract Amendment is Ownable {
   uint256 public totalCoAmendments;
-  mapping(uint256 => address) public amendmentById;
+  mapping(uint256 => address) public _amendmentById;
 
-  bool private _depricated;
+  bool internal _depricated;
   bool public replacable;
   bool public finishedAddingCoAmendments;
 
@@ -25,10 +25,14 @@ contract Amendment is Ownable {
       replacable = _replacable;
     }
 
+    function amendmentById (uint256 amendmentId) external view returns (address) {
+      return _amendmentById[amendmentId];
+    }
+
     function addCoAmendment (address coAmendment) external onlyOwner {
       require(!finishedAddingCoAmendments);
       totalCoAmendments = totalCoAmendments + 1;
-      amendmentById[totalCoAmendments] = coAmendment;
+      _amendmentById[totalCoAmendments] = coAmendment;
     }
 
     function stopAddingCoAmendments () external onlyOwner {
@@ -36,14 +40,14 @@ contract Amendment is Ownable {
     }
 
     function modifyAmendment(uint256 coAmendmentToUpdateId, address newReferenceAmendment) external onlyOwner onlyIfReplaceable {
-      amendmentById[coAmendmentToUpdateId] = newReferenceAmendment;
+      _amendmentById[coAmendmentToUpdateId] = newReferenceAmendment;
     }
 
     function depricated () public view returns (bool) {
       return _depricated;
     }
 
-    function closeFunctionality() external onlyOwner {
+    function closeFunctionality() external onlyOwner onlyIfReplaceable {
       _depricated = true;
     }
 }

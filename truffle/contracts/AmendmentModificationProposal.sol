@@ -41,6 +41,7 @@ contract AmendmentModificationProposal is Ownable {
 
   function executeModification (uint256 coAmendmentId) external {
     require(modificationByCoAmendment[coAmendmentId].exists);
+    modificationByCoAmendment[coAmendmentId].exists = false;
     totalModificationsExecuted = totalModificationsExecuted.add(1);
     address newCoAmendment = modificationByCoAmendment[coAmendmentId].newAmendment;
     bool finalModification = totalModificationsExecuted == totalModifications;

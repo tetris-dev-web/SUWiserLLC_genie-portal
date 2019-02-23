@@ -1,4 +1,5 @@
 const CooperativeMock = artifacts.require("CooperativeMock");
+const CooperativeBaseStub = artifacts.require("CooperativeBaseStub");
 const AmendmentPollStub = artifacts.require("AmendmentPollStub");
 const ProposalsStub = artifacts.require("ProposalsStub");
 const Proposals = artifacts.require("Proposals");
@@ -16,6 +17,8 @@ let aP;
 let p;
 
 let cooperative;
+
+let newCooperative;
 
 let a;
 
@@ -377,6 +380,265 @@ contract("Cooperative", async (_accounts) => {
       })
     })
   })
+
+  describe("making a new cooperative", async () => {
+    before(async () => {
+      await cooperativeStub();
+    })
+
+    describe("adoptNewCooperative", async () => {
+
+      describe("when the proposals have passed", async () => {
+        before(async () => {
+          await aP.setProposalsPassed(true);
+          await aP.setProposalsFailed(false);
+        })
+        describe("when the proposal exists", async () => {
+          before(async () => {
+            await cooperative.setCurrentProposals(p.address);
+            await p.setProposalExists(newCooperative.address);
+            await stubUtil.addMethod(p, 'recordCooperativeAdoption');
+            await cooperative.adoptNewCooperative(newCooperative.address);
+          })
+
+          it("sets the newCooperative to the passed address", async () => {
+            const newCooperativeAddrT2 = await cooperative.newCooperative.call();
+            assert.equal(newCooperativeAddrT2, newCooperative.address, "newCooperative should be set to the passed address");
+          })
+
+          it("records the cooperative adoption", async () => {
+            const { called } = await stubUtil.callHistory(p, 'recordCooperativeAdoption');
+            assert(called, "new cooperative adoption should be recorded");
+          })
+        })
+        describe("when the proposal does not exist", async () => {
+          before(async () => {
+            await p.setProposalExists(accounts[0]);
+          })
+
+          it("reverts", async () => {
+            await exceptions.catchRevert(cooperative.adoptNewCooperative(newCooperative.address));
+          })
+        })
+      })
+      describe("when the proposals have not passed", async () => {
+        before(async () => {
+          await aP.setProposalsPassed(false);
+          await p.setProposalExists(newCooperative.address);
+        })
+        it("reverts", async () => {
+          await exceptions.catchRevert(cooperative.adoptNewCooperative(newCooperative.address));
+        })
+      })
+    })
+
+    describe("migrateAmendmentToNewCooperative", async () => {
+      describe("when there is a new cooperative", async () => {
+        before(async () => {
+          await cooperative.setNewCooperative(newCooperative.address);
+        })
+        describe("when the amendment has not yet been migrated", async () => {
+          before(async () => {
+            await cooperative.setMigrationStatus(1, false);
+          })
+          describe("when the adoptions are complete", async () => {
+            before(async () => {
+              await cooperative.setCurrentProposals(p.address);
+              await p.setTotalNewAmendments(2);
+              await p.setTotalAmendmentModifications(2);
+              await p.setTotalAmendmentRemovals(1);
+              await cooperative.setTotalCompleteAdoptions(5);
+            })
+
+            describe("if the amendment is still in use", async () => {
+              before(async () => {
+                await a.setDepricatedStatus(false);
+              })
+              describe("when it is the last amendment to migrate", async () => {
+                before(async () => {
+                  await cooperative.setTotalAmendmentCount(5);
+                  await cooperative.setTotalAmendmentsMigrated(4);
+                  await cooperative.setReplacableStatus(1, true);
+                  await stubUtil.addMethod(a, "transferOwnership");
+                  await stubUtil.addMethod(newCooperative, "migrateAmendment");
+                  await stubUtil.addMethod(newCooperative, "completeMigrations");
+                  await stubUtil.addMethod(newCooperative, "renounceOwnership");
+                  await cooperative.migrateAmendmentToNewCooperative(1);//we should also test when this is not sent a cooperative
+                })
+
+                after(async () => {
+                  await cooperative.setMigrationStatus(1, false);
+                  await stubUtil.resetMethod(a, "transferOwnership");
+                  await stubUtil.resetMethod(newCooperative, "migrateAmendment");
+                  await stubUtil.resetMethod(newCooperative, "completeMigrations");
+                  await stubUtil.resetMethod(newCooperative, "renounceOwnership");
+                })
+
+                it("migrates the amendment", async () => {
+                  const {firstAddress, firstBool } = await stubUtil.callHistory(newCooperative, "migrateAmendment");
+                  assert.equal(firstAddress, a.address, "amendment should migrate to the new cooperative");
+                  assert(firstBool, "amendment replacable status should carry over with the migration");
+                })
+
+                it("transfers ownership of the amendment to the new cooperative", async () => {
+                  const { firstAddress } = await stubUtil.callHistory(a, "transferOwnership");
+                  assert.equal(firstAddress, newCooperative.address, "ownership of the amendment should transfer to the new cooperative");
+                })
+
+                it("records the migration in the original cooperative", async () => {
+                  const migrated = await cooperative.getMigrationStatus(1);
+                  assert(migrated, "migration should be recorded in original cooperative");
+
+                  const totalAmendmentsMigratedT2 = await cooperative.totalAmendmentsMigrated.call();
+                  assert.equal(Number(totalAmendmentsMigratedT2), 5, "totalAmendmentsMigrated should increment by 1");
+                })
+
+                it("completes the migrations", async () => {
+                  const { called } = await stubUtil.callHistory(newCooperative, "completeMigrations");
+                  assert(called, "migrations should be completed");
+                })
+
+                it("renounces ownership of the new cooperative", async () => {
+                  const { called } = await stubUtil.callHistory(newCooperative, "renounceOwnership");
+                  assert(called, "ownership ovr new cooperative should  be renounced");
+                })
+              })
+
+              describe("when it is not the last amendment to migrate", async () => {
+                before(async () => {
+                  await cooperative.setTotalAmendmentCount(5);
+                  await cooperative.setTotalAmendmentsMigrated(3);
+                  await cooperative.setReplacableStatus(1, false);
+                  await cooperative.migrateAmendmentToNewCooperative(1);
+                })
+
+                after(async () => {
+                  await cooperative.setMigrationStatus(1, false);
+                  await stubUtil.resetMethod(a, "transferOwnership");
+                  await stubUtil.resetMethod(newCooperative, "migrateAmendment");
+                  await stubUtil.resetMethod(newCooperative, "completeMigrations");
+                  await stubUtil.resetMethod(newCooperative, "renounceOwnership");
+                })
+
+                it("migrates the amendment", async () => {
+                  const {firstAddress, firstBool } = await stubUtil.callHistory(newCooperative, "migrateAmendment");
+                  assert.equal(firstAddress, a.address, "amendment should migrate to the new cooperative");
+                  assert(!firstBool, "amendment replacable status should carry over with the migration");
+                })
+
+                it("transfers ownership of the amendment to the new cooperative", async () => {
+                  const { firstAddress } = await stubUtil.callHistory(a, "transferOwnership");
+                  assert.equal(firstAddress, newCooperative.address, "ownership of the amendment should transfer to the new cooperative");
+                })
+
+                it("records the migration in the original cooperative", async () => {
+                  const migrated = await cooperative.getMigrationStatus(1);
+                  assert(migrated, "migration should be recorded in original cooperative");
+
+                  const totalAmendmentsMigratedT2 = await cooperative.totalAmendmentsMigrated.call();
+                  assert.equal(Number(totalAmendmentsMigratedT2), 4, "totalAmendmentsMigrated should increment by 1");
+                })
+
+                it("allows futher migrations to take place", async () => {
+                  const { called } = await stubUtil.callHistory(newCooperative, "completeMigrations");
+                  assert(!called, "migrations should be completed");
+                })
+
+                it("does not renounce ownership of the new cooperative", async () => {
+                  const { called } = await stubUtil.callHistory(newCooperative, "renounceOwnership");
+                  assert(!called, "ownership ovr new cooperative should  be renounced");
+                })
+              })
+            })
+            describe("if the amendment is depricated", async () => {//maybe sub contexts for when its the last and when its not...
+              before(async () => {
+                await a.setDepricatedStatus(true);
+                await cooperative.setTotalAmendmentCount(5);
+                await cooperative.setTotalAmendmentsMigrated(3);
+                await cooperative.setReplacableStatus(1, false);
+                await cooperative.migrateAmendmentToNewCooperative(1);
+              })
+
+              after(async () => {
+                await cooperative.setMigrationStatus(1, false);
+              })
+
+              it("does not migrate the amendment", async () => {
+                const { called } = await stubUtil.callHistory(newCooperative, "migrateAmendment");
+                assert(!called, "depricated amendment should not migrate to new cooperative");
+              })
+
+              it("does not transfer ownership of the amendment to the new cooperative", async () => {
+                const { called } = await stubUtil.callHistory(a, "transferOwnership");
+                assert(!called, "ownership should not be renouced when there are still pending migrations");
+              })
+
+              it("records the migration in the original cooperative", async () => {
+                const migrated = await cooperative.getMigrationStatus(1);
+                assert(migrated, "migration should be recorded in original cooperative");
+
+                const totalAmendmentsMigratedT2 = await cooperative.totalAmendmentsMigrated.call();
+                assert.equal(Number(totalAmendmentsMigratedT2), 4, "totalAmendmentsMigrated should increment by 1");
+              })
+
+              it("allows futher migrations to take place", async () => {
+                const { called } = await stubUtil.callHistory(newCooperative, "completeMigrations");
+                assert(!called, "migrations should be completed");
+              })
+
+              it("does not renounce ownership of the new cooperative", async () => {
+                const { called } = await stubUtil.callHistory(newCooperative, "renounceOwnership");
+                assert(!called, "ownership ovr new cooperative should  be renounced");
+              })
+            })
+          })
+          describe("when the adoptions are not yet complete", async () => {
+            before(async () => {
+              await cooperative.setCurrentProposals(p.address);
+              await p.setTotalNewAmendments(2);
+              await p.setTotalAmendmentModifications(2);
+              await p.setTotalAmendmentRemovals(1);
+              await cooperative.setTotalCompleteAdoptions(4);
+            })
+
+            after(async () => {
+              await p.setTotalNewAmendments(2);
+              await p.setTotalAmendmentModifications(2);
+              await p.setTotalAmendmentRemovals(1);
+              await cooperative.setTotalCompleteAdoptions(5);
+            })
+
+            it("reverts", async () => {
+              await exceptions.catchRevert(cooperative.migrateAmendmentToNewCooperative(1));
+            })
+          })
+        })
+        describe("when the amendment has already been migrated", async () => {
+          before(async () => {
+            await cooperative.setMigrationStatus(1, true);
+          })
+
+          after(async () => {
+            await cooperative.setMigrationStatus(1, false);
+          })
+
+          it("reverts", async () => {
+            await exceptions.catchRevert(cooperative.migrateAmendmentToNewCooperative(1));
+          })
+        })
+      })
+      describe("when there is not a new cooperative", async () => {
+        before(async () => {
+          await cooperative.clearNewCooperative();
+        })
+
+        it("reverts", async () => {
+          await exceptions.catchRevert(cooperative.migrateAmendmentToNewCooperative(1));
+        })
+      })
+    })
+  })
+
 });
 
 const setUp = async () => {
@@ -407,6 +669,10 @@ const initNewProposals = async () => {
 const initCooperative = async () => {
   cooperative = await CooperativeMock.new(accounts[0], aP.address);
 };
+
+const cooperativeStub = async () => {
+  newCooperative = await CooperativeBaseStub.new(accounts[0]);
+}
 
 const initAmendmentStub = async (replacable) => {
   a = await AmendmentStub.new(replacable);

@@ -41,12 +41,12 @@ contract Cooperative0 is Cooperative {
   uint256 public totalCompleteAdoptions;
 
   address public newCooperative;
-  uint256 totalAmendmentsMigrated;
-  mapping(uint => bool) private migrated;
+  uint256 public totalAmendmentsMigrated;
+  mapping(uint => bool) internal migrated;
 
   function adoptNewCooperative (address _newCooperative) external {
     require(amendmentPoll.proposalsPassed());
-    require(currentProposals.newCooperativeProposalExists(msg.sender));
+    require(currentProposals.newCooperativeProposalExists(_newCooperative));
     newCooperative = _newCooperative;
     currentProposals.recordCooperativeAdoption();
   }
@@ -91,7 +91,7 @@ contract Cooperative0 is Cooperative {
 
     updateCompleteAdoptions(finalModification);
   }
-
+  //we need to open the functionality
   function adoptNewAmendment (address newAmendment) external {
     require(amendmentPoll.proposalsPassed());
     require(currentProposals.newProposalExists(newAmendment));

@@ -43,4 +43,20 @@ contract CooperativeMock is Cooperative0 {
   function addAmendment (uint256 n, address a) public {
     amendmentById[n] = Amendment(a);
   }
-}
+
+  function setMigrationStatus (uint256 n, bool b) public {
+    migrated[n] = b;
+  }
+
+  function getMigrationStatus (uint256 n) public returns (bool) {
+    return migrated[n];
+  }
+
+  function setReplacableStatus (uint256 n, bool b) public {
+    replacable[n] = b;
+  }
+
+  function setTotalAmendmentsMigrated (uint256 n) public {
+    totalAmendmentsMigrated = n;
+  }
+ }

@@ -16,4 +16,14 @@ contract AmendmentStub is Amendment, ContractStub {
     CallData storage methodState = method["closeFunctionality"];
     methodState.called = true;
   }
+
+  function transferOwnership (address a) public {
+    CallData storage methodState = method["transferOwnership"];
+    methodState.firstAddress = a;
+    methodState.called = true;
+  }
+
+  function setDepricatedStatus (bool b) public {
+    _depricated = b;
+  }
 }
