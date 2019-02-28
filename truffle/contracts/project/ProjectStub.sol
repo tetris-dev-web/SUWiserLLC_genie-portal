@@ -11,7 +11,8 @@ contract ProjectStub is Project, ContractStub {
     uint256 _developerTokens,
     uint256 _investorTokens,
     string _cashFlow,
-    uint256 _mockVotes
+    uint256 _mockVotes,
+    address _dividendWallet
     )
     public
     Project(
@@ -21,7 +22,8 @@ contract ProjectStub is Project, ContractStub {
       _capitalRequired,
       _developerTokens,
       _investorTokens,
-      _cashFlow
+      _cashFlow,
+      _dividendWallet
       )
       {
     totalVotes = _mockVotes;
@@ -41,7 +43,19 @@ contract ProjectStub is Project, ContractStub {
     methodState.firstUint = voteAmount;
   }
 
+  function voteAgainst (address voter, uint256 voteAmount) external {
+    CallData storage methodState = method['voteAgainst'];
+    methodState.firstAddress = voter;
+    methodState.firstUint = voteAmount;
+  }
+
   function removeVotes (address voter, uint256 voteAmount) external {
+    CallData storage methodState = method['removeVotes'];
+    methodState.firstAddress = voter;
+    methodState.firstUint = voteAmount;
+  }
+
+  /* function removeVotes (address voter, uint256 voteAmount) external {
     CallData storage methodState = method['removeVotes'];
     if (methodState.firstAddress == address(0)) {
       methodState.firstAddress = voter;
@@ -53,7 +67,7 @@ contract ProjectStub is Project, ContractStub {
       methodState.thirdAddress = voter;
       methodState.thirdUint = voteAmount;
     }
-  }
+  } */
 
   bool stubActiveStatus;
 
@@ -80,14 +94,15 @@ contract ProjectStub is Project, ContractStub {
   function capitalRequired_ () public view returns (uint256) {
     return stubCapRequired;
   }
-
-  function developerTokens_ () public view returns (uint256) {
+  uint256 public developerTokens = 10000000;
+  uint256 public investorTokens = 10000000;
+  /* function developerTokens () public returns (uint256) {
     return 10000000;
   }
 
-  function investorTokens_ () public view returns (uint256) {
+  function investorTokens () public returns (uint256) {
     return 10000000;
-  }
+  } */
 
   function activate () external returns(uint256){
     CallData storage methodState = method['activate'];
@@ -97,5 +112,17 @@ contract ProjectStub is Project, ContractStub {
 
   function setMockVotesOf (address voter, uint256 amount) public {
     votes[voter] = amount;
+  }
+
+  function transferOwnership (address a) public {
+    CallData storage methodState = method["transferOwnership"];
+    methodState.firstAddress = a;
+    methodState.called = true;
+  }
+
+  function transferPrimary (address a) public {
+    CallData storage methodState = method["transferPrimary"];
+    methodState.firstAddress = a;
+    methodState.called = true;
   }
 }

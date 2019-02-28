@@ -10,7 +10,8 @@ contract ProjectMock is Project {
     uint256 _capitalRequired,
     uint256 _developerTokens,
     uint256 _investorTokens,
-    string _cashFlow
+    string _cashFlow,
+    address _dividendWallet
     ) public Project(
       _projectInfo,
       _developer,
@@ -18,7 +19,8 @@ contract ProjectMock is Project {
       _capitalRequired,
       _developerTokens,
       _investorTokens,
-      _cashFlow
+      _cashFlow,
+      _dividendWallet
       ) {}
 
   function removeMockVoter (address addr) public {

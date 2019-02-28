@@ -13,7 +13,7 @@ import '../Amendment.sol';
 //owner will be Voting
 //secondary will be project factory
 
-contract Activation is Ownable, ProjectFactoryLocked, Amendment {
+contract Activation is Ownable, ProjectFactoryLocked {
   using SafeMath for uint256;
   InactiveToken public inactiveToken;
   ProjectLeaderTracker public projectLeaderTracker;
@@ -39,7 +39,7 @@ contract Activation is Ownable, ProjectFactoryLocked, Amendment {
     crowdsale = _crowdsale;
   }
 
-   function tryActivateProject () external { //we need more tests for added functionality
+   function tryActivateProject () external {
      (
        address  tentativeLeaderAddr,
        bool tentativeLeaderConfirmed
@@ -47,14 +47,12 @@ contract Activation is Ownable, ProjectFactoryLocked, Amendment {
 
      Project project = Project(tentativeLeaderAddr);
      uint256 capitalRequired = project.capitalRequired();
-     if (
+     require (
        tentativeLeaderConfirmed &&
        capitalRequired <= crowdsale.weiRaised_() &&
        project.open()
-       ) {
-       //set the number of project votes to 0.
-       _activateProject(tentativeLeaderAddr, capitalRequired);
-      }
+       );
+      _activateProject(tentativeLeaderAddr, capitalRequired);
     }
 
     function activateProject (address projectAddress, uint256 capitalRequired) external onlyProjectFactory {
@@ -66,7 +64,7 @@ contract Activation is Ownable, ProjectFactoryLocked, Amendment {
       uint256 time = project.activate();
       projectLeaderTracker.handleProjectActivation();
       InactiveToken(inactiveToken).increasePendingActivations(project.developerTokens().add(project.investorTokens()));
-      crowdsale.transferCapitalToDeveloper(capitalRequired);
+      GNITokenCrowdsale(crowdsale).transferCapitalToDeveloper(capitalRequired);
       emit ProjectActivation(projectAddress, project.capitalRequired(), time);
     }
 

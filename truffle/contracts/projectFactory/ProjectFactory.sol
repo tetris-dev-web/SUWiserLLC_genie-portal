@@ -39,7 +39,7 @@ contract ProjectFactory is CrowdsaleLocked {
   mapping(uint256 => address) internal projectAddress;
   uint256 public totalProjectCount;
 
-  function projectById (uint256 id) public view returns (address ) {
+  function projectById (uint256 id) public view returns (address) {
     return projectAddress[id];
   }
 
@@ -48,10 +48,14 @@ contract ProjectFactory is CrowdsaleLocked {
     uint256 _valuation,
     uint256 _capitalRequired,
     string _cashFlow
-  ) external //make this developer instead
+  ) external
+    returns (address)
   {
     require(msg.sender == developer);
-    (uint256 _developerTokens, uint256 _investorTokens) = GNITokenCrowdsale(crowdsale).mintNewProjectTokensAndExtendDoomsDay(_capitalRequired, _valuation);
+    (uint256 _developerTokens, uint256 _investorTokens) = GNITokenCrowdsale(crowdsale).mintNewProjectTokensAndExtendDoomsDay(_valuation, _capitalRequired);
+
+    uint256 developerTokens = _developerTokens;
+    uint256 investorTokens = _investorTokens;
 
     address projectAddr = address(
       new Project(
@@ -59,14 +63,17 @@ contract ProjectFactory is CrowdsaleLocked {
         developer,
         _valuation,
         _capitalRequired,
-        _developerTokens,
-        _investorTokens,
-       _cashFlow
+        developerTokens,
+        investorTokens,
+       _cashFlow,
+       dividendWallet
       ));
 
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
-    projectFactoryHelper.handleNewProject(projectAddr);
+    ProjectFactoryHelper(projectFactoryHelper).handleNewProject(projectAddr);
     emit ProjectPitch(projectAddr, totalProjectCount);
+
+    return projectAddr;
   }
 }

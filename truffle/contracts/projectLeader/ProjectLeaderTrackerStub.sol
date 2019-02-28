@@ -10,20 +10,30 @@ contract ProjectLeaderTrackerStub is ProjectLeaderTracker, ContractStub {
     methodState.called = true;
   }
 
+  address public mockLeader;
+  bool public mockLeaderStatus;
+
+  function reset () external {
+    CallData storage methodState = method['reset'];
+    methodState.called = true;
+  }
+
+  function setTentativeLeader (address a, bool b) public {
+    mockLeader = a;
+    mockLeaderStatus = b;
+  }
+
   function tentativeLeader () external view returns (address , bool) {
-    return (address(0), true);
+    return (mockLeader, mockLeaderStatus);
   }
 
-  function handleProjectActivation () onlyOwner external {
-
+  function handleProjectActivation () external {
+    CallData storage methodState = method['handleProjectActivation'];
+    methodState.called = true;
   }
 
-  function handleProjectPitch () onlyOwner external {
-
+  function handleProjectPitch () external {
+    CallData storage methodState = method['handleProjectPitch'];
+    methodState.called = true;
   }
-
-  modifier onlyOwner {
-    _;
-  }
-
 }

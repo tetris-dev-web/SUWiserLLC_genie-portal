@@ -223,41 +223,6 @@ contract('Project', async (_accounts) => {
     })
 
   })
-
-  describe('beats', async () => {
-    it('returns false if the project has not been voted for yet', async () => {
-      mP = await mockP({
-        id: 0, name: 'project2', developer: accounts[0],
-        valuation: 5000000, capitalRequired: 1000000, developerTokens: 40000000,
-        investorTokens: 10000000, lat: '340', lng: '340'
-      })
-      let result = await mP.beats(accounts[2]);
-      assert.equal(result, false, 'a project should not be able to win without any votes');
-    })
-
-    it('returns false if the project has less votes than its competitor', async () => {
-      let competitor = await mockP({
-        id: 0, name: 'project2', developer: accounts[0],
-        valuation: 5000000, capitalRequired: 1000000, developerTokens: 40000000,
-        investorTokens: 10000000, lat: '340', lng: '340'
-      })
-      await competitor.initMockVoter(accounts[2], 3000000);
-      let result = await mP.beats(competitor.address);
-      assert.equal(result, false, 'project should not win when its competitor has more votes');
-    })
-
-    it('returns true otherwise', async () => {
-      let competitor = await mockP({
-        id: 0, name: 'project2', developer: accounts[0],
-        valuation: 5000000, capitalRequired: 1000000, developerTokens: 40000000,
-        investorTokens: 10000000, lat: '340', lng: '340'
-      });
-      await mP.initMockVoter(accounts[2], 2000000);
-      await competitor.initMockVoter(accounts[2], 1000000);
-      let result = await mP.beats(competitor.address);
-      assert.equal(result, true, 'project should beat its competitor when the conditions are met');
-    })
-  })
 })
 
 

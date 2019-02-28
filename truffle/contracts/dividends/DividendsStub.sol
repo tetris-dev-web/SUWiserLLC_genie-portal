@@ -10,10 +10,13 @@ contract DividendsStub is Dividends, ContractStub {
   constructor (ActiveToken token_) public
   Dividends(token_) {}
 
-  function distributeDividend(address  account) external returns (bool) {
+  function distributeDividend(address account) external returns (bool) {
     CallData storage methodState = method['distributeDividend'];
-    methodState.called = true;
-    methodState.firstAddress = account;
+    if (methodState.firstAddress == address(0)) {
+      methodState.firstAddress = account;
+    } else {
+      methodState.secondAddress = account;
+    }
     return true;
   }
 

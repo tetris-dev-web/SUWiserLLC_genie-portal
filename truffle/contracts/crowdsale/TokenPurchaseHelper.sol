@@ -2,7 +2,7 @@ pragma solidity >=0.4.22 <0.6.0;
 import '../Amendment.sol';
 import '../utility/Ownable.sol';
 
-contract TokenPurchaseHelper is Ownable, Amendment {
+contract TokenPurchaseHelper is Ownable {
   address public lastPurchaser;
   uint256 public lastAmount;
 

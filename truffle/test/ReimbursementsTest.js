@@ -1,4 +1,6 @@
 // 
+//
+//
 // it('sets inactiveTokensAtClosing to totalInactiveSupply - totalPendingActivations', async () => {
 //   let inactiveTokensAtClosing = await mockGTC.inactiveTokensAtClosing();
 //   assert.equal(inactiveTokensAtClosing, 60000000, 'should set inactiveTokensAtClosing to totalInactiveSupply - totalPendingActivations');

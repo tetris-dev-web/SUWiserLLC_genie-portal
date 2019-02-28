@@ -8,7 +8,7 @@ import '../crowdsale/Activation.sol';
 import '../ECRecovery.sol';
 import '../Amendment.sol';
 
-contract Voting is Ownable, Amendment {
+contract Voting is Ownable {
   /* using ECRecovery for bytes32; */
   VotingToken public votingToken;
   ProjectLeaderTracker public projectLeaderTracker;
@@ -26,26 +26,11 @@ contract Voting is Ownable, Amendment {
     uint256 totalVotes
   );
 
-  /* mapping(address => bytes32) private voteForHash;
-  mapping(address => bytes32) private voteAgainstHash; */
-
   function () external payable {}
 
   function setCrowdsale (GNITokenCrowdsale _crowdsale) public onlyOwner {
     crowdsale = _crowdsale;
   }
-
-  /* function voteForProject(address  _project, address _voter, uint256 votes, bytes memory _signedMessage) public {
-    require(Token(token).existingAccount(_voter));
-
-    bytes32 unsignedMessage = voteForHash[_project];
-    address recoveredVoter = unsignedMessage.recover(_signedMessage);
-
-    require(recoveredVoter == _voter);
-
-    _voteForProject(_project, _voter, votes);
-  } */
-
 
   function voteForProject (address _project, uint256 votes) external {
     Project(_project).vote(msg.sender, votes);

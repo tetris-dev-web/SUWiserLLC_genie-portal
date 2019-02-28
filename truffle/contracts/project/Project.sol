@@ -27,7 +27,8 @@ contract Project is Ownable, Secondary {
     uint256 _capitalRequired,
     uint256 _developerTokens,
     uint256 _investorTokens,
-    string _cashFlow
+    string _cashFlow,
+    address _dividendWallet
     ) public
     {
       projectInfo = _projectInfo;
@@ -40,7 +41,7 @@ contract Project is Ownable, Secondary {
       totalVotes = 0;
       active = false;
       closingTime = now + 86600 * 240;
-      dividendWallet = ProjectFactory(msg.sender).dividendWallet();
+      dividendWallet = _dividendWallet;
   }
 
   mapping(address => uint256) internal votes;

@@ -31,7 +31,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, ProjectFactoryLocked, Amendment {
     TimedCrowdsale(_openingTime, _doomsDay, _reimbursements)
     Amendment(false){}//need projectleader tracker, tokenpurchase helper, voting, activation
 
-  function mintNewProjectTokensAndExtendDoomsDay (uint256 capitalRequired, uint256 valuation) external onlyProjectFactory returns (uint256, uint256){
+  function mintNewProjectTokensAndExtendDoomsDay (uint256 valuation, uint256 capitalRequired) external onlyProjectFactory returns (uint256, uint256){
     (uint256 developerTokens, uint256 investorTokens) = tokensToMint(valuation, capitalRequired);
 
     InactiveToken(token).mint(developer, developerTokens);
@@ -46,15 +46,15 @@ contract GNITokenCrowdsale is TimedCrowdsale, ProjectFactoryLocked, Amendment {
    return (developerValue.mul(rate), investorValue.mul(rate));
  }
 
- //before this, we need to execute any pending token activations with the modifier above for the sender account. We need to do this so that the correct number of tokens are activated
  function buyTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
-   super.buyTokens(msg.sender);
+   uint256 tokens = super.buyTokens(msg.sender);
    _extendDoomsDay(90);
    TokenPurchaseHelper(_amendmentById[1]).handleTokenPurchase(msg.sender, msg.value);//TokenPurchaseHelper
   }
 
  function transferCapitalToDeveloper (uint256 capitalRequired) public { //we need more tests for added functionality
    require(msg.sender == _amendmentById[3]);//activation
+   require(weiRaised >= capitalRequired);
    developer.transfer(capitalRequired);
    weiRaised = weiRaised.sub(capitalRequired);
   }
@@ -73,7 +73,6 @@ contract GNITokenCrowdsale is TimedCrowdsale, ProjectFactoryLocked, Amendment {
  }
 
  function _extendDoomsDay(uint256 _days) internal canModifyDoomsDay {
-   require(msg.sender == _amendmentById[4]);
     uint256 newDoomsDay = now.add(_days.mul(1728000));
     if (newDoomsDay > doomsDay) {
       doomsDay = newDoomsDay;

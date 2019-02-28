@@ -7,7 +7,7 @@ import '../crowdsale/Activation.sol';
 import '../utility/Ownable.sol';
 import '../Amendment.sol';
 
-contract ProjectFactoryHelper is Ownable, Amendment {
+contract ProjectFactoryHelper is Ownable {
   Activation public activation;
   Voting public voting;
   ProjectLeaderTracker public projectLeaderTracker;

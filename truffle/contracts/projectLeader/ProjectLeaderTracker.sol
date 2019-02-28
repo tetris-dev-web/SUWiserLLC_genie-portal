@@ -7,11 +7,12 @@ import '../utility/SafeMath.sol';
 import '../Amendment.sol';
 
 
-contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFactoryLocked, Amendment {
+contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFactoryLocked {
   using SafeMath for uint256;
   uint256 public candidateCount;
   address  public tentativeLeaderAddr;
   uint256 public leadingVoteCount;
+  uint256 public startTime;
 
   struct ProjectsChecked {
     mapping(address => bool) isChecked;
@@ -29,6 +30,7 @@ contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFacto
     resetProjectsChecked();
     setTentativeLeader(address(0));
     candidateCount = 0;
+    startTime = now;
   }
 
   function handleProjectActivation () onlyActivation external {
@@ -41,8 +43,9 @@ contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFacto
     candidateCount = candidateCount.add(1);
   }
 
-  function trackProject (address projectAddr) external { //we need more tests for new functionality (when its implemented)
+  function trackProject (address projectAddr) external {
     require(projectAddr != address(0) && !Project(projectAddr).active());
+    require(startTime < Project(projectAddr).closingTime()); //ensures that this project is part of the current crowdsale cycle
 
     if(Project(projectAddr).open()) {
       updateTentativeLeader(projectAddr);

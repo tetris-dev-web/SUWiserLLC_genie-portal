@@ -11,16 +11,14 @@ contract ContractStub {
     address firstAddress;
     address secondAddress;
     address thirdAddress;
-    bytes firstBytes;
-    bytes32 firstBytes32;
     bool called;
-    uint256 callCount;
     bool firstBool;
   }
 
   mapping(string => CallData) internal method;
 
   function addMethod (string memory methodName) public {
+    
     CallData memory newCallData;
     method[methodName] = newCallData;
   }
@@ -37,10 +35,7 @@ contract ContractStub {
     data.firstAddress = address(0);
     data.secondAddress = address(0);
     data.thirdAddress = address(0);
-    data.firstBytes = '';
-    data.firstBytes32 = '';
     data.called = false;
-    data.callCount = 0;
     data.firstBool = false;
   }
 
@@ -55,7 +50,6 @@ contract ContractStub {
     address,
     address,
     bool,
-    uint256,
     bool
     ) {
     CallData memory data = method[methodName];
@@ -70,7 +64,6 @@ contract ContractStub {
       data.secondAddress,
       data.thirdAddress,
       data.called,
-      data.callCount,
       data.firstBool
     );
   }

@@ -26,7 +26,7 @@ contract Crowdsale {
     token = _token;
   }
 
-  function () external payable {
+  function () public payable {
   }
 
   function buyTokens(address  _beneficiary) public payable returns (uint256) {

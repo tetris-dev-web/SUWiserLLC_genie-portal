@@ -9,4 +9,10 @@ import './ActiveToken.sol';
 contract ActiveTokenStub is ActiveToken {
   constructor(VotingToken _votingToken) public
   ActiveToken(_votingToken){}
+
+    function initMockBalance (address a, uint256 n) public {
+      _balances[a] = n;
+      _totalSupply = _totalSupply.add(n);
+    }
+
 }
