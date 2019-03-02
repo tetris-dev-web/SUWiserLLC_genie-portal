@@ -23,6 +23,8 @@ let crowdsaleInstance;
 let activationInstance;
 let projectLeaderTrackerInst;
 let projectFactoryInst;
+let projectFactoryHelper;
+let tokenPurchaseHelper;
 
 module.exports = function (deployer, network, accounts) {
   console.log("NETWORK", network)
@@ -117,7 +119,7 @@ module.exports = function (deployer, network, accounts) {
             );
         })
         .then(() => {
-          return deployer.deply(
+          return deployer.deploy(
             TokenPurchaseHelper
           )
         })
@@ -126,16 +128,16 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(_crowdsaleInstance => {
           crowdsaleInstance = _crowdsaleInstance
-          return crowdsaleInstance.setCoAmendment(TokenPurchaseHelper.address);
+          return crowdsaleInstance.addCoAmendment(TokenPurchaseHelper.address);
         })
         .then(() => {
-          return crowdsaleInstance.setCoAmendment(ProjectLeaderTracker.address);
+          return crowdsaleInstance.addCoAmendment(ProjectLeaderTracker.address);
         })
         .then(() => {
-          return crowdsaleInstance.setCoAmendment(Activation.address);
+          return crowdsaleInstance.addCoAmendment(Activation.address);
         })
         .then(() => {
-          return crowdsaleInstance.setCoAmendment(Voting.address);
+          return crowdsaleInstance.addCoAmendment(Voting.address);
         })
         .then(() => {
           crowdsaleInstance.stopAddingCoAmendments();
@@ -160,11 +162,24 @@ module.exports = function (deployer, network, accounts) {
          //organize around seeding, ownership designation and contract instanciation / contract references
         //activation and voting will deploy after crowdsale
         .then(() => {
+          return TokenPurchaseHelper.at(TokenPurchaseHelper.address);
+        })
+        .then((_tokenPurchaseHelper) => {
+          tokenPurchaseHelper = _tokenPurchaseHelper;
+          return tokenPurchaseHelper.transferOwnership(crowdsaleInstance.address);
+        })
+        .then(() => {
           return ProjectFactory.at(ProjectFactory.address);
         })
         .then(_projectFactoryInst => {
           projectFactoryInst = _projectFactoryInst;
           return projectFactoryInst.transferCrowdsaleKey(crowdsaleInstance.address);
+        })
+        .then(() => {
+          return projectFactoryHelper = ProjectFactoryHelper.at(ProjectFactoryHelper.address);
+        })
+        .then(() => {
+          return projectFactoryHelper.transferOwnership(projectFactoryInst.address);
         })
         .then(() => {
           return crowdsaleInstance.transferProjectFactoryKey(projectFactoryInst.address);
@@ -177,7 +192,7 @@ module.exports = function (deployer, network, accounts) {
           return activeTokenInstance.setDividendWallet(Dividends.address);
         })
         .then(() => {
-          return activeTokenInstance.setMinter(crowdsaleInstance.address);
+          return activeTokenInstance.setMinter(InactiveToken.address);
         })
         .then(() => {
           // return network === 'ropsten' ? SeedableVoting.at(SeedableVoting.address) : Voting.at(Voting.address);
@@ -185,17 +200,18 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(_votingInstance => {
           votingInstance = _votingInstance;
-          votingInstance.setCrowdsale(crowdsaleInstance.address);
+          return votingInstance.setCrowdsale(crowdsaleInstance.address);
         })
         .then(() => {
           return ProjectLeaderTracker.at(ProjectLeaderTracker.address);
         })
         .then(_projectLeaderTrackerInst => {
           projectLeaderTrackerInst = _projectLeaderTrackerInst;
-          return projectLeaderTrackerInst.transferCrowdsaleKey(crowdsaleInstance.address);
+          return projectLeaderTrackerInst.transferCrowdsaleKey(projectFactoryHelper.address);
         })
         .then(() => {
-          return projectLeaderTrackerInst.transferProjectFactoryKey(projectFactoryInst.address);
+          console.log("pfh", projectFactoryHelper.address)
+          return projectLeaderTrackerInst.transferProjectFactoryKey(projectFactoryHelper.address);
         })
         .then(() => {
           return Activation.at(Activation.address)
@@ -205,44 +221,55 @@ module.exports = function (deployer, network, accounts) {
           return activationInstance.setCrowdsale(crowdsaleInstance.address);
         })
         .then(() => {
-          return activationInstance.transferProjectFactoryKey(projectFactoryInst.address);
+          return activationInstance.transferProjectFactoryKey(projectFactoryHelper.address);
         })
         .then(() => {
           return projectLeaderTrackerInst.transferActivationKey(activationInstance.address)
         })
         .then(() => {
+          console.log("getting inactive token inst")
           return InactiveToken.at(InactiveToken.address);
         })
         .then(_inactiveTokenInstance => {
-          inactiveTokenInstance = _inactiveTokenInstance;
+          console.log("setting inactive token inst")
+          return inactiveTokenInstance = _inactiveTokenInstance;
         })
         .then(() => {
+          console.log("setting inactive token crowdsale key")
           return inactiveTokenInstance.transferCrowdsaleKey(crowdsaleInstance.address);
         })
         .then(() => {
+          console.log("setting inactive token activation key")
           return inactiveTokenInstance.transferActivationKey(activationInstance.address);
         })
         .then(() => {
+          console.log("getting voting token inst")
           return VotingToken.at(VotingToken.address);
         })
         .then(_votingTokenInstace => {
+          console.log("setting voting token inst")
           votingTokenInstance = _votingTokenInstace;
-          votingTokenInstance.transferVotingKey(Voting.address);
+          return votingTokenInstance.transferVotingKey(Voting.address);
         })
         .then(() => {
+          console.log("setting voting token active token")
           return votingTokenInstance.setActiveToken(activeTokenInstance.address);
         })
         .then(() => {
+          console.log("setting voting token inactive token")
           return votingTokenInstance.setInactiveToken(inactiveTokenInstance.address);
         })
         .then(() => {
+          console.log("getting reimbursements")
           return Reimbursements.at(Reimbursements.address);
         })
         .then(reimbursementsInst => {
+          console.log("setting reimbursements")
           return reimbursementsInst.transferCrowdsaleKey(crowdsaleInstance.address);
         })
         .then(() => {
           if (network === 'ropsten') {
+            console.log("WE MADE IT!!!")
             // console.log("voting", votingInstance)
             return seed(crowdsaleInstance, projectFactoryInst, inactiveTokenInstance, votingInstance, developer, accounts[1], accounts[2]);
           }

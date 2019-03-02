@@ -47,12 +47,13 @@ contract Activation is Ownable, ProjectFactoryLocked {
 
      Project project = Project(tentativeLeaderAddr);
      uint256 capitalRequired = project.capitalRequired();
-     require (
+     if (
        tentativeLeaderConfirmed &&
        capitalRequired <= crowdsale.weiRaised_() &&
        project.open()
-       );
-      _activateProject(tentativeLeaderAddr, capitalRequired);
+       ) {
+         _activateProject(tentativeLeaderAddr, capitalRequired);
+       }
     }
 
     function activateProject (address projectAddress, uint256 capitalRequired) external onlyProjectFactory {

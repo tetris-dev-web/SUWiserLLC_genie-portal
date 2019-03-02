@@ -34,9 +34,9 @@ contract Voting is Ownable {
 
   function voteForProject (address _project, uint256 votes) external {
     Project(_project).vote(msg.sender, votes);
-    VotingToken(votingToken).assign(msg.sender, votes);
+    /* VotingToken(votingToken).assign(msg.sender, votes);
     GNITokenCrowdsale(crowdsale).extendDoomsDay(6);//this can be called externally
-    handleVoteChange(_project);
+    handleVoteChange(_project); */
   }
 
   function voteAgainstProject(address  _project, uint256 votes) external {

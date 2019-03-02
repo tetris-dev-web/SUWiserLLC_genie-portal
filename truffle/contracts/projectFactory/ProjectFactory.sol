@@ -71,9 +71,12 @@ contract ProjectFactory is CrowdsaleLocked {
 
     totalProjectCount = totalProjectCount.add(1);
     projectAddress[totalProjectCount] = projectAddr;
+    Project(projectAddr).transferOwnership(address(ProjectFactoryHelper(projectFactoryHelper)));
+    Project(projectAddr).transferPrimary(address(ProjectFactoryHelper(projectFactoryHelper)));
     ProjectFactoryHelper(projectFactoryHelper).handleNewProject(projectAddr);
     emit ProjectPitch(projectAddr, totalProjectCount);
 
     return projectAddr;
+    /* return address(0); */
   }
 }

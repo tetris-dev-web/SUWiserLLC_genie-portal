@@ -167,8 +167,11 @@ contract InactiveToken is CrowdsaleLocked, ActivationLocked {
 
   function increasePendingActivations(uint256 amount) external onlyActivation {//should only be callable by activation
     require(
-      inactiveTokenCycle[currentInactiveTokenCycle].totalUpdated ==
-      inactiveTokenCycle[currentInactiveTokenCycle.sub(1)].totalAccounts
+      currentInactiveTokenCycle == 0 ||
+      (
+        inactiveTokenCycle[currentInactiveTokenCycle].totalUpdated ==
+        inactiveTokenCycle[currentInactiveTokenCycle.sub(1)].totalAccounts
+      )
     );
 
     uint256 inactiveSupply = totalSupply().sub(balanceOf(crowdsale())).sub(totalPendingActivations);
