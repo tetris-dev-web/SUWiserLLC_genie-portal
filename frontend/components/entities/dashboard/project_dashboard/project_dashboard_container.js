@@ -13,12 +13,12 @@ import ProjectDashboard from './project_dashboard';
 import { fetchTokenPurchaseLogs } from '../../../../actions/chain_actions/token_actions';
 
 const mapStateToProps = state => {
-  const currentUser = state.session.currentUser;
-
-  let isInvestor = false;
-  currentUser.accounts.forEach( account => {
-    if(account.account_type === "Investor") isInvestor = true;
-  });
+  // const currentUser = state.session.currentUser;
+  //
+  // let isInvestor = false;
+  // currentUser.accounts.forEach( account => {
+  //   if(account.account_type === "Investor") isInvestor = true;
+  // });
 
 
   return {

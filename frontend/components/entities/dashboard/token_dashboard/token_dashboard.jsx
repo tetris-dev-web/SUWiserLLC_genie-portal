@@ -57,7 +57,7 @@ class TokenDashboard extends React.Component {
       default:
         break;
     }
-
+    console.log("HELLO")
     if (this.props.currentUser) {
       return(
         <div className="token-dashboard">

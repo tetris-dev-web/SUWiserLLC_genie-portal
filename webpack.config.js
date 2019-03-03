@@ -5,6 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
 module.exports = {
   context: __dirname,
   entry: ["@babel/polyfill", "./frontend/entry.jsx"],
@@ -12,14 +14,20 @@ module.exports = {
      path: path.resolve(__dirname, 'dist'),
      filename: 'bundle.js'
    },
+   target: 'web', // update from 23.12.2018
+   // externals: [nodeExternals()],
   plugins: [
-    new MiniCssExtractPlugin({
-      path: path.resolve(__dirname, "stylesheets"),
-      filename: 'bundle.scss'
-    }),
+    // new MiniCssExtractPlugin({
+    //   filename: 'style.scss'
+    // }),
+    new ExtractTextPlugin('style.css'),
     new HtmlWebpackPlugin({
-      template: "./public/index.html",
-      // favicon: "./public/favicon.ico"
+      // template: "./public/index.html",
+      // // favicon: "./public/favicon.ico"
+      // inject: false,
+      // hash: true,
+      template: './public/index.html',
+      // filename: 'index.html'
     })
   ],
   mode: 'development',
@@ -34,25 +42,21 @@ module.exports = {
         }
       },
       {
-        test: /\.scss$/,
-        use: [
-          "style-loader",
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader'
-        ]
-      },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
-      },
-      {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"]
-      },
+       test: /\.scss$/,
+       use: ExtractTextPlugin.extract({
+         fallback: "style-loader",
+         use: "css-loader!sass-loader",
+       })
+     },
+      // {
+      //   test: /\.scss$/,
+      //   use: [
+      //     "style-loader",
+      //     MiniCssExtractPlugin.loader,
+      //     'css-loader',
+      //     'sass-loader'
+      //   ]
+      // },
       {
         test: /\.(jpg|png|gif|svg|pdf|ico)$/,
         use: [

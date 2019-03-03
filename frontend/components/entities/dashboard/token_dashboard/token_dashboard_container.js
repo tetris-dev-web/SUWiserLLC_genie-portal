@@ -4,7 +4,8 @@ import TokenDashboard from './token_dashboard';
 
 const mapStateToProps = state => {
   return {
-    currentUser: state.session.currentUser,
+    // currentUser: state.session.currentUser,
+    currentUser: true,
     crowdsale: state.network.crowdsaleInstance,
     account: state.network.account
   };

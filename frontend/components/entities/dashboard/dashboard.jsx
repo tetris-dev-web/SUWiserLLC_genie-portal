@@ -4,6 +4,7 @@ import ProjectDashboardContainer from './project_dashboard/project_dashboard_con
 import PropTypes from 'prop-types';
 
 const Dashboard = () => {
+  console.log("WHATS UP")
   return (
     <div className="box">
       <TokenDashboardContainer />
