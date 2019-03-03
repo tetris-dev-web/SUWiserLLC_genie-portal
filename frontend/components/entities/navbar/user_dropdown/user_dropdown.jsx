@@ -9,15 +9,16 @@ class UserDropdown extends React.Component {
   constructor(props) {
     super(props);
 
-    const fName = this.props.currentUser.first_name;
-    const lName = this.props.currentUser.last_name;
-    const email = this.props.currentUser.email;
-    const parsedUsername = email.match(/^([^@]*)@/)[1];
-
-
-    const uName = this.props.currentUser.username;
-
-    const userType = fName && lName ? `${fName} ${lName}` : parsedUsername;
+    //this needs to be updated using uport information
+    // const fName = this.props.currentUser.first_name;
+    // const lName = this.props.currentUser.last_name;
+    // const email = this.props.currentUser.email;
+    // const parsedUsername = email.match(/^([^@]*)@/)[1];
+    //
+    //
+    // const uName = this.props.currentUser.username;
+    //
+    // const userType = fName && lName ? `${fName} ${lName}` : parsedUsername;
 
     // this.totalSupplyIdx = this.props.drizzle.contracts.Token.methods.totalSupply.cacheCall();
     /*
@@ -28,7 +29,8 @@ class UserDropdown extends React.Component {
 
     this.state = {
       openModal: false,
-      displayName: userType,
+      // displayName: userType,
+      displayName: "demo",
       tokens: 0,
       totalSupply: null
     };
@@ -137,20 +139,12 @@ class UserDropdown extends React.Component {
                 <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/wallet.svg" />
                 <div className="button-text">wallet#</div>
               </a>
-              <ul className="dropdown-menu dropdown-item">
-                <Wallet currentUser={this.props.currentUser} updateUser={this.props.updateUser} updateUsernameDisplay={this.updateUsernameDisplay}/>
-              </ul>
             </li>
             <li className="dropdown-submenu profile-menu">
               <a tabIndex="-1" className="profile-button butt">
                 <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/profile.svg" />
                 <div className="button-text">profile</div>
               </a>
-              <ul className="dropdown-menu dropdown-item">
-                <ProfileContainer
-                  updateUsernameDisplay={this.updateUsernameDisplay}
-                  user={this.props.currentUser}/>
-              </ul>
             </li>
             <li>
               <a className="logout-button butt" onClick={this.props.logout}>
@@ -163,9 +157,16 @@ class UserDropdown extends React.Component {
       </div>
     );
   }
-
-
-
 }
+//needs to be updated with uport infomration
+// <ul className="dropdown-menu dropdown-item">
+//   <Wallet currentUser={this.props.currentUser} updateUser={this.props.updateUser} updateUsernameDisplay={this.updateUsernameDisplay}/>
+// </ul>
+//needs to be updated with uport information
+// <ul className="dropdown-menu dropdown-item">
+//   <ProfileContainer
+//     updateUsernameDisplay={this.updateUsernameDisplay}
+//     user={this.props.currentUser}/>
+// </ul>
 
 export default UserDropdown;

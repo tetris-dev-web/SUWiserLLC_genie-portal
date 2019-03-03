@@ -81,11 +81,10 @@ class App extends React.Component {
     return (
       <div style={{height: "100%"}}>
         <Navbar />
-        <DeveloperInfo />
         <RedirectedRoute />
-        <Switch>
-          <AuthRoute path="/login" component={Landing} />
-          <ProtectedRoute path="/dashboard" component={Dashboard} />
+        <DeveloperInfo />
+        <Switch>]
+          <div path="/dashboard" component={Dashboard} />
         </Switch>
         {/* <Footer /> */}
       </div>
@@ -109,3 +108,8 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+
+
+// <ProtectedRoute path="/dashboard" component={Dashboard} />
+// <AuthRoute path="/login" component={Landing} />

@@ -33,7 +33,7 @@ const Redirected = ({ component: Component, path, loggedIn }) => (
 );
 
 const mapStateToProps = state => (
-  { loggedIn: Boolean(state.session.currentUser) }
+  { loggedIn: Boolean(state.network.account) }
 );
 
 export const AuthRoute = withRouter(connect(mapStateToProps, null)(Auth));

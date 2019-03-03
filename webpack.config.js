@@ -19,7 +19,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: "./public/index.html",
-      favicon: "./public/favicon.ico"
+      // favicon: "./public/favicon.ico"
     })
   ],
   mode: 'development',
@@ -36,10 +36,22 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
+          "style-loader",
           MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       },
       {
         test: /\.(jpg|png|gif|svg|pdf|ico)$/,
