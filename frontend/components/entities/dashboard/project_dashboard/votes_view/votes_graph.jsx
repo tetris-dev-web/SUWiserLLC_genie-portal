@@ -5,7 +5,6 @@ import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_p
 import VoteShiftTool from './vote_shift_tool';
 import './votes_graph.scss';
 
-
 class VotesGraph extends React.Component {
   constructor() {
     super();
@@ -28,63 +27,67 @@ class VotesGraph extends React.Component {
   }
 
   createScales(){
-    const {capitalBeingRaised, capitalTotal, startTime, endTime, lineData, maxValuation, deployedProjectsValuationMinMax} = this.props;
-    
-    console.log("graph props", this.props)
+    const { capitalBeingRaised, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax, allProjectsValuationMinMax } = this.props;
+
     return {
-      SVGHeightScale : d3.scaleLinear()
+      SVGHeightScale: d3.scaleLinear()
         .range([0, this.SVGHeight])
-        .domain([0, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
-      SVGYScale : d3.scaleLinear()
+        .domain([0, capitalTotal + (pitchedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
+      SVGYScale: d3.scaleLinear()
         .range([this.SVGHeight, 0])
-        .domain([0, capitalTotal + (deployedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
+        .domain([0, capitalTotal + (pitchedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
       SVGTimeXScale: d3.scaleLinear()
         .domain([startTime, endTime])
         .range([0, this.SVGWidth]),
-    }
+      circleScale: d3.scaleLinear()
+        .domain(allProjectsValuationMinMax)
+        .range([5, 10])
+    };
   }
 
   dataHasLoaded(){
-    return this.props.lineData
+    return this.props.lineData;
   }
 
   renderGraph() {
-    const { SVGHeightScale, SVGYScale, SVGTimeXScale } = this.createScales();
+    const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
 
     return (
       <div className={`votes-graph ${componentVisible}`}>
-          <div className="vote-shift-tool-container"
-            ref={node => this.voteShiftTool = node}>
-            {
-              selectedProject &&
-              <VoteShiftTool />
-            }
-          </div>
-          <svg className="votes-view-svg"
-            preserveAspectRatio="xMinYMin meet"
-            viewBox="0 0 960 500">
-              <VotesViewCapitalRaised
-                {...this.props}
-                {...this.state}
-                SVGYScale={SVGYScale}
-                SVGHeightScale={SVGHeightScale}
-                SVGTimeXScale={SVGTimeXScale} />
-              <VotesViewPitchedProjects
-                {...this.props}
-                {...this.state}
-                SVGYScale={SVGYScale}
-                SVGHeightScale={SVGHeightScale}
-                SVGWidth={this.SVGWidth}
-                voteShiftTool={this.voteShiftTool}
-                toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
-          </svg>
+        <div className="vote-shift-tool-container"
+          ref={node => this.voteShiftTool = node}>
+          {
+            selectedProject &&
+            <VoteShiftTool />
+          }
         </div>
-      )
+        <svg className="votes-view-svg"
+          preserveAspectRatio="xMinYMin meet"
+          viewBox="0 0 960 500">
+            <VotesViewCapitalRaised
+              {...this.props}
+              {...this.state}
+              SVGYScale={SVGYScale}
+              SVGHeightScale={SVGHeightScale}
+              SVGTimeXScale={SVGTimeXScale}
+              circleScale={circleScale} />
+            <VotesViewPitchedProjects
+              {...this.props}
+              {...this.state}
+              SVGYScale={SVGYScale}
+              SVGHeightScale={SVGHeightScale}
+              SVGWidth={this.SVGWidth}
+              circleScale={circleScale}
+              voteShiftTool={this.voteShiftTool}
+              toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
+        </svg>
+      </div>
+    );
   }
 
   render() {
-    return this.dataHasLoaded() ? this.renderGraph() : null
+    return this.dataHasLoaded() ? this.renderGraph() : null;
   }
 }
 

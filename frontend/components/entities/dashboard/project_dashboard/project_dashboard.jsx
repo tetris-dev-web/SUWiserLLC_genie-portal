@@ -1,5 +1,5 @@
 import React from 'react';
-import ProjectGraph from './loc_view/project_graph';
+import LocGraphContainer from './loc_view/loc_graph_container';
 import VotesGraphContainer from './votes_view/votes_graph_container';
 import ToggleOptions from '../dashboard_toggle_options/toggle_options';
 import { calculateAccumulatedRevenue, processCashData } from '../../../../util/project_api_util';
@@ -17,7 +17,6 @@ class ProjectDashboard extends React.Component {
 
     this.toggleView = this.toggleView.bind(this);
     this.watchProjectPitch = this.watchProjectPitch.bind(this);
-    this.filterPitchedProjects = this.filterPitchedProjects.bind(this);
   }
 
   toggleView (currentViewId) {
@@ -49,16 +48,6 @@ class ProjectDashboard extends React.Component {
     });
   }
 
-  filterPitchedProjects () {
-    return Object.keys(this.props.projects).reduce((pitchedProjects, projectTitle) => {
-      const project = this.props.projects[projectTitle];
-      if (project.instance) {
-        pitchedProjects[projectTitle] = project;
-      }
-      return pitchedProjects;
-    }, {});
-  }
-
   handleKeyPress(e) {
     alert('PRESSED');
   }
@@ -75,16 +64,10 @@ class ProjectDashboard extends React.Component {
       break;
       case 1:
         currentGraph = <VotesGraphContainer
-                          wait={500}
-                          projects={this.props.projects}
-                          />;
+          wait={500} />;
         break;
       case 2:
-        currentGraph = <ProjectGraph
-          currentUser={this.props.currentUser}
-          fetchProjects={this.props.fetchProjects}
-          data={this.props.projects}
-          capitalBeingRaised={this.props.capitalBeingRaised}/>;
+        currentGraph = <LocGraphContainer />;
         break;
       default:
         break;

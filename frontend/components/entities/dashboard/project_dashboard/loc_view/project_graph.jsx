@@ -1,9 +1,8 @@
 import React from 'react';
-import ProjectModules from './../project_modules/project_modules';
-
-
 import * as d3 from 'd3';
-import {event as currentEvent} from 'd3-selection';
+import { connect } from 'react-redux';
+import { merge } from 'lodash';
+import ProjectModules from './../project_modules/project_modules';
 
 const margin = {top: 20, right: 20, bottom: 30, left: 50};
 const width = 960 - margin.left - margin.right;
@@ -19,15 +18,20 @@ const rosyBrown = "#AB7A5E";
 const lightGrey = "#DEDBCF";
 const darkGrey = "#A59A91";
 
+const mapStateToProps = state => {
+  return {
+    projects: merge({}, state.entities.projects)
+  };
+};
 
 class ProjectGraph extends React.Component {
   constructor(props) {
     super(props);
-    this.state={
-      projects:{},
-      isModalOpen: false,
-      projectClicked:{},
-      doIHaveData: ''
+
+    this.projectClicked = null;
+
+    this.state = {
+      openModal: false
     };
 
     this.simulation = this.simulation.bind(this);
@@ -37,8 +41,6 @@ class ProjectGraph extends React.Component {
     this.createSVG = this.createSVG.bind(this);
     this.tickActions = this.tickActions.bind(this);
     this.toggleModalonClickandPassProject = this.toggleModalonClickandPassProject.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-
   }
 
   componentDidMount(){
@@ -53,20 +55,15 @@ class ProjectGraph extends React.Component {
       projectClicked.accum_actual_cashflow = JSON.parse(projectClicked.accum_actual_cashflow)
       projectClicked.projected_cashflow = JSON.parse(projectClicked.projected_cashflow)
     }
-    this.state.isModalOpen === false ? (this.setState({ isModalOpen: true, projectClicked}))
-      : (this.setState({ isModalOpen: false}))
 
-    projectClicked.id > 0 ? this.setState( {doIHaveData:true })
-      : this.setState( {doIHaveData:false })
-
-    };
-
-    closeModal(){
-      this.setState({ isModalOpen: false });
+    if (this.state.openModal === false) {
+      this.projectClicked = projectClicked;
+      this.setState({ openModal: true });
+    } else {
+      this.projectClicked = null;
+      this.setState({ openModal: false });
     }
-
-
-
+  }
 
   formatData(projectKeys) {
     const listData = (data) => {
@@ -75,11 +72,10 @@ class ProjectGraph extends React.Component {
       });
     };
 
-
     const extractData = () => {
       return projectKeys.reduce((_projectData, _key) => {
-        const city = this.props.data[_key].city;
-        const continent = this.props.data[_key].continent;
+        const city = this.props.projects[_key].city;
+        const continent = this.props.projects[_key].continent;
         const cityData = {
           title: city,
           continent
@@ -107,13 +103,12 @@ class ProjectGraph extends React.Component {
   }
 
   setUp () {
-    console.log("PROPS", this.props)
-    const projectKeys = Object.keys(this.props.data);
+    const projectKeys = Object.keys(this.props.projects);
     const svg = this.createSVG();
 
     const ProjectNodeData = this.formatData(projectKeys);
     const projectData = projectKeys.map(key => {
-      return this.props.data[key];
+      return this.props.projects[key];
     });
     const cities = ProjectNodeData.cities;
     const continents = ProjectNodeData.continents;
@@ -269,7 +264,6 @@ class ProjectGraph extends React.Component {
     drag_handler(citySquares);
   }
 
-
   simulation (nodesData,continentData,cityData, rscale) {
     const allData = nodesData.concat(continentData).concat(cityData);
     return d3.forceSimulation()
@@ -417,38 +411,29 @@ class ProjectGraph extends React.Component {
   }
 
   render() {
-
-
-    let data = '';
-    if (this.props.data) {
-      data = Object.keys(this.props.data).map(key => {
-        const project = this.props.data[key];
-        return <li key={project.id}>{project.title} {project.created_at}</li>;
-      });
-    }
-    console.log("graph state", this.state)
-
-
-      return (
-        <div className='graph-container'>
-          <div className="series content graph" id='project'>
-            <div id="graph"></div>
-          </div>
-                <ProjectModules
-                  projectClicked={this.state.projectClicked}
-                  current_capital={this.props.capitalBeingRaised}
-                  currentUser={this.props.currentUser}
-                  isModalOpen = {this.state.isModalOpen}
-                  closeModalOnClick = {this.toggleModalonClickandPassProject}
-                  doIHaveData = {this.state.doIHaveData}
-                  closeModal={this.closeModal}
-                  />
-        </div>)
-    }
+    // let data = '';
+    // if (this.props.projects) {
+    //   data = Object.keys(this.props.projects).map(key => {
+    //     const project = this.props.projects[key];
+    //     return <li key={project.id}>{project.title} {project.created_at}</li>;
+    //   });
+    // }
+    return (
+      <React.Fragment>
+        <div className="series content graph" id='project'>
+          <div id="graph"></div>
+        </div>
+        <ProjectModules
+          projectClicked={this.projectClicked}
+          openModal={this.state.openModal}
+          closeModalOnClick={this.toggleModalonClickandPassProject}/>
+      </React.Fragment>
+    );
+  }
 }
 
 ProjectGraph.defaultProps = {
   chart: 'loading'
 };
 
-export default ProjectGraph;
+export default connect(mapStateToProps)(ProjectGraph);

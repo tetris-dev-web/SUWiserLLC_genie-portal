@@ -1,4 +1,5 @@
 import React from 'react';
+import VotesViewPitchedProjectsCircle from './votes_view_pitched_projects_circle';
 
 class VotesViewPitchedProjectsRect extends React.Component {
 	constructor() {
@@ -38,8 +39,9 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	}
 
 	render() {
-		const { selectedProject, maxValuation, capitalRaised, project, SVGYScale } = this.props;
+		const { selectedProject, project, circleScale } = this.props;
 		const { fill, marginWidth, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
+
 		return(
 			<g className="votes-view-project-group"
 				onClick={this.handleClick}
@@ -71,6 +73,14 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></rect>
+				<g onClick={e => e.stopPropagation()}>
+					<VotesViewPitchedProjectsCircle 
+						cx={projectRectCenter}
+						cy={50}
+						r={circleScale(project.valuation)}
+						opacity={selectedProject ? "0.2" : "1"}
+						project={project} />
+				</g>
 				<text className="votes-view-percentage-breakdown"
 					x={projectRectCenter}
 					y={projectValutionStartY + projectValutionHeight + 20}

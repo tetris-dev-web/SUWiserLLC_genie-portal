@@ -41,17 +41,16 @@ export class SummaryAndPlan extends React.Component{
   }
 
   render(){
-    const { isInvestor, bus_plan_link,  } = this.props
+    const { isInvestor, bus_plan_link, summary } = this.props;
     return (
       <div className="project-description">
 
-        <div className="project-text">
-          <textarea onKeyPress={this.handleKeyPress}
-            onChange={(event)=> this.setState({summary: event.target.value})}
-            disabled={isInvestor}
-            className="project-summary"
-            value={this.state.summary}/>
-        </div>
+      <div className="project-text">
+        <textarea onChange={() => {}}
+                  disabled={isInvestor}
+                  className="project-summary"
+                  value={summary}/>
+      </div>
 
         <div className="bus-plan-download">
           <a  target="_blank"

@@ -46,9 +46,6 @@ class TokenGraph extends React.Component {
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
     this.width = 960 - this.margin.left - this.margin.right;
     this.height = 500 - this.margin.top - this.margin.bottom;
-
-    this.toggleData = this.toggleData.bind(this);
-    this.toggleTimeAxis = this.toggleTimeAxis.bind(this);
   }
 
   componentDidMount() {
@@ -57,21 +54,10 @@ class TokenGraph extends React.Component {
     }, this.props.wait);
   }
 
-  toggleData() {
-    if (this.state.toggle) {
-      this.setState({
-        data: totalData
-      });
-    } else {
-      this.setState({
-        data: userData
-      });
-
-    }
-  }
-
-  toggleTimeAxis() {
-    this.setState({showTimeAxis: !this.state.showTimeAxis});
+  toggleTimeAxis(boolean) {
+    return () => {
+      this.setState({showTimeAxis: boolean});
+    };
   }
 
   render() {
@@ -119,8 +105,8 @@ class TokenGraph extends React.Component {
 
     return (
       <div className={`token-graph ${componentVisible}`}
-        onMouseEnter={this.toggleTimeAxis}
-        onMouseLeave={this.toggleTimeAxis}>
+        onMouseEnter={this.toggleTimeAxis(true)}
+        onMouseLeave={this.toggleTimeAxis(false)}>
         <svg className="token-svg" viewBox="0 0 960 500" preserveAspectRatio="xMinYMin meet">
           {TokenGraphTotalTokenPath}
           {TokenGraphActiveTokenPath}

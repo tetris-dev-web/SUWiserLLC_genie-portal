@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchTokenPurchaseLogs } from '../../../../../actions/chain_actions/token_actions';
-import VotesGraph from './votes_graph'
+import VotesGraph from './votes_graph';
 
 
-const deployedProjectsValuationMinMax = (projects) => {
-  const projectValuations = projects.map(project => project.valuation);
-  return [Math.min(...projectValuations), Math.max(...projectValuations)];
+const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
+  const arrayOfValues = arrayOfObjects.map(object => object[key]);
+  return [Math.min(...arrayOfValues), Math.max(...arrayOfValues)];
 };
 
 
@@ -17,27 +17,18 @@ const mapStateToProps = state => {
       propsData.deployedProjects = [];
       propsData.pitchedProjects = [];
       propsData.totalVotes = 0;
-      propsData.maxValuation = 0;
     }
-
 
     const project = state.entities.projects[projectTitle];
 
     const deploymentTime = project.activationTime;
-    console.log("deploymentTime", deploymentTime)
     if (deploymentTime !== 0) {
       capitalDeployed += project.capitalRequired;
       project.capital = capitalDeployed;
       propsData.deployedProjects.push(project);
-    }
-    else {
-      console.log("adding a pitched project")
+    } else {
       propsData.totalVotes += project.votes;
       propsData.pitchedProjects.push(project);
-    }
-
-    if (project.valuation > propsData.maxValuation) {
-      propsData.maxValuation = project.valuation;
     }
 
     return propsData;
@@ -45,24 +36,8 @@ const mapStateToProps = state => {
 
   const {
     deployedProjects,
-    totalVotes,
-    maxValuation
+    totalVotes
   } = projectPropsData;
-
-  let scalingConstant; //will remove this after create a static scaling option
-  if (maxValuation >= 2500000) {
-    scalingConstant = 24000;
-  } else if (maxValuation >= 250000) {
-    scalingConstant = 2400;
-  } else if (maxValuation >= 25000) {
-    scalingConstant = 240
-  } else if (maxValuation >= 2500) {
-    scalingConstant = 24
-  } else if (maxValuation >= 250) {
-    scalingConstant = 2.4
-  } else {
-    scalingConstant = .24;
-  }
 
   const pitchedProjects = projectPropsData.pitchedProjects.map(project => {
     project.voteShare = project.votes / totalVotes;
@@ -102,45 +77,30 @@ const mapStateToProps = state => {
     startTime,
     endTime
   } = capitalPropsData;
-console.log({
-  crowdsaleInstance: state.network.crowdsaleInstance,
-  projectContract: state.network.projectContract,
-  web3: state.network.web3,
-  pitchedProjects,
-  deployedProjects,
-  maxValuation,
-  deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(deployedProjects),
-  lineData,
-  capitalTotal,
-  capitalBeingRaised: state.entities.capitalBeingRaised,
-  startTime,
-  endTime,
-  scalingConstant
-})
+
   return {
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract,
     web3: state.network.web3,
     pitchedProjects,
     deployedProjects,
-    maxValuation,
-    deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(deployedProjects),
+    pitchedProjectsValuationMinMax: getArrayOfObjectsMinMax(pitchedProjects, "valuation"),
+    allProjectsValuationMinMax: getArrayOfObjectsMinMax(Object.values(state.entities.projects), "valuation"),
     lineData,
     capitalTotal,
     capitalBeingRaised: capitalTotal - capitalDeployed,
     startTime,
-    endTime,
-    scalingConstant
-  }
-}
+    endTime
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchTokenPurchaseLogs: (crowdsale) => dispatch(fetchTokenPurchaseLogs(crowdsale))
-  }
-}
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(VotesGraph)
+export default connect(mapStateToProps, mapDispatchToProps)(VotesGraph);
 
 
 
@@ -387,7 +347,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(VotesGraph)
 //     longitude: -73.944585,
 //   }
 // ],
-// deployedProjectsValuationMinMax: deployedProjectsValuationMinMax(
+// pitchedProjectsValuationMinMax: pitchedProjectsValuationMinMax(
 //   [
 //     {
 //       title: 'proj1',
