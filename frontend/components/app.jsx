@@ -17,7 +17,7 @@ import GNITokenCrowdsale from '../../truffle/build/contracts/GNITokenCrowdsale.j
 import Token from '../../truffle/build/contracts/Token.json';
 import { connect } from 'react-redux';
 import {processVotes} from '../actions/chain_actions/vote_actions';
-// import './app.scss';
+import './app.scss';
 
 import Modal from '../components/entities/modal/modal';
 

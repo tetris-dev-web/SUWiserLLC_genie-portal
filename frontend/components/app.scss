@@ -1,3 +1,165 @@
-div {
-  background-color: red
+@import "../util/_variables";
+
+.link {
+  color: $darkblue;
+}
+
+.close-modal-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  text-align: center;
+  position: absolute;
+  font-size: $font-lg;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.blue-close-modal-button {
+  background-color: $db-fade;
+  left: -10px;
+  bottom: -10px;
+}
+
+.black-close-modal-button {
+  background-color: $black;
+  top: -10px;
+  left: -10px;
+}
+
+// Graphs
+.graph-container {
+  position: relative;
+  width: 100%;
+}
+
+.graph {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box {
+  display: flex;
+  flex-flow: column;
+  flex-direction: column;
+  .series.header {
+    flex: 0 1 auto;
+  }
+  .series.content {
+    flex: 1 1 auto;
+  }
+  .series.footer {
+    flex: 0 1 auto;
+  }
+}
+/* Scroll content and footer */
+.scroll {
+  overflow: auto;
+}
+
+//reset
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  text-decoration: none;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-weight: 300;
+  background-color: transparent;
+  &:active {
+    color: inherit;
+  }
+}
+
+/* HTML5 display-role reset for older browsers */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote {
+  &:before, &:after {
+    content: '';
+    content: none;
+  }
+}
+
+q {
+  &:before, &:after {
+    content: '';
+    content: none;
+  }
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Reset `button` and button-style `input` default styles */
+a {
+  color: inherit;
+  &:focus {
+    outline: none;
+  }
+  &:active {
+    text-decoration: none;
+  }
+}
+button:focus {
+  outline: none;
+}
+
+input {
+  border:none;
+  background-image:none;
+  background-color:transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  &:focus {
+    outline: none;
+  }
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button {
+    background: none;
+    border: 0;
+    font: inherit;
+    line-height: normal;
+    overflow: visible;
+    // padding: 0;
+    -webkit-appearance: button; /* for input */
+    -webkit-user-select: none; /* for button */
+       -moz-user-select: none;
+        -ms-user-select: none;
+}
+
+input::-moz-focus-inner,
+button::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+svg {
+  display: block;
+  overflow: visible !important;
 }

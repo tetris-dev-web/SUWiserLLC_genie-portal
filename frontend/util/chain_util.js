@@ -146,10 +146,7 @@ export const pitchProject = async (crowdsale, data, account) => {
       busLink
     } = data;
 
-  const voteForHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote for ${title}`}])
-  const voteAgainstHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote against ${title}`}])
-
-  return await crowdsale.pitchProject(
+  const projectInfo = JSON.stringify({
     title,
     description,
     busLink,
@@ -157,6 +154,7 @@ export const pitchProject = async (crowdsale, data, account) => {
     lat: latitude,
     lng: longitude
   });
+
   return await crowdsale.pitchProject(
     projectInfo,
     capital_required,

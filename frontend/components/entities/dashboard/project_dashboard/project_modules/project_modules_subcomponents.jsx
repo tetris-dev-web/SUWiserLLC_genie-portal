@@ -1,4 +1,5 @@
 import React from 'react';
+import './project_modules_subcomponents.scss';
 
 export function CloseButton (props){
   return <div className="black-close-modal-button close-modal-button"
