@@ -14,20 +14,11 @@ module.exports = {
      path: path.resolve(__dirname, 'dist'),
      filename: 'bundle.js'
    },
-   target: 'web', // update from 23.12.2018
-   // externals: [nodeExternals()],
+  target: 'web',
   plugins: [
-    // new MiniCssExtractPlugin({
-    //   filename: 'style.scss'
-    // }),
     new ExtractTextPlugin('style.css'),
     new HtmlWebpackPlugin({
-      // template: "./public/index.html",
-      // // favicon: "./public/favicon.ico"
-      // inject: false,
-      // hash: true,
       template: './public/index.html',
-      // filename: 'index.html'
     })
   ],
   mode: 'development',
@@ -48,15 +39,6 @@ module.exports = {
          use: "css-loader!sass-loader",
        })
      },
-      // {
-      //   test: /\.scss$/,
-      //   use: [
-      //     "style-loader",
-      //     MiniCssExtractPlugin.loader,
-      //     'css-loader',
-      //     'sass-loader'
-      //   ]
-      // },
       {
         test: /\.(jpg|png|gif|svg|pdf|ico)$/,
         use: [

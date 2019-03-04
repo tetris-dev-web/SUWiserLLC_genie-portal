@@ -17,7 +17,7 @@ import GNITokenCrowdsale from '../../truffle/build/contracts/GNITokenCrowdsale.j
 import Token from '../../truffle/build/contracts/Token.json';
 import { connect } from 'react-redux';
 import {processVotes} from '../actions/chain_actions/vote_actions';
-import './app.scss';
+// import './app.scss';
 
 class App extends React.Component {
   constructor(props) {
@@ -80,11 +80,12 @@ class App extends React.Component {
 
   render() {
     console.log("HELLO")
-  
+
     return (
       <div style={{height: "100%"}}>
-        {/* <Footer /> */}
-        <div className="none">THIS SHOULD BE RED</div>
+        <Navbar />
+        <DeveloperInfo />
+        <Dashboard/>
       </div>
     );
   }
@@ -106,15 +107,15 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-// <Navbar />
 // <Switch>]
 // </Switch>
-// <Dashboard/>
-
 // <div path="/dashboard" component={Dashboard} />
 
+
 // <RedirectedRoute />
-// <DeveloperInfo />
 
 // <ProtectedRoute path="/dashboard" component={Dashboard} />
 // <AuthRoute path="/login" component={Landing} />
+
+
+<div className="none">THIS SHOULD BE RED</div>

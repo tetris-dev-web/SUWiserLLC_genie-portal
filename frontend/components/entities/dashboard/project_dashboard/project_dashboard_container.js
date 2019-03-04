@@ -15,7 +15,7 @@ import { fetchTokenPurchaseLogs } from '../../../../actions/chain_actions/token_
 const mapStateToProps = state => {
   // const currentUser = state.session.currentUser;
   //
-  // let isInvestor = false;
+  let isInvestor = false;
   // currentUser.accounts.forEach( account => {
   //   if(account.account_type === "Investor") isInvestor = true;
   // });
@@ -28,7 +28,7 @@ const mapStateToProps = state => {
     projectContract: state.network.projectContract,
     projectFactoryInstance: state.network.projectFactoryInstance,
     capitalBeingRaised: state.entities.capitalBeingRaised,
-    currentUser,
+    // currentUser,
     isInvestor
   };
 };

@@ -90,7 +90,7 @@ class ProjectDashboard extends React.Component {
         break;
     }
 
-    if (this.props.currentUser) {
+    // if (this.props.currentUser) {
       return (
         <div className="project-dashboard">
           <div className="graph-container"
@@ -111,11 +111,11 @@ class ProjectDashboard extends React.Component {
             ]} />
         </div>
       );
-    } else {
-      return (
-        <div className="graph-container graph">Project Dashboard</div>
-      );
-    }
+    // } else {
+    //   return (
+    //     <div className="graph-container graph">Project Dashboard</div>
+    //   );
+    // }
 
   }
 }
