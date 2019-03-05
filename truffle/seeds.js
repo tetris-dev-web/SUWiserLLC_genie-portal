@@ -126,23 +126,22 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
     await createTokenPurchase(developer, 100);
     await createTokenPurchase(developer, 100);
     await createTokenPurchase(developer, 100);
-    // await createTokenPurchase(developer, 300);
-    // await createTokenPurchase(developer, 150);
-    // await createTokenPurchase(developer, 100);
-    // await createTokenPurchase(developer, 120);
   }
 
   const createVotes = async () => {
     const castVote = async (projectAddress, voteAmount) => {
       await voting.voteForProject(projectAddress, voteAmount, {from: developer});
     }
-    // await castVote(projAddr1, developer, 30);//4
 
-    await castVote(projAddr2, 50);//2
-    await castVote(projAddr3, 70);//1
-    await castVote(projAddr5, 50);//2
-    await castVote(projAddr6, 60);//2
-    await castVote(projAddr4, 40);//1
+    await castVote(projAddr2, 50);
+    await castVote(projAddr3, 70);
+    await castVote(projAddr5, 50);
+    await castVote(projAddr6, 60);
+    await castVote(projAddr4, 40);
+  }
+
+  const activateTokens = async () => {
+    await token.activatePending(developer);
   }
 
 
@@ -152,7 +151,8 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
   console.log("BUYS COMPLETE")
   await createVotes();
   console.log("VOTES COMPLETE")
-  // await crowdsale.activateProject();
+  await activateTokens();
+  console.log("TOKENS ACTIVATED");
 
 }
 
