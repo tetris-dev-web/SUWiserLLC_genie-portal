@@ -1,5 +1,7 @@
 import React from 'react';
 import './vote_shift_tool.scss';
+import { connect } from 'react-redux';
+import { fetchTotalVotes, fetchFreeVotes } from '../../../../../actions/chain_actions/votes_actions';
 
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
@@ -9,33 +11,81 @@ const VOTE_SHIFT_LINE_WIDTH = 5;
 const VOTE_SHIFT_LINE_HEIGHT = 80;
 const INNER_BAR_HEIGHT = VOTE_BAR_HEIGHT - 2 * VOTE_BAR_INNER_MARGIN;
 
+const mapStateToProps = state => {
+  return {
+    projectContract: state.network.projectContract,
+    votingToken: state.network.votingTokenInstance,
+    account: state.network.account,
+    accountVotes: state.entities.votes
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchTotalVotes: (account, votingToken) => dipatch(fetchTotalVotes),
+    fetchFreeVotes: (account, projectContract) => dispatch(projectContract)
+  }
+}
+
 class VoteShiftTool extends React.Component {
   constructor(props) {
     super(props);
 
-    const { votesPerProject, votesNotDedicated } = this.props.votesMockup;
+    // const { votesPerProject, votesNotDedicated } = this.props.votesMockup;
 
-    this.offsetX = 0;
-    this.totalVotes = votesPerProject + votesNotDedicated;
-    this.votesPerPixel = this.totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
+    // this.offsetX = 0;
+    // this.totalVotes = votesPerProject + votesNotDedicated;
+    // this.votesPerPixel = this.totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
 
-    const voteBarAppliedWidth = votesPerProject / this.votesPerPixel;
-    const voteBarFreedUpWidth = votesNotDedicated / this.votesPerPixel;
+    // const voteBarAppliedWidth = votesPerProject / this.votesPerPixel;
+    // const voteBarFreedUpWidth = votesNotDedicated / this.votesPerPixel;
 
     this.state = {
       showLogButton: false,
       blockchainLoading: false,
-      newVotesPerProject: votesPerProject,
-      newVotesNotDedicated: votesNotDedicated,
-      voteBarAppliedWidth,
-      voteBarFreedUpWidth,
-      voteShiftLineLeft: 2 * VOTE_BAR_INNER_MARGIN + voteBarAppliedWidth
+      newVotesPerProject: 0,
+      newVotesNotDedicated: 0,
+      voteBarAppliedWidth: 0,
+      voteBarFreedUpWidth: 0,
+      voteShiftLineLeft: 0
     };
 
     this.handleDragStart = this.handleDragStart.bind(this);
     this.handleDragEnd = this.handleDragEnd.bind(this);
     this.handleDragging = this.handleDragging.bind(this);
     this.handleLogClick = this.handleLogClick.bind(this);
+  }
+
+  componentDidMount () {
+    const { fetchFreeVotes, fetchProjectVotes, projectContract, votingToken, account, selectedProject } = this.props;
+
+    fetchTotalVotes(account, votingToken).then(() => {
+      fetchFreeVotes(account, projectContract, selectedProject);
+    })
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (
+      this.props.accountVotes.freedUp !== prevProps.accountVotes.freedUp ||
+      this.props.accountVotes[this.props.selectedProject] !== prevProps.accountVotes[this.props.selectedProject]
+    ) {
+      this.offsetX = 0;
+      this.totalVotes = this.props.accountVotes[this.props.selectedProject] + this.props.accountVotes.freedUp;
+      this.votesPerPixel = this.totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
+
+      const voteBarAppliedWidth = votesPerProject / this.votesPerPixel;
+      const voteBarFreedUpWidth = votesNotDedicated / this.votesPerPixel;
+
+      this.setState({
+        showLogButton: false,
+        blockchainLoading: false,
+        newVotesPerProject: votesPerProject,
+        newVotesNotDedicated: votesNotDedicated,
+        voteBarAppliedWidth,
+        voteBarFreedUpWidth,
+        voteShiftLineLeft: 2 * VOTE_BAR_INNER_MARGIN + voteBarAppliedWidth
+      })
+    }
   }
 
   handleDragStart(e) {
@@ -104,56 +154,64 @@ class VoteShiftTool extends React.Component {
   }
 
   render() {
-    return(
-      <React.Fragment>
+    const { accountVotes, selectedProject } = this.props;
+    if (
+        (accountVotes[selectedProject] || accountVotes[selectedProject] === 0) &&
+        (accountVotes.freedUp || accountsVotes.freedUp === 0)
+      ) {
+      return(
+        <React.Fragment>
 
-        <div className={this.state.blockchainLoading ? "vote-bar-loading" : "vote-bar"} style={{
-          width: VOTE_BAR_WIDTH,
-          height: VOTE_BAR_HEIGHT,
-          borderRadius: VOTE_BAR_RADIUS
-        }}>
-
-          <div className="vote-bar-inner-container"
-            style={{padding: VOTE_BAR_INNER_MARGIN}}
-            ref={node => this.voteBarContainer = node}>
-            <div className="vote-bar-applied" style={{
-              height: INNER_BAR_HEIGHT,
-              width: this.state.voteBarAppliedWidth,
+          <div className={this.state.blockchainLoading ? "vote-bar-loading" : "vote-bar"} style={{
+              width: VOTE_BAR_WIDTH,
+              height: VOTE_BAR_HEIGHT,
               borderRadius: VOTE_BAR_RADIUS
-            }}
-              ref={node => this.voteBarApplied = node}></div>
+            }}>
 
-            <div className="vote-bar-shift-line" style={{
-              height: VOTE_SHIFT_LINE_HEIGHT,
-              width: VOTE_SHIFT_LINE_WIDTH,
-              left: this.state.voteShiftLineLeft
-            }}
-              ref={node => this.shiftLine = node}
-              onMouseDown={this.handleDragStart}>
-              <span className="vote-bar-applied-votes-number">
-                {`${this.state.newVotesPerProject} votes applied`}
-              </span>
-              <span className="vote-bar-freedup-votes-number">
-                {`${this.state.newVotesNotDedicated} votes freed up`}
-              </span>
-              <span onClick={this.handleVoteClick(1)} className="vote-bar-add-vote-button">{">"}</span>
-              <span onClick={this.handleVoteClick(-1)} className="vote-bar-minus-vote-button">{"<"}</span>
+            <div className="vote-bar-inner-container"
+              style={{padding: VOTE_BAR_INNER_MARGIN}}
+              ref={node => this.voteBarContainer = node}>
+              <div className="vote-bar-applied" style={{
+                  height: INNER_BAR_HEIGHT,
+                  width: this.state.voteBarAppliedWidth,
+                  borderRadius: VOTE_BAR_RADIUS
+                }}
+                ref={node => this.voteBarApplied = node}></div>
+
+              <div className="vote-bar-shift-line" style={{
+                  height: VOTE_SHIFT_LINE_HEIGHT,
+                  width: VOTE_SHIFT_LINE_WIDTH,
+                  left: this.state.voteShiftLineLeft
+                }}
+                ref={node => this.shiftLine = node}
+                onMouseDown={this.handleDragStart}>
+                <span className="vote-bar-applied-votes-number">
+                  {`${this.state.newVotesPerProject} votes applied`}
+                </span>
+                <span className="vote-bar-freedup-votes-number">
+                  {`${this.state.newVotesNotDedicated} votes freed up`}
+                </span>
+                <span onClick={this.handleVoteClick(1)} className="vote-bar-add-vote-button">{">"}</span>
+                <span onClick={this.handleVoteClick(-1)} className="vote-bar-minus-vote-button">{"<"}</span>
+              </div>
+
+              <div className="vote-bar-freedup" style={{
+                  height: INNER_BAR_HEIGHT,
+                  width: this.state.voteBarFreedUpWidth,
+                  borderRadius: VOTE_BAR_RADIUS,
+                }}
+                ref={node => this.voteBarFreedup = node}></div>
             </div>
-
-            <div className="vote-bar-freedup" style={{
-              height: INNER_BAR_HEIGHT,
-              width: this.state.voteBarFreedUpWidth,
-              borderRadius: VOTE_BAR_RADIUS,
-            }}
-              ref={node => this.voteBarFreedup = node}></div>
           </div>
-        </div>
           {
             this.state.showLogButton &&
             <button className="vote-shift-tool-log-button" onClick={this.handleLogClick}>log</button>
           }
-      </React.Fragment>
-    );
+        </React.Fragment>
+      );
+    } else {
+      return []; //make loader
+    }
   }
 }
 
@@ -164,7 +222,7 @@ VoteShiftTool.defaultProps = {
   }
 };
 
-export default VoteShiftTool;
+export default connect(mapStateToProps, mapDispatchToProps)(VoteShiftTool);
 
 
 // old d3 implementation for reference

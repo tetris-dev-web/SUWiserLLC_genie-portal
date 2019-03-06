@@ -7,12 +7,6 @@ export const getProjectData = async (projectFactoryInstance, projectContract, id
   }
 
   const projectInstance = projectContract.at(address);
-  // const projectInfo = await projectInstance.projectInfo();
-  // const { title, lat, lng, description } = JSON.parse(projectInfo);
-  // const capitalRequired = await projectInstance.capitalRequired();
-  // const valuation = await projectInstance.valuation();
-  // const cashFlowString = await projectInstance.cashFlow();
-  // const cashFlow = JSON.parse(cashFlowString);
   const activationTimeBN = await projectInstance.activationTime();
   const activationTime = activationTimeBN.toNumber();
   const votesBN = await projectInstance.totalVotes();
@@ -34,19 +28,6 @@ export const getProjectData = async (projectFactoryInstance, projectContract, id
     valuation: projectData[3].toNumber(),
     cashFlow: JSON.parse(projectData[4])
   };
-
-  // return {
-  //   id,
-  //   address,
-  //   instance: projectInstance,
-  //   title,
-  //   lat,
-  //   lng,
-  //   description,
-  //   capitalRequired,
-  //   valuation,
-  //   cashFlow
-  // };
 };
 
 export const integrateProjectsData = async (projectFactoryInstance, projectContract) => {
@@ -65,46 +46,6 @@ export const integrateProjectsData = async (projectFactoryInstance, projectContr
       return projects;
     }, {});
   });
-  // const formatProjectData = async (instance, address, initialProjectsData, id) => {
-  //
-  //   //combine functions into one on the blockchain
-  //   const projectInfo = await instance.projectInfo();
-  //   const { title, lat, lng, description } = JSON.parse(projectInfo);
-  //   const capitalRequired = await instance.capitalRequired();
-  //   const valuation = await instance.valuation();
-  //
-  //   project.tit
-  //   project.capitalRequired = capitalRequired.toNumber();
-  //   project.valuation = valuation.toNumber();
-  //   project.active = await instance.active_();
-  //   project.id = id;
-  //   project.instance = instance;
-  //
-  //   if (project.active) {
-  //     project.votes = 0;
-  //     const activationTime = await instance.activationTime_();
-  //     project.activationTime = activationTime.toNumber();
-  //   } else {
-  //     const votes = await instance.totalVotes_();
-  //     project.votes = votes.toNumber();
-  //   }
-  //
-  //   return project;
-  // };
-
-  // const projectAddresses = await getProjectAddresses(projectFactoryInstance);
-  //
-  // const projectsData = projectAddresses.map((address, i) => {
-  //   const instance = projectContract.at(address);
-  //   return formatProjectData(instance, address, initialProjectsData, i + 1);
-  // });
-  //
-  // return Promise.all(projectsData).then(resolvedProjectsData => {
-  //   return resolvedProjectsData.reduce((projects, project) => {
-  //     projects[project.title] = project;
-  //     return projects;
-  //   }, {});
-  // });
 };
 
 export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPurchases) => {
@@ -133,6 +74,15 @@ export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPu
     dispatch(receiveTokenPurchases(capitalHistory));
   });
 };
+
+export const fetchProjectVotes = async (account, projectContract, projectAddress) => {
+  const project = await projectContract.at(projectAddress);
+  return await project.votesOf.call(account);
+}
+
+export const fetchFreeVotes = async (account, votingToken) => {
+  return await votingToken.freeUpBalanceOf(account);
+}
 
 export const fetchAllTokenTransferLogs = async (inactiveToken, activeToken, receiveAllTokenTransfers, dispatch) => {
   const inactiveTransferEvents = await fetchTokenTransferEvents(inactiveToken);

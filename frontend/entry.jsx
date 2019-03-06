@@ -9,6 +9,7 @@ import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json
 import SeedableCrowdsale from '../truffle/build/contracts/SeedableCrowdsale.json';
 import InactiveToken from '../truffle/build/contracts/InactiveToken.json';
 import ActiveToken from '../truffle/build/contracts/ActiveToken.json';
+import VotingToken from '../truffle/build/contracts/VotingToken.json';
 import Project from '../truffle/build/contracts/Project.json';
 import ProjectFactory from '../truffle/build/contracts/ProjectFactory.json'
 import Voting from '../truffle/build/contracts/Voting.json';
@@ -34,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const activeToken = TruffleContract(ActiveToken);
     activeToken.setProvider(web3Provider);
+
+    const votingToken = TruffleContract(VotingToken);
+    votingToken.setProvider(web3Provider);
     // console.log("version", web3Provider.networkVersion)
     // console.log(provider._proivder.networkVersion)
     const crowdsale = TruffleContract(SeedableCrowdsale);
@@ -51,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let account;
     let inactiveTokenInstance;
     let activeTokenInstance;
+    let votingTokenInstance;
     let crowdsaleInstance;
     let votingInstance;
     let projectFactoryInstance;
@@ -64,6 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(() => {
         return activeToken.deployed().then((_activeTokenInstance) => {
           activeTokenInstance = _activeTokenInstance;
+        })
+      })
+      .then(() => {
+        return votingToken.deployed().then((_votingTokenInstance) => {
+          votingTokenInstance = _votingTokenInstance;
         })
       })
       .then(() => {
@@ -89,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 account,
                 inactiveTokenInstance,
                 activeTokenInstance,
+                votingTokenInstance,
                 votingInstance,
                 crowdsaleInstance,
                 projectFactoryInstance,

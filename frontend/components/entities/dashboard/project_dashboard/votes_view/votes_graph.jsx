@@ -69,7 +69,7 @@ class VotesGraph extends React.Component {
           ref={node => this.voteShiftTool = node}>
           {
             selectedProject &&
-            <VoteShiftTool />
+            <VoteShiftTool selectedProject={selectedProject.address}/>
           }
         </div>
         <svg className="votes-view-svg"
