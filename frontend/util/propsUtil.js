@@ -35,19 +35,17 @@ const tokenHistoryByUser = (account, allTransfers) => {
       //if the account's overall balance is increasing
       if (transferData.type == 'inactive' || transferData.from !== "0x0000000000000000000000000000000000000000") {
         totalTokens += transferData.value;
-        if (transferData.type == 'active') {
-          activeTokens += transferData.value;
-        }
-      } else { //if the accounts own tokens were activated
+      }
+      if (transferData.type == 'active') { //if the accounts own tokens were activated
         activeTokens += transferData.value;
       }
     } else {//if the account is doing the transfering
       //if the account is losing overall tokens
       if (transferData.type == 'active' || transferData.to !== "0x0000000000000000000000000000000000000000") {
         totalTokens -= transferData.value;
-        if (transferData.type === 'active') {
-          activeTokens -= transferData.value;
-        }
+      }
+      if (transferData.type === 'active') {
+        activeTokens -= transferData.value;
       }
     }
 
