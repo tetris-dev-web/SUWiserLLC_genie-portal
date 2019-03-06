@@ -134,6 +134,35 @@ export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPu
   });
 };
 
+export const fetchAllTokenTransferLogs = async (inactiveToken, activeToken, receiveAllTokenTransfers, dispatch) => {
+  const inactiveTransferEvents = await fetchTokenTransferEvents(inactiveToken);
+  const activeTransferEvents = await fetchTokenTransferEvents(activeToken);
+  console.log("events", inactiveTransferEvents, activeTransferEvents)
+  const inactiveTransferLogs = await getLogs(inactiveTransferEvents);
+  const activeTransferLogs = await getLogs(activeTransferEvents);
+
+  console.log("transfers", inactiveTransferLogs, activeTransferLogs)
+  dispatch(receiveAllTokenTransfers({inactiveTransferLogs, activeTransferLogs}));
+}
+
+const getLogs = async (events) => {
+  return new Promise((resolve, reject) => {
+    events.get((err, logs) => {
+      resolve(logs);
+    });
+  });
+}
+
+const fetchTokenTransferEvents= async (token) => {
+  return await token.Transfer(
+    {},
+    {
+      fromBlock: 0,
+      toBlock: 'latest'
+    }
+  );
+}
+
 export const pitchProject = async (crowdsale, data, account) => {
   let {
       title,

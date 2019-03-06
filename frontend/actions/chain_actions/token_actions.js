@@ -1,5 +1,6 @@
 import * as ChainUtil from '../../util/chain_util';
 export const RECEIVE_TOKEN_PURCHASES = "RECEIVE_TOKEN_PURCHASES";
+export const RECEIVE_TOKEN_TRANSFERS = "RECEIVE_TOKEN_TRANSFERS";
 
 
 export const receiveTokenPurchases = tokenPurchases => { //no need to export?
@@ -18,3 +19,16 @@ export const fetchTokenPurchaseLogs  = (crowdsale) => {
     return ChainUtil.fetchTokenPurchaseLogs(crowdsale, dispatch, receiveTokenPurchases)
   };
 };
+
+export const fetchAllTokenTransferLogs = (inactiveToken, activeToken) => {
+  return dispatch => {
+    return ChainUtil.fetchAllTokenTransferLogs(inactiveToken, activeToken,receiveAllTokenTransfers, dispatch);
+  }
+}
+
+export const receiveAllTokenTransfers = tokenTransferLogs => {
+  return {
+    type: RECEIVE_TOKEN_TRANSFERS,
+    tokenTransferLogs
+  }
+}

@@ -72,7 +72,7 @@ class TokenInterface extends React.Component {
 
 
   // watchMint () {
-  //   this.props.tokenInstance.Mint().watch((error, event) => {
+  //   this.props.inactiveTokenInstance.Mint().watch((error, event) => {
   //     console.log(event);
   //     // this.setState({ balance: this.state.balance + event.amount});
   //   });
@@ -91,7 +91,7 @@ class TokenInterface extends React.Component {
   }
 
   watchTransfer () {
-    this.props.tokenInstance.Transfer().watch((error, event) => {
+    this.props.inactiveTokenInstance.Transfer().watch((error, event) => {
       if (event.args.to === this.props.account) {
         this.setState({ balance: this.state.balance + event.amount});
       }
@@ -126,7 +126,7 @@ const mapStateToProps = state => {
     web3: state.network.web3,
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.project,
-    tokenInstance: state.network.tokenInstance,
+    inactiveTokenInstance: state.network.inactiveTokenInstance,
     account: state.network.account
   };
 };

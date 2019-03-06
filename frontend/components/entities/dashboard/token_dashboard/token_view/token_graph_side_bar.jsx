@@ -19,8 +19,9 @@ class TokenGraphSideBar extends React.Component {
     const { width, onHoverOverlaySubRects, onHoverSideBarSubRects, side } = this.props;
     const { showSideBarSubRects } = this.state;
     if (onHoverOverlaySubRects) {
+      // console.log("overlay height", subRect.height)
       return onHoverOverlaySubRects.map((subRect, idx) => (
-        <rect key={idx} 
+        <rect key={idx}
           className={subRect.className}
           width={width}
           height={subRect.height}
@@ -61,6 +62,6 @@ class TokenGraphSideBar extends React.Component {
       </svg>
     );
   }
-} 
+}
 
 export default TokenGraphSideBar;

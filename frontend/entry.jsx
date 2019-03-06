@@ -7,7 +7,8 @@ import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';
 import SeedableCrowdsale from '../truffle/build/contracts/SeedableCrowdsale.json';
-import Token from '../truffle/build/contracts/Token.json';
+import InactiveToken from '../truffle/build/contracts/InactiveToken.json';
+import ActiveToken from '../truffle/build/contracts/ActiveToken.json';
 import Project from '../truffle/build/contracts/Project.json';
 import ProjectFactory from '../truffle/build/contracts/ProjectFactory.json'
 import Voting from '../truffle/build/contracts/Voting.json';
@@ -28,8 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // web3Provider.enable();
     provider = new Web3(web3Provider);
 
-    const token = TruffleContract(Token);
-    token.setProvider(web3Provider);
+    const inactiveToken = TruffleContract(InactiveToken);
+    inactiveToken.setProvider(web3Provider);
+
+    const activeToken = TruffleContract(ActiveToken);
+    activeToken.setProvider(web3Provider);
     // console.log("version", web3Provider.networkVersion)
     // console.log(provider._proivder.networkVersion)
     const crowdsale = TruffleContract(SeedableCrowdsale);
@@ -45,16 +49,22 @@ document.addEventListener('DOMContentLoaded', () => {
     projectContract.setProvider(web3Provider);
 
     let account;
-    let tokenInstance;
+    let inactiveTokenInstance;
+    let activeTokenInstance;
     let crowdsaleInstance;
     let votingInstance;
     let projectFactoryInstance;
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
       // console.log("tokenInst: ", token)
-      token.deployed().then((_tokenInstance) => {
+      inactiveToken.deployed().then((_inactiveTokenInstance) => {
         // console.log("tokenInst: ", _tokenInstance)
-        tokenInstance = _tokenInstance;
+        inactiveTokenInstance = _inactiveTokenInstance;
+      })
+      .then(() => {
+        return activeToken.deployed().then((_activeTokenInstance) => {
+          activeTokenInstance = _activeTokenInstance;
+        })
       })
       .then(() => {
         return voting.deployed().then((_votingInstance) => {
@@ -69,7 +79,25 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {
           crowdsaleInstance = _crowdsaleInstance;
-          preloadedState = merge({}, preloadedState, { network: {account, tokenInstance, votingInstance, crowdsaleInstance, projectFactoryInstance, projectContract, web3 } });
+
+          preloadedState = merge(
+            {},
+            preloadedState,
+            {
+              network:
+              {
+                account,
+                inactiveTokenInstance,
+                activeTokenInstance,
+                votingInstance,
+                crowdsaleInstance,
+                projectFactoryInstance,
+                projectContract,
+                web3
+              }
+            }
+          );
+
           store = configureStore(preloadedState);
           window.getState = store.getState; //just for development purposes - remove later - use logger
           const root = document.getElementById('root');
