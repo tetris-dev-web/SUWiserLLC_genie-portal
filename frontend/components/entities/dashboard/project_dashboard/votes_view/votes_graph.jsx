@@ -16,6 +16,7 @@ class VotesGraph extends React.Component {
 
     this.SVGWidth = 960;
     this.SVGHeight = 500;
+    this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
   }
 
   componentDidMount() {
@@ -24,6 +25,15 @@ class VotesGraph extends React.Component {
     }, this.props.wait);
 
     this.props.fetchTokenPurchaseLogs(this.props.crowdsaleInstance);
+    //we need to get all the votes for each project that the voter has
+    this.watchTokenPurchase();
+  }
+
+  watchTokenPurchase () {
+    this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
+      console.log("event", event)
+      this.props.receiveTokenPurchase({[Number(event.args.time)]: Number(event.args.value)});
+    })
   }
 
   createScales(){
@@ -52,7 +62,7 @@ class VotesGraph extends React.Component {
   renderGraph() {
     const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
-
+    console.log(selectedProject)
     return (
       <div className={`votes-graph ${componentVisible}`}>
         <div className="vote-shift-tool-container"

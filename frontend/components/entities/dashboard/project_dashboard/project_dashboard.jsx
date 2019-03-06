@@ -102,31 +102,5 @@ class ProjectDashboard extends React.Component {
 
   }
 }
-// <div onClick={() => this.props.fetchTokenPurchaseLogs(this.props.crowdsaleInstance, this.props.web3)}>YYYYOO</div>
-
-// Add this in after fullstack refactoring of cashflow
-// <CashFlowGraph
-//   cashflow={projectClicked.cashflow}
-//   valuation={projectClicked.valuation}
-//   currentQuarter={projectClicked.currentQuarter}
-//   accumulatedRevenue={projectClicked.accumulatedRevenue} />
-
-//
-// <div className="ft-modal-body bylaws-body">
-//   <div className="ft-img-cont">
-//
-//   </div>
-//   {!projectClicked.cashflow ? <h1>NO INFO AVAILABLE</h1> :
-//   (<div className="ft-el-cont">
-//     <h1 className="ft-el-header">{projectClicked.title}</h1>
-//     <p><strong>Title: </strong>{projectClicked.title}</p>
-//     <p><strong>Continent: </strong>{projectClicked.continent} </p>
-//     <p><strong>City: </strong>{projectClicked.city} </p>
-//     <p><strong>Valuation: </strong>{projectClicked.valuation} </p>
-//     <p><strong>Revenue: </strong>{projectClicked.revenue} </p>
-//   </div>)}
-//   <div className="ft-img-cont">
-//   </div>
-// </div>
 
 export default ProjectDashboard;

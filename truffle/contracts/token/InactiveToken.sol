@@ -65,7 +65,7 @@ contract InactiveToken is CrowdsaleLocked, ActivationLocked {
 
   function _transfer(address from, address to, uint256 value) internal {
       require(to != address(0));
-      require(votingToken.freedUpBalanceOf(to) >= value);
+      require(votingToken.freedUpBalanceOf(from) >= value);
       prepareTransfer(from, to);
       _balances[from] = _balances[from].sub(value);
       _balances[to] = _balances[to].add(value);

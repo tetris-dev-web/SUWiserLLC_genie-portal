@@ -1,5 +1,21 @@
 import React from 'react';
 import './transfer.scss';
+import { connect } from 'react-redux';
+import { buyTokens } from '../../../../actions/chain_actions/token_actions';
+
+const mapStateToProps = state => {
+  return {
+    account: state.network.account,
+    crowdsale: state.network.crowdsaleInstance,
+    inactiveTokenInstace: state.network.inactiveTokenInstace
+  }
+}
+
+const mapDipsatchToProps = dispatch => {
+  return {
+    buyTokens: (crowdsale, account, wei) => buyTokens(crowdsale, account, wei)
+  }
+}
 
 class BuyForm extends React.Component {
   constructor() {
@@ -11,7 +27,7 @@ class BuyForm extends React.Component {
       value: 0,
       bylaw_agreement: false,
     };
-    
+
     this.toggleBylawAgreement = this.toggleBylawAgreement.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -31,6 +47,11 @@ class BuyForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
+    this.props.buyTokens(
+      this.props.crowdsale,
+      this.props.account,
+      this.state.shares
+    );
   }
 
   render() {
@@ -78,4 +99,4 @@ class BuyForm extends React.Component {
   }
 }
 
-export default BuyForm;
+export default connect(mapStateToProps, mapDipsatchToProps)(BuyForm);

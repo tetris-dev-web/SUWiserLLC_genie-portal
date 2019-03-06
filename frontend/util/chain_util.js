@@ -201,5 +201,5 @@ export const fetchWeiRaised = async (crowdsaleInstance) => {
 }
 
 export const buyTokens = async (crowdsale, account, weiAmount) => {
-  await crowdsale.buyTokens({from: account, value: 10});
+  await crowdsale.buyTokens({from: account, value: weiAmount});
 };

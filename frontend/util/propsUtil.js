@@ -1,11 +1,12 @@
 import * as d3 from 'd3';
+import { merge } from 'lodash'
 
 export const getTokenHistory = (tokenTransferLogs, currentViewType, account) => {
   let { inactiveTransferLogs, activeTransferLogs } = tokenTransferLogs;
 
   const getTransferData = transferLogs => {
     return transferLogs.map(log => {
-      const args = log.args;
+      const args = merge({}, log.args);
       args.value = Number(args.value);
       args.blockNumber = log.blockNumber;
       args.type = "inactive";

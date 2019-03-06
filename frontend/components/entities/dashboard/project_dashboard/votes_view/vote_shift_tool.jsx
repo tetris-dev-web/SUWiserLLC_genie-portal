@@ -60,7 +60,7 @@ class VoteShiftTool extends React.Component {
 
     const voteBarAppliedWidth = voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN;
     const voteBarFreedUpWidth = VOTE_BAR_WIDTH - voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
-    
+
     this.setState({
       newVotesPerProject: Math.ceil(voteBarAppliedWidth * this.votesPerPixel),
       newVotesNotDedicated: Math.floor(voteBarFreedUpWidth * this.votesPerPixel),
@@ -69,8 +69,8 @@ class VoteShiftTool extends React.Component {
       voteShiftLineLeft
     });
   }
-  
-  handleDragEnd() { 
+
+  handleDragEnd() {
     const { votesPerProject, votesNotDedicated } = this.props.votesMockup;
 
     document.removeEventListener('mousemove', this.handleDragging);
@@ -91,7 +91,7 @@ class VoteShiftTool extends React.Component {
       const voteShiftLineLeft = this.state.voteShiftLineLeft + vote / this.votesPerPixel;
       const voteBarAppliedWidth = voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN;
       const voteBarFreedUpWidth = VOTE_BAR_WIDTH - voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
-  
+
       this.setState({
         newVotesPerProject: this.state.newVotesPerProject + vote,
         newVotesNotDedicated: this.state.newVotesNotDedicated - vote,
@@ -112,7 +112,7 @@ class VoteShiftTool extends React.Component {
           height: VOTE_BAR_HEIGHT,
           borderRadius: VOTE_BAR_RADIUS
         }}>
-  
+
           <div className="vote-bar-inner-container"
             style={{padding: VOTE_BAR_INNER_MARGIN}}
             ref={node => this.voteBarContainer = node}>
@@ -122,7 +122,7 @@ class VoteShiftTool extends React.Component {
               borderRadius: VOTE_BAR_RADIUS
             }}
               ref={node => this.voteBarApplied = node}></div>
-  
+
             <div className="vote-bar-shift-line" style={{
               height: VOTE_SHIFT_LINE_HEIGHT,
               width: VOTE_SHIFT_LINE_WIDTH,
@@ -137,9 +137,9 @@ class VoteShiftTool extends React.Component {
                 {`${this.state.newVotesNotDedicated} votes freed up`}
               </span>
               <span onClick={this.handleVoteClick(1)} className="vote-bar-add-vote-button">{">"}</span>
-              <span onClick={this.handleVoteClick(-1)} className="vote-bar-minus-vote-button">{"<"}</span>              
+              <span onClick={this.handleVoteClick(-1)} className="vote-bar-minus-vote-button">{"<"}</span>
             </div>
-  
+
             <div className="vote-bar-freedup" style={{
               height: INNER_BAR_HEIGHT,
               width: this.state.voteBarFreedUpWidth,

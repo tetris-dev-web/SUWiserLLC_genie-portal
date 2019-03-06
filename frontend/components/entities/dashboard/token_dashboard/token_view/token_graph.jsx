@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as d3 from 'd3';
-import { fetchAllTokenTransferLogs } from '../../../../../actions/chain_actions/token_actions';
+import { fetchAllTokenTransferLogs, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
 // import { userData, totalData } from '../../../../../util/token_data_util';
 import { getTokenHistory } from '../../../../../util/propsUtil';
 import './token_graph.scss';
@@ -52,7 +52,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchAllTokenTransferLogs: (inactiveToken, activeToken) => dispatch(fetchAllTokenTransferLogs(inactiveToken, activeToken))
+    fetchAllTokenTransferLogs: (inactiveToken, activeToken) => dispatch(fetchAllTokenTransferLogs(inactiveToken, activeToken)),
+    receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event))
   }
 }
 // will move mapStateToProps to a new file when backend is hooked up
@@ -69,10 +70,13 @@ class TokenGraph extends React.Component {
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
     this.width = 960 - this.margin.left - this.margin.right;
     this.height = 500 - this.margin.top - this.margin.bottom;
+    this.watchTokenTransfer = this.watchTokenTransfer.bind(this);
   }
 
   componentDidMount() {
     this.props.fetchAllTokenTransferLogs(this.props.inactiveToken, this.props.activeToken);
+    this.watchTokenTransfer(this.props.inactiveToken, 'inactive');
+    this.watchTokenTransfer(this.props.activeToken, 'active');
     setTimeout(() => {
       this.setState({ componentVisible: "" });
     }, this.props.wait);
@@ -82,6 +86,12 @@ class TokenGraph extends React.Component {
     return () => {
       this.setState({showTimeAxis: boolean});
     };
+  }
+
+  watchTokenTransfer (token, type) {
+    token.Transfer().watch((error, event) => {
+      this.props.receiveTokenTransfer({data: event, type});
+    })
   }
 
   render() {

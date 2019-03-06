@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchTokenPurchaseLogs } from '../../../../../actions/chain_actions/token_actions';
+import { fetchTokenPurchaseLogs, receiveTokenPurchase } from '../../../../../actions/chain_actions/token_actions';
 import VotesGraph from './votes_graph';
 
 
@@ -96,7 +96,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTokenPurchaseLogs: (crowdsale) => dispatch(fetchTokenPurchaseLogs(crowdsale))
+    fetchTokenPurchaseLogs: (crowdsale) => dispatch(fetchTokenPurchaseLogs(crowdsale)),
+    receiveTokenPurchase: (tokenPurchase) => dispatch(receiveTokenPurchase(tokenPurchase))
   };
 };
 

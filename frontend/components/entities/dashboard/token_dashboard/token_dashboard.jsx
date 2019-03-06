@@ -13,26 +13,10 @@ class TokenDashboard extends React.Component {
     };
 
     this.toggleView = this.toggleView.bind(this);
-    this.buyTest = this.buyTest.bind(this);
-    this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
-  }
-
-  componentDidMount () {
-    this.watchTokenPurchase()
   }
 
   toggleView(currentViewId) {
     this.setState({ currentViewId: currentViewId === this.state.currentViewId ? null : currentViewId });
-  }
-
-  buyTest () {
-    this.props.buyTokens(this.props.crowdsale, this.props.account, 5000);
-  }
-
-  watchTokenPurchase () {
-    this.props.crowdsale.TokenPurchase().watch((error, event) => {
-      console.log(event)
-    })
   }
 
   render() {
