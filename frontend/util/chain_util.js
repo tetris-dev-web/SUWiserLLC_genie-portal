@@ -76,12 +76,24 @@ export const fetchTokenPurchaseLogs = async (crowdsale, dispatch, receiveTokenPu
 };
 
 export const fetchProjectVotes = async (account, projectContract, projectAddress) => {
+  console.log(projectAddress)
   const project = await projectContract.at(projectAddress);
   return await project.votesOf.call(account);
 }
 
 export const fetchFreeVotes = async (account, votingToken) => {
-  return await votingToken.freeUpBalanceOf(account);
+  return await votingToken.freedUpBalanceOf(account);
+}
+
+export const voteForProject = async (account, votes, votingInstance, projectAddress) => {
+  console.log("account", account)
+  console.log("votes", votes)
+  console.log("projectAddress", projectAddress)
+  return await votingInstance.voteForProject(projectAddress, votes, {from: account});
+}
+
+export const voteAgainstProject = async (account, votes, votingInstance, projectAddress) => {
+  return await votingInstance.voteAgainstProject(projectAddress, votes, {from: account});
 }
 
 export const fetchAllTokenTransferLogs = async (inactiveToken, activeToken, receiveAllTokenTransfers, dispatch) => {

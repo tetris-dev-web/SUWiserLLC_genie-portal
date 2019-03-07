@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const crowdsale = TruffleContract(SeedableCrowdsale);
     crowdsale.setProvider(web3Provider);
 
-    const voting = TruffleContract(SeedableVoting);
+    const voting = TruffleContract(Voting);
     voting.setProvider(web3Provider);
 
     const projectFactory = TruffleContract(ProjectFactory);

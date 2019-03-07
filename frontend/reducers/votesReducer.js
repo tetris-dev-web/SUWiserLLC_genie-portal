@@ -12,10 +12,11 @@ const votesReducer = (state = {}, action) => {
     case RECEIVE_FREE_VOTES:
       newState = merge({}, state);
       newState.freeVotes = action.votes;
-      return (action.projects);
+      return newState;
     case RECEIVE_PROJECT_VOTES:
       newState = merge({}, state);
       newState[action.projectAddr] = action.votes;
+      return newState;
     default:
       return state;
   }

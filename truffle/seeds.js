@@ -1,6 +1,6 @@
-const sigUtil = require("eth-sig-util")
+const sigUtil = require("eth-sig-util");
 
-const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _account1, _account2) => {
+const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContract, _developer, _account1, _account2) => {
 
   const crowdsale = _crowdsale;
   const projectFactory = _projectFactory;
@@ -144,6 +144,15 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
     await token.activatePending(developer);
   }
 
+  const createCashFlows = async () => {
+    const project = await _projectContract.at(projAddr3);
+    await project.deposit({from: developer, value: 5000})
+    await project.deposit({from: developer, value: 4000})
+    await project.deposit({from: developer, value: 3000})
+    await project.deposit({from: developer, value: 6000})
+    await project.deposit({from: developer, value: 2000})
+  }
+
 
   await createProjects();
   console.log("PITCHES COMPLETE")
@@ -153,7 +162,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _developer, _a
   console.log("VOTES COMPLETE")
   await activateTokens();
   console.log("TOKENS ACTIVATED");
-
+  await createCashFlows();
 }
 
 const sampleCashflow = {

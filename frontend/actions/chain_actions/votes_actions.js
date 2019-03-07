@@ -3,6 +3,14 @@ import * as ChainUtil from '../../util/chain_util';
 export const RECEIVE_FREE_VOTES = "RECEIVE_FREE_VOTES";
 export const RECEIVE_PROJECT_VOTES = "RECEIVE_PROJECT_VOTES";
 
+export const voteForProject = (account, votes, votingInstance, projectAddress) => {
+  return ChainUtil.voteForProject(account, votes, votingInstance, projectAddress);
+}
+
+export const voteAgainstProject = (account, votes, votingInstance, projectAddress) => {
+  return ChainUtil.voteAgainstProject(account, votes, votingInstance, projectAddress);
+}
+
 export const fetchFreeVotes = (account, votingToken) => {
   return dispatch => {
     return ChainUtil.fetchFreeVotes(account, votingToken).then(votes => {

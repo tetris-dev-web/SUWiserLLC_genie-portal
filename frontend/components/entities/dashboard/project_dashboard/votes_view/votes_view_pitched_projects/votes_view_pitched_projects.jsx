@@ -1,7 +1,29 @@
 import React from 'react';
 import VotesViewPitchedProjectsRect from './votes_view_pitched_projects_rect';
+import { receiveProject } from '../../../../../../actions/project_actions';
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => {
+	return {
+		votingInstance: state.network.votingInstance
+	}
+}
+
+const mapDispatchToProps = dispatch => {
+	return {
+		receiveProject: (project) => dispatch(receiveProject(project))
+	}
+}
 
 class VotesViewPitchedProjects extends React.Component {
+	constructor (props) {
+		super(props);
+		this.watchVoteChange = this.watchVoteChange.bind(this);
+	}
+
+	componentDidMount () {
+		this.watchVoteChange();
+	}
 
 	processProjectData() {
 		const { capitalBeingRaised, capitalTotal, pitchedProjects, SVGYScale, SVGHeightScale, SVGWidth } = this.props;
@@ -29,6 +51,13 @@ class VotesViewPitchedProjects extends React.Component {
 		});
 	}
 
+	watchVoteChange () {
+		console.log("pitched projects component")
+		this.props.votingInstance.VoteChange().watch((error, event) => {
+			this.props.receiveProject({id: Number(event.args.projectId), votes: Number(event.args.totalVotes)});
+		})
+	}
+
 	render() {
 		const { selectedProject, toggleSelectedProject, voteShiftTool, SVGYScale, circleScale } = this.props;
 
@@ -50,4 +79,4 @@ class VotesViewPitchedProjects extends React.Component {
 	}
 }
 
-export default VotesViewPitchedProjects;
+export default connect(mapStateToProps, mapDispatchToProps)(VotesViewPitchedProjects);

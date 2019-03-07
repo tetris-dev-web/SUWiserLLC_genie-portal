@@ -22,7 +22,7 @@ contract Voting is Ownable {
   }
 
   event VoteChange (
-    address addr,
+    uint256 projectId,
     uint256 totalVotes
   );
 
@@ -58,9 +58,11 @@ contract Voting is Ownable {
      handleVoteChange(fromProjectAddr);
   }
 
-  function handleVoteChange (address  votedForProj) internal {
+  function handleVoteChange (address votedForProj) internal {
     projectLeaderTracker.trackProject(votedForProj);
     Activation(activation).tryActivateProject();
-    emit VoteChange(votedForProj, Project(votedForProj).totalVotes());
+
+    Project project = Project(votedForProj);
+    emit VoteChange(project.id(), project.totalVotes());
   }
 }

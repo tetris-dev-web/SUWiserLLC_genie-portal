@@ -97,6 +97,7 @@ class VotesGraph extends React.Component {
   }
 
   render() {
+    console.log("selectedProject", this.state.selectedProject, this.state.componentVisible)
     return this.dataHasLoaded() ? this.renderGraph() : null;
   }
 }

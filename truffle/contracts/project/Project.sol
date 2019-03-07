@@ -8,6 +8,7 @@ import '../projectFactory/ProjectFactory.sol';
 
 contract Project is Ownable, Secondary {
   using SafeMath for uint256;
+  uint256 public id;
   string public projectInfo;
   address public developer;
   address public dividendWallet;
@@ -47,6 +48,10 @@ contract Project is Ownable, Secondary {
   mapping(address => uint256) internal votes;
 
   event ReceiveCashFlow (uint256 weiAmount, uint256 time);
+
+  function setId (uint256 _id) onlyOwner {
+    id = _id;
+  }
 
   function getData() public view returns (
     address,

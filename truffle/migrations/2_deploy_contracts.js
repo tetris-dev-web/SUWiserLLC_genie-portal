@@ -13,6 +13,7 @@ const ProjectLeaderTracker = artifacts.require("ProjectLeaderTracker");
 const Voting = artifacts.require("Voting");
 const SeedableVoting = artifacts.require("SeedableVoting");
 const Activation = artifacts.require("Activation");
+const Project = artifacts.require("Project");
 const { seed } = require('../seeds');
 
 let activeTokenInstance;
@@ -271,7 +272,7 @@ module.exports = function (deployer, network, accounts) {
           if (network === 'ropsten') {
             console.log("WE MADE IT!!!")
             // console.log("voting", votingInstance)
-            return seed(crowdsaleInstance, projectFactoryInst, inactiveTokenInstance, votingInstance, developer, accounts[1], accounts[2]);
+            return seed(crowdsaleInstance, projectFactoryInst, inactiveTokenInstance, votingInstance, Project, developer, accounts[1], accounts[2]);
           }
         })
 
