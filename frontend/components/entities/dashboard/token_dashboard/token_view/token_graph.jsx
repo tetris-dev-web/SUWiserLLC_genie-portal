@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as d3 from 'd3';
 import { fetchAllTokenTransferLogs, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
+import { fetchReceiveDividendsLogs, receiveReceiveDividendsLog } from '../../../../../actions/chain_actions/dividends_actions';
 // import { userData, totalData } from '../../../../../util/token_data_util';
-import { getTokenHistory } from '../../../../../util/propsUtil';
+import { formatTokenGraphData } from '../../../../../util/propsUtil';
 import './token_graph.scss';
 import TokenGraphTokenPath from './token_graph_token_path';
 import TokenGraphXAxis from './token_graph_x_axis';
@@ -13,10 +14,10 @@ import { merge } from 'lodash';
 const mapStateToProps = (state, ownProps) => {
   let data;
 
-  if (state.entities.tokenTransfers.inactiveTransferLogs && state.entities.dividendsLogs) {
+  if (state.entities.tokenTransfers.inactiveTransferLogs && state.entities.dividendsHistory) {
     data = formatTokenGraphData(
       state.entities.tokenTransfers,
-      state.entities.dividendsLogs,
+      state.entities.dividendsHistory,
       ownProps.currentViewType,
       state.network.account
     );
@@ -24,6 +25,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     data,
+    dividends: state.network.dividendsInstance,
     inactiveToken: state.network.inactiveTokenInstance,
     activeToken: state.network.activeTokenInstance
   };
@@ -32,7 +34,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchAllTokenTransferLogs: (inactiveToken, activeToken) => dispatch(fetchAllTokenTransferLogs(inactiveToken, activeToken)),
-    receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event))
+    receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event)),
+    fetchReceiveDividendsLogs: (dividends) => dispatch(fetchReceiveDividendsLogs(dividends)),
+    receiveReceiveDividendsLog: (event) => dispatch(receiveReceiveDividendsLog(event))
   }
 }
 
@@ -53,7 +57,7 @@ class TokenGraph extends React.Component {
 
   componentDidMount() {
     this.props.fetchAllTokenTransferLogs(this.props.inactiveToken, this.props.activeToken);
-    this.props.fetchDividendsLogs(this.props.dividends);
+    this.props.fetchReceiveDividendsLogs(this.props.dividends);
     this.watchTokenTransfer(this.props.inactiveToken, 'inactive');
     this.watchTokenTransfer(this.props.activeToken, 'active');
     this.watchReceiveDividends();
@@ -74,11 +78,13 @@ class TokenGraph extends React.Component {
     })
   }
 
-  watchReceiveDividends (token, type) {
-    token.Transfer().watch((error, event) => {
-      this.props.receiveTokenTransfer({data: event, type});
+  watchReceiveDividends () {
+    const { dividends } = this.props;
+    dividends.ReceiveDividends().watch((error, event) => {
+      this.props.receiveReceiveDividendsLog(event);
     })
   }
+
   render() {
     const { data } = this.props;
 

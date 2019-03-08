@@ -87,14 +87,6 @@ export const fetchFreeVotes = async (account, votingToken) => {
   return await votingToken.freedUpBalanceOf(account);
 }
 
-// export const voteForProject = async (account, votes, votingInstance, projectAddress) => {
-//   return await votingInstance.voteForProject(projectAddress, votes, {from: account});
-// }
-//
-// export const voteAgainstProject = async (account, votes, votingInstance, projectAddress) => {
-//   return await votingInstance.voteAgainstProject(projectAddress, votes, {from: account});
-// }
-
 export const voteAndUpdateProjects = async (
   account,
   votes,
@@ -117,7 +109,7 @@ export const voteAndUpdateProjects = async (
   }
 
   Object.keys(projects).forEach(project => {
-    if (project.activation === 0) {
+    if (project.activationTime === 0) {
       batch.add(projectLeaderTracker.trackProject.request(project.id, {from: account}))
     }
   })
@@ -136,6 +128,19 @@ export const fetchAllTokenTransferLogs = async (inactiveToken, activeToken, rece
 
   console.log("transfers", inactiveTransferLogs, activeTransferLogs)
   dispatch(receiveAllTokenTransfers({inactiveTransferLogs, activeTransferLogs}));
+}
+
+export const fetchReceiveDividendsLogs = async (dividends, receiveReceiveDividendsLogs, dispatch) => {
+  const events = await dividends.ReceiveDividends(
+    {},
+    {
+      fromBlock: 0,
+      toBlock: 'latest'
+    }
+  );
+
+  const logs = await getLogs(events);
+  return dispatch(receiveReceiveDividendsLogs(logs));
 }
 
 const getLogs = async (events) => {

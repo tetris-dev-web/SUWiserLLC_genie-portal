@@ -3,9 +3,9 @@ import { merge } from 'lodash'
 
 export const formatTokenGraphData = (tokenTransferLogs, dividendsLogs, currentViewType, account) => {
   const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferLogs)
-  const tokenHistory = formatTokenHistory(inactiveHistory, activetHistory, currentViewType, account);
+  const tokenHistory = formatTokenHistory(inactiveHistory, activeHistory, currentViewType, account);
   const dividendsHistory = formatDividendsHistory(dividendsLogs);
-  return mergeHistories(dividendsHistory, tokenHistory);
+  return mergeHistories(dividendsHistory, tokenHistory, currentViewType);
 }
 
 const getTransferHistory = tokenTransferLogs => {
@@ -41,17 +41,18 @@ const formatDividendsHistory = dividendsLogs => {
   return dividendsLogs.map(log => {
     const args = merge({}, log.args);
     args.date = log.blockNumber;
+    return args;
   })
 }
 
-const mergeHistories = (dividendsHistory, tokenHistory, account, currentViewType) => {
+const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
   let transfer;
+  let currentDividendsIdx = 0;
   const merged = [];
 
-  for (let i = 0; currentDividendIdx < dividendsHistory.length; i++) {
-    const currentDividend = dividendsHistory[currentDividendIdx];
+  for (let i = 0; currentDividendsIdx < dividendsHistory.length; i++) {
+    const currentDividend = dividendsHistory[currentDividendsIdx];
     const transfer = i < tokenHistory.length ? tokenHistory[i] : transfer;
-
     if (i >= tokenHistory.length || transfer.date >= currentDividend.date) {
       currentDividend.earnings = currentViewType === "BY USER" ? currentDividend.weiAmount * (transfer.activeTokens / transfer.allActiveTokens) : currentDividend.weiAmount;
 
@@ -63,7 +64,7 @@ const mergeHistories = (dividendsHistory, tokenHistory, account, currentViewType
         earnings: currentDividend.earnings
       })
 
-      currentDividendIdx++;
+      currentDividendsIdx++;
     }
 
     if (i < tokenHistory.length) {
@@ -71,12 +72,12 @@ const mergeHistories = (dividendsHistory, tokenHistory, account, currentViewType
         activeTokens: transfer.activeTokens,
         totalTokens: transfer.totalTokens,
         date: transfer.date,
-        earnings: currentDividendIdx === 0 ? 0 : dividendsHistory[currentDividendIdx - 1]
+        earnings: currentDividendsIdx === 0 ? 0 : dividendsHistory[currentDividendIdx - 1]
       })
     }
   }
 
-  return earningsHistory;
+  return merged;
 }
 
 const tokenHistoryByUser = (account, allTransfers) => {

@@ -16,6 +16,7 @@ import Voting from '../truffle/build/contracts/Voting.json';
 import SeedableVoting from '../truffle/build/contracts/SeedableVoting.json';
 import Activation from '../truffle/build/contracts/Activation.json';
 import ProjectLeaderTracker from '../truffle/build/contracts/ProjectLeaderTracker.json';
+import Dividends from '../truffle/build/contracts/Dividends.json';
 
 document.addEventListener('DOMContentLoaded', () => {
   let store;
@@ -60,6 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectLeaderTracker = TruffleContract(ProjectLeaderTracker);
     projectLeaderTracker.setProvider(web3Provider);
 
+    const dividends = TruffleContract(Dividends);
+    dividends.setProvider(web3Provider);
+
     let account;
     let inactiveTokenInstance;
     let activeTokenInstance;
@@ -69,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let projectFactoryInstance;
     let activationInstance;
     let projectLeaderTrackerInstance;
+    let dividendsInstance;
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
       // console.log("tokenInst: ", token)
@@ -107,6 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       })
       .then(() => {
+        return dividends.deployed().then((_dividendsInstance)=> {
+          dividendsInstance = _dividendsInstance;
+        });
+      })
+      .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {
           crowdsaleInstance = _crowdsaleInstance;
 
@@ -125,7 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 projectFactoryInstance,
                 projectContract,
                 projectLeaderTrackerInstance,
-                activationInstance,
+                activationInstance, 
+                dividendsInstance,
                 web3
               }
             }
