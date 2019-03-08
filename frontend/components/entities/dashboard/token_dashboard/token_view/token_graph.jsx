@@ -22,7 +22,7 @@ const mapStateToProps = (state, ownProps) => {
       state.network.account
     );
   }
-
+  console.log("data", data)
   return {
     data,
     dividends: state.network.dividendsInstance,

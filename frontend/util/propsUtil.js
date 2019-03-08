@@ -5,21 +5,25 @@ export const formatTokenGraphData = (tokenTransferLogs, dividendsLogs, currentVi
   const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferLogs)
   const tokenHistory = formatTokenHistory(inactiveHistory, activeHistory, currentViewType, account);
   const dividendsHistory = formatDividendsHistory(dividendsLogs);
+  console.log("dividendsHistory", dividendsHistory)
+  console.log("token history", tokenHistory)
   return mergeHistories(dividendsHistory, tokenHistory, currentViewType);
 }
 
 const getTransferHistory = tokenTransferLogs => {
+  const { inactiveTransferLogs, activeTransferLogs } = tokenTransferLogs;
+
   const helper = transferLogs => {
+    const type = transferLogs === inactiveTransferLogs ? "inactive" : "active";
     return transferLogs.map(log => {
       const args = merge({}, log.args);
       args.value = Number(args.value);
       args.blockNumber = log.blockNumber;
-      args.type = "inactive";
+      args.type = type;
       return args;
     })
   }
 
-  const { inactiveTransferLogs, activeTransferLogs } = tokenTransferLogs;
   return {
     inactiveHistory: helper(inactiveTransferLogs),
     activeHistory: helper(activeTransferLogs)
@@ -38,6 +42,7 @@ const formatTokenHistory = (inactiveHistory, activeHistory, currentViewType, acc
 }
 
 const formatDividendsHistory = dividendsLogs => {
+  console.log("dividendsLogs", dividendsLogs)
   return dividendsLogs.map(log => {
     const args = merge({}, log.args);
     args.date = log.blockNumber;
@@ -48,20 +53,21 @@ const formatDividendsHistory = dividendsLogs => {
 const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
   let transfer;
   let currentDividendsIdx = 0;
+  let earnings = 0;
   const merged = [];
 
   for (let i = 0; currentDividendsIdx < dividendsHistory.length; i++) {
     const currentDividend = dividendsHistory[currentDividendsIdx];
     const transfer = i < tokenHistory.length ? tokenHistory[i] : transfer;
     if (i >= tokenHistory.length || transfer.date >= currentDividend.date) {
-      currentDividend.earnings = currentViewType === "BY USER" ? currentDividend.weiAmount * (transfer.activeTokens / transfer.allActiveTokens) : currentDividend.weiAmount;
-
+      earnings += currentViewType === "BY USER" ? currentDividend.weiAmount * (transfer.activeTokens / transfer.allActiveTokens) : currentDividend.weiAmount;
+      // currentDividend.earnings = earnings;
       const lastMergedIdx = merged.length - 1;
       merged.push({
         activeTokens: merged[lastMergedIdx].activeTokens,
         totalTokens: merged[lastMergedIdx].totalTokens,
         date: currentDividend.date,
-        earnings: currentDividend.earnings
+        earnings
       })
 
       currentDividendsIdx++;
@@ -72,7 +78,7 @@ const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
         activeTokens: transfer.activeTokens,
         totalTokens: transfer.totalTokens,
         date: transfer.date,
-        earnings: currentDividendsIdx === 0 ? 0 : dividendsHistory[currentDividendIdx - 1]
+        earnings
       })
     }
   }
@@ -91,7 +97,7 @@ const tokenHistoryByUser = (account, allTransfers) => {
 
   return userTransfers.map(transferData => {
     if (transferData.type === 'active' && transferData.from === "0x0000000000000000000000000000000000000000") {
-      allActiveTokens++;
+      allActiveTokens += transferData.value;
     }
     //if the account is receiving the tranfer
     if (transferData.to === account) {
