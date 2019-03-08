@@ -25,9 +25,6 @@ const getTransferHistory = tokenTransferLogs => {
     activeHistory: helper(activeTransferLogs)
 
   }
-  const allTransfers = helper(inactiveTransferLogs)concat(helper(activeTransferLogs)).sort((x, y) => {
-    return d3.ascending(x.blockNumber);
-  });
 }
 
 const formatTokenHistory = (inactiveHistory, activeHistory, currentViewType, account) => {
@@ -37,7 +34,7 @@ const formatTokenHistory = (inactiveHistory, activeHistory, currentViewType, acc
 
   return currentViewType === "BY USER" ?
                               tokenHistoryByUser(account, allTransfers):
-                              tokenHistoryByAll(inactiveTransfers, allTransfers);
+                              tokenHistoryByAll(allTransfers);
 }
 
 const formatDividendsHistory = dividendsLogs => {

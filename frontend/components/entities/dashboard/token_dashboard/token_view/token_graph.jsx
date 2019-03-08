@@ -53,8 +53,10 @@ class TokenGraph extends React.Component {
 
   componentDidMount() {
     this.props.fetchAllTokenTransferLogs(this.props.inactiveToken, this.props.activeToken);
+    this.props.fetchDividendsLogs(this.props.dividends);
     this.watchTokenTransfer(this.props.inactiveToken, 'inactive');
     this.watchTokenTransfer(this.props.activeToken, 'active');
+    this.watchReceiveDividends();
     setTimeout(() => {
       this.setState({ componentVisible: "" });
     }, this.props.wait);
@@ -72,6 +74,11 @@ class TokenGraph extends React.Component {
     })
   }
 
+  watchReceiveDividends (token, type) {
+    token.Transfer().watch((error, event) => {
+      this.props.receiveTokenTransfer({data: event, type});
+    })
+  }
   render() {
     const { data } = this.props;
 
