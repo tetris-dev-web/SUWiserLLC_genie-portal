@@ -12,6 +12,7 @@ export const getProjectData = async (projectFactoryInstance, projectContract, id
   const votesBN = await projectInstance.totalVotes();
   const votes = await votesBN.toNumber();
   const projectData = await projectInstance.getData();
+  const closingTime = await projectInstance.closingTime();
   const { title, lat, lng, busLink, description } = JSON.parse(projectData[1]);
   return {
     id,
@@ -23,6 +24,7 @@ export const getProjectData = async (projectFactoryInstance, projectContract, id
     description,
     busLink,
     activationTime,
+    closingTime,
     votes,
     capitalRequired: projectData[2].toNumber(),
     valuation: projectData[3].toNumber(),
@@ -85,15 +87,44 @@ export const fetchFreeVotes = async (account, votingToken) => {
   return await votingToken.freedUpBalanceOf(account);
 }
 
-export const voteForProject = async (account, votes, votingInstance, projectAddress) => {
-  console.log("account", account)
-  console.log("votes", votes)
-  console.log("projectAddress", projectAddress)
-  return await votingInstance.voteForProject(projectAddress, votes, {from: account});
-}
+// export const voteForProject = async (account, votes, votingInstance, projectAddress) => {
+//   return await votingInstance.voteForProject(projectAddress, votes, {from: account});
+// }
+//
+// export const voteAgainstProject = async (account, votes, votingInstance, projectAddress) => {
+//   return await votingInstance.voteAgainstProject(projectAddress, votes, {from: account});
+// }
 
-export const voteAgainstProject = async (account, votes, votingInstance, projectAddress) => {
-  return await votingInstance.voteAgainstProject(projectAddress, votes, {from: account});
+export const voteAndUpdateProjects = async (
+  account,
+  votes,
+  type,
+  votingInstance,
+  projectAddress,
+  projects,
+  projectLeaderTracker,
+  activation,
+  web3
+) => {
+  // const block = web3.eth.getBlock("latest");
+  const batch = web3.createBatch();
+  // console.log("block", block)
+
+  if (type === 'removeVotes') {
+    batch.add(votingInstance.voteAgainstProject.request(projectAddress, votes, {from: account}));
+  } else {
+    batch.add(votingInstance.voteForProject.request(projectAddress, votes, {from: account}));
+  }
+
+  Object.keys(projects).forEach(project => {
+    if (project.activation === 0) {
+      batch.add(projectLeaderTracker.trackProject.request(project.id, {from: account}))
+    }
+  })
+
+  console.log("batch", batch)
+  batch.add(activation.tryActivateProject.request({from: account}));
+  return await batch.execute();
 }
 
 export const fetchAllTokenTransferLogs = async (inactiveToken, activeToken, receiveAllTokenTransfers, dispatch) => {

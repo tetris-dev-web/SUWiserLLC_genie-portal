@@ -18,7 +18,7 @@ contract Dividends {
   uint256 public totalDividendPoints;
   uint256 internal pointMultiplier = 10e30;
 
-  function dividendOwedTo(address  account) internal view returns (uint256) {
+  function dividendOwedTo(address account) internal view returns (uint256) {
     uint256 owedDividendPoints = totalDividendPoints.sub(lastDividendPoints[account]);
     uint256 accountTokens = ActiveToken(token).balanceOf(account);
     return accountTokens.mul(owedDividendPoints).div(pointMultiplier);

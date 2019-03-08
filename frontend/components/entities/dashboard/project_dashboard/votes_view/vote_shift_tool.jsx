@@ -1,7 +1,7 @@
 import React from 'react';
 import './vote_shift_tool.scss';
 import { connect } from 'react-redux';
-import { fetchFreeVotes, fetchProjectVotes, voteForProject, voteAgainstProject } from '../../../../../actions/chain_actions/votes_actions';
+import { fetchFreeVotes, fetchProjectVotes, voteForProject, voteAgainstProject, voteAndUpdateProjects } from '../../../../../actions/chain_actions/votes_actions';
 
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
@@ -18,7 +18,11 @@ const mapStateToProps = (state, ownProps) => {
     votingInstance: state.network.votingInstance,
     account: state.network.account,
     votesNotDedicated: Number(state.entities.votes.freeVotes) || null,
-    votesPerProject: Number(state.entities.votes[ownProps.selectedProject]) || null
+    votesPerProject: Number(state.entities.votes[ownProps.selectedProject]) || null,
+    projects: state.entities.projects,
+    activation: state.network.activationInstance,
+    projectLeaderTracker: state.network.projectLeaderTrackerInstance,
+    web3: state.network.web3
   }
 }
 
@@ -26,8 +30,19 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchFreeVotes: (account, votingToken) => dispatch(fetchFreeVotes(account, votingToken)),
     fetchProjectVotes: (account, projectContract, projectAddress) => dispatch(fetchProjectVotes(account, projectContract, projectAddress)),
-    voteForProject: (account, votes, votingInstance, projectAddress) => voteForProject(account, votes, votingInstance, projectAddress),
-    voteAgainstProject: (account, votes, votingInstance, projectAddress) => voteAgainstProject(account, votes, votingInstance, projectAddress)
+    voteAndUpdateProjects: (account, votes, type, votingInstance, projectAddress, projects, projectLeaderTracker, activation, web3) => {
+      return voteAndUpdateProjects(account,
+      votes,
+      type,
+      votingInstance,
+      projectAddress,
+      projects,
+      projectLeaderTracker,
+      activation,
+      web3)
+    }
+    // voteForProject: (account, votes, votingInstance, projectAddress) => voteForProject(account, votes, votingInstance, projectAddress),
+    // voteAgainstProject: (account, votes, votingInstance, projectAddress) => voteAgainstProject(account, votes, votingInstance, projectAddress)
   }
 }
 
@@ -132,21 +147,31 @@ class VoteShiftTool extends React.Component {
   handleLogClick() {
     this.setState({ blockchainLoading: !this.state.blockchainLoading });
 
-    const { account, votingInstance, selectedProject, votesPerProject, voteForProject, voteAgainstProject } = this.props;
+    const { account, votingInstance, selectedProject, votesPerProject, voteAndUpdateProjects, projects, activation, projectLeaderTracker, web3 } = this.props;
     const { newVotesPerProject } = this.state;
     console.log("newVotesPerProject", newVotesPerProject)
 
-    let logVotes;
+    let type;
     let votes;
     if (newVotesPerProject > votesPerProject) {
-      logVotes = voteForProject;
+      type = 'addVotes';
       votes = newVotesPerProject - votesPerProject;
     } else {
-      logVotes = voteAgainstProject;
+      type = 'removeVotes';
       votes = votesPerProject - newVotesPerProject;
     }
 
-    logVotes(account, votes, votingInstance, selectedProject);
+    voteAndUpdateProjects(
+      account,
+      votes,
+      type,
+      votingInstance,
+      selectedProject,
+      projects,
+      projectLeaderTracker,
+      activation,
+      web3
+    );
   }
 
   handleVoteClick(vote) {
@@ -194,7 +219,6 @@ class VoteShiftTool extends React.Component {
 
   watchVoteChange () {
     this.props.votingInstance.VoteChange().watch((error, event) => {
-      console.log(event);
       this.fetchVoteData();
     })
   }

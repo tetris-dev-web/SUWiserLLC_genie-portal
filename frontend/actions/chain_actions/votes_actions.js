@@ -11,6 +11,30 @@ export const voteAgainstProject = (account, votes, votingInstance, projectAddres
   return ChainUtil.voteAgainstProject(account, votes, votingInstance, projectAddress);
 }
 
+export const voteAndUpdateProjects = (
+  account,
+  votes,
+  type,
+  votingInstance,
+  projectAddress,
+  projects,
+  projectLeaderTracker,
+  activation,
+  web3
+) => {
+  return ChainUtil.voteAndUpdateProjects(
+    account,
+    votes,
+    type,
+    votingInstance,
+    projectAddress,
+    projects,
+    projectLeaderTracker,
+    activation,
+    web3
+  );
+}
+
 export const fetchFreeVotes = (account, votingToken) => {
   return dispatch => {
     return ChainUtil.fetchFreeVotes(account, votingToken).then(votes => {

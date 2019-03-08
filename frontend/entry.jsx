@@ -14,6 +14,8 @@ import Project from '../truffle/build/contracts/Project.json';
 import ProjectFactory from '../truffle/build/contracts/ProjectFactory.json'
 import Voting from '../truffle/build/contracts/Voting.json';
 import SeedableVoting from '../truffle/build/contracts/SeedableVoting.json';
+import Activation from '../truffle/build/contracts/Activation.json';
+import ProjectLeaderTracker from '../truffle/build/contracts/ProjectLeaderTracker.json';
 
 document.addEventListener('DOMContentLoaded', () => {
   let store;
@@ -52,6 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectContract = TruffleContract(Project);
     projectContract.setProvider(web3Provider);
 
+    const activation = TruffleContract(Activation);
+    activation.setProvider(web3Provider);
+
+    const projectLeaderTracker = TruffleContract(ProjectLeaderTracker);
+    projectLeaderTracker.setProvider(web3Provider);
+
     let account;
     let inactiveTokenInstance;
     let activeTokenInstance;
@@ -59,6 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let crowdsaleInstance;
     let votingInstance;
     let projectFactoryInstance;
+    let activationInstance;
+    let projectLeaderTrackerInstance;
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
       // console.log("tokenInst: ", token)
@@ -87,6 +97,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       })
       .then(() => {
+        return projectLeaderTracker.deployed().then((_projectLeaderTrackerInstance)=> {
+          projectLeaderTrackerInstance = _projectLeaderTrackerInstance;
+        });
+      })
+      .then(() => {
+        return activation.deployed().then((_activationInstance)=> {
+          activationInstance = _activationInstance;
+        });
+      })
+      .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {
           crowdsaleInstance = _crowdsaleInstance;
 
@@ -104,6 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 crowdsaleInstance,
                 projectFactoryInstance,
                 projectContract,
+                projectLeaderTrackerInstance,
+                activationInstance,
                 web3
               }
             }

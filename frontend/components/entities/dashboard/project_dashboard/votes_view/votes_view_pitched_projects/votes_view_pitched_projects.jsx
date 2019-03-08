@@ -52,7 +52,6 @@ class VotesViewPitchedProjects extends React.Component {
 	}
 
 	watchVoteChange () {
-		console.log("pitched projects component")
 		this.props.votingInstance.VoteChange().watch((error, event) => {
 			this.props.receiveProject({id: Number(event.args.projectId), votes: Number(event.args.totalVotes)});
 		})

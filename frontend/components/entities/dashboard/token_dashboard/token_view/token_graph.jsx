@@ -9,41 +9,20 @@ import TokenGraphTokenPath from './token_graph_token_path';
 import TokenGraphXAxis from './token_graph_x_axis';
 import TokenGraphOverlay from './token_graph_overlay';
 import { merge } from 'lodash';
-//merge inactive and active mints, sorted by time
-//iterate through the logs, keeping track of variables for total tokens and active tokens
-//if it is an inactive mint, increment total tokens variable, and add to array with all current vairbale vals
-//if it is an active mint, increment active tokens variable, and add to array with all current variable values
-const mapStateToProps = (state, ownProps) => {
-  const parseTime = d3.timeParse("%m/%d/%y");
-  // userData.forEach(d => {
-    /* It will try to parse twice if relogging in, resulting in null,
-    so you must check if it's a string */
-  //   if (typeof d.date === 'string') d.date = parseTime(d.date);
-  //   d.price = +d.price;
-  //   d.balance = +d.balance;
-  //   d.totalTokens = +d.totalTokens;
-  //   d.activeTokens = +d.activeTokens;
-  // });
-  //
-  // totalData.forEach(d => {
-  //   if (typeof d.date === 'string') d.date = parseTime(d.date);
-  //   d.price = +d.price;
-  //   d.balance = +d.balance;
-  //   d.totalTokens = +d.totalTokens;
-  //   d.activeTokens = +d.activeTokens;
-  // });
-  //
-  // console.log("totalData", totalData)
 
+const mapStateToProps = (state, ownProps) => {
   let data;
-  if (state.entities.tokenTransfers.inactiveTransferLogs) {
-    data = getTokenHistory(state.entities.tokenTransfers, ownProps.currentViewType, state.network.account);
+
+  if (state.entities.tokenTransfers.inactiveTransferLogs && state.entities.dividendsLogs) {
+    data = formatTokenGraphData(
+      state.entities.tokenTransfers,
+      state.entities.dividendsLogs,
+      ownProps.currentViewType,
+      state.network.account
+    );
   }
-  //
-  // console.log(totalData)
 
   return {
-    // data: ownProps.currentViewType === "BY USER"? userData : totalData,
     data,
     inactiveToken: state.network.inactiveTokenInstance,
     activeToken: state.network.activeTokenInstance
@@ -56,7 +35,6 @@ const mapDispatchToProps = dispatch => {
     receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event))
   }
 }
-// will move mapStateToProps to a new file when backend is hooked up
 
 class TokenGraph extends React.Component {
   constructor(){
