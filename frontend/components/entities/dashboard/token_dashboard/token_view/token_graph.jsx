@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as d3 from 'd3';
 import { fetchAllTokenTransferLogs, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
 import { fetchReceiveDividendsLogs, receiveReceiveDividendsLog } from '../../../../../actions/chain_actions/dividends_actions';
-// import { userData, totalData } from '../../../../../util/token_data_util';
+import { userData, totalData } from '../../../../../util/token_data_util';
 import { formatTokenGraphData } from '../../../../../util/propsUtil';
 import './token_graph.scss';
 import TokenGraphTokenPath from './token_graph_token_path';
@@ -12,6 +12,25 @@ import TokenGraphOverlay from './token_graph_overlay';
 import { merge } from 'lodash';
 
 const mapStateToProps = (state, ownProps) => {
+  // const parseTime = d3.timeParse("%m/%d/%y");
+  //
+  // userData.forEach(d => {
+  //   /* It will try to parse twice if relogging in, resulting in null,
+  //   so you must check if it's a string */
+  //   if (typeof d.date === 'string') d.date = parseTime(d.date);
+  //   d.price = +d.price;
+  //   d.balance = +d.balance;
+  //   d.totalTokens = +d.totalTokens;
+  //   d.activeTokens = +d.activeTokens;
+  // });
+  //
+  // totalData.forEach(d => {
+  //   if (typeof d.date === 'string') d.date = parseTime(d.date);
+  //   d.price = +d.price;
+  //   d.balance = +d.balance;
+  //   d.totalTokens = +d.totalTokens;
+  //   d.activeTokens = +d.activeTokens;
+  // });
   let data;
 
   if (state.entities.tokenTransfers.inactiveTransferLogs && state.entities.dividendsHistory) {
@@ -25,6 +44,7 @@ const mapStateToProps = (state, ownProps) => {
   console.log("data", data)
   return {
     data,
+    // data: ownProps.currentViewType === "BY USER"? userData : totalData,
     dividends: state.network.dividendsInstance,
     inactiveToken: state.network.inactiveTokenInstance,
     activeToken: state.network.activeTokenInstance

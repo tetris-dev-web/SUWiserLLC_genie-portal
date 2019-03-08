@@ -60,7 +60,14 @@ const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
     const currentDividend = dividendsHistory[currentDividendsIdx];
     const transfer = i < tokenHistory.length ? tokenHistory[i] : transfer;
     if (i >= tokenHistory.length || transfer.date >= currentDividend.date) {
-      earnings += currentViewType === "BY USER" ? currentDividend.weiAmount * (transfer.activeTokens / transfer.allActiveTokens) : currentDividend.weiAmount;
+      if (currentViewType === "BY USER") {
+        console.log("earnings",earnings)
+        earnings += currentDividend.weiAmount * (transfer.activeTokens / transfer.allActiveTokens);
+      } else {
+        console.log("earnings", earnings)
+        earnings += currentDividend.weiAmount;
+      }
+      // earnings += currentViewType === "BY USER" ? currentDividend.weiAmount * (transfer.activeTokens / transfer.allActiveTokens) : currentDividend.weiAmount;
       // currentDividend.earnings = earnings;
       const lastMergedIdx = merged.length - 1;
       merged.push({
