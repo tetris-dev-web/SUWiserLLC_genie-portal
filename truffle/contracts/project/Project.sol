@@ -12,6 +12,7 @@ contract Project is Ownable, Secondary {
   string public projectInfo;
   address public developer;
   address public dividendWallet;
+  uint256 public openingTime;
   uint256 public closingTime;
   uint256 public valuation;
   uint256 public capitalRequired;
@@ -41,13 +42,14 @@ contract Project is Ownable, Secondary {
       cashFlow = _cashFlow;
       totalVotes = 0;
       active = false;
+      openingTime = now;
       closingTime = now + 86600 * 240;
       dividendWallet = _dividendWallet;
   }
 
   mapping(address => uint256) internal votes;
 
-  event ReceiveCashFlow (uint256 weiAmount, uint256 time);
+  event ReceiveCashFlow (uint256 weiAmount, uint256 time, uint256 projectId);
 
   function setId (uint256 _id) onlyOwner {
     id = _id;
@@ -89,7 +91,7 @@ contract Project is Ownable, Secondary {
   function deposit () public payable {
     require(msg.value != 0);
     uint256 weiAmount = msg.value;
-    emit ReceiveCashFlow(msg.value, now);
+    emit ReceiveCashFlow(msg.value, now, id);
     Dividends(dividendWallet).receiveDividends.value(weiAmount)();
   }
 

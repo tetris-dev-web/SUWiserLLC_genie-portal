@@ -4,12 +4,13 @@ import ProjectThermo from './project_modules_thermo';
 import CashFlowGraph from './project_modules_cashflow';
 import {Title, IframeFor3dModel, CloseButton, SummaryAndPlan } from './project_modules_subcomponents';
 import { editProject } from '../../../../../actions/project_actions'
+import { calculateCashflowData } from '../../../../../util/project_api_util';
 
 class ProjectModules extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      model_link: "",
+      model_link: "https://poly.google.com/view/" + "7syizSLPN60" + "/embed",
       modalState: false,
     };
   }
@@ -32,7 +33,10 @@ class ProjectModules extends React.Component {
 
   render() {
       const { project, isInvestor, isModalOpen, closeModalOnClick } = this.props;
+      const { projected_cashflow, actual_cashflow, accum_projected_cashflow, accum_actual_cashflow } = calculateCashflowData(project.cashFlow);
+      console.log("outer comp", projected_cashflow, actual_cashflow, accum_projected_cashflow, accum_actual_cashflow)
       const { model_link } = this.state;
+      console.log("project", project)
       // const noDataComponent = <h1 className="nodata-text">No data available</h1>
 
       return (
@@ -55,17 +59,20 @@ class ProjectModules extends React.Component {
                 <ProjectThermo    project={project}/>
 
                 <CashFlowGraph
-                                  actual_cashflow = {project.actual_cashflow}
-                                  accum_actual_cashflow = {project.accum_actual_cashflow}
-                                  projected_cashflow = {project.projected_cashflow}
-                                  accum_projected_cashflow ={project.accum_projected_cashflow}
+                                  actual_cashflow = {actual_cashflow}
+                                  accum_actual_cashflow = {accum_actual_cashflow}
+                                  projected_cashflow = {projected_cashflow}
+                                  accum_projected_cashflow ={accum_projected_cashflow}
+                                  valuation={project.valuation}
+                                  length={Object.keys(project.cashFlow).length}
+                                  address={project.address}
                                   height={200}
                                   width={300}/>
 
                 <SummaryAndPlan
                                   handleKeyPress = {null}
                                   isInvestor = {isInvestor}
-                                  summary = {project.summary}
+                                  summary = {project.description}
                                   bus_plan_link = {project.bus_plan_link} />
 
                 <ProjectMap       projectClicked={ project } />

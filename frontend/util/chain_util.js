@@ -9,10 +9,12 @@ export const getProjectData = async (projectFactoryInstance, projectContract, id
   const projectInstance = projectContract.at(address);
   const activationTimeBN = await projectInstance.activationTime();
   const activationTime = activationTimeBN.toNumber();
+  const closingTimeBN = await projectInstance.closingTime();
+  const openingTimeBN = await projectInstance.openingTime();
+  const closingTime = Number(closingTimeBN);
   const votesBN = await projectInstance.totalVotes();
   const votes = await votesBN.toNumber();
   const projectData = await projectInstance.getData();
-  const closingTime = await projectInstance.closingTime();
   const { title, lat, lng, busLink, description } = JSON.parse(projectData[1]);
   return {
     id,
@@ -141,6 +143,34 @@ export const fetchReceiveDividendsLogs = async (dividends, receiveReceiveDividen
 
   const logs = await getLogs(events);
   return dispatch(receiveReceiveDividendsLogs(logs));
+}
+
+export const fetchProjecteCashflow = async (projectContract, projectAddress, cashFlowLen, receiveProject, dispatch) => {
+  const project = await projectContract.at(projectAddress);
+  const events = await project.ReceiveCashFlow(
+    {},
+    {
+      fromBlock: 0,
+      toBlock: 'latest'
+    }
+  );
+
+  const logs = await getLogs(events);
+  let len;
+  const cashFlow = logs.reduce((cashFlow, log) => {
+    len = len ? len + 1 : cashFlowLen + 1;
+    cashFlow[len] = {
+      cashFlow: Number(log.args.weiAmount),
+      isActuals: true
+    }
+
+    return cashFlow;
+  }, {})
+
+  return dispatch(receiveProject({
+    id: logs[0].args.projectId,
+    cashFlow
+  }));
 }
 
 const getLogs = async (events) => {

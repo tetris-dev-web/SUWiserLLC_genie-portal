@@ -71,7 +71,8 @@ export class SummaryAndPlan extends React.Component{
 
 
 export function IframeFor3dModel (props) {
-  const componentToRender= !props.projectClicked.model_id ? <div></div> :
+  // !props.projectClicked.model_id ? <div></div> :
+  const componentToRender =
       <div className="iframe">
         <iframe id="iframe" src={ `${props.model_link}` }
                 frameBorder="0"

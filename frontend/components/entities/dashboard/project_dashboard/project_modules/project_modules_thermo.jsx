@@ -21,9 +21,9 @@ class ProjectThermo extends React.Component {
   render() {
     //change vote expectation to capital raised
     const { project, capitalBeingRaised } = this.props
-    const { capital_required, start_date, close_date } = project;
+    const { capitalRequired, start_date, close_date } = project;
 
-    const percentCompleted = (capitalBeingRaised*100) / capital_required;
+    const percentCompleted = (capitalBeingRaised*100) / capitalRequired;
 
     const rectDems = {
           Width : 22,
@@ -112,7 +112,7 @@ class ProjectThermo extends React.Component {
                   <Text
                     x={5}
                     y={27}
-                    text={ 'capital required' + '\n' + '$' + capital_required }
+                    text={ 'capital required' + '\n' + '$' + capitalRequired }
                     fontSize={12}
                     fontFamily={'open sans condensed'}
                     fill={'white'}

@@ -1,5 +1,19 @@
 import React from 'react';
 import * as d3 from 'd3';
+import { connect } from 'react-redux';
+import { fetchProjecteCashflow } from '../../../../../actions/chain_actions/project_actions';
+
+const mapStateToProps = state => {
+  return {
+    projectContract: state.network.projectContract
+  }
+}
+
+const maptDispatchToProps = dispatch => {
+  return {
+    fetchProjecteCashflow: (projectContract, projectAddress, cashFlowLen) => dispatch(fetchProjecteCashflow(projectContract, projectAddress, cashFlowLen))
+  }
+}
 
 class CashFlowGraph extends React.Component {
   constructor(props) {
@@ -15,10 +29,18 @@ class CashFlowGraph extends React.Component {
     // this.addAxis = this.addAxis.bind(this);
     this.addData = this.addData.bind(this);
     this.addText = this.addText.bind(this);
+    this.populateData = this.populateData.bind(this);
   }
 
   componentDidMount(){
+    this.populateData();
+    console.log("length", this.props.length)
+    this.props.fetchProjecteCashflow(this.props.projectContract, this.props.address, this.props.length).then(() => {
+      // this.populateData();
+    })
+  }
 
+  populateData () {
     const {currentQuarter, actualPoints, actualAccumulatedPoints,  projectedPoints, projectedAccumulatedPoints} = this.formatCashData()
 
     const {xAxisScale, yAxisScale, yLinesScale,  maxValue, minValue, minExpectedValueAccuProj} = this.defineScales();
@@ -36,8 +58,7 @@ class CashFlowGraph extends React.Component {
     d3.select('#cash-graph')
       .on("mouseover", function(){ return text.style("visibility", "visible"); })
       .on("mouseout", function(){ return text.style("visibility", "hidden"); });
-    }
-  //
+  }
 
   addData(graph, cssClass, points, xAxisScale, yAxisScale) {
     const lineConstructor = d3.line()
@@ -58,14 +79,6 @@ class CashFlowGraph extends React.Component {
       .attr('class', cssClass)
       .append('path')
       .attr('d', line)
-
-      // .filter(function(d){
-      //         d.y !== 0 ? console.log("data: ", d.y) : null
-      //         return d.y != 0
-      //       })
-
-    //
-
   }
 
   // addData(graph, cssClass, points, xAxisScale, yAxisScale) {
@@ -219,7 +232,7 @@ class CashFlowGraph extends React.Component {
     // Retrieve cashflow data from props
     const {actual_cashflow, accum_actual_cashflow, projected_cashflow, accum_projected_cashflow} = this.props;
 
-
+    console.log("cashflow component", this.props)
     const currentQuarter = findCurrentQuarterFromActuals(actual_cashflow);
 
     // Define D3 Coordinates
@@ -248,4 +261,4 @@ class CashFlowGraph extends React.Component {
   }
 }
 
-export default CashFlowGraph;
+export default connect(mapStateToProps, maptDispatchToProps)(CashFlowGraph);

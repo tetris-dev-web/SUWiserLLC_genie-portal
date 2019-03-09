@@ -20,6 +20,12 @@ export const fetchProjects  = (projectFactoryInstance, projectContract) => {
   };
 };
 
+export const fetchProjecteCashflow = (projectContract, projectAddress, cashFlowLen) => {
+  return dispatch => {
+    return ChainUtil.fetchProjecteCashflow(projectContract, projectAddress, cashFlowLen, receiveProject, dispatch);
+  }
+}
+
 export const fetchProjectActivationLogs = (crowdsale, web3) => {
   return dispatch => {
     return ChainUtil.fetchProjectActivationLogs(crowdsale, web3);

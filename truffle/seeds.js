@@ -146,11 +146,11 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
 
   const createCashFlows = async () => {
     const project = await _projectContract.at(projAddr3);
-    await project.deposit({from: developer, value: 5000})
-    await project.deposit({from: developer, value: 4000})
-    await project.deposit({from: developer, value: 3000})
-    await project.deposit({from: developer, value: 6000})
-    await project.deposit({from: developer, value: 2000})
+    await project.deposit({from: developer, value: 50000})
+    await project.deposit({from: developer, value: 40000})
+    await project.deposit({from: developer, value: 30000})
+    await project.deposit({from: developer, value: 60000})
+    await project.deposit({from: developer, value: 20000})
   }
 
 
