@@ -37,7 +37,13 @@ contract SeedableCrowdsale is GNITokenCrowdsale {
         );
   } */
 
-  function _extendDoomsDay (uint256 _days) internal {
+  function seedTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
+    uint256 tokens = buyTokensFor(msg.sender);
+    _extendDoomsDay_(90);
+    TokenPurchaseHelper(_amendmentById[1]).handleTokenPurchase(msg.sender, msg.value);//TokenPurchaseHelper
+   }
+
+  function _extendDoomsDay_ (uint256 _days) internal {
     uint256 newDoomsDay = now.add(_days.mul(1728000));
     if (newDoomsDay > doomsDay) {
       doomsDay = newDoomsDay;

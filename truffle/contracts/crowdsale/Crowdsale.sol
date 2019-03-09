@@ -29,7 +29,7 @@ contract Crowdsale {
   function () public payable {
   }
 
-  function buyTokens(address  _beneficiary) public payable returns (uint256) {
+  function buyTokensFor(address  _beneficiary) public payable returns (uint256) {
     uint256 weiAmount = msg.value;
     require(_beneficiary != address(0));
     require(weiAmount != 0);

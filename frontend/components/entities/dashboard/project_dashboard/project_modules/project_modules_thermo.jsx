@@ -22,7 +22,7 @@ class ProjectThermo extends React.Component {
     //change vote expectation to capital raised
     const { project, capitalBeingRaised } = this.props
     const { capitalRequired, start_date, close_date } = project;
-
+    console.log("project thermo", this.props.captialBeingRaised)
     const percentCompleted = (capitalBeingRaised*100) / capitalRequired;
 
     const rectDems = {
@@ -122,21 +122,11 @@ class ProjectThermo extends React.Component {
                   <CapRaisedLine/>
                   <CapReqLine/>
                   <CurrentDayLine/>
-                <Text
-                  x={rectDems.StartingX-35}
-                  y={filledRectStartingY}
-                  text={ capitalBeingRaised + '\n' + 'raised' }
-                  fontSize={12}
-                  fontFamily={'open sans condensed'}
-                  fill={'#00FFFF'}
-                  strokeWidth={1}
-                  visible={showText}
-                  />
 
                 <Text
                   x={veticalLineStartX-18}
                   y={10}
-                  text={ 'close date' + '\n' + '18-10-25' }
+                  text={ capitalBeingRaised + '\n' + 'raised' }
                   fontSize={13}
                   fontFamily={'open sans condensed'}
                   fill={'white'}
@@ -190,5 +180,25 @@ class ProjectThermo extends React.Component {
       );
     };
 };
+// <Text
+//   x={rectDems.StartingX-35}
+//   y={filledRectStartingY}
+//   text={ capitalBeingRaised + '\n' + 'raised' }
+//   fontSize={12}
+//   fontFamily={'open sans condensed'}
+//   fill={'#00FFFF'}
+//   strokeWidth={1}
+//   visible={showText}
+//   />
 
+// <Text
+//   x={veticalLineStartX-18}
+//   y={10}
+//   text={ 'close date' + '\n' + '18-10-25' }
+//   fontSize={13}
+//   fontFamily={'open sans condensed'}
+//   fill={'white'}
+//   strokeWidth={1}
+//   visible={showText}
+//   />
 export default ProjectThermo;

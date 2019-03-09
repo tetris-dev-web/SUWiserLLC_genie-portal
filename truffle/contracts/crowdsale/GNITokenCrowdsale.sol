@@ -47,7 +47,7 @@ contract GNITokenCrowdsale is TimedCrowdsale, ProjectFactoryLocked, Amendment {
  }
 
  function buyTokens () public payable { //tests need to be removed/added to account for new functionality. we also may just put all the logic for the super function in here.
-   uint256 tokens = super.buyTokens(msg.sender);
+   uint256 tokens = buyTokensFor(msg.sender);
    _extendDoomsDay(90);
    TokenPurchaseHelper(_amendmentById[1]).handleTokenPurchase(msg.sender, msg.value);//TokenPurchaseHelper
   }

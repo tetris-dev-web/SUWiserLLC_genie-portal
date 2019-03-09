@@ -35,6 +35,11 @@ export const fetchAllTokenTransferLogs = (inactiveToken, activeToken) => {
   }
 }
 
+export const fetchTokenBalances = (inactiveToken, activeToken, account) => {
+  return ChainUtil.fetchTokenBalances(inactiveToken, activeToken, account);
+}
+
+
 export const receiveAllTokenTransfers = tokenTransferLogs => {
   return {
     type: RECEIVE_TOKEN_TRANSFERS,

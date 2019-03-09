@@ -33,9 +33,9 @@ const getTransferHistory = tokenTransferLogs => {
 
 const formatTokenHistory = (inactiveHistory, activeHistory, currentViewType, account) => {
   const allTransfers = inactiveHistory.concat(activeHistory).sort((x, y) => {
-    return d3.ascending(x.blockNumber);
+    return x.blockNumber - y.blockNumber;
   });
-
+  console.log("allTransfers", allTransfers)
   return currentViewType === "BY USER" ?
                               tokenHistoryByUser(account, allTransfers):
                               tokenHistoryByAll(allTransfers);
@@ -54,23 +54,30 @@ const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
   let transfer;
   let currentDividendsIdx = 0;
   let earnings = 0;
+  let lastMergedIdx;
   const merged = [];
 
+  const integrateBlockData = blockData => {
+    if (lastMergedIdx > -1 && merged[lastMergedIdx].date === blockData.date) {
+      merged[lastMergedIdx] = blockData;
+    } else {
+      merged.push(blockData)
+    }
+  }
+
   for (let i = 0; currentDividendsIdx < dividendsHistory.length; i++) {
+    lastMergedIdx = merged.length - 1;
     const currentDividend = dividendsHistory[currentDividendsIdx];
     const transfer = i < tokenHistory.length ? tokenHistory[i] : transfer;
+
     if (i >= tokenHistory.length || transfer.date >= currentDividend.date) {
       if (currentViewType === "BY USER") {
-        console.log("earnings",earnings)
         earnings += Number(currentDividend.weiAmount) * (transfer.activeTokens / transfer.allActiveTokens);
       } else {
-        console.log("earnings", earnings)
         earnings += Number(currentDividend.weiAmount);
       }
-      // earnings += currentViewType === "BY USER" ? currentDividend.weiAmount * (transfer.activeTokens / transfer.allActiveTokens) : currentDividend.weiAmount;
-      // currentDividend.earnings = earnings;
-      const lastMergedIdx = merged.length - 1;
-      merged.push({
+
+      integrateBlockData({
         activeTokens: merged[lastMergedIdx].activeTokens,
         totalTokens: merged[lastMergedIdx].totalTokens,
         date: currentDividend.date,
@@ -81,7 +88,7 @@ const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
     }
 
     if (i < tokenHistory.length) {
-      merged.push({
+      integrateBlockData({
         activeTokens: transfer.activeTokens,
         totalTokens: transfer.totalTokens,
         date: transfer.date,

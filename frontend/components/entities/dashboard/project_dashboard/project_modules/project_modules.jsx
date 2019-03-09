@@ -5,6 +5,13 @@ import CashFlowGraph from './project_modules_cashflow';
 import {Title, IframeFor3dModel, CloseButton, SummaryAndPlan } from './project_modules_subcomponents';
 import { editProject } from '../../../../../actions/project_actions'
 import { calculateCashflowData } from '../../../../../util/project_api_util';
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => {
+  return {
+    capitalBeingRaised: state.entities.capitalBeingRaised
+  }
+}
 
 class ProjectModules extends React.Component {
   constructor(props){
@@ -32,6 +39,7 @@ class ProjectModules extends React.Component {
   }
 
   render() {
+    console.log("project modules", this.props.captialBeingRaised)
       const { project, isInvestor, isModalOpen, closeModalOnClick } = this.props;
       const { projected_cashflow, actual_cashflow, accum_projected_cashflow, accum_actual_cashflow } = calculateCashflowData(project.cashFlow);
       console.log("outer comp", projected_cashflow, actual_cashflow, accum_projected_cashflow, accum_actual_cashflow)
@@ -56,7 +64,7 @@ class ProjectModules extends React.Component {
 
                 <IframeFor3dModel projectClicked={project}
                                   model_link ={model_link}/>
-                <ProjectThermo    project={project}/>
+
 
                 <CashFlowGraph
                                   actual_cashflow = {actual_cashflow}
@@ -85,5 +93,5 @@ class ProjectModules extends React.Component {
     }
 }
 
-
-export default ProjectModules;
+// <ProjectThermo    project={project} capitalBeingRaised={this.props.capitalBeingRaised}/>
+export default connect(mapStateToProps)(ProjectModules);

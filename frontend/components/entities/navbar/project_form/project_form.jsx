@@ -12,7 +12,6 @@ import { merge } from 'lodash';
 import './project_form.scss';
 
 class ProjectForm extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -26,7 +25,7 @@ class ProjectForm extends React.Component {
         continent: 'North America',
         valuation: '1',
         cashflow: '',
-        creator_id: this.props.currentUser.id,
+        // creator_id: this.props.currentUser.id,
         model_id: '870fb9d9-b5d2-4565-a6dd-65f9a1f4d00e',
         summary: 'summary',
         capital_required: '',

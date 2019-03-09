@@ -4,6 +4,8 @@ import ModalStyle from './modal_style';
 import Wallet from './wallet/wallet';
 import ProfileContainer from './profile/profile_container';
 import TokenData from '../../../../contract_data/Token';
+import { fetchTokenBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../../actions/chain_actions/token_actions';
+import { connect } from 'react-redux';
 
 class UserDropdown extends React.Component {
   constructor(props) {
@@ -30,9 +32,11 @@ class UserDropdown extends React.Component {
     this.state = {
       openModal: false,
       // displayName: userType,
-      displayName: "demo",
-      tokens: 0,
-      totalSupply: null
+      displayName: "demo user",
+      totalActive: 0,
+      totalInactive: 0,
+      accountActive: 0,
+      accountInactive: 0
     };
     // tokens: 0,
     // user_tokens: 500,
@@ -48,15 +52,67 @@ class UserDropdown extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.updateUsernameDisplay = this.updateUsernameDisplay.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
+    this.watchTransfer = this.watchTransfer.bind(this);
     // this.address = null;
     // this.abi = null;
     // this.web3 = null;
   }
 
   componentDidMount () {
-
+    const { inactiveTokenInstance, activeTokenInstance, account } = this.props;
+    this.props.fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account).then(balances => {
+      const { totalActive, totalInactive, accountActive, accountTotal } = balances;
+      this.setState({
+        totalActive: Number(totalActive),
+        totalInactive: Number(totalInactive),
+        accountActive: Number(accountActive),
+        accountTotal: Number(accountTotal)
+      })
+    });
+    this.watchTransfer(inactiveTokenInstance);
+    this.watchTransfer(activeTokenInstance);
   }
 
+  watchTransfer (token) {
+    const { inactiveTokenInstance, activeTokenInstance, account } = this.props;
+    token.Transfer().watch((error, event) => {
+      let newState = merge({}, this.state);
+      const value = Number(event.args.value);
+      if (event.args.from === "0x0000000000000000000000000000000000000000") {
+        if (token === inactiveToken) {
+          newState = merge({}, newState, { totalInactive: this.state.totalInactive + value })
+        } else {
+          newState = merge({}, newState, { totalActive: this.state.totalActive + value })
+        }
+      }
+
+      if (event.args.to === "0x0000000000000000000000000000000000000000") {
+        if (token === inactiveToken) {
+          newState = merge({}, newState, { totalInactive: this.state.totalInactive - value })
+        } else {
+          newState = merge({}, newState, { totalActive: this.state.totalActive - value })
+        }
+      }
+
+      if (event.args.to === account) {
+        if (token === inactiveToken) {
+          newState = merge({}, newState, { accountInactive: this.state.accountInactive + value })
+        } else {
+          newState = merge({}, newState, { totalAactive: this.state.accountActive + value })
+        }
+      }
+
+      if (event.args.from === account) {
+        if (token === inactiveToken) {
+          newState = merge({}, newState, { accountInactive: this.state.accountInactive - value })
+        } else {
+          newState = merge({}, newState, { totalAactive: this.state.accountActive - value })
+        }
+      }
+
+      this.setState(newState);
+    });
+  }
 
   openModal() {
     this.setState({openModal: true});
@@ -118,21 +174,23 @@ class UserDropdown extends React.Component {
     // let { tokens, user_tokens, total_tokens } = this.state;
     // let { tokens } = this.props.currentUser;
 
-
+    console.log("state, yo", this.state)
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
-          <a id="dLabel" role="button" data-toggle="dropdown" className="dropdown-link">
-            <div className="user-dropdown-button">
+            <div className="user-dropdown-button" id='token-display'>
               <div className="display-name">
                 {this.state.displayName}
               </div>
               <hr/>
               <div className="tokens-cont">
-                <div className="total-tokens">{this.state.totalSupply ? this.state.totalSupply : null} tokens</div>
+                <div className="total-tokens">{this.state.accountActive ? this.state.accountActive : 0} active tokens</div>
+              </div>
+              <div className="tokens-cont">
+                <div className="total-tokens">{this.state.accountInactive ? this.state.accountInactive : 0} inactive tokens</div>
               </div>
             </div>
-          </a>
+
           <ul className="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
             <li className="dropdown-submenu">
               <a tabIndex="-1" className="wallet-button butt">
@@ -158,6 +216,26 @@ class UserDropdown extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    web3: state.network.web3,
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    projectContract: state.network.project,
+    inactiveTokenInstance: state.network.inactiveTokenInstance,
+    activeTokenInstance: state.network.activeTokenInstance,
+    account: state.network.account,
+    tokenBalances: state.entities.tokenBalances
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchTokenBalances: (inactiveTokenInstance, activeTokenInstance, account) => fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account)
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserDropdown);
 //needs to be updated with uport infomration
 // <ul className="dropdown-menu dropdown-item">
 //   <Wallet currentUser={this.props.currentUser} updateUser={this.props.updateUser} updateUsernameDisplay={this.updateUsernameDisplay}/>
@@ -169,4 +247,26 @@ class UserDropdown extends React.Component {
 //     user={this.props.currentUser}/>
 // </ul>
 
-export default UserDropdown;
+
+
+
+
+
+// <div className="tokens-cont">
+//   <div className="total-tokens">{this.state.totalActive ? this.state.totalActive : null} active tokens</div>
+// </div>
+// <div className="tokens-cont">
+//   <div className="total-tokens">{this.state.totalInactive ? this.state.totalInactive : null} inactive tokens</div>
+// </div>
+// <div className="tokens-cont">
+//   <div className="total-tokens">{this.state.accountActive ? this.state.accountActive : null} account active tokens</div>
+// </div>
+// <div className="tokens-cont">
+//   <div className="total-tokens">{this.state.accountInactive ? this.state.accountInactive : null} account inactive tokens</div>
+// </div>
+
+
+
+
+
+// <a id="dLabel" role="button" data-toggle="dropdown" className="dropdown-link">

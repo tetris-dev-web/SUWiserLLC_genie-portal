@@ -221,6 +221,20 @@ export const pitchProject = async (crowdsale, data, account) => {
   );
 };
 
+export const fetchTokenBalances = async (inactiveToken, activeToken, account) => {
+  const accountInactive = await inactiveToken.balanceOf(account);
+  const accountActive = await activeToken.balanceOf(account);
+  const totalInactive = await inactiveToken.totalSupply();
+  const totalActive = await activeToken.totalSupply();
+
+  return {
+    accountInactive,
+    accountActive,
+    totalInactive,
+    totalActive
+  }
+}
+
 export const fetchWeiRaised = async (crowdsaleInstance) => {
   console.log("fetch weiRaised function", crowdsaleInstance)
   const weiRaisedBN = await crowdsaleInstance.weiRaised_();

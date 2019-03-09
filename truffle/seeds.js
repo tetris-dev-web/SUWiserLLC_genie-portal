@@ -119,7 +119,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
 
   const createTokenPurchases = async () => {
     const createTokenPurchase = async (address, weiAmount) => {
-      await crowdsale.buyTokens({from: address, value: weiAmount});
+      await crowdsale.seedTokens({from: address, value: weiAmount});
     }
 
     await createTokenPurchase(developer, 200);

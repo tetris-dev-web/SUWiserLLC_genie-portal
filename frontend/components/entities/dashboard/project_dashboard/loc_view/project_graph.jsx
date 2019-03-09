@@ -20,7 +20,8 @@ const darkGrey = "#A59A91";
 
 const mapStateToProps = state => {
   return {
-    projects: merge({}, state.entities.projects)
+    projects: merge({}, state.entities.projects),
+    caspitalBeingRaised: state.entitis.capitalBeingRaised
   };
 };
 
@@ -417,7 +418,7 @@ class ProjectGraph extends React.Component {
     //     const project = this.props.projects[key];
     //     return <li key={project.id}>{project.title} {project.created_at}</li>;
     //   });
-    // }
+    //
     return (
       <React.Fragment>
         <div className="series content graph" id='project'>
