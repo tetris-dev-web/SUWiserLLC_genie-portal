@@ -6,6 +6,7 @@ import ProfileContainer from './profile/profile_container';
 import TokenData from '../../../../contract_data/Token';
 import { fetchTokenBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../../actions/chain_actions/token_actions';
 import { connect } from 'react-redux';
+import { merge } from 'lodash';
 
 class UserDropdown extends React.Component {
   constructor(props) {

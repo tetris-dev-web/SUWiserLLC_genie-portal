@@ -12,6 +12,7 @@ const tokenTransfersReducer = (state = {}, action) => {
     case RECEIVE_TOKEN_TRANSFER:
       const newState = merge({}, state);
       if (action.tokenTransfer.type === 'inactive') {
+        console.log("reducer newState", newState)
         newState.inactiveTransferLogs.push(action.tokenTransfer.data)
       } else {
         newState.activeTransferLogs.push(action.tokenTransfer.data)
