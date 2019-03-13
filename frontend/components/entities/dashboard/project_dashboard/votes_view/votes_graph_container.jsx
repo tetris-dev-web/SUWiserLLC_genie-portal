@@ -56,7 +56,12 @@ const mapStateToProps = state => {
       const capital = state.entities.capitalHistory[time];
       propsData.capitalTotal += capital;
 
-
+      if (!propsData.lineData.length) {
+        propsData.lineData.push({
+          date: Number(time) - 1,
+          capital: 0
+        })
+      }
       propsData.lineData.push({
         date: Number(time),
         capital: propsData.capitalTotal
@@ -90,7 +95,7 @@ const mapStateToProps = state => {
       lineData,
       capitalTotal,
       capitalBeingRaised: capitalTotal - capitalDeployed,
-      startTime,
+      startTime: startTime - 1,
       endTime
     };
   // }

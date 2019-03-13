@@ -15,8 +15,10 @@ class VotesGraph extends React.Component {
       componentVisible: "invisible"
     };
 
-    this.SVGWidth = 960;
-    this.SVGHeight = 500;
+    this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
+    this.SVGWidth = (960 - this.margin.left - this.margin.right) * .75;
+    this.SVGHeight = 500 * .75;
+    this.timeWidth = (960 - this.margin.left - this.margin.right) * .75;
     this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
   }
 
@@ -50,7 +52,7 @@ class VotesGraph extends React.Component {
         .domain([0, capitalTotal + (pitchedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
       SVGTimeXScale: d3.scaleLinear()
         .domain([startTime, endTime])
-        .range([0, this.SVGWidth]),
+        .range([0, this.timeWidth]),
       circleScale: d3.scaleLinear()
         .domain(allProjectsValuationMinMax)
         .range([5, 10])
@@ -60,12 +62,11 @@ class VotesGraph extends React.Component {
   dataHasLoaded(){
     return this.props.lineData;
   }
-  
   renderGraph() {
     const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
-
-    console.log("selectedProject", selectedProject)
+    // console.log("props", this.props)
+    //   console.log("selectedProject", selectedProject)
     return (
       <div className={`votes-graph ${componentVisible}`}>
         <div className="vote-shift-tool-container"
@@ -77,23 +78,26 @@ class VotesGraph extends React.Component {
         </div>
         <svg className="votes-view-svg"
           preserveAspectRatio="xMinYMin meet"
-          viewBox="0 0 960 500">
-            <VotesViewCapitalRaised
-              {...this.props}
-              {...this.state}
-              SVGYScale={SVGYScale}
-              SVGHeightScale={SVGHeightScale}
-              SVGTimeXScale={SVGTimeXScale}
-              circleScale={circleScale} />
-            <VotesViewPitchedProjects
-              {...this.props}
-              {...this.state}
-              SVGYScale={SVGYScale}
-              SVGHeightScale={SVGHeightScale}
-              SVGWidth={this.SVGWidth}
-              circleScale={circleScale}
-              voteShiftTool={this.voteShiftTool}
-              toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
+          viewBox="0 0 960 500"
+          >
+          <VotesViewCapitalRaised
+            {...this.props}
+            {...this.state}
+            margin={this.margin}
+            SVGYScale={SVGYScale}
+            SVGHeightScale={SVGHeightScale}
+            SVGTimeXScale={SVGTimeXScale}
+            circleScale={circleScale} />
+          <VotesViewPitchedProjects
+            {...this.props}
+            {...this.state}
+            margin={this.margin}
+            SVGYScale={SVGYScale}
+            SVGHeightScale={SVGHeightScale}
+            SVGWidth={this.SVGWidth}
+            circleScale={circleScale}
+            voteShiftTool={this.voteShiftTool}
+            toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
         </svg>
       </div>
     );
@@ -108,7 +112,7 @@ class VotesGraph extends React.Component {
 export default VotesGraph;
 
 
-
+// height="500" width="960"
 
 
 

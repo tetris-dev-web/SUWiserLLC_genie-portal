@@ -71,7 +71,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       0,
       900,
       '40.7128',
-      '74.0060',
+      '-74.0060',
       1
      );
     // console.log(Project.at(projAddr1))
@@ -80,7 +80,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       200,
       800,
       '40.7128',
-      '74.0060',
+      '-74.0060',
       2
     );
     projAddr3 = await createProject(
@@ -104,7 +104,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       500,
       700,
       '5.6037',
-      '0.1870',
+      '-0.1870',
       5
     );
     projAddr6 = await createProject(

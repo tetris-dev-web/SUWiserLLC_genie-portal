@@ -50,6 +50,8 @@ const mapStateToProps = ({ entities }) => {
     );
   });
 
+  
+
   return {
     projects,
     cities,

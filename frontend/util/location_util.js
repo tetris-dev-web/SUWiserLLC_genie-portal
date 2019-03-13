@@ -243,7 +243,7 @@ const countryToContinent = {
 
 export const getLocationGraphData = async (projects) => {
   const { projectCities, cities, continents } = await fetchCitiesAndContinents(projects);
-
+  console.log("results, yo", projectCities, cities, continents)
   const linksData = [];
 
   projectCities.forEach((city, idx) => {
@@ -274,11 +274,13 @@ export const getLocationGraphData = async (projects) => {
       }
     );
   });
+
+  // console.log(linksData)
 }
 
 export const fetchCitiesAndContinents = async projects => {
   const locationsData = [];
-
+  console.log("projects", projects)
   projects.forEach(project => {
     let locationData = latLngToCityContinent(project.lat, project.lng);
     locationsData.push(locationData);
@@ -288,8 +290,9 @@ export const fetchCitiesAndContinents = async projects => {
 }
 
 
-const formatCitiesAndContinents = await (locationsData) => {
+const formatCitiesAndContinents = async (locationsData) => {
   return Promise.all(locationsData).then((resolvedData, projectIdx) => {
+    console.log("ld", resolvedData)
     const seenCities = {};
     const seenContinents = {};
 
@@ -304,7 +307,7 @@ const formatCitiesAndContinents = await (locationsData) => {
         seenCities[city.name] = true;
         cities.push(city);
       }
-      if(!seenContinent[city.continent]) {
+      if(!seenContinents[city.continent]) {
         seenContinents[city.continent] = true;
         continents.push({name: city.continent});
       }
@@ -320,17 +323,30 @@ const formatCitiesAndContinents = await (locationsData) => {
 
 export const latLngToCityContinent = async (lat, lng) => {
   Geocode.setApiKey('AIzaSyBdh7dx8oKj5iDtCAzBBCLNOEA94nf8Cl8');
+   // if (lat === "31.2304" && lng === '121.4737') {
+   //   return {
+   //     continent: "Asia",
+   //     city: "Shanghai"
+   //   }
+   // }
+  try {
+    const { results } = await Geocode.fromLatLng('5.6037', '-0.1870');
+    console.log('results', results)
 
-  const results = await Geocode.fromLatLng(lat, lng);
+    return results.reduce((location, el) => {
+      if (el.types.includes("postal_code")) {
+        location.name = el.address_components[1].long_name;
+      }
+      if (el.types.includes("country")) {
 
-  return results.reduce((location, el) => {
-    if (el.types.includes("postal_code")) {
-      location.name = el.address_components[1].long_name;
-    } else if (el.types.includes("country")) {
-      countryCode = el.address_components[0].short_name;
-      location.continent = countryToContinent[countryCode]
-    }
+        const countryCode = el.address_components[0].short_name;
+        location.continent = countryToContinent[countryCode]
+      }
 
-    return location;
-  }, {});
+      return location;
+    }, {});
+  } catch (err) {
+    console.log("err", err)
+  }
+  // console.log(results)
 }

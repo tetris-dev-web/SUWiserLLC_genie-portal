@@ -29,13 +29,19 @@ class VotesViewCapitalRaised extends React.Component {
         project={project}
         opacity={selectedProject ? "0.2" : "1"} />
     ));
+    console.log("lineData", lineData)
 
     const lineScale = d3.line()
       .x(d => SVGTimeXScale(d.date))
-      .y(d => SVGYScale(d.capital));
+      .y(d => {
+        const result = SVGYScale(d.capital);
+        console.log(result)
+        return result;
+      })
     const Path = <VotesViewCapitalRaisedPath
       d={lineScale(lineData)}
-      opacity={selectedProject ? "0.2" : "1"} />;
+      opacity={selectedProject ? "0.2" : "1"}
+      transform={`translate(${3 * this.props.margin.left}, 0)`}/>;
 
     const heightOfCapitalBeingRaisedRect = SVGHeightScale(capitalBeingRaised);
     const yOfCapitalBeingRaisedRect = SVGYScale(capitalTotal);
@@ -59,6 +65,7 @@ class VotesViewCapitalRaised extends React.Component {
 
     const heightOfCapitalRaisedPrevRect = SVGHeightScale(capitalTotal - capitalBeingRaised);
     const yOfCapitalRaisedPrevRect = heightOfCapitalBeingRaisedRect + yOfCapitalBeingRaisedRect;
+    console.log("!!", yOfCapitalRaisedPrevRect + heightOfCapitalRaisedPrevRect)
     const capRaisedAmounts = deployedProjects.map((project, idx) => (
       <text className="votes-view-capital-raised-text"
         key={idx}
@@ -86,8 +93,8 @@ class VotesViewCapitalRaised extends React.Component {
       <g className="votes-view-capital-raised">
         {CapitalBeingRaisedRect}
         {CapitalRaisedPrevRect}
-        {Path}
         {Lines}
+        {Path}
         {Circles}
       </g>
     );

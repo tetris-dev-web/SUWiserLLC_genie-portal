@@ -4,6 +4,7 @@ import './loc_graph.scss';
 import LocGraphRect from './loc_graph_rect';
 import LocGraphCircle from './loc_graph_circle';
 import NorthAmerica from '../../../../../assets/NorthAmerica.png';
+import { getLocationGraphData } from '../../../../../util/location_util';
 console.log("n", NorthAmerica)
 const rosyBrown = "#AB7A5E";
 const lightBlue = "#5EABAA";
@@ -25,6 +26,11 @@ class LocGraph extends React.Component {
       this.forceUpdate();
       // bypass shouldComponentUpdate
     });
+    getLocationGraphData(this.props.projects).then(data => {
+      console.log("data",data)
+      console.log('props', this.props)
+    });
+
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -115,7 +121,6 @@ class LocGraph extends React.Component {
   render() {
     const { projects, cities, continents, linksData } = this.props;
     const { outterCircleScale } = this.createScales();
-    console.log("linksd", linksData)
     const links = linksData.map((link, idx) => (
       <line key={idx}
         className={`loc-svg-link ${link.source.fixed ? "invisible" : ""}`}
@@ -137,15 +142,8 @@ class LocGraph extends React.Component {
       "Europe": NorthAmerica,
       "Asia": NorthAmerica
     }
-    console.log("c images",continentImages)
+  
     const continentNodes = continents.map((continent, idx) => {
-      console.log("img", continentImages[continent.name])
-
-      // <LocGraphRect key={idx}
-      // className="loc-svg-continent-node"
-      // transform={`translate(${continent.x - .5 * this.continentNodeSide}, ${continent.y - .5 * this.continentNodeSide})`}
-      // text={continent.name} />
-
       return (
         <g
           key={idx}
