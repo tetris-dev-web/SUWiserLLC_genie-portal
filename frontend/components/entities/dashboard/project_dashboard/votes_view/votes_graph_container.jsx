@@ -11,87 +11,96 @@ const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
 
 
 const mapStateToProps = state => {
-  let capitalDeployed = 0;
-  const projectPropsData = Object.keys(state.entities.projects).reduce((propsData, projectTitle) => {
-    if (!propsData.deployedProjects) {
-      propsData.deployedProjects = [];
-      propsData.pitchedProjects = [];
-      propsData.totalVotes = 0;
-    }
+  console.log("container", state)
+    let capitalDeployed = 0;
+    const projectPropsData = Object.keys(state.entities.projects).reduce((propsData, projectTitle) => {
+      if (!propsData.deployedProjects) {
+        propsData.deployedProjects = [];
+        propsData.pitchedProjects = [];
+        propsData.totalVotes = 0;
+      }
 
-    const project = state.entities.projects[projectTitle];
+      const project = state.entities.projects[projectTitle];
 
-    const deploymentTime = project.activationTime;
-    if (deploymentTime !== 0) {
-      capitalDeployed += project.capitalRequired;
-      project.capital = capitalDeployed;
-      propsData.deployedProjects.push(project);
-    } else {
-      propsData.totalVotes += project.votes;
-      propsData.pitchedProjects.push(project);
-    }
+      const deploymentTime = project.activationTime;
+      if (deploymentTime !== 0) {
+        capitalDeployed += project.capitalRequired;
+        project.capital = capitalDeployed;
+        propsData.deployedProjects.push(project);
+      } else {
+        propsData.totalVotes += project.votes;
+        propsData.pitchedProjects.push(project);
+      }
 
-    return propsData;
-  }, {});
+      return propsData;
+    }, {});
 
-  const {
-    deployedProjects,
-    totalVotes
-  } = projectPropsData;
+    const {
+      deployedProjects,
+      totalVotes
+    } = projectPropsData;
 
-  const pitchedProjects = projectPropsData.pitchedProjects.map(project => {
-    project.voteShare = project.votes / totalVotes;
-    return project;
-  }).sort((a, b) => b.voteShare - a.voteShare);
+    const pitchedProjects = projectPropsData.pitchedProjects.map(project => {
+      project.voteShare = project.votes / totalVotes;
+      return project;
+    }).sort((a, b) => b.voteShare - a.voteShare);
 
-  const capitalPropsData = Object.keys(state.entities.capitalHistory).reduce((propsData, time) => {
-    if (!propsData.lineData) {
-      propsData.lineData = [];
-      propsData.capitalTotal = 0;
-      propsData.startTime = time;
-      propsData.endTime = time;
-    }
+    const capitalPropsData = Object.keys(state.entities.capitalHistory).reduce((propsData, time) => {
+      if (!propsData.lineData) {
+        propsData.lineData = [];
+        propsData.capitalTotal = 0;
+        propsData.startTime = time;
+        propsData.endTime = time;
+      }
 
-    const capital = state.entities.capitalHistory[time];
-    propsData.capitalTotal += capital;
+      const capital = state.entities.capitalHistory[time];
+      propsData.capitalTotal += capital;
 
 
-    propsData.lineData.push({
-      date: Number(time),
-      capital: propsData.capitalTotal
-    });
+      propsData.lineData.push({
+        date: Number(time),
+        capital: propsData.capitalTotal
+      });
 
-    if (time < propsData.startTime) {
-      propsData.startTime = time;
-    }
-    if (time > propsData.endTime) {
-      propsData.endTime = time;
-    }
+      if (time < propsData.startTime) {
+        propsData.startTime = time;
+      }
+      if (time > propsData.endTime) {
+        propsData.endTime = time;
+      }
 
-    return propsData;
-  }, {});
+      return propsData;
+    }, {});
+    const {
+      lineData,
+      capitalTotal,
+      startTime,
+      endTime
+    } = capitalPropsData;
 
-  const {
-    lineData,
-    capitalTotal,
-    startTime,
-    endTime
-  } = capitalPropsData;
+    console.log("cpd", capitalPropsData)
+    return {
+      crowdsaleInstance: state.network.crowdsaleInstance,
+      projectContract: state.network.projectContract,
+      web3: state.network.web3,
+      pitchedProjects,
+      deployedProjects,
+      pitchedProjectsValuationMinMax: getArrayOfObjectsMinMax(pitchedProjects, "valuation"),
+      allProjectsValuationMinMax: getArrayOfObjectsMinMax(Object.values(state.entities.projects), "valuation"),
+      lineData,
+      capitalTotal,
+      capitalBeingRaised: capitalTotal - capitalDeployed,
+      startTime,
+      endTime
+    };
+  // }
 
-  return {
-    crowdsaleInstance: state.network.crowdsaleInstance,
-    projectContract: state.network.projectContract,
-    web3: state.network.web3,
-    pitchedProjects,
-    deployedProjects,
-    pitchedProjectsValuationMinMax: getArrayOfObjectsMinMax(pitchedProjects, "valuation"),
-    allProjectsValuationMinMax: getArrayOfObjectsMinMax(Object.values(state.entities.projects), "valuation"),
-    lineData,
-    capitalTotal,
-    capitalBeingRaised: capitalTotal - capitalDeployed,
-    startTime,
-    endTime
-  };
+  // return {
+  //   crowdsaleInstance: state.network.crowdsaleInstance,
+  //   projectContract: state.network.projectContract,
+  //   web3: state.network.web3,
+  // }
+
 };
 
 const mapDispatchToProps = dispatch => {

@@ -29,8 +29,8 @@ class BuyFormModal extends React.Component {
           style={ModalStyle}
           contentLabel="Transfer Modal"
           className="modal-container">
-          <BuyForm 
-            closeModal={this.closeModal}/>
+          <BuyForm
+            closeModal={this.handleClick}/>
         </Modal>
       </div>
     );

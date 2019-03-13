@@ -1,10 +1,4 @@
 import { connect } from 'react-redux';
-// import {
-//   fetchProject,
-//   editProject,
-//   receiveProject
-// } from '../../../../actions/project_actions';
-import { fetchProjectsAndCapitalRaised } from '../../../../actions/chain_actions/crowdsale_actions';
 import {
   fetchProjects,
   fetchProject
@@ -37,7 +31,6 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchTokenPurchaseLogs: (crowdsale, web3) => dispatch(fetchTokenPurchaseLogs(crowdsale, web3)),
     // receiveProject: project => dispatch(receiveProject(project)),
-    fetchProjectsAndCapitalRaised: (projectFactoryInstance, projectContract, crowdsaleInstance) => dispatch(fetchProjectsAndCapitalRaised(projectFactoryInstance, projectContract, crowdsaleInstance)),
     fetchProject: (projectFactoryInstance, projectContract, id, address) => dispatch(fetchProject(projectFactoryInstance, projectContract, id, address)),
     // editProject: project => dispatch(editProject(project))
   };

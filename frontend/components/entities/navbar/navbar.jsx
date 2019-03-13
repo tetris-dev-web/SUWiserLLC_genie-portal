@@ -17,7 +17,7 @@ class Navbar extends React.Component {
     if (this.props.account) {
       return <TokenInterface />;
     } else {
-      return <Login />;
+      return <Login/>;
     }
     //
     // return(<div>

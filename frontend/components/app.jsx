@@ -15,6 +15,7 @@ import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import { connect } from 'react-redux';
 import {processVotes} from '../actions/chain_actions/vote_actions';
+import { updateNetwork } from '../actions/chain_actions/network_actions'
 import './app.scss';
 
 import Modal from '../components/entities/modal/modal';
@@ -22,30 +23,19 @@ import Modal from '../components/entities/modal/modal';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.voteTest = this.voteTest.bind(this);
+    // this.state = {
+    //   account: this.props.account
+    // }
   }
 
-  componentDidMount () {
-    if(this.props.web3){
-      this.props.votingInstance.VoteChange().watch((error, event) => {
-        console.log(event); //TODO log to state
-      });
-    }
-  }
-
-  voteTest () {
-    this.props.processVotes({
-      vote_additions: [
-        {project_address: this.props.account, voter_address: this.props.account, votes: 1, type: 'addition', signed_message: 'defkweofmk'},
-        {project_address: this.props.account, voter_address: this.props.account, votes: 2, type: 'addition', signed_message: 'defkweofmk'}
-      ],
-      vote_removals: [
-        {project_address: this.props.account, voter_address: this.props.account, votes: 3, type: 'removal', signed_message: 'defkweofmk'},
-        {project_address: this.props.account, voter_address: this.props.account, votes: 4, type: 'removal', signed_message: 'defkweofmk'}
-      ]
+  componentDidMount() {
+    this.set
+    this.props.web3.currentProvider.publicConfigStore.on('update', network => {
+      this.props.provider.eth.getCoinbase((err, account) => {
+        this.props.updateNetwork({ account: account ? account : false })
+      })
     });
   }
-
 
   render() {
     console.log("HELLO")
@@ -66,26 +56,35 @@ const mapStateToProps  = state => {
     account: state.network.account,
     web3: state.network.web3,
     crowdsaleInstance: state.network.crowdsaleInstance,
-    votingInstance: state.network.votingInstance
+    votingInstance: state.network.votingInstance,
+    provider: state.network.provider
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    processVotes: vote_data => dispatch(processVotes(vote_data))
+    processVotes: vote_data => dispatch(processVotes(vote_data)),
+    updateNetwork: network => dispatch(updateNetwork(network))
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-// <Switch>]
-// </Switch>
 // <div path="/dashboard" component={Dashboard} />
 
 
 // <RedirectedRoute />
+// <Switch>
+//   <AuthRoute path="/login" component={Landing} />
+//   <ProtectedRoute path="/dashboard" component={Dashboard} />
+// </Switch>
 
-// <ProtectedRoute path="/dashboard" component={Dashboard} />
-// <AuthRoute path="/login" component={Landing} />
+
+// <div className="none">THIS SHOULD BE RED</div>
 
 
-<div className="none">THIS SHOULD BE RED</div>
+
+// <RedirectedRoute />
+// <Switch>
+//   <AuthRoute path="/login" component={Landing} />
+//   <ProtectedRoute path="/dashboard" component={Dashboard} />
+// </Switch>

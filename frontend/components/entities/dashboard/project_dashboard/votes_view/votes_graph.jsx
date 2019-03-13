@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
 import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
 import VoteShiftTool from './vote_shift_tool';
+import Loader from '../../loader/loader';
 import './votes_graph.scss';
 
 class VotesGraph extends React.Component {
@@ -31,14 +32,15 @@ class VotesGraph extends React.Component {
 
   watchTokenPurchase () {
     this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
-      console.log("event", event)
-      this.props.receiveTokenPurchase({[Number(event.args.time)]: Number(event.args.value)});
+      console.log("event", Number(event.args.time), Number(event.args.value))
+
+      this.props.receiveTokenPurchase({time: Number(event.args.time), value: Number(event.args.value)});
     })
   }
 
   createScales(){
     const { capitalBeingRaised, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax, allProjectsValuationMinMax } = this.props;
-
+    console.log("re rendering graph")
     return {
       SVGHeightScale: d3.scaleLinear()
         .range([0, this.SVGHeight])
@@ -58,11 +60,12 @@ class VotesGraph extends React.Component {
   dataHasLoaded(){
     return this.props.lineData;
   }
-
+  
   renderGraph() {
     const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
-    console.log(selectedProject)
+
+    console.log("selectedProject", selectedProject)
     return (
       <div className={`votes-graph ${componentVisible}`}>
         <div className="vote-shift-tool-container"
@@ -98,7 +101,7 @@ class VotesGraph extends React.Component {
 
   render() {
     console.log("selectedProject", this.state.selectedProject, this.state.componentVisible)
-    return this.dataHasLoaded() ? this.renderGraph() : null;
+    return this.dataHasLoaded() ? this.renderGraph() : <Loader/>;
   }
 }
 

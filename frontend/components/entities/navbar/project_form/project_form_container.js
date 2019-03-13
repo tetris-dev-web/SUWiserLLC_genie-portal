@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
 import ProjectForm from './project_form';
+import { connect } from 'react-redux';
 import {
   createProject
 } from '../../../../actions/chain_actions/project_actions';
@@ -18,14 +18,14 @@ const mapStateToProps = state => {
     projects,
     currentUser: state.session.currentUser,
     errors: state.errors.project,
-    crowdsaleInstance: state.network.crowdsaleInstance,
+    projectFactoryInstance: state.network.projectFactoryInstance,
     account: state.network.account
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    createProject: (crowdsale, params, pdf_file, account) => dispatch(createProject(crowdsale, params, pdf_file, account)),
+    createProject: (projectFactoryInstance, params, pdf_file, account) => createProject(projectFactoryInstance, params, pdf_file, account),
     clearProjectErrors: () => dispatch(clearProjectErrors())
   };
 };

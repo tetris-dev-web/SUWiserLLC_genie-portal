@@ -15,6 +15,8 @@ export const getProjectData = async (projectFactoryInstance, projectContract, id
   const votesBN = await projectInstance.totalVotes();
   const votes = await votesBN.toNumber();
   const projectData = await projectInstance.getData();
+  const active = await projectInstance.active();
+
   const { title, lat, lng, busLink, description } = JSON.parse(projectData[1]);
   return {
     id,
@@ -28,6 +30,7 @@ export const getProjectData = async (projectFactoryInstance, projectContract, id
     activationTime,
     closingTime,
     votes,
+    active,
     capitalRequired: projectData[2].toNumber(),
     valuation: projectData[3].toNumber(),
     cashFlow: JSON.parse(projectData[4])
@@ -111,13 +114,14 @@ export const voteAndUpdateProjects = async (
   }
 
   Object.keys(projects).forEach(project => {
-    if (project.activationTime === 0) {
+    if (project.activationTime === 0 && project.title) {
+      // !== 'Matt\'s Mansion'
       batch.add(projectLeaderTracker.trackProject.request(project.id, {from: account}))
     }
   })
 
   console.log("batch", batch)
-  batch.add(activation.tryActivateProject.request({from: account}));
+  // batch.add(activation.tryActivateProject.request({from: account}));
   return await batch.execute();
 }
 
@@ -191,7 +195,7 @@ const fetchTokenTransferEvents= async (token) => {
   );
 }
 
-export const pitchProject = async (crowdsale, data, account) => {
+export const pitchProject = async (projectFactoryInstance, data, account) => {
   let {
       title,
       description,
@@ -207,15 +211,14 @@ export const pitchProject = async (crowdsale, data, account) => {
     title,
     description,
     busLink,
-    model_id,
     lat: latitude,
     lng: longitude
   });
 
-  return await crowdsale.pitchProject(
+  return await projectFactoryInstance.createProject(
     projectInfo,
-    capital_required,
-    valuation,
+    Math.round(valuation),
+    Math.round(capital_required),
     cashflow,
     {from: account}
   );

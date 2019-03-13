@@ -4,7 +4,7 @@ import { receiveProject, receiveProjectErrors, receiveProjects } from '../projec
 
 export const fetchProject = (projectFactoryInstance, projectContract, id, address) => {
   return dispatch => {
-    return ChainUtil.getProjectData(address).then((projectData) => {
+    return ChainUtil.getProjectData(projectFactoryInstance, projectContract, id, address).then((projectData) => {
       return dispatch(receiveProject(projectData));
     });
   };
@@ -33,12 +33,12 @@ export const fetchProjectActivationLogs = (crowdsale, web3) => {
 };
 
 
-export const createProject = (crowdsale, railsParams, params, pdf_file, account) => {
+export const createProject = (projectFactoryInstance, params, pdf_file, account) => {
   // return dispatch => {
     // return APIUtil.createProject(railsParams).then(project => {
     //   // return APIUtil.uploadPDF(project, pdf_file).then(()=>{
     //     dispatch(receiveProject(project));
-        return ChainUtil.pitchProject(crowdsale, params, account);
+        return ChainUtil.pitchProject(projectFactoryInstance, params, account);
       // })
     // });
 };

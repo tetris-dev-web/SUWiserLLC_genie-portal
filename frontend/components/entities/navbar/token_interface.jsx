@@ -1,5 +1,5 @@
 import React from 'react';import { fetchTokenBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../actions/chain_actions/token_actions';
-import UserDropdownContainer from './user_dropdown/user_dropdown_container';
+import UserDropdown from './user_dropdown/user_dropdown';
 import BuyFormModal from './buy_form/buy_form_modal';
 import ProjectFormModal from './project_form/project_form_modal';
 
@@ -27,7 +27,7 @@ class TokenInterface extends React.Component {
         <div className="navbar-right">
           <div className="user-container">
           </div>
-          <UserDropdownContainer />
+          <UserDropdown/>
           <BuyFormModal />
           <ProjectFormModal />
         </div>

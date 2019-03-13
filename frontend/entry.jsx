@@ -23,12 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let web3Provider;
   let provider;
   let preloadedState = {};
-  if (window.currentUser) {
-    preloadedState = { session: { currentUser: window.currentUser }};
-    delete window.currentUser;
-  }
 
-  if (typeof web3 != 'undefined') {
+  if (web3) {
     web3Provider = web3.currentProvider;
     // web3Provider.enable();
     provider = new Web3(web3Provider);
@@ -135,25 +131,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 projectFactoryInstance,
                 projectContract,
                 projectLeaderTrackerInstance,
-                activationInstance, 
+                activationInstance,
                 dividendsInstance,
-                web3
+                web3,
+                provider
               }
             }
           );
 
           store = configureStore(preloadedState);
+          // let acc = web3;
+          // const networkInterval = setInterval(() => {
+          //   if (!web3) {
+          //       console.log("workssss!!")
+          //   }
+          // }, 100);
+
           window.getState = store.getState; //just for development purposes - remove later - use logger
           const root = document.getElementById('root');
-          ReactDOM.render(<Root store={store} />, root);
+          ReactDOM.render(<Root store={store} window={window}/>, root);
         });
       });
     });
   } else {
     web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
     store = configureStore(preloadedState);
-    window.getState = store.getState;
+    window.getState = store.getState; //just for development purposes - remove later - use logger
     const root = document.getElementById('root');
-    ReactDOM.render(<Root store={store} />, root);
+    ReactDOM.render(<Root store={store} window={window}/>, root);
   }
 });

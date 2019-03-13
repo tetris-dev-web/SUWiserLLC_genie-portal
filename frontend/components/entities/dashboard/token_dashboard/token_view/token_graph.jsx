@@ -9,6 +9,8 @@ import './token_graph.scss';
 import TokenGraphTokenPath from './token_graph_token_path';
 import TokenGraphXAxis from './token_graph_x_axis';
 import TokenGraphOverlay from './token_graph_overlay';
+import Loader from '../../loader/loader';
+import '../../loader/loader.scss';
 import { merge } from 'lodash';
 
 const mapStateToProps = (state, ownProps) => {
@@ -171,9 +173,14 @@ class TokenGraph extends React.Component {
       );
     }
     else {
-      return [];//this will be replcced with a loader
+      console.log("should see loader")
+      return <Loader/>
     }
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TokenGraph);
+
+
+
+// return <Loader/>;//this will be replcced with a loader

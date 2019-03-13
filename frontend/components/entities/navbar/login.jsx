@@ -13,13 +13,17 @@ class Login extends React.Component {
             <div className="gen-dash">GENIE DASHBOARD</div>
           </div>
         </div>
-        <div className="navbar-right">
-          <SessionFormContainer type="Log In"/>
-          <SessionFormContainer type="Sign Up"/>
-        </div>
       </nav>
     );
   }
 }
 
 export default Login;
+
+
+
+
+// <div className='login-prompt'>
+//   <div className="login-text">Please login with MetaMask</div>
+//   {web3 ? <div></div> : <a href="https://metamask.io/" target="_blank" className="metaMask-Button">Download MetaMask</a>}
+// </div>

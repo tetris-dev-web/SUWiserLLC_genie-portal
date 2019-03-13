@@ -74,7 +74,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></rect>
 				<g onClick={e => e.stopPropagation()}>
-					<VotesViewPitchedProjectsCircle 
+					<VotesViewPitchedProjectsCircle
 						cx={projectRectCenter}
 						cy={50}
 						r={circleScale(project.valuation)}
@@ -85,7 +85,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					x={projectRectCenter}
 					y={projectValutionStartY + projectValutionHeight + 20}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}>
-					<tspan>{`${voteShare * 100}%`}</tspan>
+					<tspan>{`${Math.round(voteShare * 100)}%`}</tspan>
 				</text>
 				{
 					this.state.showHoverEffect &&

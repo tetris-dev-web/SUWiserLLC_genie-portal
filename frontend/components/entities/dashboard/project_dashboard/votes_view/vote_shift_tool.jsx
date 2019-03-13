@@ -17,8 +17,8 @@ const mapStateToProps = (state, ownProps) => {
     votingToken: state.network.votingTokenInstance,
     votingInstance: state.network.votingInstance,
     account: state.network.account,
-    votesNotDedicated: Number(state.entities.votes.freeVotes) || null,
-    votesPerProject: Number(state.entities.votes[ownProps.selectedProject]) || null,
+    votesNotDedicated: Number(state.entities.votes.freeVotes) || 0,
+    votesPerProject: Number(state.entities.votes[ownProps.selectedProject]) || 0,
     projects: state.entities.projects,
     activation: state.network.activationInstance,
     projectLeaderTracker: state.network.projectLeaderTrackerInstance,
@@ -202,10 +202,10 @@ class VoteShiftTool extends React.Component {
     this.offsetX = 0;
     this.totalVotes = votesNotDedicated + votesPerProject;
     this.votesPerPixel = this.totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
-
-    const voteBarAppliedWidth = votesPerProject / this.votesPerPixel;
-    const voteBarFreedUpWidth = votesNotDedicated / this.votesPerPixel;
-
+    console.log("!!", votesPerProject, votesNotDedicated)
+    const voteBarAppliedWidth = votesPerProject === 0 ? 0 : votesPerProject / this.votesPerPixel;
+    const voteBarFreedUpWidth = votesNotDedicated === 0 ? 0 : votesNotDedicated / this.votesPerPixel;
+    console.log("!!!", voteBarAppliedWidth, voteBarFreedUpWidth)
     this.setState({
       showLogButton: false,
       blockchainLoading: false,

@@ -81,7 +81,7 @@ class VotesViewCapitalRaised extends React.Component {
           {capRaisedAmounts}
         </g>
       )}/>;
-
+    console.log("inner", this.props)
     return (
       <g className="votes-view-capital-raised">
         {CapitalBeingRaisedRect}

@@ -4,7 +4,6 @@ const webpack = require("webpack");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -24,6 +23,15 @@ module.exports = {
   mode: 'development',
   module: {
     rules: [
+      // {
+      //   test: /\.(png|jpg|gif)$/,
+      //   use: [
+      //     {
+      //       loader: 'file-loader',
+      //       options: {},
+      //     },
+      //   ],
+      // },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,

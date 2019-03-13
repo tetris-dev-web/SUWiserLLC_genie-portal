@@ -29,7 +29,7 @@ class ProjectFormModal extends React.Component {
           contentLabel="Manage Modal"
           className="modal-container">
           <ProjectForm
-            closeModal={this.closeModal}
+            closeModal={this.handleClick}
             drizzleState={this.props.drizzleState} />
         </Modal>
       </div>

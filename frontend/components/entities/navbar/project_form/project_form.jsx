@@ -161,6 +161,8 @@ class ProjectForm extends React.Component {
           capital_required,
           latitude,
           longitude,
+          valuation,
+          busLink: "https://drive.google.com/open?id=1zxY4cZcdaAMpinQpdZmTb8Zy2i9dh2iZ",
           cashflow: JSON.stringify(this.state.projectData.cashflow),
           actual_cashflow: JSON.stringify(this.state.projectData.actual_cashflow),
           projected_cashflow: JSON.stringify(this.state.projectData.projected_cashflow),
@@ -178,7 +180,8 @@ class ProjectForm extends React.Component {
 
 
     // console.log("project data: ", projectData);
-    this.props.createProject(this.props.crowdsaleInstance, params, this.state.pdf_file, this.props.account).then(() => {
+
+    this.props.createProject(this.props.projectFactoryInstance, params, this.state.pdf_file, this.props.account).then(() => {
       if (this.props.errors.length == 0) {
         this.props.closeModal();
         // window.location.reload();
@@ -594,8 +597,8 @@ class ProjectForm extends React.Component {
               </div>
               <div className="cap-row">
                 <span>valuation</span>
-                <div className="style2">{this.state.projected_cashflow ? "$" + this.calculateNetPresentValue(Object.values(this.state.projected_cashflow).slice(this.state.currentQuarter - 1)) : '$830,000'}</div>
-                <div className="style2">{this.state.accumulatedRevenue ? "$" + this.calculateCapitalRequired() : "$130,000"}</div>
+                <div className="style2">{this.state.projectData.projected_cashflow ? "$" + this.calculateNetPresentValue(Object.values(this.state.projectData.projected_cashflow).slice(this.state.currentQuarter - 1)) : '0'}</div>
+                <div className="style2">{this.state.projectData.capital_required ? "$" + this.state.projectData.capital_required : "0"}</div>
                 <span>capital <br />  required</span>
               </div>
               <div className="coins">

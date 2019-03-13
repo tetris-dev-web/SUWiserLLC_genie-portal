@@ -80,7 +80,7 @@ class UserDropdown extends React.Component {
       let newState = merge({}, this.state);
       const value = Number(event.args.value);
       if (event.args.from === "0x0000000000000000000000000000000000000000") {
-        if (token === inactiveToken) {
+        if (token === inactiveTokenInstance) {
           newState = merge({}, newState, { totalInactive: this.state.totalInactive + value })
         } else {
           newState = merge({}, newState, { totalActive: this.state.totalActive + value })
@@ -88,7 +88,7 @@ class UserDropdown extends React.Component {
       }
 
       if (event.args.to === "0x0000000000000000000000000000000000000000") {
-        if (token === inactiveToken) {
+        if (token === inactiveTokenInstance) {
           newState = merge({}, newState, { totalInactive: this.state.totalInactive - value })
         } else {
           newState = merge({}, newState, { totalActive: this.state.totalActive - value })
@@ -96,7 +96,7 @@ class UserDropdown extends React.Component {
       }
 
       if (event.args.to === account) {
-        if (token === inactiveToken) {
+        if (token === inactiveTokenInstance) {
           newState = merge({}, newState, { accountInactive: this.state.accountInactive + value })
         } else {
           newState = merge({}, newState, { totalAactive: this.state.accountActive + value })
@@ -104,7 +104,7 @@ class UserDropdown extends React.Component {
       }
 
       if (event.args.from === account) {
-        if (token === inactiveToken) {
+        if (token === inactiveTokenInstance) {
           newState = merge({}, newState, { accountInactive: this.state.accountInactive - value })
         } else {
           newState = merge({}, newState, { totalAactive: this.state.accountActive - value })
@@ -180,15 +180,15 @@ class UserDropdown extends React.Component {
       <div>
         <div id="dropdown-container" className="dropdown">
             <div className="user-dropdown-button" id='token-display'>
-              <div className="display-name">
+              <div id='user-text'className="display-name">
                 {this.state.displayName}
               </div>
               <hr/>
               <div className="tokens-cont">
-                <div className="total-tokens">{this.state.accountActive ? this.state.accountActive : 0} active tokens</div>
+                <div id='user-text' className="total-tokens">{this.state.accountActive ? this.state.accountActive : 0} active tokens</div>
               </div>
               <div className="tokens-cont">
-                <div className="total-tokens">{this.state.accountInactive ? this.state.accountInactive : 0} inactive tokens</div>
+                <div id='user-text' className="total-tokens">{this.state.accountInactive ? this.state.accountInactive : 0} inactive tokens</div>
               </div>
             </div>
 
