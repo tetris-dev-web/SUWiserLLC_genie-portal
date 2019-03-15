@@ -18,10 +18,10 @@ class VotesViewPitchedProjectsCircle extends React.Component {
 
   render() {
     const { cx, cy, r, opacity, project, openModal } = this.props;
-    console.log("r",r);
+
     return  (
 
-        <g className="votes-view-project-circle">
+        <g className="votes-view-project-circle" transform={'translate(0, -60)'}>
           <circle
             fill="white"
             cx={cx}

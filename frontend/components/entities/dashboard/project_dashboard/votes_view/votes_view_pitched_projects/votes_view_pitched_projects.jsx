@@ -72,7 +72,7 @@ class VotesViewPitchedProjects extends React.Component {
 		));
 
 		return (
-			<g className="votes-view-pitched-projects" height={"250"}>
+			<g className="votes-view-pitched-projects" height={"250"} transform={'translate(0, 60)'}>
 				{rects}
 			</g>
 		);

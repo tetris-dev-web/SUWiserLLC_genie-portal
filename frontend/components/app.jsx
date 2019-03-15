@@ -38,8 +38,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log("HELLO")
-
     return (
       <div style={{height: "100%"}}>
         <Modal />

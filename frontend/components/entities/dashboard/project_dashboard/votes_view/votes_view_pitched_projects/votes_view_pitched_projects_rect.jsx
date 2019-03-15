@@ -71,7 +71,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					x={projectStartX - .5 * marginWidth}
 					y={projectValutionStartY + projectValutionHeight}
 					fill={fill}
-					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
+					opacity='100%'
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></rect>
 

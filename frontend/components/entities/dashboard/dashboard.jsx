@@ -27,7 +27,7 @@ class Dashboard extends React.Component {
 
   updateTimeAxis(newStartTime, newEndTime) {
     const { startTime, endTime } = this.state;
-    console.log(newStartTime, 'st update')
+    // console.log(newStartTime, 'st update')
     this.setState({
       startTime: newStartTime ? startTime ? Math.min(newStartTime, startTime) : newStartTime : startTime,
       endTime: Math.max(endTime, newEndTime)
@@ -47,7 +47,7 @@ class Dashboard extends React.Component {
   render () {
     const { startTime, endTime } = this.state;
 
-    console.log("stte", this.state)
+    // console.log("stte", this.state)
     if (Object.keys(this.props.projects).length) {
       return (
         <div className="box">

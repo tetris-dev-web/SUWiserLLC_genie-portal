@@ -11,7 +11,7 @@ const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
 
 
 const mapStateToProps = state => {
-  console.log("container", state)
+  // console.log("container", state)
     let capitalDeployed = 0;
     const projectPropsData = Object.keys(state.entities.projects).reduce((propsData, projectTitle) => {
       if (!propsData.deployedProjects) {
@@ -70,6 +70,7 @@ const mapStateToProps = state => {
       if (time < propsData.startTime) {
         propsData.startTime = time;
       }
+
       if (time > propsData.endTime) {
         propsData.endTime = time;
       }
@@ -83,7 +84,7 @@ const mapStateToProps = state => {
       endTime
     } = capitalPropsData;
 
-    console.log("cpd", capitalPropsData)
+    // console.log("cpd", capitalPropsData)
     return {
       crowdsaleInstance: state.network.crowdsaleInstance,
       projectContract: state.network.projectContract,
