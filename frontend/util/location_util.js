@@ -242,15 +242,21 @@ const countryToContinent = {
 };
 
 export const getLocationGraphData = async (projects) => {
+  // console.log("P", projects)
   const { projectCities, cities, continents } = await fetchCitiesAndContinents(projects);
-  console.log("results, yo", projectCities, cities, continents)
+  // console.log("results, yo", projectCities, cities, continents)
   const linksData = [];
+  const center = {fixed: true};
 
   projectCities.forEach((city, idx) => {
-    linksData.push({
-      source: city,
-      target: projects[idx]
-    })
+    for (let i = 0; i < cities.length; i++) {
+      if (city.name == cities[i].name) {
+        linksData.push({
+          source: cities[i],
+          target: projects[idx]
+        })
+      }
+    }
   })
 
   cities.forEach(city => {
@@ -269,18 +275,26 @@ export const getLocationGraphData = async (projects) => {
   continents.forEach(continent => {
     linksData.push(
       {
-        source: {fixed: true},
+        source: center,
         target: continent
       }
     );
   });
 
+  // console.log('ld', linksData)
+  return {
+    data: linksData,
+    continents,
+    cities,
+    center,
+    projects
+  }
   // console.log(linksData)
 }
 
 export const fetchCitiesAndContinents = async projects => {
   const locationsData = [];
-  console.log("projects", projects)
+  // console.log("projects", projects)
   projects.forEach(project => {
     let locationData = latLngToCityContinent(project.lat, project.lng);
     locationsData.push(locationData);
@@ -292,7 +306,7 @@ export const fetchCitiesAndContinents = async projects => {
 
 const formatCitiesAndContinents = async (locationsData) => {
   return Promise.all(locationsData).then((resolvedData, projectIdx) => {
-    console.log("ld", resolvedData)
+    // console.log("rd", resolvedData)
     const seenCities = {};
     const seenContinents = {};
 
@@ -330,11 +344,11 @@ export const latLngToCityContinent = async (lat, lng) => {
    //   }
    // }
   try {
-    const { results } = await Geocode.fromLatLng('5.6037', '-0.1870');
-    console.log('results', results)
+    const { results } = await Geocode.fromLatLng(lat, lng);
+    // console.log('results', results)
 
     return results.reduce((location, el) => {
-      if (el.types.includes("postal_code")) {
+      if (el.types.includes("postal_code") || (el.types.includes("locality")  && el.types.includes('political'))) {
         location.name = el.address_components[1].long_name;
       }
       if (el.types.includes("country")) {

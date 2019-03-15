@@ -16,9 +16,9 @@ class VotesGraph extends React.Component {
     };
 
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
-    this.SVGWidth = (960 - this.margin.left - this.margin.right) * .75;
-    this.SVGHeight = 500 * .75;
-    this.timeWidth = (960 - this.margin.left - this.margin.right) * .75;
+    this.SVGWidth = (960 - this.margin.left - this.margin.right) * .5;
+    this.SVGHeight = 500 * .5;
+    this.timeWidth = (960 - this.margin.left - this.margin.right) * .5;
     this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
   }
 
@@ -32,6 +32,15 @@ class VotesGraph extends React.Component {
     this.watchTokenPurchase();
   }
 
+  componentDidUpdate(prevProps) {
+    const prevLineData = prevProps.lineData;
+    const { lineData, updateTimeAxis, startTime, endTime } = this.props;
+
+    if (!prevLineData && lineData) {
+      updateTimeAxis(startTime, endTime)
+    }
+  }
+
   watchTokenPurchase () {
     this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
       console.log("event", Number(event.args.time), Number(event.args.value))
@@ -41,8 +50,9 @@ class VotesGraph extends React.Component {
   }
 
   createScales(){
-    const { capitalBeingRaised, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax, allProjectsValuationMinMax } = this.props;
-    console.log("re rendering graph")
+    const { capitalBeingRaised, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax, allProjectsValuationMinMax, timeAxis } = this.props;
+    console.log("re redering graph")
+    console.log(startTime, endTime, timeAxis)
     return {
       SVGHeightScale: d3.scaleLinear()
         .range([0, this.SVGHeight])
@@ -51,7 +61,7 @@ class VotesGraph extends React.Component {
         .range([this.SVGHeight, 0])
         .domain([0, capitalTotal + (pitchedProjectsValuationMinMax[1] - capitalBeingRaised) * 2]),
       SVGTimeXScale: d3.scaleLinear()
-        .domain([startTime, endTime])
+        .domain([timeAxis.startTime, timeAxis.endTime])
         .range([0, this.timeWidth]),
       circleScale: d3.scaleLinear()
         .domain(allProjectsValuationMinMax)

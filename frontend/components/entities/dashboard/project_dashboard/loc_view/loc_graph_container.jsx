@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { merge } from 'lodash';
 import LocGraph from './loc_graph';
+import { getLocationGraphData } from '../../../../../util/location_util';
 
 const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
   const arrayOfValues = arrayOfObjects.map(object => object[key]);
@@ -8,6 +9,7 @@ const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
 };
 
 const mapStateToProps = ({ entities }) => {
+  console.log("E", entities)
   const projects = Object.values(entities.projects).map(project => merge({}, project));
 
   // export cities from projects
@@ -20,6 +22,7 @@ const mapStateToProps = ({ entities }) => {
     { name: "Shanghai", continent: "Asia" }
   ];
   const continents = [{ name: "North America" }, { name: "Asia" }, {name: "Europe"}];
+  console.log(continents)
   const center = {fixed: true};
 
   const linksData = projects.map((project, idx) => {
@@ -29,6 +32,7 @@ const mapStateToProps = ({ entities }) => {
 
     return link;
   });
+
   cities.forEach(city => {
     for (let i = 0; i < continents.length; i++) {
       if (city.continent === continents[i].name) {
@@ -50,8 +54,10 @@ const mapStateToProps = ({ entities }) => {
     );
   });
 
-  
+  // const linksData = await getLocationGraphData(this.props.projects)
 
+  console.log('initial links data', linksData)
+  
   return {
     projects,
     cities,

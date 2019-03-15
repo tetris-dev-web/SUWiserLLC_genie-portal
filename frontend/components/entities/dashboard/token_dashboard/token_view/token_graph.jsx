@@ -72,8 +72,8 @@ class TokenGraph extends React.Component {
     };
 
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
-    this.width = 960 - this.margin.left - this.margin.right;
-    this.height = 500 - this.margin.top - this.margin.bottom;
+    this.width = (960 - this.margin.left - this.margin.right);
+    this.height = (500 - this.margin.top - this.margin.bottom);
     this.watchTokenTransfer = this.watchTokenTransfer.bind(this);
   }
 
@@ -83,9 +83,20 @@ class TokenGraph extends React.Component {
     this.watchTokenTransfer(this.props.inactiveToken, 'inactive');
     this.watchTokenTransfer(this.props.activeToken, 'active');
     this.watchReceiveDividends();
+
     setTimeout(() => {
       this.setState({ componentVisible: "" });
     }, this.props.wait);
+  }
+
+  componentDidUpdate (prevProps) {
+    const prevData = prevProps.data;
+    const { data, updateTimeAxis } = this.props;
+
+    if (!prevData && data) {
+      console.log(data[0].date, 'st proj')
+      updateTimeAxis(data[0].date, data[data.length - 1].date);
+    }
   }
 
   toggleTimeAxis(boolean) {
@@ -96,26 +107,34 @@ class TokenGraph extends React.Component {
 
   watchTokenTransfer (token, type) {
     token.Transfer().watch((error, event) => {
-      this.props.receiveTokenTransfer({data: event, type});
+      this.props.receiveTokenTransfer({data: event, type}).then(() => {
+        updateTimeAxis(null, event.blockNumber);
+      });
     })
   }
 
   watchReceiveDividends () {
-    const { dividends } = this.props;
+    const { dividends, updateTimeAxis } = this.props;
     dividends.ReceiveDividends().watch((error, event) => {
-      this.props.receiveReceiveDividendsLog(event);
+      this.props.receiveReceiveDividendsLog(event).then(() => {
+        updateTimeAxis(null, event.blockNumber);
+      });
     })
   }
 
   render() {
-    const { data } = this.props;
-
+    const { data, timeAxis } = this.props;
+    console.log("data", data)
     if (data) {
       const { showTimeAxis, componentVisible } = this.state;
+      // console.log(data)
+      const timeScale = d3.scaleTime()
+      .domain(new Date(2019, 3, 15), new Date(2019, 4, 15))
+      .range([0, this.width])
 
       const xScale = d3.scaleTime()
       .range([0, this.width])
-      .domain([data[0].date, data[data.length - 1].date]);
+      .domain([timeAxis.startTime, timeAxis.endTime]);
 
       const yScaleTokens = d3.scaleLinear()
       .range([this.height, 0])
@@ -159,7 +178,6 @@ class TokenGraph extends React.Component {
           <svg className="token-svg" viewBox="0 0 960 500" preserveAspectRatio="xMinYMin meet">
             {TokenGraphTotalTokenPath}
             {TokenGraphActiveTokenPath}
-            {showTimeAxis && TokenGraphTimeAxis}
             <TokenGraphOverlay
               data={data}
               width={this.width}
@@ -181,6 +199,7 @@ class TokenGraph extends React.Component {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TokenGraph);
 
+// {showTimeAxis && TokenGraphTimeAxis}
 
 
 // return <Loader/>;//this will be replcced with a loader

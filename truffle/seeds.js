@@ -111,8 +111,8 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       'Kyle\'s Kale Farm',
       300,
       700,
-      '40.7128',
-      '74.0060',
+      '41.9028',
+      '12.4964',
       6
     );
   }

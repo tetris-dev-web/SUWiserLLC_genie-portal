@@ -41,7 +41,7 @@ class VotesViewCapitalRaised extends React.Component {
     const Path = <VotesViewCapitalRaisedPath
       d={lineScale(lineData)}
       opacity={selectedProject ? "0.2" : "1"}
-      transform={`translate(${3 * this.props.margin.left}, 0)`}/>;
+      transform={`translate(263, 0)`}/>;
 
     const heightOfCapitalBeingRaisedRect = SVGHeightScale(capitalBeingRaised);
     const yOfCapitalBeingRaisedRect = SVGYScale(capitalTotal);

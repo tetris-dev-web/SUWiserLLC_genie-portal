@@ -12,41 +12,86 @@ const lightBlue = "#5EABAA";
 class LocGraph extends React.Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      projectCities: null,
+      cities: null,
+      continents: null,
+      data: null,
+      center: null,
+      projects: null
+    }
     this.width = 960;
     this.height = 700;
     this.cityNodeSide = 15;
     this.continentNodeSide = 8;
-    this.simulation = this.configureSimulation(this.props);
+    // this.simulation = this.configureSimulation.bind(this, this.props)();
   }
 
-  componentDidMount() {
+  async componentDidMount () {
+
+    const {
+        projects,
+        cities,
+        continents,
+        data,
+        center
+      } = await getLocationGraphData(this.props.projects);
+      console.log('p', projects)
+      console.log('cit', cities)
+      console.log('con', continents)
+      console.log('d', data)
+      console.log('cen', center)
+
+
+    // this.addDragHandlers();
+    // this.simulation.on("tick", () => {
+    //   this.forceUpdate();
+    //   // bypass shouldComponentUpdate
+    // });
+    this.setState({
+        projects,
+        cities,
+        continents,
+        data,
+        center
+      })
+  }
+
+  // UNSAFE_componentWillReceiveProps(nextProps) {
+  //   const { projects, cities, continents, linksData, center } = nextProps;
+  //
+  //   this.simulation.nodes(projects.concat(continents).concat(cities).concat([center]))
+  //     .force("link", d3.forceLink(linksData).distance(20));
+  //   this.simulation.alpha(1).restart();
+  // }
+
+  componentDidUpdate(prevProps, prevState) {
     this.addDragHandlers();
-    this.simulation.on("tick", () => {
-      this.forceUpdate();
-      // bypass shouldComponentUpdate
-    });
-    getLocationGraphData(this.props.projects).then(data => {
-      console.log("data",data)
-      console.log('props', this.props)
-    });
+    const { data, projects, cities, continents, center } = this.state;
+    // const { projects, cities, continents, center } = this.props;
+    if (!prevState.data && data) {
+      this.simulation = this.configureSimulation.bind(this, this.props)();
+      this.addDragHandlers();
+      this.simulation.on("tick", () => {
+        this.forceUpdate();
+        // bypass shouldComponentUpdate
+      });
+    }
 
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    const { projects, cities, continents, linksData, center } = nextProps;
-
-    this.simulation.nodes(projects.concat(continents).concat(cities).concat([center]))
-      .force("link", d3.forceLink(linksData).distance(20));
-    this.simulation.alpha(1).restart();
-  }
-
-  componentDidUpdate() {
-    this.addDragHandlers();
+    if (
+      prevState.projects !== projects ||
+      prevState.cities !== cities ||
+      prevState.data !== data
+    ) {
+      this.simulation.nodes(projects.concat(continents).concat(cities).concat([center]))
+        .force("link", d3.forceLink(data).distance(20));
+      this.simulation.alpha(1).restart();
+    }
   }
 
   configureSimulation(props) {
-    const { projects, cities, continents, linksData, center } = props;
+    const { data, projects, cities, continents, linksData, center } = this.state;
+    // const { projects, cities, continents, center } = props;
 
     center.fx = this.width / 2;
     center.fy = this.height / 2;
@@ -73,7 +118,7 @@ class LocGraph extends React.Component {
           return 50;
         }
       }))
-      .force("link", d3.forceLink(linksData).distance(20));
+      .force("link", d3.forceLink(data).distance(20));
   }
 
   createScales() {
@@ -89,7 +134,7 @@ class LocGraph extends React.Component {
   }
 
   addDragHandlers() {
-    const { projects, cities, continents } = this.props;
+    const { projects, cities, continents } = this.state;
 
     const dragStart = (d) => {
       if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
@@ -119,61 +164,67 @@ class LocGraph extends React.Component {
   }
 
   render() {
-    const { projects, cities, continents, linksData } = this.props;
-    const { outterCircleScale } = this.createScales();
-    const links = linksData.map((link, idx) => (
-      <line key={idx}
-        className={`loc-svg-link ${link.source.fixed ? "invisible" : ""}`}
-        x1={link.source.x} x2={link.target.x}
-        y1={link.source.y} y2={link.target.y} ></line>
-    ));
+    const { data, projects, cities, continents } = this.state;
+    if (data) {
+      // const { projects, cities, continents, linksData } = this.props;
+      const { outterCircleScale } = this.createScales();
+      const links = data.map((link, idx) => (
+        <line key={idx}
+          className={`loc-svg-link ${link.source.fixed ? "invisible" : ""}`}
+          x1={link.source.x} x2={link.target.x}
+          y1={link.source.y} y2={link.target.y} ></line>
+      ));
 
-    const cityNodes = cities.map((city, idx) => (
-      <LocGraphRect key={idx}
-        className="loc-svg-city-node"
-        transform={`translate(${city.x - .5 * this.cityNodeSide}, ${city.y - .5 * this.cityNodeSide})`}
-        text={city.name} />
-    ));
+      const cityNodes = cities.map((city, idx) => (
+        <LocGraphRect key={idx}
+          className="loc-svg-city-node"
+          transform={`translate(${city.x - .5 * this.cityNodeSide}, ${city.y - .5 * this.cityNodeSide})`}
+          text={city.name} />
+      ));
 
-    const continentImages = {
-      "North America": NorthAmerica,
-      "South America": NorthAmerica,
-      "Africa": NorthAmerica,
-      "Europe": NorthAmerica,
-      "Asia": NorthAmerica
-    }
-  
-    const continentNodes = continents.map((continent, idx) => {
+      const continentImages = {
+        "North America": NorthAmerica,
+        "South America": NorthAmerica,
+        "Africa": NorthAmerica,
+        "Europe": NorthAmerica,
+        "Asia": NorthAmerica
+      }
+
+      const continentNodes = continents.map((continent, idx) => {
+        return (
+          <g
+            key={idx}
+            transform={`translate(${continent.x - .5 * this.continentNodeSide - 30}, ${continent.y - .5 * this.continentNodeSide - 30})`}>
+            <image className="loc-svg-continent-node" href={continentImages[continent.name]}/>
+          </g>
+        );
+      })
+
+      const projectNodes = projects.map((project, idx) => (
+        <LocGraphCircle key={idx}
+          className="loc-svg-project-node"
+          transform={`translate(${project.x}, ${project.y})`}
+          project={project}
+          r={outterCircleScale(project.valuation)}
+          fill={project.activationTime ? lightBlue : rosyBrown} />
+      ));
+
       return (
-        <g
-          key={idx}
-          transform={`translate(${continent.x - .5 * this.continentNodeSide - 30}, ${continent.y - .5 * this.continentNodeSide - 30})`}>
-          <image className="loc-svg-continent-node" href={continentImages[continent.name]}/>
-        </g>
+        <div className="loc-graph">
+          <svg className="loc-svg"
+            preserveAspectRatio="xMinYMin meet"
+            viewBox="0 0 960 700">
+            <g>{links}</g>
+            <g>{cityNodes}</g>
+            <g>{continentNodes}</g>
+            <g>{projectNodes}</g>
+          </svg>
+        </div>
       );
-    })
 
-    const projectNodes = projects.map((project, idx) => (
-      <LocGraphCircle key={idx}
-        className="loc-svg-project-node"
-        transform={`translate(${project.x}, ${project.y})`}
-        project={project}
-        r={outterCircleScale(project.valuation)}
-        fill={project.activationTime ? lightBlue : rosyBrown} />
-    ));
-
-    return (
-      <div className="loc-graph">
-        <svg className="loc-svg"
-          preserveAspectRatio="xMinYMin meet"
-          viewBox="0 0 960 700">
-          <g>{links}</g>
-          <g>{cityNodes}</g>
-          <g>{continentNodes}</g>
-          <g>{projectNodes}</g>
-        </svg>
-      </div>
-    );
+    } else {
+      return <div></div>
+    }
   }
 }
 

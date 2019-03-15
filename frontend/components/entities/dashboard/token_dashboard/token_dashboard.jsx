@@ -18,13 +18,16 @@ class TokenDashboard extends React.Component {
   }
 
   toggleView(currentViewId) {
-    this.setState({ currentViewId: currentViewId === this.state.currentViewId ? null : currentViewId });
+    const { trackGraph } = this.props;
+    const newViewId = currentViewId === this.state.currentViewId ? null : currentViewId;
+    this.setState({ currentViewId: newViewId });
+    trackGraph('tokenGraph', newViewId);
   }
 
   render() {
     let currentGraph;
     const { currentViewId } = this.state;
-    const { web3, account } = this.props;
+    const { web3, account, updateTimeAxis, trackGraph, timeAxis } = this.props;
     console.log(currentViewId, web3, account)
     switch (currentViewId) {
       case null:
@@ -33,8 +36,10 @@ class TokenDashboard extends React.Component {
       case 0:
       case 1:
         currentGraph = <TokenGraph
+          timeAxis={timeAxis}
           currentUser={this.props.currentUser}
           currentViewType={this.viewTypes[currentViewId]}
+          updateTimeAxis={updateTimeAxis}
           wait={500}/>;
         break;
       case 2:

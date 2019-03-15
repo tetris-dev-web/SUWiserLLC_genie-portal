@@ -58,10 +58,11 @@ class VotesViewPitchedProjects extends React.Component {
 	}
 
 	render() {
-		const { selectedProject, toggleSelectedProject, voteShiftTool, SVGYScale, circleScale } = this.props;
+		const { selectedProject, toggleSelectedProject, voteShiftTool, SVGYScale, circleScale, margin } = this.props;
 
 		const rects = this.processProjectData().map((project, idx) => (
 			<VotesViewPitchedProjectsRect key={idx}
+				transform={`translate(263, 0)`}
 				project={project}
 				SVGYScale={SVGYScale}
 				circleScale={circleScale}
@@ -71,7 +72,7 @@ class VotesViewPitchedProjects extends React.Component {
 		));
 
 		return (
-			<g className="votes-view-pitched-projects">
+			<g className="votes-view-pitched-projects" height={"250"}>
 				{rects}
 			</g>
 		);

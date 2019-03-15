@@ -21,7 +21,11 @@ class ProjectDashboard extends React.Component {
   }
 
   toggleView (currentViewId) {
-    this.setState({currentViewId: currentViewId === this.state.currentViewId ? null : currentViewId});
+    const { trackGraph } = this.props;
+    const newViewId = currentViewId === this.state.currentViewId ? null : currentViewId;
+    trackGraph('projectGraph', newViewId === 0);
+    this.setState({currentViewId: newViewId});
+
     if (currentViewId === this.state.currentViewId) {
       this.graphContainer.style.minHeight = "0";
     } else {
@@ -62,6 +66,8 @@ class ProjectDashboard extends React.Component {
       // break;
       case 0:
         currentGraph = <VotesGraphContainer
+          timeAxis={this.props.timeAxis}
+          updateTimeAxis={this.props.updateTimeAxis}
           wait={500} />;
         break;
       case 1:
