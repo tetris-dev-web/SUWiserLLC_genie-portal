@@ -38,8 +38,10 @@ export const getProjectData = async (projectFactoryInstance, projectContract, id
 };
 
 export const integrateProjectsData = async (projectFactoryInstance, projectContract) => {
-
+  console.log('about to get data', projectFactoryInstance)
+  console.log(projectContract)
   const totalProjectCount = await projectFactoryInstance.totalProjectCount();
+  console.log('p count', Number(totalProjectCount))
   const projectsData = [];
 
   for (let i = 1; i <= totalProjectCount.toNumber(); i++) {
@@ -48,6 +50,7 @@ export const integrateProjectsData = async (projectFactoryInstance, projectContr
   }
 
   return Promise.all(projectsData).then(resolvedProjectsData => {
+    console.log('got the data', resolvedProjectsData)
     return resolvedProjectsData.reduce((projects, project) => {
       projects[project.id] = project;
       return projects;

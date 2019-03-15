@@ -74,6 +74,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       '-74.0060',
       1
      );
+     console.log('p1', projAddr1)
     // console.log(Project.at(projAddr1))
     projAddr2 = await createProject(
       'Matt\'s Mansion',
@@ -83,6 +84,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       '-74.0060',
       2
     );
+    console.log('p2', projAddr2)
     projAddr3 = await createProject(
       'Steven\'s Skyscraper',
       400,
@@ -91,6 +93,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       '12.4964',
       3
     );
+    console.log('p3', projAddr3)
     projAddr4 = await createProject(
       'Liam\'s Lounge',
       600,
@@ -99,6 +102,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       '121.4737',
       4
     );
+    console.log('p4', projAddr4)
     projAddr5 = await createProject(
       'Ryan\'s Rooftop',
       500,
@@ -107,6 +111,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       '-0.1870',
       5
     );
+    console.log('p5', projAddr5)
     projAddr6 = await createProject(
       'Kyle\'s Kale Farm',
       300,
@@ -115,6 +120,7 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
       '12.4964',
       6
     );
+    console.log('p6', projAddr6)
   }
 
   const createTokenPurchases = async () => {

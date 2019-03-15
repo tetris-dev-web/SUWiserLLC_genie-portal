@@ -22,6 +22,7 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
+    console.log('yo')
     this.props.fetchProjectsAndCapitalRaised(this.props.projectFactoryInstance,this.props.projectContract,this.props.crowdsaleInstance);
   }
 
