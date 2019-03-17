@@ -5,6 +5,21 @@ const decodeJWT = require('did-jwt').decodeJWT
 const { Credentials } = require('uport-credentials')
 const transports = require('uport-transports').transport
 const message = require('uport-transports').message.util
+const Web3 = require('web3');
+const web3 = new Web3("https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY);
+import TruffleContract from 'truffle-contract';
+import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';
+import SeedableCrowdsale from '../truffle/build/contracts/SeedableCrowdsale.json';
+import InactiveToken from '../truffle/build/contracts/InactiveToken.json';
+import ActiveToken from '../truffle/build/contracts/ActiveToken.json';
+import VotingToken from '../truffle/build/contracts/VotingToken.json';
+import Project from '../truffle/build/contracts/Project.json';
+import ProjectFactory from '../truffle/build/contracts/ProjectFactory.json'
+import Voting from '../truffle/build/contracts/Voting.json';
+import SeedableVoting from '../truffle/build/contracts/SeedableVoting.json';
+import Activation from '../truffle/build/contracts/Activation.json';
+import ProjectLeaderTracker from '../truffle/build/contracts/ProjectLeaderTracker.json';
+import Dividends from '../truffle/build/contracts/Dividends.json';
 
 let endpoint = ''
 const app = express();
@@ -15,22 +30,25 @@ const credentials = new Credentials({
   appName: 'Genie Portal', did, privateKey
 })
 
-app.get('/', (req, res) => {
-  credentials.createDisclosureRequest({
-    requested: ['name', 'email'],
-    callbackUrl: endpoint + '/callback'
-  }).then(requestToken => {
-    console.log(decodeJWT(requestToken))
+// app.get('/', (req, res) => {
+//   credentials.createDisclosureRequest({
+//     requested: ['name', 'email'],
+//     callbackUrl: endpoint + '/callback'
+//   }).then(requestToken => {
+//     console.log(decodeJWT(requestToken))
+//
+//     // const uri = message.paramsToQueryString(message.messageToURI(requestToken), {callback_type: 'post'})
+//     // const qr =  transports.ui.getImageDataURI(uri)
+//     const transportQR = transports.qr.send()
+//     transportQR(requestToken);
+//     // res.send(transportQR)
+//     // res.send(qr)
+//   })
+// })
 
-    // const uri = message.paramsToQueryString(message.messageToURI(requestToken), {callback_type: 'post'})
-    // const qr =  transports.ui.getImageDataURI(uri)
-    const transportQR = transports.qr.send()
-    transportQR(requestToken);
-    // res.send(transportQR)
-    // res.send(qr)
-  })
+app.get('/api/sup', (req, res) => {
+  res.send({"message": "it works"});
 })
-
 // app.post('/callback', (req, res) => {
 //   const jwt = req.body.access_token
 //   credentials.authenticateDisclosureResponse(jwt).then(creds => {

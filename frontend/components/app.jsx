@@ -29,7 +29,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.set
+    fetch(`/api/sup`)
+      .then(response => response.json())
+      .then(formattedResponse => {
+        console.log("RESPONSE", formattedResponse)
+      });
+
     this.props.web3.currentProvider.publicConfigStore.on('update', network => {
       this.props.provider.eth.getCoinbase((err, account) => {
         this.props.updateNetwork({ account: account ? account : false })

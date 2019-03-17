@@ -45,7 +45,7 @@ class VotesGraph extends React.Component {
   watchTokenPurchase () {
     this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
       // console.log("event", Number(event.args.time), Number(event.args.value))
-
+      console.log(event)
       this.props.receiveTokenPurchase({time: event.blockNumber, value: Number(event.args.value)});
     })
   }
