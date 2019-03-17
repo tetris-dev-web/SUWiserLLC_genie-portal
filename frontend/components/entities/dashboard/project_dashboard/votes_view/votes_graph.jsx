@@ -17,7 +17,7 @@ class VotesGraph extends React.Component {
 
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
     this.SVGWidth = (960 - this.margin.left - this.margin.right) * .5;
-    this.SVGHeight = 367 * .5;
+    this.SVGHeight = 600 * .5;
     this.timeWidth = (960 - this.margin.left - this.margin.right) * .5;
     this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
   }
@@ -37,7 +37,7 @@ class VotesGraph extends React.Component {
     const prevLineData = prevProps.lineData;
     const { lineData, updateTimeAxis, startTime, endTime } = this.props;
 
-    if (!prevLineData && lineData) {
+    if (prevLineData !== lineData) {
       updateTimeAxis(startTime, endTime)
     }
   }
@@ -51,21 +51,16 @@ class VotesGraph extends React.Component {
   }
 
   createScales(){
-    const { capitalBeingRaised, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax, allProjectsValuationMinMax, timeAxis } = this.props;
-    // console.log("creating scales")
-    // console.log(this.props)
-    // console.log('mm', pitchedProjectsValuationMinMax)
-    // console.log(startTime, endTime, timeAxis)
-    console.log(this.props)
-    console.log('svg h', this.SVGHeight)
-    console.log('max domain', capitalTotal + (pitchedProjectsValuationMinMax[1] - capitalBeingRaised) * 2)
+    const { capitalBeingRaised, capitalDeployed, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax, allProjectsValuationMinMax, timeAxis } = this.props;
+    console.log('TA', timeAxis)
+
     return {
       SVGHeightScale: d3.scaleLinear()
         .range([0, this.SVGHeight])
-        .domain([0, capitalTotal]),
+        .domain([0, capitalDeployed + Math.max(pitchedProjectsValuationMinMax[1], capitalBeingRaised)]),
       SVGYScale: d3.scaleLinear()
         .range([this.SVGHeight, 0])
-        .domain([0, capitalTotal]),
+        .domain([0, capitalDeployed + Math.max(pitchedProjectsValuationMinMax[1], capitalBeingRaised)]),
       SVGTimeXScale: d3.scaleLinear()
         .domain([timeAxis.startTime, timeAxis.endTime])
         .range([0, this.timeWidth]),
@@ -83,7 +78,7 @@ class VotesGraph extends React.Component {
     const { selectedProject, componentVisible } = this.state;
     // console.log("props", this.props)
     //   console.log("selectedProject", selectedProject)
-    console.log('rendering again')
+    console.log('rendering again', this.props)
     return (
       <div className={`votes-graph ${componentVisible}`}>
         <div className="vote-shift-tool-container"
@@ -95,7 +90,7 @@ class VotesGraph extends React.Component {
         </div>
         <svg className="votes-view-svg"
           preserveAspectRatio="xMinYMin meet"
-          viewBox="0 0 960 240"
+          viewBox="0 0 960 300"
           >
           <VotesViewCapitalRaised
             {...this.props}

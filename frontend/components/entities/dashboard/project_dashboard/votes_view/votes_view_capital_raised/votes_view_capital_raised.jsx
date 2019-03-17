@@ -9,14 +9,20 @@ import colors from  "../../../../../../util/_variables.scss";
 class VotesViewCapitalRaised extends React.Component {
 
   render() {
-    const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, capitalTotal, lineData, deployedProjects, selectedProject } = this.props;
+    const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, capitalTotal, lineData, deployedProjects, selectedProject, SVGWidth, timeAxis } = this.props;
+    // console.log(this.props, 'props')
+    const Lines = deployedProjects.map((project, idx) => {
+      console.log(project, 'PROJ')
+      // -Math.abs(.5 * SVGTimeXScale(SVGWidth))
+      return (
+        <VotesViewCapitalRaisedLine key={idx}
+          x1={-Math.abs(SVGTimeXScale((timeAxis.startTime + timeAxis.endTime) / 2) / .8)} y1={SVGYScale(project.capital)}
+          x2={SVGTimeXScale(project.activationTime)} y2={SVGYScale(project.capital)}
+          opacity={selectedProject ? "0.2" : "1"}
+          transform={`translate(263, 0)`}/>
+      )
+    });
 
-    const Lines = deployedProjects.map((project, idx) => (
-      <VotesViewCapitalRaisedLine key={idx}
-        x1="0" y1={SVGYScale(project.capital)}
-        x2={SVGTimeXScale(project.activationTime)} y2={SVGYScale(project.capital)}
-        opacity={selectedProject ? "0.2" : "1"} />
-    ));
 
     const Circles = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedCircle key={idx}
@@ -27,7 +33,9 @@ class VotesViewCapitalRaised extends React.Component {
         x={SVGTimeXScale(project.time)}
         y={SVGYScale(project.capital) + circleScale(project.valuation) + 20}
         project={project}
-        opacity={selectedProject ? "0.2" : "1"} />
+        opacity={selectedProject ? "0.2" : "1"}
+        transform={`translate(263, 0)`}
+        />
     ));
 
     const lineScale = d3.line()
@@ -37,6 +45,8 @@ class VotesViewCapitalRaised extends React.Component {
 
         return result;
       })
+
+      console.log('ld', lineData)
     const Path = <VotesViewCapitalRaisedPath
       d={lineScale(lineData)}
       opacity={selectedProject ? "0.2" : "1"}
@@ -93,7 +103,7 @@ class VotesViewCapitalRaised extends React.Component {
       )}/>;
 
     return (
-      <g className="votes-view-capital-raised" transform={'translate(0, 60)'}>
+      <g className="votes-view-capital-raised" transform={'translate(0, 0)'}>
         {CapitalBeingRaisedRect}
         {CapitalRaisedPrevRect}
         {Lines}

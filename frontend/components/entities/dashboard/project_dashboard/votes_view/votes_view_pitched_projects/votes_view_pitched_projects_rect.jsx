@@ -65,25 +65,8 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></rect>
-				<rect
-					width={projectWidth + marginWidth}
-					height={this.votesBreakdownRectHeight}
-					x={projectStartX - .5 * marginWidth}
-					y={projectValutionStartY + projectValutionHeight}
-					fill={fill}
-					opacity='100%'
-					onMouseOver={this.handleHover(true)}
-					onMouseLeave={this.handleHover(false)}></rect>
 
 
-					<g onClick={e => e.stopPropagation()}>
-						<VotesViewPitchedProjectsCircle
-							cx={projectRectCenter}
-							cy={50}
-							r={circleScale(project.valuation)}
-							opacity={selectedProject ? "0.2" : "1"}
-							project={project} />
-					</g>
 
 
 
@@ -97,8 +80,16 @@ class VotesViewPitchedProjectsRect extends React.Component {
 				{
 					this.state.showHoverEffect &&
 					<g className="votes-view-onhover-group">
+						<g onClick={e => e.stopPropagation()}>
+							<VotesViewPitchedProjectsCircle
+								cx={projectRectCenter}
+								cy={50}
+								r={circleScale(project.valuation)}
+								opacity={selectedProject ? "0.2" : "1"}
+								project={project} />
+						</g>
 						<g className="votes-view-onhover-text-group">
-							<text className="votes-view-project-title" x={projectRectCenter} y="30" fill="#aa7a60">
+							<text className="votes-view-project-title" x={projectRectCenter} y="90" fill="#aa7a60">
 								<tspan>{title}</tspan>
 							</text>
 							<text x={projectRectCenter} y={projectValutionStartY - 25} fill={fill}>
@@ -117,11 +108,6 @@ class VotesViewPitchedProjectsRect extends React.Component {
 						<g className="votes-view-onhover-project-outlines-group">
 							<rect x={projectStartX} y={projectValutionStartY} width={projectWidth} height={this.outlineWidth}></rect>
 							<rect x={projectStartX + projectWidth - this.outlineWidth} y={projectValutionStartY} width={this.outlineWidth} height={projectValutionHeight}></rect>
-							<rect x={projectStartX + projectWidth - this.outlineWidth} y={projectValutionStartY + projectValutionHeight} width={.5 * marginWidth + this.outlineWidth} height={this.outlineWidth}></rect>
-							<rect x={projectStartX + projectWidth + marginWidth - this.outlineWidth * 3.5} y={projectValutionStartY + projectValutionHeight} width={this.outlineWidth} height={this.votesBreakdownRectHeight}></rect>
-							<rect x={projectStartX - .5 * marginWidth} y={projectValutionStartY + projectValutionHeight + this.votesBreakdownRectHeight - this.outlineWidth} width={projectWidth + marginWidth} height={this.outlineWidth}></rect>
-							<rect x={projectStartX - .5 * marginWidth} y={projectValutionStartY + projectValutionHeight} width={this.outlineWidth} height={this.votesBreakdownRectHeight}></rect>
-							<rect x={projectStartX - .5 * marginWidth} y={projectValutionStartY + projectValutionHeight} width={.5 * marginWidth + this.outlineWidth} height={this.outlineWidth}></rect>
 							<rect x={projectStartX} y={projectValutionStartY} width={this.outlineWidth} height={projectValutionHeight}></rect>
 						</g>
 					</g>
@@ -131,4 +117,16 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	}
 }
 
+
 export default VotesViewPitchedProjectsRect;
+
+
+// <rect
+// 	width={projectWidth + marginWidth}
+// 	height={this.votesBreakdownRectHeight}
+// 	x={projectStartX - .5 * marginWidth}
+// 	y={projectValutionStartY + projectValutionHeight}
+// 	fill={fill}
+// 	opacity='100%'
+// 	onMouseOver={this.handleHover(true)}
+// 	onMouseLeave={this.handleHover(false)}></rect>

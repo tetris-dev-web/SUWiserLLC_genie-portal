@@ -49,19 +49,17 @@ const mapStateToProps = state => {
       if (!propsData.lineData) {
         propsData.lineData = [];
         propsData.capitalTotal = 0;
-        propsData.startTime = time;
+        propsData.startTime = time - 1;
         propsData.endTime = time;
-      }
-
-      const capital = state.entities.capitalHistory[time];
-      propsData.capitalTotal += capital;
-
-      if (!propsData.lineData.length) {
         propsData.lineData.push({
           date: Number(time) - 1,
           capital: 0
         })
       }
+
+      const capital = state.entities.capitalHistory[time];
+      propsData.capitalTotal += capital;
+
       propsData.lineData.push({
         date: Number(time),
         capital: propsData.capitalTotal
@@ -95,9 +93,10 @@ const mapStateToProps = state => {
       allProjectsValuationMinMax: getArrayOfObjectsMinMax(Object.values(state.entities.projects), "valuation"),
       lineData,
       capitalTotal,
+      capitalDeployed,
       capitalBeingRaised: capitalTotal - capitalDeployed,
-      startTime: startTime - 1,
-      endTime
+      startTime: Math.min(startTime, deployedProjects[0].activationTime),
+      endTime: Math.max(endTime, deployedProjects[deployedProjects.length - 1].activationTime)
     };
   // }
 

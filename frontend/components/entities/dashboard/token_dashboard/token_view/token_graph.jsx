@@ -73,7 +73,7 @@ class TokenGraph extends React.Component {
 
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
     this.width = (960 - this.margin.left - this.margin.right);
-    this.height = (500 - this.margin.top - this.margin.bottom);
+    this.height = (400 - this.margin.top - this.margin.bottom);
     this.watchTokenTransfer = this.watchTokenTransfer.bind(this);
   }
 
@@ -93,8 +93,9 @@ class TokenGraph extends React.Component {
     const prevData = prevProps.data;
     const { data, updateTimeAxis } = this.props;
 
-    if (!prevData && data) {
-      console.log(data[0].date, 'st proj')
+    if (!prevData && data || (data && prevData.keys.length < data.keys.length)) {
+      console.log(prevData, data)
+
       updateTimeAxis(data[0].date, data[data.length - 1].date);
     }
   }
@@ -175,7 +176,7 @@ class TokenGraph extends React.Component {
         <div className={`token-graph ${componentVisible}`}
           onMouseEnter={this.toggleTimeAxis(true)}
           onMouseLeave={this.toggleTimeAxis(false)}>
-          <svg className="token-svg" viewBox="0 0 960 500" preserveAspectRatio="xMinYMin meet">
+          <svg className="token-svg" viewBox="0 0 960 415" preserveAspectRatio="xMinYMin meet">
             {TokenGraphTotalTokenPath}
             {TokenGraphActiveTokenPath}
             <TokenGraphOverlay

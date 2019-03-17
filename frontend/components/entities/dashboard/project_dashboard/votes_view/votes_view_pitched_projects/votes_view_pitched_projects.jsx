@@ -72,11 +72,10 @@ class VotesViewPitchedProjects extends React.Component {
 		));
 
 		return (
-			<g className="votes-view-pitched-projects" height={"250"} transform={'translate(0, 60)'}>
+			<g className="votes-view-pitched-projects" transform={'translate(0, 0)'}>
 				{rects}
 			</g>
 		);
 	}
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(VotesViewPitchedProjects);

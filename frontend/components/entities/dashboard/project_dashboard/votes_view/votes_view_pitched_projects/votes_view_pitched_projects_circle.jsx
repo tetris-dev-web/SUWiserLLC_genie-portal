@@ -21,12 +21,13 @@ class VotesViewPitchedProjectsCircle extends React.Component {
 
     return  (
 
-        <g className="votes-view-project-circle" transform={'translate(0, -60)'}>
+        <g className="votes-view-project-circle" transform={'translate(-45, 35)'}>
           <circle
             fill="white"
             cx={cx}
             cy={cy}
             r={this.state.r}
+            y="90"
             stroke="#61aba9"
             strokeWidth=".7px"
             opacity={opacity}

@@ -17,7 +17,7 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 	}
 
 	render() {
-		const { cx, cy, r, x, y, project, opacity } = this.props;
+		const { cx, cy, r, x, y, project, opacity, transform } = this.props;
 
 		return (
 			<React.Fragment>
@@ -27,6 +27,7 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 					cy={cy}
 					r={r}
 					opacity={opacity}
+					transform={transform}
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></circle>
 				{
@@ -42,4 +43,3 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 }
 
 export default VotesViewCapitalRaisedCircle;
-

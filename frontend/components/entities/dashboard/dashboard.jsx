@@ -58,7 +58,7 @@ class Dashboard extends React.Component {
         </div>
       );
     }
-    return <Loader/>;
+    return <div className="box"><Loader/></div>;
   }
 };
 
