@@ -7,19 +7,19 @@ const transports = require('uport-transports').transport
 const message = require('uport-transports').message.util
 const Web3 = require('web3');
 const web3 = new Web3("https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY);
-import TruffleContract from 'truffle-contract';
-import GNITokenCrowdsale from '../truffle/build/contracts/GNITokenCrowdsale.json';
-import SeedableCrowdsale from '../truffle/build/contracts/SeedableCrowdsale.json';
-import InactiveToken from '../truffle/build/contracts/InactiveToken.json';
-import ActiveToken from '../truffle/build/contracts/ActiveToken.json';
-import VotingToken from '../truffle/build/contracts/VotingToken.json';
-import Project from '../truffle/build/contracts/Project.json';
-import ProjectFactory from '../truffle/build/contracts/ProjectFactory.json'
-import Voting from '../truffle/build/contracts/Voting.json';
-import SeedableVoting from '../truffle/build/contracts/SeedableVoting.json';
-import Activation from '../truffle/build/contracts/Activation.json';
-import ProjectLeaderTracker from '../truffle/build/contracts/ProjectLeaderTracker.json';
-import Dividends from '../truffle/build/contracts/Dividends.json';
+const TruffleContract = require('truffle-contract');
+const GNITokenCrowdsale = require('../truffle/build/contracts/GNITokenCrowdsale.json');
+const SeedableCrowdsale = require('../truffle/build/contracts/SeedableCrowdsale.json');
+const InactiveToken = require('../truffle/build/contracts/InactiveToken.json');
+const ActiveToken = require('../truffle/build/contracts/ActiveToken.json');
+const VotingToken = require('../truffle/build/contracts/VotingToken.json');
+const Project = require('../truffle/build/contracts/Project.json');
+const ProjectFactory = require('../truffle/build/contracts/ProjectFactory.json');
+const Voting = require('../truffle/build/contracts/Voting.json');
+const SeedableVoting = require('../truffle/build/contracts/SeedableVoting.json');
+const Activation = require('../truffle/build/contracts/Activation.json');
+const ProjectLeaderTracker = require('../truffle/build/contracts/ProjectLeaderTracker.json');
+const Dividends = require('../truffle/build/contracts/Dividends.json');
 
 let endpoint = ''
 const app = express();
@@ -48,6 +48,9 @@ const credentials = new Credentials({
 
 app.get('/api/sup', (req, res) => {
   res.send({"message": "it works"});
+  const projectFactory = TruffleContract(ProjectFactory);
+  projectFactory.setProvider(web3);
+  console.log("ProjectF", projectFactory)
 })
 // app.post('/callback', (req, res) => {
 //   const jwt = req.body.access_token
