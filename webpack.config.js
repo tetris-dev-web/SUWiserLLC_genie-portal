@@ -13,25 +13,25 @@ module.exports = {
      path: path.resolve(__dirname, 'dist'),
      filename: 'bundle.js'
    },
-  target: 'web',
+   target: 'web', // update from 23.12.2018
+   // externals: [nodeExternals()],
   plugins: [
+    // new MiniCssExtractPlugin({
+    //   filename: 'style.scss'
+    // }),
     new ExtractTextPlugin('style.css'),
     new HtmlWebpackPlugin({
+      // template: "./public/index.html",
+      // // favicon: "./public/favicon.ico"
+      // inject: false,
+      // hash: true,
       template: './public/index.html',
+      // filename: 'index.html'
     })
   ],
   mode: 'development',
   module: {
     rules: [
-      // {
-      //   test: /\.(png|jpg|gif)$/,
-      //   use: [
-      //     {
-      //       loader: 'file-loader',
-      //       options: {},
-      //     },
-      //   ],
-      // },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
@@ -47,6 +47,15 @@ module.exports = {
          use: "css-loader!sass-loader",
        })
      },
+      // {
+      //   test: /\.scss$/,
+      //   use: [
+      //     "style-loader",
+      //     MiniCssExtractPlugin.loader,
+      //     'css-loader',
+      //     'sass-loader'
+      //   ]
+      // },
       {
         test: /\.(jpg|png|gif|svg|pdf|ico)$/,
         use: [
@@ -67,8 +76,11 @@ module.exports = {
     proxy: {
         "/api": "http://localhost:8080"
     }
-},
+  },
   resolve: {
-    extensions: [".js", ".jsx", "*"]
-  }
+       extensions: ['.js', '.jsx', '.css', '.scss'],
+       // modulesDirectories: [
+       //   'node_modules'
+       // ]
+   }
 };
