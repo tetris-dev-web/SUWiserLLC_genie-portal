@@ -5,8 +5,6 @@ const decodeJWT = require('did-jwt').decodeJWT
 const { Credentials } = require('uport-credentials')
 const transports = require('uport-transports').transport
 const message = require('uport-transports').message.util
-const Web3 = require('web3');
-const web3 = new Web3("https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY);
 const TruffleContract = require('truffle-contract');
 const GNITokenCrowdsale = require('../truffle/build/contracts/GNITokenCrowdsale.json');
 const SeedableCrowdsale = require('../truffle/build/contracts/SeedableCrowdsale.json');
@@ -21,9 +19,17 @@ const Activation = require('../truffle/build/contracts/Activation.json');
 const ProjectLeaderTracker = require('../truffle/build/contracts/ProjectLeaderTracker.json');
 const Dividends = require('../truffle/build/contracts/Dividends.json');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
+const Web3 = require('web3');
+const web3 = new Web3("https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY);
+
 let endpoint = ''
 const app = express();
 app.use(bodyParser.json({ type: '*/*' }))
+
+
 
 const {did, privateKey} = Credentials.createIdentity()
 const credentials = new Credentials({
@@ -47,11 +53,15 @@ const credentials = new Credentials({
 // })
 
 app.get('/api/sup', (req, res) => {
-  res.send({"message": "it works"});
   const projectFactory = TruffleContract(ProjectFactory);
-  projectFactory.setProvider(web3);
-  console.log("ProjectF", projectFactory)
+  projectFactory.setProvider(web3.currentProvider);
+  console.log(web3.currentProvider, 'CURRENT PROVIDER')
+  const truffleInst = projectFactory.at("0xb58937b6e5c79cb5254d60316a2b3580b8b58d9d");
+  const abi = truffleInst.abi;
+  const inst = new web3.eth.Contract(truffleInst.abi, "0xb58937b6e5c79cb5254d60316a2b3580b8b58d9d")
+  inst.methods.totalProjectCount().call((err, result) => { console.log('result', result) })
 })
+
 // app.post('/callback', (req, res) => {
 //   const jwt = req.body.access_token
 //   credentials.authenticateDisclosureResponse(jwt).then(creds => {
