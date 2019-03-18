@@ -25,11 +25,12 @@ let endpoint = ''
 const app = express();
 app.use(bodyParser.json({ type: '*/*' }))
 
-const {did, privateKey} = Credentials.createIdentity()
-const credentials = new Credentials({
-  appName: 'Genie Portal', did, privateKey
-})
-
+// // uport code to integrate  below
+// const {did, privateKey} = Credentials.createIdentity()
+// const credentials = new Credentials({
+//   appName: 'Genie Portal', did, privateKey
+// })
+//
 // app.get('/', (req, res) => {
 //   credentials.createDisclosureRequest({
 //     requested: ['name', 'email'],
@@ -52,6 +53,10 @@ app.get('/api/sup', (req, res) => {
   projectFactory.setProvider(web3);
   console.log("ProjectF", projectFactory)
 })
+
+
+// // also here
+
 // app.post('/callback', (req, res) => {
 //   const jwt = req.body.access_token
 //   credentials.authenticateDisclosureResponse(jwt).then(creds => {

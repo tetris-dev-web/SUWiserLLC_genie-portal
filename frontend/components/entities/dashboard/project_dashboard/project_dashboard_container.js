@@ -17,11 +17,11 @@ const mapStateToProps = state => {
 
   return {
     web3: state.network.web3,
-    // projects: state.entities.projects,
+    // projects: state.chain_data.projects,
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract,
     projectFactoryInstance: state.network.projectFactoryInstance,
-    capitalBeingRaised: state.entities.capitalBeingRaised,
+    capitalBeingRaised: state.chain_data.capitalBeingRaised,
     // currentUser,
     isInvestor
   };

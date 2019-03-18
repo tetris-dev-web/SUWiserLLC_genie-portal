@@ -64,7 +64,7 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    projects: state.entities.projects,
+    projects: state.chain_data.projects,
     projectFactoryInstance: state.network.projectFactoryInstance,
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract

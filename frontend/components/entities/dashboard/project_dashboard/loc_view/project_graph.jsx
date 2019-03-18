@@ -20,7 +20,7 @@ const darkGrey = "#A59A91";
 
 const mapStateToProps = state => {
   return {
-    projects: merge({}, state.entities.projects),
+    projects: merge({}, state.chain_data.projects),
     caspitalBeingRaised: state.entitis.capitalBeingRaised
   };
 };

@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import * as d3 from 'd3';
 import { fetchAllTokenTransferLogs, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
 import { fetchReceiveDividendsLogs, receiveReceiveDividendsLog } from '../../../../../actions/chain_actions/dividends_actions';
@@ -13,54 +12,6 @@ import Loader from '../../loader/loader';
 import '../../loader/loader.scss';
 import { merge } from 'lodash';
 
-const mapStateToProps = (state, ownProps) => {
-  // const parseTime = d3.timeParse("%m/%d/%y");
-  //
-  // userData.forEach(d => {
-  //   /* It will try to parse twice if relogging in, resulting in null,
-  //   so you must check if it's a string */
-  //   if (typeof d.date === 'string') d.date = parseTime(d.date);
-  //   d.price = +d.price;
-  //   d.balance = +d.balance;
-  //   d.totalTokens = +d.totalTokens;
-  //   d.activeTokens = +d.activeTokens;
-  // });
-  //
-  // totalData.forEach(d => {
-  //   if (typeof d.date === 'string') d.date = parseTime(d.date);
-  //   d.price = +d.price;
-  //   d.balance = +d.balance;
-  //   d.totalTokens = +d.totalTokens;
-  //   d.activeTokens = +d.activeTokens;
-  // });
-  let data;
-
-  if (state.entities.tokenTransfers.inactiveTransferLogs && state.entities.dividendsHistory) {
-    data = formatTokenGraphData(
-      state.entities.tokenTransfers,
-      state.entities.dividendsHistory,
-      ownProps.currentViewType,
-      state.network.account
-    );
-  }
-  console.log("data", data)
-  return {
-    data,
-    // data: ownProps.currentViewType === "BY USER"? userData : totalData,
-    dividends: state.network.dividendsInstance,
-    inactiveToken: state.network.inactiveTokenInstance,
-    activeToken: state.network.activeTokenInstance
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchAllTokenTransferLogs: (inactiveToken, activeToken) => dispatch(fetchAllTokenTransferLogs(inactiveToken, activeToken)),
-    receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event)),
-    fetchReceiveDividendsLogs: (dividends) => dispatch(fetchReceiveDividendsLogs(dividends)),
-    receiveReceiveDividendsLog: (event) => dispatch(receiveReceiveDividendsLog(event))
-  }
-}
 
 class TokenGraph extends React.Component {
   constructor(){
@@ -78,10 +29,10 @@ class TokenGraph extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchAllTokenTransferLogs(this.props.inactiveToken, this.props.activeToken);
-    this.props.fetchReceiveDividendsLogs(this.props.dividends);
-    this.watchTokenTransfer(this.props.inactiveToken, 'inactive');
-    this.watchTokenTransfer(this.props.activeToken, 'active');
+    this.props.fetchAllTokenTransferLogs(this.props.inactiveTokenInstance, this.props.activeTokenInstance);
+    this.props.fetchReceiveDividendsLogs(this.props.dividendsInstance);
+    this.watchTokenTransfer(this.props.inactiveTokenInstance, 'inactive');
+    this.watchTokenTransfer(this.props.activeTokenInstance, 'active');
     this.watchReceiveDividends();
 
     setTimeout(() => {
@@ -115,8 +66,8 @@ class TokenGraph extends React.Component {
   }
 
   watchReceiveDividends () {
-    const { dividends, updateTimeAxis } = this.props;
-    dividends.ReceiveDividends().watch((error, event) => {
+    const { dividendsInstance, updateTimeAxis } = this.props;
+    dividendsInstance.ReceiveDividends().watch((error, event) => {
       this.props.receiveReceiveDividendsLog(event).then(() => {
         updateTimeAxis(null, event.blockNumber);
       });
@@ -198,8 +149,7 @@ class TokenGraph extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TokenGraph);
-
+export default TokenGraph;
 // {showTimeAxis && TokenGraphTimeAxis}
 
 

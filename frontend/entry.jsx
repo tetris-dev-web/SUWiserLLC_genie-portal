@@ -37,8 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const votingToken = TruffleContract(VotingToken);
     votingToken.setProvider(web3Provider);
-    // console.log("version", web3Provider.networkVersion)
-    // console.log(provider._proivder.networkVersion)
+
     const crowdsale = TruffleContract(SeedableCrowdsale);
     crowdsale.setProvider(web3Provider);
 
@@ -70,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let activationInstance;
     let projectLeaderTrackerInstance;
     let dividendsInstance;
+
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
       // console.log("tokenInst: ", token)
@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .then(() => {
         return projectFactory.deployed().then((_projectFactoryInstance)=> {
+          // projectFactoryInstance = projectFactory.at("0x6a58d89601d88d4e95fa1ede425857f50c9aa958");
           projectFactoryInstance = _projectFactoryInstance;
         });
       })
@@ -140,12 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
           );
 
           store = configureStore(preloadedState);
-          // let acc = web3;
-          // const networkInterval = setInterval(() => {
-          //   if (!web3) {
-          //       console.log("workssss!!")
-          //   }
-          // }, 100);
+
 
           window.getState = store.getState; //just for development purposes - remove later - use logger
           const root = document.getElementById('root');

@@ -1,10 +1,12 @@
 import React from 'react';
 import './developerInfo.scss';
 import { connect } from 'react-redux';
-import { 
+import {
   openModal,
   closeModal
  } from '../../../actions/modal_actions';
+
+// TODO convert to react-modal
 
 const mapPropsToState = state => {
   return {
@@ -22,7 +24,7 @@ const mapDispatchToState = dispatch => {
 class DeveloperInfo extends React.Component {
   constructor(props) {
     super(props);
-  
+
     this.state = {
       showDropdown: false
     };
@@ -42,7 +44,7 @@ class DeveloperInfo extends React.Component {
     } else {
       document.addEventListener("click", this.toggleDropdown);
     }
-    
+
     this.setState({showDropdown: !this.state.showDropdown});
   }
 
@@ -55,12 +57,12 @@ class DeveloperInfo extends React.Component {
       }
     );
   }
- 
+
   render() {
     const { modals } = this.props;
     const { showDropdown } = this.state;
     let activeDropdown = showDropdown ? 'active-dropdown' : '';
-    
+
     const showSidebarOptions = (
       <React.Fragment>
         <li className="strategy">

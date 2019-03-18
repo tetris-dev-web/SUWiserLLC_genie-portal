@@ -1,5 +1,7 @@
+//for formatting the data for the token graph
 import * as d3 from 'd3';
 import { merge } from 'lodash'
+
 
 export const formatTokenGraphData = (tokenTransferLogs, dividendsLogs, currentViewType, account) => {
   const dividendsHistory = formatDividendsHistory(dividendsLogs);

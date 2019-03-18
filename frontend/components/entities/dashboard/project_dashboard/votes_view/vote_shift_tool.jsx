@@ -17,9 +17,9 @@ const mapStateToProps = (state, ownProps) => {
     votingToken: state.network.votingTokenInstance,
     votingInstance: state.network.votingInstance,
     account: state.network.account,
-    votesNotDedicated: Number(state.entities.votes.freeVotes) || 0,
-    votesPerProject: Number(state.entities.votes[ownProps.selectedProject]) || 0,
-    projects: state.entities.projects,
+    votesNotDedicated: Number(state.chain_data.votes.freeVotes) || 0,
+    votesPerProject: Number(state.chain_data.votes[ownProps.selectedProject]) || 0,
+    projects: state.chain_data.projects,
     activation: state.network.activationInstance,
     projectLeaderTracker: state.network.projectLeaderTrackerInstance,
     web3: state.network.web3

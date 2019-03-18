@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ToggleOptions from '../dashboard_toggle_options/toggle_options';
-import TokenGraph from './token_view/token_graph';
+import TokenGraph from './token_view/token_graph_container';
 import PriceGraph from './price_view/price_graph';
 import LoginPrompt from '../login_prompt/login_prompt';
 import './token_dashboard.scss';

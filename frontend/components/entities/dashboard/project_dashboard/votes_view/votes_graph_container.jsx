@@ -13,14 +13,14 @@ const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
 const mapStateToProps = state => {
   // console.log("container", state)
     let capitalDeployed = 0;
-    const projectPropsData = Object.keys(state.entities.projects).reduce((propsData, projectTitle) => {
+    const projectPropsData = Object.keys(state.chain_data.projects).reduce((propsData, projectTitle) => {
       if (!propsData.deployedProjects) {
         propsData.deployedProjects = [];
         propsData.pitchedProjects = [];
         propsData.totalVotes = 0;
       }
 
-      const project = state.entities.projects[projectTitle];
+      const project = state.chain_data.projects[projectTitle];
 
       const deploymentTime = project.activationTime;
       if (deploymentTime !== 0) {
@@ -45,7 +45,7 @@ const mapStateToProps = state => {
       return project;
     }).sort((a, b) => b.voteShare - a.voteShare);
 
-    const capitalPropsData = Object.keys(state.entities.capitalHistory).reduce((propsData, time) => {
+    const capitalPropsData = Object.keys(state.chain_data.capitalHistory).reduce((propsData, time) => {
       if (!propsData.lineData) {
         propsData.lineData = [];
         propsData.capitalTotal = 0;
@@ -57,7 +57,7 @@ const mapStateToProps = state => {
         })
       }
 
-      const capital = state.entities.capitalHistory[time];
+      const capital = state.chain_data.capitalHistory[time];
       propsData.capitalTotal += capital;
 
       propsData.lineData.push({
@@ -90,7 +90,7 @@ const mapStateToProps = state => {
       pitchedProjects,
       deployedProjects,
       pitchedProjectsValuationMinMax: getArrayOfObjectsMinMax(pitchedProjects, "valuation"),
-      allProjectsValuationMinMax: getArrayOfObjectsMinMax(Object.values(state.entities.projects), "valuation"),
+      allProjectsValuationMinMax: getArrayOfObjectsMinMax(Object.values(state.chain_data.projects), "valuation"),
       lineData,
       capitalTotal,
       capitalDeployed,

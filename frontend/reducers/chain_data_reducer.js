@@ -5,16 +5,14 @@ import capitalBeingRaised from './capitalBeingRaisedReducer';
 import tokenTransfers from './tokenTransfersReducer';
 import dividendsHistory from './dividendsHistoryReducer';
 import votes from './votesReducer';
-import users from './user_reducer';
 
-const entitiesReducer = combineReducers({
+const chainDataReducer = combineReducers({
   projects,
   dividendsHistory,
   capitalHistory,
   capitalBeingRaised,
   tokenTransfers,
-  votes,
-  users
+  votes
 });
 
-export default entitiesReducer;
+export default chainDataReducer;
