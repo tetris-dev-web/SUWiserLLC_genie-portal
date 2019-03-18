@@ -7,7 +7,7 @@ import * as ChainUtil from '../../util/chain_util';
 import { fetchProjects } from './project_actions';
 export const RECEIVE_WEI_RAISED = 'RECEIVE_WEI_RAISED';
 
-export const fetchProjectsAndCapitalRaised = (projectFactoryInst, projectContract, crowdsaleInstance) => {
+export const fetchProjectsGraphData = (projectFactoryInst, projectContract, crowdsaleInstance) => {
   return dispatch => {
     return dispatch(fetchProjects(projectFactoryInst, projectContract)).then(() => {
       return dispatch(fetchWeiRaised(crowdsaleInstance));
@@ -16,10 +16,8 @@ export const fetchProjectsAndCapitalRaised = (projectFactoryInst, projectContrac
 };
 
 export const fetchWeiRaised = (crowdsaleInstance) => {
-  console.log("fetch wei raised action")
   return dispatch => {
     return ChainUtil.fetchWeiRaised(crowdsaleInstance).then(weiRaised => {
-      console.log("weiRaised fetched:", weiRaised)
       return dispatch({type: RECEIVE_WEI_RAISED, weiRaised});
     });
   };

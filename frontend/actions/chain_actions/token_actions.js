@@ -4,7 +4,6 @@ export const RECEIVE_TOKEN_PURCHASE = "RECEIVE_TOKEN_PURCHASE";
 export const RECEIVE_TOKEN_TRANSFERS = "RECEIVE_TOKEN_TRANSFERS";
 export const RECEIVE_TOKEN_TRANSFER = "RECEIVE_TOKEN_TRANSFER";
 
-
 export const receiveTokenPurchases = tokenPurchases => { //no need to export?
   return {
     type: RECEIVE_TOKEN_PURCHASES,
@@ -31,14 +30,19 @@ export const fetchTokenPurchaseLogs  = (crowdsale) => {
 
 export const fetchAllTokenTransferLogs = (inactiveToken, activeToken) => {
   return dispatch => {
-    return ChainUtil.fetchAllTokenTransferLogs(inactiveToken, activeToken,receiveAllTokenTransfers, dispatch);
+    return fetch(`/api/token_graph_data`).then(response => {
+      return response.json().then(tokenTransfers => {
+        console.log(tokenTransfers)
+        return dispatch(receiveAllTokenTransfers(tokenTransfers));
+      })
+    })
+    // return ChainUtil.fetchAllTokenTransferLogs(inactiveToken, activeToken, receiveAllTokenTransfers, dispatch)
   }
 }
 
 export const fetchTokenBalances = (inactiveToken, activeToken, account) => {
   return ChainUtil.fetchTokenBalances(inactiveToken, activeToken, account);
 }
-
 
 export const receiveAllTokenTransfers = tokenTransferLogs => {
   return {

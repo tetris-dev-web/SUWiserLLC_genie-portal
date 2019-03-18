@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchProjectsAndCapitalRaised } from '../../../actions/chain_actions/crowdsale_actions';
+import { fetchProjectGraphData } from '../../../actions/chain_actions/project_actions';
 import TokenDashboardContainer from './token_dashboard/token_dashboard_container';
 import ProjectDashboardContainer from './project_dashboard/project_dashboard_container';
 import TimeAxis from './time_axis/time_axis';
@@ -22,8 +22,7 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    console.log('yo')
-    this.props.fetchProjectsAndCapitalRaised(this.props.projectFactoryInstance,this.props.projectContract,this.props.crowdsaleInstance);
+    this.props.fetchProjectGraphData();
   }
 
   updateTimeAxis(newStartTime, newEndTime) {
@@ -73,7 +72,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchProjectsAndCapitalRaised: (projectFactoryInstance, projectContract, crowdsaleInstance) => dispatch(fetchProjectsAndCapitalRaised(projectFactoryInstance, projectContract, crowdsaleInstance))
+    fetchProjectGraphData: () => dispatch(fetchProjectGraphData())
   }
 }
 

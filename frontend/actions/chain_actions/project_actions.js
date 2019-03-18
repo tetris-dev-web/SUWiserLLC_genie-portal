@@ -1,6 +1,16 @@
 // import * as APIUtil from '../../util/project_api_util';
 import * as ChainUtil from '../../util/chain_util';
-import { receiveProject, receiveProjectErrors, receiveProjects } from '../project_actions';
+import * as ExpressAPI  from '../../util/fetch_util/project_api';
+export const RECEIVE_PROJECT_GRAPH_DATA = 'RECEIVE_PROJECT_GRAPH_DATA';
+
+export const receiveProjectGraphData = projectGraphData => {
+  const { projects, weiRaised } = projectGraphData;
+  return {
+    type: RECEIVE_PROJECTS,
+    projects,
+    weiRaised
+  };
+};
 
 export const fetchProject = (projectFactoryInstance, projectContract, id, address) => {
   return dispatch => {
@@ -10,13 +20,11 @@ export const fetchProject = (projectFactoryInstance, projectContract, id, addres
   };
 };
 
-export const fetchProjects  = (projectFactoryInstance, projectContract) => {
+export const fetchProjectGraphData = () => {
   return dispatch => {
-    // return APIUtil.fetchProjects().then(projects => {
-      return ChainUtil.integrateProjectsData(projectFactoryInstance, projectContract).then((projectsData) => {
-        return dispatch(receiveProjects(projectsData));
-      });
-    // });
+    return ExpressAPI.fetchProjectGraphData().then(projectGraphData => {
+      return dispatch(receiveProjectGraphData(crowdsaleInstance));
+    });
   };
 };
 
@@ -31,7 +39,6 @@ export const fetchProjectActivationLogs = (crowdsale, web3) => {
     return ChainUtil.fetchProjectActivationLogs(crowdsale, web3);
   };
 };
-
 
 export const createProject = (projectFactoryInstance, params, pdf_file, account) => {
   // return dispatch => {

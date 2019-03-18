@@ -35,7 +35,7 @@ const mapStateToProps = (state, ownProps) => {
   // });
   let data;
 
-  if (state.entities.tokenTransfers.inactiveTransferLogs && state.entities.dividendsHistory) {
+  if (state.entities.tokenTransfers.inactiveTransferData && state.entities.dividendsHistory) {
     data = formatTokenGraphData(
       state.entities.tokenTransfers,
       state.entities.dividendsHistory,

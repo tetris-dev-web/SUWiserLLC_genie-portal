@@ -23,7 +23,6 @@ class VotesGraph extends React.Component {
   }
 
   componentDidMount() {
-    console.log('cdm', this.props)
     setTimeout(() => {
       this.setState({componentVisible: ""});
     }, this.props.wait);
@@ -116,6 +115,7 @@ class VotesGraph extends React.Component {
   }
 
   render() {
+    console.log('votes graph props', this.props)
     // console.log("selectedProject", this.state.selectedProject, this.state.componentVisible)
     return this.dataHasLoaded() ? this.renderGraph() : <Loader/>;
   }

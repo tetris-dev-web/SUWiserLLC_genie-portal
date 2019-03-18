@@ -133,11 +133,10 @@ export const fetchAllTokenTransferLogs = async (inactiveToken, activeToken, rece
   const inactiveTransferEvents = await fetchTokenTransferEvents(inactiveToken);
   const activeTransferEvents = await fetchTokenTransferEvents(activeToken);
   console.log("events", inactiveTransferEvents, activeTransferEvents)
-  const inactiveTransferLogs = await getLogs(inactiveTransferEvents);
-  const activeTransferLogs = await getLogs(activeTransferEvents);
+  const inactiveTransferData = await getLogs(inactiveTransferEvents);
+  const activeTransferData = await getLogs(activeTransferEvents);
 
-  console.log("transfers", inactiveTransferLogs, activeTransferLogs)
-  dispatch(receiveAllTokenTransfers({inactiveTransferLogs, activeTransferLogs}));
+  dispatch(receiveAllTokenTransfers({inactiveTransferData, activeTransferData}));
 }
 
 export const fetchReceiveDividendsLogs = async (dividends, receiveReceiveDividendsLogs, dispatch) => {
