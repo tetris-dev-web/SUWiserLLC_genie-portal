@@ -20,7 +20,7 @@ const darkGrey = "#A59A91";
 
 const mapStateToProps = state => {
   return {
-    projects: merge({}, state.entities.projects),
+    projects: merge({}, state.entities.projectGraph.projects),
     caspitalBeingRaised: state.entitis.capitalBeingRaised
   };
 };
@@ -45,7 +45,13 @@ class ProjectGraph extends React.Component {
   }
 
   componentDidMount(){
-    this.setUp();
+    if (!this.props.projectsLoaded) {
+      this.props.fetchSharedProjectGraphData().then(() => {
+        this.setUp();
+      });
+    } else {
+      this.setUp();
+    }
   }
 
   toggleModalonClickandPassProject(projectClicked) {

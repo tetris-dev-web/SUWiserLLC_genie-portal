@@ -6,8 +6,8 @@ import {
 import { clearProjectErrors } from '../../../../actions/project_actions';
 
 const mapStateToProps = state => {
-  const projects = Object.keys(state.entities.projects).reduce((pitchedProjects, projectTitle) => {
-    const project = state.entities.projects[projectTitle];
+  const projects = Object.keys(state.entities.projectGraph.projects).reduce((pitchedProjects, projectTitle) => {
+    const project = state.entities.projectGraph.projects[projectTitle];
     if (project.instance) {
       pitchedProjects[projectTitle] = project;
     }

@@ -1,12 +1,13 @@
 // import * as APIUtil from '../../util/project_api_util';
 import * as ChainUtil from '../../util/chain_util';
-import * as ExpressAPI  from '../../util/fetch_util/project_api';
+import * as ExpressAPI  from '../../util/fetch_util/express_api_util';
 export const RECEIVE_PROJECT_GRAPH_DATA = 'RECEIVE_PROJECT_GRAPH_DATA';
 
 export const receiveProjectGraphData = projectGraphData => {
+  console.log(projectGraphData)
   const { projects, weiRaised } = projectGraphData;
   return {
-    type: RECEIVE_PROJECTS,
+    type: RECEIVE_PROJECT_GRAPH_DATA,
     projects,
     weiRaised
   };
@@ -20,10 +21,11 @@ export const fetchProject = (projectFactoryInstance, projectContract, id, addres
   };
 };
 
-export const fetchProjectGraphData = () => {
+export const fetchSharedProjectGraphData = () => {
+  console.log("yo bitch")
   return dispatch => {
-    return ExpressAPI.fetchProjectGraphData().then(projectGraphData => {
-      return dispatch(receiveProjectGraphData(crowdsaleInstance));
+    return ExpressAPI.fetchApiData('shared_project_graph_data').then(projectGraphData => {
+      return dispatch(receiveProjectGraphData(projectGraphData));
     });
   };
 };

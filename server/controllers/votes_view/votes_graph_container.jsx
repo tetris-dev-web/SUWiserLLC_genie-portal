@@ -56,11 +56,41 @@ const mapStateToProps = state => {
         return project;
       }).sort((a, b) => b.voteShare - a.voteShare);
 
-      const { capitalHistory } = state.entities.projectGraph;
-      lineData = capitalHistory.history
-      capitalTotal = capitalHistory.capitalTotal
-      startTime = capitalHistory.startTime
-      endTime = capitalHistory.endTime
+      const capitalPropsData = Object.keys(state.entities.projectGraph.capitalHistory).reduce((propsData, time) => {
+        if (!propsData.lineData) {
+          propsData.lineData = [];
+          propsData.capitalTotal = 0;
+          propsData.startTime = time - 1;
+          propsData.endTime = time;
+          propsData.lineData.push({
+            date: Number(time) - 1,
+            capital: 0
+          })
+        }
+
+        const capital = state.entities.projectGraph.capitalHistory[time];
+        propsData.capitalTotal += capital;
+
+        propsData.lineData.push({
+          date: Number(time),
+          capital: propsData.capitalTotal
+        });
+
+        if (time < propsData.startTime) {
+          propsData.startTime = time;
+        }
+
+        if (time > propsData.endTime) {
+          propsData.endTime = time;
+        }
+
+        return propsData;
+      }, {});
+
+      lineData = capitalPropsData.lineData
+      capitalTotal = capitalPropsData.capitalTotal
+      startTime = capitalPropsData.startTime
+      endTime = capitalPropsData.endTime
 
       pitchedProjectsValuationMinMax = getArrayOfObjectsMinMax(pitchedProjects, "valuation")
       allProjectsValuationMinMax = getArrayOfObjectsMinMax(Object.values(state.entities.projectGraph.projects), "valuation")

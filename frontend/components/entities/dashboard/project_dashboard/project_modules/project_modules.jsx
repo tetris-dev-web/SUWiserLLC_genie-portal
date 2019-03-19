@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
   return {
-    capitalBeingRaised: state.entities.capitalBeingRaised
+    capitalBeingRaised: state.entities.projectGraph.capitalBeingRaised
   }
 }
 

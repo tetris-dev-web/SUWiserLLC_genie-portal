@@ -3,7 +3,7 @@ const { numberParser } = require('../util/number_util');
 const Project = require('../../truffle/build/contracts/Project.json');
 const ProjectFactory = require('../../truffle/build/contracts/ProjectFactory.json');
 
-const fetchProjectsData = async () => {
+const fetchProjects = async () => {
   const projectFactoryInstance = web3Instance(ProjectFactory, "0xb58937b6e5c79cb5254d60316a2b3580b8b58d9d");
   const projectContract = truffleContract(Project);
   const totalProjectCount = await projectFactoryInstance.methods.totalProjectCount().call();
@@ -58,6 +58,6 @@ const dataByProject = async (projectFactoryInstance, projectContract, id, addres
 };
 
 module.exports = {
-  fetchProjectsData,
+  fetchProjects,
   dataByProject
 };

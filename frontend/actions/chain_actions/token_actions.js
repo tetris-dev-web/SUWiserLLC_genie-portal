@@ -1,13 +1,16 @@
 import * as ChainUtil from '../../util/chain_util';
-export const RECEIVE_TOKEN_PURCHASES = "RECEIVE_TOKEN_PURCHASES";
+import * as ExpressAPI  from '../../util/fetch_util/express_api_util';
+export const RECEIVE_TOKEN_GRAPH_DATA = "RECEIVE_TOKEN_GRAPH_DATA";
 export const RECEIVE_TOKEN_PURCHASE = "RECEIVE_TOKEN_PURCHASE";
-export const RECEIVE_TOKEN_TRANSFERS = "RECEIVE_TOKEN_TRANSFERS";
+export const RECEIVE_CAPITAL_HISTORY = "RECEIVE_CAPITAL_HISTORY";
 export const RECEIVE_TOKEN_TRANSFER = "RECEIVE_TOKEN_TRANSFER";
 
-export const receiveTokenPurchases = tokenPurchases => { //no need to export?
+export const receiveTokenGraphData = (tokenGraphData, currentViewType) => { //no need to export?
+
   return {
-    type: RECEIVE_TOKEN_PURCHASES,
-    tokenPurchases
+    type: RECEIVE_TOKEN_GRAPH_DATA,
+    tokenGraphData,
+    currentViewType
   }
 }
 
@@ -18,23 +21,44 @@ export const receiveTokenPurchase = tokenPurchase => {
   }
 }
 
+export const receiveCapitalHistory = capitalHistory => {
+  return {
+    type: RECEIVE_CAPITAL_HISTORY,
+    capitalHistory
+  }
+}
+
 export const buyTokens = (crowdsale, account, value) => {
   return ChainUtil.buyTokens(crowdsale, account, value)
 }
 
-export const fetchTokenPurchaseLogs  = (crowdsale) => {
+export const fetchCapitalHistory  = (crowdsale) => {
+  // return dispatch => {
+  //   return ChainUtil.fetchTokenPurchaseLogs(crowdsale, dispatch, receiveCapitalHistory)
+  // };
   return dispatch => {
-    return ChainUtil.fetchTokenPurchaseLogs(crowdsale, dispatch, receiveTokenPurchases)
-  };
+    return ExpressAPI.fetchApiData(
+      'capital_history_data'
+    ).then(capitalHistory => {
+      return dispatch(receiveCapitalHistory(capitalHistory))
+    })
+  }
 };
 
-export const fetchAllTokenTransferLogs = (inactiveToken, activeToken) => {
+export const fetchTokenGraphData = (currentViewType, account = null) => {
   return dispatch => {
-    return fetch(`/api/token_graph_data`).then(response => {
-      return response.json().then(tokenTransfers => {
-        console.log(tokenTransfers)
-        return dispatch(receiveAllTokenTransfers(tokenTransfers));
-      })
+    return ExpressAPI.fetchApiData(
+      `token_graph_data`,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({currentViewType, account})
+      }
+    ).then(tokenGraphData => {
+        return dispatch(receiveTokenGraphData(tokenGraphData, currentViewType));
     })
     // return ChainUtil.fetchAllTokenTransferLogs(inactiveToken, activeToken, receiveAllTokenTransfers, dispatch)
   }
@@ -44,12 +68,6 @@ export const fetchTokenBalances = (inactiveToken, activeToken, account) => {
   return ChainUtil.fetchTokenBalances(inactiveToken, activeToken, account);
 }
 
-export const receiveAllTokenTransfers = tokenTransferLogs => {
-  return {
-    type: RECEIVE_TOKEN_TRANSFERS,
-    tokenTransferLogs
-  }
-}
 
 export const receiveTokenTransfer = tokenTransfer => {
   return {

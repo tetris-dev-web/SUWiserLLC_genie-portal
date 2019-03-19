@@ -1,6 +1,6 @@
-import { merge } from 'lodash'
+const { merge } = require('lodash');
 
-export const formatTokenGraphData = (tokenTransferData, dividendsLogs, currentViewType, account) => {
+const formatTokenGraphData = (tokenTransferData, dividendsLogs, currentViewType, account) => {
   const dividendsHistory = formatDividendsHistory(dividendsLogs);
   const tokenHistory = formatTokenHistory(tokenTransferData, currentViewType, account);
   return mergeHistories(dividendsHistory, tokenHistory, currentViewType);
@@ -9,8 +9,8 @@ export const formatTokenGraphData = (tokenTransferData, dividendsLogs, currentVi
 const formatDividendsHistory = dividendsLogs => {
   return dividendsLogs.map(_data => {
     const data = merge({}, _data);
-    data.date = _data.blockNumber;
-    return args;
+    data.date = data.blockNumber;
+    return data;
   })
 }
 
@@ -100,26 +100,9 @@ const getTransferHistory = tokenTransferData => {
   }
 }
 
-// const type = transferLogs === inactiveTransferData ? "inactive" : "active";
-// return transferLogs.map(log => {
-//   const args = merge({}, log.args);
-//   args.value = Number(args.value);
-//   args.blockNumber = log.blockNumber;
-//   args.type = type;
-//   return args;
-// })
-
-// const type = transferData === inactiveTransferData ? "inactive" : "active";
-// return transferData.map(_data => {
-//   const data = merge({}, _data);
-//   data.type = type;
-//   return data;
-// })
-
-
 const tokenHistoryByUser = (account, allTransfers) => {
   const userTransfers = allTransfers.filter(transfer => {
-    return transfer.from === account || transfer.to === account;
+    return transfer.from.toLowerCase() === account || transfer.to.toLowerCase() === account;
   })
 
   let totalTokens = 0;
@@ -131,7 +114,7 @@ const tokenHistoryByUser = (account, allTransfers) => {
       allActiveTokens += transferData.value;
     }
     //if the account is receiving the tranfer
-    if (transferData.to === account) {
+    if (transferData.to.toLowerCase() === account) {
       //if the account's overall balance is increasing
       if (transferData.type == 'inactive' || transferData.from !== "0x0000000000000000000000000000000000000000") {
         totalTokens += transferData.value;
@@ -178,3 +161,7 @@ const tokenHistoryByAll = allTransfers => {
     };
   });
 };
+
+module.exports = {
+  formatTokenGraphData
+}

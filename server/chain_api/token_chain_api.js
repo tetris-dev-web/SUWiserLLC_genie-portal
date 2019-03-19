@@ -19,8 +19,8 @@ const fetchTokenTransfers = async () => {
 }
 
 const transfersData = async (tokenInstance) => {
-  const events = await fetchEvents(tokenInstance);
-  
+  const events = await fetchEvents(tokenInstance, 'Transfer');
+
   return events.filter(event => Number(event.returnValues.value) > 0).map(event => {
     const data = merge({}, event.returnValues);
     data.blockNumber = event.blockNumber;
