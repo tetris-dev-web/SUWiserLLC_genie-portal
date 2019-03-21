@@ -159,17 +159,8 @@ class UserDropdown extends React.Component {
 
   render() {
 
-    // const tokens = this.props.drizzleState.contracts.Token.totalSupply[this.state.totalSupplyIdx];
-    // console.log('UserDropdown', this.props.drizzleState.contracts.Token);
 
-    // if(tokens){
-    //
-    //   console.log('UserDropdown', tokens);
-    // }
-    // let { tokens, user_tokens, total_tokens } = this.state;
-    // let { tokens } = this.props.currentUser;
 
-    console.log("state, yo", this.state)
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
@@ -231,37 +222,3 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserDropdown);
-//needs to be updated with uport infomration
-// <ul className="dropdown-menu dropdown-item">
-//   <Wallet currentUser={this.props.currentUser} updateUser={this.props.updateUser} updateUsernameDisplay={this.updateUsernameDisplay}/>
-// </ul>
-//needs to be updated with uport information
-// <ul className="dropdown-menu dropdown-item">
-//   <ProfileContainer
-//     updateUsernameDisplay={this.updateUsernameDisplay}
-//     user={this.props.currentUser}/>
-// </ul>
-
-
-
-
-
-
-// <div className="tokens-cont">
-//   <div className="total-tokens">{this.state.totalActive ? this.state.totalActive : null} active tokens</div>
-// </div>
-// <div className="tokens-cont">
-//   <div className="total-tokens">{this.state.totalInactive ? this.state.totalInactive : null} inactive tokens</div>
-// </div>
-// <div className="tokens-cont">
-//   <div className="total-tokens">{this.state.accountActive ? this.state.accountActive : null} account active tokens</div>
-// </div>
-// <div className="tokens-cont">
-//   <div className="total-tokens">{this.state.accountInactive ? this.state.accountInactive : null} account inactive tokens</div>
-// </div>
-
-
-
-
-
-// <a id="dLabel" role="button" data-toggle="dropdown" className="dropdown-link">

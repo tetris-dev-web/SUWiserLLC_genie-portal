@@ -1,17 +1,14 @@
 import React from 'react';
 import DoomsDayDetail from './dooms_day_detail';
-import './strategy_modal.scss';
+import '../modal_styles.scss';
 
 class StrategyModal extends React.Component {
-  constructor() {
-    super();
-  }
 
   render() {
     return(
       <div className="modal-layer">
         <div className="ft-modal-header-cont">
-          <div className="ft-modal-header">
+          <div className="modal-header">
             Strategy
           </div>
         </div>

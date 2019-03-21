@@ -1,6 +1,5 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Switch } from 'react-router-dom';
 import {
   AuthRoute,
   ProtectedRoute,
@@ -8,9 +7,7 @@ import {
 } from '../util/route_util';
 import Navbar from './entities/navbar/navbar_container';
 import Landing from './entities/landing/landing';
-import Dashboard from './entities/dashboard/dashboard';
-import DeveloperInfo from './entities/developerInfo/developerInfo';
-// import Footer from './entities/footer/footer';
+import Dashboard from './entities/dashboard/dashboard_container';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import { connect } from 'react-redux';
@@ -18,14 +15,11 @@ import {processVotes} from '../actions/chain_actions/vote_actions';
 import { updateNetwork } from '../actions/chain_actions/network_actions'
 import './app.scss';
 
-import Modal from '../components/entities/modal/modal';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   account: this.props.account
-    // }
+
   }
 
   componentDidMount() {
@@ -44,11 +38,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <div style={{height: "100%"}}>
-        <Modal />
+      <div className="rootDiv">
         <Navbar />
-        <DeveloperInfo />
-        <Dashboard/>
+        <Dashboard />
       </div>
     );
   }
@@ -72,22 +64,3 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-// <div path="/dashboard" component={Dashboard} />
-
-
-// <RedirectedRoute />
-// <Switch>
-//   <AuthRoute path="/login" component={Landing} />
-//   <ProtectedRoute path="/dashboard" component={Dashboard} />
-// </Switch>
-
-
-// <div className="none">THIS SHOULD BE RED</div>
-
-
-
-// <RedirectedRoute />
-// <Switch>
-//   <AuthRoute path="/login" component={Landing} />
-//   <ProtectedRoute path="/dashboard" component={Dashboard} />
-// </Switch>

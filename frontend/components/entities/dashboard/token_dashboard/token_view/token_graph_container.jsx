@@ -1,5 +1,8 @@
 import { connect } from 'react-redux';
 import TokenGraph from './token_graph';
+import { formatTokenGraphData } from '../../../../../util/propsUtil';
+import { fetchAllTokenTransferLogs, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
+import { fetchReceiveDividendsLogs, receiveReceiveDividendsLog } from '../../../../../actions/chain_actions/dividends_actions';
 
 const mapStateToProps = (state, ownProps) => {
 
@@ -17,7 +20,6 @@ const mapStateToProps = (state, ownProps) => {
   console.log("data", data)
   return {
     data,
-    // data: ownProps.currentViewType === "BY USER"? userData : totalData,
     dividendsInstance: state.network.dividendsInstance,
     inactiveTokenInstance: state.network.inactiveTokenInstance,
     activeTokenInstance: state.network.activeTokenInstance

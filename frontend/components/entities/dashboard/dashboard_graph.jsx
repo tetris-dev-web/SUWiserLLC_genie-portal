@@ -1,19 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ToggleOptions from '../dashboard_toggle_options/toggle_options';
-import TokenGraph from './token_view/token_graph_container';
-import PriceGraph from './price_view/price_graph';
-import LoginPrompt from '../login_prompt/login_prompt';
-import { byUserIcon, allUsersIcon } from './TokenDashboardIcons';
-import './token_dashboard.scss';
+import ToggleOptions from './dashboard_toggle_options/toggle_options';
 
+import LoginPrompt from './login_prompt/login_prompt';
 
-//TODO MODIFY DESCRIPTION OF TOKEN DASHBOARD
+import './dashboard_graph.scss';
 
-class TokenDashboard extends React.Component {
+class DashboardGraph extends React.Component {
   constructor(props) {
     super(props);
-    this.viewOptions = ["BY USER", "BY ALL"];  //base on keys of icons
     this.state = {
       currentView: null
     };
@@ -32,31 +27,23 @@ class TokenDashboard extends React.Component {
   render() {
     let currentGraph;
     const { currentView } = this.state;
-    const { web3, account, updateTimeAxis, trackGraph, timeAxis } = this.props;
-
+    const { web3, account } = this.props;
 
     currentView === null ?
           currentGraph = <div></div>
-        : currentGraph = <TokenGraph
-                          timeAxis={timeAxis}
-                          currentUser={this.props.currentUser}
-                          currentViewType={this.viewOptions[currentView]}
-                          updateTimeAxis={updateTimeAxis}
-                          wait={500} />;
+        : currentGraph = this.props.graph  // TODO this needs to be based on the graph inputted
 
     if (this.props.currentUser) {
       return(
-        <div className="token-dashboard">
+        <div className={`dashboard-${this.props.dashboardType}`}>
           <ToggleOptions
-            dashboardType="token"
-            dashboardTitle="TOKEN DASHBOARD"
-            dashboardDescription="The project dashboard tracks the performance of the projects providing investors a comparative framework to provide direction on which investments to focus on."
+            dashboardType={this.props.dashboardType}
+            dashboardTitle={this.props.dashboardTitle}
+            dashboardDescription={this.props.dashboardDescription}
             toggleView={this.toggleView}
             currentView={currentView}
-            viewOptions={this.viewOptions}
-            optionIcons={{
-              "byUserIcon" : byUserIcon ,
-              "allUsersIcon": allUsersIcon }}
+            viewOptions={this.props.viewOptions}
+            optionIcons={this.props.optionIcons}
             />
           <div className="graph-container">
             {
@@ -69,7 +56,7 @@ class TokenDashboard extends React.Component {
       );
     } else {
       return (
-        <div className="graph-container graph">Token Dashboard</div>
+        <div className="graph-container graph">{this.props.dashboardTitle}</div>
       );
     }
   }
@@ -82,7 +69,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(TokenDashboard);
+export default connect(mapStateToProps)(DashboardGraph);
 
 
 // <svg viewBox="-2.5 -2.5 30 30"><path d="M25,11.5h-2.551C21.98,6.776,18.223,3.02,13.5,2.551V0h-2v2.55C6.776,3.02,3.02,6.776,2.551,11.5H0v2h2.551  c0.469,4.723,4.226,8.48,8.949,8.949V25h2v-2.551c4.723-0.469,8.48-4.227,8.949-8.949H25V11.5z M13.5,20.431V18.41  c-0.326,0.055-0.659,0.09-1,0.09c-0.342,0-0.675-0.035-1-0.09v2.021c-3.612-0.453-6.478-3.319-6.931-6.931H6.59  c-0.055-0.326-0.09-0.659-0.09-1s0.035-0.674,0.09-1H4.569C5.022,7.888,7.888,5.022,11.5,4.569V6.59c0.325-0.055,0.658-0.09,1-0.09  c0.341,0,0.674,0.035,1,0.09V4.569c3.611,0.454,6.478,3.319,6.931,6.931H18.41c0.055,0.326,0.09,0.659,0.09,1s-0.035,0.674-0.09,1  h2.021C19.978,17.111,17.111,19.978,13.5,20.431z" /></svg>

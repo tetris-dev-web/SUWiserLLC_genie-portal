@@ -1,11 +1,22 @@
+//libraries
 import React from 'react';
-import { connect } from 'react-redux';
-import { fetchProjectsAndCapitalRaised } from '../../../actions/chain_actions/crowdsale_actions';
-import TokenDashboardContainer from './token_dashboard/token_dashboard_container';
-import ProjectDashboardContainer from './project_dashboard/project_dashboard_container';
-import TimeAxis from './time_axis/time_axis';
 import PropTypes from 'prop-types';
+
+//components
+import DashboardGraph from './dashboard_graph_container';
+//project graph types
+import LocGraphContainer from './project_dashboard/loc_view/loc_graph_container';
+import VotesGraphContainer from './project_dashboard/votes_view/votes_graph_container';
+import { voteViewIcon, locViewIcon } from './project_dashboard/ProjectDashboardIcons';
+
+//token graph types
+import TokenGraph from './token_dashboard/token_view/token_graph_container';
+import { byUserIcon, allUsersIcon } from './token_dashboard/TokenDashboardIcons';
+
+
 import Loader from './loader/loader';
+import TimeAxis from './time_axis/time_axis';
+
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -13,48 +24,78 @@ class Dashboard extends React.Component {
     this.state = {
       startTime: null,
       endTime: null,
-      tokenGraphOpen: null,
-      projectGraphOpen: null
+      howManyGraphsAreOpen: 0,
     }
     this.showAxis = this.showAxis.bind(this);
-    this.trackGraph = this.trackGraph.bind(this);
+    this.addToNumberOfGraphsOpenBy = this.addToNumberOfGraphsOpenBy.bind(this);
     this.updateTimeAxis = this.updateTimeAxis.bind(this);
   }
 
   componentDidMount() {
-    console.log('yo')
-    this.props.fetchProjectsAndCapitalRaised(this.props.projectFactoryInstance,this.props.projectContract,this.props.crowdsaleInstance);
+    this.props.fetchProjectsAndCapitalRaised(this.props.projectFactoryInstance, this.props.projectContract, this.props.crowdsaleInstance);
   }
 
   updateTimeAxis(newStartTime, newEndTime) {
     const { startTime, endTime } = this.state;
-    // console.log(newStartTime, 'st update')
     this.setState({
-      startTime: newStartTime ? startTime ? Math.min(newStartTime, startTime) : newStartTime : startTime,
+      startTime: newStartTime ?
+                  startTime ?
+                      Math.min(newStartTime, startTime)
+                      : newStartTime
+                  : startTime,
       endTime: Math.max(endTime, newEndTime)
     })
   }
 
-  trackGraph (graphType, openStatus) {
+  addToNumberOfGraphsOpenBy(numberOfGraphs) {
     this.setState({
-      [`${graphType}Open`]: openStatus
+      howManyGraphsAreOpen: this.state.howManyGraphsAreOpen + numberOfGraphs
     })
   }
 
   showAxis () {
-    return this.state.tokenGraphOpen || this.state.projectGraphOpen
+    return this.state.howManyGraphsAreOpen > 0?
+            true
+            : false
   }
 
   render () {
     const { startTime, endTime } = this.state;
 
-    // console.log("stte", this.state)
     if (Object.keys(this.props.projects).length) {
       return (
         <div className="box">
-          <TokenDashboardContainer timeAxis={{startTime, endTime}} trackGraph={this.trackGraph} updateTimeAxis={this.updateTimeAxis}/>
-          { this.showAxis() ? <TimeAxis startTime={startTime} endTime={endTime}/> : <div></div>}
-          <ProjectDashboardContainer timeAxis={{startTime, endTime}} trackGraph={this.trackGraph} updateTimeAxis={this.updateTimeAxis}/>
+          <DashboardGraph
+            timeAxis={{startTime, endTime}}
+            addToNumberOfGraphsOpenBy={this.addToNumberOfGraphsOpenBy}
+            updateTimeAxis={this.updateTimeAxis}
+            graphs={[TokenGraph]}
+            dashboardType="token"
+            dashboardTitle="TOKEN DASHBOARD"
+            dashboardDescription="The token dashboard tracks the performance of the portal's token, providing investors perspective on the deployment and earnings history of tokens in circulation."
+            toggleView={this.toggleView}
+            optionIcons={{
+              "BY USER" : byUserIcon ,
+              "BY ALL": allUsersIcon }}
+            />
+          {this.showAxis() ?
+            <TimeAxis
+              startTime={startTime}
+              endTime={endTime}/>
+            : <div> </div> }
+          <DashboardGraph
+            timeAxis={{startTime, endTime}}
+            addToNumberOfGraphsOpenBy={this.addToNumberOfGraphsOpenBy}
+            updateTimeAxis={this.updateTimeAxis}
+            graph={[LocGraphContainer, VotesGraphContainer]}
+            dashboardType="project"
+            dashboardTitle="PROJECT DASHBOARD"
+            dashboardDescription="The project dashboard tracks the performance of the projects providing investors a comparative framework to provide direction on which investments to focus on."
+            toggleView={this.toggleView}
+            optionIcons={{
+              "VOTE VIEW" : voteViewIcon ,
+              "LOCATION VIEW": locViewIcon }}
+            />
         </div>
       );
     }
@@ -62,20 +103,5 @@ class Dashboard extends React.Component {
   }
 };
 
-const mapStateToProps = state => {
-  return {
-    projects: state.chain_data.projects,
-    projectFactoryInstance: state.network.projectFactoryInstance,
-    crowdsaleInstance: state.network.crowdsaleInstance,
-    projectContract: state.network.projectContract
-  }
-}
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchProjectsAndCapitalRaised: (projectFactoryInstance, projectContract, crowdsaleInstance) => dispatch(fetchProjectsAndCapitalRaised(projectFactoryInstance, projectContract, crowdsaleInstance))
-  }
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default Dashboard;

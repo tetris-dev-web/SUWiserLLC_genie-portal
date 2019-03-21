@@ -2,16 +2,20 @@ import { connect } from 'react-redux';
 import {
   fetchProjects,
   fetchProject
-} from '../../../../actions/chain_actions/project_actions';
-import ProjectDashboard from './project_dashboard';
-import { fetchTokenPurchaseLogs } from '../../../../actions/chain_actions/token_actions';
+} from '../../../actions/chain_actions/project_actions';
+import DashboardGraph from './dashboard_graph';
+import { fetchTokenPurchaseLogs } from '../../../actions/chain_actions/token_actions';
 
 const mapStateToProps = state => {
 
-  let isInvestor = false;
+  let isInvestor = false; //hard coded for demo
 
   return {
-
+    //token related props
+    currentUser: true, //hard coded for demo
+    crowdsale: state.network.crowdsaleInstance,
+    account: state.network.account,
+    //projects related props
     web3: state.network.web3,
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract,
@@ -31,4 +35,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Dashboard);
+)(DashboardGraph);

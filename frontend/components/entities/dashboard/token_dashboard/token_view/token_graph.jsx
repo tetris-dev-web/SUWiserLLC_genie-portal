@@ -1,9 +1,5 @@
 import React from 'react';
 import * as d3 from 'd3';
-import { fetchAllTokenTransferLogs, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
-import { fetchReceiveDividendsLogs, receiveReceiveDividendsLog } from '../../../../../actions/chain_actions/dividends_actions';
-import { userData, totalData } from '../../../../../util/token_data_util';
-import { formatTokenGraphData } from '../../../../../util/propsUtil';
 import './token_graph.scss';
 import TokenGraphTokenPath from './token_graph_token_path';
 import TokenGraphXAxis from './token_graph_x_axis';

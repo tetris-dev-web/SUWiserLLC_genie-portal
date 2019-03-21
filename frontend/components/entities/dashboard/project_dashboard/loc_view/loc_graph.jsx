@@ -36,18 +36,7 @@ class LocGraph extends React.Component {
         data,
         center
       } = await getLocationGraphData(this.props.projects);
-      console.log('p', projects)
-      console.log('cit', cities)
-      console.log('con', continents)
-      console.log('d', data)
-      console.log('cen', center)
 
-
-    // this.addDragHandlers();
-    // this.simulation.on("tick", () => {
-    //   this.forceUpdate();
-    //   // bypass shouldComponentUpdate
-    // });
     this.setState({
         projects,
         cities,
@@ -57,18 +46,9 @@ class LocGraph extends React.Component {
       })
   }
 
-  // UNSAFE_componentWillReceiveProps(nextProps) {
-  //   const { projects, cities, continents, linksData, center } = nextProps;
-  //
-  //   this.simulation.nodes(projects.concat(continents).concat(cities).concat([center]))
-  //     .force("link", d3.forceLink(linksData).distance(20));
-  //   this.simulation.alpha(1).restart();
-  // }
-
   componentDidUpdate(prevProps, prevState) {
     this.addDragHandlers();
     const { data, projects, cities, continents, center } = this.state;
-    // const { projects, cities, continents, center } = this.props;
     if (!prevState.data && data) {
       this.simulation = this.configureSimulation.bind(this, this.props)();
       this.addDragHandlers();
