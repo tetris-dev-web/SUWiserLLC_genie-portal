@@ -72,6 +72,7 @@ const mapStateToProps = state => {
     return {
       crowdsaleInstance: state.network.crowdsaleInstance,
       projectContract: state.network.projectContract,
+      projectFactoryInstance: state.network.projectFactoryInstance,
       web3: state.network.web3,
       projectsLoaded: Object.keys(state.entities.projectGraph.projects).length,
       pitchedProjects: pitchedProjects,

@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectLeaderTracker = TruffleContract(ProjectLeaderTracker);
     projectLeaderTracker.setProvider(web3Provider);
 
-    const dividends = TruffleContract(Dividends);
-    dividends.setProvider(web3Provider);
+    // const dividends = TruffleContract(Dividends);
+    // dividends.setProvider(web3Provider);
 
     let account;
     let inactiveTokenInstance;
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let projectFactoryInstance;
     let activationInstance;
     let projectLeaderTrackerInstance;
-    let dividendsInstance;
+    // let dividendsInstance;
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
       // console.log("tokenInst: ", token)
@@ -107,11 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
           activationInstance = _activationInstance;
         });
       })
-      .then(() => {
-        return dividends.deployed().then((_dividendsInstance)=> {
-          dividendsInstance = _dividendsInstance;
-        });
-      })
+      // .then(() => {
+      //   return dividends.deployed().then((_dividendsInstance)=> {
+      //     dividendsInstance = _dividendsInstance;
+      //   });
+      // })
       .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {
           crowdsaleInstance = _crowdsaleInstance;
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 projectContract,
                 projectLeaderTrackerInstance,
                 activationInstance,
-                dividendsInstance,
+                // dividendsInstance,
                 web3,
                 provider
               }
@@ -140,13 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
           );
 
           store = configureStore(preloadedState);
-          // let acc = web3;
-          // const networkInterval = setInterval(() => {
-          //   if (!web3) {
-          //       console.log("workssss!!")
-          //   }
-          // }, 100);
-
           window.getState = store.getState; //just for development purposes - remove later - use logger
           const root = document.getElementById('root');
           ReactDOM.render(<Root store={store} window={window}/>, root);

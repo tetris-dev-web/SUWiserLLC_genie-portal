@@ -20,6 +20,7 @@ class VotesGraph extends React.Component {
     this.SVGHeight = 600 * .5;
     this.timeWidth = (960 - this.margin.left - this.margin.right) * .5;
     this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
+    this.watchProjectPitch = this.watchProjectPitch.bind(this);
   }
 
   componentDidMount() {
@@ -46,11 +47,19 @@ class VotesGraph extends React.Component {
     }
   }
 
+  watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
+    const { projectFactoryInstance, projectContract } = this.props;
+    projectFactoryInstance.ProjectPitch().watch((error, event) => {
+      const address = event.args.projectAddress;
+      // const id = event.args.projectId;
+      this.props.fetchProject(address);
+    });
+  }
+
   watchTokenPurchase () {
     this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
       // console.log("event", Number(event.args.time), Number(event.args.value))
-      console.log(event)
-      this.props.receiveTokenPurchase({time: event.blockNumber, value: Number(event.args.value)});
+      this.props.receiveTokenPurchase({blockNumber: event.blockNumber, value: Number(event.args.value)});
     })
   }
 

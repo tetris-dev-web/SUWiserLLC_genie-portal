@@ -25,6 +25,7 @@ class LocGraph extends React.Component {
     this.cityNodeSide = 15;
     this.continentNodeSide = 8;
     this.populateState = this.populateState.bind(this);
+    this.watchProjectPitch = this.watchProjectPitch.bind(this);
   }
 
   componentDidMount () {
@@ -61,7 +62,7 @@ class LocGraph extends React.Component {
     this.addDragHandlers();
     const { data, projects, cities, continents, center } = this.state;
 
-    if (!prevState.data && data) {
+    if ((!prevState.data && data) || prevState.data !== data) {
       this.simulation = this.configureSimulation.bind(this, this.props)();
       this.addDragHandlers();
       this.simulation.on("tick", () => {
@@ -151,6 +152,15 @@ class LocGraph extends React.Component {
       handleDrag(d3.selectAll(".loc-svg-continent-node").data(continents));
       handleDrag(d3.selectAll(".loc-svg-project-node-group").data(projects));
     }
+  }
+
+  watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
+    const { projectFactoryInstance, projectContract } = this.props;
+    projectFactoryInstance.ProjectPitch().watch((error, event) => {
+      const address = event.args.projectAddress;
+      // const id = event.args.projectId;
+      this.props.fetchProject(address);
+    });
   }
 
   render() {

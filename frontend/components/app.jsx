@@ -14,20 +14,12 @@ import DeveloperInfo from './entities/developerInfo/developerInfo';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import { connect } from 'react-redux';
-import {processVotes} from '../actions/chain_actions/vote_actions';
 import { updateNetwork } from '../actions/chain_actions/network_actions'
 import './app.scss';
 
 import Modal from '../components/entities/modal/modal';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    // this.state = {
-    //   account: this.props.account
-    // }
-  }
-
   componentDidMount() {
     this.props.web3.currentProvider.publicConfigStore.on('update', network => {
       this.props.provider.eth.getCoinbase((err, account) => {
@@ -60,7 +52,6 @@ const mapStateToProps  = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    processVotes: vote_data => dispatch(processVotes(vote_data)),
     updateNetwork: network => dispatch(updateNetwork(network))
   };
 };

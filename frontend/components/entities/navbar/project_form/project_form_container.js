@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import {
   createProject
 } from '../../../../actions/chain_actions/project_actions';
-import { clearProjectErrors } from '../../../../actions/project_actions';
 
 const mapStateToProps = state => {
   const projects = Object.keys(state.entities.projectGraph.projects).reduce((pitchedProjects, projectTitle) => {

@@ -2,6 +2,9 @@ import {
   RECEIVE_TOKEN_GRAPH_DATA,
   RECEIVE_TOKEN_TRANSFER
 } from '../actions/chain_actions/token_actions';
+import {
+  RECEIVE_DIVIDENDS
+} from '../actions/chain_actions/dividends_actions';
 import { merge } from 'lodash';
 
 const tokenGraphByAllReducer = (state = [], action) => {
@@ -9,7 +12,7 @@ const tokenGraphByAllReducer = (state = [], action) => {
   let newState;
   switch (action.type) {
     case RECEIVE_TOKEN_GRAPH_DATA:
-
+    console.log("reducerrrr")
       if (action.currentViewType === 'BY ALL') {
         return action.tokenGraphData;
       }
@@ -18,7 +21,7 @@ const tokenGraphByAllReducer = (state = [], action) => {
       if (state.length) {
         const { tokenTransfer } = action;
         const { type, event } = tokenTransfer;
-        const { to, from, args } = event;
+        const { to, from, args, blockNumber } = event;
         newState = merge([], state);
         let { activeTokens, totalTokens, earnings, date } = newState[newState.length - 1];
 
@@ -31,9 +34,9 @@ const tokenGraphByAllReducer = (state = [], action) => {
         }
 
         const nextData = {
-          date: blockNumber,
-          activeToken,
+          activeTokens,
           totalTokens,
+          date: blockNumber,
           earnings
         };
 
@@ -47,6 +50,19 @@ const tokenGraphByAllReducer = (state = [], action) => {
       }
 
       return state;
+    case RECEIVE_DIVIDENDS:
+    //this isnt going to happen yet
+      newState = merge({}, state);
+      let { activeTokens, totalTokens, earnings, date } = newState[newState.length - 1];
+
+      newState.push({
+        activeTokens,
+        totalTokens,
+        data: Number(action.dividends.blockNumber),
+        earnings: earnings + Number(action.dividends.args.weiAmount)
+      })
+
+      return newState;
     default:
     return state;
   }

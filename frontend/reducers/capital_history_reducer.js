@@ -11,12 +11,22 @@ const capitalHistoryReducer = (state = {}, action) => {
     case RECEIVE_CAPITAL_HISTORY:
       return (action.capitalHistory);
     case RECEIVE_TOKEN_PURCHASE:
+      const { tokenPurchase } = action;
       const newState = merge({}, state);
-      if (newState[action.tokenPurchase.time]) {
-        newState[action.tokenPurchase.time] += action.tokenPurchase.value;
-      } else {
-        newState[action.tokenPurchase.time] = action.tokenPurchase.value;
+      const lastRecordLen = newState.history.length - 1;
+      const lastRecord = newState.history[lastRecordLen];
+
+      const newRecord = {
+        date: Number(tokenPurchase.blockNumber),
+        capital: lastRecord.capital + Number(tokenPurchase.value)
       }
+
+      if (lastRecord.date === Number(tokenPurchase.blockNumber)) {
+        newState.history[lastRecordLen] = newRecord;
+      } else {
+        newState.history[tokenPurchase.blockNumber].push(newRecord);
+      }
+
       return newState;
     default:
       return state;

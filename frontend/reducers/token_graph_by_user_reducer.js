@@ -16,7 +16,7 @@ const tokenGraphByUserReducer = (state = [], action) => {
       return state;
     case RECEIVE_TOKEN_TRANSFER:
     const { tokenTransfer } = action;
-    const { type, event, account } = tokenTransfer;
+    const { type, event, account, blockNumber } = tokenTransfer;
     const { to, from, args } = event;
 
       if (state.length && (to === account || from === account)) {
@@ -42,9 +42,9 @@ const tokenGraphByUserReducer = (state = [], action) => {
         }
 
         const nextData = {
-          date: blockNumber,
-          totalTokens,
           activeTokens,
+          totalTokens,
+          date: blockNumber,
           earnings
         };
 

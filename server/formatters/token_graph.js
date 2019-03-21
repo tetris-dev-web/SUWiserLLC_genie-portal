@@ -37,44 +37,44 @@ const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
 
   const incrementEarnings = () => {
     if (currentViewType === "BY USER") {
-      earnings += Number(currentDividend.weiAmount) * (transfer.activeTokens / transfer.allActiveTokens);
+      earnings += Number(currentDividendsRecord.weiAmount) * (currentTokenRecord.activeTokens / currentTokenRecord.allActiveTokens);
     } else {
-      earnings += Number(currentDividend.weiAmount);
+      earnings += Number(currentDividendsRecord.weiAmount);
     }
   }
 
-  let currentDividend;
-  let transfer;
+  let currentDividendsRecord;
+  let currentTokenRecord;
 
-  let currentDividendsIdx = 0;
-  let currentTransferIdx = 0;
+  let currentDividendsRecordsIdx = 0;
+  let currentTokenRecordIdx = 0;
   let lastMergedIdx;
 
   let earnings = 0;
   const merged = [];
 
-  while (currentDividendsIdx < dividendsHistory.length || currentTransferIdx < tokenHistory.length) {
+  while (currentDividendsRecordsIdx < dividendsHistory.length || currentTokenRecordIdx < tokenHistory.length) {
     lastMergedIdx = merged.length - 1;
-    currentDividend = currentDividendsIdx < dividendsHistory.length ? dividendsHistory[currentDividendsIdx] : null;
-    transfer = currentTransferIdx < tokenHistory.length ? tokenHistory[currentTransferIdx] : transfer;
+    currentDividendsRecord = currentDividendsRecordsIdx < dividendsHistory.length ? dividendsHistory[currentDividendsRecordsIdx] : null;
+    currentTokenRecord = currentTokenRecordIdx < tokenHistory.length ? tokenHistory[currentTokenRecordIdx] : currentTokenRecord;
 
-    if (currentTransferIdx >= tokenHistory.length || (currentDividend && transfer.date >= currentDividend.date)) {
+    if (currentTokenRecordIdx >= tokenHistory.length || (currentDividendsRecord && currentTokenRecord.date >= currentDividendsRecord.date)) {
       incrementEarnings();
       integrateBlockData({
         activeTokens: merged[lastMergedIdx].activeTokens,
         totalTokens: merged[lastMergedIdx].totalTokens,
-        date: currentDividend.date,
+        date: currentDividendsRecord.date,
         earnings
       })
-      currentDividendsIdx++;
+      currentDividendsRecordsIdx++;
     } else {
       integrateBlockData({
-        activeTokens: transfer.activeTokens,
-        totalTokens: transfer.totalTokens,
-        date: transfer.date,
+        activeTokens: currentTokenRecord.activeTokens,
+        totalTokens: currentTokenRecord.totalTokens,
+        date: currentTokenRecord.date,
         earnings
       })
-      currentTransferIdx++;
+      currentTokenRecordIdx++;
     }
   }
 

@@ -32,7 +32,7 @@ const Modal = ({ modals, closeModal }) => {
         component = <StrategyModal />;
         break;
       case 'project_module':
-        component = <ProjectModules project={modal.project}/>;
+        component = <ProjectModules projectId={modal.project.id}/>;
         break;
       default:
         return null;

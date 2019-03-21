@@ -2,6 +2,7 @@
 import * as ChainUtil from '../../util/chain_util';
 import * as ExpressAPI  from '../../util/fetch_util/express_api_util';
 export const RECEIVE_PROJECT_GRAPH_DATA = 'RECEIVE_PROJECT_GRAPH_DATA';
+export const RECEIVE_PROJECT = 'RECEIVE_PROJECT';
 
 export const receiveProjectGraphData = projectGraphData => {
   console.log(projectGraphData)
@@ -13,16 +14,15 @@ export const receiveProjectGraphData = projectGraphData => {
   };
 };
 
-export const fetchProject = (projectFactoryInstance, projectContract, id, address) => {
+export const fetchProject = (address) => {
   return dispatch => {
-    return ChainUtil.getProjectData(projectFactoryInstance, projectContract, id, address).then((projectData) => {
-      return dispatch(receiveProject(projectData));
-    });
-  };
+    return ExpressAPI.fetchApiData(`project_graph_data/${address}`).then(project => {
+      return dispatch(receiveProject(project));
+    })
+  }
 };
 
 export const fetchSharedProjectGraphData = () => {
-  console.log("yo bitch")
   return dispatch => {
     return ExpressAPI.fetchApiData('shared_project_graph_data').then(projectGraphData => {
       return dispatch(receiveProjectGraphData(projectGraphData));
@@ -30,24 +30,21 @@ export const fetchSharedProjectGraphData = () => {
   };
 };
 
-export const fetchProjecteCashflow = (projectContract, projectAddress, cashFlowLen) => {
+export const fetchProjectModuleData = address => {
   return dispatch => {
-    return ChainUtil.fetchProjecteCashflow(projectContract, projectAddress, cashFlowLen, receiveProject, dispatch);
+    return ExpressAPI.fetchApiData(`project_module_data/${address}`).then(projectModuleData => {
+      return dispatch(receiveProject(projectModuleData));
+    })
   }
 }
 
-export const fetchProjectActivationLogs = (crowdsale, web3) => {
-  return dispatch => {
-    return ChainUtil.fetchProjectActivationLogs(crowdsale, web3);
-  };
+export const createProject = (projectFactoryInstance, params, pdf_file, account) => {
+    return ChainUtil.pitchProject(projectFactoryInstance, params, account);
 };
 
-export const createProject = (projectFactoryInstance, params, pdf_file, account) => {
-  // return dispatch => {
-    // return APIUtil.createProject(railsParams).then(project => {
-    //   // return APIUtil.uploadPDF(project, pdf_file).then(()=>{
-    //     dispatch(receiveProject(project));
-        return ChainUtil.pitchProject(projectFactoryInstance, params, account);
-      // })
-    // });
+export const receiveProject = project => {
+  return {
+    type: RECEIVE_PROJECT,
+    project
+  };
 };

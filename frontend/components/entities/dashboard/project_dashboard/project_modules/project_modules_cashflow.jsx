@@ -1,19 +1,5 @@
 import React from 'react';
 import * as d3 from 'd3';
-import { connect } from 'react-redux';
-import { fetchProjecteCashflow } from '../../../../../actions/chain_actions/project_actions';
-
-const mapStateToProps = state => {
-  return {
-    projectContract: state.network.projectContract
-  }
-}
-
-const maptDispatchToProps = dispatch => {
-  return {
-    fetchProjecteCashflow: (projectContract, projectAddress, cashFlowLen) => dispatch(fetchProjecteCashflow(projectContract, projectAddress, cashFlowLen))
-  }
-}
 
 class CashFlowGraph extends React.Component {
   constructor(props) {
@@ -34,10 +20,6 @@ class CashFlowGraph extends React.Component {
 
   componentDidMount(){
     this.populateData();
-    console.log("length", this.props.length)
-    this.props.fetchProjecteCashflow(this.props.projectContract, this.props.address, this.props.length).then(() => {
-      // this.populateData();
-    })
   }
 
   populateData () {
@@ -261,4 +243,4 @@ class CashFlowGraph extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, maptDispatchToProps)(CashFlowGraph);
+export default CashFlowGraph;

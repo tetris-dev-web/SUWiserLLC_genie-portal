@@ -33,9 +33,6 @@ export const buyTokens = (crowdsale, account, value) => {
 }
 
 export const fetchCapitalHistory  = (crowdsale) => {
-  // return dispatch => {
-  //   return ChainUtil.fetchTokenPurchaseLogs(crowdsale, dispatch, receiveCapitalHistory)
-  // };
   return dispatch => {
     return ExpressAPI.fetchApiData(
       'capital_history_data'
@@ -60,7 +57,6 @@ export const fetchTokenGraphData = (currentViewType, account = null) => {
     ).then(tokenGraphData => {
         return dispatch(receiveTokenGraphData(tokenGraphData, currentViewType));
     })
-    // return ChainUtil.fetchAllTokenTransferLogs(inactiveToken, activeToken, receiveAllTokenTransfers, dispatch)
   }
 }
 
