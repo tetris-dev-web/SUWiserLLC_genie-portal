@@ -31,7 +31,7 @@ class DashboardGraph extends React.Component {
 
     currentView === null ?
           currentGraph = <div></div>
-        : currentGraph = this.props.graph  // TODO this needs to be based on the graph inputted
+        : currentGraph = this.props.graph[currentView]  // TODO this needs to be based on the graph inputted
 
     if (this.props.currentUser) {
       return(

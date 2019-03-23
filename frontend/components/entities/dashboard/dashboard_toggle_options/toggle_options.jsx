@@ -44,8 +44,9 @@ class ToggleOptions extends React.Component {
 
     const ToggleOption = (props) => (
       <div className="toggle-option" onClick={() => {
+            console.log(" views ",this.props.currentView, props.name);
            this.props.toggleView(props.name)
-           this.setState({DashboardIsLoaded: !this.state.DashboardIsLoaded})
+           this.props.currentView === props.name ? "do nothing" : this.setState({DashboardIsLoaded: !this.state.DashboardIsLoaded})
           }
          }>
         <div className={`toggle-button ${this.props.dashboardType}`}
