@@ -9,15 +9,14 @@ const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
   return [Math.min(...arrayOfValues), Math.max(...arrayOfValues)];
 };
 
-const mapStateToProps = ({ entities }) => {
-  console.log("E", entities)
-  const projects = Object.values(entities.projectGraph.projects).map(project => merge({}, project));
+const mapStateToProps = (state) => {
+  const projects = Object.values(state.entities.projectGraph.projects).map(project => merge({}, project));
 
   return {
     projectFactoryInstance: state.network.projectFactoryInstance,
     projectContract: state.network.projectContract,
     projects,
-    projectsLoaded: Object.keys(entities.projectGraph.projects).length,
+    projectsLoaded: Object.keys(state.entities.projectGraph.projects).length,
     allProjectsValuationMinMax: getArrayOfObjectsMinMax(projects, "valuation")
   };
 };

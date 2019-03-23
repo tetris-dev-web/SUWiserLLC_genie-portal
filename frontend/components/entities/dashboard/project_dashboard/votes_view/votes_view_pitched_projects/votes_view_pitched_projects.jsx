@@ -19,6 +19,7 @@ class VotesViewPitchedProjects extends React.Component {
 	constructor (props) {
 		super(props);
 		this.watchVoteChange = this.watchVoteChange.bind(this);
+		this.minWidth = null;
 	}
 
 	componentDidMount () {
@@ -35,6 +36,10 @@ class VotesViewPitchedProjects extends React.Component {
 
 		return pitchedProjects.map(project => {
 			const projectWidth = project.voteShare * totalProjectWidth;
+			if (projectWidth > 0 && (!this.minWidth || projectWidth < this.minWidth)) {
+				this.minWidth = projectWidth;
+			}
+
 			const newProject = Object.assign({}, project, {
 				fill: capitalBeingRaised < project.capitalRequired ? "#aa7a60" : "#61aba9",
 				marginWidth,
@@ -46,6 +51,7 @@ class VotesViewPitchedProjects extends React.Component {
 				projectCapitalRequiredStartY: SVGYScale(project.capitalRequired + capitalTotal - capitalBeingRaised),
 				projectRectCenter: projectStartX + projectWidth / 2
 			});
+
 			projectStartX += (marginWidth + projectWidth);
 			return newProject;
 		});
@@ -60,16 +66,19 @@ class VotesViewPitchedProjects extends React.Component {
 	render() {
 		const { selectedProject, toggleSelectedProject, voteShiftTool, SVGYScale, circleScale, margin } = this.props;
 
-		const rects = this.processProjectData().map((project, idx) => (
-			<VotesViewPitchedProjectsRect key={idx}
-				transform={`translate(263, 0)`}
-				project={project}
-				SVGYScale={SVGYScale}
-				circleScale={circleScale}
-				selectedProject={selectedProject}
-				toggleSelectedProject={toggleSelectedProject}
-				voteShiftTool={voteShiftTool} />
-		));
+		const rects = this.processProjectData().map((project, idx) => {
+			project.projectWidth = project.projectWidth > 0 ? project.projectWidth : this.minWidth / 3;
+			return (
+				<VotesViewPitchedProjectsRect key={idx}
+					transform={`translate(263, 0)`}
+					project={project}
+					SVGYScale={SVGYScale}
+					circleScale={circleScale}
+					selectedProject={selectedProject}
+					toggleSelectedProject={toggleSelectedProject}
+					voteShiftTool={voteShiftTool} />
+			);
+		});
 
 		return (
 			<g className="votes-view-pitched-projects" transform={'translate(0, 0)'}>

@@ -25,12 +25,12 @@ class VotesViewPitchedProjectsRect extends React.Component {
 
 	handleClick(e) {
 		const { selectedProject, toggleSelectedProject, project, voteShiftTool } = this.props;
-
 		if (!selectedProject) {
 			document.addEventListener('click', this.handleClick, false);
 			toggleSelectedProject(project);
 			if (!this.state.showHoverEffect) this.setState({ showHoverEffect: true });
-		} else if (selectedProject.id === project.id) {
+		 }
+		else {
 			if (this.projectGroup.contains(e.target) || voteShiftTool.contains(e.target)) return;
 			document.removeEventListener('click', this.handleClick, false);
 			toggleSelectedProject(null);
@@ -41,7 +41,9 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	render() {
 		const { selectedProject, project, circleScale, transform } = this.props;
 		const { fill, marginWidth, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
-
+		console.log(projectWidth, 'width')
+		console.log(projectValutionHeight, 'val height')
+		console.log(projectCapitalRequiredHeight, 'cap height')
 		return(
 			<g className="votes-view-project-group"
 				transform={transform}

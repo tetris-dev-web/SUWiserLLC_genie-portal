@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const projectLeaderTracker = TruffleContract(ProjectLeaderTracker);
     projectLeaderTracker.setProvider(web3Provider);
 
-    // const dividends = TruffleContract(Dividends);
-    // dividends.setProvider(web3Provider);
+    const dividends = TruffleContract(Dividends);
+    dividends.setProvider(web3Provider);
 
     let account;
     let inactiveTokenInstance;
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let projectFactoryInstance;
     let activationInstance;
     let projectLeaderTrackerInstance;
-    // let dividendsInstance;
+    let dividendsInstance;
     provider.eth.getCoinbase((err, _account) => {
       account = _account;
       // console.log("tokenInst: ", token)
@@ -107,11 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
           activationInstance = _activationInstance;
         });
       })
-      // .then(() => {
-      //   return dividends.deployed().then((_dividendsInstance)=> {
-      //     dividendsInstance = _dividendsInstance;
-      //   });
-      // })
+      .then(() => {
+        return dividends.deployed().then((_dividendsInstance)=> {
+          dividendsInstance = _dividendsInstance;
+        });
+      })
       .then(() => {
         crowdsale.deployed().then((_crowdsaleInstance) => {
           crowdsaleInstance = _crowdsaleInstance;
@@ -132,13 +132,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 projectContract,
                 projectLeaderTrackerInstance,
                 activationInstance,
-                // dividendsInstance,
+                dividendsInstance,
                 web3,
                 provider
               }
             }
           );
-
+          console.log({
+            activationAddress: activationInstance.address,
+            activeTokenAddress: activeTokenInstance.address,
+            crowdsaleAddress: crowdsaleInstance.address,
+            dividendsAddress: dividendsInstance.address,
+            inactiveTokenAddress: inactiveTokenInstance.address,
+            projectFactoryAddress: projectFactoryInstance.address,
+            projectLeaderTrackerAddress: projectLeaderTrackerInstance.address,
+            votingAddress: votingInstance.address,
+            votingTokenAddress: votingTokenInstance.address
+          })
           store = configureStore(preloadedState);
           window.getState = store.getState; //just for development purposes - remove later - use logger
           const root = document.getElementById('root');

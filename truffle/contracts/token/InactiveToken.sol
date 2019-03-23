@@ -175,7 +175,7 @@ contract InactiveToken is CrowdsaleLocked, ActivationLocked {
     );
 
     uint256 inactiveSupply = totalSupply().sub(balanceOf(crowdsale())).sub(totalPendingActivations);
-    require(totalPendingActivations.add(amount) <= totalSupply().sub(totalPendingActivations));
+    require(amount <= inactiveSupply);
 
     uint256 newActivationPoints = amount.mul(activationMultiplier).div(inactiveSupply);
     totalActivationPoints = totalActivationPoints.add(newActivationPoints);

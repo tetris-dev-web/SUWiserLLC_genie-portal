@@ -75,9 +75,9 @@ class ProjectForm extends React.Component {
     // this.renderFileName();
   }
 
-  componentWillUnmount() {
-    this.props.clearProjectErrors();
-  }
+  // componentWillUnmount() {
+  //   this.props.clearProjectErrors();
+  // }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -181,12 +181,14 @@ class ProjectForm extends React.Component {
 
     // console.log("project data: ", projectData);
 
-    this.props.createProject(this.props.projectFactoryInstance, params, this.state.pdf_file, this.props.account).then(() => {
-      if (this.props.errors.length == 0) {
-        this.props.closeModal();
-        // window.location.reload();
-      }
-    });
+    // this.props.createProject(this.props.projectFactoryInstance, params, this.state.pdf_file, this.props.account).then(() => {
+    //   if (this.props.errors.length == 0) {
+    //     this.props.closeModal();
+    //     // window.location.reload();
+    //   }
+    // });
+
+    this.props.pitchProjectForDemo(params);
   }
 
   dropPinClick() {

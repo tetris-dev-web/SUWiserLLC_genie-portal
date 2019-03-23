@@ -23,25 +23,27 @@ export const voteAndUpdateProjects = async (
   web3
 ) => {
   // const block = web3.eth.getBlock("latest");
-  const batch = web3.createBatch();
+  // const batch = web3.createBatch();
   // console.log("block", block)
 
-  if (type === 'removeVotes') {
-    batch.add(votingInstance.voteAgainstProject.request(projectAddress, votes, {from: account}));
-  } else {
-    batch.add(votingInstance.voteForProject.request(projectAddress, votes, {from: account}));
-  }
-
-  Object.keys(projects).forEach(project => {
-    if (project.activationTime === 0 && project.title) {
-      // !== 'Matt\'s Mansion'
-      batch.add(projectLeaderTracker.trackProject.request(project.id, {from: account}))
-    }
-  })
-
-  console.log("batch", batch)
-  batch.add(activation.tryActivateProject.request({from: account}));
-  return await batch.execute();
+  // if (type === 'removeVotes') {
+  //   batch.add(votingInstance.voteAgainstProject.request(projectAddress, votes, {from: account}));
+  // } else {
+  //   batch.add(votingInstance.voteForProject.request(projectAddress, votes, {from: account}));
+  // }
+  //
+  // Object.keys(projects).forEach(project => {
+  //   if (project.activationTime === 0 && project.title) {
+  //     // !== 'Matt\'s Mansion'
+  //     batch.add(projectLeaderTracker.trackProject.request(project.id, {from: account}))
+  //   }
+  // })
+  //
+  const leader = await projectLeaderTracker.tentativeLeader();
+  console.log('leader', leader)
+  // batch.add(activation.tryActivateProject.request({from: account}));
+  // return await batch.execute();
+  // await activation.tryActivateProject({from: account});
 }
 
 export const pitchProject = async (projectFactoryInstance, data, account) => {

@@ -34,7 +34,7 @@ class VotesGraph extends React.Component {
     }
 
     this.props.fetchCapitalHistory(this.props.crowdsaleInstance);
-
+    this.watchProjectPitch();
     this.watchTokenPurchase();
   }
 
@@ -57,8 +57,9 @@ class VotesGraph extends React.Component {
   }
 
   watchTokenPurchase () {
+    console.log("watching purchase")
     this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
-      // console.log("event", Number(event.args.time), Number(event.args.value))
+      console.log('event', event)
       this.props.receiveTokenPurchase({blockNumber: event.blockNumber, value: Number(event.args.value)});
     })
   }

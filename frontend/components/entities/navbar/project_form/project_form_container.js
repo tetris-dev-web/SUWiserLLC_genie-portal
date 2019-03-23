@@ -1,7 +1,8 @@
 import ProjectForm from './project_form';
 import { connect } from 'react-redux';
 import {
-  createProject
+  createProject,
+  pitchProjectForDemo
 } from '../../../../actions/chain_actions/project_actions';
 
 const mapStateToProps = state => {
@@ -25,6 +26,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     createProject: (projectFactoryInstance, params, pdf_file, account) => createProject(projectFactoryInstance, params, pdf_file, account),
+    pitchProjectForDemo: params => pitchProjectForDemo(params),
     clearProjectErrors: () => dispatch(clearProjectErrors())
   };
 };

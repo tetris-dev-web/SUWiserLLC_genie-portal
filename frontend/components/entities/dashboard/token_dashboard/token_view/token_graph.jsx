@@ -49,6 +49,7 @@ class TokenGraph extends React.Component {
     this.width = (960 - this.margin.left - this.margin.right);
     this.height = (400 - this.margin.top - this.margin.bottom);
     this.watchTokenTransfer = this.watchTokenTransfer.bind(this);
+    this.watchReceiveDividends = this.watchReceiveDividends.bind(this);
     this.fetchData = this.fetchData.bind(this);
   }
 
@@ -86,6 +87,7 @@ class TokenGraph extends React.Component {
   }
 
   watchTokenTransfer (token, type) {
+    console.log('watching token transfer')
     token.Transfer().watch((error, event) => {
       console.log('event', event)
       this.props.receiveTokenTransfer({event, account: this.props.account, type})

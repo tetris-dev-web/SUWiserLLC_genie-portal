@@ -38,6 +38,20 @@ export const fetchProjectModuleData = address => {
   }
 }
 
+export const pitchProjectForDemo = params => {
+  return ExpressAPI.fetchApiData(
+    'demo/pitch_project',
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({params})
+    }
+  )
+}
+
 export const createProject = (projectFactoryInstance, params, pdf_file, account) => {
     return ChainUtil.pitchProject(projectFactoryInstance, params, account);
 };

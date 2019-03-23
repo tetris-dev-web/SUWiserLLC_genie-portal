@@ -6,11 +6,12 @@ const { Credentials } = require('uport-credentials')
 const transports = require('uport-transports').transport;
 const message = require('uport-transports').message.util;
 const { asyncMiddleware } = require('./middlewares/async_middleware');
-const { fetchProjects, fetchProjectGraphData, demoInvestorProjectVotes } = require('./chain_api/projects_chain_api');
-const { capitalHistoryData } = require('./controllers/capital_history_controller');
-const { tokenGraphData } = require('./controllers/token_graph_controller');
-const { projectModuleData } = require('./controllers/projects_controller');
-const { fetchWeiRaised } = require('./chain_api/crowdsale_chain_api')
+const { fetchProjects, fetchProjectModuleData, fetchProjectGraphData, demoInvestorVotesByProject } = require('./controllers/projects_controller');
+const { fetchTokenHistoryWithEarnings } = require('./controllers/token_controller');
+const { fetchWeiRaised , fetchPurchases, buyTokens } = require('./controllers/crowdsale_controller');
+const { voteAndUpdateProjects } = require('./controllers/voting_controller');
+const { demoInvestorFreeVotes } = require('./controllers/voting_token_controller');
+const { pitchProject } = require('./controllers/project_factory_controller');
 
 let endpoint = ''
 const app = express();
@@ -31,25 +32,49 @@ app.get('/api/project_graph_data/:address', asyncMiddleware(async (req, res) => 
 
 app.get('/api/project_module_data/:address', asyncMiddleware(async (req, res) => {
   const address = req.params.address;
-  const project = await projectModuleData(address);
+  const project = await fetchProjectModuleData(address);
   res.send(project);
 }))
 
 app.get('/api/capital_history_data', asyncMiddleware(async (req, res) => {
-  const _capitalHistoryData = await capitalHistoryData();
+  const _capitalHistoryData = await fetchPurchases();
   res.send(_capitalHistoryData)
 }));
 
 app.post('/api/token_graph_data', asyncMiddleware(async (req, res) => {
   const { body } = req;
   const { currentViewType, account } = body;
-  const _tokenGraphData = await tokenGraphData(currentViewType, account);
+  const _tokenGraphData = await fetchTokenHistoryWithEarnings(currentViewType, account);
   res.send(_tokenGraphData);
 }));
 
+app.get('/api/demo/demoInvestorFreeVotes', asyncMiddleware(async (req, res) => {
+  const freeVotes = await demoInvestorFreeVotes();
+  res.send(freeVotes);
+}))
+
 app.get('/api/demo/project_votes/:projectAddress', asyncMiddleware(async (req, res) => {
   const { projectAddress } = req.params;
-  const votes = await demoInvestorProjectVotes(projectAddress);
+  const votes = await demoInvestorVotesByProject(projectAddress);
+  res.send(votes);
+}))
+
+app.post('/api/demo/vote_and_update_projects', asyncMiddleware(async (req, res) => {
+  const { votes, type, selectedProject } = req.body;
+  await voteAndUpdateProjects(votes, type, selectedProject);
+  res.send({});
+}))
+
+app.post('/api/demo/pitch_project', asyncMiddleware(async (req, res) => {
+  const { params } = req.body;
+  await pitchProject(params);
+  res.send({});
+}))
+
+app.post('/api/demo/buy_tokens', asyncMiddleware(async (req, res) => {
+  const { wei } = req.body;
+  await buyTokens(wei);
+  res.send({});
 }))
 
 const server = app.listen(8080, () => {

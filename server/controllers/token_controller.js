@@ -1,14 +1,17 @@
-const { web3Instance } = require('../chain_connection/contracts');
-const { fetchEvents } = require('../chain_connection/events');
+const { fetchEvents } = require('../chain_util/chain_util');
 const { numberParser } = require('../util/number_util');
 const { merge } = require('lodash');
-const InactiveToken = require('../../truffle/build/contracts/InactiveToken.json');
-const ActiveToken = require('../../truffle/build/contracts/ActiveToken.json');
+const { formatTokenGraphData } = require('../formatters/token_graph');
+const { fetchDividendReceptions } = require('./dividends_controller');
+const { inactiveTokenInstance, activeTokenInstance } = require('../chain_models/models');
+
+const fetchTokenHistoryWithEarnings = async (currentViewType, account) => {
+  const dividendReceptions = await fetchDividendReceptions();
+  const tokenTransfers = await fetchTokenTransfers();
+  return formatTokenGraphData(tokenTransfers, dividendReceptions, currentViewType, account);
+}
 
 const fetchTokenTransfers = async () => {
-  const inactiveTokenInstance = web3Instance(InactiveToken, "0x19e4f9f6f4fb5c52255fe70dfefd061cce754452");
-  const activeTokenInstance = web3Instance(ActiveToken, "0x90c8903d589de9df9e672f5e9fd9429b015850ba");
-
   const inactiveTransferData = await transfersData(inactiveTokenInstance);
   const activeTransferData = await transfersData(activeTokenInstance);
 
@@ -30,5 +33,5 @@ const transfersData = async (tokenInstance) => {
 }
 
 module.exports = {
-  fetchTokenTransfers
+  fetchTokenHistoryWithEarnings
 }

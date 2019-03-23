@@ -32,6 +32,22 @@ export const buyTokens = (crowdsale, account, value) => {
   return ChainUtil.buyTokens(crowdsale, account, value)
 }
 
+export const buyTokensWithDemoInvestor = wei => {
+  return ExpressAPI.fetchApiData(
+    'demo/buy_tokens',
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        wei
+      })
+    }
+  )
+}
+
 export const fetchCapitalHistory  = (crowdsale) => {
   return dispatch => {
     return ExpressAPI.fetchApiData(
