@@ -67,12 +67,15 @@
     "webpack": "npx webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "jTest": "jest",
+    "build-frontend": "webpack",
     "jTest-watch": "jest --watch",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "start": "webpack ./frontend/entry.jsx ./dist/index_bundle.js",
     "server": "nodemon server/server.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build-frontend"
   },
+  "proxy": "http://localhost:5000",
   "jest": {
     "snapshotSerializers": [
       "enzyme-to-json/serializer"

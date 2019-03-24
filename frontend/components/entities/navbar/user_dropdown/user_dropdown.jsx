@@ -4,7 +4,7 @@ import ModalStyle from './modal_style';
 import Wallet from './wallet/wallet';
 import ProfileContainer from './profile/profile_container';
 import TokenData from '../../../../contract_data/Token';
-import { fetchTokenBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../../actions/chain_actions/token_actions';
+import { fetchTokenBalances, fetchDemoInvestorBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../../actions/chain_actions/token_actions';
 import { connect } from 'react-redux';
 import { merge } from 'lodash';
 
@@ -61,15 +61,22 @@ class UserDropdown extends React.Component {
 
   componentDidMount () {
     const { inactiveTokenInstance, activeTokenInstance, account } = this.props;
-    this.props.fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account).then(balances => {
-      const { totalActive, totalInactive, accountActive, accountTotal } = balances;
-      this.setState({
-        totalActive: Number(totalActive),
-        totalInactive: Number(totalInactive),
-        accountActive: Number(accountActive),
-        accountTotal: Number(accountTotal)
-      })
-    });
+    // this.props.fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account).then(balances => {
+    //   const { totalActive, totalInactive, accountActive, accountTotal } = balances;
+    //   this.setState({
+    //     totalActive: Number(totalActive),
+    //     totalInactive: Number(totalInactive),
+    //     accountActive: Number(accountActive),
+    //     accountTotal: Number(accountTotal)
+    //   })
+    // });
+    this.props.fetchDemoInvestorBalances().then(balances => {
+        const { accountActive, accountTotal } = balances;
+        this.setState({
+          accountActive: Number(accountActive),
+          accountTotal: Number(accountTotal)
+        })
+    })
     this.watchTransfer(inactiveTokenInstance);
     this.watchTransfer(activeTokenInstance);
   }
@@ -232,7 +239,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTokenBalances: (inactiveTokenInstance, activeTokenInstance, account) => fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account)
+    fetchTokenBalances: (inactiveTokenInstance, activeTokenInstance, account) => fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account),
+    fetchDemoInvestorBalances: () => fetchDemoInvestorBalances()
   }
 };
 

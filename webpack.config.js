@@ -10,7 +10,7 @@ module.exports = {
   context: __dirname,
   entry: ["@babel/polyfill", "./frontend/entry.jsx"],
   output: {
-     path: path.resolve(__dirname, 'dist'),
+     path: path.resolve(__dirname, './frontend/build'),
      filename: 'bundle.js'
    },
   target: 'web',

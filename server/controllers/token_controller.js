@@ -32,6 +32,18 @@ const transfersData = async (tokenInstance) => {
   })
 }
 
+const fetchInvestorBalance = async () => {
+  const account = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const accountInactive = await inactiveTokenInstance.methods.balanceOf(account).call();
+  const accountActive = await activeTokenInstance.methods.balanceOf(account).call();
+
+  return {
+    accountInactive,
+    accountActive
+  }
+}
+
 module.exports = {
-  fetchTokenHistoryWithEarnings
+  fetchTokenHistoryWithEarnings,
+  fetchInvestorBalance
 }
