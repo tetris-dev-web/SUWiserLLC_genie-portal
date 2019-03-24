@@ -1,22 +1,21 @@
-import * as d3 from 'd3';
 import { merge } from 'lodash'
 
-export const formatTokenGraphData = (tokenTransferLogs, dividendsLogs, currentViewType, account) => {
+export const formatTokenGraphData = (tokenTransferData, dividendsLogs, currentViewType, account) => {
   const dividendsHistory = formatDividendsHistory(dividendsLogs);
-  const tokenHistory = formatTokenHistory(tokenTransferLogs, currentViewType, account);
+  const tokenHistory = formatTokenHistory(tokenTransferData, currentViewType, account);
   return mergeHistories(dividendsHistory, tokenHistory, currentViewType);
 }
 
 const formatDividendsHistory = dividendsLogs => {
-  return dividendsLogs.map(log => {
-    const args = merge({}, log.args);
-    args.date = log.blockNumber;
+  return dividendsLogs.map(_data => {
+    const data = merge({}, _data);
+    data.date = _data.blockNumber;
     return args;
   })
 }
 
-const formatTokenHistory = (tokenTransferLogs, currentViewType, account) => {
-  const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferLogs);
+const formatTokenHistory = (tokenTransferData, currentViewType, account) => {
+  const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferData);
 
   const allTransfers = inactiveHistory.concat(activeHistory).sort((x, y) => {
     return x.blockNumber - y.blockNumber;
@@ -82,26 +81,41 @@ const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
   return merged;
 }
 
-const getTransferHistory = tokenTransferLogs => {
-  const { inactiveTransferLogs, activeTransferLogs } = tokenTransferLogs;
+const getTransferHistory = tokenTransferData => {
+  const { inactiveTransferData, activeTransferData } = tokenTransferData;
 
-  const helper = transferLogs => {
-    const type = transferLogs === inactiveTransferLogs ? "inactive" : "active";
-    return transferLogs.map(log => {
-      const args = merge({}, log.args);
-      args.value = Number(args.value);
-      args.blockNumber = log.blockNumber;
-      args.type = type;
-      return args;
+  const helper = transferData => {
+    const type = transferData === inactiveTransferData ? "inactive" : "active";
+    return transferData.map(_data => {
+      const data = merge({}, _data);
+      data.type = type;
+      return data;
     })
   }
 
   return {
-    inactiveHistory: helper(inactiveTransferLogs),
-    activeHistory: helper(activeTransferLogs)
+    inactiveHistory: helper(inactiveTransferData),
+    activeHistory: helper(activeTransferData)
 
   }
 }
+
+// const type = transferLogs === inactiveTransferData ? "inactive" : "active";
+// return transferLogs.map(log => {
+//   const args = merge({}, log.args);
+//   args.value = Number(args.value);
+//   args.blockNumber = log.blockNumber;
+//   args.type = type;
+//   return args;
+// })
+
+// const type = transferData === inactiveTransferData ? "inactive" : "active";
+// return transferData.map(_data => {
+//   const data = merge({}, _data);
+//   data.type = type;
+//   return data;
+// })
+
 
 const tokenHistoryByUser = (account, allTransfers) => {
   const userTransfers = allTransfers.filter(transfer => {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as d3 from 'd3';
-import { fetchAllTokenTransferLogs, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
-import { fetchReceiveDividendsLogs, receiveReceiveDividendsLog } from '../../../../../actions/chain_actions/dividends_actions';
+import { fetchTokenGraphData, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
+import { receiveReceiveDividends } from '../../../../../actions/chain_actions/dividends_actions';
 import { userData, totalData } from '../../../../../util/token_data_util';
 import { formatTokenGraphData } from '../../../../../util/propsUtil';
 import './token_graph.scss';
@@ -14,51 +14,25 @@ import '../../loader/loader.scss';
 import { merge } from 'lodash';
 
 const mapStateToProps = (state, ownProps) => {
-  // const parseTime = d3.timeParse("%m/%d/%y");
-  //
-  // userData.forEach(d => {
-  //   /* It will try to parse twice if relogging in, resulting in null,
-  //   so you must check if it's a string */
-  //   if (typeof d.date === 'string') d.date = parseTime(d.date);
-  //   d.price = +d.price;
-  //   d.balance = +d.balance;
-  //   d.totalTokens = +d.totalTokens;
-  //   d.activeTokens = +d.activeTokens;
-  // });
-  //
-  // totalData.forEach(d => {
-  //   if (typeof d.date === 'string') d.date = parseTime(d.date);
-  //   d.price = +d.price;
-  //   d.balance = +d.balance;
-  //   d.totalTokens = +d.totalTokens;
-  //   d.activeTokens = +d.activeTokens;
-  // });
-  let data;
+  const { currentViewType } = ownProps;
+  const tokenGraph = state.entities.tokenGraph;
+  const { byUser, byAll } = tokenGraph;
+  const dataLoaded = Object.keys(byAll).length && currentViewType === 'BY ALL' || Object.keys(byUser).length && currentViewType === 'BY USER';
 
-  if (state.entities.tokenTransfers.inactiveTransferLogs && state.entities.dividendsHistory) {
-    data = formatTokenGraphData(
-      state.entities.tokenTransfers,
-      state.entities.dividendsHistory,
-      ownProps.currentViewType,
-      state.network.account
-    );
-  }
-  console.log("data", data)
   return {
-    data,
-    // data: ownProps.currentViewType === "BY USER"? userData : totalData,
+    data: dataLoaded ? currentViewType === 'BY USER' ? tokenGraph.byUser : tokenGraph.byAll : null,
     dividends: state.network.dividendsInstance,
     inactiveToken: state.network.inactiveTokenInstance,
-    activeToken: state.network.activeTokenInstance
+    activeToken: state.network.activeTokenInstance,
+    account: state.network.account
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchAllTokenTransferLogs: (inactiveToken, activeToken) => dispatch(fetchAllTokenTransferLogs(inactiveToken, activeToken)),
+    fetchTokenGraphData: (currentViewType, account) => dispatch(fetchTokenGraphData(currentViewType, account)),
     receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event)),
-    fetchReceiveDividendsLogs: (dividends) => dispatch(fetchReceiveDividendsLogs(dividends)),
-    receiveReceiveDividendsLog: (event) => dispatch(receiveReceiveDividendsLog(event))
+    receiveReceiveDividends: (event) => dispatch(receiveReceiveDividends(event))
   }
 }
 
@@ -75,11 +49,12 @@ class TokenGraph extends React.Component {
     this.width = (960 - this.margin.left - this.margin.right);
     this.height = (400 - this.margin.top - this.margin.bottom);
     this.watchTokenTransfer = this.watchTokenTransfer.bind(this);
+    this.watchReceiveDividends = this.watchReceiveDividends.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
-    this.props.fetchAllTokenTransferLogs(this.props.inactiveToken, this.props.activeToken);
-    this.props.fetchReceiveDividendsLogs(this.props.dividends);
+    this.fetchData();
     this.watchTokenTransfer(this.props.inactiveToken, 'inactive');
     this.watchTokenTransfer(this.props.activeToken, 'active');
     this.watchReceiveDividends();
@@ -91,13 +66,18 @@ class TokenGraph extends React.Component {
 
   componentDidUpdate (prevProps) {
     const prevData = prevProps.data;
-    const { data, updateTimeAxis } = this.props;
-
+    const prevViewType = prevProps.currentViewType;
+    const { data, updateTimeAxis, currentViewType } = this.props;
     if (!prevData && data || (data && prevData.keys.length < data.keys.length)) {
-      console.log(prevData, data)
-
       updateTimeAxis(data[0].date, data[data.length - 1].date);
     }
+    if (currentViewType !== prevViewType) {
+      this.fetchData()
+    }
+  }
+
+  fetchData () {
+    this.props.fetchTokenGraphData(this.props.currentViewType, this.props.account);
   }
 
   toggleTimeAxis(boolean) {
@@ -107,19 +87,19 @@ class TokenGraph extends React.Component {
   }
 
   watchTokenTransfer (token, type) {
+    console.log('watching token transfer')
     token.Transfer().watch((error, event) => {
-      this.props.receiveTokenTransfer({data: event, type}).then(() => {
-        updateTimeAxis(null, event.blockNumber);
-      });
+      console.log('event', event)
+      this.props.receiveTokenTransfer({event, account: this.props.account, type})
+      this.props.updateTimeAxis(null, event.blockNumber);
     })
   }
 
   watchReceiveDividends () {
     const { dividends, updateTimeAxis } = this.props;
     dividends.ReceiveDividends().watch((error, event) => {
-      this.props.receiveReceiveDividendsLog(event).then(() => {
-        updateTimeAxis(null, event.blockNumber);
-      });
+      this.props.receiveReceiveDividends(event)
+      this.props.updateTimeAxis(null, event.blockNumber);
     })
   }
 

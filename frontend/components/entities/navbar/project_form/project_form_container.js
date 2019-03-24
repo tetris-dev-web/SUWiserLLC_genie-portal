@@ -1,13 +1,13 @@
 import ProjectForm from './project_form';
 import { connect } from 'react-redux';
 import {
-  createProject
+  createProject,
+  pitchProjectForDemo
 } from '../../../../actions/chain_actions/project_actions';
-import { clearProjectErrors } from '../../../../actions/project_actions';
 
 const mapStateToProps = state => {
-  const projects = Object.keys(state.entities.projects).reduce((pitchedProjects, projectTitle) => {
-    const project = state.entities.projects[projectTitle];
+  const projects = Object.keys(state.entities.projectGraph.projects).reduce((pitchedProjects, projectTitle) => {
+    const project = state.entities.projectGraph.projects[projectTitle];
     if (project.instance) {
       pitchedProjects[projectTitle] = project;
     }
@@ -26,6 +26,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     createProject: (projectFactoryInstance, params, pdf_file, account) => createProject(projectFactoryInstance, params, pdf_file, account),
+    pitchProjectForDemo: params => pitchProjectForDemo(params),
     clearProjectErrors: () => dispatch(clearProjectErrors())
   };
 };

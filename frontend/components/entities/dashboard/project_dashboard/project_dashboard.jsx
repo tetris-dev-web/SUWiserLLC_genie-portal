@@ -17,7 +17,6 @@ class ProjectDashboard extends React.Component {
     };
 
     this.toggleView = this.toggleView.bind(this);
-    this.watchProjectPitch = this.watchProjectPitch.bind(this);
   }
 
   toggleView (currentViewId) {
@@ -32,24 +31,7 @@ class ProjectDashboard extends React.Component {
       this.graphContainer.style.minHeight = "50vh";
     }
   }
-
-  componentDidMount() {
-    this.watchProjectPitch();
-  }
-
-  watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
-    const { projectFactoryInstance, projectContract } = this.props;
-    projectFactoryInstance.ProjectPitch().watch((error, event) => {
-      const address = event.args.projectAddress;
-      const id = event.args.projectId;
-      this.props.fetchProject(projectFactoryInstance, projectContract, id, address);
-    // const title = event.args.title;
-    // const project = this.props.projects[title];
-    // project.instance = this.props.projectContract.at(address);
-    // this.props.receiveProject(project);
-    });
-  }
-
+  
   handleKeyPress(e) {
     alert('PRESSED');
   }

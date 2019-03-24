@@ -2,14 +2,27 @@ import React from 'react';
 import ProjectMap from './project_modules_map';
 import ProjectThermo from './project_modules_thermo';
 import CashFlowGraph from './project_modules_cashflow';
+import Loader from '../../loader/loader';
 import {Title, IframeFor3dModel, CloseButton, SummaryAndPlan } from './project_modules_subcomponents';
+import { fetchProjectModuleData } from '../../../../../actions/chain_actions/project_actions';
 import { editProject } from '../../../../../actions/project_actions'
 import { calculateCashflowData } from '../../../../../util/project_api_util';
 import { connect } from 'react-redux';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  // const cashflow = state.entities.projectGraph.projects[ownProps.project.id].cashFlow;
+  const project = state.entities.projectGraph.projects[ownProps.projectId];
   return {
-    capitalBeingRaised: state.entities.capitalBeingRaised
+    project,
+    capitalBeingRaised: state.entities.projectGraph.capitalBeingRaised,
+    projectContract: state.network.projectContract
+  }
+}
+
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchProjectModuleData: (address) => dispatch(fetchProjectModuleData(address))
   }
 }
 
@@ -18,8 +31,14 @@ class ProjectModules extends React.Component {
     super(props);
     this.state = {
       model_link: "https://poly.google.com/view/" + "7syizSLPN60" + "/embed",
-      modalState: false,
+      modalState: false
     };
+  }
+
+  componentDidMount () {
+    const { address } = this.props.project;
+    this.props.fetchProjectModuleData(address);
+    //we can listen for changes in later with websockets
   }
 
   UNSAFE_componentWillUpdate (prevProps, prevState) {
@@ -39,59 +58,47 @@ class ProjectModules extends React.Component {
   }
 
   render() {
-    console.log("project modules", this.props.captialBeingRaised)
       const { project, isInvestor, isModalOpen, closeModalOnClick } = this.props;
-      const { projected_cashflow, actual_cashflow, accum_projected_cashflow, accum_actual_cashflow } = calculateCashflowData(project.cashFlow);
-      console.log("outer comp", projected_cashflow, actual_cashflow, accum_projected_cashflow, accum_actual_cashflow)
-      const { model_link } = this.state;
-      console.log("project", project)
-      // const noDataComponent = <h1 className="nodata-text">No data available</h1>
 
-      return (
-        // <Modal
-        //   isOpen={isModalOpen}
-        //   onRequestClose={closeModalOnClick}
-        //   contentLabel="Project Graph Modal"
-        //   style={ModalStyle}
-        //   className="modal-container">
+      if (project.cashFlow) {
+        const { projected_cashflow, actual_cashflow, accum_projected_cashflow, accum_actual_cashflow } = calculateCashflowData(project.cashFlow);
+        const { model_link } = this.state;
 
-        //   <CloseButton closeModal = {closeModalOnClick} />
+        return (
+          <React.Fragment>
+            <Title nameOfProject={project.title}/>
+            <div className="project-modal-grid">
 
-          // { projectClicked &&
-            <React.Fragment>
-              <Title nameOfProject={project.title}/>
-              <div className="project-modal-grid">
-
-                <IframeFor3dModel projectClicked={project}
-                                  model_link ={model_link}/>
+              <IframeFor3dModel projectClicked={project}
+                model_link ={model_link}/>
 
 
-                <CashFlowGraph
-                                  actual_cashflow = {actual_cashflow}
-                                  accum_actual_cashflow = {accum_actual_cashflow}
-                                  projected_cashflow = {projected_cashflow}
-                                  accum_projected_cashflow ={accum_projected_cashflow}
-                                  valuation={project.valuation}
-                                  length={Object.keys(project.cashFlow).length}
-                                  address={project.address}
-                                  height={200}
-                                  width={300}/>
+              <CashFlowGraph
+                actual_cashflow = {actual_cashflow}
+                accum_actual_cashflow = {accum_actual_cashflow}
+                projected_cashflow = {projected_cashflow}
+                accum_projected_cashflow ={accum_projected_cashflow}
+                valuation={project.valuation}
+                length={Object.keys(project.cashFlow).length}
+                address={project.address}
+                height={200}
+                width={300}/>
 
-                <SummaryAndPlan
-                                  handleKeyPress = {null}
-                                  isInvestor = {isInvestor}
-                                  summary = {project.description}
-                                  bus_plan_link = {project.bus_plan_link} />
+              <SummaryAndPlan
+                handleKeyPress = {null}
+                isInvestor = {isInvestor}
+                summary = {project.description}
+                bus_plan_link = {project.bus_plan_link} />
 
-                <ProjectMap       projectClicked={ project } />
+              <ProjectMap       projectClicked={ project } />
 
-              </div>
-            </React.Fragment>
-          // }
-        // </Modal>
-      );
+            </div>
+          </React.Fragment>
+        );
+      }
+
+      return <Loader/>;
     }
 }
 
-// <ProjectThermo    project={project} capitalBeingRaised={this.props.capitalBeingRaised}/>
-export default connect(mapStateToProps)(ProjectModules);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectModules);

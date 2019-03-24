@@ -10,7 +10,7 @@ class VotesViewCapitalRaised extends React.Component {
 
   render() {
     const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, capitalTotal, lineData, deployedProjects, selectedProject, SVGWidth, timeAxis } = this.props;
-    // console.log(this.props, 'props')
+    console.log(this.props, 'props, should render again')
     const Lines = deployedProjects.map((project, idx) => {
       console.log(project, 'PROJ')
       // -Math.abs(.5 * SVGTimeXScale(SVGWidth))

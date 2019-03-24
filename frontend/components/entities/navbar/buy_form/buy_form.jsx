@@ -1,7 +1,7 @@
 import React from 'react';
 import './transfer.scss';
 import { connect } from 'react-redux';
-import { buyTokens } from '../../../../actions/chain_actions/token_actions';
+import { buyTokens, buyTokensWithDemoInvestor } from '../../../../actions/chain_actions/token_actions';
 
 const mapStateToProps = state => {
   return {
@@ -13,7 +13,8 @@ const mapStateToProps = state => {
 
 const mapDipsatchToProps = dispatch => {
   return {
-    buyTokens: (crowdsale, account, wei) => buyTokens(crowdsale, account, wei)
+    buyTokens: (crowdsale, account, wei) => buyTokens(crowdsale, account, wei),
+    buyTokensWithDemoInvestor: wei => buyTokensWithDemoInvestor(wei)
   }
 }
 
@@ -47,11 +48,13 @@ class BuyForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.buyTokens(
-      this.props.crowdsale,
-      this.props.account,
-      this.state.shares
-    );
+    // this.props.buyTokens(
+    //   this.props.crowdsale,
+    //   this.props.account,
+    //   this.state.shares
+    // );
+    this.props.buyTokensWithDemoInvestor(this.state.shares);
+    this.props.closeModal();
   }
 
   render() {

@@ -1,6 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { fetchProjectsAndCapitalRaised } from '../../../actions/chain_actions/crowdsale_actions';
 import TokenDashboardContainer from './token_dashboard/token_dashboard_container';
 import ProjectDashboardContainer from './project_dashboard/project_dashboard_container';
 import TimeAxis from './time_axis/time_axis';
@@ -21,14 +19,8 @@ class Dashboard extends React.Component {
     this.updateTimeAxis = this.updateTimeAxis.bind(this);
   }
 
-  componentDidMount() {
-    console.log('yo')
-    this.props.fetchProjectsAndCapitalRaised(this.props.projectFactoryInstance,this.props.projectContract,this.props.crowdsaleInstance);
-  }
-
   updateTimeAxis(newStartTime, newEndTime) {
     const { startTime, endTime } = this.state;
-    // console.log(newStartTime, 'st update')
     this.setState({
       startTime: newStartTime ? startTime ? Math.min(newStartTime, startTime) : newStartTime : startTime,
       endTime: Math.max(endTime, newEndTime)
@@ -48,34 +40,15 @@ class Dashboard extends React.Component {
   render () {
     const { startTime, endTime } = this.state;
 
-    // console.log("stte", this.state)
-    if (Object.keys(this.props.projects).length) {
-      return (
-        <div className="box">
-          <TokenDashboardContainer timeAxis={{startTime, endTime}} trackGraph={this.trackGraph} updateTimeAxis={this.updateTimeAxis}/>
-          { this.showAxis() ? <TimeAxis startTime={startTime} endTime={endTime}/> : <div></div>}
-          <ProjectDashboardContainer timeAxis={{startTime, endTime}} trackGraph={this.trackGraph} updateTimeAxis={this.updateTimeAxis}/>
-        </div>
-      );
-    }
-    return <div className="box"><Loader/></div>;
+    return (
+      <div className="box">
+        <TokenDashboardContainer timeAxis={{startTime, endTime}} trackGraph={this.trackGraph} updateTimeAxis={this.updateTimeAxis}/>
+        { this.showAxis() ? <TimeAxis startTime={startTime} endTime={endTime}/> : <div></div>}
+        <ProjectDashboardContainer timeAxis={{startTime, endTime}} trackGraph={this.trackGraph} updateTimeAxis={this.updateTimeAxis}/>
+      </div>
+    );
   }
 };
 
-const mapStateToProps = state => {
-  return {
-    projects: state.entities.projects,
-    projectFactoryInstance: state.network.projectFactoryInstance,
-    crowdsaleInstance: state.network.crowdsaleInstance,
-    projectContract: state.network.projectContract
-  }
-}
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchProjectsAndCapitalRaised: (projectFactoryInstance, projectContract, crowdsaleInstance) => dispatch(fetchProjectsAndCapitalRaised(projectFactoryInstance, projectContract, crowdsaleInstance))
-  }
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default Dashboard;

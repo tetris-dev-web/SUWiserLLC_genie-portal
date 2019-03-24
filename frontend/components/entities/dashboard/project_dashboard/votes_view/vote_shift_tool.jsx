@@ -1,7 +1,16 @@
 import React from 'react';
 import './vote_shift_tool.scss';
 import { connect } from 'react-redux';
-import { fetchFreeVotes, fetchProjectVotes, voteForProject, voteAgainstProject, voteAndUpdateProjects } from '../../../../../actions/chain_actions/votes_actions';
+import {
+  fetchFreeVotes,
+  fetchProjectVotes,
+  fetchDemoInvestorFreeVotes,
+  fetchDemoInvestorProjectVotes,
+  voteForProject,
+  voteAgainstProject,
+  voteAndUpdateProjects,
+  demoInvestorVoteAndUpdateProjects
+} from '../../../../../actions/chain_actions/votes_actions';
 
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
@@ -17,12 +26,14 @@ const mapStateToProps = (state, ownProps) => {
     votingToken: state.network.votingTokenInstance,
     votingInstance: state.network.votingInstance,
     account: state.network.account,
-    votesNotDedicated: Number(state.entities.votes.freeVotes) || 0,
-    votesPerProject: Number(state.entities.votes[ownProps.selectedProject]) || 0,
-    projects: state.entities.projects,
+    votesNotDedicated: Number(state.entities.projectGraph.votes.freeVotes) || 0,
+    votesPerProject: Number(state.entities.projectGraph.votes[ownProps.selectedProject]) || 0,
+    projects: state.entities.projectGraph.projects,
     activation: state.network.activationInstance,
     projectLeaderTracker: state.network.projectLeaderTrackerInstance,
-    web3: state.network.web3
+    web3: state.network.web3,
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    inactiveTokenInstance: state.network.inactiveTokenInstance
   }
 }
 
@@ -30,6 +41,8 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchFreeVotes: (account, votingToken) => dispatch(fetchFreeVotes(account, votingToken)),
     fetchProjectVotes: (account, projectContract, projectAddress) => dispatch(fetchProjectVotes(account, projectContract, projectAddress)),
+    fetchDemoInvestorFreeVotes: () => dispatch(fetchDemoInvestorFreeVotes()),
+    fetchDemoInvestorProjectVotes: (projectAddress) => dispatch(fetchDemoInvestorProjectVotes(projectAddress)),
     voteAndUpdateProjects: (account, votes, type, votingInstance, projectAddress, projects, projectLeaderTracker, activation, web3) => {
       return voteAndUpdateProjects(account,
       votes,
@@ -40,7 +53,8 @@ const mapDispatchToProps = dispatch => {
       projectLeaderTracker,
       activation,
       web3)
-    }
+    },
+    demoInvestorVoteAndUpdateProjects: (votes, type, selectedProject) => demoInvestorVoteAndUpdateProjects(votes, type, selectedProject)
     // voteForProject: (account, votes, votingInstance, projectAddress) => voteForProject(account, votes, votingInstance, projectAddress),
     // voteAgainstProject: (account, votes, votingInstance, projectAddress) => voteAgainstProject(account, votes, votingInstance, projectAddress)
   }
@@ -79,14 +93,12 @@ class VoteShiftTool extends React.Component {
   }
 
   componentDidMount () {
-    console.log("mount")
     this.fetchVoteData();
     this.watchVoteChange();
     this.populateState();
   }
 
   componentDidUpdate (prevProps, prevState) {
-    console.log('update')
     const { votesNotDedicated, votesPerProject } = this.props;
     if (
       votesNotDedicated !== prevProps.votesNotDedicated ||
@@ -97,11 +109,25 @@ class VoteShiftTool extends React.Component {
   }
 
   fetchVoteData () {
-    const { fetchFreeVotes, fetchProjectVotes, projectContract, votingToken, account, selectedProject } = this.props;
+    const {
+      fetchFreeVotes,
+      fetchProjectVotes,
+      fetchDemoInvestorFreeVotes,
+      fetchDemoInvestorProjectVotes,
+      projectContract,
+      votingToken,
+      account,
+      selectedProject,
+      // loggedInToMetaMask
+    } = this.props;
 
-    fetchFreeVotes(account, votingToken).then(() => {
-      fetchProjectVotes(account, projectContract, selectedProject);
-    })
+    // if (loggedInToMetaMask) {
+      // fetchFreeVotes(account, votingToken).then(() => {
+      //   fetchProjectVotes(account, projectContract, selectedProject);
+      // })
+    // } else {
+      fetchDemoInvestorFreeVotes().then(() => fetchDemoInvestorProjectVotes(selectedProject))
+    // }
   }
 
   handleDragStart(e) {
@@ -147,9 +173,8 @@ class VoteShiftTool extends React.Component {
   handleLogClick() {
     this.setState({ blockchainLoading: !this.state.blockchainLoading });
 
-    const { account, votingInstance, selectedProject, votesPerProject, voteAndUpdateProjects, projects, activation, projectLeaderTracker, web3 } = this.props;
+    const { account, votingInstance, selectedProject, votesPerProject, voteAndUpdateProjects, demoInvestorVoteAndUpdateProjects, projects, activation, projectLeaderTracker, web3 } = this.props;
     const { newVotesPerProject } = this.state;
-    console.log("newVotesPerProject", newVotesPerProject)
 
     let type;
     let votes;
@@ -160,18 +185,23 @@ class VoteShiftTool extends React.Component {
       type = 'removeVotes';
       votes = votesPerProject - newVotesPerProject;
     }
+    // voteAndUpdateProjects(
+    //   account,
+    //   votes,
+    //   type,
+    //   votingInstance,
+    //   selectedProject,
+    //   projects,
+    //   projectLeaderTracker,
+    //   activation,
+    //   web3
+    // );
 
-    voteAndUpdateProjects(
-      account,
+    demoInvestorVoteAndUpdateProjects(
       votes,
       type,
-      votingInstance,
-      selectedProject,
-      projects,
-      projectLeaderTracker,
-      activation,
-      web3
-    );
+      selectedProject
+    )
   }
 
   handleVoteClick(vote) {
@@ -202,10 +232,10 @@ class VoteShiftTool extends React.Component {
     this.offsetX = 0;
     this.totalVotes = votesNotDedicated + votesPerProject;
     this.votesPerPixel = this.totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
-    console.log("!!", votesPerProject, votesNotDedicated)
+    
     const voteBarAppliedWidth = votesPerProject === 0 ? 0 : votesPerProject / this.votesPerPixel;
     const voteBarFreedUpWidth = votesNotDedicated === 0 ? 0 : votesNotDedicated / this.votesPerPixel;
-    console.log("!!!", voteBarAppliedWidth, voteBarFreedUpWidth)
+
     this.setState({
       showLogButton: false,
       blockchainLoading: false,

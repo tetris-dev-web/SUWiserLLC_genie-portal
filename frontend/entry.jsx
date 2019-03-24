@@ -138,15 +138,18 @@ document.addEventListener('DOMContentLoaded', () => {
               }
             }
           );
-
+          console.log({
+            activationAddress: activationInstance.address,
+            activeTokenAddress: activeTokenInstance.address,
+            crowdsaleAddress: crowdsaleInstance.address,
+            dividendsAddress: dividendsInstance.address,
+            inactiveTokenAddress: inactiveTokenInstance.address,
+            projectFactoryAddress: projectFactoryInstance.address,
+            projectLeaderTrackerAddress: projectLeaderTrackerInstance.address,
+            votingAddress: votingInstance.address,
+            votingTokenAddress: votingTokenInstance.address
+          })
           store = configureStore(preloadedState);
-          // let acc = web3;
-          // const networkInterval = setInterval(() => {
-          //   if (!web3) {
-          //       console.log("workssss!!")
-          //   }
-          // }, 100);
-
           window.getState = store.getState; //just for development purposes - remove later - use logger
           const root = document.getElementById('root');
           ReactDOM.render(<Root store={store} window={window}/>, root);
