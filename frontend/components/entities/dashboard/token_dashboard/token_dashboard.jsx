@@ -28,7 +28,7 @@ class TokenDashboard extends React.Component {
     let currentGraph;
     const { currentViewId } = this.state;
     const { web3, account, updateTimeAxis, trackGraph, timeAxis } = this.props;
-    console.log(currentViewId, web3, account)
+
     switch (currentViewId) {
       case null:
         currentGraph = <div></div>;
@@ -49,7 +49,7 @@ class TokenDashboard extends React.Component {
       default:
         break;
     }
-    console.log("HELLO")
+
     if (this.props.currentUser) {
       return(
         <div className="token-dashboard">
