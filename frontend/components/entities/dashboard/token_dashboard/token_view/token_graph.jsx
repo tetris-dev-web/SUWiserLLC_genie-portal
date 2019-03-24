@@ -30,7 +30,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTokenGraphData: (currentViewType, account) => dispatch(fetchTokenGraphData(currentViewType, account)),
+    fetcTokenGraphData: (currentViewType, account) => dispatch(fetchTokenGraphData(currentViewType, account)),
     receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event)),
     receiveReceiveDividends: (event) => dispatch(receiveReceiveDividends(event))
   }
@@ -77,7 +77,7 @@ class TokenGraph extends React.Component {
   }
 
   fetchData () {
-    this.props.fetchTokenGraphData(this.props.currentViewType, this.props.account);
+    this.props.fetcTokenGraphData(this.props.currentViewType, this.props.account);
   }
 
   toggleTimeAxis(boolean) {
