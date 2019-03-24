@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
     store = configureStore(preloadedState);
-    window.getState = store.getState; //just for development purposes - remove later - use logger
+    // window.getState = store.getState; //just for development purposes - remove later - use logger
     const root = document.getElementById('root');
     ReactDOM.render(<Root store={store} window={window}/>, root);
   }
