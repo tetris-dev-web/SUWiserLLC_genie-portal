@@ -13,6 +13,7 @@ const { fetchWeiRaised , fetchPurchases, buyTokens } = require('./controllers/cr
 const { voteAndUpdateProjects } = require('./controllers/voting_controller');
 const { demoInvestorFreeVotes } = require('./controllers/voting_token_controller');
 const { pitchProject } = require('./controllers/project_factory_controller');
+const port = process.env.PORT || 5000;
 
 let endpoint = ''
 const app = express();
@@ -91,6 +92,6 @@ if(process.env.NODE_ENV === 'production') {
   })
 }
 
-const server = app.listen(8080, () => {
+const server = app.listen(port, () => {
   console.log("listening")
 })
