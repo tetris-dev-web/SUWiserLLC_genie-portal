@@ -8,9 +8,9 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   context: __dirname,
-  entry: ["@babel/polyfill", "./frontend/entry.jsx"],
+  entry: ["@babel/polyfill", "./entry.jsx"],
   output: {
-     path: path.resolve(__dirname, './frontend/build'),
+     path: path.resolve(__dirname, './build'),
      filename: 'bundle.js'
    },
   target: 'web',
