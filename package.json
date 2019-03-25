@@ -1,5 +1,8 @@
 {
   "name": "genie-portal",
+  "enigines": {
+    "node": "8.9.0"
+  },
   "private": true,
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
@@ -69,12 +72,12 @@
     "jTest": "jest",
     "build-frontend": "webpack",
     "jTest-watch": "jest --watch",
+    "start": "node server/server.js",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "nodemon server/server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build-frontend"
   },
-  "proxy": "http://localhost:5000",
   "jest": {
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
