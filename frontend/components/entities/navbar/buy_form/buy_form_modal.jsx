@@ -1,6 +1,5 @@
 import React from 'react';
 import Modal from 'react-modal';
-import DrizzleConsumer from '../../../drizzle/drizzleConsumer';
 
 import BuyForm from './buy_form';
 import ModalStyle from './modal_style';

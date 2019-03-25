@@ -1,5 +1,4 @@
 import sigUtil from "eth-sig-util"
-// import abi from "ethereumjs-abi"
 
 export const fetchProjectVotes = async (account, projectContract, projectAddress) => {
   console.log(projectAddress)
