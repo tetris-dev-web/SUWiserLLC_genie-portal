@@ -1,4 +1,3 @@
-
 const path = require("path");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -8,9 +7,9 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   context: __dirname,
-  entry: ["@babel/polyfill", "./entry.jsx"],
+  entry: ["@babel/polyfill", "./frontend/entry.jsx"],
   output: {
-     path: path.resolve(__dirname, './build'),
+     path: path.resolve(__dirname, './frontend/build'),
      filename: 'bundle.js'
    },
   target: 'web',
