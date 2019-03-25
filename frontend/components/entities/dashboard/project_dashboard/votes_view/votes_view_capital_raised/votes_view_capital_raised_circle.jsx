@@ -29,11 +29,12 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 					opacity={opacity}
 					transform={transform}
 					onMouseOver={this.handleHover(true)}
-					onMouseLeave={this.handleHover(false)}></circle>
+					onMouseLeave={this.handleHover(false)}>
+				</circle>
 				{
 					this.state.showText &&
 					<text className="votes-view-capital-raised-text"
-						x={x}
+						x={cx+60}
 						y={y}><tspan>{project.title}</tspan>
 					</text>
 				}

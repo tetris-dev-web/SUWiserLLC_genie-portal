@@ -1,10 +1,6 @@
 import React from 'react';
 
 
-// const capBRaisedTextToDisplay = (capitalBRaised) => `$ ${Number(capitalBRaised/1000.0).toLocaleString()} k`
-//
-// const capRaisedTextToDisplay = (capitalRaised) => `$ ${Number(capitalRaised/1000.0).toLocaleString()} k`
-
 class VotesViewCapitalRaisedRect extends React.Component {
 	constructor() {
 		super();
