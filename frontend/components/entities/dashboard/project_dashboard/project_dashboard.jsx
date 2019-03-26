@@ -11,7 +11,7 @@ import './project_dashboard.scss';
 class ProjectDashboard extends React.Component {
   constructor(props){
     super(props);
-    this.viewTypes = ["GRAPH VIEW", "VOTE VIEW", "LOCATION VIEW"];
+    this.viewTypes = ["VOTE VIEW", "LOCATION VIEW"];
     this.state = {
       currentViewId: null
     };
@@ -31,7 +31,7 @@ class ProjectDashboard extends React.Component {
       this.graphContainer.style.minHeight = "50vh";
     }
   }
-  
+
   handleKeyPress(e) {
     alert('PRESSED');
   }

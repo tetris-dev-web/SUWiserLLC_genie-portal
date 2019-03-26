@@ -39,11 +39,61 @@ class VotesViewPitchedProjectsRect extends React.Component {
 	}
 
 	render() {
-		const { selectedProject, project, circleScale, transform } = this.props;
+		const { selectedProject, SVGWidth, project, circleScale, transform } = this.props;
 		const { fill, marginWidth, projectStartX, projectWidth, projectValutionHeight, projectValutionStartY, projectCapitalRequiredHeight, projectCapitalRequiredStartY, projectRectCenter, capitalRequired, valuation, voteShare, title, id } = project;
-		console.log(projectWidth, 'width')
-		console.log(projectValutionHeight, 'val height')
-		console.log(projectCapitalRequiredHeight, 'cap height')
+
+		const extensionForLines = SVGWidth+100
+
+
+		const HoverEffects = () => (
+			<g className="votes-view-onhover-group">
+				<g onClick={e => e.stopPropagation()}>
+					<VotesViewPitchedProjectsCircle
+						cx={projectRectCenter}
+						cy={150}
+						selectedProject={selectedProject}
+						r={circleScale(project.valuation)}
+						project={project} />
+				</g>
+				<g className="votes-view-onhover-text-group">
+					<text className="votes-view-project-title" x={projectRectCenter} y="250" fill={fill}>
+						<tspan>{title}</tspan>
+					</text>
+
+					<text x={extensionForLines} y={projectValutionStartY} fill={fill}>
+						<tspan>valuation {valuation}</tspan>
+					</text>
+					<line
+						x1={projectRectCenter} y1={projectValutionStartY}
+						x2={2000} y2={projectValutionStartY}
+						stroke={fill}
+						strokeDasharray="5,20"
+						opacity={.5}>
+					</line>
+
+					<text x={extensionForLines} y={projectCapitalRequiredStartY} fill={fill}>
+						<tspan> capital required {capitalRequired}</tspan>
+					</text>
+					<line
+						x1={projectRectCenter} y1={projectCapitalRequiredStartY}
+						x2={2000} y2={projectCapitalRequiredStartY}
+						stroke={fill}
+						strokeDasharray="5,20"
+						opacity={.5}>
+					</line>
+
+
+
+				</g>
+				<g className="votes-view-onhover-project-outlines-group">
+					<rect x={projectStartX} y={projectValutionStartY} width={projectWidth} height={this.outlineWidth}></rect>
+					<rect x={projectStartX + projectWidth - this.outlineWidth} y={projectValutionStartY} width={this.outlineWidth} height={projectValutionHeight}></rect>
+					<rect x={projectStartX} y={projectValutionStartY} width={this.outlineWidth} height={projectValutionHeight}></rect>
+				</g>
+			</g>
+		)
+
+
 		return(
 			<g className="votes-view-project-group"
 				transform={transform}
@@ -68,51 +118,16 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}></rect>
 
-
-
-
-
-
 				<text className="votes-view-percentage-breakdown"
 					x={projectRectCenter}
 					y={projectValutionStartY + projectValutionHeight + 20}
 					opacity={selectedProject && selectedProject.id !== id ? "0.2" : "1"}>
 					<tspan>{`${Math.round(voteShare * 100)}%`}</tspan>
 				</text>
+
 				{
 					this.state.showHoverEffect &&
-					<g className="votes-view-onhover-group">
-						<g onClick={e => e.stopPropagation()}>
-							<VotesViewPitchedProjectsCircle
-								cx={projectRectCenter}
-								cy={50}
-								r={circleScale(project.valuation)}
-								opacity={selectedProject ? "0.2" : "1"}
-								project={project} />
-						</g>
-						<g className="votes-view-onhover-text-group">
-							<text className="votes-view-project-title" x={projectRectCenter} y="90" fill="#aa7a60">
-								<tspan>{title}</tspan>
-							</text>
-							<text x={projectRectCenter} y={projectValutionStartY - 25} fill={fill}>
-								<tspan>valuation</tspan>
-							</text>
-							<text x={projectRectCenter} y={projectValutionStartY - 10} fill={fill}>
-								<tspan>{valuation}</tspan>
-							</text>
-							<text x={projectRectCenter} y={projectCapitalRequiredStartY + 20} fill="#fff">
-								<tspan>capital needs</tspan>
-							</text>
-							<text x={projectRectCenter} y={projectCapitalRequiredStartY + 35} fill="#fff">
-								<tspan>{capitalRequired}</tspan>
-							</text>
-						</g>
-						<g className="votes-view-onhover-project-outlines-group">
-							<rect x={projectStartX} y={projectValutionStartY} width={projectWidth} height={this.outlineWidth}></rect>
-							<rect x={projectStartX + projectWidth - this.outlineWidth} y={projectValutionStartY} width={this.outlineWidth} height={projectValutionHeight}></rect>
-							<rect x={projectStartX} y={projectValutionStartY} width={this.outlineWidth} height={projectValutionHeight}></rect>
-						</g>
-					</g>
+					<HoverEffects />
 				}
 			</g>
 		);
