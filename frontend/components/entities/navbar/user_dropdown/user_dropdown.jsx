@@ -2,8 +2,9 @@ import React from 'react';
 import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import Wallet from './wallet/wallet';
+import ProfileContainer from './profile/profile_container';
 import TokenData from '../../../../contract_data/Token';
-import { fetchTokenBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../../actions/chain_actions/token_actions';
+import { fetchTokenBalances, fetchDemoInvestorBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../../actions/chain_actions/token_actions';
 import { connect } from 'react-redux';
 import { merge } from 'lodash';
 
@@ -31,13 +32,16 @@ class UserDropdown extends React.Component {
 
     this.state = {
       openModal: false,
+      // displayName: userType,
       displayName: "demo user",
       totalActive: 0,
       totalInactive: 0,
       accountActive: 0,
       accountInactive: 0
     };
-
+    // tokens: 0,
+    // user_tokens: 500,
+    // total_tokens: 49500
 
     window.SessionOpenModal = () => {
       this.setState({openModal: true});
@@ -50,20 +54,29 @@ class UserDropdown extends React.Component {
     this.updateUsernameDisplay = this.updateUsernameDisplay.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
     this.watchTransfer = this.watchTransfer.bind(this);
-
+    // this.address = null;
+    // this.abi = null;
+    // this.web3 = null;
   }
 
   componentDidMount () {
     const { inactiveTokenInstance, activeTokenInstance, account } = this.props;
-    this.props.fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account).then(balances => {
-      const { totalActive, totalInactive, accountActive, accountTotal } = balances;
-      this.setState({
-        totalActive: Number(totalActive),
-        totalInactive: Number(totalInactive),
-        accountActive: Number(accountActive),
-        accountTotal: Number(accountTotal)
-      })
-    });
+    // this.props.fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account).then(balances => {
+    //   const { totalActive, totalInactive, accountActive, accountTotal } = balances;
+    //   this.setState({
+    //     totalActive: Number(totalActive),
+    //     totalInactive: Number(totalInactive),
+    //     accountActive: Number(accountActive),
+    //     accountTotal: Number(accountTotal)
+    //   })
+    // });
+    this.props.fetchDemoInvestorBalances().then(balances => {
+        const { accountActive, accountTotal } = balances;
+        this.setState({
+          accountActive: Number(accountActive),
+          accountTotal: Number(accountTotal)
+        })
+    })
     this.watchTransfer(inactiveTokenInstance);
     this.watchTransfer(activeTokenInstance);
   }
@@ -211,13 +224,14 @@ const mapStateToProps = state => {
     inactiveTokenInstance: state.network.inactiveTokenInstance,
     activeTokenInstance: state.network.activeTokenInstance,
     account: state.network.account,
-    tokenBalances: state.chain_data.tokenBalances
+    tokenBalances: state.entities.tokenBalances
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTokenBalances: (inactiveTokenInstance, activeTokenInstance, account) => fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account)
+    fetchTokenBalances: (inactiveTokenInstance, activeTokenInstance, account) => fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account),
+    fetchDemoInvestorBalances: () => fetchDemoInvestorBalances()
   }
 };
 

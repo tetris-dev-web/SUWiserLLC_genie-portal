@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require("path");
 const bodyParser = require('body-parser')
 const ngrok = require('ngrok')
 const decodeJWT = require('did-jwt').decodeJWT
@@ -7,11 +8,12 @@ const transports = require('uport-transports').transport;
 const message = require('uport-transports').message.util;
 const { asyncMiddleware } = require('./middlewares/async_middleware');
 const { fetchProjects, fetchProjectModuleData, fetchProjectGraphData, demoInvestorVotesByProject } = require('./controllers/projects_controller');
-const { fetchTokenHistoryWithEarnings } = require('./controllers/token_controller');
+const { fetchTokenHistoryWithEarnings, fetchInvestorBalance } = require('./controllers/token_controller');
 const { fetchWeiRaised , fetchPurchases, buyTokens } = require('./controllers/crowdsale_controller');
 const { voteAndUpdateProjects } = require('./controllers/voting_controller');
 const { demoInvestorFreeVotes } = require('./controllers/voting_token_controller');
 const { pitchProject } = require('./controllers/project_factory_controller');
+const port = process.env.PORT || 5000;
 
 let endpoint = ''
 const app = express();
@@ -77,6 +79,19 @@ app.post('/api/demo/buy_tokens', asyncMiddleware(async (req, res) => {
   res.send({});
 }))
 
-const server = app.listen(8080, () => {
+app.get('/api/demo/fetch_investor_balance', asyncMiddleware(async (req, res) => {
+  const balance = await fetchInvestorBalance();
+  res.send(balance);
+}))
+
+
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.resolve(__dirname, '../frontend/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../frontend/build/index.html'));
+  })
+}
+
+const server = app.listen(port, () => {
   console.log("listening")
 })

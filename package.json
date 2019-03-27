@@ -1,5 +1,9 @@
 {
   "name": "genie-portal",
+  "engines": {
+    "node": "8.9.0",
+    "npm": "5.5.1"
+  },
   "private": true,
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
@@ -68,9 +72,10 @@
     "webpack": "npx webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "jTest": "jest",
+    "build-frontend": "webpack",
     "jTest-watch": "jest --watch",
+    "start": "node server/server.js",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-    "start": "webpack ./frontend/entry.jsx ./dist/index_bundle.js",
     "server": "nodemon server/server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },

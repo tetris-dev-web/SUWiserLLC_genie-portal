@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import * as d3 from 'd3';
 import { fetchTokenGraphData, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
 import { receiveReceiveDividends } from '../../../../../actions/chain_actions/dividends_actions';
@@ -177,7 +178,8 @@ class TokenGraph extends React.Component {
   }
 }
 
-export default TokenGraph;
+export default connect(mapStateToProps, mapDispatchToProps)(TokenGraph);
+
 // {showTimeAxis && TokenGraphTimeAxis}
 
 

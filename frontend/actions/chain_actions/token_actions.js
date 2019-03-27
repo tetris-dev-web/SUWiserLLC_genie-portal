@@ -80,6 +80,9 @@ export const fetchTokenBalances = (inactiveToken, activeToken, account) => {
   return ChainUtil.fetchTokenBalances(inactiveToken, activeToken, account);
 }
 
+export const fetchDemoInvestorBalances = () => {
+  return ExpressAPI.fetchApiData('demo/fetch_investor_balance');
+}
 
 export const receiveTokenTransfer = tokenTransfer => {
   return {

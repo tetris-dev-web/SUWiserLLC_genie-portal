@@ -12,7 +12,6 @@ const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
 
 
 const mapStateToProps = state => {
-
   let pitchedProjects;
   let deployedProjects;
   let pitchedProjectsValuationMinMax;

@@ -85,16 +85,23 @@ class ProjectThermo extends React.Component {
                 stroke={'#00FFFF'}
                 strokeWidth={1.5}/>
 
+
     const CapReqLine = () => <Line
                 points={[15,55,190,55]}
                 stroke={'white'}
-                strokeWidth={.5}/>
+                strokeWidth={.5}
+                />
 
 
+              console.log("current day line values", daysToCloseLineX, daysToCloseLineX);
     const CurrentDayLine = () => <Line
                 points={[daysToCloseLineX,55,daysToCloseLineX,160]}
                 stroke={'#00FFFF'}
-                strokeWidth={1.5}/>
+                strokeWidth={1.5}
+                />
+
+
+
 
       return (
         <div className="temp">

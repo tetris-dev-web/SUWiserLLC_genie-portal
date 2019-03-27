@@ -164,6 +164,7 @@ class LocGraph extends React.Component {
   }
 
   render() {
+    console.log('hello')
     const { data, projects, cities, continents } = this.state;
     if (data) {
       // const { projects, cities, continents, linksData } = this.props;
