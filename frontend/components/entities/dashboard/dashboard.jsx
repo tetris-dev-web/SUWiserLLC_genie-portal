@@ -1,10 +1,5 @@
 //libraries
 import React from 'react';
-import TokenDashboardContainer from './token_dashboard/token_dashboard_container';
-import ProjectDashboardContainer from './project_dashboard/project_dashboard_container';
-import TimeAxis from './time_axis/time_axis';
-import PropTypes from 'prop-types';
-
 //components
 import DashboardGraph from './dashboard_graph_container';
 //project graph types
@@ -13,9 +8,8 @@ import VotesGraphContainer from './project_dashboard/votes_view/votes_graph_cont
 import { voteViewIcon, locViewIcon } from './project_dashboard/ProjectDashboardIcons';
 
 //token graph types
-import TokenGraph from './token_dashboard/token_view/token_graph_container';
+import TokenGraph from './token_dashboard/token_view/token_graph';
 import { byUserIcon, allUsersIcon } from './token_dashboard/TokenDashboardIcons';
-
 
 import Loader from './loader/loader';
 import TimeAxis from './time_axis/time_axis';
@@ -61,14 +55,16 @@ class Dashboard extends React.Component {
   render () {
     const { startTime, endTime } = this.state;
 
-    if (Object.keys(this.props.projects).length) {
       return (
         <div className="box">
           <DashboardGraph
             timeAxis={{startTime, endTime}}
             addToNumberOfGraphsOpenBy={this.addToNumberOfGraphsOpenBy}
             updateTimeAxis={this.updateTimeAxis}
-            graphs={[TokenGraph]}
+            graphs={{
+              "BY USER": <TokenGraph currentView="BY USER" />,
+              "BY ALL": <TokenGraph currentView="BY ALL" />
+            }}
             dashboardType="token"
             dashboardTitle="TOKEN DASHBOARD"
             dashboardDescription="The token dashboard tracks the performance of the portal's token, providing investors perspective on the deployment and earnings history of tokens in circulation."
@@ -86,7 +82,8 @@ class Dashboard extends React.Component {
             timeAxis={{startTime, endTime}}
             addToNumberOfGraphsOpenBy={this.addToNumberOfGraphsOpenBy}
             updateTimeAxis={this.updateTimeAxis}
-            graph={[LocGraphContainer, VotesGraphContainer]}
+            graphs={[
+              LocGraphContainer, VotesGraphContainer]}
             dashboardType="project"
             dashboardTitle="PROJECT DASHBOARD"
             dashboardDescription="The project dashboard tracks the performance of the projects providing investors a comparative framework to provide direction on which investments to focus on."
@@ -97,7 +94,7 @@ class Dashboard extends React.Component {
             />
         </div>
       );
-    }
+
     return <div className="box"><Loader/></div>;
   }
 };

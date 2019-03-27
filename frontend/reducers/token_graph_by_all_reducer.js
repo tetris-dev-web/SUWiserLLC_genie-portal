@@ -11,12 +11,13 @@ const tokenGraphByAllReducer = (state = [], action) => {
   Object.freeze(state);
   let newState;
   switch (action.type) {
+
     case RECEIVE_TOKEN_GRAPH_DATA:
-    console.log("reducerrrr")
       if (action.currentViewType === 'BY ALL') {
         return action.tokenGraphData;
       }
       return state;
+
     case RECEIVE_TOKEN_TRANSFER:
       if (state.length) {
         const { tokenTransfer } = action;

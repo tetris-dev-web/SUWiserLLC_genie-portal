@@ -23,16 +23,16 @@ const mapStateToProps = state => {
   let startTime;
   let endTime;
 
-    if (Object.keys(state.entities.projectGraph.projects).length && Object.keys(state.entities.projectGraph.capitalHistory).length) {
+    if (Object.keys(state.chain_data.projectGraph.projects).length && Object.keys(state.chain_data.projectGraph.capitalHistory).length) {
       capitalDeployed = 0;
-      const projectPropsData = Object.keys(state.entities.projectGraph.projects).reduce((propsData, projectTitle) => {
+      const projectPropsData = Object.keys(state.chain_data.projectGraph.projects).reduce((propsData, projectTitle) => {
         if (!propsData.deployedProjects) {
           propsData.deployedProjects = [];
           propsData.pitchedProjects = [];
           propsData.totalVotes = 0;
         }
 
-        const project = state.entities.projectGraph.projects[projectTitle];
+        const project = state.chain_data.projectGraph.projects[projectTitle];
 
         const deploymentTime = project.activationTime;
         if (deploymentTime !== 0) {
@@ -55,14 +55,14 @@ const mapStateToProps = state => {
         return project;
       }).sort((a, b) => b.voteShare - a.voteShare);
 
-      const { capitalHistory } = state.entities.projectGraph;
+      const { capitalHistory } = state.chain_data.projectGraph;
       lineData = capitalHistory.history
       capitalTotal = capitalHistory.capitalTotal
       startTime = capitalHistory.startTime
       endTime = capitalHistory.endTime
 
       pitchedProjectsValuationMinMax = getArrayOfObjectsMinMax(pitchedProjects, "valuation")
-      allProjectsValuationMinMax = getArrayOfObjectsMinMax(Object.values(state.entities.projectGraph.projects), "valuation")
+      allProjectsValuationMinMax = getArrayOfObjectsMinMax(Object.values(state.chain_data.projectGraph.projects), "valuation")
       startTime = Math.min(startTime, deployedProjects[0].activationTime)
       endTime = Math.max(endTime, deployedProjects[deployedProjects.length - 1].activationTime)
       capitalBeingRaised = capitalTotal - capitalDeployed
@@ -73,7 +73,7 @@ const mapStateToProps = state => {
       projectContract: state.network.projectContract,
       projectFactoryInstance: state.network.projectFactoryInstance,
       web3: state.network.web3,
-      projectsLoaded: Object.keys(state.entities.projectGraph.projects).length,
+      projectsLoaded: Object.keys(state.chain_data.projectGraph.projects).length,
       pitchedProjects: pitchedProjects,
       deployedProjects: deployedProjects,
       pitchedProjectsValuationMinMax: pitchedProjectsValuationMinMax,

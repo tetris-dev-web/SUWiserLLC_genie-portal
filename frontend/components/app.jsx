@@ -7,7 +7,7 @@ import {
 } from '../util/route_util';
 import Navbar from './entities/navbar/navbar_container';
 import Landing from './entities/landing/landing';
-import Dashboard from './entities/dashboard/dashboard_container';
+import Dashboard from './entities/dashboard/dashboard';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import { connect } from 'react-redux';
@@ -39,8 +39,8 @@ const mapStateToProps  = state => {
   return {
     account: state.network.account,
     web3: state.network.web3,
-    crowdsaleInstance: state.network.crowdsaleInstance,
-    votingInstance: state.network.votingInstance,
+    // crowdsaleInstance: state.network.crowdsaleInstance,
+    // votingInstance: state.network.votingInstance,
     provider: state.network.provider
   };
 };

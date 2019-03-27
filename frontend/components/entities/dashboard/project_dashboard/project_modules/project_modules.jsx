@@ -10,8 +10,8 @@ import { calculateCashflowData } from '../../../../../util/project_api_util';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state, ownProps) => {
-  // const cashflow = state.entities.projectGraph.projects[ownProps.project.id].cashFlow;
-  const project = state.entities.projectGraph.projects[ownProps.projectId];
+  // const cashflow = state.chain_data.projectGraph.projects[ownProps.project.id].cashFlow;
+  const project = state.chain_data.projectGraph.projects[ownProps.projectId];
   return {
     project,
     capitalBeingRaised: state.chain_data.projectGraph.capitalBeingRaised,

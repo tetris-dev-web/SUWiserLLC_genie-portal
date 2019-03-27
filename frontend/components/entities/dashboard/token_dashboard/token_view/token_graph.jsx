@@ -13,28 +13,6 @@ import Loader from '../../loader/loader';
 import '../../loader/loader.scss';
 import { merge } from 'lodash';
 
-const mapStateToProps = (state, ownProps) => {
-  const { currentViewType } = ownProps;
-  const tokenGraph = state.entities.tokenGraph;
-  const { byUser, byAll } = tokenGraph;
-  const dataLoaded = Object.keys(byAll).length && currentViewType === 'BY ALL' || Object.keys(byUser).length && currentViewType === 'BY USER';
-
-  return {
-    data: dataLoaded ? currentViewType === 'BY USER' ? tokenGraph.byUser : tokenGraph.byAll : null,
-    dividends: state.network.dividendsInstance,
-    inactiveToken: state.network.inactiveTokenInstance,
-    activeToken: state.network.activeTokenInstance,
-    account: state.network.account
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchTokenGraphData: (currentViewType, account) => dispatch(fetchTokenGraphData(currentViewType, account)),
-    receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event)),
-    receiveReceiveDividends: (event) => dispatch(receiveReceiveDividends(event))
-  }
-}
 
 class TokenGraph extends React.Component {
   constructor(){
@@ -66,18 +44,18 @@ class TokenGraph extends React.Component {
 
   componentDidUpdate (prevProps) {
     const prevData = prevProps.data;
-    const prevViewType = prevProps.currentViewType;
-    const { data, updateTimeAxis, currentViewType } = this.props;
+    const prevViewType = prevProps.currentView;
+    const { data, updateTimeAxis, currentView } = this.props;
     if (!prevData && data || (data && prevData.keys.length < data.keys.length)) {
       updateTimeAxis(data[0].date, data[data.length - 1].date);
     }
-    if (currentViewType !== prevViewType) {
+    if (currentView !== prevViewType) {
       this.fetchData()
     }
   }
 
   fetchData () {
-    this.props.fetchTokenGraphData(this.props.currentViewType, this.props.account);
+    this.props.fetchTokenGraphData(this.props.currentView, this.props.account);
   }
 
   toggleTimeAxis(boolean) {
@@ -178,9 +156,36 @@ class TokenGraph extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TokenGraph);
+
 
 // {showTimeAxis && TokenGraphTimeAxis}
 
 
 // return <Loader/>;//this will be replcced with a loader
+
+///container
+
+const mapStateToProps = (state, ownProps) => {
+  const { currentView } = ownProps;
+  const tokenGraph = state.chain_data.tokenGraph;
+  const { byUser, byAll } = tokenGraph;
+  const dataLoaded = Object.keys(byAll).length && currentView === 'BY ALL' || Object.keys(byUser).length && currentView === 'BY USER';
+
+  return {
+    data: dataLoaded ? currentView === 'BY USER' ? tokenGraph.byUser : tokenGraph.byAll : null,
+    dividends: state.network.dividendsInstance,
+    inactiveToken: state.network.inactiveTokenInstance,
+    activeToken: state.network.activeTokenInstance,
+    account: state.network.account
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchTokenGraphData: (currentView, account) => dispatch(fetchTokenGraphData(currentView, account)),
+    receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event)),
+    receiveReceiveDividends: (event) => dispatch(receiveReceiveDividends(event))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TokenGraph);

@@ -4,9 +4,7 @@ import ModalStyle from './modal_style';
 import Wallet from './wallet/wallet';
 import ProfileContainer from './profile/profile_container';
 import TokenData from '../../../../contract_data/Token';
-import { fetchTokenBalances, fetchDemoInvestorBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../../actions/chain_actions/token_actions';
-import { connect } from 'react-redux';
-import { merge } from 'lodash';
+
 
 class UserDropdown extends React.Component {
   constructor(props) {
@@ -216,6 +214,12 @@ class UserDropdown extends React.Component {
   }
 }
 
+// Container
+
+import { fetchTokenBalances, fetchDemoInvestorBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../../actions/chain_actions/token_actions';
+import { connect } from 'react-redux';
+import { merge } from 'lodash';
+
 const mapStateToProps = state => {
   return {
     web3: state.network.web3,
@@ -224,7 +228,7 @@ const mapStateToProps = state => {
     inactiveTokenInstance: state.network.inactiveTokenInstance,
     activeTokenInstance: state.network.activeTokenInstance,
     account: state.network.account,
-    tokenBalances: state.entities.tokenBalances
+    tokenBalances: state.chain_data.tokenBalances
   };
 };
 

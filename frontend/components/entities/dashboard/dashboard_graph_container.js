@@ -20,7 +20,7 @@ const mapStateToProps = state => {
     crowdsaleInstance: state.network.crowdsaleInstance,
     projectContract: state.network.projectContract,
     projectFactoryInstance: state.network.projectFactoryInstance,
-    capitalBeingRaised: state.chain_data.capitalBeingRaised,
+    capitalBeingRaised: state.chain_data.capitalBeingRaised, //undefined
     isInvestor
   };
 };
