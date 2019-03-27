@@ -9,7 +9,7 @@ import {
 import Navbar from './entities/navbar/navbar_container';
 import Landing from './entities/landing/landing';
 import Dashboard from './entities/dashboard/dashboard';
-import DeveloperInfo from './entities/developerInfo/developerInfo';
+// import DeveloperInfo from './entities/developerInfo/developerInfo';
 // import Footer from './entities/footer/footer';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
@@ -33,12 +33,12 @@ class App extends React.Component {
       <div style={{height: "100%"}}>
         <Modal />
         <Navbar />
-        <DeveloperInfo />
         <Dashboard/>
       </div>
     );
   }
 }
+// <DeveloperInfo />
 
 const mapStateToProps  = state => {
   return {

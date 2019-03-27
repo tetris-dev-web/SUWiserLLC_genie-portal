@@ -53,6 +53,7 @@ class BuyForm extends React.Component {
     //   this.props.account,
     //   this.state.shares
     // );
+
     this.props.buyTokensWithDemoInvestor(this.state.shares);
     this.props.closeModal();
   }
