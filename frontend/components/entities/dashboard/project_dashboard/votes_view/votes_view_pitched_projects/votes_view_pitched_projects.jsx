@@ -64,7 +64,7 @@ class VotesViewPitchedProjects extends React.Component {
 	}
 
 	render() {
-		const { selectedProject, SVGWidth, toggleSelectedProject, voteShiftTool, SVGYScale, circleScale, margin } = this.props;
+		const {selectedProject, SVGWidth, toggleSelectedProject, voteShiftTool, SVGYScale, circleScale, margin} = this.props;
 
 		const rects = this.processProjectData().map((project, idx) => {
 			project.projectWidth = project.projectWidth > 0 ? project.projectWidth : this.minWidth / 3;

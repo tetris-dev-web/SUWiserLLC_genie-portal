@@ -16,14 +16,6 @@ import './app.scss';
 
 
 class App extends React.Component {
-<<<<<<< HEAD
-  constructor(props) {
-    super(props);
-
-  }
-
-=======
->>>>>>> fa0d9365ea38bcabc667b57750e9a1b5e4b18d50
   componentDidMount() {
     this.props.web3.currentProvider.publicConfigStore.on('update', network => {
       this.props.provider.eth.getCoinbase((err, account) => {
