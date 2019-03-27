@@ -21,7 +21,7 @@ class VotesViewPitchedProjectsCircle extends React.Component {
 
     return  (
 
-        <g className="votes-view-project-circle" transform={'translate(-45, 35)'}>
+        <g className={`"votes-view-project-circle" ${this.props.selectedProject? "" : "hidden" } `}>
           <circle
             fill="white"
             cx={cx}
@@ -39,12 +39,3 @@ class VotesViewPitchedProjectsCircle extends React.Component {
 }
 
 export default connect(null, mapDispatchToProps)(VotesViewPitchedProjectsCircle);
-// (
-//   <circle className="votes-view-project-circle"
-//     fill="#bdc4c9"
-//     cx={cx}
-//     cy={cy}
-//     r={r}
-//     opacity={opacity}
-//     onClick={() => openModal({ type: "project_module", project })}></circle>
-// );

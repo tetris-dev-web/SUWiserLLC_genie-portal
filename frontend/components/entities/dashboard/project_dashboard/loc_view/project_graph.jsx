@@ -45,7 +45,13 @@ class ProjectGraph extends React.Component {
   }
 
   componentDidMount(){
-    this.setUp();
+    if (!this.props.projectsLoaded) {
+      this.props.fetchSharedProjectGraphData().then(() => {
+        this.setUp();
+      });
+    } else {
+      this.setUp();
+    }
   }
 
   toggleModalonClickandPassProject(projectClicked) {

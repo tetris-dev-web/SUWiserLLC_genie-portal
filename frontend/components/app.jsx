@@ -11,24 +11,20 @@ import Dashboard from './entities/dashboard/dashboard_container';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import { connect } from 'react-redux';
-import {processVotes} from '../actions/chain_actions/vote_actions';
 import { updateNetwork } from '../actions/chain_actions/network_actions'
 import './app.scss';
 
 
 class App extends React.Component {
+<<<<<<< HEAD
   constructor(props) {
     super(props);
 
   }
 
+=======
+>>>>>>> fa0d9365ea38bcabc667b57750e9a1b5e4b18d50
   componentDidMount() {
-    fetch(`/api/sup`)
-      .then(response => response.json())
-      .then(formattedResponse => {
-        console.log("RESPONSE", formattedResponse)
-      });
-
     this.props.web3.currentProvider.publicConfigStore.on('update', network => {
       this.props.provider.eth.getCoinbase((err, account) => {
         this.props.updateNetwork({ account: account ? account : false })
@@ -58,7 +54,6 @@ const mapStateToProps  = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    processVotes: vote_data => dispatch(processVotes(vote_data)),
     updateNetwork: network => dispatch(updateNetwork(network))
   };
 };

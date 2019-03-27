@@ -3,86 +3,79 @@ const bodyParser = require('body-parser')
 const ngrok = require('ngrok')
 const decodeJWT = require('did-jwt').decodeJWT
 const { Credentials } = require('uport-credentials')
-const transports = require('uport-transports').transport
-const message = require('uport-transports').message.util
-const Web3 = require('web3');
-const web3 = new Web3("https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY);
-const TruffleContract = require('truffle-contract');
-const GNITokenCrowdsale = require('../truffle/build/contracts/GNITokenCrowdsale.json');
-const SeedableCrowdsale = require('../truffle/build/contracts/SeedableCrowdsale.json');
-const InactiveToken = require('../truffle/build/contracts/InactiveToken.json');
-const ActiveToken = require('../truffle/build/contracts/ActiveToken.json');
-const VotingToken = require('../truffle/build/contracts/VotingToken.json');
-const Project = require('../truffle/build/contracts/Project.json');
-const ProjectFactory = require('../truffle/build/contracts/ProjectFactory.json');
-const Voting = require('../truffle/build/contracts/Voting.json');
-const SeedableVoting = require('../truffle/build/contracts/SeedableVoting.json');
-const Activation = require('../truffle/build/contracts/Activation.json');
-const ProjectLeaderTracker = require('../truffle/build/contracts/ProjectLeaderTracker.json');
-const Dividends = require('../truffle/build/contracts/Dividends.json');
+const transports = require('uport-transports').transport;
+const message = require('uport-transports').message.util;
+const { asyncMiddleware } = require('./middlewares/async_middleware');
+const { fetchProjects, fetchProjectModuleData, fetchProjectGraphData, demoInvestorVotesByProject } = require('./controllers/projects_controller');
+const { fetchTokenHistoryWithEarnings } = require('./controllers/token_controller');
+const { fetchWeiRaised , fetchPurchases, buyTokens } = require('./controllers/crowdsale_controller');
+const { voteAndUpdateProjects } = require('./controllers/voting_controller');
+const { demoInvestorFreeVotes } = require('./controllers/voting_token_controller');
+const { pitchProject } = require('./controllers/project_factory_controller');
 
 let endpoint = ''
 const app = express();
+
 app.use(bodyParser.json({ type: '*/*' }))
 
-// // uport code to integrate  below
-// const {did, privateKey} = Credentials.createIdentity()
-// const credentials = new Credentials({
-//   appName: 'Genie Portal', did, privateKey
-// })
-//
-// app.get('/', (req, res) => {
-//   credentials.createDisclosureRequest({
-//     requested: ['name', 'email'],
-//     callbackUrl: endpoint + '/callback'
-//   }).then(requestToken => {
-//     console.log(decodeJWT(requestToken))
-//
-//     // const uri = message.paramsToQueryString(message.messageToURI(requestToken), {callback_type: 'post'})
-//     // const qr =  transports.ui.getImageDataURI(uri)
-//     const transportQR = transports.qr.send()
-//     transportQR(requestToken);
-//     // res.send(transportQR)
-//     // res.send(qr)
-//   })
-// })
+app.get('/api/shared_project_graph_data', asyncMiddleware(async (req, res) => {
+  const projects = await fetchProjects();
+  const weiRaised = await fetchWeiRaised();
+  res.send({projects, weiRaised});
+}));
 
-app.get('/api/sup', (req, res) => {
-  res.send({"message": "it works"});
-  const projectFactory = TruffleContract(ProjectFactory);
-  projectFactory.setProvider(web3);
-  console.log("ProjectF", projectFactory)
-})
+app.get('/api/project_graph_data/:address', asyncMiddleware(async (req, res) => {
+  const { address } = req.params;
+  const project = await fetchProjectGraphData(address);
+  res.send(project);
+}))
 
+app.get('/api/project_module_data/:address', asyncMiddleware(async (req, res) => {
+  const address = req.params.address;
+  const project = await fetchProjectModuleData(address);
+  res.send(project);
+}))
 
-// // also here
+app.get('/api/capital_history_data', asyncMiddleware(async (req, res) => {
+  const _capitalHistoryData = await fetchPurchases();
+  res.send(_capitalHistoryData)
+}));
 
-// app.post('/callback', (req, res) => {
-//   const jwt = req.body.access_token
-//   credentials.authenticateDisclosureResponse(jwt).then(creds => {
-//     // take this time to perform custom authorization steps... then,
-//     // set up a push transport with the provided
-//     // push token and public encryption key (boxPub)
-//     const push = transports.push.send(creds.pushToken, creds.boxPub)
-//
-//     credentials.createVerification({
-//       sub: creds.did,
-//       exp: Math.floor(new Date().getTime() / 1000) + 30 * 24 * 60 * 60,
-//       claim: {'Identity' : {'Last Seen' : `${new Date()}`}}
-//       // Note, the above is a complex (nested) claim.
-//       // Also supported are simple claims:  claim: {'Key' : 'Value'}
-//     }).then(attestation => {
-//       console.log(`Encoded JWT sent to user: ${attestation}`)
-//       console.log(`Decodeded JWT sent to user: ${JSON.stringify(decodeJWT(attestation))}`)
-//       return push(attestation)  // *push* the notification to the user's uPort mobile app.
-//     }).then(res => {
-//       console.log(res)
-//       console.log('Push notification sent and should be recieved any moment...')
-//       console.log('Accept the push notification in the uPort mobile application')
-//       ngrok.disconnect()
-//     })
-//   })
-// })
+app.post('/api/token_graph_data', asyncMiddleware(async (req, res) => {
+  const { body } = req;
+  const { currentViewType, account } = body;
+  const _tokenGraphData = await fetchTokenHistoryWithEarnings(currentViewType, account);
+  res.send(_tokenGraphData);
+}));
+
+app.get('/api/demo/demoInvestorFreeVotes', asyncMiddleware(async (req, res) => {
+  const freeVotes = await demoInvestorFreeVotes();
+  res.send(freeVotes);
+}))
+
+app.get('/api/demo/project_votes/:projectAddress', asyncMiddleware(async (req, res) => {
+  const { projectAddress } = req.params;
+  const votes = await demoInvestorVotesByProject(projectAddress);
+  res.send(votes);
+}))
+
+app.post('/api/demo/vote_and_update_projects', asyncMiddleware(async (req, res) => {
+  const { votes, type, selectedProject } = req.body;
+  await voteAndUpdateProjects(votes, type, selectedProject);
+  res.send({});
+}))
+
+app.post('/api/demo/pitch_project', asyncMiddleware(async (req, res) => {
+  const { params } = req.body;
+  await pitchProject(params);
+  res.send({});
+}))
+
+app.post('/api/demo/buy_tokens', asyncMiddleware(async (req, res) => {
+  const { wei } = req.body;
+  await buyTokens(wei);
+  res.send({});
+}))
 
 const server = app.listen(8080, () => {
   console.log("listening")

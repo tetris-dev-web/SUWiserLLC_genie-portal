@@ -1,5 +1,8 @@
 //libraries
 import React from 'react';
+import TokenDashboardContainer from './token_dashboard/token_dashboard_container';
+import ProjectDashboardContainer from './project_dashboard/project_dashboard_container';
+import TimeAxis from './time_axis/time_axis';
 import PropTypes from 'prop-types';
 
 //components
@@ -29,10 +32,6 @@ class Dashboard extends React.Component {
     this.showAxis = this.showAxis.bind(this);
     this.addToNumberOfGraphsOpenBy = this.addToNumberOfGraphsOpenBy.bind(this);
     this.updateTimeAxis = this.updateTimeAxis.bind(this);
-  }
-
-  componentDidMount() {
-    this.props.fetchProjectsAndCapitalRaised(this.props.projectFactoryInstance, this.props.projectContract, this.props.crowdsaleInstance);
   }
 
   updateTimeAxis(newStartTime, newEndTime) {

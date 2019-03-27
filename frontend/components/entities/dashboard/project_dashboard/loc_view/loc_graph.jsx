@@ -24,11 +24,23 @@ class LocGraph extends React.Component {
     this.height = 700;
     this.cityNodeSide = 15;
     this.continentNodeSide = 8;
-    // this.simulation = this.configureSimulation.bind(this, this.props)();
+    this.populateState = this.populateState.bind(this);
+    this.watchProjectPitch = this.watchProjectPitch.bind(this);
   }
 
-  async componentDidMount () {
+  componentDidMount () {
+    const { projectsLoaded, fetchSharedProjectGraphData } = this.props;
 
+    if (projectsLoaded) {
+      this.populateState();
+    } else {
+      fetchSharedProjectGraphData().then(() => {
+        this.populateState();
+      })
+    }
+  }
+
+  async populateState () {
     const {
         projects,
         cities,
@@ -49,12 +61,12 @@ class LocGraph extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     this.addDragHandlers();
     const { data, projects, cities, continents, center } = this.state;
-    if (!prevState.data && data) {
+
+    if ((!prevState.data && data) || prevState.data !== data) {
       this.simulation = this.configureSimulation.bind(this, this.props)();
       this.addDragHandlers();
       this.simulation.on("tick", () => {
         this.forceUpdate();
-        // bypass shouldComponentUpdate
       });
     }
 
@@ -107,40 +119,48 @@ class LocGraph extends React.Component {
       outterCircleScale: d3.scaleLinear()
         .domain(allProjectsValuationMinMax)
         .range([15, 30]),
-      // innerCircleScale: d3.scaleLinear()
-      //   .domain(should be revenue)
-      //   .range([15, 30]),
     };
   }
 
   addDragHandlers() {
     const { projects, cities, continents } = this.state;
 
-    const dragStart = (d) => {
-      if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    };
+    if (projects && cities && continents) {
+      const dragStart = (d) => {
+        if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      };
 
-    const dragging = (d) => {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    };
+      const dragging = (d) => {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+      };
 
-    const dragEnd = (d) => {
-      if (!d3.event.active) this.simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    };
+      const dragEnd = (d) => {
+        if (!d3.event.active) this.simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      };
 
-    const handleDrag = d3.drag()
+      const handleDrag = d3.drag()
       .on("start", dragStart)
       .on("drag", dragging)
       .on("end", dragEnd);
 
-    handleDrag(d3.selectAll(".loc-svg-city-node").data(cities));
-    handleDrag(d3.selectAll(".loc-svg-continent-node").data(continents));
-    handleDrag(d3.selectAll(".loc-svg-project-node-group").data(projects));
+      handleDrag(d3.selectAll(".loc-svg-city-node").data(cities));
+      handleDrag(d3.selectAll(".loc-svg-continent-node").data(continents));
+      handleDrag(d3.selectAll(".loc-svg-project-node-group").data(projects));
+    }
+  }
+
+  watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
+    const { projectFactoryInstance, projectContract } = this.props;
+    projectFactoryInstance.ProjectPitch().watch((error, event) => {
+      const address = event.args.projectAddress;
+      // const id = event.args.projectId;
+      this.props.fetchProject(address);
+    });
   }
 
   render() {

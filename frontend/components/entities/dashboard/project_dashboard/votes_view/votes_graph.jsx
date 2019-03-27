@@ -20,16 +20,21 @@ class VotesGraph extends React.Component {
     this.SVGHeight = 600 * .5;
     this.timeWidth = (960 - this.margin.left - this.margin.right) * .5;
     this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
+    this.watchProjectPitch = this.watchProjectPitch.bind(this);
   }
 
   componentDidMount() {
-    console.log('cdm', this.props)
     setTimeout(() => {
       this.setState({componentVisible: ""});
     }, this.props.wait);
 
-    this.props.fetchTokenPurchaseLogs(this.props.crowdsaleInstance);
 
+    if (!this.props.projectsLoaded) {
+      this.props.fetchSharedProjectGraphData();
+    }
+
+    this.props.fetchCapitalHistory(this.props.crowdsaleInstance);
+    this.watchProjectPitch();
     this.watchTokenPurchase();
   }
 
@@ -42,11 +47,20 @@ class VotesGraph extends React.Component {
     }
   }
 
+  watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
+    const { projectFactoryInstance, projectContract } = this.props;
+    projectFactoryInstance.ProjectPitch().watch((error, event) => {
+      const address = event.args.projectAddress;
+      // const id = event.args.projectId;
+      this.props.fetchProject(address);
+    });
+  }
+
   watchTokenPurchase () {
+    console.log("watching purchase")
     this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
-      // console.log("event", Number(event.args.time), Number(event.args.value))
-      console.log(event)
-      this.props.receiveTokenPurchase({time: event.blockNumber, value: Number(event.args.value)});
+      console.log('event', event)
+      this.props.receiveTokenPurchase({blockNumber: event.blockNumber, value: Number(event.args.value)});
     })
   }
 
@@ -76,9 +90,7 @@ class VotesGraph extends React.Component {
   renderGraph() {
     const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
-    // console.log("props", this.props)
-    //   console.log("selectedProject", selectedProject)
-    console.log('rendering again', this.props)
+
     return (
       <div className={`votes-graph ${componentVisible}`}>
         <div className="vote-shift-tool-container"
@@ -116,133 +128,8 @@ class VotesGraph extends React.Component {
   }
 
   render() {
-    // console.log("selectedProject", this.state.selectedProject, this.state.componentVisible)
     return this.dataHasLoaded() ? this.renderGraph() : <Loader/>;
   }
 }
 
 export default VotesGraph;
-
-
-// height="500" width="960"
-
-
-
-//
-// const cashflow = {
-//   "1": {
-//     "cashFlow": -36974,
-//     "isActuals": true
-//   },
-//   "2": {
-//     "cashFlow": -40018,
-//     "isActuals": true
-//   },
-//   "3": {
-//     "cashFlow": -16857,
-//     "isActuals": true
-//   },
-//   "4": {
-//     "cashFlow": -2915,
-//     "isActuals": true
-//   },
-//   "5": {
-//     "cashFlow": -20325,
-//     "isActuals": true
-//   },
-//   "6": {
-//     "cashFlow": 7864,
-//     "isActuals": true
-//   },
-//   "7": {
-//     "cashFlow": 25360,
-//     "isActuals": true
-//   },
-//   "8": {
-//     "cashFlow": 28107,
-//     "isActuals": true
-//   },
-//   "9": {
-//     "cashFlow": 28942,
-//     "isActuals": false
-//   },
-//   "10": {
-//     "cashFlow": 28696,
-//     "isActuals": false
-//   },
-//   "11": {
-//     "cashFlow": 29356,
-//     "isActuals": false
-//   },
-//   "12": {
-//     "cashFlow": 28854,
-//     "isActuals": false
-//   },
-//   "13": {
-//     "cashFlow": 28588,
-//     "isActuals": false
-//   },
-//   "14": {
-//     "cashFlow": 30781,
-//     "isActuals": false
-//   },
-//   "15": {
-//     "cashFlow": 29081,
-//     "isActuals": false
-//   },
-//   "16": {
-//     "cashFlow": 31887,
-//     "isActuals": false
-//   },
-//   "17": {
-//     "cashFlow": 51887,
-//     "isActuals": false
-//   },
-//   "18": {
-//     "cashFlow": 71887,
-//     "isActuals": false
-//   },
-//   "19": {
-//     "cashFlow": 30339,
-//     "isActuals": false
-//   },
-//   "20": {
-//     "cashFlow": 30718,
-//     "isActuals": false
-//   },
-//   "21": {
-//     "cashFlow": 31102,
-//     "isActuals": false
-//   },
-//   "22": {
-//     "cashFlow": 31491,
-//     "isActuals": false
-//   },
-//   "23": {
-//     "cashFlow": 31885,
-//     "isActuals": false
-//   },
-//   "24": {
-//     "cashFlow": 32283,
-//     "isActuals": false
-//   },
-//   "25": {
-//     "cashFlow": 32687,
-//     "isActuals": false
-//   },
-//   "26": {
-//     "cashFlow": 33096,
-//     "isActuals": false
-//   },
-//   "27": {
-//     "cashFlow": 33509,
-//     "isActuals": false
-//   },
-//   "28": {
-//     "cashFlow": 33928,
-//     "isActuals": false
-//   }
-// };
-//
-// const cashflowData = calculateCashflowData(cashflow);
-// const { actual_cashflow, accum_actual_cashflow, accum_projected_cashflow, projected_cashflow } = cashflowData;

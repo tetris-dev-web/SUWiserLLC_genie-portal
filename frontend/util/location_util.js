@@ -346,7 +346,7 @@ export const latLngToCityContinent = async (lat, lng) => {
   try {
     const { results } = await Geocode.fromLatLng(lat, lng);
     // console.log('results', results)
-
+    console.log(results)
     return results.reduce((location, el) => {
       if (el.types.includes("postal_code") || (el.types.includes("locality")  && el.types.includes('political'))) {
         location.name = el.address_components[1].long_name;

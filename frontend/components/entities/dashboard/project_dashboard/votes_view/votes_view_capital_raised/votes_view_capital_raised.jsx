@@ -10,9 +10,9 @@ class VotesViewCapitalRaised extends React.Component {
 
   render() {
     const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, capitalTotal, lineData, deployedProjects, selectedProject, SVGWidth, timeAxis } = this.props;
-    // console.log(this.props, 'props')
+
     const Lines = deployedProjects.map((project, idx) => {
-      console.log(project, 'PROJ')
+
       // -Math.abs(.5 * SVGTimeXScale(SVGWidth))
       return (
         <VotesViewCapitalRaisedLine key={idx}
@@ -22,7 +22,6 @@ class VotesViewCapitalRaised extends React.Component {
           transform={`translate(263, 0)`}/>
       )
     });
-
 
     const Circles = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedCircle key={idx}
@@ -46,15 +45,14 @@ class VotesViewCapitalRaised extends React.Component {
         return result;
       })
 
-      console.log('ld', lineData)
+
     const Path = <VotesViewCapitalRaisedPath
       d={lineScale(lineData)}
       opacity={selectedProject ? "0.2" : "1"}
       transform={`translate(263, 0)`}/>;
 
     const heightOfCapitalBeingRaisedRect = SVGHeightScale(capitalBeingRaised);
-    console.log('actual', capitalBeingRaised)
-    console.log('h', heightOfCapitalBeingRaisedRect)
+
     const yOfCapitalBeingRaisedRect = SVGYScale(capitalTotal);
     const CapitalBeingRaisedRect = <VotesViewCapitalRaisedRect
       x="0" y={yOfCapitalBeingRaisedRect}
@@ -64,7 +62,7 @@ class VotesViewCapitalRaised extends React.Component {
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"
-            x="93%" y={yOfCapitalBeingRaisedRect + heightOfCapitalBeingRaisedRect / 2}>
+            x="85%" y={yOfCapitalBeingRaisedRect + heightOfCapitalBeingRaisedRect / 2}>
             <tspan dy=".4em">capital being raised</tspan>
           </text>
           <text className="votes-view-capital-raised-text"
@@ -75,18 +73,27 @@ class VotesViewCapitalRaised extends React.Component {
       )}/>;
 
     const heightOfCapitalRaisedPrevRect = SVGHeightScale(capitalTotal - capitalBeingRaised);
-    console.log('actual', capitalTotal - capitalBeingRaised)
-    console.log('h', heightOfCapitalRaisedPrevRect)
+
     const yOfCapitalRaisedPrevRect = heightOfCapitalBeingRaisedRect + yOfCapitalBeingRaisedRect;
 
-    const capRaisedAmounts = deployedProjects.map((project, idx) => (
-      <text className="votes-view-capital-raised-text"
-        key={idx}
-        x={"7%"}
-        y={idx ? SVGYScale((project.capital + deployedProjects[idx - 1].capital) / 2) : (SVGYScale(project.capital) + yOfCapitalRaisedPrevRect + heightOfCapitalRaisedPrevRect) / 2}>
-        <tspan dy=".4em">{`$ ${Number(project.capital / 1000.0).toLocaleString()} k`}</tspan>
-      </text>
-    ));
+    console.log("deployedProjects", deployedProjects);
+
+
+    const capRaisedAmounts = deployedProjects.map((project, idx) => {
+      console.log(project);
+      const capitalRequired = project.capitalRequired > 0? "$ "+ Number(project.capitalRequired/1000.0).toLocaleString()+" k" : "";
+      return (
+        <text className="votes-view-capital-raised-text"
+          key={idx}
+          x={"7%"}
+          y={idx ? SVGYScale((project.capital + deployedProjects[idx - 1].capital) / 2) : (SVGYScale(project.capital) + yOfCapitalRaisedPrevRect + heightOfCapitalRaisedPrevRect) / 2}>
+          <tspan dy=".4em">{capitalRequired}</tspan>
+        </text>
+      )
+
+    });
+
+
     const CapitalRaisedPrevRect = <VotesViewCapitalRaisedRect
       x="0" y={yOfCapitalRaisedPrevRect}
       fill={colors.teal}
@@ -95,7 +102,7 @@ class VotesViewCapitalRaised extends React.Component {
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"
-            x="93%" y={yOfCapitalRaisedPrevRect + heightOfCapitalRaisedPrevRect / 2}>
+            x="85%" y={yOfCapitalRaisedPrevRect + heightOfCapitalRaisedPrevRect / 2}>
             <tspan dy=".4em">capital that has been raised</tspan>
           </text>
           {capRaisedAmounts}

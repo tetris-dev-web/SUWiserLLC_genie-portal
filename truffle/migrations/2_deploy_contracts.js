@@ -30,7 +30,7 @@ let tokenPurchaseHelper;
 module.exports = function (deployer, network, accounts) {
   console.log("NETWORK", network)
     const rate = 1;
-    const developer = accounts[0];  //will need to make this variable and import from the interface on first deployment of a developer's site (Progeny)
+    const developer = accounts[0];  
 
     return deployer
         .then(() => {

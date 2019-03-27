@@ -1,5 +1,9 @@
 import React from 'react';
 import * as d3 from 'd3';
+import { fetchTokenGraphData, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
+import { receiveReceiveDividends } from '../../../../../actions/chain_actions/dividends_actions';
+import { userData, totalData } from '../../../../../util/token_data_util';
+import { formatTokenGraphData } from '../../../../../util/propsUtil';
 import './token_graph.scss';
 import TokenGraphTokenPath from './token_graph_token_path';
 import TokenGraphXAxis from './token_graph_x_axis';
@@ -8,6 +12,28 @@ import Loader from '../../loader/loader';
 import '../../loader/loader.scss';
 import { merge } from 'lodash';
 
+const mapStateToProps = (state, ownProps) => {
+  const { currentViewType } = ownProps;
+  const tokenGraph = state.entities.tokenGraph;
+  const { byUser, byAll } = tokenGraph;
+  const dataLoaded = Object.keys(byAll).length && currentViewType === 'BY ALL' || Object.keys(byUser).length && currentViewType === 'BY USER';
+
+  return {
+    data: dataLoaded ? currentViewType === 'BY USER' ? tokenGraph.byUser : tokenGraph.byAll : null,
+    dividends: state.network.dividendsInstance,
+    inactiveToken: state.network.inactiveTokenInstance,
+    activeToken: state.network.activeTokenInstance,
+    account: state.network.account
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchTokenGraphData: (currentViewType, account) => dispatch(fetchTokenGraphData(currentViewType, account)),
+    receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event)),
+    receiveReceiveDividends: (event) => dispatch(receiveReceiveDividends(event))
+  }
+}
 
 class TokenGraph extends React.Component {
   constructor(){
@@ -22,13 +48,14 @@ class TokenGraph extends React.Component {
     this.width = (960 - this.margin.left - this.margin.right);
     this.height = (400 - this.margin.top - this.margin.bottom);
     this.watchTokenTransfer = this.watchTokenTransfer.bind(this);
+    this.watchReceiveDividends = this.watchReceiveDividends.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
-    this.props.fetchAllTokenTransferLogs(this.props.inactiveTokenInstance, this.props.activeTokenInstance);
-    this.props.fetchReceiveDividendsLogs(this.props.dividendsInstance);
-    this.watchTokenTransfer(this.props.inactiveTokenInstance, 'inactive');
-    this.watchTokenTransfer(this.props.activeTokenInstance, 'active');
+    this.fetchData();
+    this.watchTokenTransfer(this.props.inactiveToken, 'inactive');
+    this.watchTokenTransfer(this.props.activeToken, 'active');
     this.watchReceiveDividends();
 
     setTimeout(() => {
@@ -38,13 +65,18 @@ class TokenGraph extends React.Component {
 
   componentDidUpdate (prevProps) {
     const prevData = prevProps.data;
-    const { data, updateTimeAxis } = this.props;
-
+    const prevViewType = prevProps.currentViewType;
+    const { data, updateTimeAxis, currentViewType } = this.props;
     if (!prevData && data || (data && prevData.keys.length < data.keys.length)) {
-      console.log(prevData, data)
-
       updateTimeAxis(data[0].date, data[data.length - 1].date);
     }
+    if (currentViewType !== prevViewType) {
+      this.fetchData()
+    }
+  }
+
+  fetchData () {
+    this.props.fetchTokenGraphData(this.props.currentViewType, this.props.account);
   }
 
   toggleTimeAxis(boolean) {
@@ -54,19 +86,19 @@ class TokenGraph extends React.Component {
   }
 
   watchTokenTransfer (token, type) {
+    console.log('watching token transfer')
     token.Transfer().watch((error, event) => {
-      this.props.receiveTokenTransfer({data: event, type}).then(() => {
-        updateTimeAxis(null, event.blockNumber);
-      });
+      console.log('event', event)
+      this.props.receiveTokenTransfer({event, account: this.props.account, type})
+      this.props.updateTimeAxis(null, event.blockNumber);
     })
   }
 
   watchReceiveDividends () {
-    const { dividendsInstance, updateTimeAxis } = this.props;
-    dividendsInstance.ReceiveDividends().watch((error, event) => {
-      this.props.receiveReceiveDividendsLog(event).then(() => {
-        updateTimeAxis(null, event.blockNumber);
-      });
+    const { dividends, updateTimeAxis } = this.props;
+    dividends.ReceiveDividends().watch((error, event) => {
+      this.props.receiveReceiveDividends(event)
+      this.props.updateTimeAxis(null, event.blockNumber);
     })
   }
 

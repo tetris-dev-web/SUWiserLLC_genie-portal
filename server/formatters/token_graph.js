@@ -1,24 +1,21 @@
-//for formatting the data for the token graph
-import * as d3 from 'd3';
-import { merge } from 'lodash'
+const { merge } = require('lodash');
 
-
-export const formatTokenGraphData = (tokenTransferLogs, dividendsLogs, currentViewType, account) => {
+const formatTokenGraphData = (tokenTransferData, dividendsLogs, currentViewType, account) => {
   const dividendsHistory = formatDividendsHistory(dividendsLogs);
-  const tokenHistory = formatTokenHistory(tokenTransferLogs, currentViewType, account);
+  const tokenHistory = formatTokenHistory(tokenTransferData, currentViewType, account);
   return mergeHistories(dividendsHistory, tokenHistory, currentViewType);
 }
 
 const formatDividendsHistory = dividendsLogs => {
-  return dividendsLogs.map(log => {
-    const args = merge({}, log.args);
-    args.date = log.blockNumber;
-    return args;
+  return dividendsLogs.map(_data => {
+    const data = merge({}, _data);
+    data.date = data.blockNumber;
+    return data;
   })
 }
 
-const formatTokenHistory = (tokenTransferLogs, currentViewType, account) => {
-  const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferLogs);
+const formatTokenHistory = (tokenTransferData, currentViewType, account) => {
+  const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferData);
 
   const allTransfers = inactiveHistory.concat(activeHistory).sort((x, y) => {
     return x.blockNumber - y.blockNumber;
@@ -40,74 +37,72 @@ const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
 
   const incrementEarnings = () => {
     if (currentViewType === "BY USER") {
-      earnings += Number(currentDividend.weiAmount) * (transfer.activeTokens / transfer.allActiveTokens);
+      earnings += Number(currentDividendsRecord.weiAmount) * (currentTokenRecord.activeTokens / currentTokenRecord.allActiveTokens);
     } else {
-      earnings += Number(currentDividend.weiAmount);
+      earnings += Number(currentDividendsRecord.weiAmount);
     }
   }
 
-  let currentDividend;
-  let transfer;
+  let currentDividendsRecord;
+  let currentTokenRecord;
 
-  let currentDividendsIdx = 0;
-  let currentTransferIdx = 0;
+  let currentDividendsRecordsIdx = 0;
+  let currentTokenRecordIdx = 0;
   let lastMergedIdx;
 
   let earnings = 0;
   const merged = [];
 
-  while (currentDividendsIdx < dividendsHistory.length || currentTransferIdx < tokenHistory.length) {
+  while (currentDividendsRecordsIdx < dividendsHistory.length || currentTokenRecordIdx < tokenHistory.length) {
     lastMergedIdx = merged.length - 1;
-    currentDividend = currentDividendsIdx < dividendsHistory.length ? dividendsHistory[currentDividendsIdx] : null;
-    transfer = currentTransferIdx < tokenHistory.length ? tokenHistory[currentTransferIdx] : transfer;
+    currentDividendsRecord = currentDividendsRecordsIdx < dividendsHistory.length ? dividendsHistory[currentDividendsRecordsIdx] : null;
+    currentTokenRecord = currentTokenRecordIdx < tokenHistory.length ? tokenHistory[currentTokenRecordIdx] : currentTokenRecord;
 
-    if (currentTransferIdx >= tokenHistory.length || (currentDividend && transfer.date >= currentDividend.date)) {
+    if (currentTokenRecordIdx >= tokenHistory.length || (currentDividendsRecord && currentTokenRecord.date >= currentDividendsRecord.date)) {
       incrementEarnings();
       integrateBlockData({
         activeTokens: merged[lastMergedIdx].activeTokens,
         totalTokens: merged[lastMergedIdx].totalTokens,
-        date: currentDividend.date,
+        date: currentDividendsRecord.date,
         earnings
       })
-      currentDividendsIdx++;
+      currentDividendsRecordsIdx++;
     } else {
       integrateBlockData({
-        activeTokens: transfer.activeTokens,
-        totalTokens: transfer.totalTokens,
-        date: transfer.date,
+        activeTokens: currentTokenRecord.activeTokens,
+        totalTokens: currentTokenRecord.totalTokens,
+        date: currentTokenRecord.date,
         earnings
       })
-      currentTransferIdx++;
+      currentTokenRecordIdx++;
     }
   }
 
   return merged;
 }
 
-const getTransferHistory = tokenTransferLogs => {
-  const { inactiveTransferLogs, activeTransferLogs } = tokenTransferLogs;
+const getTransferHistory = tokenTransferData => {
+  const { inactiveTransferData, activeTransferData } = tokenTransferData;
 
-  const helper = transferLogs => {
-    const type = transferLogs === inactiveTransferLogs ? "inactive" : "active";
-    return transferLogs.map(log => {
-      const args = merge({}, log.args);
-      args.value = Number(args.value);
-      args.blockNumber = log.blockNumber;
-      args.type = type;
-      return args;
+  const helper = transferData => {
+    const type = transferData === inactiveTransferData ? "inactive" : "active";
+    return transferData.map(_data => {
+      const data = merge({}, _data);
+      data.type = type;
+      return data;
     })
   }
 
   return {
-    inactiveHistory: helper(inactiveTransferLogs),
-    activeHistory: helper(activeTransferLogs)
+    inactiveHistory: helper(inactiveTransferData),
+    activeHistory: helper(activeTransferData)
 
   }
 }
 
 const tokenHistoryByUser = (account, allTransfers) => {
   const userTransfers = allTransfers.filter(transfer => {
-    return transfer.from === account || transfer.to === account;
+    return transfer.from.toLowerCase() === account || transfer.to.toLowerCase() === account;
   })
 
   let totalTokens = 0;
@@ -119,7 +114,7 @@ const tokenHistoryByUser = (account, allTransfers) => {
       allActiveTokens += transferData.value;
     }
     //if the account is receiving the tranfer
-    if (transferData.to === account) {
+    if (transferData.to.toLowerCase() === account) {
       //if the account's overall balance is increasing
       if (transferData.type == 'inactive' || transferData.from !== "0x0000000000000000000000000000000000000000") {
         totalTokens += transferData.value;
@@ -166,3 +161,7 @@ const tokenHistoryByAll = allTransfers => {
     };
   });
 };
+
+module.exports = {
+  formatTokenGraphData
+}

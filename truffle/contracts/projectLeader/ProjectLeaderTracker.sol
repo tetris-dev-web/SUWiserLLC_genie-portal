@@ -45,7 +45,7 @@ contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFacto
 
   function trackProject (address projectAddr) external {
     require(projectAddr != address(0) && !Project(projectAddr).active());
-    require(startTime < Project(projectAddr).closingTime()); //ensures that this project is part of the current crowdsale cycle
+    require(startTime < Project(projectAddr).closingTime()); //ensures that this project is part of the current cycle
 
     if(Project(projectAddr).open()) {
       updateTentativeLeader(projectAddr);
@@ -128,7 +128,11 @@ contract ProjectLeaderTracker is CrowdsaleLocked, ActivationLocked, ProjectFacto
   }
 
   function tentativeLeaderConfirmed () internal view returns (bool) {
-    return checkCycle[currentCheckCycle].totalChecked == candidateCount;
+    return totalChecked() == candidateCount;
+  }
+
+  function totalChecked () public view returns (uint256) {
+    return checkCycle[currentCheckCycle].totalChecked;
   }
 }
 
