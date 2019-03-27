@@ -25,3 +25,14 @@ export const Strategy = () => {
       />
   )
 }
+
+
+// export const OfferCicular = () => {
+//   return (
+//     <InfoModal
+//       modalTitle="OFFER CIRCULAR"
+//       upperFigure={{}}
+//       lowerFigure={{}}
+//       content={Genus}
+//   )
+// }

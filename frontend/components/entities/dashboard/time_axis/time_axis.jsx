@@ -14,7 +14,7 @@ class TokenGraphXAxis extends React.Component  {
     const { startTime, endTime } = this.props;
     const scale = d3.scaleLinear()
     .range([0, this.width])
-    .domain([startTime, endTime])
+    .domain([0, 4])
 
     d3.select(this.axis)
       .call(d3.axisBottom(scale))
@@ -24,7 +24,7 @@ class TokenGraphXAxis extends React.Component  {
       // .ticks(10, "s"))
       // .tickFormat()
       // .tickFormat(d3.timeFormat("%m.%y")));
-    }
+  }
 
   componentDidMount() {
     this.drawAxis();
@@ -40,6 +40,7 @@ class TokenGraphXAxis extends React.Component  {
     return (
       <div className='time-axis'>
         <svg className='time-axis-svg' viewBox="0 0 960 100" preserveAspectRatio="xMinYMin meet">
+          <text transform="translate(-70, 71)">QTR</text>
           <g className="time-axis-g"
             ref={node => this.axis = node}
             transform={`translate(${this.margin.left}, ${this.margin.top + this.margin.bottom})`}

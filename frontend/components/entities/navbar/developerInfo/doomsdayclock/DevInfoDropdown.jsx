@@ -55,7 +55,7 @@ class DevInfoDropdown extends React.Component {
         <li className="about bounceOnHover">
           <div className="button-text bounceOnHover"
             onClick={() => this.handleClick("about")}>
-            OFFER CIRCULAR
+            ABOUT
           </div>
         </li>
       </ul>

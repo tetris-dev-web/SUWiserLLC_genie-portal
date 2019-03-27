@@ -33,15 +33,12 @@ class InfoModal extends React.Component {
     }
     return sections;
   }
-
   render() {
-
     const Header = (props) => (
       <div className="modal-header">
         {props.modalTitle}
       </div>
     )
-
     const Diagram = (props) => {
       console.log("diagram", props.diagram, typeof props.diagram);
       if(typeof props.diagram === "string"){
@@ -53,8 +50,6 @@ class InfoModal extends React.Component {
         return props.diagram
       }
     }
-
-
     return(
       <div className="InfoModal">
           <Header modalTitle={this.props.modalTitle} />
@@ -62,9 +57,7 @@ class InfoModal extends React.Component {
           {this.generateContent()}
           <Diagram diagram={this.props.lowerFigure} />
       </div>
-
     );
   }
 }
-
 export default InfoModal;

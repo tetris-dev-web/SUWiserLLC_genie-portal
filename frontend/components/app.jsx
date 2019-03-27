@@ -33,6 +33,7 @@ class App extends React.Component {
     );
   }
 }
+// <DeveloperInfo />
 
 const mapStateToProps  = state => {
   return {

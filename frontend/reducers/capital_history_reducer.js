@@ -22,15 +22,13 @@ const capitalHistoryReducer = (state = {}, action) => {
           date: Number(tokenPurchase.blockNumber),
           capital: lastRecord.capital + Number(tokenPurchase.value)
         }
-        console.log(action, 'action')
-        console.log(newRecord, 'newRecord')
-        if (lastRecord.date === Number(tokenPurchase.blockNumber)) {
-          newState.history[lastRecordLen] = newRecord;
-        } else {
+
+        if (lastRecord.date !== Number(tokenPurchase.blockNumber)) {
           newState.history.push(newRecord);
+          newState.capitalTotal += Number(tokenPurchase.value);
+          newState.endTime = Number(tokenPurchase.blockNumber);
         }
       }
-
       return newState;
     default:
       return state;

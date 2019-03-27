@@ -13,7 +13,7 @@ const { fetchWeiRaised , fetchPurchases, buyTokens } = require('./controllers/cr
 const { voteAndUpdateProjects } = require('./controllers/voting_controller');
 const { demoInvestorFreeVotes } = require('./controllers/voting_token_controller');
 const { pitchProject } = require('./controllers/project_factory_controller');
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 
 let endpoint = ''
 const app = express();
