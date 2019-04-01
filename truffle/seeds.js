@@ -1,4 +1,4 @@
-const sigUtil = require("eth-sig-util");
+const { web3, dotenv } = require("../server/chain_connection/web3_configuration");
 
 const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContract, _developer, _account1, _account2) => {
 
@@ -39,21 +39,6 @@ const seed = async (_crowdsale, _projectFactory, _token, _voting, _projectContra
         lng
       })
       const cashflow = JSON.stringify(sampleCashflow);
-      // const voteForHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote for ${title}`}])
-      // const voteAgainstHash = sigUtil.typedSignatureHash([{ type: 'string', name: 'Message', value: `vote against ${title}`}])
-      // const data = crowdsale.seedProject.getData(
-      //   projectInfo,
-      //   description,
-      //   capitalRequired,
-      //   valuation,
-      //   cashflow,
-      //   voteForHash,
-      //   voteAgainstHash
-      // );
-      // const gas = web3.eth.estimateGas({
-      //   to: crowdsale.address,
-      //   data
-      // });
       await projectFactory.createProject(
         projectInfo,
         valuation,

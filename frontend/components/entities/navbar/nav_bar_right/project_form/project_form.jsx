@@ -1,12 +1,12 @@
 import React from 'react';
-import { totalData } from '../../../../util/token_data_util';
-import { roundToTwo, getFileExtension } from '../../../../util/function_util';
+import { totalData } from '../../../../../util/token_data_util';
+import { roundToTwo, getFileExtension } from '../../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow_modal/cashflow_modal';
 import PDFModal from './pdf_modal/pdf_modal';
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
-import { formatProjectData, processCashData } from '../../../../util/project_api_util';
+import { formatProjectData, processCashData } from '../../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
 import { merge } from 'lodash';
 import './project_form.scss';
@@ -189,6 +189,11 @@ class ProjectForm extends React.Component {
     // });
 
     this.props.pitchProjectForDemo(params);
+    this.props.updateTransactionModal({
+      isOpen: true,
+      title: "YOUR TRANSACTION HAS BEEN SENT",
+      message: "It may take a few minutes for your transaction to be processed by the blockchain."
+    });
   }
 
   dropPinClick() {

@@ -1,9 +1,7 @@
 import React from 'react';
-
+import { withRouter } from 'react-router';
 import Login from './login';
-import UserDropdown from './user_dropdown/user_dropdown';
-import BuyFormModal from './buy_form/buy_form_modal';
-import ProjectFormModal from './project_form/project_form_modal';
+import NavBarRight from './nav_bar_right/nav_bar_right'
 import DeveloperInfo from './developerInfo/DeveloperInfo';
 
 import './navbar.scss';
@@ -11,24 +9,26 @@ import './navbar.scss';
 class Navbar extends React.Component {
 
   render() {
-    console.log('.....')
+    const pathname = this.props.history.location.pathname;
+    console.log(pathname, 'pathname')
     const LoggedInNavbar = () => (
       <nav className="series navbar-container">
         <DeveloperInfo />
-        <div className="navbar-right">
-          <UserDropdown/>
-          <BuyFormModal />
-          <ProjectFormModal />
-        </div>
+        {
+          pathname.length > 1 ?
+            <NavBarRight pathname={pathname}/> :
+            <div></div>
+        }
       </nav>
-    )
+    );
 
       return <LoggedInNavbar />;
 
   }
 }
 
-export default Navbar;
+export default withRouter(Navbar);
+
 // if (this.props.account) {
 // } else {
 //   return <Login/>;

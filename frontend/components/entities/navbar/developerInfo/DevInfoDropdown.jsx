@@ -21,6 +21,7 @@ class DevInfoDropdown extends React.Component {
       InfoModalComponent: ""
     };
     this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   toggleDropdown(e) {
@@ -30,6 +31,7 @@ class DevInfoDropdown extends React.Component {
   }
 
   handleClick(type) {
+    console.log('handling click')
     this.setState({
       InfoModalIsOpen: !this.state.InfoModalIsOpen,
       InfoModalComponent: modalInfo[type]

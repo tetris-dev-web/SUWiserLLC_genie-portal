@@ -1,7 +1,27 @@
+const { web3 } = require('../chain_connection/web3_configuration');
 const { fetchEvents } = require('../chain_util/chain_util');
 const { numberParser } = require('../util/number_util');
 const { formatProject } = require('../formatters/project_module');
+const { sendTransaction } = require('../chain_util/chain_util');
 const { projectFactoryInstance, _projectInstance } = require('../chain_models/models');
+
+const demoDepositCashflow = async (wei, projectAddress) => {
+  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const privateKey = process.env.PRIVATE_KEY;
+  const nonce = await web3.eth.getTransactionCount(address);
+  const projectInstance = _projectInstance(projectAddress);
+
+  await sendTransaction(
+    {
+      nonce,
+      to: projectAddress,
+      value: web3.utils.toHex(wei),
+      data: projectInstance.methods.deposit().encodeABI()
+    },
+    address,
+    privateKey
+  )
+}
 
 const fetchProjects = async () => {
   const totalProjectCount = await projectFactoryInstance.methods.totalProjectCount().call();
@@ -91,5 +111,6 @@ module.exports = {
   fetchProjects,
   fetchProjectGraphData,
   fetchProjectModuleData,
-  demoInvestorVotesByProject
+  demoInvestorVotesByProject,
+  demoDepositCashflow
 };

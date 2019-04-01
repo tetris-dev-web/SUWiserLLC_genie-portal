@@ -1,5 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import ProjectModules from '../../project_modules/project_modules';
+import { openModal } from '../../../../../../actions/modal_actions';
+
+const mapDispatchToProps = dispatch => {
+  return {
+    openModal: modal => dispatch(openModal(modal))
+  };
+};
+
 
 class VotesViewCapitalRaisedCircle extends React.Component {
 	constructor() {
@@ -17,7 +26,7 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 	}
 
 	render() {
-		const { cx, cy, r, x, y, project, opacity, transform } = this.props;
+		const { cx, cy, r, x, y, project, opacity, openModal, transform } = this.props;
 
 		return (
 			<React.Fragment>
@@ -28,6 +37,7 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 					r={r}
 					opacity={opacity}
 					transform={transform}
+					onClick={() => openModal({ type: "project_module", project })}
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}>
 				</circle>
@@ -43,4 +53,4 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 	}
 }
 
-export default VotesViewCapitalRaisedCircle;
+export default connect(null, mapDispatchToProps)(VotesViewCapitalRaisedCircle);

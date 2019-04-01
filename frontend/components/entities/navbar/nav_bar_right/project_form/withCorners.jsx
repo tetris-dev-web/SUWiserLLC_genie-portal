@@ -9,7 +9,7 @@ function DivWithCorners(props) {
         <div className="top-right-corner"></div>
 
         <div className="bottom-left-corner"></div>
-        
+
         <div className="bottom-right-corner"></div>
     </div>
   );

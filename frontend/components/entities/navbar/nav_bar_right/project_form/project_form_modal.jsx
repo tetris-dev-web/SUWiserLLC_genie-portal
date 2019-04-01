@@ -29,6 +29,7 @@ class ProjectFormModal extends React.Component {
           contentLabel="Manage Modal"
           className="modal-container">
           <ProjectForm
+            updateTransactionModal={this.props.updateTransactionModal}
             closeModal={this.handleClick}
             drizzleState={this.props.drizzleState} />
         </Modal>

@@ -43,7 +43,7 @@ class VotesGraph extends React.Component {
     const { lineData, updateTimeAxis, startTime, endTime } = this.props;
 
     if (prevLineData !== lineData) {
-      updateTimeAxis(startTime, endTime)
+      updateTimeAxis(startTime, endTime);
     }
   }
 
@@ -61,6 +61,7 @@ class VotesGraph extends React.Component {
     this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
       console.log('event', event)
       this.props.receiveTokenPurchase({blockNumber: event.blockNumber, value: Number(event.args.value)});
+      this.props.notifyTransactionCompletion({notification: "Your token purchase transaction has been mined to the blockchain."});
     })
   }
 

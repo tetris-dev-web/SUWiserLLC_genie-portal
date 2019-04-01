@@ -17,7 +17,7 @@ class VotesViewCapitalRaisedRect extends React.Component {
 	}
 
 	render() {
-		const { x, y, height, fill, opacity, textToDisplay } = this.props;
+		const { x, y, height, fill, opacity, textToDisplay, voteBreakdownText } = this.props;
 		const { showText } = this.state;
 
 		return (
@@ -31,6 +31,7 @@ class VotesViewCapitalRaisedRect extends React.Component {
 					fill={fill}
 					opacity={opacity}>
 				</rect>
+				{voteBreakdownText && voteBreakdownText()}
 				{showText && textToDisplay()}
 			</g>
 		);

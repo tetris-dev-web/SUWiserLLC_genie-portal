@@ -99,6 +99,15 @@ console.log("capital raised props", this.props)
       fill={colors.teal}
       height={heightOfCapitalRaisedPrevRect}
       opacity={selectedProject ? "0.1" : "0.3"}
+      voteBreakdownText={() => (
+        <g>
+          <text
+            className='votes-view-vote-breakdown-text'
+            x="50%" y={yOfCapitalBeingRaisedRect + heightOfCapitalBeingRaisedRect + 35}>
+            <tspan dy=".4em">vote breakdown</tspan>
+          </text>
+        </g>
+      )}
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"

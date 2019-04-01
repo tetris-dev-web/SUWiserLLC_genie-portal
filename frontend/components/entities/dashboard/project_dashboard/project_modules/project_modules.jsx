@@ -1,6 +1,7 @@
 import React from 'react';
 import ProjectMap from './project_modules_map';
 import ProjectThermo from './project_modules_thermo';
+import DepositCashFlow from './project_modules_deposit_cashflow';
 import CashFlowGraph from './project_modules_cashflow';
 import Loader from '../../loader/loader';
 import {Title, IframeFor3dModel, CloseButton, SummaryAndPlan } from './project_modules_subcomponents';
@@ -57,6 +58,14 @@ class ProjectModules extends React.Component {
     convert3dModelIDtoLink();
   }
 
+  watchReceiveCashflow () {
+    const { project } = this.props;
+    project.ReceiveCashFlow().watch((error, event) => {
+      console.log('yo')
+      this.props.fetchProjectModuleData(project.address);
+    })
+  }
+
   render() {
       const { project, isInvestor, isModalOpen, closeModalOnClick } = this.props;
 
@@ -67,6 +76,9 @@ class ProjectModules extends React.Component {
         return (
           <React.Fragment>
             <Title nameOfProject={project.title}/>
+
+            <DepositCashFlow projectAddress={project.address}/>
+
             <div className="project-modal-grid">
 
               <IframeFor3dModel projectClicked={project}

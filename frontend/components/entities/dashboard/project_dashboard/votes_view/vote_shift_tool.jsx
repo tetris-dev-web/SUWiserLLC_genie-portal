@@ -11,6 +11,7 @@ import {
   voteAndUpdateProjects,
   demoInvestorVoteAndUpdateProjects
 } from '../../../../../actions/chain_actions/votes_actions';
+import { updateTransactionModal } from '../../../../../actions//ui_actions';
 
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
@@ -52,7 +53,8 @@ const mapDispatchToProps = dispatch => {
       projects,
       projectLeaderTracker,
       activation,
-      web3)
+      web3),
+      updateTransactionModal: modalInfo => dispatch(updateTransactionModal(modalInfo))
     },
     demoInvestorVoteAndUpdateProjects: (votes, type, selectedProject) => demoInvestorVoteAndUpdateProjects(votes, type, selectedProject)
     // voteForProject: (account, votes, votingInstance, projectAddress) => voteForProject(account, votes, votingInstance, projectAddress),
@@ -93,6 +95,7 @@ class VoteShiftTool extends React.Component {
   }
 
   componentDidMount () {
+    console.log("hello............")
     this.fetchVoteData();
     this.watchVoteChange();
     this.populateState();
@@ -126,6 +129,7 @@ class VoteShiftTool extends React.Component {
       //   fetchProjectVotes(account, projectContract, selectedProject);
       // })
     // } else {
+    console.log("WHAT")
       fetchDemoInvestorFreeVotes().then(() => fetchDemoInvestorProjectVotes(selectedProject))
     // }
   }
@@ -173,7 +177,7 @@ class VoteShiftTool extends React.Component {
   handleLogClick() {
     this.setState({ blockchainLoading: !this.state.blockchainLoading });
 
-    const { account, votingInstance, selectedProject, votesPerProject, voteAndUpdateProjects, demoInvestorVoteAndUpdateProjects, projects, activation, projectLeaderTracker, web3 } = this.props;
+    const { account, votingInstance, selectedProject, votesPerProject, voteAndUpdateProjects, demoInvestorVoteAndUpdateProjects, projects, activation, projectLeaderTracker, web3, updateTransactionModal } = this.props;
     const { newVotesPerProject } = this.state;
 
     let type;
@@ -202,6 +206,12 @@ class VoteShiftTool extends React.Component {
       type,
       selectedProject
     )
+
+    updateTransactionModal({
+      isOpen: true,
+      title: "YOUR TRANSACTION HAS BEEN SENT";
+      message: "It may take a few minutes for your transaction to be processed by the blockchain."
+    })
   }
 
   handleVoteClick(vote) {
@@ -232,7 +242,7 @@ class VoteShiftTool extends React.Component {
     this.offsetX = 0;
     this.totalVotes = votesNotDedicated + votesPerProject;
     this.votesPerPixel = this.totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
-    
+
     const voteBarAppliedWidth = votesPerProject === 0 ? 0 : votesPerProject / this.votesPerPixel;
     const voteBarFreedUpWidth = votesNotDedicated === 0 ? 0 : votesNotDedicated / this.votesPerPixel;
 

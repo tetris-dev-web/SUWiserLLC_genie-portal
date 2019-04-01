@@ -7,7 +7,13 @@ const { Credentials } = require('uport-credentials')
 const transports = require('uport-transports').transport;
 const message = require('uport-transports').message.util;
 const { asyncMiddleware } = require('./middlewares/async_middleware');
-const { fetchProjects, fetchProjectModuleData, fetchProjectGraphData, demoInvestorVotesByProject } = require('./controllers/projects_controller');
+const {
+  fetchProjects,
+  fetchProjectModuleData,
+  fetchProjectGraphData,
+  demoInvestorVotesByProject,
+  demoDepositCashflow
+} = require('./controllers/projects_controller');
 const { fetchTokenHistoryWithEarnings, fetchInvestorBalance } = require('./controllers/token_controller');
 const { fetchWeiRaised , fetchPurchases, buyTokens } = require('./controllers/crowdsale_controller');
 const { voteAndUpdateProjects } = require('./controllers/voting_controller');
@@ -82,6 +88,12 @@ app.post('/api/demo/buy_tokens', asyncMiddleware(async (req, res) => {
 app.get('/api/demo/fetch_investor_balance', asyncMiddleware(async (req, res) => {
   const balance = await fetchInvestorBalance();
   res.send(balance);
+}))
+
+app.post('/api/demo/deposit_cashflow', asyncMiddleware(async (req, res) => {
+  const { weiAmount, projectAddress } = req.body;
+  await demoDepositCashflow(weiAmount, projectAddress);
+  res.send({})
 }))
 
 

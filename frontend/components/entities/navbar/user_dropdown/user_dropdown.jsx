@@ -2,11 +2,8 @@ import React from 'react';
 import Modal from 'react-modal';
 import ModalStyle from './modal_style';
 import Wallet from './wallet/wallet';
-import ProfileContainer from './profile/profile_container';
+import ProfileContainer from './profile/profile';
 import TokenData from '../../../../contract_data/Token';
-import { fetchTokenBalances, fetchDemoInvestorBalances, receiveActiveTokens, receiveInactiveTokens } from '../../../../actions/chain_actions/token_actions';
-import { connect } from 'react-redux';
-import { merge } from 'lodash';
 
 class UserDropdown extends React.Component {
   constructor(props) {
@@ -53,73 +50,6 @@ class UserDropdown extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.updateUsernameDisplay = this.updateUsernameDisplay.bind(this);
     this.handleLogOut = this.handleLogOut.bind(this);
-    this.watchTransfer = this.watchTransfer.bind(this);
-    // this.address = null;
-    // this.abi = null;
-    // this.web3 = null;
-  }
-
-  componentDidMount () {
-    const { inactiveTokenInstance, activeTokenInstance, account } = this.props;
-    // this.props.fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account).then(balances => {
-    //   const { totalActive, totalInactive, accountActive, accountTotal } = balances;
-    //   this.setState({
-    //     totalActive: Number(totalActive),
-    //     totalInactive: Number(totalInactive),
-    //     accountActive: Number(accountActive),
-    //     accountTotal: Number(accountTotal)
-    //   })
-    // });
-    this.props.fetchDemoInvestorBalances().then(balances => {
-        const { accountActive, accountTotal } = balances;
-        this.setState({
-          accountActive: Number(accountActive),
-          accountTotal: Number(accountTotal)
-        })
-    })
-    this.watchTransfer(inactiveTokenInstance);
-    this.watchTransfer(activeTokenInstance);
-  }
-
-  watchTransfer (token) {
-    const { inactiveTokenInstance, activeTokenInstance, account } = this.props;
-    token.Transfer().watch((error, event) => {
-      let newState = merge({}, this.state);
-      const value = Number(event.args.value);
-      if (event.args.from === "0x0000000000000000000000000000000000000000") {
-        if (token === inactiveTokenInstance) {
-          newState = merge({}, newState, { totalInactive: this.state.totalInactive + value })
-        } else {
-          newState = merge({}, newState, { totalActive: this.state.totalActive + value })
-        }
-      }
-
-      if (event.args.to === "0x0000000000000000000000000000000000000000") {
-        if (token === inactiveTokenInstance) {
-          newState = merge({}, newState, { totalInactive: this.state.totalInactive - value })
-        } else {
-          newState = merge({}, newState, { totalActive: this.state.totalActive - value })
-        }
-      }
-
-      if (event.args.to === account) {
-        if (token === inactiveTokenInstance) {
-          newState = merge({}, newState, { accountInactive: this.state.accountInactive + value })
-        } else {
-          newState = merge({}, newState, { totalAactive: this.state.accountActive + value })
-        }
-      }
-
-      if (event.args.from === account) {
-        if (token === inactiveTokenInstance) {
-          newState = merge({}, newState, { accountInactive: this.state.accountInactive - value })
-        } else {
-          newState = merge({}, newState, { totalAactive: this.state.accountActive - value })
-        }
-      }
-
-      this.setState(newState);
-    });
   }
 
   openModal() {
@@ -182,7 +112,6 @@ class UserDropdown extends React.Component {
     // let { tokens, user_tokens, total_tokens } = this.state;
     // let { tokens } = this.props.currentUser;
 
-    console.log("state, yo", this.state)
     return (
       <div>
         <div id="dropdown-container" className="dropdown">
@@ -198,62 +127,22 @@ class UserDropdown extends React.Component {
                 <div id='user-text' className="total-tokens">{this.state.accountInactive ? this.state.accountInactive : 0} inactive tokens</div>
               </div>
             </div>
-
-          <ul className="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-            <li className="dropdown-submenu">
-              <a tabIndex="-1" className="wallet-button butt">
-                <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/wallet.svg" />
-                <div className="button-text">wallet#</div>
-              </a>
-            </li>
-            <li className="dropdown-submenu profile-menu">
-              <a tabIndex="-1" className="profile-button butt">
-                <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/profile.svg" />
-                <div className="button-text">profile</div>
-              </a>
-            </li>
-            <li>
-              <a className="logout-button butt" onClick={this.props.logout}>
-                <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/logout.svg" />
-                <div className="button-text">log&nbsp;out</div>
-              </a>
-            </li>
-          </ul>
+        </div>
+        <div className="dropdown-menu dropdown-item">
+          <ProfileContainer
+            updateUsernameDisplay={this.updateUsernameDisplay}
+            user={this.props.currentUser}/>
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    web3: state.network.web3,
-    crowdsaleInstance: state.network.crowdsaleInstance,
-    projectContract: state.network.project,
-    inactiveTokenInstance: state.network.inactiveTokenInstance,
-    activeTokenInstance: state.network.activeTokenInstance,
-    account: state.network.account,
-    tokenBalances: state.entities.tokenBalances
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchTokenBalances: (inactiveTokenInstance, activeTokenInstance, account) => fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account),
-    fetchDemoInvestorBalances: () => fetchDemoInvestorBalances()
-  }
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserDropdown);
+export default UserDropdown;
 //needs to be updated with uport infomration
-// <ul className="dropdown-menu dropdown-item">
-//   <Wallet currentUser={this.props.currentUser} updateUser={this.props.updateUser} updateUsernameDisplay={this.updateUsernameDisplay}/>
-// </ul>
 //needs to be updated with uport information
 // <ul className="dropdown-menu dropdown-item">
-//   <ProfileContainer
-//     updateUsernameDisplay={this.updateUsernameDisplay}
-//     user={this.props.currentUser}/>
+//   <Wallet currentUser={this.props.currentUser} updateUser={this.props.updateUser} updateUsernameDisplay={this.updateUsernameDisplay}/>
 // </ul>
 
 
@@ -279,3 +168,26 @@ export default connect(mapStateToProps, mapDispatchToProps)(UserDropdown);
 
 
 // <a id="dLabel" role="button" data-toggle="dropdown" className="dropdown-link">
+
+
+
+// <ul className="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+//   <li className="dropdown-submenu">
+//     <a tabIndex="-1" className="wallet-button butt">
+//       <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/wallet.svg" />
+//       <div className="button-text">wallet#</div>
+//     </a>
+//   </li>
+//   <li className="dropdown-submenu profile-menu">
+//     <a tabIndex="-1" className="profile-button butt">
+//       <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/profile.svg" />
+//       <div className="button-text">profile</div>
+//     </a>
+//   </li>
+//   <li>
+//     <a className="logout-button butt" onClick={this.props.logout}>
+//       <img className="button-img" src="https://s3.amazonaws.com/genie-portal-dev/static/logout.svg" />
+//       <div className="button-text">log&nbsp;out</div>
+//     </a>
+//   </li>
+// </ul>

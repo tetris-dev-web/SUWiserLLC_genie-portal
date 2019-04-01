@@ -1,8 +1,8 @@
 import React from 'react';
 import { keys, merge } from 'lodash';
-import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_modules/project_modules_cashflow';
+import CashFlowGraph from '../../../../../entities/dashboard/project_dashboard/project_modules/project_modules_cashflow';
 import ThumbsUp from '../thumbs_up_svg';
-import { calculateAccumulatedRevenue,  processCashData } from '../../../../../util/project_api_util';
+import { calculateAccumulatedRevenue,  processCashData } from '../../../../../../util/project_api_util';
 
 class CashFlowInputSheet extends React.Component {
   constructor(props) {

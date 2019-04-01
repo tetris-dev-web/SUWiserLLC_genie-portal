@@ -1,101 +1,103 @@
 import React from 'react';
+import { fetchTokenBalances, fetchDemoInvestorBalances } from '../../../../../actions/chain_actions/token_actions';
+import { connect } from 'react-redux';
+import { merge } from 'lodash';
+
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      id: '',
-      email: '',
-      zipcode: '',
-      first_name: '',
-      last_name: ''
+      account: null,
+      "ETH": null,
+      "GNI (active)": null,
+      "GNIT (vesting)": null,
+
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.watchTransfer = this.watchTransfer.bind(this);
   }
-
-  update(property) {
-    return (e) => {
-      e.preventDefault();
-      this.setState({ [property]: e.currentTarget.value });
-    };
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-
-    let stateUsername = this.state.username;
-    let propsUsername = this.props.currentUser.username;
-
-    let parsedUsername = this.props.currentUser.username;
-
-    if (this.state.email && this.state.email.includes('@') && stateUsername !== propsUsername) {
-      parsedUsername = this.state.email.match(/^([^@]*)@/)[1];
-    }
-
-    /*
-    Again, we use regex to truncate the username from the email,
-    but we check to see if the updated username piece of state differs from
-    the props username so it is only updated if they differ.
-    */
-
-    let updatedUser = {
-      id: this.state.id,
-      email: this.state.email,
-      // password: (this.state.password.length > 6) ? this.state.password : "",
-      password: this.state.password,
-      zipcode: this.state.zipcode,
-      first_name: this.state.first_name,
-      last_name: this.state.last_name,
-    };
-
-    this.props.updateUser(updatedUser).then(() => {
-      this.props.updateUsernameDisplay(updatedUser);
-      // $("#dropdown-container").removeClass('dropdown open').addClass('dropdown');
-    });
-  }
-
   /*
   After we updated the user on the backend, we update the user's display
   name on the underlying Navbar Component before closing the modal
   */
 
   componentDidMount() {
-    let updatedUser = this.props.currentUser;
+    const { inactiveTokenInstance, activeTokenInstance, account } = this.props;
+    // this.props.fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account).then(balances => {
+    //   const { totalActive, totalInactive, accountActive, accountTotal } = balances;
+    //   this.setState({
+    //     totalActive: Number(totalActive),
+    //     totalInactive: Number(totalInactive),
+    //     accountActive: Number(accountActive),
+    //     accountTotal: Number(accountTotal)
+    //   })
+    // });
+    this.props.fetchDemoInvestorBalances().then(balances => {
+        const { accountActive, accountInactive } = balances;
+        this.setState({
+          "GNI (active)": Number(accountActive),
+          "GNI (vesting)": Number(accountInactive),
+          "ETH": this.props.balance
+        })
+    })
+    this.watchTransfer(inactiveTokenInstance);
+    this.watchTransfer(activeTokenInstance);
+  }
 
-    // used an empty '' so that it doesn't return null for the value
-    this.setState({
-      id: updatedUser.id || '',
-      email: updatedUser.email || '',
-      zipcode: updatedUser.zipcode || '',
-      first_name: updatedUser.first_name || '',
-      last_name: updatedUser.last_name || ''
+  componentDidUpdate (prevProps) {
+    if (prevProps.balance !== this.props.balance) {
+      this.setState({
+        "ETH": this.props.balance
+      })
+    }
+  }
+
+  watchTransfer (token) {
+    const { inactiveTokenInstance, account } = this.props;
+    token.Transfer().watch((error, event) => {
+      let newState = merge({}, this.state);
+      const value = Number(event.args.value);
+      if (event.args.from === "0x0000000000000000000000000000000000000000") {
+        if (token === inactiveTokenInstance) {
+          newState = merge({}, newState, { totalInactive: this.state.totalInactive + value })
+        } else {
+          newState = merge({}, newState, { totalActive: this.state.totalActive + value })
+        }
+      }
+
+      if (event.args.to === "0x0000000000000000000000000000000000000000") {
+        if (token === inactiveTokenInstance) {
+          newState = merge({}, newState, { totalInactive: this.state.totalInactive - value })
+        } else {
+          newState = merge({}, newState, { totalActive: this.state.totalActive - value })
+        }
+      }
+
+      if (event.args.to === account) {
+        if (token === inactiveTokenInstance) {
+          newState = merge({}, newState, { accountInactive: this.state.accountInactive + value })
+        } else {
+          newState = merge({}, newState, { totalAactive: this.state.accountActive + value })
+        }
+      }
+
+      if (event.args.from === account) {
+        if (token === inactiveTokenInstance) {
+          newState = merge({}, newState, { accountInactive: this.state.accountInactive - value })
+        } else {
+          newState = merge({}, newState, { totalAactive: this.state.accountActive - value })
+        }
+      }
+
+      this.setState(newState);
     });
   }
 
-  // ComponentWillReceiveProps() {
-  //   let updatedUser = this.props.currentUser;
-  //
-  //   this.setState({
-  //     id: updatedUser.id,
-  //     email: updatedUser.email,
-  //     zipcode: updatedUser.zipcode,
-  //     first_name: updatedUser.first_name,
-  //     last_name: updatedUser.last_name
-  //   });
-  // }
-
-
-  /*
-  We use the componentWillMount lifecycle method to autopopulate the profile
-  update fields to reflect any changes they may have just made by fetching the
-  current user from the backend and returning the most up-to-date data.
-  */
-
   render() {
 
-    let { email, password, zipcode, first_name, last_name } = this.state;
 
     return(
       <form className="profile-form-box">
@@ -103,8 +105,7 @@ class Profile extends React.Component {
           type="text"
           placeholder="email"
           autoComplete="new-email"
-          value={email}
-          onChange={this.update('email')}
+          value='hi'
           className="profile-input"
           />
         <br/>
@@ -112,8 +113,7 @@ class Profile extends React.Component {
           type="password"
           placeholder="password"
           autoComplete="new-password"
-          value={password}
-          onChange={this.update('password')}
+          value='hi'
           className="profile-input"
           />
         <br/>
@@ -121,8 +121,7 @@ class Profile extends React.Component {
           type="zipcode"
           placeholder="zipcode"
           autoComplete="new-zipcode"
-          value={zipcode}
-          onChange={this.update('zipcode')}
+          value='hi'
           className="profile-input"
           />
         <br/>
@@ -130,8 +129,7 @@ class Profile extends React.Component {
           type="first_name"
           placeholder="first name"
           autoComplete="new-first_name"
-          value={first_name}
-          onChange={this.update('first_name')}
+          value='hi'
           className="profile-input"
           />
         <br/>
@@ -139,8 +137,7 @@ class Profile extends React.Component {
           type="last_name"
           placeholder="last name"
           autoComplete="new-last_name"
-          value={last_name}
-          onChange={this.update('last_name')}
+          value='hi'
           className="profile-input"
           />
         <br/>
@@ -148,10 +145,27 @@ class Profile extends React.Component {
           type="submit"
           value="update"
           className="submit-button"
-          onClick={this.handleSubmit}/><br/>
+          /><br/>
       </form>
     );
   }
 }
 
-export default Profile;
+const mapStateToProps = state => {
+  return {
+    inactiveTokenInstance: state.network.inactiveTokenInstance,
+    activeTokenInstance: state.network.activeTokenInstance,
+    account: state.network.account,
+    balance: state.network.balance,
+    tokenBalances: state.entities.tokenBalances
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchTokenBalances: (inactiveTokenInstance, activeTokenInstance, account) => fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account),
+    fetchDemoInvestorBalances: () => fetchDemoInvestorBalances()
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

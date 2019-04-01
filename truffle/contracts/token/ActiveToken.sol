@@ -23,11 +23,18 @@ contract ActiveToken is Ownable {
 
   mapping (address => mapping (address => uint256)) internal _allowed;
 
-  uint256 internal _totalSupply;
+  mapping(uint256 => address) internal investorAddress;
+  mapping(address => uint256) internal investorId;
 
+  uint256 internal _totalSupply;
+  uint256 public totalInvestors;
 
   function totalSupply() public view returns (uint256) {
       return _totalSupply;
+  }
+
+  function investorById (uint256 id) public returns (address) {
+    return investorAddress[id];
   }
 
   function balanceOf(address owner) public view returns (uint256) {
@@ -116,8 +123,16 @@ contract ActiveToken is Ownable {
   }
 
   function prepareTransfer (address from, address to) internal {
+    recordAccount(to);
     dividendWallet.distributeDividend(from);
     dividendWallet.distributeDividend(to);
   }
 
+  function recordAccount (address account) internal {
+    if (investorId[account] == 0) {
+      totalInvestors = totalInvestors.add(1);
+      investorAddress[totalInvestors] = account;
+      investorId[account] = totalInvestors;
+    }
+  }
 }

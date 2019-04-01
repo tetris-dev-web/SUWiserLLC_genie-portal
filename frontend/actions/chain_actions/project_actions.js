@@ -14,6 +14,20 @@ export const receiveProjectGraphData = projectGraphData => {
   };
 };
 
+export const demoDepositCashflow = (projectAddress, weiAmount) => {
+  return ExpressAPI.fetchApiData(
+    `demo/deposit_cashflow`,
+    {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({projectAddress, weiAmount})
+    }
+  );
+};
+
 export const fetchProject = (address) => {
   return dispatch => {
     return ExpressAPI.fetchApiData(`project_graph_data/${address}`).then(project => {

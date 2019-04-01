@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dividends.setProvider(web3Provider);
 
     let account;
+    let balance;
     let inactiveTokenInstance;
     let activeTokenInstance;
     let votingTokenInstance;
@@ -76,6 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
       inactiveToken.deployed().then((_inactiveTokenInstance) => {
         // console.log("tokenInst: ", _tokenInstance)
         inactiveTokenInstance = _inactiveTokenInstance;
+      })
+      .then(() => {
+        return provider.eth.getBalance(account).then(_balance => {
+          balance = _balance
+        })
       })
       .then(() => {
         return activeToken.deployed().then((_activeTokenInstance) => {
@@ -123,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
               network:
               {
                 account,
+                balance,
                 inactiveTokenInstance,
                 activeTokenInstance,
                 votingTokenInstance,

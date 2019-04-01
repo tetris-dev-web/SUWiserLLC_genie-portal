@@ -5,6 +5,7 @@ const { crowdsaleInstance } = require('../chain_models/models');
 const { crowdsaleAddress } = require('../chain_models/contract_addresses');
 const { formatCapitalHistoryData } = require('../formatters/capital_history');
 const { sendTransaction } = require('../chain_util/chain_util');
+const { attemptProjectActivation } = require('./activation_controller');
 const { dotenv } = require('../chain_connection/web3_configuration');
 
 const fetchWeiRaised = async () => {
@@ -23,7 +24,7 @@ const buyTokens = async wei => {
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
 
-  return await sendTransaction(
+  await sendTransaction(
     {
       nonce,
       to: crowdsaleAddress,
@@ -33,6 +34,8 @@ const buyTokens = async wei => {
     address,
     privateKey
   );
+
+  return await attemptProjectActivation();
 }
 
 module.exports = {

@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import {
   createProject,
   pitchProjectForDemo
-} from '../../../../actions/chain_actions/project_actions';
+} from '../../../../../actions/chain_actions/project_actions';
+import { updateTransactionModal } from '../../../../../actions/ui_actions';
 
 const mapStateToProps = state => {
   const projects = Object.keys(state.entities.projectGraph.projects).reduce((pitchedProjects, projectTitle) => {
@@ -27,7 +28,8 @@ const mapDispatchToProps = dispatch => {
   return {
     createProject: (projectFactoryInstance, params, pdf_file, account) => createProject(projectFactoryInstance, params, pdf_file, account),
     pitchProjectForDemo: params => pitchProjectForDemo(params),
-    clearProjectErrors: () => dispatch(clearProjectErrors())
+    clearProjectErrors: () => dispatch(clearProjectErrors()),
+    updateTransactionModal: modalInfo => dispatch(updateTransactionModal(modalInfo))
   };
 };
 

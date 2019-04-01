@@ -8,6 +8,7 @@ const {
 const { web3 } = require('../chain_connection/web3_configuration');
 const { votingAddress, projectLeaderTrackerAddress } = require('../chain_models/contract_addresses');
 const { dotenv } = require('../chain_connection/web3_configuration');
+const { attemptProjectActivation } = require('./activation_controller');
 const { sendTransaction } = require('../chain_util/chain_util');
 
 
@@ -112,9 +113,6 @@ const recalculateLeader = async (address, privateKey) => {
   return Promise.all(trackProjectTransactions);
 }
 
-const attemptProjectActivation = async () => {
-  return await activationInstance.methods.tryActivateProject().call();
-}
 
 module.exports = {
   voteAndUpdateProjects

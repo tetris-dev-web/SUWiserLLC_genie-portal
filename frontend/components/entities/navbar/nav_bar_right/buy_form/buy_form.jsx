@@ -1,7 +1,8 @@
 import React from 'react';
 import './transfer.scss';
 import { connect } from 'react-redux';
-import { buyTokens, buyTokensWithDemoInvestor } from '../../../../actions/chain_actions/token_actions';
+import { buyTokens, buyTokensWithDemoInvestor } from '../../../../../actions/chain_actions/token_actions';
+import { updateTransactionModal } from  '../../../../../actions/ui_actions';
 
 const mapStateToProps = state => {
   return {
@@ -14,7 +15,8 @@ const mapStateToProps = state => {
 const mapDipsatchToProps = dispatch => {
   return {
     buyTokens: (crowdsale, account, wei) => buyTokens(crowdsale, account, wei),
-    buyTokensWithDemoInvestor: wei => buyTokensWithDemoInvestor(wei)
+    buyTokensWithDemoInvestor: wei => buyTokensWithDemoInvestor(wei),
+    updateTransactionModal: modalInfo => dispatch(updateTransactionModal(modalInfo))
   }
 }
 
@@ -26,11 +28,12 @@ class BuyForm extends React.Component {
       shares: 0,
       price: 78,
       value: 0,
-      bylaw_agreement: false,
+      bylaw_agreement: false
     };
 
     this.toggleBylawAgreement = this.toggleBylawAgreement.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeTransactionModal = this.closeTransactionModal.bind(this);
   }
 
   update(field) {
@@ -54,8 +57,30 @@ class BuyForm extends React.Component {
     //   this.state.shares
     // );
 
-    this.props.buyTokensWithDemoInvestor(this.state.shares);
-    this.props.closeModal();
+    let title;
+    let message;
+
+    if (this.state.shares <= 5) {
+      title = "YOUR TRANSACTION HAS BEEN SENT";
+      message = "It may take a few minutes for your transaction to be processed by the blockchain."
+      this.props.buyTokensWithDemoInvestor(this.state.shares);
+      this.props.closeModal();
+    } else {
+      title = "TRANSACTION REJECTED";
+      message = "For this demo, we limit token purchases to 5 wei. Please try again with a smaller wei amount."
+    }
+
+    this.props.updateTransactionModal({
+      isOpen: true,
+      title,
+      message
+    });
+  }
+
+  closeTransactionModal () {
+    this.setState({
+      transactionModalOpen: false
+    })
   }
 
   render() {
