@@ -14,11 +14,12 @@ contract Dividends {
   mapping(address => uint256) public lastDividendPoints;
 
   event ReceiveDividends(uint256 weiAmount, uint256 time);
+  event DividendCollection(address account, uint256 amount);
 
   uint256 public totalDividendPoints;
   uint256 internal pointMultiplier = 10e30;
 
-  function dividendOwedTo(address account) internal view returns (uint256) {
+  function dividendOwedTo(address account) public view returns (uint256) {
     uint256 owedDividendPoints = totalDividendPoints.sub(lastDividendPoints[account]);
     uint256 accountTokens = ActiveToken(token).balanceOf(account);
     return accountTokens.mul(owedDividendPoints).div(pointMultiplier);
@@ -28,6 +29,7 @@ contract Dividends {
     uint256 dividend = dividendOwedTo(account);
     account.transfer(dividend);
     lastDividendPoints[account] = totalDividendPoints;
+    emit DividendCollection(account, dividend);
     return true;
   }
 

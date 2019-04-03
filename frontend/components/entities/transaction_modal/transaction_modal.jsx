@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 import './transaction_modal.scss';
 import { connect } from 'react-redux';
-import { updateTransactionModal } from  '../../../../../actions/ui_actions';
+import { updateTransactionModal } from  '../../../actions/ui_actions';
 
 class TransactionModal extends React.Component {
   constructor(props) {
@@ -17,6 +17,11 @@ class TransactionModal extends React.Component {
         className='transaction_modal'
         isOpen={isOpen}
         onRequestClose={() => updateTransactionModal({ isOpen: false })}
+        style={{
+          overlay : {
+            zIndex          : 100
+          }
+        }}
         >
         <div className='form_content'>
           <h1 className='form_content_title'>{title}</h1>

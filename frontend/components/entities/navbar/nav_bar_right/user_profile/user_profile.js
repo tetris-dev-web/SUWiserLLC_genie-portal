@@ -19,7 +19,6 @@ class UserProfile extends React.Component {
   }
 
   render () {
-    console.log(this.state, 'stateee')
     return (
       <div className='user_profile'>
         <div onClick={() => this.setShowProfileStatus(true)}>DEMO USER</div>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { fetchTokenBalances, fetchDemoInvestorBalances } from '../../../../../actions/chain_actions/token_actions';
+import { fetchTokenBalances, fetchDemoInvestorBalances, collectDemoInvestorDividend } from '../../../../../actions/chain_actions/token_actions';
+import { activateDemoInvestorPending } from '../../../../../actions/chain_actions/dividends_actions';
 import { connect } from 'react-redux';
 import { merge } from 'lodash';
 
@@ -7,13 +8,16 @@ class ProfileContent extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      account: null,
-      "ETH": null,
-      "GNI (active)": null,
-      "GNI (vesting)": null,
-
+      account: '',
+      "ETH": '',
+      "GNI (vesting)": '',
+      "GNI (pending)": 0,
+      "GNI (active)": '',
+      "Dividend Owed": 0
     };
     this.watchTransfer = this.watchTransfer.bind(this);
+    this.activateTokens = this.activateTokens.bind(this);
+    this.collectDividend = this.collectDividend.bind(this);
   }
 
   componentDidMount() {
@@ -28,16 +32,21 @@ class ProfileContent extends React.Component {
     //   })
     // });
     this.props.fetchDemoInvestorBalances().then(balances => {
-        const { accountActive, accountInactive } = balances;
+        const { accountActive, accountInactive, accountPending, accountDividend } = balances;
+        console.log(balances, "sup")
         this.setState({
           account,
-          "GNI (active)": Number(accountActive),
+          "ETH": this.props.balance,
           "GNI (vesting)": Number(accountInactive),
-          "ETH": this.props.balance
+          "GNI (pending)": Number(accountPending),
+          "GNI (active)": Number(accountActive),
+          "Dividend Owed": Number(accountDividend)
         })
     })
     this.watchTransfer(inactiveTokenInstance);
     this.watchTransfer(activeTokenInstance);
+    // this.watchDividendCollection();
+    // this.watchTokenActivation();
   }
 
   componentDidUpdate (prevProps) {
@@ -46,6 +55,14 @@ class ProfileContent extends React.Component {
         "ETH": this.props.balance
       })
     }
+  }
+
+  activateTokens () {
+    this.props.inactiveTokenInstance.activateDemoInvestorPending();
+  }
+
+  collectDividend () {
+    this.props.dividendsInstance.collectDemoInvestorDividend();
   }
 
   watchTransfer (token) {
@@ -89,12 +106,54 @@ class ProfileContent extends React.Component {
     });
   }
 
+  watchDividendCollection () {
+    const { dividendsInstance } = this.props;
+    dividendsInstance.DividendCollection().watch((error, event) => {
+      const { account } = event.args;
+      if (account === this.props.account) { //we need to populate state with the correct account (hardcode for demo)
+        this.setState({
+          "Dividend Owed": 0
+        })
+      }
+    })
+  }
+
+  watchTokenActivation () {
+    const { inactiveTokenInstance } = this.props;
+    inactiveTokenInstance.TokenActivation().watch((error, event) => {
+      const { account, amount } = event.args;
+      if (account === this.props.account) {
+        this.setState({
+          "GNI (pending)": 0,
+          "GNI (active)": this.state["GNI (active)"] + amount
+        })
+      }
+    })
+  }
+
   render () {
     const userInfo = Object.keys(this.state).map((item, idx) => {
+      const content =  item === "GNI (pending)" || item === "Dividend Owed" ?
+                        <div className='profile_item_right'>
+                          <div className='profile_item_content'>
+                            {`${this.state[item]}`}
+                          </div>
+                          <div
+                            className='profile_item_button'
+                            onClick={ item === "GNI (pending)" ?  this.activateTokens : this.collectDividend }
+                            >
+                            {this.state[item] > 0 ?
+                              `${item === "GNI (pending)" ? "acitvate" : "collect"}`
+                              :
+                              ''
+                            }
+                          </div>
+                        </div> :
+                        <div className='profile_item_content'>{`${this.state[item]}`}</div>
       return (
         <div key={idx} className='profile_item'>
           <div className='profile_item_type'>{`${item}`}</div>
-          <div className='profile_item_content'>{`${this.state[item]}`}</div>
+          {content}
         </div>
       );
     })
@@ -106,18 +165,27 @@ class ProfileContent extends React.Component {
     )
   }
 }
+// {
+//   item === "GNI (pending)" || item === "Dividend Owed" ?
+//   <div className='profile_item_button'>{`${item === "GNI (pending)" ? "acitvate tokens" : "collect dividend"}`}</div> :
+//   <div></div>
+// }
 
 const mapStateToProps = state => {
   return {
     inactiveTokenInstance: state.network.inactiveTokenInstance,
     activeTokenInstance: state.network.activeTokenInstance,
+    dividendsInstance: state.network.dividendsInstance,
     account: state.network.account,
     balance: state.network.balance,
     tokenBalances: state.entities.tokenBalances,
     fetchTokenBalances: (inactiveTokenInstance, activeTokenInstance, account) => fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account),
-    fetchDemoInvestorBalances: () => fetchDemoInvestorBalances()
+    fetchDemoInvestorBalances: () => fetchDemoInvestorBalances(),
+    collectDemoInvestorDividend: () => collectDemoInvestorDividend(),
+    activateDemoInvestorPending: () => activateDemoInvestorPending()
   };
 };
+
 
 
 export default connect(mapStateToProps)(ProfileContent);

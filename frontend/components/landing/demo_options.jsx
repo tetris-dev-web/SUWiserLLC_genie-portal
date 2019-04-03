@@ -12,7 +12,7 @@ export const DemoOptions = ({ handleClick }) => {
 const DashBoardOption = ({ userDisplay, navigateToDashBoard }) => {
   return (
     <div className='demo_option'>
-      <p onClick={navigateToDashBoard}>{`${userDisplay} >>>`}</p>
+      <p onClick={navigateToDashBoard}>{`${userDisplay}`}</p>
     </div>
   )
 }

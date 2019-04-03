@@ -18,6 +18,8 @@ contract InactiveToken is CrowdsaleLocked, ActivationLocked {
     activeToken = ActiveToken(_activeToken);
   }
 
+  event TokenActivation(address account, uint256 amount);
+
   event Transfer(address indexed from, address indexed to, uint256 value);
 
   event Approval(address indexed owner, address indexed spender, uint256 value);
@@ -161,6 +163,7 @@ contract InactiveToken is CrowdsaleLocked, ActivationLocked {
       activate(account, tokens);
       lastActivationPoints[account] = totalActivationPoints;
       totalPendingActivations = totalPendingActivations.sub(tokens);
+      emit TokenActivation(account, tokens);
     }
     return true;
   }

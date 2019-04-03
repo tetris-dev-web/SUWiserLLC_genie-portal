@@ -1,3 +1,4 @@
+import * as ExpressAPI  from './util/fetch_util/express_api_util';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import configureStore from './store/store';
@@ -19,12 +20,14 @@ import ProjectLeaderTracker from '../truffle/build/contracts/ProjectLeaderTracke
 import Dividends from '../truffle/build/contracts/Dividends.json';
 
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("hello")
   let store;
   let web3Provider;
   let provider;
   let preloadedState = {};
 
-  if (web3) {
+  if (typeof web3 !== 'undefined') {
+    console.log('theres web3')
     web3Provider = web3.currentProvider;
     // web3Provider.enable();
     provider = new Web3(web3Provider);
@@ -59,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const dividends = TruffleContract(Dividends);
     dividends.setProvider(web3Provider);
-
+    console.log("hello")
     let account;
     let balance;
     let inactiveTokenInstance;
@@ -79,9 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
         inactiveTokenInstance = _inactiveTokenInstance;
       })
       .then(() => {
-        return provider.eth.getBalance(account).then(_balance => {
-          balance = _balance
-        })
+        if (account) {
+          return provider.eth.getBalance(account).then(_balance => {
+            balance = _balance
+          })
+        }
+        return;
       })
       .then(() => {
         return activeToken.deployed().then((_activeTokenInstance) => {
@@ -141,7 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 activationInstance,
                 dividendsInstance,
                 web3,
-                provider
+                provider,
+                web3Provider
               }
             }
           );
@@ -164,10 +171,26 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   } else {
-    web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+    // web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
+    // proivder = new Web3(web3Provider);
+    //
+    //   preloadedState = merge(
+    //     {},
+    //     preloadedState,
+    //     {
+    //       network:
+    //       {
+    //         provider,
+    //         web3Provider
+    //       }
+    //     }
+    //   );
+    //
     store = configureStore(preloadedState);
-    // window.getState = store.getState; //just for development purposes - remove later - use logger
+    window.getState = store.getState; //just for development purposes - remove later - use logger
     const root = document.getElementById('root');
     ReactDOM.render(<Root store={store} window={window}/>, root);
+    // })
+
   }
 });

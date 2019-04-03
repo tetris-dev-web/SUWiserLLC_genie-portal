@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import { demoDepositCashflow } from '../../../../../actions/chain_actions/project_actions';
+import { updateTransactionModal} from '../../../../../actions/ui_actions';
 import './project_modules_deposit_cashflow.scss';
 
 class DepositCashFlow extends React.Component {
@@ -32,6 +33,11 @@ class DepositCashFlow extends React.Component {
     const weiAmount = provider.utils.toWei(this.state["ETH"].toString(), 'ether');
     console.log(weiAmount);
     this.props.demoDepositCashflow(projectAddress, weiAmount);
+    this.props.updateTransactionModal({
+      isOpen: true,
+      title: "YOUR TRANSACTION HAS BEEN SENT",
+      message: "It may take a few minutes for your transaction to be processed by the blockchain."
+    })
   }
 
   updateDesposit (denomination) {
@@ -79,4 +85,10 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(DepositCashFlow);
+const mapDispatchToProps = dispatch => {
+  return {
+    updateTransactionModal: modalInfo => dispatch(updateTransactionModal(modalInfo))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DepositCashFlow);

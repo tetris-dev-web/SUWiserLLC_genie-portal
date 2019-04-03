@@ -11,7 +11,7 @@ import {
   voteAndUpdateProjects,
   demoInvestorVoteAndUpdateProjects
 } from '../../../../../actions/chain_actions/votes_actions';
-import { updateTransactionModal } from '../../../../../actions//ui_actions';
+import { updateTransactionModal } from '../../../../../actions/ui_actions';
 
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
@@ -53,9 +53,9 @@ const mapDispatchToProps = dispatch => {
       projects,
       projectLeaderTracker,
       activation,
-      web3),
-      updateTransactionModal: modalInfo => dispatch(updateTransactionModal(modalInfo))
+      web3)
     },
+    updateTransactionModal: modalInfo => dispatch(updateTransactionModal(modalInfo)),
     demoInvestorVoteAndUpdateProjects: (votes, type, selectedProject) => demoInvestorVoteAndUpdateProjects(votes, type, selectedProject)
     // voteForProject: (account, votes, votingInstance, projectAddress) => voteForProject(account, votes, votingInstance, projectAddress),
     // voteAgainstProject: (account, votes, votingInstance, projectAddress) => voteAgainstProject(account, votes, votingInstance, projectAddress)
@@ -209,7 +209,7 @@ class VoteShiftTool extends React.Component {
 
     updateTransactionModal({
       isOpen: true,
-      title: "YOUR TRANSACTION HAS BEEN SENT";
+      title: "YOUR TRANSACTION HAS BEEN SENT",
       message: "It may take a few minutes for your transaction to be processed by the blockchain."
     })
   }
