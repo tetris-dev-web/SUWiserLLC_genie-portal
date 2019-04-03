@@ -1,3 +1,4 @@
+const { web3 } = require('../chain_connection/web3_configuration');
 const { fetchEvents } = require('../chain_util/chain_util');
 const { numberParser } = require('../util/number_util');
 const { merge } = require('lodash');
@@ -40,8 +41,11 @@ const fetchInvestorBalance = async () => {
   const accountActive = await activeTokenInstance.methods.balanceOf(account).call();
   const accountPending = await inactiveTokenInstance.methods.pendingActivations(account).call();
   const accountDividend = await dividendsInstance.methods.dividendOwedTo(account).call();
+  const accountBalance = await web3.eth.getBalance(account);
   console.log(accountInactive, accountActive)
   return {
+    account,
+    accountBalance,
     accountInactive,
     accountActive,
     accountPending,

@@ -32,11 +32,11 @@ class ProfileContent extends React.Component {
     //   })
     // });
     this.props.fetchDemoInvestorBalances().then(balances => {
-        const { accountActive, accountInactive, accountPending, accountDividend } = balances;
+        const { accountActive, accountInactive, accountPending, accountDividend, account, accountBalance } = balances;
         console.log(balances, "sup")
         this.setState({
           account,
-          "ETH": this.props.balance,
+          "ETH": Number(accountBalance),
           "GNI (vesting)": Number(accountInactive),
           "GNI (pending)": Number(accountPending),
           "GNI (active)": Number(accountActive),
