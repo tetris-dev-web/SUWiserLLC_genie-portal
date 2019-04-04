@@ -1,7 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Switch } from 'react-router-dom';
+import  { withRouter } from 'react-router';
 import TransactionModal from './entities/transaction_modal/transaction_modal'
+import FourOhFourPage from './404_page/404_page';
+import DemoOptions from './landing/demo_options';
 import {
   AuthRoute,
   ProtectedRoute,
@@ -18,6 +21,7 @@ import TruffleContract from 'truffle-contract';
 import { connect } from 'react-redux';
 import { updateNetwork } from '../actions/chain_actions/network_actions'
 import './app.scss';
+import './landing/landing.scss';
 
 import Modal from '../components/entities/modal/modal';
 
@@ -28,9 +32,11 @@ class App extends React.Component {
     this.watchProjectPitch = this.watchProjectPitch.bind(this);
     this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
     this.watchVoteChange = this.watchVoteChange.bind(this);
+    this.setAccount = this.setAccount.bind(this);
   }
 
   componentDidMount() {
+    this.setAccount();
     this.watchAccountChange();
     this.watchProjectPitch();
     this.watchTokenPurchase();
@@ -38,18 +44,20 @@ class App extends React.Component {
     this.watchReceiveDividends();
   }
 
+  setAccount () {
+    this.props.provider.eth.getCoinbase((err, _account) => {
+      const account = _account ? _account : false;
+      if (account) {
+        return this.props.provider.eth.getBalance(account).then(balance => {
+          this.props.updateNetwork({ account, balance })
+        })
+      }
+    })
+  }
+
   watchAccountChange () {
-    this.props.web3Provider.publicConfigStore.on('update', network => {
-      this.props.provider.eth.getCoinbase((err, _account) => {
-        const account = _account ? account : false;
-
-        if (account) {
-          return this.props.provider.eth.getBalance(account).then(balance => {
-            this.props.updateNetwork({ account, balance })
-          })
-        }
-
-      })
+    this.props.web3.currentProvider.publicConfigStore.on('update', network => {
+      this.setAccount();
     });
   }
 
@@ -79,8 +87,25 @@ class App extends React.Component {
   }
 
   render() {
+    const { history, account } = this.props;
+    console.log(history, 'history')
+    if (
+      history.location.pathname === '/dashboard/demo' &&
+      (!account || account === '0xEF898fd948F50D5010d3Ec20233faE23D89a1a51')
+    ) {
+      return (
+        <FourOhFourPage
+          title={"Account 404"}
+          description={"Please log in to your ethereum account on metamask or use one of our demo accounts."}
+          additionalContent={
+              <DemoOptions />
+          }
+          />
+      )
+    }
     return (
       <div>
+        <Navbar/>
         <TransactionModal />
         <Dashboard />
       </div>
@@ -115,7 +140,21 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+
+// setAccount () {
+//   console.log('hello')
+//   this.props.provider.eth.getCoinbase((err, _account) => {
+//     const account = _account ? account : false;
+//     console.log(account)
+//     if (account) {
+//       return this.props.provider.eth.getBalance(account).then(balance => {
+//         this.props.updateNetwork({ account, balance })
+//       })
+//     }
+//   })
+// }
+
 // <div path="/dashboard" component={Dashboard} />
 
 

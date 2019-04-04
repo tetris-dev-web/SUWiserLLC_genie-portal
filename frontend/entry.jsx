@@ -74,64 +74,64 @@ document.addEventListener('DOMContentLoaded', () => {
     let activationInstance;
     let projectLeaderTrackerInstance;
     let dividendsInstance;
-    provider.eth.getCoinbase((err, _account) => {
-      account = _account;
+    // provider.eth.getCoinbase((err, _account) => {
+      // account = _account;
       // console.log("tokenInst: ", token)
       // inactiveToken.deployed().then((_inactiveTokenInstance) => {
         // console.log("tokenInst: ", _tokenInstance)
         inactiveTokenInstance = inactiveToken.at("0x0481b7da3c03c0fefd2d4605409464462086917e");
-      })
-      .then(() => {
-        if (account) {
-          return provider.eth.getBalance(account).then(_balance => {
-            balance = _balance
-          })
-        }
-        return;
-      })
-      .then(() => {
+      // })
+      // .then(() => {
+      //   if (account) {
+      //     return provider.eth.getBalance(account).then(_balance => {
+      //       balance = _balance
+      //     })
+      //   }
+      //   return;
+      // })
+      // .then(() => {
         // return activeToken.deployed().then((_activeTokenInstance) => {
         //   activeTokenInstance = _activeTokenInstance;
         // })
         activeTokenInstance = activeToken.at("0xaa82a247b0d0b7407b60753870fc4b2f31d900d6")
-      })
-      .then(() => {
+      // })
+      // .then(() => {
         // return votingToken.deployed().then((_votingTokenInstance) => {
         //   votingTokenInstance = _votingTokenInstance;
         // })
         votingTokenInstance = votingToken.at("0x7d3f22de0b6f9c0ad3922b0d39425a350c421467")
-      })
-      .then(() => {
+      // })
+      // .then(() => {
         // return voting.deployed().then((_votingInstance) => {
         //   votingInstance = _votingInstance;
         // });
         votingInstance = voting.at("0x5f69e60ca7a927f87b1ed3f80c6c4b2f3b599aec")
-      })
-      .then(() => {
+      // })
+      // .then(() => {
         // return projectFactory.deployed().then((_projectFactoryInstance)=> {
         //   projectFactoryInstance = _projectFactoryInstance;
         // });
         projectFactoryInstance = projectFactory.at("0x5a366ca75a3b3169099de63cefc1fd7e5a9ea059");
-      })
-      .then(() => {
+      // })
+      // .then(() => {
         // return projectLeaderTracker.deployed().then((_projectLeaderTrackerInstance)=> {
         //   projectLeaderTrackerInstance = _projectLeaderTrackerInstance;
         // });
         projectLeaderTrackerInstance = projectLeaderTracker.at("0x8b616ded81a8c8d9e30875cf77c24261ed7723f6");
-      })
-      .then(() => {
+      // })
+      // .then(() => {
         // return activation.deployed().then((_activationInstance)=> {
         //   activationInstance = _activationInstance;
         // });
         activationInstance = activation.at("0xb85006d9095b233c9c7eb2f16af23c21f9da34fd");
-      })
-      .then(() => {
+      // })
+      // .then(() => {
         // return dividends.deployed().then((_dividendsInstance)=> {
         //   dividendsInstance = _dividendsInstance;
         // });
         dividendsInstance = dividends.at("0x8c8b54c2f7c11ba51352dc218891a3cc3245f0dc")
-      })
-      .then(() => {
+      // })
+      // .then(() => {
         // crowdsale.deployed().then((_crowdsaleInstance) => {
         //   crowdsaleInstance = _crowdsaleInstance;
         crowdsaleInstance = crowdsale.at("0xc2773530c0ec596e50e0456191fa7c692529d4c2");
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const root = document.getElementById('root');
           ReactDOM.render(<Root store={store} window={window} networkVersion={web3Provider.networkVersion}/>, root);
         // });
-      });
+      // });
     // });
   } else {
     // web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');

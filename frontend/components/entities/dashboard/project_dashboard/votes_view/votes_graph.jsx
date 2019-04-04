@@ -129,7 +129,6 @@ class VotesGraph extends React.Component {
   }
 
   render() {
-    console.log("rendering again")
     return this.dataHasLoaded() ? this.renderGraph() : <Loader/>;
   }
 }
