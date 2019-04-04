@@ -7,6 +7,7 @@ import Landing from './landing/landing';
 import App from './app';
 import Navbar from './entities/navbar/navbar_container';
 import Modal from '../components/entities/modal/modal';
+import FourOhFourPage from './404_page/404_page';
 import './root.scss';
 
 class Root extends React.Component {
@@ -18,9 +19,9 @@ class Root extends React.Component {
   }
 
   render () {
-    const { store, window } = this.props;
-
-    if (window.web3) {
+    const { store, window, networkVersion } = this.props;
+    console.log('networkVersion', networkVersion)
+    if (window.web3 && networkVersion === '3') {
 
       return (
         <Provider store={store}>
@@ -38,15 +39,7 @@ class Root extends React.Component {
 
     }
 
-    return (
-          <div className='404_prompt' style={{display: 'flex', margin: 'auto'}}>
-            <div className='404_message' style={{display: 'flex', flexDirection: 'column'}}>
-              <h1 className='404_title' style={{margin: 'auto', fontSize: '90px', fontFamily: 'none'}}>Web3 404</h1>
-              <p className='404_description' style={{fontSize: '30px', margin: '30px'}}>Unable to connect to your web3 provider. Please download Metamask to continue.</p>
-              <a href="https://metamask.io/" target="_blank" className="metaMask-Button" style={{fontSize: '30px'}}>Download MetaMask</a>
-            </div>
-          </div>
-        );
+    return <FourOhFourPage web3={window.web3}/>
   }
 }
 
