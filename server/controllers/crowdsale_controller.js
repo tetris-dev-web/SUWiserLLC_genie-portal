@@ -25,7 +25,7 @@ const buyTokens = async wei => {
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
 
-  await sendTransaction(
+  const transaction = await sendTransaction(
     {
       nonce,
       to: crowdsaleAddress,
@@ -36,7 +36,13 @@ const buyTokens = async wei => {
     privateKey
   );
 
-  return await attemptProjectActivation();
+  console.log(
+    "TRANSACTION:",
+    transaction
+  )
+
+  await attemptProjectActivation();
+
 }
 
 module.exports = {

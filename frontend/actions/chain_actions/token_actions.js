@@ -31,7 +31,13 @@ export const receiveCapitalHistory = capitalHistory => {
 }
 
 export const buyTokens = (crowdsale, account, value) => {
-  return ChainUtil.buyTokens(crowdsale, account, value)
+  // return dispatch => {
+    return ChainUtil.buyTokens(crowdsale, account, value)
+    // .then(() => {
+      // receiveTokenPurchase({blockNumber: event.blockNumber, value: Number(event.args.value)});
+      // notifyTransactionCompletion({notification: "Your token purchase transaction has been mined to the blockchain."});
+    // })
+  // }
 }
 
 export const buyTokensWithDemoInvestor = wei => {
@@ -76,6 +82,10 @@ export const fetchTokenGraphData = (currentViewType, account = null) => {
         return dispatch(receiveTokenGraphData(tokenGraphData, currentViewType));
     })
   }
+}
+
+export const activateDemoInvestorPending = () => {
+  return ExpressAPI.fetchApiData('demo/activate_investor_pending');
 }
 
 export const fetchTokenBalances = (inactiveToken, activeToken, account) => {

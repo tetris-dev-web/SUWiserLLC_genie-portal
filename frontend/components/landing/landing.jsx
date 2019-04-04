@@ -22,7 +22,13 @@ class Landing extends React.Component {
       <Modal
         isOpen={true}
         className='landing_modal'
-        transparent={true}>
+        transparent={true}
+        style={{
+          overlay: {
+            backgroundColor: 'black'
+          }
+        }}
+        >
           <div className='landing'>
             <h1 className='landing_title'>PROGENY DEMO</h1>
             <LandingDescription />

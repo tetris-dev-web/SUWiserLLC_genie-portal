@@ -22,6 +22,13 @@ class TransactionNotifications extends React.Component {
         onRequestClose={this.clearNotification}
         className="transaction-notification-modal"
         disableAutoFocus={true}
+        style={
+          {
+            overlay : {
+              zIndex          : 101
+            }
+          }
+        }
       >
       <div className='transaction-notification'>
         <p className='transaction-noitification-content'>{`${notification}`}</p>

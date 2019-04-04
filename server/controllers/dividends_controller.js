@@ -50,7 +50,25 @@ const distributeDividends = async () => {
   return Promise.all(dividendDistributions);
 }
 
+
+const collectDemoInvestorDividend = async () => {
+  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const privateKey = process.env.PRIVATE_KEY;
+  let nonce = await web3.eth.getTransactionCount(address);
+
+  return await sendTransaction(
+    {
+      nonce,
+      to: dividendsAddress,
+      value: 0,
+      data: dividendsInstance.methods.distributeDividend(address)
+    },
+    address,
+    privateKey
+  )
+}
 module.exports = {
   fetchDividendReceptions,
-  distributeDividends
+  distributeDividends,
+  collectDemoInvestorDividend
 }

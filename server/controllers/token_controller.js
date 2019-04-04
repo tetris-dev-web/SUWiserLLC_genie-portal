@@ -1,9 +1,12 @@
+const { web3 } = require('../chain_connection/web3_configuration');
 const { fetchEvents } = require('../chain_util/chain_util');
 const { numberParser } = require('../util/number_util');
 const { merge } = require('lodash');
 const { formatTokenGraphData } = require('../formatters/token_graph');
 const { fetchDividendReceptions } = require('./dividends_controller');
-const { inactiveTokenInstance, activeTokenInstance } = require('../chain_models/models');
+const { inactiveTokenInstance, activeTokenInstance, dividendsInstance } = require('../chain_models/models');
+const { inactiveTokenAddress } = require('../chain_models/contract_addresses');
+const { sendTransaction } = require('../chain_util/chain_util');
 
 
 const fetchTokenHistoryWithEarnings = async (currentViewType, account) => {
@@ -47,15 +50,40 @@ const fetchInvestorBalance = async () => {
   const account = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
   const accountInactive = await inactiveTokenInstance.methods.balanceOf(account).call();
   const accountActive = await activeTokenInstance.methods.balanceOf(account).call();
+  const accountPending = await inactiveTokenInstance.methods.pendingActivations(account).call();
+  const accountDividend = await dividendsInstance.methods.dividendOwedTo(account).call();
+  const accountBalance = await web3.eth.getBalance(account);
   console.log(accountInactive, accountActive)
   return {
+    account,
+    accountBalance,
     accountInactive,
-    accountActive
+    accountActive,
+    accountPending,
+    accountDividend
   }
+}
+
+const activateDemoInvestorPending = async () => {
+  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const privateKey = process.env.PRIVATE_KEY;
+  let nonce = await web3.eth.getTransactionCount(address);
+
+  return await sendTransaction(
+    {
+      nonce,
+      to: inactiveTokenAddress,
+      value: 0,
+      data: inactiveTokenInstance.methods.activateDemoInvestorPending(address)
+    },
+    address,
+    privateKey
+  )
 }
 
 module.exports = {
   fetchTokenHistoryWithEarnings,
   fetchInvestorBalance,
+  activateDemoInvestorPending,
   fetchEndTime
 }

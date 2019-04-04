@@ -35,10 +35,11 @@ class App extends React.Component {
     this.watchProjectPitch();
     this.watchTokenPurchase();
     this.watchVoteChange();
+    this.watchReceiveDividends();
   }
 
   watchAccountChange () {
-    this.props.web3.currentProvider.publicConfigStore.on('update', network => {
+    this.props.web3Provider.publicConfigStore.on('update', network => {
       this.props.provider.eth.getCoinbase((err, _account) => {
         const account = _account ? account : false;
 
@@ -52,7 +53,7 @@ class App extends React.Component {
     });
   }
 
-  watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
+  async watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
     const { projectFactoryInstance } = this.props;
     projectFactoryInstance.ProjectPitch().watch((error, event) => {
       this.props.notifyTransactionCompletion("Your project pitch transaction has been mined to the blockchain.");
@@ -67,8 +68,13 @@ class App extends React.Component {
 
   watchVoteChange () {
     this.props.votingInstance.VoteChange().watch((error, event) => {
-      console.log('hello')
       this.props.notifyTransactionCompletion("Your votes have been mined to the blockchain");
+    })
+  }
+
+  watchReceiveDividends () {
+    this.props.dividendsInstance.ReceiveDividends().watch((error, event) => {
+      this.props.notifyTransactionCompletion("Your cashflows have been mined to the blockchain");
     })
   }
 
@@ -85,11 +91,14 @@ class App extends React.Component {
 
 const mapStateToProps  = state => {
   return {
-    account: state.network.account,
+    eventSubscription: state.network.eventSubscription,
     web3: state.network.web3,
+    account: state.network.account,
+    web3Provider: state.network.web3Provider,
     projectFactoryInstance: state.network.projectFactoryInstance,
     crowdsaleInstance: state.network.crowdsaleInstance,
     votingInstance: state.network.votingInstance,
+    dividendsInstance: state.network.dividendsInstance,
     provider: state.network.provider
   };
 };

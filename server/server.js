@@ -14,13 +14,28 @@ const {
   demoInvestorVotesByProject,
   demoDepositCashflow
 } = require('./controllers/projects_controller');
-const { fetchTokenHistoryWithEarnings, fetchInvestorBalance, fetchEndTime } = require('./controllers/token_controller');
+const { fetchTokenHistoryWithEarnings, fetchInvestorBalance, activateDemoInvestorPending, fetchEndTime } = require('./controllers/token_controller');
 const { fetchWeiRaised , fetchPurchases, buyTokens } = require('./controllers/crowdsale_controller');
 const { voteAndUpdateProjects } = require('./controllers/voting_controller');
 
 const { pitchProject, fetchStartTime } = require('./controllers/project_factory_controller');
 const { demoInvestorFreeVotes } = require('./controllers/voting_token_controller');
+const { pitchProject } = require('./controllers/project_factory_controller');
+const { collectDemoInvestorDividend } = require('./controllers/dividends_controller');
+const safeStringify = require('json-stringify-safe');
 
+const {
+  _projectInstance,
+  activationInstance,
+  activeTokenInstance,
+  crowdsaleInstance,
+  dividendsInstance,
+  inactiveTokenInstance,
+  projectFactoryInstance,
+  projectLeaderTrackerInstance,
+  votingInstance,
+  votingTokenInstance
+} = require('./chain_models/models');
 
 const port = process.env.PORT || 8080;
 
@@ -36,6 +51,26 @@ app.get('/api/fetchStartAndEndTimes', asyncMiddleware(async (req, res) => {
   const endTime =   await fetchEndTime();
   const startAndEndTimes = {startTime, endTime }
   res.send(startAndEndTimes);
+
+app.get('/api/contract_instances', asyncMiddleware( async (req, res) => {
+  const eventSubscription = callBack => {
+    return async () => {
+      return await projectFactoryInstance.events.ProjectPitch({
+        filter: {},
+        fromBlock: 0
+      }, (err, event) => callBack())
+    }
+  }
+
+  const func = eventSubscription(
+    () => {
+      console.log('hello')
+    }
+  )
+  const the = await func();
+  // console.log(the)
+  console.log(eventSubscription)
+  res.send(safeStringify({ eventSubscription: eventSubscription }));
 }))
 
 app.get('/api/shared_project_graph_data', asyncMiddleware(async (req, res) => {
@@ -105,6 +140,16 @@ app.get('/api/demo/fetch_investor_balance', asyncMiddleware(async (req, res) => 
 app.post('/api/demo/deposit_cashflow', asyncMiddleware(async (req, res) => {
   const { weiAmount, projectAddress } = req.body;
   await demoDepositCashflow(weiAmount, projectAddress);
+  res.send({})
+}))
+
+app.get('/api/demo/activate_investor_pending', asyncMiddleware(async (req, res) => {
+  await activateDemoInvestorPending();
+  res.send({})
+}))
+
+app.get('/api/demo/collect_investor_dividend', asyncMiddleware(async (req, res) => {
+  await collectDemoInvestorDividend();
   res.send({})
 }))
 
