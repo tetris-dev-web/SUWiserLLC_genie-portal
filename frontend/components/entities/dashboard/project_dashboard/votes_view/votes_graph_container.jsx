@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { fetchCapitalHistory, receiveTokenPurchase } from '../../../../../actions/chain_actions/token_actions';
 import { fetchSharedProjectGraphData } from '../../../../../actions/chain_actions/project_actions';
 import VotesGraph from './votes_graph';
+import { fetchStartAndEndTimes } from '../../../../../actions/chain_actions/time_axis_actions';
 
 
 const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
@@ -18,21 +19,22 @@ const mapStateToProps = state => {
   let allProjectsValuationMinMax;
   let lineData;
   let capitalTotal;
-  let capitalDeployed;
+  let capitalDeployed = 0;
   let capitalBeingRaised;
-  let startTime;
-  let endTime;
 
-    if (Object.keys(state.entities.projectGraph.projects).length && Object.keys(state.entities.projectGraph.capitalHistory).length) {
-      capitalDeployed = 0;
-      const projectPropsData = Object.keys(state.entities.projectGraph.projects).reduce((propsData, projectTitle) => {
+
+  const dataIsLoaded = Object.keys(state.chain_data.projectGraph.projects).length && Object.keys(state.chain_data.projectGraph.capitalHistory).length? true : false;
+
+    if (dataIsLoaded) {
+
+      const projectPropsData = Object.keys(state.chain_data.projectGraph.projects).reduce((propsData, projectTitle) => {
         if (!propsData.deployedProjects) {
           propsData.deployedProjects = [];
           propsData.pitchedProjects = [];
           propsData.totalVotes = 0;
         }
 
-        const project = state.entities.projectGraph.projects[projectTitle];
+        const project = state.chain_data.projectGraph.projects[projectTitle];
 
         const deploymentTime = project.activationTime;
         if (deploymentTime !== 0) {
@@ -55,25 +57,23 @@ const mapStateToProps = state => {
         return project;
       }).sort((a, b) => b.voteShare - a.voteShare);
 
-      const { capitalHistory } = state.entities.projectGraph;
-      lineData = capitalHistory.history
-      capitalTotal = capitalHistory.capitalTotal
-      startTime = capitalHistory.startTime
-      endTime = capitalHistory.endTime
+      const { capitalHistory } = state.chain_data.projectGraph;
+        lineData = capitalHistory.history
+        capitalTotal = capitalHistory.capitalTotal
+
 
       pitchedProjectsValuationMinMax = getArrayOfObjectsMinMax(pitchedProjects, "valuation")
-      allProjectsValuationMinMax = getArrayOfObjectsMinMax(Object.values(state.entities.projectGraph.projects), "valuation")
-      startTime = Math.min(startTime, deployedProjects[0].activationTime)
-      endTime = Math.max(endTime, deployedProjects[deployedProjects.length - 1].activationTime)
+      allProjectsValuationMinMax = getArrayOfObjectsMinMax(Object.values(state.chain_data.projectGraph.projects), "valuation")
       capitalBeingRaised = capitalTotal - capitalDeployed
     }
+
 
     return {
       crowdsaleInstance: state.network.crowdsaleInstance,
       projectContract: state.network.projectContract,
       projectFactoryInstance: state.network.projectFactoryInstance,
       web3: state.network.web3,
-      projectsLoaded: Object.keys(state.entities.projectGraph.projects).length,
+      projectsLoaded: Object.keys(state.chain_data.projectGraph.projects).length,
       pitchedProjects: pitchedProjects,
       deployedProjects: deployedProjects,
       pitchedProjectsValuationMinMax: pitchedProjectsValuationMinMax,
@@ -82,16 +82,19 @@ const mapStateToProps = state => {
       capitalTotal: capitalTotal,
       capitalDeployed: capitalDeployed,
       capitalBeingRaised: capitalBeingRaised,
-      startTime: startTime,
-      endTime: endTime
+      startTime: state.chain_data.timeAxis.startTime,
+      endTime: state.chain_data.timeAxis.endTime
     };
 };
+
+
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchSharedProjectGraphData: () => dispatch(fetchSharedProjectGraphData()),
     fetchCapitalHistory: (crowdsaleInstance) => dispatch(fetchCapitalHistory(crowdsaleInstance)),
-    receiveTokenPurchase: (tokenPurchase) => dispatch(receiveTokenPurchase(tokenPurchase))
+    receiveTokenPurchase: (tokenPurchase) => dispatch(receiveTokenPurchase(tokenPurchase)),
+    fetchStartAndEndTimes: () => dispatch(fetchStartAndEndTimes())
   };
 };
 

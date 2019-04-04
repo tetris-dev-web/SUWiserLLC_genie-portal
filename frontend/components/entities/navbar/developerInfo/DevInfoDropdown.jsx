@@ -2,7 +2,7 @@ import React from 'react';
 import './developerInfo.scss';
 import  Modal  from 'react-modal';
 
-import { Strategy, Bylaws } from './createInfoModals';
+import {Strategy, Bylaws } from './createInfoModals';
 
 console.log("Strategy", Strategy);
 

@@ -26,6 +26,7 @@ export const Strategy = () => {
   )
 }
 
+
 // export const OfferCicular = () => {
 //   return (
 //     <InfoModal

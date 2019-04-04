@@ -7,6 +7,7 @@ import {
   ProtectedRoute,
   RedirectedRoute
 } from '../util/route_util';
+
 import Navbar from './entities/navbar/navbar_container';
 import Landing from './entities/landing/landing';
 import Dashboard from './entities/dashboard/dashboard';
@@ -19,7 +20,6 @@ import { connect } from 'react-redux';
 import { updateNetwork } from '../actions/chain_actions/network_actions'
 import './app.scss';
 
-import Modal from '../components/entities/modal/modal';
 
 class App extends React.Component {
   constructor (props) {
@@ -74,19 +74,14 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <TransactionModal />
+      <div className="rootDiv">
+        <Navbar />
         <Dashboard />
+        <ProjectModalStructure />
       </div>
     );
   }
 }
-// <DeveloperInfo />
-// <div style={{height: "100%"}}>
-//   <Modal />
-//   <Navbar />
-//   <Dashboard/>
-// </div>
 
 const mapStateToProps  = state => {
   return {
@@ -107,22 +102,3 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-// <div path="/dashboard" component={Dashboard} />
-
-
-// <RedirectedRoute />
-// <Switch>
-//   <AuthRoute path="/login" component={Landing} />
-//   <ProtectedRoute path="/dashboard" component={Dashboard} />
-// </Switch>
-
-
-// <div className="none">THIS SHOULD BE RED</div>
-
-
-
-// <RedirectedRoute />
-// <Switch>
-//   <AuthRoute path="/login" component={Landing} />
-//   <ProtectedRoute path="/dashboard" component={Dashboard} />
-// </Switch>

@@ -61,7 +61,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 					</text>
 
 					<text x={extensionForLines} y={projectValutionStartY} fill={fill}>
-						<tspan>valuation {valuation}</tspan>
+						<tspan> valuation {valuation}</tspan>
 					</text>
 					<line
 						x1={projectRectCenter} y1={projectValutionStartY}

@@ -1,14 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import ProjectModules from '../../project_modules/project_modules';
-import { openModal } from '../../../../../../actions/modal_actions';
-
-const mapDispatchToProps = dispatch => {
-  return {
-    openModal: modal => dispatch(openModal(modal))
-  };
-};
-
 
 class VotesViewCapitalRaisedCircle extends React.Component {
 	constructor() {

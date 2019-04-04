@@ -1,40 +1,16 @@
 import React from 'react';
-import { connect } from 'react-redux';
+
 import * as d3 from 'd3';
-import { fetchTokenGraphData, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
-import { receiveReceiveDividends } from '../../../../../actions/chain_actions/dividends_actions';
-import { userData, totalData } from '../../../../../util/token_data_util';
-import { formatTokenGraphData } from '../../../../../util/propsUtil';
+
+
+
 import './token_graph.scss';
 import TokenGraphTokenPath from './token_graph_token_path';
 import TokenGraphXAxis from './token_graph_x_axis';
 import TokenGraphOverlay from './token_graph_overlay';
 import Loader from '../../loader/loader';
 import '../../loader/loader.scss';
-import { merge } from 'lodash';
 
-const mapStateToProps = (state, ownProps) => {
-  const { currentViewType } = ownProps;
-  const tokenGraph = state.entities.tokenGraph;
-  const { byUser, byAll } = tokenGraph;
-  const dataLoaded = Object.keys(byAll).length && currentViewType === 'BY ALL' || Object.keys(byUser).length && currentViewType === 'BY USER';
-
-  return {
-    data: dataLoaded ? currentViewType === 'BY USER' ? tokenGraph.byUser : tokenGraph.byAll : null,
-    dividends: state.network.dividendsInstance,
-    inactiveToken: state.network.inactiveTokenInstance,
-    activeToken: state.network.activeTokenInstance,
-    account: state.network.account
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchTokenGraphData: (currentViewType, account) => dispatch(fetchTokenGraphData(currentViewType, account)),
-    receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event)),
-    receiveReceiveDividends: (event) => dispatch(receiveReceiveDividends(event))
-  }
-}
 
 class TokenGraph extends React.Component {
   constructor(){
@@ -66,18 +42,16 @@ class TokenGraph extends React.Component {
 
   componentDidUpdate (prevProps) {
     const prevData = prevProps.data;
-    const prevViewType = prevProps.currentViewType;
-    const { data, updateTimeAxis, currentViewType } = this.props;
-    if (!prevData && data || (data && prevData.keys.length < data.keys.length)) {
-      updateTimeAxis(data[0].date, data[data.length - 1].date);
-    }
-    if (currentViewType !== prevViewType) {
+    const prevViewType = prevProps.currentView;
+    const { data, currentView } = this.props;
+
+    if (currentView !== prevViewType) {
       this.fetchData()
     }
   }
 
   fetchData () {
-    this.props.fetchTokenGraphData(this.props.currentViewType, this.props.account);
+    this.props.fetchTokenGraphData(this.props.currentView, this.props.account);
   }
 
   toggleTimeAxis(boolean) {
@@ -91,21 +65,18 @@ class TokenGraph extends React.Component {
     token.Transfer().watch((error, event) => {
       console.log('event', event)
       this.props.receiveTokenTransfer({event, account: this.props.account, type})
-      this.props.updateTimeAxis(null, event.blockNumber);
     })
   }
 
   watchReceiveDividends () {
-    const { dividends, updateTimeAxis } = this.props;
+    const { dividends } = this.props;
     dividends.ReceiveDividends().watch((error, event) => {
       this.props.receiveReceiveDividends(event)
-      this.props.updateTimeAxis(null, event.blockNumber);
     })
   }
 
   render() {
-    const { data, timeAxis } = this.props;
-    console.log("data", data)
+    const { data, startTime, endTime} = this.props;
     if (data) {
       const { showTimeAxis, componentVisible } = this.state;
       // console.log(data)
@@ -115,7 +86,7 @@ class TokenGraph extends React.Component {
 
       const xScale = d3.scaleTime()
       .range([0, this.width])
-      .domain([timeAxis.startTime, timeAxis.endTime]);
+      .domain([startTime, endTime]);
 
       const yScaleTokens = d3.scaleLinear()
       .range([this.height, 0])
@@ -178,9 +149,51 @@ class TokenGraph extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TokenGraph);
+
 
 // {showTimeAxis && TokenGraphTimeAxis}
 
 
 // return <Loader/>;//this will be replcced with a loader
+
+/// CONTAINER
+import { fetchTokenGraphData, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
+import { receiveReceiveDividends } from '../../../../../actions/chain_actions/dividends_actions';
+import { fetchStartAndEndTimes } from '../../../../../actions/chain_actions/time_axis_actions';
+
+const mapStateToProps = (state, ownProps) => {
+  const { currentView } = ownProps;
+  const tokenGraph = state.chain_data.tokenGraph;
+  const { byUser, byAll } = tokenGraph;
+  const dataLoaded = Object.keys(byAll).length && currentView === 'BY ALL' || Object.keys(byUser).length && currentView === 'BY USER';
+
+
+  const { startTime, endTime } = fetchStartAndEndTimes()
+
+
+  return {
+    data: dataLoaded ? currentView === 'BY USER' ? tokenGraph.byUser : tokenGraph.byAll : null,
+    dividends: state.network.dividendsInstance,
+    inactiveToken: state.network.inactiveTokenInstance,
+    activeToken: state.network.activeTokenInstance,
+    account: state.network.account,
+    startTime: startTime,
+    endTime : endTime
+  };
+};
+
+
+// CONTAINER
+import { connect } from 'react-redux';
+import { userData, totalData } from '../../../../../util/token_data_util';
+import { formatTokenGraphData } from '../../../../../util/propsUtil';
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchTokenGraphData: (currentView, account) => dispatch(fetchTokenGraphData(currentView, account)),
+    receiveTokenTransfer: (event) => dispatch(receiveTokenTransfer(event)),
+    receiveReceiveDividends: (event) => dispatch(receiveReceiveDividends(event))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TokenGraph);

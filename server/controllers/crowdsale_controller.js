@@ -18,6 +18,7 @@ const fetchPurchases = async () => {
   return formatCapitalHistoryData(tokenPurchases);
 }
 
+
 const buyTokens = async wei => {
   //using demo account for now
   const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";

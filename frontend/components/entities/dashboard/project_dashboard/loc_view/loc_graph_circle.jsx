@@ -1,12 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { openModal } from '../../../../../actions/modal_actions';
 
-const mapDispatchToProps = dispatch => {
-  return {
-    openModal: modal => dispatch(openModal(modal))
-  };
-};
 
 class LocGraphCircle extends React.Component {
   constructor() {
@@ -26,13 +19,14 @@ class LocGraphCircle extends React.Component {
   render() {
     const { className, transform, r, fill, project, openModal } = this.props;
     const { showText } = this.state;
+    // console.log("circleprops", this.props);
 
     return (
       <g className={`${className}-group`}
         transform={transform}
         onMouseEnter={this.handleHover(true)}
         onMouseLeave={this.handleHover(false)}
-        onClick={() => openModal({ type: "project_module", project })}>
+        onClick={() => openModal(project.id)}>
         <circle className={`${className} outter`}
           r={r}
           fill={fill}></circle>
@@ -47,5 +41,16 @@ class LocGraphCircle extends React.Component {
     );
   }
 }
+
+// CONTAINER
+import { connect } from 'react-redux';
+import { openModal } from '../../../../../actions/modal_actions';
+
+const mapDispatchToProps = dispatch => {
+  return {
+    openModal: projectId => dispatch(openModal(projectId))
+  };
+};
+
 
 export default connect(null, mapDispatchToProps)(LocGraphCircle);

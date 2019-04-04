@@ -33,7 +33,7 @@ contract ProjectFactory is CrowdsaleLocked {
 
   event ProjectPitch (
     address projectAddress,
-    uint256 projectId
+    uint256 indexed projectId
   );
 
   mapping(uint256 => address) internal projectAddress;

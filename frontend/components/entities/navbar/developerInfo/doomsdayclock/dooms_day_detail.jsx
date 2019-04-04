@@ -44,7 +44,7 @@ class DoomsDayDetail extends React.Component {
   //not necessary if no interactions with the doomsday clock - will have hover effects
   componentDidMount(){
     const graph = this.startGraph();
-
+  
   const dataPassedIn =
   {
     //assumptions : data is passed in order of data created?

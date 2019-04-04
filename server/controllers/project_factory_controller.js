@@ -3,6 +3,14 @@ const { projectFactoryAddress } = require('../chain_models/contract_addresses');
 const { web3 } = require('../chain_connection/web3_configuration');
 const { dotenv } = require('../chain_connection/web3_configuration');
 const { sendTransaction } = require('../chain_util/chain_util');
+const { fetchEvents } = require('../chain_util/chain_util');
+
+
+const fetchStartTime = async () => {
+  const lastProjecPitch = await fetchEvents(projectFactoryInstance, 'ProjectPitch' );
+  return lastProjecPitch[0].blockNumber ; // in demo mode, need to switch time scale for live version
+}
+
 
 const pitchProject = async params => {
   let {
@@ -52,5 +60,6 @@ const pitchProject = async params => {
 }
 
 module.exports = {
-  pitchProject
+  pitchProject,
+  fetchStartTime
 }

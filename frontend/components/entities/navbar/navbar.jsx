@@ -22,7 +22,14 @@ class Navbar extends React.Component {
       </nav>
     );
 
+    // if (this.props.account) {
+    //   return <LoggedInNavbar />;
+    // } else {
+    //   return <Login/>;
+    // }
+
       return <LoggedInNavbar />;
+
 
   }
 }

@@ -5,6 +5,8 @@ export const RECEIVE_TOKEN_PURCHASE = "RECEIVE_TOKEN_PURCHASE";
 export const RECEIVE_CAPITAL_HISTORY = "RECEIVE_CAPITAL_HISTORY";
 export const RECEIVE_TOKEN_TRANSFER = "RECEIVE_TOKEN_TRANSFER";
 
+//separate out non store interactions,
+
 export const receiveTokenGraphData = (tokenGraphData, currentViewType) => { //no need to export?
 
   return {

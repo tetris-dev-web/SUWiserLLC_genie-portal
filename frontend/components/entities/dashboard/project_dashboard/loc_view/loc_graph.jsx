@@ -164,7 +164,6 @@ class LocGraph extends React.Component {
   }
 
   render() {
-    console.log('hello')
     const { data, projects, cities, continents } = this.state;
     if (data) {
       // const { projects, cities, continents, linksData } = this.props;
@@ -214,7 +213,7 @@ class LocGraph extends React.Component {
         <div className="loc-graph">
           <svg className="loc-svg"
             preserveAspectRatio="xMinYMin meet"
-            viewBox="0 0 960 700">
+            viewBox="0 100 1000 550">
             <g>{links}</g>
             <g>{cityNodes}</g>
             <g>{continentNodes}</g>

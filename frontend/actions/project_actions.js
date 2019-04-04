@@ -6,7 +6,7 @@ export const RECEIVE_PROJECT_ERRORS = 'RECEIVE_PROJECT_ERRORS';
 export const CLEAR_PROJECT_ERRORS = 'CLEAR_PROJECT_ERRORS';
 
 
-export const receiveProject = project => {
+export const receiveProjectPerformanceData = project => {
   return {
     type: RECEIVE_PROJECT,
     project
