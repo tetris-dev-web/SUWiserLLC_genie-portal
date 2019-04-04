@@ -2,7 +2,7 @@ import React from 'react';
 import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import { merge } from 'lodash';
-import ProjectModules from './../project_modules/project_modules';
+import ProjectModules from './../project_modals/project_modals';
 
 const margin = {top: 20, right: 20, bottom: 30, left: 50};
 const width = 960 - margin.left - margin.right;

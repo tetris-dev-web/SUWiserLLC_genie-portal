@@ -1,12 +1,11 @@
 module.exports = {
-  activationAddress: "0xc938afbb8d2306af3813870edc46dfa3439705f7",
-  activeTokenAddress: "0xe39f831d50f9674a1087694b80ebed387f61f46e",
-  crowdsaleAddress: "0x6c9d20fb1d7eea4aca3a681828f437efe615d902",
-  dividendsAddress: "0x3883dbe5cd873fcaf0a70548312394fca6d62241",
-  inactiveTokenAddress: "0xe81561f39f45fdf8ebdf84c9dfed925b3e0567d0",
-  projectFactoryAddress: "0x8018a09d6f52454bcb030df08ecd4108117ad3c6",
-  projectLeaderTrackerAddress: "0x90435583192fefe93539911ba6af02554e39b4b8",
-  votingAddress: "0x2c2b651c2b35e226924730d23d5d41920323107d",
-  votingTokenAddress: "0x17555d1fc4238f1c5eae55a8d477803f8713f768"
-
+  activationAddress: "0xf63fc7283acb979d76a35c8df75dca6c65e82629",
+  activeTokenAddress: "0xd4eb81e4dd01505076620c17af67c7065effa0c0",
+  crowdsaleAddress: "0x33430576aa475e6540d00a57bedfda9b3c4ca962",
+  dividendsAddress: "0xadd89f059de7e00b22fc0c1bbcefd4c34e1cf1bb",
+  inactiveTokenAddress: "0xc1feda8e7a08e1bf77c510531c45816fe8ac5d68",
+  projectFactoryAddress: "0x276d829dd2e77f446483f71bca2c6113490c164e",
+  projectLeaderTrackerAddress: "0x0e84f6c08bdbbfa6ad901baf48445c1e817cdb61",
+  votingAddress: "0x25f4750d9f0faabb0d6909b3f90a4995f6764432",
+  votingTokenAddress: "0x92923309ceef17ee569883af7ca9fdedcff33726"
 }

@@ -5,11 +5,23 @@ const { formatTokenGraphData } = require('../formatters/token_graph');
 const { fetchDividendReceptions } = require('./dividends_controller');
 const { inactiveTokenInstance, activeTokenInstance } = require('../chain_models/models');
 
+
 const fetchTokenHistoryWithEarnings = async (currentViewType, account) => {
   const dividendReceptions = await fetchDividendReceptions();
   const tokenTransfers = await fetchTokenTransfers();
   return formatTokenGraphData(tokenTransfers, dividendReceptions, currentViewType, account);
 }
+
+
+
+const fetchEndTime = async () => {
+  const {inactiveTransferData, activeTransferData } = await fetchTokenTransfers();
+  const lastEventofActiveTokenTransfers = inactiveTransferData[activeTransferData.length-1].blockNumber;
+  const lastEventofInActiveTokenTransfers = activeTransferData[activeTransferData.length-1].blockNumber;
+  const endTime = Math.max(lastEventofActiveTokenTransfers,lastEventofInActiveTokenTransfers);  // Time.now()
+  return endTime;
+}
+
 
 const fetchTokenTransfers = async () => {
   const inactiveTransferData = await transfersData(inactiveTokenInstance);
@@ -23,7 +35,6 @@ const fetchTokenTransfers = async () => {
 
 const transfersData = async (tokenInstance) => {
   const events = await fetchEvents(tokenInstance, 'Transfer');
-
   return events.filter(event => Number(event.returnValues.value) > 0).map(event => {
     const data = merge({}, event.returnValues);
     data.blockNumber = event.blockNumber;
@@ -45,5 +56,6 @@ const fetchInvestorBalance = async () => {
 
 module.exports = {
   fetchTokenHistoryWithEarnings,
-  fetchInvestorBalance
+  fetchInvestorBalance,
+  fetchEndTime
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import VotesViewPitchedProjectsRect from './votes_view_pitched_projects_rect';
-import { receiveProject } from '../../../../../../actions/project_actions';
+import { receiveProjectPerformanceData } from '../../../../../../actions/project_actions';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {

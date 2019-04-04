@@ -53,9 +53,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity >=0.4.22 <0.6.0;\n\n/**\n * @title ActivaitonAccess\n * @dev A ActivaitonAccess contract can only be used by its activation account (the one that created it)\n */\ncontract ActivationLocked {\n    address private _activation;\n\n    event ActivationTransferred(\n        address recipient\n    );\n\n    /**\n     * @dev Sets the activation account to the one that is creating the ActivaitonLocked contract.\n     */\n    constructor () internal {\n        _activation = msg.sender;\n        emit ActivationTransferred(_activation);\n    }\n\n    /**\n     * @dev Reverts if called from any account other than the activation.\n     */\n    modifier onlyActivation() {\n        require(msg.sender == _activation);\n        _;\n    }\n\n    /**\n     * @return the address of the activation.\n     */\n    function activation() public view returns (address) {\n        return _activation;\n    }\n\n    /**\n     * @dev Transfers contract to a new activation.\n     * @param recipient The address of new activation.\n     */\n    function transferActivationKey(address recipient) public onlyActivation {\n        require(recipient != address(0));\n        _activation = recipient;\n        emit ActivationTransferred(_activation);\n    }\n}\n",
-  "sourcePath": "/Users/steven/genie-portal/truffle/contracts/utility/ActivationLocked.sol",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/ActivationLocked.sol",
   "ast": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/ActivationLocked.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/ActivationLocked.sol",
     "exportedSymbols": {
       "ActivationLocked": [
         8423
@@ -844,7 +844,7 @@
     "src": "0:1210:56"
   },
   "legacyAST": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/ActivationLocked.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/ActivationLocked.sol",
     "exportedSymbols": {
       "ActivationLocked": [
         8423
@@ -1638,5 +1638,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-03-25T19:29:22.772Z"
+  "updatedAt": "2019-03-29T19:23:54.607Z"
 }

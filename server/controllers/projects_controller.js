@@ -1,6 +1,6 @@
 const { fetchEvents } = require('../chain_util/chain_util');
 const { numberParser } = require('../util/number_util');
-const { formatProject } = require('../formatters/project_module');
+const { formatProject } = require('../formatters/project_modal');
 const { projectFactoryInstance, _projectInstance } = require('../chain_models/models');
 
 const fetchProjects = async () => {
@@ -39,6 +39,13 @@ const _fetchProjectGraphData = async options => {
   const projectData = await projectMethods.getData().call();
   const { title, lat, lng } = JSON.parse(projectData[1]); //this should be changed on the blockchain end.
 
+  //module data
+  const closingTime = await numberParser(projectMethods.closingTime());
+  const openingTime = await numberParser(projectMethods.openingTime());
+  const { busLink, description } = JSON.parse(projectData[1]);
+  const prePortalCashflow = JSON.parse(projectData[4])
+  const cashflow = await fetchEvents(projectInstance, 'ReceiveCashFlow');
+
   return {
     id,
     lat,
@@ -49,6 +56,13 @@ const _fetchProjectGraphData = async options => {
     votes,
     capitalRequired: Number(projectData[2]),
     valuation: Number(projectData[3]),
+    //modal info
+    prePortalCashflow,
+    cashflow,
+    busLink,
+    description,
+    closingTime,
+    openingTime
   };
 };
 
@@ -56,31 +70,31 @@ const fetchProjectGraphData = async (address) => {
   return await _fetchProjectGraphData({address});
 }
 
-const fetchProjectModuleData = async (projectAddress) => {
-  const projectInstance = _projectInstance(projectAddress);
-  const projectMethods = projectInstance.methods;
-
-  const id = await numberParser(projectMethods.id());//we need to change the frontend project keys to address so we dont need to do this
-
-  const closingTime = await numberParser(projectMethods.closingTime());
-  const openingTime = await numberParser(projectMethods.openingTime());
-
-  const projectData = await projectMethods.getData().call();
-  const { busLink, description } = JSON.parse(projectData[1]);
-
-  const prePortalCashflow = JSON.parse(projectData[4])
-  const cashflow = await fetchEvents(projectInstance, 'ReceiveCashFlow');
-
-  return formatProject({
-    id,
-    prePortalCashflow,
-    cashflow,
-    busLink,
-    description,
-    closingTime,
-    openingTime
-  });
-}
+// const  fetchProjectPerformanceData  = async (projectAddress) => {
+//   const projectInstance = _projectInstance(projectAddress);
+//   const projectMethods = projectInstance.methods;
+//
+//   const id = await numberParser(projectMethods.id());  // TODO we need to change the frontend project keys to address so we dont need to do this
+//
+//   const closingTime = await numberParser(projectMethods.closingTime());
+//   const openingTime = await numberParser(projectMethods.openingTime());
+//
+//   const projectData = await projectMethods.getData().call();
+//   const { busLink, description } = JSON.parse(projectData[1]);
+//
+//   const prePortalCashflow = JSON.parse(projectData[4])
+//   const cashflow = await fetchEvents(projectInstance, 'ReceiveCashFlow');
+//
+//   return formatProject({
+//     id,
+//     prePortalCashflow,
+//     cashflow,
+//     busLink,
+//     description,
+//     closingTime,
+//     openingTime
+//   });
+// }
 
 const demoInvestorVotesByProject = async projectAddress => {
   const projectInstance = _projectInstance(projectAddress);
@@ -90,6 +104,6 @@ const demoInvestorVotesByProject = async projectAddress => {
 module.exports = {
   fetchProjects,
   fetchProjectGraphData,
-  fetchProjectModuleData,
+   // fetchProjectPerformanceData ,
   demoInvestorVotesByProject
 };

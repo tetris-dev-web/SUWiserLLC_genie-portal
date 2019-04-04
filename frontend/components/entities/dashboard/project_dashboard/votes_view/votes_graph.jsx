@@ -12,7 +12,7 @@ class VotesGraph extends React.Component {
 
     this.state = {
       selectedProject: null,
-      componentVisible: "invisible"
+      componentVisible: "invisible",
     };
 
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
@@ -24,6 +24,7 @@ class VotesGraph extends React.Component {
   }
 
   componentDidMount() {
+    console.log("wait",this.props.wait);
     setTimeout(() => {
       this.setState({componentVisible: ""});
     }, this.props.wait);
@@ -38,14 +39,13 @@ class VotesGraph extends React.Component {
     this.watchTokenPurchase();
   }
 
-  componentDidUpdate(prevProps) {
-    const prevLineData = prevProps.lineData;
-    const { lineData, updateTimeAxis, startTime, endTime } = this.props;
-
-    if (prevLineData !== lineData) {
-      updateTimeAxis(startTime, endTime)
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   const prevLineData = prevProps.lineData;
+  //   const { lineData, updateTimeAxis, startTime, endTime } = this.props;
+  //   if (prevLineData !== lineData) {
+  //     updateTimeAxis(startTime, endTime)
+  //   }
+  // }
 
   watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
     const { projectFactoryInstance, projectContract } = this.props;
@@ -65,9 +65,9 @@ class VotesGraph extends React.Component {
   }
 
   createScales(){
-    const { capitalBeingRaised, capitalDeployed, capitalTotal, startTime, endTime, pitchedProjectsValuationMinMax, allProjectsValuationMinMax, timeAxis } = this.props;
-    console.log('TA', timeAxis)
-
+    const { capitalBeingRaised, capitalDeployed, capitalTotal, pitchedProjectsValuationMinMax, allProjectsValuationMinMax } = this.props;
+    const { startTime, endTime } = this.props;
+    console.log("inFunctionTimes", startTime,endTime);
     return {
       SVGHeightScale: d3.scaleLinear()
         .range([0, this.SVGHeight])
@@ -76,7 +76,7 @@ class VotesGraph extends React.Component {
         .range([this.SVGHeight, 0])
         .domain([0, capitalDeployed + Math.max(pitchedProjectsValuationMinMax[1], capitalBeingRaised)]),
       SVGTimeXScale: d3.scaleLinear()
-        .domain([timeAxis.startTime, timeAxis.endTime])
+        .domain([startTime, endTime])
         .range([0, this.timeWidth]),
       circleScale: d3.scaleLinear()
         .domain(allProjectsValuationMinMax)
@@ -90,6 +90,8 @@ class VotesGraph extends React.Component {
   renderGraph() {
     const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
+    const { startTime, endTime } = this.props
+    console.log("timesabove", startTime, endTime );
 
     return (
       <div className={`votes-graph ${componentVisible}`}>
@@ -102,8 +104,7 @@ class VotesGraph extends React.Component {
         </div>
         <svg className="votes-view-svg"
           preserveAspectRatio="xMinYMin meet"
-          viewBox="0 0 960 300"
-          >
+          viewBox="0 0 960 300">
           <VotesViewCapitalRaised
             {...this.props}
             {...this.state}
@@ -111,7 +112,9 @@ class VotesGraph extends React.Component {
             SVGYScale={SVGYScale}
             SVGHeightScale={SVGHeightScale}
             SVGTimeXScale={SVGTimeXScale}
-            circleScale={circleScale} />
+            circleScale={circleScale}
+            startTime={startTime}
+            endTime={endTime} />
           <VotesViewPitchedProjects
             {...this.props}
             {...this.state}
@@ -128,7 +131,6 @@ class VotesGraph extends React.Component {
   }
 
   render() {
-    console.log("rendering again")
     return this.dataHasLoaded() ? this.renderGraph() : <Loader/>;
   }
 }

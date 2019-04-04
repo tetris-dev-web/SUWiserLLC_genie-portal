@@ -30,7 +30,7 @@ let tokenPurchaseHelper;
 module.exports = function (deployer, network, accounts) {
   console.log("NETWORK", network)
     const rate = 1;
-    const developer = accounts[0];  
+    const developer = accounts[0];
 
     return deployer
         .then(() => {
@@ -270,7 +270,7 @@ module.exports = function (deployer, network, accounts) {
         })
         .then(() => {
           if (network === 'ropsten') {
-            console.log("WE MADE IT!!!")
+            console.log("WE MADE IT!!!");
             // console.log("voting", votingInstance)
             return seed(crowdsaleInstance, projectFactoryInst, inactiveTokenInstance, votingInstance, Project, developer, accounts[1], accounts[2]);
           }

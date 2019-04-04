@@ -53,9 +53,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity >=0.4.22 <0.6.0;\n\n/**\n * @title VotingLocked\n * @dev A VotingLocked contract can only be used by its voting account (the one that created it)\n */\ncontract VotingLocked {\n    address private _voting;\n\n    event VotingTransferred(\n        address recipient\n    );\n\n    /**\n     * @dev Sets the voting account to the one that is creating the VotingLocked contract.\n     */\n    constructor () internal {\n        _voting = msg.sender;\n        emit VotingTransferred(_voting);\n    }\n\n    /**\n     * @dev Reverts if called from any account other than the voting.\n     */\n    modifier onlyVoting() {\n        require(msg.sender == _voting);\n        _;\n    }\n\n    /**\n     * @return the address of the voting.\n     */\n    function voting() public view returns (address) {\n        return _voting;\n    }\n\n    /**\n     * @dev Transfers contract to a new voting.\n     * @param recipient The address of new voting.\n     */\n    function transferVotingKey(address recipient) public onlyVoting {\n        require(recipient != address(0));\n        _voting = recipient;\n        emit VotingTransferred(_voting);\n    }\n}\n",
-  "sourcePath": "/Users/steven/genie-portal/truffle/contracts/utility/VotingLocked.sol",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/VotingLocked.sol",
   "ast": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/VotingLocked.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/VotingLocked.sol",
     "exportedSymbols": {
       "VotingLocked": [
         9002
@@ -844,7 +844,7 @@
     "src": "0:1114:64"
   },
   "legacyAST": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/VotingLocked.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/VotingLocked.sol",
     "exportedSymbols": {
       "VotingLocked": [
         9002
@@ -1638,5 +1638,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-03-25T19:29:22.780Z"
+  "updatedAt": "2019-03-29T19:23:54.615Z"
 }

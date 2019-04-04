@@ -7,18 +7,30 @@ const { Credentials } = require('uport-credentials')
 const transports = require('uport-transports').transport;
 const message = require('uport-transports').message.util;
 const { asyncMiddleware } = require('./middlewares/async_middleware');
-const { fetchProjects, fetchProjectModuleData, fetchProjectGraphData, demoInvestorVotesByProject } = require('./controllers/projects_controller');
-const { fetchTokenHistoryWithEarnings, fetchInvestorBalance } = require('./controllers/token_controller');
+const { fetchProjects , fetchProjectGraphData, demoInvestorVotesByProject } = require('./controllers/projects_controller');
+const { fetchTokenHistoryWithEarnings, fetchInvestorBalance, fetchEndTime } = require('./controllers/token_controller');
 const { fetchWeiRaised , fetchPurchases, buyTokens } = require('./controllers/crowdsale_controller');
 const { voteAndUpdateProjects } = require('./controllers/voting_controller');
+
+const { pitchProject, fetchStartTime } = require('./controllers/project_factory_controller');
 const { demoInvestorFreeVotes } = require('./controllers/voting_token_controller');
-const { pitchProject } = require('./controllers/project_factory_controller');
+
+
 const port = process.env.PORT || 8080;
 
 let endpoint = ''
 const app = express();
 
 app.use(bodyParser.json({ type: '*/*' }))
+
+app.get('/api/fetchStartAndEndTimes', asyncMiddleware(async (req, res) => {
+  const startTime =  await fetchStartTime();
+  console.log("start", startTime)
+  // code for demo
+  const endTime =   await fetchEndTime();
+  const startAndEndTimes = {startTime, endTime }
+  res.send(startAndEndTimes);
+}))
 
 app.get('/api/shared_project_graph_data', asyncMiddleware(async (req, res) => {
   const projects = await fetchProjects();
@@ -32,11 +44,11 @@ app.get('/api/project_graph_data/:address', asyncMiddleware(async (req, res) => 
   res.send(project);
 }))
 
-app.get('/api/project_module_data/:address', asyncMiddleware(async (req, res) => {
-  const address = req.params.address;
-  const project = await fetchProjectModuleData(address);
-  res.send(project);
-}))
+// app.get('/api/project_modal_data/:address', asyncMiddleware(async (req, res) => {
+//   const address = req.params.address;
+//   const project = await  fetchProjectPerformanceData (address);
+//   res.send(project);
+// }))
 
 app.get('/api/capital_history_data', asyncMiddleware(async (req, res) => {
   const _capitalHistoryData = await fetchPurchases();

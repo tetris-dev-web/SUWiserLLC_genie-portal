@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { fetchCapitalHistory, receiveTokenPurchase } from '../../../../../actions/chain_actions/token_actions';
 import { fetchSharedProjectGraphData } from '../../../../../actions/chain_actions/project_actions';
 import VotesGraph from './votes_graph';
+import { fetchStartAndEndTimes } from '../../../../../actions/chain_actions/time_axis_actions';
 
 
 const getArrayOfObjectsMinMax = (arrayOfObjects, key) => {
@@ -18,13 +19,14 @@ const mapStateToProps = state => {
   let allProjectsValuationMinMax;
   let lineData;
   let capitalTotal;
-  let capitalDeployed;
+  let capitalDeployed = 0;
   let capitalBeingRaised;
-  let startTime;
-  let endTime;
 
-    if (Object.keys(state.chain_data.projectGraph.projects).length && Object.keys(state.chain_data.projectGraph.capitalHistory).length) {
-      capitalDeployed = 0;
+
+  const dataIsLoaded = Object.keys(state.chain_data.projectGraph.projects).length && Object.keys(state.chain_data.projectGraph.capitalHistory).length? true : false;
+
+    if (dataIsLoaded) {
+
       const projectPropsData = Object.keys(state.chain_data.projectGraph.projects).reduce((propsData, projectTitle) => {
         if (!propsData.deployedProjects) {
           propsData.deployedProjects = [];
@@ -56,17 +58,15 @@ const mapStateToProps = state => {
       }).sort((a, b) => b.voteShare - a.voteShare);
 
       const { capitalHistory } = state.chain_data.projectGraph;
-      lineData = capitalHistory.history
-      capitalTotal = capitalHistory.capitalTotal
-      startTime = capitalHistory.startTime
-      endTime = capitalHistory.endTime
+        lineData = capitalHistory.history
+        capitalTotal = capitalHistory.capitalTotal
+
 
       pitchedProjectsValuationMinMax = getArrayOfObjectsMinMax(pitchedProjects, "valuation")
       allProjectsValuationMinMax = getArrayOfObjectsMinMax(Object.values(state.chain_data.projectGraph.projects), "valuation")
-      startTime = Math.min(startTime, deployedProjects[0].activationTime)
-      endTime = Math.max(endTime, deployedProjects[deployedProjects.length - 1].activationTime)
       capitalBeingRaised = capitalTotal - capitalDeployed
     }
+
 
     return {
       crowdsaleInstance: state.network.crowdsaleInstance,
@@ -82,16 +82,19 @@ const mapStateToProps = state => {
       capitalTotal: capitalTotal,
       capitalDeployed: capitalDeployed,
       capitalBeingRaised: capitalBeingRaised,
-      startTime: startTime,
-      endTime: endTime
+      startTime: state.chain_data.timeAxis.startTime,
+      endTime: state.chain_data.timeAxis.endTime
     };
 };
+
+
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchSharedProjectGraphData: () => dispatch(fetchSharedProjectGraphData()),
     fetchCapitalHistory: (crowdsaleInstance) => dispatch(fetchCapitalHistory(crowdsaleInstance)),
-    receiveTokenPurchase: (tokenPurchase) => dispatch(receiveTokenPurchase(tokenPurchase))
+    receiveTokenPurchase: (tokenPurchase) => dispatch(receiveTokenPurchase(tokenPurchase)),
+    fetchStartAndEndTimes: () => dispatch(fetchStartAndEndTimes())
   };
 };
 

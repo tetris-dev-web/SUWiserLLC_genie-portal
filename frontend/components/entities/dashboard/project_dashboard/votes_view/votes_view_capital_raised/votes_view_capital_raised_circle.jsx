@@ -1,5 +1,4 @@
 import React from 'react';
-import ProjectModules from '../../project_modules/project_modules';
 
 class VotesViewCapitalRaisedCircle extends React.Component {
 	constructor() {

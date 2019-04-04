@@ -5,9 +5,12 @@ import {
   ProtectedRoute,
   RedirectedRoute
 } from '../util/route_util';
+
 import Navbar from './entities/navbar/navbar_container';
 import Landing from './entities/landing/landing';
 import Dashboard from './entities/dashboard/dashboard';
+import ProjectModalStructure from './entities/dashboard/project_dashboard/project_modals/project_modal_structure';
+
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import { connect } from 'react-redux';
@@ -29,11 +32,11 @@ class App extends React.Component {
       <div className="rootDiv">
         <Navbar />
         <Dashboard />
+        <ProjectModalStructure />
       </div>
     );
   }
 }
-// <DeveloperInfo />
 
 const mapStateToProps  = state => {
   return {

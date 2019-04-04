@@ -53,9 +53,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity >=0.4.22 <0.6.0;\n\n/**\n * @title ProjectFactoryLocked\n * @dev A ProjectFactoryLocked contract can only be used by its projectFactory account (the one that created it)\n */\ncontract ProjectFactoryLocked {\n    address private _projectFactory;\n\n    event ProjectFactoryTransferred(\n        address recipient\n    );\n\n    /**\n     * @dev Sets the projectFactory account to the one that is creating the ProjectFactoryLocked contract.\n     */\n    constructor () internal {\n        _projectFactory = msg.sender;\n        emit ProjectFactoryTransferred(_projectFactory);\n    }\n\n    /**\n     * @dev Reverts if called from any account other than the projectFactory.\n     */\n    modifier onlyProjectFactory() {\n        require(msg.sender == _projectFactory);\n        _;\n    }\n\n    /**\n     * @return the address of the projectFactory.\n     */\n    function projectFactory() public view returns (address) {\n        return _projectFactory;\n    }\n\n    /**\n     * @dev Transfers contract to a new projectFactory.\n     * @param recipient The address of new projectFactory.\n     */\n    function transferProjectFactoryKey(address recipient) public onlyProjectFactory {\n        require(recipient != address(0));\n        _projectFactory = recipient;\n        emit ProjectFactoryTransferred(_projectFactory);\n    }\n}\n",
-  "sourcePath": "/Users/steven/genie-portal/truffle/contracts/utility/ProjectFactoryLocked.sol",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/ProjectFactoryLocked.sol",
   "ast": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/ProjectFactoryLocked.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/ProjectFactoryLocked.sol",
     "exportedSymbols": {
       "ProjectFactoryLocked": [
         8713
@@ -844,7 +844,7 @@
     "src": "0:1306:60"
   },
   "legacyAST": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/ProjectFactoryLocked.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/ProjectFactoryLocked.sol",
     "exportedSymbols": {
       "ProjectFactoryLocked": [
         8713
@@ -1638,5 +1638,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-03-25T19:29:22.776Z"
+  "updatedAt": "2019-03-29T19:23:54.611Z"
 }

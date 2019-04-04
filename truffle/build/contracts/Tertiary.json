@@ -53,9 +53,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity >=0.4.22 <0.6.0;\n\n/**\n * @title Tertiary\n * @dev A Tertiary contract can only be used by its tertiary account (the one that created it)\n */\ncontract Tertiary {\n    address private _tertiary;\n\n    event TertiaryTransferred(\n        address recipient\n    );\n\n    /**\n     * @dev Sets the tertiary account to the one that is creating the Tertiary contract.\n     */\n    constructor () internal {\n        _tertiary = msg.sender;\n        emit TertiaryTransferred(_tertiary);\n    }\n\n    /**\n     * @dev Reverts if called from any account other than the tertiary.\n     */\n    modifier onlyTertiary() {\n        require(msg.sender == _tertiary);\n        _;\n    }\n\n    /**\n     * @return the address of the tertiary.\n     */\n    function tertiary() public view returns (address) {\n        return _tertiary;\n    }\n\n    /**\n     * @dev Transfers contract to a new tertiary.\n     * @param recipient The address of new tertiary.\n     */\n    function transferTertiary(address recipient) public onlyTertiary {\n        require(recipient != address(0));\n        _tertiary = recipient;\n        emit TertiaryTransferred(_tertiary);\n    }\n}\n",
-  "sourcePath": "/Users/steven/genie-portal/truffle/contracts/utility/Tertiary.sol",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/Tertiary.sol",
   "ast": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/Tertiary.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/Tertiary.sol",
     "exportedSymbols": {
       "Tertiary": [
         8937
@@ -844,7 +844,7 @@
     "src": "0:1135:63"
   },
   "legacyAST": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/Tertiary.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/Tertiary.sol",
     "exportedSymbols": {
       "Tertiary": [
         8937
@@ -1638,5 +1638,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-03-25T19:29:22.778Z"
+  "updatedAt": "2019-03-29T19:23:54.614Z"
 }

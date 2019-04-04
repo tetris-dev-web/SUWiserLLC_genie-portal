@@ -53,9 +53,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity >=0.4.22 <0.6.0;\n\n/**\n * @title CrowdsaleLocked\n * @dev A CrowdsaleLocked contract can only be used by its crowdsale account (the one that created it)\n */\ncontract CrowdsaleLocked {\n    address private _crowdsale;\n\n    event CrowdsaleTransferred(\n        address recipient\n    );\n\n    /**\n     * @dev Sets the crowdsale account to the one that is creating the CrowdsaleLocked contract.\n     */\n    constructor () internal {\n        _crowdsale = msg.sender;\n        emit CrowdsaleTransferred(_crowdsale);\n    }\n\n    /**\n     * @dev Reverts if called from any account other than the crowdsale.\n     */\n    modifier onlyCrowdsale() {\n        require(msg.sender == _crowdsale);\n        _;\n    }\n\n    /**\n     * @return the address of the crowdsale.\n     */\n    function crowdsale() public view returns (address) {\n        return _crowdsale;\n    }\n\n    /**\n     * @dev Transfers contract to a new crowdsale.\n     * @param recipient The address of new crowdsale.\n     */\n    function transferCrowdsaleKey(address recipient) public onlyCrowdsale {\n        require(recipient != address(0));\n        _crowdsale = recipient;\n        emit CrowdsaleTransferred(_crowdsale);\n    }\n}\n",
-  "sourcePath": "/Users/steven/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
+  "sourcePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
   "ast": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
     "exportedSymbols": {
       "CrowdsaleLocked": [
         8488
@@ -844,7 +844,7 @@
     "src": "0:1186:57"
   },
   "legacyAST": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
+    "absolutePath": "/Users/matthewsteele/Desktop/ProjectFolder/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
     "exportedSymbols": {
       "CrowdsaleLocked": [
         8488
@@ -1638,5 +1638,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.2",
-  "updatedAt": "2019-03-25T19:29:22.772Z"
+  "updatedAt": "2019-03-29T19:23:54.607Z"
 }

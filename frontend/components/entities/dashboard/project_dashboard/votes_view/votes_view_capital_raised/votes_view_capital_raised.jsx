@@ -9,14 +9,12 @@ import colors from  "../../../../../../util/_variables.scss";
 class VotesViewCapitalRaised extends React.Component {
 
   render() {
-    const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, capitalTotal, lineData, deployedProjects, selectedProject, SVGWidth, timeAxis } = this.props;
-console.log("capital raised props", this.props)
+    const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, capitalTotal, lineData, deployedProjects, selectedProject, SVGWidth, startTime, endTime } = this.props;
+    console.log(startTime, endTime, "times");
     const Lines = deployedProjects.map((project, idx) => {
-
-      // -Math.abs(.5 * SVGTimeXScale(SVGWidth))
       return (
         <VotesViewCapitalRaisedLine key={idx}
-          x1={-Math.abs(SVGTimeXScale((timeAxis.startTime + timeAxis.endTime) / 2) / .8)} y1={SVGYScale(project.capital)}
+          x1={-Math.abs(SVGTimeXScale((startTime + endTime) / 2) / .8)} y1={SVGYScale(project.capital)}
           x2={SVGTimeXScale(project.activationTime)} y2={SVGYScale(project.capital)}
           opacity={selectedProject ? "0.2" : "1"}
           transform={`translate(263, 0)`}/>

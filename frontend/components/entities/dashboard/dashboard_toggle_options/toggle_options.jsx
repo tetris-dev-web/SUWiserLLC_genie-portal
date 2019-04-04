@@ -17,22 +17,21 @@ class ToggleOptions extends React.Component {
   }
 
   handleDashboardHover() {
-    console.log("loaded?",this.state.DashboardIsLoaded)
     if (!this.state.DashboardIsLoaded){
       this.setState({
         textToShow: this.props.dashboardDescription,
-        showDashboardDescription: !this.state.showDashboardDescription
+        showDashboardDescription: !this.state.showDashboardDescription //this is the issue
       });
     }
   }
 
   handleButtonHover(nameOfHoveredOption) {
     if(!this.state.DashboardIsLoaded && nameOfHoveredOption === "" ){
-      console.log("got through tconditional")
+      // show description when on toggle but not button
       this.setState({
         textToShow: this.props.dashboardDescription
       })
-    }else {
+    } else if (!this.state.DashboardIsLoaded) {
       this.setState({
         textToShow: (<p className="greenText"> {nameOfHoveredOption} </p>),
       });
@@ -40,15 +39,24 @@ class ToggleOptions extends React.Component {
 
   }
 
+  handleOnClick(){
+
+  }
+
   generateOptions() {
 
     const ToggleOption = (props) => (
+
+
       <div className="toggle-option" onClick={() => {
-            console.log(" views ",this.props.currentView, props.name);
-           this.props.toggleView(props.name)
-           this.props.currentView === props.name ? "do nothing" : this.setState({DashboardIsLoaded: !this.state.DashboardIsLoaded})
-          }
-         }>
+        this.props.toggleView(props.name)
+        console.log(props, "props", this.props.currentView);
+        props.name === this.props.currentView?
+          this.setState({DashboardIsLoaded: !this.state.DashboardIsLoaded, showDashboardDescription: false, textToShow: "" })
+            : Object.keys(this.props.optionIcons).includes(this.props.currentView) ?
+                "do nothing"
+                : this.setState({DashboardIsLoaded: !this.state.DashboardIsLoaded})
+        }}>
         <div className={`toggle-button ${this.props.dashboardType}`}
           onMouseEnter={() => this.handleButtonHover(props.name)}
           onMouseLeave={() => this.handleButtonHover("")}
@@ -74,9 +82,7 @@ class ToggleOptions extends React.Component {
   render() {
     const { currentView, dashboardTitle, dashboardDescription, dashboardType } = this.props;
     const { DashboardIsLoaded, generateOptions, textToShow, showDashboardDescription } = this.state;
-
-    console.log("textToShow",textToShow)
-
+    console.log("loading text", DashboardIsLoaded, showDashboardDescription)
     return (
       <div className={currentView === null ? `toggle-view-options-container-graph-hidden ${dashboardType}` : `toggle-view-options-container-graph-open ${dashboardType}`}>
         <div className={`toggle-view-options-border-layer ${dashboardType}`}>
@@ -89,7 +95,7 @@ class ToggleOptions extends React.Component {
           </div>
           <div className={`toggle-view-title ${dashboardType}`}>
             {dashboardTitle}
-            {DashboardIsLoaded && showDashboardDescription?
+            {DashboardIsLoaded?
               <div className="toggle-view-current-view"> {currentView} </div> : ""}
           </div>
 

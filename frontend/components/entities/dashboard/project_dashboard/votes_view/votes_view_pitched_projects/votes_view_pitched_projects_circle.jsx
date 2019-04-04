@@ -31,7 +31,7 @@ class VotesViewPitchedProjectsCircle extends React.Component {
             stroke="#61aba9"
             strokeWidth=".7px"
             opacity={opacity}
-            onClick={() => openModal({ type: "project_module", project })} onMouseOver={() => this.setState({r: 12})} onMouseLeave={() => this.setState({r: 8})}></circle>
+            onClick={() => openModal({ type: "project_modal", project })} onMouseOver={() => this.setState({r: 12})} onMouseLeave={() => this.setState({r: 8})}></circle>
           <text x={cx} y={cy + 5} fill="#61aba9" textAnchor="middle" stroke="#51c5cf" strokeWidth=".2px" dy=".009em">i</text>
         </g>
     );
