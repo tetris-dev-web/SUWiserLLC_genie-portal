@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_modals/project_modals_cashflow';
+// import CashFlowGraph from '../../../../dashboard/project_dashboard/project_modals/project_modals_cashflow';
 import CashFlowInputSheet from './cashflow_input_sheet';
 import ModalStyle from './modal_style';
 

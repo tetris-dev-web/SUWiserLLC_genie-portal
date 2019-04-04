@@ -11,7 +11,7 @@ export const DemoOptions = ({ handleClick }) => {
 
 const DashBoardOption = ({ userDisplay, navigateToDashBoard }) => {
   return (
-    <div className='demo_option'>
+    <div  className='bounceOnHover demo_option'>
       <p onClick={navigateToDashBoard}>{`${userDisplay}`}</p>
     </div>
   )

@@ -13,7 +13,6 @@ class Profile extends React.Component {
       "ETH": null,
       "GNI (active)": null,
       "GNIT (vesting)": null,
-
     };
 
     // this.handleSubmit = this.handleSubmit.bind(this);
@@ -150,6 +149,9 @@ class Profile extends React.Component {
     );
   }
 }
+
+
+// CONTAINER
 
 const mapStateToProps = state => {
   return {

@@ -43,4 +43,4 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 	}
 }
 
-export default connect(null, mapDispatchToProps)(VotesViewCapitalRaisedCircle);
+export default VotesViewCapitalRaisedCircle;

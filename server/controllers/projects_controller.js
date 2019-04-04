@@ -1,7 +1,7 @@
 const { web3 } = require('../chain_connection/web3_configuration');
 const { fetchEvents } = require('../chain_util/chain_util');
 const { numberParser } = require('../util/number_util');
-const { formatProject } = require('../formatters/project_module');
+const { formatProject } = require('../formatters/project_modal');
 const { sendTransaction } = require('../chain_util/chain_util');
 const { projectFactoryInstance, _projectInstance } = require('../chain_models/models');
 
@@ -59,7 +59,7 @@ const _fetchProjectGraphData = async options => {
   const projectData = await projectMethods.getData().call();
   const { title, lat, lng } = JSON.parse(projectData[1]); //this should be changed on the blockchain end.
 
-  //module data
+  //modal data
   const closingTime = await numberParser(projectMethods.closingTime());
   const openingTime = await numberParser(projectMethods.openingTime());
   const { busLink, description } = JSON.parse(projectData[1]);
@@ -124,7 +124,7 @@ const demoInvestorVotesByProject = async projectAddress => {
 module.exports = {
   fetchProjects,
   fetchProjectGraphData,
-  fetchProjectModuleData,
+  // fetchProjectModalData,
   demoInvestorVotesByProject,
   demoDepositCashflow
 };

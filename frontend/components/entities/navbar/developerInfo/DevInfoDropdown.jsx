@@ -31,7 +31,7 @@ class DevInfoDropdown extends React.Component {
   }
 
   handleClick(type) {
-    console.log('handling click')
+    // console.log('handling click')
     this.setState({
       InfoModalIsOpen: !this.state.InfoModalIsOpen,
       InfoModalComponent: modalInfo[type]

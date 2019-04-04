@@ -2,15 +2,11 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { Switch } from 'react-router-dom';
 import TransactionModal from './entities/transaction_modal/transaction_modal'
-import {
-  AuthRoute,
-  ProtectedRoute,
-  RedirectedRoute
-} from '../util/route_util';
 
 import Navbar from './entities/navbar/navbar_container';
-import Landing from './entities/landing/landing';
 import Dashboard from './entities/dashboard/dashboard';
+import ProjectModalStructure from './entities/dashboard/project_dashboard/project_modals/project_modal_structure';
+
 import { notifyTransactionCompletion } from '../actions/ui_actions';
 // import DeveloperInfo from './entities/developerInfo/developerInfo';
 // import Footer from './entities/footer/footer';
@@ -81,13 +77,16 @@ class App extends React.Component {
   render() {
     return (
       <div className="rootDiv">
-        <Navbar />
         <Dashboard />
         <ProjectModalStructure />
+        <Navbar />
       </div>
     );
   }
 }
+
+
+// CONTAINER
 
 const mapStateToProps  = state => {
   return {

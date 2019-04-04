@@ -20,7 +20,6 @@ const { voteAndUpdateProjects } = require('./controllers/voting_controller');
 
 const { pitchProject, fetchStartTime } = require('./controllers/project_factory_controller');
 const { demoInvestorFreeVotes } = require('./controllers/voting_token_controller');
-const { pitchProject } = require('./controllers/project_factory_controller');
 const { collectDemoInvestorDividend } = require('./controllers/dividends_controller');
 const safeStringify = require('json-stringify-safe');
 
@@ -46,11 +45,10 @@ app.use(bodyParser.json({ type: '*/*' }))
 
 app.get('/api/fetchStartAndEndTimes', asyncMiddleware(async (req, res) => {
   const startTime =  await fetchStartTime();
-  console.log("start", startTime)
-  // code for demo
   const endTime =   await fetchEndTime();
   const startAndEndTimes = {startTime, endTime }
   res.send(startAndEndTimes);
+}))
 
 app.get('/api/contract_instances', asyncMiddleware( async (req, res) => {
   const eventSubscription = callBack => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import { totalData } from '../../../../../util/token_data_util';
 import { roundToTwo, getFileExtension } from '../../../../../util/function_util';
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow_modal/cashflow_modal';

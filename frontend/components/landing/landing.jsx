@@ -25,7 +25,7 @@ class Landing extends React.Component {
         transparent={true}
         style={{
           overlay: {
-            backgroundColor: 'black'
+            backgroundColor: "#333"
           }
         }}
         >

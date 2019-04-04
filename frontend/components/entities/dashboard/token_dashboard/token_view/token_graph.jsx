@@ -160,6 +160,8 @@ class TokenGraph extends React.Component {
 import { fetchTokenGraphData, receiveTokenTransfer } from '../../../../../actions/chain_actions/token_actions';
 import { receiveReceiveDividends } from '../../../../../actions/chain_actions/dividends_actions';
 import { fetchStartAndEndTimes } from '../../../../../actions/chain_actions/time_axis_actions';
+import { connect } from 'react-redux';
+
 
 const mapStateToProps = (state, ownProps) => {
   const { currentView } = ownProps;
@@ -182,11 +184,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
-// CONTAINER
-import { connect } from 'react-redux';
-import { userData, totalData } from '../../../../../util/token_data_util';
-import { formatTokenGraphData } from '../../../../../util/propsUtil';
 
 const mapDispatchToProps = dispatch => {
   return {

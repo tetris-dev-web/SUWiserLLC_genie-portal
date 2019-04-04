@@ -5,8 +5,6 @@ import { HashRouter, Route } from 'react-router-dom';
 import TransactionNotifications from './entities/notifications/notifications';
 import Landing from './landing/landing';
 import App from './app';
-import Navbar from './entities/navbar/navbar_container';
-import Modal from '../components/entities/modal/modal';
 import FourOhFourPage from './404_page/404_page';
 import './root.scss';
 
@@ -28,8 +26,6 @@ class Root extends React.Component {
           <HashRouter>
             <div style={{height: "100%"}}>
               <TransactionNotifications />
-              <Modal />
-              <Navbar />
               <Route exact path='/' component={Landing} />
               <Route exact path='/dashboard/:userType' component={App} />
             </div>
