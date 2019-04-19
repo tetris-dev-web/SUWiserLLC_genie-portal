@@ -15,6 +15,10 @@ module.exports = async () => {
     console.log('purchase 3 complete');
     await createTokenPurchase(account, 100);
     console.log('purchase 4 complete');
+    await createTokenPurchase(account, 500);
+    console.log('purchase 2 complete')
+    await createTokenPurchase(account, 200);
+    console.log('purchase 2 complete')
   };
 
   const createVotes = async () => {
@@ -26,6 +30,9 @@ module.exports = async () => {
     console.log('vote 4 complete')
     await castVote(projAddrs[3], 40);
     console.log('vote 5 complete');
+    await castVote(projAddrs[6], 30);
+    await castVote(projAddrs[7], 60);
+    await castVote(projAddrs[8], 80);
   }
 
   const activateTokens = async () => {
