@@ -1,6 +1,5 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import Login from './login';
 import NavBarRight from './nav_bar_right/nav_bar_right'
 import DeveloperInfo from './developerInfo/DeveloperInfo';
 

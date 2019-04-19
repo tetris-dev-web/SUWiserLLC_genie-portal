@@ -37,12 +37,14 @@ module.exports = {
       network_id: "*", // Match any network id
       gasLimit: 10000000
     },
+    //developer
     ropsten: {
        provider: () => new HDWalletProvider(privateKeys, "https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY, 0),
        network_id: 3,
        gas: 4500000,
        gasPrice: 10000000000
     },
+    //investors
     seedInvestor1: {
       provider: () => new HDWalletProvider(privateKeys, "https://ropsten.infura.io/v3/" + process.env.INFURA_API_KEY, 1),
       network_id: 3,

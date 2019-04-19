@@ -26,6 +26,7 @@ class ProjectFormModal extends React.Component {
           isOpen={this.state.isModalOpen}
           onRequestClose={this.handleClick}
           style={ModalStyle}
+          ariaHideApp={false}
           contentLabel="Manage Modal"
           className="modal-container">
           <ProjectForm

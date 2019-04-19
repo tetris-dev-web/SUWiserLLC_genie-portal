@@ -4,15 +4,22 @@ const SeedableCrowdsale = artifacts.require("SeedableCrowdsale");
 const Voting = artifacts.require("Voting");
 const { getProjectAddresses } = require('./util');
 
+
 module.exports = async () => {
   const createTokenPurchases = async () => {
     const createTokenPurchase = async (address, weiAmount) => {
       await crowdsale.seedTokens({from: address, value: weiAmount});
     }
-
+    
     await createTokenPurchase(account, 200);
     console.log('purchase 1 complete')
-    await createTokenPurchase(account, 100);
+    await createTokenPurchase(account, 200);
+    console.log('purchase 2 complete')
+    await createTokenPurchase(account, 300);
+    console.log('purchase 2 complete')
+    await createTokenPurchase(account, 500);
+    console.log('purchase 2 complete')
+    await createTokenPurchase(account, 200);
     console.log('purchase 2 complete')
 
   }
@@ -25,9 +32,14 @@ module.exports = async () => {
     await castVote(projAddrs[1], 50);
     console.log('vote 1 complete')
     await castVote(projAddrs[2], 70);
-    console.log('vote 2 complete')
-    await castVote(projAddrs[4], 50);
-    console.log('vote 3 complete');
+    await castVote(projAddrs[3], 70);
+    await castVote(projAddrs[4], 30);
+    await castVote(projAddrs[5], 30);
+    await castVote(projAddrs[6], 20);
+    await castVote(projAddrs[7], 60);
+    await castVote(projAddrs[8], 80);
+    await castVote(projAddrs[9], 40);
+    console.log('vote 9 complete');
   }
 
   const account = web3.currentProvider.addresses[0];

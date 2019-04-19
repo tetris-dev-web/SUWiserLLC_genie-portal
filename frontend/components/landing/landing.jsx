@@ -6,14 +6,6 @@ import { setDemoType } from '../../actions/ui_actions';
 import './landing.scss';
 
 class Landing extends React.Component {
-  constructor (props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick (demoType) {
-    this.props.history.push(`/dashboard/${demoType}`);
-  }
 
   render () {
     return (
@@ -21,6 +13,7 @@ class Landing extends React.Component {
         isOpen={true}
         className='landing_modal'
         transparent={true}
+        ariaHideApp={false}
         style={{
           overlay: {
             backgroundColor: "#333"
@@ -30,7 +23,7 @@ class Landing extends React.Component {
           <div className='landing'>
             <h1 className='landing_title'>PROGENY DEMO</h1>
             <LandingDescription />
-            <DemoOptions handleClick={this.handleClick}/>
+            <DemoOptions />
           </div>
     </Modal>
     )

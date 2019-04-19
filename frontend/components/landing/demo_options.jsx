@@ -2,6 +2,12 @@ import React from 'react';
 import { withRouter } from 'react-router';
 
 class DemoOptions extends React.Component {
+
+  constructor (props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   handleClick (demoType) {
     this.props.history.push(`/dashboard/${demoType}`);
   }
@@ -9,9 +15,9 @@ class DemoOptions extends React.Component {
   render () {
     return (
       <div className='demo_options'>
-        <DashBoardOption userDisplay={'proceed to dashboard with my own account'} navigateToDashBoard={() => handleClick('demo')}/>
-        <DashBoardOption userDisplay={'demo investor dashboard'} navigateToDashBoard={() => handleClick('demoInvestor')}/>
-        <DashBoardOption userDisplay={'demo developer dashboard'} navigateToDashBoard={() => handleClick('demoDeveloper')}/>
+        <DashBoardOption userDisplay={'proceed to dashboard with my own account'} navigateToDashBoard={() => this.handleClick('demo')}/>
+        <DashBoardOption userDisplay={'demo investor dashboard'} navigateToDashBoard={() => this.handleClick('demoInvestor')}/>
+        <DashBoardOption userDisplay={'demo developer dashboard'} navigateToDashBoard={() => this.handleClick('demoDeveloper')}/>
       </div>
     )
   }

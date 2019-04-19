@@ -11,7 +11,6 @@ const ProjectFactory = artifacts.require("ProjectFactory");
 const ProjectFactoryHelper = artifacts.require("ProjectFactoryHelper");
 const ProjectLeaderTracker = artifacts.require("ProjectLeaderTracker");
 const Voting = artifacts.require("Voting");
-const SeedableVoting = artifacts.require("SeedableVoting");
 const Activation = artifacts.require("Activation");
 const Project = artifacts.require("Project");
 const { seed } = require('../seeds');

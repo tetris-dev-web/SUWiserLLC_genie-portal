@@ -2,6 +2,11 @@ const ProjectFactory = artifacts.require("ProjectFactory");
 const { sampleCashflow } = require('./sampleCashflow/sampleCashflow');
 // const projectFactory = await ProjectFactory.deployed();
 
+
+//for creating projects as the developer
+
+// integrate second model and business plan for Genus
+
 module.exports = async () => {
   const developer = web3.currentProvider.addresses[0];
   const projectFactory = await ProjectFactory.deployed();
@@ -41,64 +46,93 @@ module.exports = async () => {
       return await projectFactory.projectById.call(id);
     }
 
+    // values in wei
+
     const projAddr1 = await createProject(
       'HamInn',
       0,
-      900,
-      '40.7128',
+      700,
+      '40.818001',
       '-74.0060',
       1
      );
      console.log('p1', projAddr1)
     // console.log(Project.at(projAddr1))
     const projAddr2 = await createProject(
-      'Matt\'s Mansion',
-      200,
-      800,
-      '40.7128',
-      '-74.0060',
+      'PR Beach Villa',
+      250,
+      400,
+      '18.3128',
+      '-65.0060',
       2
     );
-    console.log('p2', projAddr2)
     const projAddr3 = await createProject(
-      'Steven\'s Skyscraper',
-      400,
-      1000,
-      '41.9028',
-      '12.4964',
+      'Co-op in Goergia',
+      180,
+      350,
+      '41.7128',
+      '44.7060',
       3
     );
-    console.log('p3', projAddr3)
     const projAddr4 = await createProject(
-      'Liam\'s Lounge',
-      600,
+      'Penn Student Housing',
+      300,
       800,
-      '31.2304',
-      '121.4737',
+      '39.970031',
+      '-75.168550',
       4
     );
     console.log('p4', projAddr4)
     const projAddr5 = await createProject(
-      'Ryan\'s Rooftop',
-      500,
-      700,
-      '5.6037',
-      '-0.1870',
+      'Steven\'s Business Incubator',
+      400,
+      1000,
+      '40.618001',
+      '-74.1060',
       5
     );
-    console.log('p5', projAddr5)
     const projAddr6 = await createProject(
+      'Liam\'s Lounge',
+      600,
+      800,
+      '-23.18001',
+      '-46.1060',
+      6
+    );
+    const projAddr7 = await createProject(
+      'Philly Artist Loft',
+      500,
+      700,
+      '39.960031',
+      '-75.128550',
+      7
+    );
+    const projAddr8 = await createProject(
       'Kyle\'s Kale Farm',
       300,
       700,
-      '41.9028',
-      '12.4964',
-      6
+      '40.918001',
+      '-74.1060',
+      8
     );
-    console.log('p6', projAddr6)
+    const projAddr9 = await createProject(
+      'Columbia Generator',
+      500,
+      800,
+      '40.638001',
+      '-74.1060',
+      9
+    );
+    const projAddr10 = await createProject(
+      'Brazil Fitness Complex',
+      500,
+      800,
+      '-23.18001',
+      '-46.4060',
+      10
+    );
   }
 
-  console.log('what')
   await createProjects();
   return null;
 }

@@ -7,17 +7,15 @@ import {
 import { updateTransactionModal } from '../../../../../actions/ui_actions';
 
 const mapStateToProps = state => {
-  const projects = Object.keys(state.chain_data.projects).reduce((pitchedProjects, projectTitle) => {
-    const project = state.chain_data.projects[projectTitle];
+  const projects = Object.keys(state.chain_data.projectGraph.projects).reduce((pitchedProjects, projectTitle) => {
+    const project = state.chain_data.projectGraph.projects[projectTitle];
     if (project.instance) {
       pitchedProjects[projectTitle] = project;
     }
     return pitchedProjects;
   }, {});
-
   return {
     projects,
-    currentUser: state.session.currentUser,
     errors: state.errors.project,
     projectFactoryInstance: state.network.projectFactoryInstance,
     account: state.network.account

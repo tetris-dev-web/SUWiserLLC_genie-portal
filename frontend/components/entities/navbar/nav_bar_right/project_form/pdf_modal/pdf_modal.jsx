@@ -12,7 +12,7 @@ class PDFModal extends React.Component {
 
 		this.handleClick = this.handleClick.bind(this);
 	}
-	
+
 	handleClick() {
 		this.setState({ isModalOpen: !this.state.isModalOpen });
 	}
@@ -27,6 +27,7 @@ class PDFModal extends React.Component {
 				<Modal
 					isOpen={this.state.isModalOpen}
 					onRequestClose={this.handleClick}
+          ariaHideApp={false}
 					style={ModalStyle}>
 					<iframe className='pdf-upload' src={planFilePDFDataURL} />
 				</Modal>

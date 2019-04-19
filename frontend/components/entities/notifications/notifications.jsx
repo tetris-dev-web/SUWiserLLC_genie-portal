@@ -21,6 +21,7 @@ class TransactionNotifications extends React.Component {
         isOpen={Boolean(notification.length)}
         onRequestClose={this.clearNotification}
         className="transaction-notification-modal"
+        ariaHideApp={false}
         disableAutoFocus={true}
         style={
           {

@@ -34,7 +34,7 @@ describe('Project Form Component', () => {
 
  it('Correctly enters a title', () => {
    const { eWrapper } = setUp();
-   let projectTitleInput = eWrapper.find('.project-title-input');
+   let projectTitleInput = eWrapper.find('.title-input');
    projectTitleInput.value = "Project";
    expect(projectTitleInput.value).toEqual("Project")
  });

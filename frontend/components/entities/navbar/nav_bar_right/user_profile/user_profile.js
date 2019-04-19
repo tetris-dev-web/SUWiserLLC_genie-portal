@@ -30,6 +30,7 @@ class UserProfile extends React.Component {
         <Modal
         className='user_profile_modal'
         isOpen={this.state.showProfile}
+        ariaHideApp={false}
         onRequestClose={() => this.setShowProfileStatus(false)}
         >
         <ProfileContent />

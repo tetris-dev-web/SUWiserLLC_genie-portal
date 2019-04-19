@@ -4,8 +4,10 @@ import React from 'react';
 class DropPinAddress extends React.Component{
   constructor(props){
     super(props);
+    console.log(props);
 
       }
+
 
   render(){
     return(

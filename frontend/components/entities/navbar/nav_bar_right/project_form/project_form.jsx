@@ -3,12 +3,15 @@ import { roundToTwo, getFileExtension } from '../../../../../util/function_util'
 import DivWithCorners from './withCorners';
 import CashFlowModal from './cashflow_modal/cashflow_modal';
 import PDFModal from './pdf_modal/pdf_modal';
+import {sampleProject} from "./cashflow/sampleProjectJson"
 // import { getFailedProjects } from '../../../../util/project_api_util';
 import Finance from 'financejs';
 import { formatProjectData, processCashData } from '../../../../../util/project_api_util';
 import DropPinModal from './drop_pin_modal/drop_pin_modal';
 import { merge } from 'lodash';
 import './project_form.scss';
+
+
 
 class ProjectForm extends React.Component {
   constructor(props) {
@@ -59,24 +62,20 @@ class ProjectForm extends React.Component {
     this.calculateTotalCapitalDeployed = this.calculateTotalCapitalDeployed.bind(this);
     this.calculateNetPresentValue = this.calculateNetPresentValue.bind(this);
     this.receiveCashflowData = this.receiveCashflowData.bind(this);
-    // this.parseCashflowData = this.parseCashflowData.bind(this);
     this.renderLatLngErrors = this.renderLatLngErrors.bind(this);
-    this.dropPinClick = this.dropPinClick.bind(this);
     this.updateLatLng = this.updateLatLng.bind(this);
     this.storeAddress = this.storeAddress.bind(this);
     this.calculateCapitalRequired = this.calculateCapitalRequired.bind(this);
     this.parseInputFile = this.parseInputFile.bind(this);
     this.updateCashflowValue = this.updateCashflowValue.bind(this);
     this.updateActuals = this.updateActuals.bind(this);
+    this.update = this.update.bind(this);
   }
 
   componentDidMount() {
     // this.renderFileName();
   }
 
-  // componentWillUnmount() {
-  //   this.props.clearProjectErrors();
-  // }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -195,9 +194,6 @@ class ProjectForm extends React.Component {
     });
   }
 
-  dropPinClick() {
-    this.setState({drop_pin_clicked: true});
-  }
 
   renderLatLngErrors(clicked) {
     if (this.state.projectData.latitude == '' && this.state.projectData.longitude == '' && clicked) {
@@ -288,28 +284,15 @@ class ProjectForm extends React.Component {
     return netPresentValue;
   }
 
-  // calculateValuation(){
-  //
-  // }
-
 
   receiveCashflowData(cashflowVars){
     return calculateCashflowData(cashflowVars);
   }
 
-  update(property) {
-    return (e) => {
-      if (this.state.hasOwnProperty(property)) {
-        this.setState({ [property]: e.currentTarget.value });
-      } else {
-        const projectData = merge({}, this.state.projectData, { [property]: e.currentTarget.value });
-        this.setState({projectData});
-      }
-    };
-  }
 
   updateCashflow(cashflow) {
     // Needed to update project state with cashflow state
+    // should be combined with update
     return e => {
       e.preventDefault();
       this.setState({ projectData: cashflow });
@@ -353,8 +336,7 @@ class ProjectForm extends React.Component {
             let cashflow = processCashData(cashflowData);
             // cashflow = this.setupCashflow(cashflow, currentQuarter)
             let quarters = Object.keys(cashflow).map(Number).sort((a, b) => a - b);
-            // console.log('quarters is:', quarters);
-            // console.log('Cashflow is:', cashflow);
+
 
             // const data = formatProjectData(cashflow);
             // const currentQuarter = this.findCurrentQuarter(quarters, cashflow);
@@ -485,6 +467,20 @@ class ProjectForm extends React.Component {
   //   });
   // }
 
+  update(property, value) { //rename to updateForm
+    console.log("loggin", property, value);
+    if (this.state.hasOwnProperty(property)) {
+      this.setState({ [property]: value });
+    } else {
+      const projectData = merge({}, this.state.projectData, { [property]: value });
+      this.setState({projectData});
+    }
+  }
+
+
+
+
+
   render() {
     let modelLink;
     if (this.state.modelId === "") {
@@ -492,42 +488,29 @@ class ProjectForm extends React.Component {
     } else {
       modelLink = "https://poly.google.com/view/" + this.state.modelId
     }
+    let { title, latitude, longitude, model_id, currentQuarter, description } = this.state.projectData
 
-    let { title, latitude, longitude, model_id, currentQuarter, description } = this.props
-      // revenue, valuation, description, model_id, city, country, continent, icon
 
-     return (
-      <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
-        <div className="text-input-container project-title-input-container">
-          <input className="text-input project-title-input"
-            type="text"
-            placeholder="WHAT'S IT'S NAME"
-            value={title}
-            onChange={this.update('title')} />
-        </div>
+    const TextInputWithUpdate = TextHOC(this.update)
 
+
+    // TODO lat/long will need to check for number up update
+
+
+    const LocInput = (props) => {
+      console.log("insideLoc", latitude, this.state.title)
+      return (
         <div className="form-box-container">
           <h1 className="form-box-title with-border">WHERE IS IT?</h1>
           <div className="form-box-border-layer">
-
             <div className="form-box-lat-long-section">
-              <div className="lat-long-input-container">
-                <div className="text-input-container lat-input-container">
-                  <input className="text-input lat-input"
-                    type="number"
-                    step="any"
-                    placeholder="lat"
-                    value={latitude}
-                    onChange={this.update('latitude')} />
-                </div>
-                <div className="text-input-container long-input-container">
-                  <input className="text-input long-input"
-                    type="number"
-                    step="any"
-                    placeholder="long"
-                    value={longitude}
-                    onChange={this.update('longitude')} />
-                </div>
+              <div className="lat-longitude-input-container">
+                <TextInputWithUpdate
+                  input="latitude"
+                  placeholder="lat"/>
+                <TextInputWithUpdate
+                  input="longitude"
+                  placeholder="long"/>
               </div>
               <DivWithCorners>
                   <DropPinModal
@@ -535,16 +518,25 @@ class ProjectForm extends React.Component {
                     lng={parseFloat(this.state.longitude)}
                     title={this.state.title}
                     updateLatLng={this.updateLatLng}
-                    dropPinClick={this.dropPinClick}
                     storeAddress={this.storeAddress}
                     city={this.state.city}
                     continent={this.state.continent}
                     />
               </DivWithCorners>
             </div>
-
           </div>
         </div>
+      )
+    }
+
+
+
+     return (
+      <form className="form-box p-form-box" onSubmit={this.handleSubmit}>
+        <TextInputWithUpdate
+          input="title"
+          placeholder="WHAT'S IT'S NAME"/>
+
 
         {this.renderLatLngErrors(this.state.drop_pin_clicked)}
 
@@ -577,7 +569,7 @@ class ProjectForm extends React.Component {
                   <input className="current-quarter-input"
                     type="number"
                     value={currentQuarter}
-                    onChange={this.update('currentQuarter')} />
+                    onChange={() => this.update('currentQuarter')} />
                   <label htmlFor="current-quarter"> current qtr</label>
                 </div>
               </div>
@@ -652,7 +644,7 @@ class ProjectForm extends React.Component {
                 <input className="text-input model-id-input"
                   placeholder="model id"
                   value={model_id}
-                  onChange={this.update('model_id')} />
+                  onChange={() => this.update('model_id')} />
               </div>
               <DivWithCorners>
                 <div className="project-form-button model-id">
@@ -669,7 +661,7 @@ class ProjectForm extends React.Component {
         <div className="form-box-container">
           <div className="description-section">
             <h1 className="form-box-title">SUMMARY DESCRIPTION</h1>
-            <textarea className="description-area" value={description} onChange={this.update('description')} />
+            <textarea className="description-area" value={description} onChange={() => this.update('description')} />
             <input className="submit-button" type="submit" value="Pitch"/>
             {this.renderErrors()}
           </div>
@@ -677,6 +669,7 @@ class ProjectForm extends React.Component {
 
         <div className="blue-close-modal-button close-modal-button"
           onClick={this.props.closeModal}>&times;</div>
+
       </form>
     );
   }
@@ -684,232 +677,17 @@ class ProjectForm extends React.Component {
 
 export default ProjectForm;
 
-// <select className="text-input continent-input"
-//   value={continent}
-//   onChange={this.update('continent')}>
-//     <option value="" disabled>Continent</option>
-//     <option value="North America">North America</option>
-//     <option value="South America">South America</option>
-//     <option value="Europe">Europe</option>
-//     <option value="Africa">Africa</option>
-//     <option value="Asia">Asia</option>
-//     <option value="Australia">Australia</option>
-// </select>
-// <input className="text-input city-input"
-//   type="text"
-//   placeholder="#| city"
-//   value={city}
-//   onChange={this.update('city')} />
-// <input className="text-input lat-input"
-//   type="number"
-//   step="any"
-//   placeholder="#| latitude"
-//   value={latitude}
-//   onChange={this.update('latitude')} />
-// <input className="text-input long-input"
-//   type="number"
-//   step="any"
-//   placeholder="#| longitude"
-//   value={longitude}
-//   onChange={this.update('longitude')} />
-// <input className="text-input revenue-input"
-//   type="number"
-//   placeholder="#| revenue"
-//   value={revenue}
-//   onChange={this.update('revenue')} />
-// <div className="valuation-container">
-//   <input className="valuation-input"
-//     type="number"
-//     placeholder="#| valuation"
-//     value={valuation}
-//     onChange={this.update('valuation')} />
-//   <div className="coin-count">{this.state.coins}</div>
-//   <div className="coin-text">coins to be issued</div>
-// </div>
-//
-// <hr className="project-divider" />
-//
-// <div className="geo-container">
-//   <header className="geo-row-container">
-//     <h5>spatial overlays</h5>
-//     <h5>hierarchy</h5>
-//     <h5>opacity</h5>
-//   </header>
-//   {geojsons}
-// </div>
-//
-// <hr className="project-divider" />
-//
-// <div className="fin-plan-container">
-//   <div className="file-container">
-//     <input id="fin-file"
-//       name="fin-file"
-//       className="file-input"
-//       type="file" />
-//     <label htmlFor="fin-file">
-//       <span>choose csv</span>
-//     </label>
-//   </div>
-//   <h5>financials</h5>
-//   <div className="file-container">
-//     <input id="plan-file"
-//       name="plan-file"
-//       className="file-input"
-//       type="file"
-//       multiple
-//       onChange={this.updateFile} />
-//     <label htmlFor="plan-file">
-//       <span>choose a pdf</span>
-//     </label>
-//   </div>
-//   <h5>plan</h5>
-// </div>
-//
-// <div className="link-upload-cont">
-//   <input type="text"
-//     placeholder="paste model link url here"
-//     value={model_id}
-//     className="link-input"
-//     onChange={this.update('model_id')} />
-// </div>
-//
-// <div className="link-upload-cont">
-//   <input type="text"
-//     placeholder="paste icon image url here"
-//     value={icon}
-//     className="link-input"
-//     onChange={this.update('icon')} />
-// </div>
-//
-// <hr className="project-divider" />
-//
-// <label className="p-form-label">
-//   description
-//   <textarea
-//     value={ description }
-//     className="p-form-description"
-//     onChange={this.update('description')} />
-// </label>
-// <div className="pitch-button-cont">
-//   <input
-//     className="pitch-button"
-//     type="submit"
-//     value="pitch"
-//     onClick={this.handleSubmit} />
-// </div>
-//
-const sampleProject = {
-  "1": {
-    "cashFlow": -50000,
-    "isActuals": true
-  },
-  "2": {
-    "cashFlow": -40018,
-    "isActuals": true
-  },
-  "3": {
-    "cashFlow": -16857,
-    "isActuals": true
-  },
-  "4": {
-    "cashFlow": -2915,
-    "isActuals": true
-  },
-  "5": {
-    "cashFlow": -20325,
-    "isActuals": true
-  },
-  "6": {
-    "cashFlow": 7864,
-    "isActuals": true
-  },
-  "7": {
-    "cashFlow": 25360,
-    "isActuals": true
-  },
-  "8": {
-    "cashFlow": 28107,
-    "isActuals": true
-  },
-  "9": {
-    "cashFlow": 28942,
-    "isActuals": false
-  },
-  "10": {
-    "cashFlow": 28696,
-    "isActuals": false
-  },
-  "11": {
-    "cashFlow": 29356,
-    "isActuals": false
-  },
-  "12": {
-    "cashFlow": 28854,
-    "isActuals": false
-  },
-  "13": {
-    "cashFlow": 28588,
-    "isActuals": false
-  },
-  "14": {
-    "cashFlow": 30781,
-    "isActuals": false
-  },
-  "15": {
-    "cashFlow": 29081,
-    "isActuals": false
-  },
-  "16": {
-    "cashFlow": 31887,
-    "isActuals": false
-  },
-  "17": {
-    "cashFlow": 51887,
-    "isActuals": false
-  },
-  "18": {
-    "cashFlow": 71887,
-    "isActuals": false
-  },
-  "19": {
-    "cashFlow": 30339,
-    "isActuals": false
-  },
-  "20": {
-    "cashFlow": 30718,
-    "isActuals": false
-  },
-  "21": {
-    "cashFlow": 31102,
-    "isActuals": false
-  },
-  "22": {
-    "cashFlow": 31491,
-    "isActuals": false
-  },
-  "23": {
-    "cashFlow": 31885,
-    "isActuals": false
-  },
-  "24": {
-    "cashFlow": 32283,
-    "isActuals": false
-  },
-  "25": {
-    "cashFlow": 32687,
-    "isActuals": false
-  },
-  "26": {
-    "cashFlow": 33096,
-    "isActuals": false
-  },
-  "27": {
-    "cashFlow": 33509,
-    "isActuals": false
-  },
-  "28": {
-    "cashFlow": 33928,
-    "isActuals": false
+const TextHOC = (updateFunction) => {
+  return (props) => {
+      return (
+        <div className={`text-input-container ${props.input}-input-container`}>
+          <input className={`text-input ${props.input}-input`}
+            key={props.input}
+            type="text"
+            placeholder={props.placeholder}
+            value={props.title}
+            onChange={(e) => updateFunction(props.input, e.currentTarget.value)} />
+        </div>
+      )
   }
 }
-;

@@ -185,7 +185,7 @@ const mapStateToProps = state => {
     dividendsInstance: state.network.dividendsInstance,
     account: state.network.account,
     balance: state.network.balance,
-    tokenBalances: state.entities.tokenBalances,
+    // tokenBalances: state.chain_data.tokenBalances,
     fetchTokenBalances: (inactiveTokenInstance, activeTokenInstance, account) => fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account),
     fetchDemoInvestorBalances: () => fetchDemoInvestorBalances(),
     collectDemoInvestorDividend: () => collectDemoInvestorDividend(),

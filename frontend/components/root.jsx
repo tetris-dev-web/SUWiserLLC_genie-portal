@@ -5,11 +5,6 @@ import { HashRouter, Route } from 'react-router-dom';
 import TransactionNotifications from './entities/notifications/notifications';
 import Landing from './landing/landing';
 import App from './app';
-<<<<<<< HEAD
-=======
-// import Navbar from './entities/navbar/navbar_container';
-import Modal from '../components/entities/modal/modal';
->>>>>>> aecba8065bf19b2aaa1273caa4a019ac81eacd0d
 import FourOhFourPage from './404_page/404_page';
 import './root.scss';
 
@@ -31,10 +26,6 @@ class Root extends React.Component {
           <HashRouter>
             <div style={{height: "100%"}}>
               <TransactionNotifications />
-<<<<<<< HEAD
-=======
-              <Modal />
->>>>>>> aecba8065bf19b2aaa1273caa4a019ac81eacd0d
               <Route exact path='/' component={Landing} />
               <Route exact path='/dashboard/:userType' component={App} />
             </div>

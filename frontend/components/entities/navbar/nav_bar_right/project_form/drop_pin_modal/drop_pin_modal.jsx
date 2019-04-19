@@ -10,27 +10,12 @@ class DropPinModal extends React.Component {
     this.state = {
       openModal: false,
     };
-
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    // this.displayLatLng = this.displayLatLng.bind(this);
-    // this.updateAddress = this.updateAddress.bind(this);
   }
 
-  // displayLatLng(pos) {
-  //   this.setState({lat: pos.lat, lng: pos.lng});
-  // }
-  //
-  // updateAddress(address){
-  //   this.setState({address: address})
-  // }
-
   openModal() {
-    if(!isNaN(this.props.lat) && !isNaN(this.props.lng)) {
       this.setState({openModal: true});
-    } else {
-      this.props.dropPinClick();
-    }
   }
 
   closeModal() {
@@ -46,9 +31,9 @@ class DropPinModal extends React.Component {
         <Modal
           isOpen={this.state.openModal}
           onRequestClose={this.closeModal}
+          ariaHideApp={false}
           style={ModalStyle}
           >
-
           <div className='drop-pin-flex'>
             <DropPinAddress
               lat={this.props.lat}

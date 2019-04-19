@@ -5,7 +5,7 @@ import Modal from 'react-modal'
 class PolyModal extends React.Component{
   constructor(props){
     super(props);
-    
+
     this.state = {
       isModalOpen: false,
     };
@@ -34,6 +34,7 @@ class PolyModal extends React.Component{
           isOpen={this.state.isModalOpen}
           onRequestClose={this.handleClick}
           style={ModalStyle}
+          ariaHideApp={false}
           >
           <div className="iframe">
             <iframe id="iframe" src={ `${model_link}` } frameBorder="0" allowvr="yes" allowFullScreen className="iframe" style={{width: "100%", height: "100%"}}></iframe>
