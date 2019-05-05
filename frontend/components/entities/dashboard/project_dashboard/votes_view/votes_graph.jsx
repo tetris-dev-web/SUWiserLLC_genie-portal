@@ -13,6 +13,7 @@ class VotesGraph extends React.Component {
     this.state = {
       selectedProject: null,
       componentVisible: "invisible",
+      voteViewOpen: false,
     };
 
     this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
@@ -59,7 +60,6 @@ class VotesGraph extends React.Component {
   watchTokenPurchase () {
     console.log("watching purchase")
     this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
-      console.log('event', event)
       this.props.receiveTokenPurchase({blockNumber: event.blockNumber, value: Number(event.args.value)});
       this.props.notifyTransactionCompletion({notification: "Your token purchase transaction has been mined to the blockchain."});
     })
@@ -68,7 +68,6 @@ class VotesGraph extends React.Component {
   createScales(){
     const { capitalBeingRaised, capitalDeployed, capitalTotal, pitchedProjectsValuationMinMax, allProjectsValuationMinMax } = this.props;
     const { startTime, endTime } = this.props;
-    console.log("inFunctionTimes", startTime,endTime);
     return {
       SVGHeightScale: d3.scaleLinear()
         .range([0, this.SVGHeight])
@@ -92,7 +91,6 @@ class VotesGraph extends React.Component {
     const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
     const { startTime, endTime } = this.props
-    console.log("timesabove", startTime, endTime );
 
     return (
       <div className={`votes-graph ${componentVisible}`}>
@@ -103,6 +101,20 @@ class VotesGraph extends React.Component {
             <VoteShiftTool selectedProject={selectedProject.address}/>
           }
         </div>
+        {
+          !this.state.voteViewOpen?
+          <button
+            className="voteBreakDownButtonOpen bounceOnHover"
+            onClick={() => this.setState({voteViewOpen: !this.state.voteViewOpen})}>
+            projects under consideration
+          </button>
+            : <button
+                className="voteBreakDownButtonClose bounceOnHover"
+                onClick={() => this.setState({voteViewOpen: !this.state.voteViewOpen})}>
+                X
+              </button>
+        }
+
         <svg className="votes-view-svg"
           preserveAspectRatio="xMinYMin meet"
           viewBox="0 0 960 300">
@@ -115,17 +127,24 @@ class VotesGraph extends React.Component {
             SVGTimeXScale={SVGTimeXScale}
             circleScale={circleScale}
             startTime={startTime}
-            endTime={endTime} />
-          <VotesViewPitchedProjects
-            {...this.props}
-            {...this.state}
-            margin={this.margin}
-            SVGYScale={SVGYScale}
-            SVGHeightScale={SVGHeightScale}
-            SVGWidth={this.SVGWidth}
-            circleScale={circleScale}
-            voteShiftTool={this.voteShiftTool}
-            toggleSelectedProject={selectedProject => this.setState({selectedProject})}/>
+            endTime={endTime}
+          />
+
+          {
+          !this.state.voteViewOpen?
+          ""
+          : <VotesViewPitchedProjects
+              {...this.props}
+              {...this.state}
+              margin={this.margin}
+              SVGYScale={SVGYScale}
+              SVGHeightScale={SVGHeightScale}
+              SVGWidth={this.SVGWidth}
+              circleScale={circleScale}
+              voteShiftTool={this.voteShiftTool}
+              toggleSelectedProject={selectedProject => this.setState({selectedProject})}
+            />
+           }
         </svg>
       </div>
     );

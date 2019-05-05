@@ -18,6 +18,8 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 	render() {
 		const { cx, cy, r, x, y, project, opacity, openModal, transform } = this.props;
 
+		console.log(cx, cy, x, y, "coordinates");
+
 		return (
 			<React.Fragment>
 				<circle className="votes-view-project-circle"
@@ -27,15 +29,20 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 					r={r}
 					opacity={opacity}
 					transform={transform}
-					onClick={() => openModal({ type: "project_module", project })}
+					onClick={() => openModal(project.id)}
 					onMouseOver={this.handleHover(true)}
 					onMouseLeave={this.handleHover(false)}>
 				</circle>
 				{
 					this.state.showText &&
-					<text className="votes-view-capital-raised-text"
-						x={cx+60}
-						y={y}><tspan>{project.title}</tspan>
+					<text className="votes-view-circle-text-hovers"
+						x={cx}
+						y={cy-20}
+						transform={transform}
+						>
+						<tspan>
+							{project.title}
+						</tspan>
 					</text>
 				}
 			</React.Fragment>
@@ -43,4 +50,15 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 	}
 }
 
-export default VotesViewCapitalRaisedCircle;
+
+// CONTAINER
+import { connect } from 'react-redux';
+import { openModal } from '../../../../../../actions/modal_actions';
+
+const mapDispatchToProps = dispatch => {
+  return {
+    openModal: projectId => dispatch(openModal(projectId))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(VotesViewCapitalRaisedCircle);

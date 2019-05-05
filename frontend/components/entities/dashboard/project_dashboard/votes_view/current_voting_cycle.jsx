@@ -3,45 +3,6 @@ import * as d3 from 'd3';
 import { connect } from 'react-redux';
 import VoteShiftTool from './vote_shift_tool';
 
-const mapStateToProps = state => {
-    return({
-      pitchedProjects: [
-        {
-          valuation: 5000000,
-          capitalRequired: 3500000,
-          voteShare: .15,
-          title: "Ryan and Liam"
-        },
-        {
-          valuation: 2000000,
-          capitalRequired: 1500000,
-          voteShare: .15,
-          title: "Liam and Ryan"
-        },
-        {
-          valuation: 4000000,
-          capitalRequired: 2500000,
-          voteShare: .20,
-          title: "HamInn"
-        },
-        {
-          valuation: 5000000,
-          capitalRequired: 4000000,
-          voteShare: .30,
-          title: "Genesis"
-        },
-        {
-          valuation: 3500000,
-          capitalRequired: 2000000,
-          voteShare: .20,
-          title: "Penn Generator"
-        },
-      ].sort((a,b) => b.voteShare - a.voteShare),
-      maxValuation: 5000000,
-      capitalRaised: 3000000
-    });
-};
-
 class VotesView2 extends React.Component{
   constructor(props){
     super(props);
@@ -270,4 +231,48 @@ class VotesView2 extends React.Component{
   }
 }
 
-export default connect(mapStateToProps)(VotesView2);
+
+//CONTAINER
+
+//is this data being used?
+//
+// const mapStateToProps = state => {
+//     return({
+//       pitchedProjects: [
+//         {
+//           valuation: 5000000,
+//           capitalRequired: 3500000,
+//           voteShare: .15,
+//           title: "Ryan and Liam"
+//         },
+//         {
+//           valuation: 2000000,
+//           capitalRequired: 1500000,
+//           voteShare: .15,
+//           title: "Liam and Ryan"
+//         },
+//         {
+//           valuation: 4000000,
+//           capitalRequired: 2500000,
+//           voteShare: .20,
+//           title: "HamInn"
+//         },
+//         {
+//           valuation: 5000000,
+//           capitalRequired: 4000000,
+//           voteShare: .30,
+//           title: "Genesis"
+//         },
+//         {
+//           valuation: 3500000,
+//           capitalRequired: 2000000,
+//           voteShare: .20,
+//           title: "Penn Generator"
+//         },
+//       ].sort((a,b) => b.voteShare - a.voteShare),
+//       maxValuation: 5000000,
+//       capitalRaised: 3000000
+//     });
+// };
+
+export default VotesView2;

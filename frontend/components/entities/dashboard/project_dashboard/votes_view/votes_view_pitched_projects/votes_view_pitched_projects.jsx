@@ -3,17 +3,6 @@ import VotesViewPitchedProjectsRect from './votes_view_pitched_projects_rect';
 import { receiveProjectPerformanceData } from '../../../../../../actions/project_actions';
 import { connect } from 'react-redux';
 
-const mapStateToProps = state => {
-	return {
-		votingInstance: state.network.votingInstance
-	}
-}
-
-const mapDispatchToProps = dispatch => {
-	return {
-		receiveProject: (project) => dispatch(receiveProject(project))
-	}
-}
 
 class VotesViewPitchedProjects extends React.Component {
 	constructor (props) {
@@ -69,7 +58,8 @@ class VotesViewPitchedProjects extends React.Component {
 		const rects = this.processProjectData().map((project, idx) => {
 			project.projectWidth = project.projectWidth > 0 ? project.projectWidth : this.minWidth / 3;
 			return (
-				<VotesViewPitchedProjectsRect key={idx}
+				<VotesViewPitchedProjectsRect
+					key={idx}
 					transform={`translate(263, 0)`}
 					project={project}
 					SVGWidth={SVGWidth}
@@ -88,4 +78,21 @@ class VotesViewPitchedProjects extends React.Component {
 		);
 	}
 }
+
+
+
+
+/// CONTAINER
+const mapStateToProps = state => {
+	return {
+		votingInstance: state.network.votingInstance
+	}
+}
+
+const mapDispatchToProps = dispatch => {
+	return {
+		receiveProject: (project) => dispatch(receiveProject(project))
+	}
+}
+
 export default connect(mapStateToProps, mapDispatchToProps)(VotesViewPitchedProjects);

@@ -1,17 +1,6 @@
 import React from 'react';
 import './vote_shift_tool.scss';
-import { connect } from 'react-redux';
-import {
-  fetchFreeVotes,
-  fetchProjectVotes,
-  fetchDemoInvestorFreeVotes,
-  fetchDemoInvestorProjectVotes,
-  voteForProject,
-  voteAgainstProject,
-  voteAndUpdateProjects,
-  demoInvestorVoteAndUpdateProjects
-} from '../../../../../actions/chain_actions/votes_actions';
-import { updateTransactionModal } from '../../../../../actions/ui_actions';
+
 
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
@@ -20,47 +9,6 @@ const VOTE_BAR_RADIUS = 8;
 const VOTE_SHIFT_LINE_WIDTH = 5;
 const VOTE_SHIFT_LINE_HEIGHT = 80;
 const INNER_BAR_HEIGHT = VOTE_BAR_HEIGHT - 2 * VOTE_BAR_INNER_MARGIN;
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    projectContract: state.network.projectContract,
-    votingToken: state.network.votingTokenInstance,
-    votingInstance: state.network.votingInstance,
-    account: state.network.account,
-    votesNotDedicated: Number(state.chain_data.votes.freeVotes) || 0,
-    votesPerProject: Number(state.chain_data.votes[ownProps.selectedProject]) || 0,
-    projects: state.chain_data.projects,
-    activation: state.network.activationInstance,
-    projectLeaderTracker: state.network.projectLeaderTrackerInstance,
-    web3: state.network.web3,
-    crowdsaleInstance: state.network.crowdsaleInstance,
-    inactiveTokenInstance: state.network.inactiveTokenInstance
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchFreeVotes: (account, votingToken) => dispatch(fetchFreeVotes(account, votingToken)),
-    fetchProjectVotes: (account, projectContract, projectAddress) => dispatch(fetchProjectVotes(account, projectContract, projectAddress)),
-    fetchDemoInvestorFreeVotes: () => dispatch(fetchDemoInvestorFreeVotes()),
-    fetchDemoInvestorProjectVotes: (projectAddress) => dispatch(fetchDemoInvestorProjectVotes(projectAddress)),
-    voteAndUpdateProjects: (account, votes, type, votingInstance, projectAddress, projects, projectLeaderTracker, activation, web3) => {
-      return voteAndUpdateProjects(account,
-      votes,
-      type,
-      votingInstance,
-      projectAddress,
-      projects,
-      projectLeaderTracker,
-      activation,
-      web3)
-    },
-    updateTransactionModal: modalInfo => dispatch(updateTransactionModal(modalInfo)),
-    demoInvestorVoteAndUpdateProjects: (votes, type, selectedProject) => demoInvestorVoteAndUpdateProjects(votes, type, selectedProject)
-    // voteForProject: (account, votes, votingInstance, projectAddress) => voteForProject(account, votes, votingInstance, projectAddress),
-    // voteAgainstProject: (account, votes, votingInstance, projectAddress) => voteAgainstProject(account, votes, votingInstance, projectAddress)
-  }
-}
 
 class VoteShiftTool extends React.Component {
   constructor(props) {
@@ -331,5 +279,62 @@ VoteShiftTool.defaultProps = {
     votesNotDedicated: 500
   }
 };
+
+
+//CONTAINER
+import { connect } from 'react-redux';
+import {
+  fetchFreeVotes,
+  fetchProjectVotes,
+  fetchDemoInvestorFreeVotes,
+  fetchDemoInvestorProjectVotes,
+  voteForProject,
+  voteAgainstProject,
+  voteAndUpdateProjects,
+  demoInvestorVoteAndUpdateProjects
+} from '../../../../../actions/chain_actions/votes_actions';
+import { updateTransactionModal } from '../../../../../actions/ui_actions';
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    projectContract: state.network.projectContract,
+    votingToken: state.network.votingTokenInstance,
+    votingInstance: state.network.votingInstance,
+    account: state.network.account,
+    votesNotDedicated: Number(state.chain_data.projectGraph.votes.freeVotes) || 0,
+    votesPerProject: Number(state.chain_data.projectGraph.votes[ownProps.selectedProject]) || 0,
+    projects: state.chain_data.projects,
+    activation: state.network.activationInstance,
+    projectLeaderTracker: state.network.projectLeaderTrackerInstance,
+    web3: state.network.web3,
+    crowdsaleInstance: state.network.crowdsaleInstance,
+    inactiveTokenInstance: state.network.inactiveTokenInstance
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchFreeVotes: (account, votingToken) => dispatch(fetchFreeVotes(account, votingToken)),
+    fetchProjectVotes: (account, projectContract, projectAddress) => dispatch(fetchProjectVotes(account, projectContract, projectAddress)),
+    fetchDemoInvestorFreeVotes: () => dispatch(fetchDemoInvestorFreeVotes()),
+    fetchDemoInvestorProjectVotes: (projectAddress) => dispatch(fetchDemoInvestorProjectVotes(projectAddress)),
+    voteAndUpdateProjects: (account, votes, type, votingInstance, projectAddress, projects, projectLeaderTracker, activation, web3) => {
+      return voteAndUpdateProjects(account,
+      votes,
+      type,
+      votingInstance,
+      projectAddress,
+      projects,
+      projectLeaderTracker,
+      activation,
+      web3)
+    },
+    updateTransactionModal: modalInfo => dispatch(updateTransactionModal(modalInfo)),
+    demoInvestorVoteAndUpdateProjects: (votes, type, selectedProject) => demoInvestorVoteAndUpdateProjects(votes, type, selectedProject)
+    // voteForProject: (account, votes, votingInstance, projectAddress) => voteForProject(account, votes, votingInstance, projectAddress),
+    // voteAgainstProject: (account, votes, votingInstance, projectAddress) => voteAgainstProject(account, votes, votingInstance, projectAddress)
+  }
+}
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(VoteShiftTool);

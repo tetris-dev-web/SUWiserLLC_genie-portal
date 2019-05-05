@@ -82,7 +82,7 @@ class ToggleOptions extends React.Component {
   render() {
     const { currentView, dashboardTitle, dashboardDescription, dashboardType } = this.props;
     const { DashboardIsLoaded, generateOptions, textToShow, showDashboardDescription } = this.state;
-    console.log("loading text", DashboardIsLoaded, showDashboardDescription)
+
     return (
       <div className={currentView === null ? `toggle-view-options-container-graph-hidden ${dashboardType}` : `toggle-view-options-container-graph-open ${dashboardType}`}>
         <div className={`toggle-view-options-border-layer ${dashboardType}`}>
@@ -99,9 +99,11 @@ class ToggleOptions extends React.Component {
               <div className="toggle-view-current-view"> {currentView} </div> : ""}
           </div>
 
+          {!DashboardIsLoaded && showDashboardDescription?
+            <div className={`toggle-view-dashboard-description ${dashboardType}`}> {textToShow} </div> : ""}
+
         </div>
-        {!DashboardIsLoaded && showDashboardDescription?
-          <div className={`toggle-view-dashboard-description ${dashboardType}`}> {textToShow} </div> : ""}
+
       </div>
     );
   }

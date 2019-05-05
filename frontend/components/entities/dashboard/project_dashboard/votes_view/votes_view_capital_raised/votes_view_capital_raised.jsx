@@ -9,17 +9,49 @@ import colors from  "../../../../../../util/_variables.scss";
 class VotesViewCapitalRaised extends React.Component {
 
   render() {
-    const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, capitalTotal, lineData, deployedProjects, selectedProject, SVGWidth, startTime, endTime } = this.props;
-    console.log(startTime, endTime, "times");
+    const { SVGYScale, SVGHeightScale, SVGTimeXScale, circleScale, capitalBeingRaised, voteViewOpen, capitalTotal, lineData, deployedProjects, selectedProject, SVGWidth, startTime, endTime } = this.props;
+
+    const heightOfCapitalBeingRaisedRect = SVGHeightScale(capitalBeingRaised);
+    const yOfCapitalBeingRaisedRect = SVGYScale(capitalTotal);
+    const heightOfCapitalRaisedPrevRect = SVGHeightScale(capitalTotal - capitalBeingRaised);
+    const yOfCapitalRaisedPrevRect = heightOfCapitalBeingRaisedRect + yOfCapitalBeingRaisedRect;
+
+
+    const setOpacityBasedOnAppDepth = () => {
+      let opacity = 1
+      if(selectedProject){opacity = 0.1}
+      else if (voteViewOpen) {opacity = 0.4}
+      else {opacity = 1}
+      return opacity
+    }
+
+    const opacityVar = setOpacityBasedOnAppDepth()
+
+    console.log("opacity", opacityVar);
+
+    const lineScale = d3.line()
+      .x(d => SVGTimeXScale(d.date))
+      .y(d => {
+        const result = SVGYScale(d.capital);
+
+        return result;
+      })
+
     const Lines = deployedProjects.map((project, idx) => {
       return (
         <VotesViewCapitalRaisedLine key={idx}
           x1={-Math.abs(SVGTimeXScale((startTime + endTime) / 2) / .8)} y1={SVGYScale(project.capital)}
           x2={SVGTimeXScale(project.activationTime)} y2={SVGYScale(project.capital)}
-          opacity={selectedProject ? "0.2" : "1"}
+          opacity={opacityVar}
           transform={`translate(263, 0)`}/>
       )
     });
+
+    const Path = <VotesViewCapitalRaisedPath
+      d={lineScale(lineData)}
+      opacity={opacityVar}
+      transform={`translate(263, 0)`}/>;
+
 
     const Circles = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedCircle key={idx}
@@ -30,33 +62,17 @@ class VotesViewCapitalRaised extends React.Component {
         x={SVGTimeXScale(project.time)}
         y={SVGYScale(project.capital) + circleScale(project.valuation) + 20}
         project={project}
-        opacity={selectedProject ? "0.2" : "1"}
+        opacity={opacityVar}
         transform={`translate(263, 0)`}
         />
     ));
 
-    const lineScale = d3.line()
-      .x(d => SVGTimeXScale(d.date))
-      .y(d => {
-        const result = SVGYScale(d.capital);
 
-        return result;
-      })
-
-
-    const Path = <VotesViewCapitalRaisedPath
-      d={lineScale(lineData)}
-      opacity={selectedProject ? "0.2" : "1"}
-      transform={`translate(263, 0)`}/>;
-
-    const heightOfCapitalBeingRaisedRect = SVGHeightScale(capitalBeingRaised);
-
-    const yOfCapitalBeingRaisedRect = SVGYScale(capitalTotal);
     const CapitalBeingRaisedRect = <VotesViewCapitalRaisedRect
       x="0" y={yOfCapitalBeingRaisedRect}
       fill={colors.rosyBrown}
       height={heightOfCapitalBeingRaisedRect}
-      opacity={selectedProject ? "0.1" : "0.3"}
+      opacity={opacityVar}
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"
@@ -70,15 +86,8 @@ class VotesViewCapitalRaised extends React.Component {
         </g>
       )}/>;
 
-    const heightOfCapitalRaisedPrevRect = SVGHeightScale(capitalTotal - capitalBeingRaised);
-
-    const yOfCapitalRaisedPrevRect = heightOfCapitalBeingRaisedRect + yOfCapitalBeingRaisedRect;
-
-    console.log("deployedProjects", deployedProjects);
-
 
     const capRaisedAmounts = deployedProjects.map((project, idx) => {
-      console.log(project);
       const capitalRequired = project.capitalRequired > 0? "$ "+ Number(project.capitalRequired/1000.0).toLocaleString()+" k" : "";
       return (
         <text className="votes-view-capital-raised-text"
@@ -96,16 +105,7 @@ class VotesViewCapitalRaised extends React.Component {
       x="0" y={yOfCapitalRaisedPrevRect}
       fill={colors.teal}
       height={heightOfCapitalRaisedPrevRect}
-      opacity={selectedProject ? "0.1" : "0.3"}
-      voteBreakdownText={() => (
-        <g>
-          <text
-            className='votes-view-vote-breakdown-text'
-            x="50%" y={yOfCapitalBeingRaisedRect + heightOfCapitalBeingRaisedRect + 35}>
-            <tspan dy=".4em">vote breakdown</tspan>
-          </text>
-        </g>
-      )}
+      opacity={opacityVar}
       textToDisplay={() => (
         <g>
           <text className="votes-view-capital-raised-text"
@@ -116,8 +116,12 @@ class VotesViewCapitalRaised extends React.Component {
         </g>
       )}/>;
 
+
+
+
     return (
       <g className="votes-view-capital-raised" transform={'translate(0, 0)'}>
+
         {CapitalBeingRaisedRect}
         {CapitalRaisedPrevRect}
         {Lines}

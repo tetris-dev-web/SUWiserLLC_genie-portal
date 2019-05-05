@@ -24,7 +24,7 @@ class Root extends React.Component {
       return (
         <Provider store={store}>
           <HashRouter>
-            <div style={{height: "100%"}}>
+            <div className="standardDiv" style={{height: "100%"}}>
               <TransactionNotifications />
               <Route exact path='/' component={Landing} />
               <Route exact path='/dashboard/:userType' component={App} />
