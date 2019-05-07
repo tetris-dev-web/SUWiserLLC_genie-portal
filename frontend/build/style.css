@@ -126,20 +126,28 @@
     cursor: pointer;
     color: #333; }
 
-.rootDiv {
-  display: flex;
-  flex-direction: column; }
-  .rootDiv .box {
-    width: 100%;
+#root {
+  height: 100%; }
+  #root .rootDiv {
+    height: 100%;
     display: flex;
-    flex-flow: column;
     flex-direction: column; }
-    .rootDiv .box .series.header {
-      flex: 0 1 auto; }
-    .rootDiv .box .series.content {
-      flex: 1 1 auto; }
-    .rootDiv .box .series.footer {
-      flex: 0 1 auto; }
+    #root .rootDiv .dashboardBox {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-flow: column;
+      flex-direction: column; }
+      #root .rootDiv .dashboardBox .series.header {
+        flex: 0 1 auto; }
+      #root .rootDiv .dashboardBox .series.content {
+        flex: 1 1 auto; }
+      #root .rootDiv .dashboardBox .series.footer {
+        flex: 0 1 auto; }
+    #root .rootDiv .dashboardsOpenClass {
+      justify-content: space-between; }
+    #root .rootDiv .dashboardClosedClass {
+      justify-content: center; }
 
 .link {
   color: #384778; }
@@ -398,8 +406,7 @@ svg {
   position: absolute;
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 60px; }
+  justify-content: space-between; }
   .navbar-container .navbar-right {
     display: flex;
     background-color: #9b9287;
@@ -543,7 +550,7 @@ svg {
   .navbar-left .DevLogo {
     display: flex; }
   .navbar-left .dev-info-container {
-    width: 7%;
+    width: 10%;
     position: absolute;
     left: 0;
     top: 85px;
@@ -560,13 +567,13 @@ svg {
     .navbar-left .dev-info-container .devinfo-dropdown {
       font-size: 12px;
       background-color: #A59A91;
-      position: fixed;
+      position: initial;
       top: 85px;
       left: 0%;
       right: 5%;
       bottom: 5%;
       height: 100px;
-      width: 15%;
+      width: 100%;
       border-radius: 0 10px 10px 0;
       padding: 10px;
       z-Index: 101;
@@ -706,8 +713,6 @@ svg {
     color: #333; }
 
 .toggle-view-options-container-graph-open.project {
-  position: absolute;
-  top: 100%;
   justify-content: flex-end; }
 
 .toggle-view-options-container-graph-open .toggle-view-options-border-layer {
@@ -724,17 +729,16 @@ svg {
     border-radius: 20px 20px 0px 0px;
     padding: 6px 6px 10px 6px; }
 
-.toggle-view-options-container-graph-hidden {
-  min-height: calc(50vh); }
-  .toggle-view-options-container-graph-hidden.token {
+.toggle-view-options-container-graph-hidden.token {
+  flex-direction: column-reverse; }
+
+.toggle-view-options-container-graph-hidden .toggle-view-options-border-layer {
+  height: 100%; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer.token {
     flex-direction: column-reverse; }
-  .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer {
-    height: 100%; }
-    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer.token {
-      flex-direction: column-reverse; }
-    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.project, .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.token {
-      border-radius: 15px;
-      padding: 8px 8px 12px 8px; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.project, .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.token {
+    border-radius: 15px;
+    padding: 8px 8px 12px 8px; }
 
 .toggle-view-options-container-graph-open,
 .toggle-view-options-container-graph-hidden {
@@ -742,14 +746,14 @@ svg {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center; }
+  align-items: center;
+  z-index: 10; }
   .toggle-view-options-container-graph-open .toggle-view-options-border-layer,
   .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer {
     width: 70%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center; }
+    align-items: center; }
     .toggle-view-options-container-graph-open .toggle-view-options-border-layer.project,
     .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer.project {
       padding-top: 25px; }
@@ -794,19 +798,6 @@ svg {
         .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option #selected-button,
         .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option #selected-button {
           background-color: #A59A91; }
-      .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-view-title,
-      .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-view-next-view,
-      .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-view-dashboard-description,
-      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-view-title,
-      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-view-next-view,
-      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-view-dashboard-description {
-        font-size: 18.5px;
-        color: #32384F;
-        font-weight: 700;
-        top: 100%;
-        right: 50%;
-        transform: translateX(50%);
-        white-space: nowrap; }
     .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-title,
     .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-title {
       font-weight: 700;
@@ -830,10 +821,16 @@ svg {
   .toggle-view-options-container-graph-open .toggle-view-dashboard-description,
   .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description {
     width: 18%;
-    margin: 50px; }
+    position: fixed; }
     .toggle-view-options-container-graph-open .toggle-view-dashboard-description .greenText,
     .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description .greenText {
       color: #61aba9; }
+    .toggle-view-options-container-graph-open .toggle-view-dashboard-description.project,
+    .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description.project {
+      bottom: 20%; }
+    .toggle-view-options-container-graph-open .toggle-view-dashboard-description.token,
+    .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description.token {
+      top: 20%; }
 .hidden {
   display: none; }
 
@@ -866,7 +863,8 @@ svg {
 .time-axis {
   transition: opacity 0.3s;
   visibility: visible;
-  opacity: 1; }
+  opacity: 1;
+  text-align: center; }
   .time-axis .time-axis-svg {
     width: 50%;
     margin: 0 auto; }
@@ -1697,7 +1695,19 @@ svg {
   position: relative;
   transition: opacity 0.3s;
   visibility: visible;
-  opacity: 1; }
+  opacity: 1;
+  text-align: center; }
+  .votes-graph .voteBreakDownButtonOpen {
+    background: #9b9287;
+    border-radius: 15px;
+    color: white;
+    margin: 25px; }
+  .votes-graph .voteBreakDownButtonClose {
+    background: #9b9287;
+    border-radius: 15px;
+    color: white;
+    opacity: .3;
+    margin: 25px; }
   .votes-graph.invisible {
     visibility: hidden;
     opacity: 0; }
@@ -1708,11 +1718,11 @@ svg {
   .votes-graph .votes-view-svg {
     width: 100%; }
   .votes-graph .capitalRaisedLine {
-    stroke: #fff;
+    stroke: #bdc4c9;
     stroke-width: 5px; }
   .votes-graph path {
     fill: none;
-    stroke: #fff;
+    stroke: black;
     stroke-width: 2px; }
   .votes-graph text {
     text-anchor: middle;
@@ -1720,6 +1730,8 @@ svg {
   .votes-graph .votes-view-vote-breakdown-text {
     fill: #fff;
     font-size: 12px; }
+  .votes-graph .votes-view-circle-text-hovers {
+    fill: #bdc4c9; }
   .votes-graph .votes-view-capital-raised-text {
     fill: #fff; }
   .votes-graph .votes-view-capital-raised-text-right {
@@ -1859,7 +1871,7 @@ svg {
   top: -10px;
   left: -10px; }
 
-.overlay {
+.ReactModal__Overlay {
   position: fixed;
   top: 0;
   left: 0;

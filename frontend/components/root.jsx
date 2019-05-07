@@ -35,14 +35,15 @@ class Root extends React.Component {
 
     }
 
-    const web3 = { window };
+    const web3 = window.web3;
+    console.log(web3, 'web3')
     return <FourOhFourPage
       title={ web3 ? 'Network Error' : 'Web3 404'}
       description={web3 ? 'Please select the Ropsten network to continue.' : 'Unable to connect to your web3 provider. Please download Metamask to continue.'}
       additionalContent={
         web3 ?
         <div></div> :
-        <a href="https://metamask.io/" target="_blank" className="metaMask-Button" style={{fontSize: '30px'}}>{web3 ? '' : 'Download MetaMask'}</a>
+        <a href="https://metamask.io/" target="_blank" className="metaMask-Button" >{web3 ? '' : 'Download MetaMask'}</a>
       }
       />
   }
