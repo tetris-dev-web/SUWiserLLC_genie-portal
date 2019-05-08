@@ -7,7 +7,7 @@ import {
 } from '../actions/chain_actions/dividends_actions';
 import { merge } from 'lodash';
 
-const tokenGraphByAllReducer = (state = [], action) => {
+const tokenGraphByAllReducer = (state = null, action) => {
   Object.freeze(state);
   let newState;
   switch (action.type) {

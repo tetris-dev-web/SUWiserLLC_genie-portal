@@ -98,6 +98,7 @@ app.post('/api/token_graph_data', asyncMiddleware(async (req, res) => {
   const { body } = req;
   const { currentViewType, account } = body;
   const _tokenGraphData = await fetchTokenHistoryWithEarnings(currentViewType, account);
+  console.log('TOKEN GRAPH DATA:', _tokenGraphData)
   res.send(_tokenGraphData);
 }));
 

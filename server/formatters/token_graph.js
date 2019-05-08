@@ -14,7 +14,7 @@ const formatDividendsHistory = dividendsLogs => {
   })
 }
 
-const formatTokenHistory = (tokenTransferData, currentViewType, account) => {
+const formatTokenHistory = (tokenTransferData, currentViewType, account="0xef898fd948f50d5010d3ec20233fae23d89a1a51") => {
   const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferData);
 
   const allTransfers = inactiveHistory.concat(activeHistory).sort((x, y) => {
@@ -27,6 +27,8 @@ const formatTokenHistory = (tokenTransferData, currentViewType, account) => {
 }
 
 const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
+  if (!tokenHistory.length) return [];
+
   const integrateBlockData = blockData => {
     if (lastMergedIdx > -1 && merged[lastMergedIdx].date === blockData.date) {
       merged[lastMergedIdx] = blockData;
