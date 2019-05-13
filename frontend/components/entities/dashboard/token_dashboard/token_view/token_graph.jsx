@@ -77,7 +77,7 @@ class TokenGraph extends React.Component {
 
   render() {
     const { data, startTime, endTime} = this.props;
-    if (data) {
+    if (data && data.length) {
       const { showTimeAxis, componentVisible } = this.state;
       // console.log(data)
       const timeScale = d3.scaleTime()
@@ -142,6 +142,9 @@ class TokenGraph extends React.Component {
         </div>
       );
     }
+    else if (data) {
+      return <p className='token-graph-placeholder'>No token history yet</p>
+    }
     else {
       console.log("should see loader")
       return <Loader/>
@@ -167,10 +170,10 @@ const mapStateToProps = (state, ownProps) => {
   const { currentView } = ownProps;
   const tokenGraph = state.chain_data.tokenGraph;
   const { byUser, byAll } = tokenGraph;
-  const dataLoaded = Object.keys(byAll).length && currentView === 'BY ALL' || Object.keys(byUser).length && currentView === 'BY USER';
+  const dataLoaded = byAll && currentView === 'BY ALL' || byUser && currentView === 'BY USER';
 
 
-  const { startTime, endTime } = fetchStartAndEndTimes()
+  const { startTime, endTime } = state.chain_data.timeAxis
 
 
   return {

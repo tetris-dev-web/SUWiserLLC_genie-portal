@@ -4,7 +4,7 @@ import {
 } from '../actions/chain_actions/token_actions';
 import { merge } from 'lodash';
 
-const tokenGraphByUserReducer = (state = [], action) => {
+const tokenGraphByUserReducer = (state = null, action) => {
   Object.freeze(state);
   let newState;
   switch (action.type) {

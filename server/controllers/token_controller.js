@@ -19,7 +19,7 @@ const fetchTokenHistoryWithEarnings = async (currentViewType, account) => {
 
 const fetchEndTime = async () => {
   const {inactiveTransferData, activeTransferData } = await fetchTokenTransfers();
-  const lastEventofActiveTokenTransfers = inactiveTransferData[activeTransferData.length-1].blockNumber;
+  const lastEventofActiveTokenTransfers = inactiveTransferData[inactiveTransferData.length-1].blockNumber;
   const lastEventofInActiveTokenTransfers = activeTransferData[activeTransferData.length-1].blockNumber;
   const endTime = Math.max(lastEventofActiveTokenTransfers,lastEventofInActiveTokenTransfers);  // Time.now()
   return endTime;

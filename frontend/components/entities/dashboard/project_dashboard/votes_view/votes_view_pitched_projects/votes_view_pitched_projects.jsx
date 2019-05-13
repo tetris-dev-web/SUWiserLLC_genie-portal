@@ -70,7 +70,7 @@ class VotesViewPitchedProjects extends React.Component {
 					voteShiftTool={voteShiftTool} />
 			);
 		});
-
+		// console.log(rects, "RECTS")
 		return (
 			<g className="votes-view-pitched-projects" transform={'translate(0, 0)'}>
 				{rects}
