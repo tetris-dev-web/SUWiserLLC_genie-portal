@@ -43,7 +43,6 @@ class VoteShiftTool extends React.Component {
   }
 
   componentDidMount () {
-    console.log("hello............")
     this.fetchVoteData();
     this.watchVoteChange();
     this.populateState();

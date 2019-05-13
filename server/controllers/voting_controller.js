@@ -47,6 +47,7 @@ const recordVotes = async (projectAddress, votes, type, address, privateKey) => 
 
   const nonce = await web3.eth.getTransactionCount(address);
 
+  console.log("REALLY WANT TO VOTE HERE")
   return await sendTransaction(
     {
       nonce,

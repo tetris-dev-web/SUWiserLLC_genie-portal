@@ -14,6 +14,7 @@ class BuyFormModal extends React.Component {
   }
 
   handleClick() {
+    console.log("OPENING MODAL")
     this.setState({ isModalOpen: !this.state.isModalOpen });
   }
 

@@ -114,6 +114,7 @@ app.get('/api/demo/project_votes/:projectAddress', asyncMiddleware(async (req, r
 }))
 
 app.post('/api/demo/vote_and_update_projects', asyncMiddleware(async (req, res) => {
+  console.log("VOTING")
   const { votes, type, selectedProject } = req.body;
   await voteAndUpdateProjects(votes, type, selectedProject);
   res.send({});
