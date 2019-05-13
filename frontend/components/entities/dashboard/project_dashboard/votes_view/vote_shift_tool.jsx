@@ -1,7 +1,7 @@
 import React from 'react';
 import './vote_shift_tool.scss';
 
-
+// TODO make into object
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
 const VOTE_BAR_INNER_MARGIN = 5;
@@ -13,16 +13,6 @@ const INNER_BAR_HEIGHT = VOTE_BAR_HEIGHT - 2 * VOTE_BAR_INNER_MARGIN;
 class VoteShiftTool extends React.Component {
   constructor(props) {
     super(props);
-
-    // const { votesPerProject, votesNotDedicated } = this.props.votesMockup;
-
-    // this.offsetX = 0;
-    // this.totalVotes = votesPerProject + votesNotDedicated;
-    // this.votesPerPixel = this.totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
-
-    // const voteBarAppliedWidth = votesPerProject / this.votesPerPixel;
-    // const voteBarFreedUpWidth = votesNotDedicated / this.votesPerPixel;
-
     this.state = {
       showLogButton: false,
       blockchainLoading: false,
@@ -43,7 +33,6 @@ class VoteShiftTool extends React.Component {
   }
 
   componentDidMount () {
-    console.log("hello............")
     this.fetchVoteData();
     this.watchVoteChange();
     this.populateState();
@@ -77,7 +66,6 @@ class VoteShiftTool extends React.Component {
       //   fetchProjectVotes(account, projectContract, selectedProject);
       // })
     // } else {
-    console.log("WHAT")
       fetchDemoInvestorFreeVotes().then(() => fetchDemoInvestorProjectVotes(selectedProject))
     // }
   }
@@ -220,15 +208,17 @@ class VoteShiftTool extends React.Component {
       return(
         <React.Fragment>
 
-          <div className={this.state.blockchainLoading ? "vote-bar-loading" : "vote-bar"} style={{
+          <div
+            className={this.state.blockchainLoading ? "vote-bar-loading" : "vote-bar"}
+            style={{
               width: VOTE_BAR_WIDTH,
               height: VOTE_BAR_HEIGHT,
               borderRadius: VOTE_BAR_RADIUS
             }}>
-
             <div className="vote-bar-inner-container"
               style={{padding: VOTE_BAR_INNER_MARGIN}}
-              ref={node => this.voteBarContainer = node}>
+              ref={node => this.voteBarContainer = node}
+              >
               <div className="vote-bar-applied" style={{
                   height: INNER_BAR_HEIGHT,
                   width: this.state.voteBarAppliedWidth,
