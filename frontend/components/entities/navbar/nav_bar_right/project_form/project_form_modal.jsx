@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'react-modal';
 import ProjectForm from './project_form_container';
 import ModalStyle from './modal_style';
-import './project_modal.scss';
+// import './project_modal.scss';
 
 class ProjectFormModal extends React.Component {
   constructor(props) {

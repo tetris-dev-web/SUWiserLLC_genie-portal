@@ -41,24 +41,25 @@ export class SummaryAndPlan extends React.Component{
   }
 
   render(){
-    const { isInvestor, bus_plan_link, summary } = this.props;
+    const { isInvestor, busLink, summary } = this.props;
     return (
       <div className="project-description">
 
-      <div className="project-text">
-        <textarea onChange={() => {}}
-                  disabled={isInvestor}
-                  className="project-summary"
-                  value={summary}/>
-      </div>
+        <div className="project-text">
+          <textarea onChange={() => {}}
+                    disabled={isInvestor}
+                    className="project-summary"
+                    value={summary}/>
+        </div>
 
         <div className="bus-plan-download">
-          <a  target="_blank"
+          <a
+            className="planLink"
+            target="_blank"
             rel="noopener noreferrer"
-            href={ `${bus_plan_link}` }>
-            <i className="fas fa-file-contract">
-              <span>business plan</span>
-            </i>
+            href={ `${busLink}` }>
+            <img src="frontend/images/icons/planIconTeal.png"></img>
+              <span className="planText">business plan</span>
           </a>
         </div>
 

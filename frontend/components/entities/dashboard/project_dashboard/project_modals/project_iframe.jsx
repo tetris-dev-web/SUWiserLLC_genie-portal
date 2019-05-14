@@ -6,16 +6,6 @@ class ProjectIframe extends React.Component {
     const project = this.props.project;
   }
 
-  componentDidMount() {
-    // var head = $("#iframe").contents().find("head");
-    // var css = '<style type="text/css">' +
-    // 'a img{visibility:hidden}; ' +
-    // '</style>';
-    //
-    // $(head).append(css);
-
-    console.log('mounted');
-  }
 
   render() {
     let model_link;

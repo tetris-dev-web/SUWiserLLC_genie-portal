@@ -5,7 +5,6 @@ import LocGraphRect from './loc_graph_rect';
 import LocGraphCircle from './loc_graph_circle';
 import NorthAmerica from '../../../../../assets/NorthAmerica.png';
 import { getLocationGraphData } from '../../../../../util/location_util';
-console.log("n", NorthAmerica)
 const rosyBrown = "#AB7A5E";
 const lightBlue = "#5EABAA";
 

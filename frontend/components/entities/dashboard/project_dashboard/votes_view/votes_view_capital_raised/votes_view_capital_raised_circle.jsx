@@ -18,8 +18,6 @@ class VotesViewCapitalRaisedCircle extends React.Component {
 	render() {
 		const { cx, cy, r, x, y, project, opacity, openModal, transform } = this.props;
 
-		console.log(cx, cy, x, y, "coordinates");
-
 		return (
 			<React.Fragment>
 				<circle className="votes-view-project-circle"

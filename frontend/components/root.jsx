@@ -45,7 +45,7 @@ class Root extends React.Component {
         <div></div> :
         <a href="https://metamask.io/" target="_blank" className="metaMask-Button" >{web3 ? '' : 'Download MetaMask'}</a>
       }
-      />
+      />``
   }
 }
 // <Navbar />

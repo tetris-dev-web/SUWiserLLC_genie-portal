@@ -27,8 +27,6 @@ class VotesViewCapitalRaised extends React.Component {
 
     const opacityVar = setOpacityBasedOnAppDepth()
 
-    console.log("opacity", opacityVar);
-
     const lineScale = d3.line()
       .x(d => SVGTimeXScale(d.date))
       .y(d => {

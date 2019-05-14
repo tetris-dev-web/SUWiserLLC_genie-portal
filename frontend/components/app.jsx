@@ -7,6 +7,8 @@ import TransactionModal from './entities/transaction_modal/transaction_modal'
 import Navbar from './entities/navbar/navbar_container';
 import Dashboard from './entities/dashboard/dashboard';
 import ProjectModalStructure from './entities/dashboard/project_dashboard/project_modals/project_modal_structure';
+import FourOhFourPage from './404_page/404_page';
+
 
 import { notifyTransactionCompletion } from '../actions/ui_actions';
 // import DeveloperInfo from './entities/developerInfo/developerInfo';
@@ -82,7 +84,6 @@ class App extends React.Component {
 
   render() {
     const { history, account } = this.props;
-    console.log(history, 'history')
     if (
       history.location.pathname === '/dashboard/demo' &&
       (!account || account === '0xEF898fd948F50D5010d3Ec20233faE23D89a1a51')
@@ -91,9 +92,6 @@ class App extends React.Component {
         <FourOhFourPage
           title={"Account 404"}
           description={"Please log in to your ethereum account on metamask or use one of our demo accounts."}
-          additionalContent={
-              <DemoOptions />
-          }
           />
       )
     }

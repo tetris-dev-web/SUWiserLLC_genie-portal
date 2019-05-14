@@ -61,7 +61,6 @@ class ProjectModules extends React.Component {
   watchReceiveCashflow () {
     const { project } = this.props;
     project.ReceiveCashFlow().watch((error, event) => {
-      console.log('yo')
       this.props.fetchProjectModuleData(project.address);
     })
   }

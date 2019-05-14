@@ -91,6 +91,22 @@ class VotesGraph extends React.Component {
     const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
     const { selectedProject, componentVisible } = this.state;
     const { startTime, endTime } = this.props
+    let button
+    if(!this.state.voteViewOpen){
+      button = (<button
+                className="voteBreakDownButtonOpen bounceOnHover"
+                onClick={() => this.setState({voteViewOpen: !this.state.voteViewOpen})}>
+                projects under consideration
+                </button>)
+    }else if(selectedProject){
+      button = ""
+    }else{
+      button = (<button
+                className="voteBreakDownButtonClose bounceOnHover"
+                onClick={() => this.setState({voteViewOpen: !this.state.voteViewOpen})}>
+                X
+                </button>)
+    }
 
     return (
       <div className={`votes-graph ${componentVisible}`}>
@@ -102,17 +118,7 @@ class VotesGraph extends React.Component {
           }
         </div>
         {
-          !this.state.voteViewOpen?
-          <button
-            className="voteBreakDownButtonOpen bounceOnHover"
-            onClick={() => this.setState({voteViewOpen: !this.state.voteViewOpen})}>
-            projects under consideration
-          </button>
-            : <button
-                className="voteBreakDownButtonClose bounceOnHover"
-                onClick={() => this.setState({voteViewOpen: !this.state.voteViewOpen})}>
-                X
-              </button>
+          button
         }
 
         <svg className="votes-view-svg"

@@ -20,14 +20,12 @@ import ProjectLeaderTracker from '../truffle/build/contracts/ProjectLeaderTracke
 import Dividends from '../truffle/build/contracts/Dividends.json';
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("hello")
   let store;
   let web3Provider;
   let provider;
   let preloadedState = {};
 
   if (typeof web3 !== 'undefined') {
-    console.log('theres web3')
     web3Provider = web3.currentProvider;
     // web3Provider.enable();
     provider = new Web3(web3Provider);

@@ -44,16 +44,16 @@ class DoomsDayDetail extends React.Component {
   //not necessary if no interactions with the doomsday clock - will have hover effects
   componentDidMount(){
     const graph = this.startGraph();
-  
+
   const dataPassedIn =
   {
     //assumptions : data is passed in order of data created?
       projects:
       [
-        {'project': 'hammIn', 'date': new Date('06-15-2018'), 'end_date': new Date('3-12-2019'),  'tokens': 3},
-        {'project': 'Genus',  'date': new Date('06-20-2018'), 'end_date': new Date('3-17-2019'), 'tokens': 8},
-        {'project': 'coolGym', 'date': new Date('07-01-2018'), 'end_date': new Date('3-28-2019'), 'tokens': 5},
-        {'project': 'dunkey', 'date': new Date('07-20-2018'), 'end_date': new Date('4-16-2019'), 'tokens': 3}
+        {'project': 'hammInn', 'date': new Date('11-15-2018'), 'end_date': new Date('6-12-2019'),  'tokens': 12},
+        {'project': 'Ryans Rooftop',  'date': new Date('09-20-2018'), 'end_date': new Date('5-17-2019'), 'tokens': 18},
+        {'project': 'Liams loung', 'date': new Date('12-01-2018'), 'end_date': new Date('7-28-2019'), 'tokens': 9},
+        {'project': 'Matts mansion', 'date': new Date('09-20-2018'), 'end_date': new Date('8-16-2019'), 'tokens': 11}
       ]
   }
 

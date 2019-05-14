@@ -16,11 +16,6 @@ class ProjectModules extends React.Component {
     };
   }
 
-  // componentWillMount () {
-  //   console.log("in mount")
-  //   this.props.fetchProjectPerformanceData(this.props.projectAddress);
-  // }
-
   UNSAFE_componentWillUpdate (prevProps, prevState) {
     const { openProject } = this.props;
 
@@ -38,8 +33,7 @@ class ProjectModules extends React.Component {
   }
 
   render() {
-      const { openProject} = this.props;
-      console.log("openProject", openProject);
+      const { openProject, capitalBeingRaised} = this.props;
       const isInvestor = true;
       if(openProject) {
         const { projected_cashflow, actual_cashflow, accum_projected_cashflow, accum_actual_cashflow } = calculateCashflowData(openProject.prePortalCashflow);
@@ -61,14 +55,14 @@ class ProjectModules extends React.Component {
                 valuation={openProject.valuation}
                 length={Object.keys(openProject.prePortalCashflow).length}
                 address={openProject.address}
-                height={200}
-                width={300}/>
+                height={400}
+                width={600}/>
 
               <SummaryAndPlan
                 handleKeyPress = {null}
                 isInvestor = {isInvestor}
                 summary = {openProject.description}
-                bus_plan_link = {openProject.bus_plan_link} />
+                busLink = {openProject.busLink} />
 
               <ProjectMap
                 projectClicked={ openProject } />

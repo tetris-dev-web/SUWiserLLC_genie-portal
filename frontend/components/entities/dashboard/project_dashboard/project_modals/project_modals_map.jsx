@@ -6,7 +6,6 @@ class ProjectMap extends React.Component {
   constructor(props) {
     super(props);
     const project = this.props.projectClicked;
-    console.log("project", project);
     this.state = {
       project: this.props.projectClicked,
       lat: parseFloat(project.lat),

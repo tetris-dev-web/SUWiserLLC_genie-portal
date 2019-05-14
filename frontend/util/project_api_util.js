@@ -1,10 +1,6 @@
 import { keys } from 'lodash'; // TODO - see if .keys works instead of keys()
 
 export const fetchProjects = () => {
-  // console.log("projectList",$.ajax({
-  //   method: 'GET',
-  //   url: 'api/projects',
-  // }))
   return $.ajax({
     method: 'GET',
     url: 'api/projects',
@@ -20,8 +16,6 @@ export const fetchProject = id => {
 };
 
 export const createProject = formData => {
-  console.log("form data: ", formData);
-
   return $.ajax({
     method: 'POST',
     url: 'api/projects',
@@ -124,7 +118,6 @@ export const calculateCashflowData = (cashflow) => {
   let projectedSum = 0
 
   for (var quarter in cashflow){
-    // console.log("Quarter is: ", cashflow[quarter]);
     accumProjectedCashflow[quarter] = {}
     projectedCashflow[quarter] = {}
     actualCashflow[quarter] = {}

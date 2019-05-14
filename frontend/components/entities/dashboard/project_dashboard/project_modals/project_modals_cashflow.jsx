@@ -11,8 +11,6 @@ class CashFlowGraph extends React.Component {
     this.createAxes = this.createAxes.bind(this);
     this.defineScales = this.defineScales.bind(this);
     this.formatCashData = this.formatCashData.bind(this);
-    // this.roundOffGraphEnds = this.roundOffGraphEnds.bind(this);
-    // this.addAxis = this.addAxis.bind(this);
     this.addData = this.addData.bind(this);
     this.addText = this.addText.bind(this);
     this.populateData = this.populateData.bind(this);
@@ -63,27 +61,6 @@ class CashFlowGraph extends React.Component {
       .attr('d', line)
   }
 
-  // addData(graph, cssClass, points, xAxisScale, yAxisScale) {
-  //   const lineConstructor = (xScale, yScale) => {
-  //     return d3.line().x(d=>{
-  //       console.log("d.x: ", d.x)
-  //       return xScale(d.x)
-  //       }).y(d=>{
-  //         console.log("d.y: ", d.y)
-  //         console.log("yScale: ", yScale(d.y))
-  //         return d.y > 0 ? yScale(d.y)
-  //         : null })
-  //     }
-  //
-  //   graph.append("g")
-  //     .attr('class', cssClass)
-  //     .append("path")
-  //     .datum(points)
-  //     .style("display", function(d) { (test if value is zero) ? "none" : "inline"; }
-  //     .attr('d', lineConstructor(xAxisScale, yAxisScale));
-  // }
-
-
   addText(graph) { //potentially make this a subcomponent
     return graph.append("text")
       .attr("x", 17)
@@ -109,14 +86,12 @@ class CashFlowGraph extends React.Component {
   }
 
   defineScales() { //make this a method
-    console.log('cashflow modules props', this.props)
       const getGraphParameters = () => {
         const numQuarters = Object.keys(this.props.accum_projected_cashflow).length
         const minExpectedValueAccuAct = d3.min(Object.values(this.props.accum_actual_cashflow))
         const minExpectedValueAccuProj = d3.min(Object.values(this.props.accum_projected_cashflow))
         const maxExpectedValueAccuAct = d3.max(Object.values(this.props.accum_actual_cashflow))
         const maxExpectedValueAccuProj = d3.max(Object.values(this.props.accum_projected_cashflow))
-        // console.log("inputs: ", minExpectedValueAccuAct, minExpectedValueAccuProj, maxExpectedValueAccuAct, maxExpectedValueAccuProj)
         let minValue, maxValue
         minExpectedValueAccuAct < minExpectedValueAccuProj ? minValue = minExpectedValueAccuAct
           : minValue = minExpectedValueAccuProj
@@ -213,8 +188,6 @@ class CashFlowGraph extends React.Component {
 
     // Retrieve cashflow data from props
     const {actual_cashflow, accum_actual_cashflow, projected_cashflow, accum_projected_cashflow} = this.props;
-
-    console.log("cashflow component", this.props)
     const currentQuarter = findCurrentQuarterFromActuals(actual_cashflow);
 
     // Define D3 Coordinates

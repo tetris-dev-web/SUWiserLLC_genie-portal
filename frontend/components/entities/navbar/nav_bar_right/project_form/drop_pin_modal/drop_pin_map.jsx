@@ -7,8 +7,6 @@ class DropPinMap extends React.Component {
   constructor(props) {
     super(props);
     const {lat, lng, title} = this.props;
-    console.log(this.props);
-    console.log('this is lat, lng', lat, lng);
     this.state = {
       latlng: [lat, lng],
       marker: [lat, lng],
@@ -269,7 +267,6 @@ class DropPinMap extends React.Component {
     Geocode.setApiKey('AIzaSyBdh7dx8oKj5iDtCAzBBCLNOEA94nf8Cl8');
     Geocode.fromLatLng(this.state.marker.lat, this.state.marker.lng).then(
       ({results}) => {
-        console.log(results)
         let city, countryCode, continent;
         results.forEach(el => {
           if (el.types.includes("postal_code")) {

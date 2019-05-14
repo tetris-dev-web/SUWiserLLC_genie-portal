@@ -83,12 +83,6 @@ app.get('/api/project_graph_data/:address', asyncMiddleware(async (req, res) => 
   res.send(project);
 }))
 
-// app.get('/api/project_modal_data/:address', asyncMiddleware(async (req, res) => {
-//   const address = req.params.address;
-//   const project = await  fetchProjectPerformanceData (address);
-//   res.send(project);
-// }))
-
 app.get('/api/capital_history_data', asyncMiddleware(async (req, res) => {
   const _capitalHistoryData = await fetchPurchases();
   res.send(_capitalHistoryData)
@@ -98,7 +92,6 @@ app.post('/api/token_graph_data', asyncMiddleware(async (req, res) => {
   const { body } = req;
   const { currentViewType, account } = body;
   const _tokenGraphData = await fetchTokenHistoryWithEarnings(currentViewType, account);
-  console.log('TOKEN GRAPH DATA:', _tokenGraphData)
   res.send(_tokenGraphData);
 }));
 

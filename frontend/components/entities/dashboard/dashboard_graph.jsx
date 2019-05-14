@@ -22,7 +22,6 @@ class DashboardGraph extends React.Component {
   toggleView(currentView) {
     const newView = currentView === this.state.currentView ? null : currentView;
     this.setState({ currentView: newView })
-    console.log(newView);
 
     const dashboardIsClosed = newView === null? true : false
 
