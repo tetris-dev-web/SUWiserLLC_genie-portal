@@ -15,7 +15,7 @@ class DemoOptions extends React.Component {
   render () {
     return (
       <div className='demo_options'>
-        <DashBoardOption userDisplay={'proceed to dashboard with my own account'} navigateToDashBoard={() => this.handleClick('demo')}/>
+        <DashBoardOption userDisplay={'demo with your own account'} navigateToDashBoard={() => this.handleClick('demo')}/>
         <DashBoardOption userDisplay={'demo investor dashboard'} navigateToDashBoard={() => this.handleClick('demoInvestor')}/>
         <DashBoardOption userDisplay={'demo developer dashboard'} navigateToDashBoard={() => this.handleClick('demoDeveloper')}/>
       </div>
