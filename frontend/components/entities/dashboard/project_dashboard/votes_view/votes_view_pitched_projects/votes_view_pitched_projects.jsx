@@ -73,7 +73,9 @@ class VotesViewPitchedProjects extends React.Component {
 		// console.log(rects, "RECTS")
 		return (
 			<g className="votes-view-pitched-projects" transform={'translate(0, 0)'}>
+				<text transform={'translate(313, 220)'} >leading project ---></text>
 				{rects}
+				<text transform={'translate(665, 220)'} > projects by vote %</text>
 			</g>
 		);
 	}
