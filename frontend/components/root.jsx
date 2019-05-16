@@ -19,36 +19,39 @@ class Root extends React.Component {
   render () {
     const { store, window, networkVersion } = this.props;
     console.log('networkVersion', networkVersion)
+
+    const RootApplication =  ()  => (
+            <Provider store={store}>
+              <HashRouter>
+                <div className="standardDiv" style={{height: "100%"}}>
+                  <TransactionNotifications />
+                  <Route exact path='/' component={Landing} />
+                  <Route exact path='/dashboard/:userType' component={App} />
+                </div>
+              </HashRouter>
+            </Provider>)
+
     if (window.web3 && networkVersion === '3') {
-
-      return (
-        <Provider store={store}>
-          <HashRouter>
-            <div className="standardDiv" style={{height: "100%"}}>
-              <TransactionNotifications />
-              <Route exact path='/' component={Landing} />
-              <Route exact path='/dashboard/:userType' component={App} />
-            </div>
-          </HashRouter>
-        </Provider>
-      );
-
+      return <RootApplication />;
+    }
+    else { try {
+      const web3 = window.web3;
+      return <FourOhFourPage
+                title={ web3 ? 'Network Error' : 'Web3 404'}
+                description={web3 ? 'Please select the Ropsten network to continue.' : 'Unable to connect to your web3 provider. Please download Metamask to continue.'}
+                additionalContent={
+                  web3 ?
+                  <div></div> :
+                  <a href="https://metamask.io/" target="_blank" className="metaMask-Button" >{web3 ? '' : 'Download MetaMask'}</a>
+                }
+                />
+            } catch(err){
+              this.forceUpdate()
+            }
     }
 
-    const web3 = window.web3;
-    console.log(web3, 'web3')
-    return <FourOhFourPage
-      title={ web3 ? 'Network Error' : 'Web3 404'}
-      description={web3 ? 'Please select the Ropsten network to continue.' : 'Unable to connect to your web3 provider. Please download Metamask to continue.'}
-      additionalContent={
-        web3 ?
-        <div></div> :
-        <a href="https://metamask.io/" target="_blank" className="metaMask-Button" >{web3 ? '' : 'Download MetaMask'}</a>
-      }
-      />``
   }
 }
-// <Navbar />
 
 
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import * as d3 from 'd3';
 import VotesViewCapitalRaisedRect from './votes_view_capital_raised_rect';
-import VotesViewCapitalRaisedPath from './votes_view_capital_raised_path';
-import VotesViewCapitalRaisedLine from './votes_view_capital_raised_line';
+import CapitalRaisedPath from './CapitalRaisedPath';
+import ProjectCrossLine from './ProjectCrossLine';
 import VotesViewCapitalRaisedCircle from './votes_view_capital_raised_circle';
 import colors from  "../../../../../../util/_variables.scss";
 
@@ -31,13 +31,12 @@ class VotesViewCapitalRaised extends React.Component {
       .x(d => SVGTimeXScale(d.date))
       .y(d => {
         const result = SVGYScale(d.capital);
-
         return result;
       })
 
     const Lines = deployedProjects.map((project, idx) => {
       return (
-        <VotesViewCapitalRaisedLine key={idx}
+        <ProjectCrossLine key={idx}
           x1={-Math.abs(SVGTimeXScale((startTime + endTime) / 2) / .8)} y1={SVGYScale(project.capital)}
           x2={SVGTimeXScale(project.activationTime)} y2={SVGYScale(project.capital)}
           opacity={opacityVar}
@@ -45,11 +44,10 @@ class VotesViewCapitalRaised extends React.Component {
       )
     });
 
-    const Path = <VotesViewCapitalRaisedPath
-      d={lineScale(lineData)}
-      opacity={opacityVar}
-      transform={`translate(263, 0)`}/>;
-
+    const TotalRaisedPath = <CapitalRaisedPath
+                              d={lineScale(lineData)}
+                              opacity={opacityVar}
+                              transform={`translate(263, 0)`}/>;
 
     const Circles = deployedProjects.map((project, idx) => (
       <VotesViewCapitalRaisedCircle key={idx}
@@ -101,7 +99,7 @@ class VotesViewCapitalRaised extends React.Component {
 
     const CapitalRaisedPrevRect = <VotesViewCapitalRaisedRect
       x="0" y={yOfCapitalRaisedPrevRect}
-      fill={colors.blue}
+      fill={colors.darkgray}
       height={heightOfCapitalRaisedPrevRect}
       opacity={opacityVar}
       textToDisplay={() => (
@@ -115,15 +113,12 @@ class VotesViewCapitalRaised extends React.Component {
       )}/>;
 
 
-
-
     return (
       <g className="votes-view-capital-raised" transform={'translate(0, 0)'}>
-
         {CapitalBeingRaisedRect}
         {CapitalRaisedPrevRect}
         {Lines}
-        {Path}
+        {TotalRaisedPath}
         {Circles}
       </g>
     );
