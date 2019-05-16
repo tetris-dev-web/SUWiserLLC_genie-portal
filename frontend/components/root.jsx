@@ -38,7 +38,7 @@ class Root extends React.Component {
       const web3 = window.web3;
       return <FourOhFourPage
                 title={ web3 ? 'Network Error' : 'Web3 404'}
-                description={web3 ? 'Please select the Ropsten network to continue.' : 'Unable to connect to your web3 provider. Please download Metamask to continue.'}
+                description={web3 ? 'Please select the Ropsten network to continue. You may need to refresh' : 'Unable to connect to your web3 provider. Please download Metamask to continue. You may need to refresh'}
                 additionalContent={
                   web3 ?
                   <div></div> :

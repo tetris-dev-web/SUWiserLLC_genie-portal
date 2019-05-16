@@ -26,19 +26,19 @@ class VotesViewPitchedProjectsCircle extends React.Component {
 
         <g className={`"votes-view-project-circle" ${this.props.selectedProject? "" : "hidden" } `}>
           <circle
-            fill="white"
+            fill="#61aba9"
             cx={cx}
             cy={cy}
             r={this.state.r}
             y="90"
-            stroke="#61aba9"
+            stroke="white"
             strokeWidth=".7px"
             opacity={opacity}
             onClick={() => openModal(project.id)}
             onMouseOver={() => this.setState({r: 12})}
             onMouseLeave={() => this.setState({r: 8})}>
           </circle>
-          <text x={cx} y={cy + 5} fill="#61aba9" textAnchor="middle" stroke="#51c5cf" strokeWidth=".2px" dy=".009em">i</text>
+          <text x={cx} y={cy + 5} fill="white" textAnchor="middle" stroke="#51c5cf" strokeWidth=".2px" dy=".005em">i</text>
         </g>
     );
   }
