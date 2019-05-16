@@ -101,7 +101,7 @@ class VotesViewCapitalRaised extends React.Component {
 
     const CapitalRaisedPrevRect = <VotesViewCapitalRaisedRect
       x="0" y={yOfCapitalRaisedPrevRect}
-      fill={colors.teal}
+      fill={colors.blue}
       height={heightOfCapitalRaisedPrevRect}
       opacity={opacityVar}
       textToDisplay={() => (
