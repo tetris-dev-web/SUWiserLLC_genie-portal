@@ -56,11 +56,11 @@ class VotesViewPitchedProjectsRect extends React.Component {
 						project={project} />
 				</g>
 				<g className="votes-view-onhover-text-group">
-					<text className="votes-view-project-title" x={projectRectCenter} y="250" fill={fill}>
+					<text className="votes-view-project-title" x={projectRectCenter} y="250">
 						<tspan>{title}</tspan>
 					</text>
 
-					<text x={extensionForLines} y={projectValutionStartY} fill={fill}>
+					<text className="hoverCostReferences" x={extensionForLines} y={projectValutionStartY} fill={fill}>
 						<tspan> valuation {valuation}</tspan>
 					</text>
 					<line
@@ -71,7 +71,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 						opacity={.5}>
 					</line>
 
-					<text x={extensionForLines} y={projectCapitalRequiredStartY} fill={fill}>
+					<text className="hoverCostReferences" x={extensionForLines} y={projectCapitalRequiredStartY} fill={fill}>
 						<tspan> capital required {capitalRequired}</tspan>
 					</text>
 					<line
@@ -136,7 +136,7 @@ class VotesViewPitchedProjectsRect extends React.Component {
 
 
 export default VotesViewPitchedProjectsRect;
-
+// this.state.showHoverEffect &&
 
 // <rect
 // 	width={projectWidth + marginWidth}

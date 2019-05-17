@@ -60,14 +60,14 @@ class BuyForm extends React.Component {
     let title;
     let message;
 
-    if (this.state.shares <= 5) {
+    if (this.state.shares <= 80) {
       title = "YOUR TRANSACTION HAS BEEN SENT";
       message = "It may take a few minutes for your transaction to be processed by the blockchain."
       this.props.buyTokensWithDemoInvestor(this.state.shares);
       this.props.closeModal();
     } else {
       title = "TRANSACTION REJECTED";
-      message = "For this demo, we limit token purchases to 5 wei. Please try again with a smaller wei amount."
+      message = "For this demo, we limit token purchases to 80 wei. Please try again with a smaller wei amount."
     }
 
     this.props.updateTransactionModal({
