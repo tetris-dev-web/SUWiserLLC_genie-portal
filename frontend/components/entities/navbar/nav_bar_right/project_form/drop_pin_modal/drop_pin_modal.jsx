@@ -23,6 +23,7 @@ class DropPinModal extends React.Component {
   }
 
   render() {
+    console.log("pin props", this.props )
     return (
       <div>
         <div className="project-form-button drop-pin">
@@ -35,14 +36,6 @@ class DropPinModal extends React.Component {
           style={ModalStyle}
           >
           <div className='drop-pin-flex'>
-            <DropPinAddress
-              lat={this.props.lat}
-              lng={this.props.lng}
-              updateLatLng={this.props.updateLatLng}
-              city={this.props.city}
-              continent={this.props.continent}
-              closeModal={this.closeModal}
-              />
             <div className="drop-pin-container">
               <DropPinMap
                 lat={this.props.lat}
@@ -61,6 +54,14 @@ class DropPinModal extends React.Component {
 
 export default DropPinModal;
 
+// <DropPinAddress
+//   lat={this.props.lat}
+//   lng={this.props.lng}
+//   updateLatLng={this.props.updateLatLng}
+//   city={this.props.city}
+//   continent={this.props.continent}
+//   closeModal={this.closeModal}
+//   />
 
 
 

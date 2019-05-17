@@ -133,39 +133,10 @@ class CashFlowGraph extends React.Component {
   }
 
 
-  // lineConstructors(xAxisScale, yAxisScale, yLinesScale) {
-  //
-  //
-  //   // const expectedAndActualLine = lineConstructor(xAxisScale, yLinesScale);
-  //   // const expectedAccumulatedLine = lineConstructor(xAxisScale, yAxisScale); // remove the redundancy
-  //   // const actualAccumulatedLine = lineConstructor(xAxisScale, yAxisScale);
-  //
-  //   return [
-  //     expectedAndActualLine,
-  //     expectedAccumulatedLine,
-  //     actualAccumulatedLine
-  //   ];
-  // }
-
-    // [expectedAndActualLine, expectedAccumulatedLine, actualAccumulatedLine] = createLines()
-
-    //
-    // const averageAccumulatedValue = (least + most) / 2;
-    // this.roundOffGraphEnds(averageAccumulatedValue, expectedAccumulatedPoints);
-    // this.roundOffGraphEnds(averageAccumulatedValue, actualAccumulatedPoints);
-
-  // roundOffGraphEnds(averageAccumulatedValue, accumulatedPoints) {
-  //   // prevents a "trailing garbage error from arising in the graph"
-  //   const totalAccumulatedPoints = Object.values(accumulatedPoints).length;
-  //   accumulatedPoints.unshift({ x: 0, y: averageAccumulatedValue });
-  //   accumulatedPoints.push({ x: totalAccumulatedPoints, y: averageAccumulatedValue });
-  // }
-
   formatCashData() {
     const generatePoints = (points) => {
       return points.map((val,qtr) =>{ return {x:qtr,y:val}; });
     }
-
 
     const findCurrentQuarterFromActuals = (actualCashflow) => {
       let lastQuarterCashflow
@@ -217,3 +188,34 @@ class CashFlowGraph extends React.Component {
 }
 
 export default CashFlowGraph;
+
+
+
+
+  // lineConstructors(xAxisScale, yAxisScale, yLinesScale) {
+  //
+  //
+  //   // const expectedAndActualLine = lineConstructor(xAxisScale, yLinesScale);
+  //   // const expectedAccumulatedLine = lineConstructor(xAxisScale, yAxisScale); // remove the redundancy
+  //   // const actualAccumulatedLine = lineConstructor(xAxisScale, yAxisScale);
+  //
+  //   return [
+  //     expectedAndActualLine,
+  //     expectedAccumulatedLine,
+  //     actualAccumulatedLine
+  //   ];
+  // }
+
+    // [expectedAndActualLine, expectedAccumulatedLine, actualAccumulatedLine] = createLines()
+
+    //
+    // const averageAccumulatedValue = (least + most) / 2;
+    // this.roundOffGraphEnds(averageAccumulatedValue, expectedAccumulatedPoints);
+    // this.roundOffGraphEnds(averageAccumulatedValue, actualAccumulatedPoints);
+
+  // roundOffGraphEnds(averageAccumulatedValue, accumulatedPoints) {
+  //   // prevents a "trailing garbage error from arising in the graph"
+  //   const totalAccumulatedPoints = Object.values(accumulatedPoints).length;
+  //   accumulatedPoints.unshift({ x: 0, y: averageAccumulatedValue });
+  //   accumulatedPoints.push({ x: totalAccumulatedPoints, y: averageAccumulatedValue });
+  // }

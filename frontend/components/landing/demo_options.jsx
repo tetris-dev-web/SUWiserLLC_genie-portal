@@ -15,7 +15,6 @@ class DemoOptions extends React.Component {
   render () {
     return (
       <div className='demo_options'>
-        <DashBoardOption userDisplay={'demo with your own account'} navigateToDashBoard={() => this.handleClick('demo')}/>
         <DashBoardOption userDisplay={'demo investor dashboard'} navigateToDashBoard={() => this.handleClick('demoInvestor')}/>
         <DashBoardOption userDisplay={'demo developer dashboard'} navigateToDashBoard={() => this.handleClick('demoDeveloper')}/>
       </div>
@@ -32,3 +31,6 @@ const DashBoardOption = ({ userDisplay, navigateToDashBoard }) => {
 }
 
 export default withRouter(DemoOptions);
+
+
+// <DashBoardOption userDisplay={'demo with your own account'} navigateToDashBoard={() => this.handleClick('demo')}/>
