@@ -1,39 +1,136 @@
-.login-prompt {
-  transition: min-height cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
+.hidden {
+  display: none; }
+
+.opaque {
+  opacity: .5; }
+
+.bounceOnHover {
+  transition: all .2s ease-in-out; }
+  .bounceOnHover:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    color: #333; }
+
+.toggle-view-options-container-graph-open.project {
+  justify-content: flex-end; }
+
+.toggle-view-options-container-graph-open .toggle-view-options-border-layer {
+  opacity: .8;
+  transition: opacity 500ms ease-in-out; }
+  .toggle-view-options-container-graph-open .toggle-view-options-border-layer.token {
+    justify-content: flex-start; }
+  .toggle-view-options-container-graph-open .toggle-view-options-border-layer.project {
+    flex-direction: column-reverse; }
+  .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options.token {
+    border-radius: 0px 0px 20px 20px;
+    padding: 6px 6px 10px 6px; }
+  .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options.project {
+    border-radius: 20px 20px 0px 0px;
+    padding: 6px 6px 10px 6px; }
+
+.toggle-view-options-container-graph-hidden.token {
+  flex-direction: column-reverse; }
+
+.toggle-view-options-container-graph-hidden .toggle-view-options-border-layer {
+  height: 100%; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer.token {
+    flex-direction: column-reverse; }
+  .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.project, .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.token {
+    border-radius: 15px;
+    padding: 8px 8px 12px 8px; }
+
+.toggle-view-options-container-graph-open,
+.toggle-view-options-container-graph-hidden {
+  text-align: center;
+  width: 50%;
+  margin: auto;
   display: flex;
   flex-direction: column;
-  font-size: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%; }
-
-.login-text {
-  margin-left: auto;
-  margin-right: auto; }
-
-.metaMask-Button {
-  margin-left: 10px;
-  padding: 10px;
-  margin: 10px;
-  background-color: teal;
-  text-decoration: none;
-  color: white;
-  padding: 5px 35px;
-  font-size: 26px;
-  text-transform: uppercase;
-  border-radius: 30px;
-  font-weight: 600;
-  margin-left: auto;
-  margin-right: auto; }
-
-.metaMask-Button:hover {
-  cursor: pointer;
-  background-color: #299c9c;
-  text-decoration: none; }
-
-.metaMask-Button:visited {
-  color: white;
-  text-decoration: none; }
+  align-items: center;
+  z-index: 10; }
+  .toggle-view-options-container-graph-open .toggle-view-options-border-layer,
+  .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; }
+    .toggle-view-options-container-graph-open .toggle-view-options-border-layer.project,
+    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer.project {
+      padding-top: 25px; }
+    .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options,
+    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options {
+      position: relative;
+      display: inline-flex;
+      background-color: #9b9287;
+      color: white; }
+      .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options.project, .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options.token,
+      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.project,
+      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.token {
+        transition: border-radius 2s, padding 1s; }
+      .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option,
+      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center; }
+        .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-icon,
+        .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-icon {
+          fill: white;
+          width: 30px; }
+          .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-icon #active,
+          .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-icon #active {
+            transform: rotate(90deg); }
+        .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button,
+        .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button {
+          cursor: pointer;
+          width: 18px;
+          height: 18px;
+          border-radius: 25px;
+          background-color: white; }
+          .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button:hover,
+          .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button:hover {
+            background-color: #61aba9; }
+          .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button.project,
+          .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button.project {
+            margin-bottom: 8px; }
+          .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button.token,
+          .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button.token {
+            margin-top: 8px; }
+        .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option #selected-button,
+        .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option #selected-button {
+          background-color: #A59A91; }
+    .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-title,
+    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-title {
+      font-weight: 700;
+      font-size: 15px;
+      top: 50%;
+      right: calc(100% + 20px);
+      transform: translateY(-50%);
+      color: #9b9287;
+      white-space: nowrap;
+      margin-top: 20px; }
+      .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-title .toggle-view-current-view,
+      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-title .toggle-view-current-view {
+        position: absolute;
+        font-weight: 700;
+        font-size: 15px;
+        top: 50%;
+        left: calc(100% + 20px);
+        transform: translateY(-50%);
+        color: #61aba9;
+        white-space: nowrap; }
+  .toggle-view-options-container-graph-open .toggle-view-dashboard-description,
+  .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description {
+    width: 18%;
+    position: fixed; }
+    .toggle-view-options-container-graph-open .toggle-view-dashboard-description .greenText,
+    .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description .greenText {
+      color: #61aba9; }
+    .toggle-view-options-container-graph-open .toggle-view-dashboard-description.project,
+    .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description.project {
+      bottom: 20%; }
+    .toggle-view-options-container-graph-open .toggle-view-dashboard-description.token,
+    .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description.token {
+      top: 20%; }
 .hidden {
   display: none; }
 
@@ -602,139 +699,42 @@ svg {
     font-size: 25px; }
   .strategy-modal .strategy-info .ft-el-text {
     margin: 0 20% 0 0; }
-.hidden {
-  display: none; }
-
-.opaque {
-  opacity: .5; }
-
-.bounceOnHover {
-  transition: all .2s ease-in-out; }
-  .bounceOnHover:hover {
-    transform: scale(1.1);
-    cursor: pointer;
-    color: #333; }
-
-.toggle-view-options-container-graph-open.project {
-  justify-content: flex-end; }
-
-.toggle-view-options-container-graph-open .toggle-view-options-border-layer {
-  opacity: .8;
-  transition: opacity 500ms ease-in-out; }
-  .toggle-view-options-container-graph-open .toggle-view-options-border-layer.token {
-    justify-content: flex-start; }
-  .toggle-view-options-container-graph-open .toggle-view-options-border-layer.project {
-    flex-direction: column-reverse; }
-  .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options.token {
-    border-radius: 0px 0px 20px 20px;
-    padding: 6px 6px 10px 6px; }
-  .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options.project {
-    border-radius: 20px 20px 0px 0px;
-    padding: 6px 6px 10px 6px; }
-
-.toggle-view-options-container-graph-hidden.token {
-  flex-direction: column-reverse; }
-
-.toggle-view-options-container-graph-hidden .toggle-view-options-border-layer {
-  height: 100%; }
-  .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer.token {
-    flex-direction: column-reverse; }
-  .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.project, .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.token {
-    border-radius: 15px;
-    padding: 8px 8px 12px 8px; }
-
-.toggle-view-options-container-graph-open,
-.toggle-view-options-container-graph-hidden {
-  text-align: center;
-  width: 50%;
-  margin: auto;
+.login-prompt {
+  transition: min-height cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  z-index: 10; }
-  .toggle-view-options-container-graph-open .toggle-view-options-border-layer,
-  .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer {
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    align-items: center; }
-    .toggle-view-options-container-graph-open .toggle-view-options-border-layer.project,
-    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer.project {
-      padding-top: 25px; }
-    .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options,
-    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options {
-      position: relative;
-      display: inline-flex;
-      background-color: #9b9287;
-      color: white; }
-      .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options.project, .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options.token,
-      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.project,
-      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options.token {
-        transition: border-radius 2s, padding 1s; }
-      .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option,
-      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option {
-        display: flex;
-        flex-direction: column;
-        align-items: center; }
-        .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-icon,
-        .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-icon {
-          fill: white;
-          width: 30px; }
-          .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-icon #active,
-          .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-icon #active {
-            transform: rotate(90deg); }
-        .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button,
-        .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button {
-          cursor: pointer;
-          width: 18px;
-          height: 18px;
-          border-radius: 25px;
-          background-color: white; }
-          .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button:hover,
-          .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button:hover {
-            background-color: #61aba9; }
-          .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button.project,
-          .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button.project {
-            margin-bottom: 8px; }
-          .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button.token,
-          .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option .toggle-button.token {
-            margin-top: 8px; }
-        .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-options .toggle-option #selected-button,
-        .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-options .toggle-option #selected-button {
-          background-color: #A59A91; }
-    .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-title,
-    .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-title {
-      font-weight: 700;
-      font-size: 15px;
-      top: 50%;
-      right: calc(100% + 20px);
-      transform: translateY(-50%);
-      color: #9b9287;
-      white-space: nowrap;
-      margin-top: 20px; }
-      .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-title .toggle-view-current-view,
-      .toggle-view-options-container-graph-hidden .toggle-view-options-border-layer .toggle-view-title .toggle-view-current-view {
-        position: absolute;
-        font-weight: 700;
-        font-size: 15px;
-        top: 50%;
-        left: calc(100% + 20px);
-        transform: translateY(-50%);
-        color: #61aba9;
-        white-space: nowrap; }
-  .toggle-view-options-container-graph-open .toggle-view-dashboard-description,
-  .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description {
-    width: 18%;
-    position: fixed; }
-    .toggle-view-options-container-graph-open .toggle-view-dashboard-description .greenText,
-    .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description .greenText {
-      color: #61aba9; }
-    .toggle-view-options-container-graph-open .toggle-view-dashboard-description.project,
-    .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description.project {
-      bottom: 20%; }
-    .toggle-view-options-container-graph-open .toggle-view-dashboard-description.token,
-    .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description.token {
-      top: 20%; }
+  font-size: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%; }
+
+.login-text {
+  margin-left: auto;
+  margin-right: auto; }
+
+.metaMask-Button {
+  margin-left: 10px;
+  padding: 10px;
+  margin: 10px;
+  background-color: teal;
+  text-decoration: none;
+  color: white;
+  padding: 5px 35px;
+  font-size: 26px;
+  text-transform: uppercase;
+  border-radius: 30px;
+  font-weight: 600;
+  margin-left: auto;
+  margin-right: auto; }
+
+.metaMask-Button:hover {
+  cursor: pointer;
+  background-color: #299c9c;
+  text-decoration: none; }
+
+.metaMask-Button:visited {
+  color: white;
+  text-decoration: none; }
 .hidden {
   display: none; }
 
@@ -1049,24 +1049,6 @@ svg {
     .transfer-button-cont .transfer-button:hover {
       background-color: #384778;
       color: white; }
-.hidden {
-  display: none; }
-
-.opaque {
-  opacity: .5; }
-
-.bounceOnHover {
-  transition: all .2s ease-in-out; }
-  .bounceOnHover:hover {
-    transform: scale(1.1);
-    cursor: pointer;
-    color: #333; }
-
-#doomsday-container {
-  display: flex;
-  width: 100%;
-  height: 500px;
-  justify-content: center; }
 .hidden {
   display: none; }
 
@@ -1402,6 +1384,24 @@ svg {
     cursor: pointer;
     color: #333; }
 
+#doomsday-container {
+  display: flex;
+  width: 100%;
+  height: 500px;
+  justify-content: center; }
+.hidden {
+  display: none; }
+
+.opaque {
+  opacity: .5; }
+
+.bounceOnHover {
+  transition: all .2s ease-in-out; }
+  .bounceOnHover:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    color: #333; }
+
 .loc-graph .loc-svg {
   width: 75%;
   margin: 0 auto; }
@@ -1552,13 +1552,19 @@ svg {
     width: 100%; }
   .votes-graph .votes-view-svg {
     width: 100%; }
-  .votes-graph .capitalRaisedLine {
+    .votes-graph .votes-view-svg .votes-view-pitched-projects text {
+      fill: white;
+      font-size: 10px;
+      opacity: .75; }
+  .votes-graph .ProjectCrossLine {
     stroke: #bdc4c9;
     stroke-width: 5px; }
-  .votes-graph path {
+  .votes-graph .CapitalRaisedPath {
     fill: none;
-    stroke: black;
-    stroke-width: 2px; }
+    stroke: #61aba9;
+    stroke-width: 4px; }
+  .votes-graph .questionIcon {
+    fill: #61aba9; }
   .votes-graph text {
     text-anchor: middle;
     pointer-events: none; }
@@ -1823,7 +1829,7 @@ svg {
         align-items: center; }
         .project-modal-grid .project-description .bus-plan-download .planLink img {
           height: 50%;
-          width: 25%; }
+          width: 20%; }
         .project-modal-grid .project-description .bus-plan-download .planLink .planText {
           font-size: large; }
   .project-modal-grid .cashflow-graph {

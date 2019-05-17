@@ -329,14 +329,13 @@ class ProjectForm extends React.Component {
   }
 
   render() {
-
     let {
       title,
       latitude,
       longitude,
       model_id,
       currentQuarter,
-      description
+      description,
     } = this.state.projectData
 
     // TODO lat/long will need to check for number up update
@@ -352,13 +351,10 @@ class ProjectForm extends React.Component {
             </div>
             <DivWithCorners>
               <DropPinModal
-                lat={parseFloat(this.state.latitude)}
-                lng={parseFloat(this.state.longitude)}
-                title={this.state.title}
-                updateLatLng={this.updateLatLng}
-                storeAddress={this.storeAddress}
-                city={this.state.city}
-                continent={this.state.continent}/>
+                lat={parseFloat(latitude)}
+                lng={parseFloat(longitude)}
+                title={title}
+                updateLatLng={this.updateLatLng}/>
             </DivWithCorners>
           </div>
         </div>
