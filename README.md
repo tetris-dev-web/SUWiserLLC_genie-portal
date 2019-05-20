@@ -80,6 +80,3 @@ Remember to compile and migrate truffle contracts before running Webpack!
 
 (coming soon!)
 
-## Links to Key Documents
-
-(coming soon!)
