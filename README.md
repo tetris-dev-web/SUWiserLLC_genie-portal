@@ -76,7 +76,6 @@ Have the following sets of commands running in separate terminals:
     ```
 Remember to compile and migrate truffle contracts before running Webpack!
 
-## Running the Testsuite
 
-(coming soon!)
+see wiki for further details
 
