@@ -73,29 +73,29 @@ see wiki for further details
 The prototype optimized for use with the Chrome browser. 
 When you load the page, you will be prompted to install metamask into your browser. 
 <br>
-<img src="https://github.com/GenusDev/genie-portal/wiki/images/downloadMetaMaskWarning.png" alt="icon" height="300" width="300">
+<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/downloadMetaMaskWarning.png" alt="icon" height="300" width="300">
 
 Then connect to the Ropsten network, as prompted by the browser
 <br>
-<img src="https://github.com/GenusDev/genie-portal/wiki/images/connectingToRopsten.png" alt="icon" height="300" width="300">
+<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/connectingToRopsten.png" alt="icon" height="300" width="300">
 
 
 # User Interface 
 Once loaded, you choose to use the prototype as a developer or investor. In production, your wallet would determine your user type. 
 
 <br>
-<img src="https://github.com/GenusDev/genie-portal/wiki/images/chooseUserType.png" alt="icon" height="300" width="300">
+<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/chooseUserType.png" alt="icon" height="300" width="300">
 
 
 ### There are two key dashboards, one showcasing projects, and the other tracking the token earnings performance by usr and by all. 
 
 <br>
-<img src="https://github.com/GenusDev/genie-portal/wiki/images/tokenGraph.png" alt="icon" height="300" width="300">
+<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/tokenGraph.png" alt="icon" height="300" width="300">
 
 <br>
-<img src="https://github.com/GenusDev/genie-portal/wiki/images/projectGraph.png" alt="icon" height="300" width="300">
+<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/projectGraph.png" alt="icon" height="300" width="300">
 
 ### project when clicked provide project specific info 
 
 <br>
-<img src="https://github.com/GenusDev/genie-portal/wiki/images/projectSpecificInfo.png" alt="icon" height="300" width="300">
+<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/projectSpecificInfo.png" alt="icon" height="300" width="300">
