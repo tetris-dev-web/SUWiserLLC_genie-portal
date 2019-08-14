@@ -87,13 +87,14 @@ Once loaded, you choose to use the prototype as a developer or investor. In prod
 <img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/chooseUserType.png" alt="icon" height="300" >
 
 
-### There are two key dashboards, one showcasing projects, and the other tracking the token earnings performance by usr and by all. 
+### There are two key dashboards, one showcasing projects, 
+<br>
+<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/projectGraph.png" alt="icon" height="300">
+
+and the other tracking the token earnings performance by usr and by all. 
 
 <br>
-<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/tokenGraph.png" alt="icon" height="300">
-
-<br>
-<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/projectGraph.png" alt="icon" height="300" >
+<img src="https://github.com/GenusDev/genusdev-assets/blob/master/read_me_images/tokenGraph.png" alt="icon" height="300" >
 
 ### project when clicked provide project specific info 
 
