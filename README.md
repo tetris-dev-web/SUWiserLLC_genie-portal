@@ -10,7 +10,7 @@ Real estate blockchain token portal engine
     ```
 - Create a branch, named in according with the [GenusDev Programming Conventions](https://docs.google.com/document/d/1-PGffrw-B1d9P5A_zfo5gJrW8dK28kqx5j-xxKOMPLY) e.g. `git checkout -b JohnR-readme-edit-0903`
 
-remember to git ignore all the same folders, if you are having problems with folders still pushing, use the following command:
+remember to git ignore all package and dev related temporary folders, if you are having problems with folders still pushing, try the following command to remove the truffle cached build file:
 
 ```bash
     git rm -r --cached ./truffle/build
@@ -20,7 +20,7 @@ remember to git ignore all the same folders, if you are having problems with fol
 
 ### Backend
 
-- Rails 5.1.4
+- Express 4.17.1
 
 ### Frontend
 
@@ -36,17 +36,9 @@ remember to git ignore all the same folders, if you are having problems with fol
 
 1. Install packages
     ```bash
-    bundle install
     npm install
     ```
-2. Setup backend
-    ```bash
-    rails db:setup
-    rails db:seed
-    ```
-    `rails db:migrate` to run future migrations with
-
-  3. Ropsten
+2. Ropsten
   ```bash
   truffle migrate --compile-all --reset --network ropsten
   ```
@@ -66,16 +58,44 @@ Have the following sets of commands running in separate terminals:
     migrate
     ```
 - Then from the root directory:
-  - Start the server
+
+  - Run webpack and server simultaneously 
     ```bash
-    rails s
+    npm run dev
     ```
-  - Run webpack
-    ```bash
-    npm webpack
-    ```
-Remember to compile and migrate truffle contracts before running Webpack!
+
+Remember to compile and migrate truffle contracts before running server and Webpack!
 
 
 see wiki for further details
 
+# connect to ethereuem Ropsten network
+The prototype optimized for use with the Chrome browser. 
+When you load the page, you will be prompted to install metamask into your browser. 
+<br>
+<img src="https://github.com/GenusDev/genie-portal/wiki/images/downloadMetaMaskWarning.png" alt="icon" height="300" width="300">
+
+Then connect to the Ropsten network, as prompted by the browser
+<br>
+<img src="https://github.com/GenusDev/genie-portal/wiki/images/connectingToRopsten.png" alt="icon" height="300" width="300">
+
+
+# User Interface 
+Once loaded, you choose to use the prototype as a developer or investor. In production, your wallet would determine your user type. 
+
+<br>
+<img src="https://github.com/GenusDev/genie-portal/wiki/images/chooseUserType.png" alt="icon" height="300" width="300">
+
+
+### There are two key dashboards, one showcasing projects, and the other tracking the token earnings performance by usr and by all. 
+
+<br>
+<img src="https://github.com/GenusDev/genie-portal/wiki/images/tokenGraph.png" alt="icon" height="300" width="300">
+
+<br>
+<img src="https://github.com/GenusDev/genie-portal/wiki/images/projectGraph.png" alt="icon" height="300" width="300">
+
+### project when clicked provide project specific info 
+
+<br>
+<img src="https://github.com/GenusDev/genie-portal/wiki/images/projectSpecificInfo.png" alt="icon" height="300" width="300">
