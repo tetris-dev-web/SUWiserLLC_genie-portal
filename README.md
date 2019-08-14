@@ -38,7 +38,7 @@ remember to git ignore all package and dev related temporary folders, if you are
     ```bash
     npm install
     ```
-2. Ropsten
+2. From the truffle folder migrate contracs to the Ropsten test network
   ```bash
   truffle migrate --compile-all --reset --network ropsten
   ```
@@ -47,16 +47,6 @@ remember to git ignore all package and dev related temporary folders, if you are
 
 Have the following sets of commands running in separate terminals:
 
-- In the truffle directory:
-  - Start the ganache server
-    ```bash
-    ganache-cli -b 3
-    ```
-  - Run `truffle console` and build the contracts:
-    ```bash
-    compile
-    migrate
-    ```
 - Then from the root directory:
 
   - Run webpack and server simultaneously 
