@@ -1,0 +1,188 @@
+@import "./frontend/util/_variables.scss";
+
+.toggle-view-options-container-graph-open {
+  &.token {
+  }
+  &.project {
+    // flex-direction: column-reverse;
+    // position: absolute;
+    // top: 100%;
+    justify-content: flex-end;
+  }
+  .toggle-view-options-border-layer {
+    opacity: .8;
+    transition: opacity 500ms ease-in-out;
+    // min-height: calc(50vh);
+    &.token {
+      // transform: translateY(calc(-85%)) rotate(360deg);
+      // transition: cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
+      justify-content: flex-start;
+      // flex-direction: column-reverse;
+    }
+    &.project {
+      // transform: translateY(calc(85%)) rotate(360deg);
+      // transition: cubic-bezier(0, 0, 0.18, 0.75) 0.5s;
+      flex-direction: column-reverse;
+    }
+    .toggle-view-options {
+      &.token{
+        border-radius: 0px 0px 20px 20px;
+        padding: 6px 6px 10px 6px;
+      }
+      &.project {
+        border-radius: 20px 20px 0px 0px;
+        padding: 6px 6px 10px 6px;
+      }
+    }
+  }
+}
+
+.toggle-view-options-container-graph-hidden {
+  // min-height: calc(50vh);
+
+  &.token {
+    flex-direction: column-reverse;
+  }
+  &.project {
+  }
+  .toggle-view-options-border-layer {
+    height: 100%;
+    &.token {
+      flex-direction: column-reverse;
+    }
+    .toggle-view-options {
+      &.project,
+      &.token {
+        border-radius: 15px;
+        padding: 8px 8px 12px 8px;
+      }
+    }
+  }
+}
+
+.toggle-view-options-container-graph-open,
+.toggle-view-options-container-graph-hidden {
+  text-align: center;
+  width: 50%;
+  margin: auto;
+  // height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+
+  .toggle-view-options-border-layer {
+
+    width: 70%;
+
+    // margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // justify-content: center;
+    // transition: transform 500ms ease-in-out;
+    &.token,
+      &token {
+      // transition: transform 500ms ease-in-out;
+      }
+    &.project {
+      padding-top: 25px;
+    }
+    .toggle-view-options {
+      position: relative;
+      display: inline-flex;
+      background-color: $tan;
+      color: white;
+      &.project,
+      &.token {
+        // border-radius: 15px;
+        // padding: 8px 8px 12px 8px;
+        transition: border-radius 2s,
+        padding 1s;
+      }
+      .toggle-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .toggle-icon {
+          fill: white;
+          width: 30px;
+
+          #active {
+            transform: rotate(90deg);
+          }
+        }
+        .toggle-button {
+          cursor: pointer;
+          width: 18px;
+          height: 18px;
+          border-radius: 25px;
+          background-color: white;
+          &:hover {
+            background-color: $teal;
+          }
+
+          &.project {
+            margin-bottom: 8px;
+          }
+
+          &.token {
+            margin-top: 8px;
+          }
+        }
+        #selected-button {
+          background-color: $grey;
+        }
+      }
+      // .toggle-view-title,
+      // .toggle-view-next-view,
+      // .toggle-view-dashboard-description {
+      //   font-size: $font-md;
+      //   color: $dark-slate-gray;
+      //   font-weight: 700;
+      //   top: 100%;
+      //   right: 50%;
+      //   transform: translateX(50%);
+      //   white-space: nowrap;
+      // }
+    }
+    .toggle-view-title {
+      font-weight: 700;
+      font-size: 15px;
+      top: 50%;
+      right: calc(100% + 20px);
+      transform: translateY(-50%);
+      color: $tan;
+      white-space: nowrap;
+      margin-top: 20px;
+      &.project {
+      }
+      &.token {
+      }
+      .toggle-view-current-view {
+        position: absolute;
+        font-weight: 700;
+        font-size: 15px;
+        top: 50%;
+        left: calc(100% + 20px);
+        transform: translateY(-50%);
+        color: $teal;
+        white-space: nowrap;
+      }
+    }
+  }
+  .toggle-view-dashboard-description {
+    width: 18%;
+    position: fixed;
+    // margin: 50px;
+    .greenText{
+      color: $teal;
+    }
+    &.project {
+      bottom: 20%;
+    }
+    &.token {
+      top: 20%;
+    }
+  }
+}
