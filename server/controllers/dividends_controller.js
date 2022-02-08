@@ -9,17 +9,19 @@ const { dividendsAddress } = require('../chain_models/contract_addresses');
 const fetchDividendReceptions = async () => {
   const dividendReceptions = await fetchEvents(dividendsInstance, 'ReceiveDividends');
 
-  return dividendReceptions.filter(event => Number(event.returnValues.weiAmount) > 0).map(event => {
-    const data = merge({}, event.returnValues);
-    data.blockNumber = event.blockNumber;
-    return data;
-  })
-}
+  return dividendReceptions
+    .filter((event) => Number(event.returnValues.weiAmount) > 0)
+    .map((event) => {
+      const data = merge({}, event.returnValues);
+      data.blockNumber = event.blockNumber;
+      return data;
+    });
+};
 
 //for now we will call this every time cashflows are received.
 //in the future, we will call this on a quarterly invterval
 const distributeDividends = async () => {
-  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const address = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
   const privateKey = process.env.PRIVATE_KEY;
 
   const distributeDividend = async (investorId, nonce) => {
@@ -30,12 +32,12 @@ const distributeDividends = async () => {
         nonce,
         to: dividendsAddress,
         value: 0,
-        data: dividendsInstance.methods.distributeDividend(investorAddress).encodeABI()
+        data: dividendsInstance.methods.distributeDividend(investorAddress).encodeABI(),
       },
       address,
-      privateKey
-    )
-  }
+      privateKey,
+    );
+  };
 
   let currentNonce = await web3.eth.getTransactionCount(address);
   const totalInvestors = await activeTokenInstace.methods.totalInvestors.call();
@@ -48,11 +50,10 @@ const distributeDividends = async () => {
   }
 
   return Promise.all(dividendDistributions);
-}
-
+};
 
 const collectDemoInvestorDividend = async () => {
-  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const address = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
   const privateKey = process.env.PRIVATE_KEY;
   let nonce = await web3.eth.getTransactionCount(address);
 
@@ -61,14 +62,14 @@ const collectDemoInvestorDividend = async () => {
       nonce,
       to: dividendsAddress,
       value: 0,
-      data: dividendsInstance.methods.distributeDividend(address)
+      data: dividendsInstance.methods.distributeDividend(address),
     },
     address,
-    privateKey
-  )
-}
+    privateKey,
+  );
+};
 module.exports = {
   fetchDividendReceptions,
   distributeDividends,
-  collectDemoInvestorDividend
-}
+  collectDemoInvestorDividend,
+};

@@ -9,7 +9,7 @@ const {
   projectFactoryAddress,
   projectLeaderTrackerAddress,
   votingAddress,
-  votingTokenAddress
+  votingTokenAddress,
 } = require('./contract_addresses');
 
 const Activation = require('../../truffle/build/contracts/Activation.json');
@@ -19,7 +19,7 @@ const Dividends = require('../../truffle/build/contracts/Dividends.json');
 const InactiveToken = require('../../truffle/build/contracts/InactiveToken.json');
 const Project = require('../../truffle/build/contracts/Project.json');
 const ProjectFactory = require('../../truffle/build/contracts/ProjectFactory.json');
-const ProjectLeaderTracker = require('../../truffle/build/contracts/ProjectLeaderTracker.json')
+const ProjectLeaderTracker = require('../../truffle/build/contracts/ProjectLeaderTracker.json');
 const Voting = require('../../truffle/build/contracts/Voting.json');
 const VotingToken = require('../../truffle/build/contracts/VotingToken.json');
 
@@ -33,5 +33,5 @@ module.exports = {
   projectFactoryInstance: web3Instance(ProjectFactory, projectFactoryAddress),
   projectLeaderTrackerInstance: web3Instance(ProjectLeaderTracker, projectLeaderTrackerAddress),
   votingInstance: web3Instance(Voting, votingAddress),
-  votingTokenInstance: web3Instance(VotingToken, votingTokenAddress)
-}
+  votingTokenInstance: web3Instance(VotingToken, votingTokenAddress),
+};

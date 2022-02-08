@@ -10,18 +10,17 @@ const { dotenv } = require('../chain_connection/web3_configuration');
 
 const fetchWeiRaised = async () => {
   return await numberParser(crowdsaleInstance.methods.weiRaised_());
-}
+};
 
 const fetchPurchases = async () => {
   const tokenPurchases = await fetchEvents(crowdsaleInstance, 'TokenPurchase');
 
   return formatCapitalHistoryData(tokenPurchases);
-}
+};
 
-
-const buyTokens = async wei => {
+const buyTokens = async (wei) => {
   //using demo account for now
-  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const address = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
 
@@ -30,23 +29,19 @@ const buyTokens = async wei => {
       nonce,
       to: crowdsaleAddress,
       value: web3.utils.toHex(wei),
-      data: crowdsaleInstance.methods.buyTokens().encodeABI()
+      data: crowdsaleInstance.methods.buyTokens().encodeABI(),
     },
     address,
-    privateKey
+    privateKey,
   );
 
-  console.log(
-    "TRANSACTION:",
-    transaction
-  )
+  console.log('TRANSACTION:', transaction);
 
   await attemptProjectActivation();
-
-}
+};
 
 module.exports = {
   fetchWeiRaised,
   fetchPurchases,
-  buyTokens
-}
+  buyTokens,
+};
