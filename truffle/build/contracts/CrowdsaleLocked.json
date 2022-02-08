@@ -52,10 +52,10 @@
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity >=0.4.22 <0.6.0;\n\n/**\n * @title CrowdsaleLocked\n * @dev A CrowdsaleLocked contract can only be used by its crowdsale account (the one that created it)\n */\ncontract CrowdsaleLocked {\n    address private _crowdsale;\n\n    event CrowdsaleTransferred(\n        address recipient\n    );\n\n    /**\n     * @dev Sets the crowdsale account to the one that is creating the CrowdsaleLocked contract.\n     */\n    constructor () internal {\n        _crowdsale = msg.sender;\n        emit CrowdsaleTransferred(_crowdsale);\n    }\n\n    /**\n     * @dev Reverts if called from any account other than the crowdsale.\n     */\n    modifier onlyCrowdsale() {\n        require(msg.sender == _crowdsale);\n        _;\n    }\n\n    /**\n     * @return the address of the crowdsale.\n     */\n    function crowdsale() public view returns (address) {\n        return _crowdsale;\n    }\n\n    /**\n     * @dev Transfers contract to a new crowdsale.\n     * @param recipient The address of new crowdsale.\n     */\n    function transferCrowdsaleKey(address recipient) public onlyCrowdsale {\n        require(recipient != address(0));\n        _crowdsale = recipient;\n        emit CrowdsaleTransferred(_crowdsale);\n    }\n}\n",
-  "sourcePath": "/Users/steven/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
+  "source": "pragma solidity >=0.4.22 <0.6.0;\r\n\r\n/**\r\n * @title CrowdsaleLocked\r\n * @dev A CrowdsaleLocked contract can only be used by its crowdsale account (the one that created it)\r\n */\r\ncontract CrowdsaleLocked {\r\n    address private _crowdsale;\r\n\r\n    event CrowdsaleTransferred(\r\n        address recipient\r\n    );\r\n\r\n    /**\r\n     * @dev Sets the crowdsale account to the one that is creating the CrowdsaleLocked contract.\r\n     */\r\n    constructor () internal {\r\n        _crowdsale = msg.sender;\r\n        emit CrowdsaleTransferred(_crowdsale);\r\n    }\r\n\r\n    /**\r\n     * @dev Reverts if called from any account other than the crowdsale.\r\n     */\r\n    modifier onlyCrowdsale() {\r\n        require(msg.sender == _crowdsale);\r\n        _;\r\n    }\r\n\r\n    /**\r\n     * @return the address of the crowdsale.\r\n     */\r\n    function crowdsale() public view returns (address) {\r\n        return _crowdsale;\r\n    }\r\n\r\n    /**\r\n     * @dev Transfers contract to a new crowdsale.\r\n     * @param recipient The address of new crowdsale.\r\n     */\r\n    function transferCrowdsaleKey(address recipient) public onlyCrowdsale {\r\n        require(recipient != address(0));\r\n        _crowdsale = recipient;\r\n        emit CrowdsaleTransferred(_crowdsale);\r\n    }\r\n}\r\n",
+  "sourcePath": "F:\\Projects\\genie\\genie-portal\\truffle\\contracts\\utility\\CrowdsaleLocked.sol",
   "ast": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
+    "absolutePath": "/F/Projects/genie/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
     "exportedSymbols": {
       "CrowdsaleLocked": [
         8568
@@ -82,7 +82,7 @@
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "contract",
-        "documentation": "@title CrowdsaleLocked\n@dev A CrowdsaleLocked contract can only be used by its crowdsale account (the one that created it)",
+        "documentation": "@title CrowdsaleLocked\r\n@dev A CrowdsaleLocked contract can only be used by its crowdsale account (the one that created it)\r",
         "fullyImplemented": true,
         "id": 8568,
         "linearizedBaseContracts": [
@@ -97,7 +97,7 @@
             "name": "_crowdsale",
             "nodeType": "VariableDeclaration",
             "scope": 8568,
-            "src": "202:26:57",
+            "src": "209:26:57",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -108,7 +108,7 @@
               "id": 8506,
               "name": "address",
               "nodeType": "ElementaryTypeName",
-              "src": "202:7:57",
+              "src": "209:7:57",
               "typeDescriptions": {
                 "typeIdentifier": "t_address",
                 "typeString": "address"
@@ -134,7 +134,7 @@
                   "name": "recipient",
                   "nodeType": "VariableDeclaration",
                   "scope": 8511,
-                  "src": "271:17:57",
+                  "src": "281:17:57",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -145,7 +145,7 @@
                     "id": 8508,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "271:7:57",
+                    "src": "281:7:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -155,15 +155,15 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "261:33:57"
+              "src": "270:35:57"
             },
-            "src": "235:60:57"
+            "src": "244:62:57"
           },
           {
             "body": {
               "id": 8523,
               "nodeType": "Block",
-              "src": "438:87:57",
+              "src": "454:90:57",
               "statements": [
                 {
                   "expression": {
@@ -180,7 +180,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8507,
-                      "src": "448:10:57",
+                      "src": "465:10:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -197,7 +197,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 9387,
-                        "src": "461:3:57",
+                        "src": "478:3:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
@@ -211,13 +211,13 @@
                       "memberName": "sender",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "461:10:57",
+                      "src": "478:10:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "448:23:57",
+                    "src": "465:23:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -225,7 +225,7 @@
                   },
                   "id": 8518,
                   "nodeType": "ExpressionStatement",
-                  "src": "448:23:57"
+                  "src": "465:23:57"
                 },
                 {
                   "eventCall": {
@@ -238,7 +238,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 8507,
-                        "src": "507:10:57",
+                        "src": "525:10:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -257,7 +257,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8511,
-                      "src": "486:20:57",
+                      "src": "504:20:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
@@ -271,7 +271,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "486:32:57",
+                    "src": "504:32:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -279,11 +279,11 @@
                   },
                   "id": 8522,
                   "nodeType": "EmitStatement",
-                  "src": "481:37:57"
+                  "src": "499:37:57"
                 }
               ]
             },
-            "documentation": "@dev Sets the crowdsale account to the one that is creating the CrowdsaleLocked contract.",
+            "documentation": "@dev Sets the crowdsale account to the one that is creating the CrowdsaleLocked contract.\r",
             "id": 8524,
             "implemented": true,
             "isConstructor": true,
@@ -295,17 +295,17 @@
               "id": 8512,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "426:2:57"
+              "src": "442:2:57"
             },
             "payable": false,
             "returnParameters": {
               "id": 8513,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "438:0:57"
+              "src": "454:0:57"
             },
             "scope": 8568,
-            "src": "414:111:57",
+            "src": "430:114:57",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
@@ -314,7 +314,7 @@
             "body": {
               "id": 8534,
               "nodeType": "Block",
-              "src": "645:61:57",
+              "src": "669:64:57",
               "statements": [
                 {
                   "expression": {
@@ -340,7 +340,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 9387,
-                            "src": "663:3:57",
+                            "src": "688:3:57",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
@@ -354,7 +354,7 @@
                           "memberName": "sender",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "663:10:57",
+                          "src": "688:10:57",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -369,13 +369,13 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 8507,
-                          "src": "677:10:57",
+                          "src": "702:10:57",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           }
                         },
-                        "src": "663:24:57",
+                        "src": "688:24:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -397,7 +397,7 @@
                         9391
                       ],
                       "referencedDeclaration": 9390,
-                      "src": "655:7:57",
+                      "src": "680:7:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                         "typeString": "function (bool) pure"
@@ -411,7 +411,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "655:33:57",
+                    "src": "680:33:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -419,16 +419,16 @@
                   },
                   "id": 8532,
                   "nodeType": "ExpressionStatement",
-                  "src": "655:33:57"
+                  "src": "680:33:57"
                 },
                 {
                   "id": 8533,
                   "nodeType": "PlaceholderStatement",
-                  "src": "698:1:57"
+                  "src": "724:1:57"
                 }
               ]
             },
-            "documentation": "@dev Reverts if called from any account other than the crowdsale.",
+            "documentation": "@dev Reverts if called from any account other than the crowdsale.\r",
             "id": 8535,
             "name": "onlyCrowdsale",
             "nodeType": "ModifierDefinition",
@@ -436,16 +436,16 @@
               "id": 8525,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "642:2:57"
+              "src": "666:2:57"
             },
-            "src": "620:86:57",
+            "src": "644:89:57",
             "visibility": "internal"
           },
           {
             "body": {
               "id": 8542,
               "nodeType": "Block",
-              "src": "824:34:57",
+              "src": "856:36:57",
               "statements": [
                 {
                   "expression": {
@@ -455,7 +455,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 8507,
-                    "src": "841:10:57",
+                    "src": "874:10:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -464,11 +464,11 @@
                   "functionReturnParameters": 8539,
                   "id": 8541,
                   "nodeType": "Return",
-                  "src": "834:17:57"
+                  "src": "867:17:57"
                 }
               ]
             },
-            "documentation": "@return the address of the crowdsale.",
+            "documentation": "@return the address of the crowdsale.\r",
             "id": 8543,
             "implemented": true,
             "isConstructor": false,
@@ -480,7 +480,7 @@
               "id": 8536,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "791:2:57"
+              "src": "823:2:57"
             },
             "payable": false,
             "returnParameters": {
@@ -493,7 +493,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 8543,
-                  "src": "815:7:57",
+                  "src": "847:7:57",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -504,7 +504,7 @@
                     "id": 8537,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "815:7:57",
+                    "src": "847:7:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -514,10 +514,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "814:9:57"
+              "src": "846:9:57"
             },
             "scope": 8568,
-            "src": "773:85:57",
+            "src": "805:87:57",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -526,7 +526,7 @@
             "body": {
               "id": 8566,
               "nodeType": "Block",
-              "src": "1055:128:57",
+              "src": "1095:132:57",
               "statements": [
                 {
                   "expression": {
@@ -550,7 +550,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 8545,
-                          "src": "1073:9:57",
+                          "src": "1114:9:57",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -571,7 +571,7 @@
                               "kind": "number",
                               "lValueRequested": false,
                               "nodeType": "Literal",
-                              "src": "1094:1:57",
+                              "src": "1135:1:57",
                               "subdenomination": null,
                               "typeDescriptions": {
                                 "typeIdentifier": "t_rational_0_by_1",
@@ -593,7 +593,7 @@
                             "isPure": true,
                             "lValueRequested": false,
                             "nodeType": "ElementaryTypeNameExpression",
-                            "src": "1086:7:57",
+                            "src": "1127:7:57",
                             "typeDescriptions": {
                               "typeIdentifier": "t_type$_t_address_$",
                               "typeString": "type(address)"
@@ -608,13 +608,13 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1086:10:57",
+                          "src": "1127:10:57",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           }
                         },
-                        "src": "1073:23:57",
+                        "src": "1114:23:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -636,7 +636,7 @@
                         9391
                       ],
                       "referencedDeclaration": 9390,
-                      "src": "1065:7:57",
+                      "src": "1106:7:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                         "typeString": "function (bool) pure"
@@ -650,7 +650,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1065:32:57",
+                    "src": "1106:32:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -658,7 +658,7 @@
                   },
                   "id": 8557,
                   "nodeType": "ExpressionStatement",
-                  "src": "1065:32:57"
+                  "src": "1106:32:57"
                 },
                 {
                   "expression": {
@@ -675,7 +675,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8507,
-                      "src": "1107:10:57",
+                      "src": "1149:10:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -690,13 +690,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8545,
-                      "src": "1120:9:57",
+                      "src": "1162:9:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "1107:22:57",
+                    "src": "1149:22:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -704,7 +704,7 @@
                   },
                   "id": 8561,
                   "nodeType": "ExpressionStatement",
-                  "src": "1107:22:57"
+                  "src": "1149:22:57"
                 },
                 {
                   "eventCall": {
@@ -717,7 +717,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 8507,
-                        "src": "1165:10:57",
+                        "src": "1208:10:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -736,7 +736,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8511,
-                      "src": "1144:20:57",
+                      "src": "1187:20:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
@@ -750,7 +750,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1144:32:57",
+                    "src": "1187:32:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -758,11 +758,11 @@
                   },
                   "id": 8565,
                   "nodeType": "EmitStatement",
-                  "src": "1139:37:57"
+                  "src": "1182:37:57"
                 }
               ]
             },
-            "documentation": "@dev Transfers contract to a new crowdsale.\n@param recipient The address of new crowdsale.",
+            "documentation": "@dev Transfers contract to a new crowdsale.\r\n@param recipient The address of new crowdsale.\r",
             "id": 8567,
             "implemented": true,
             "isConstructor": false,
@@ -778,14 +778,14 @@
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
                   "referencedDeclaration": 8535,
-                  "src": "1041:13:57",
+                  "src": "1081:13:57",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "1041:13:57"
+                "src": "1081:13:57"
               }
             ],
             "name": "transferCrowdsaleKey",
@@ -800,7 +800,7 @@
                   "name": "recipient",
                   "nodeType": "VariableDeclaration",
                   "scope": 8567,
-                  "src": "1015:17:57",
+                  "src": "1055:17:57",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -811,7 +811,7 @@
                     "id": 8544,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1015:7:57",
+                    "src": "1055:7:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -821,30 +821,30 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1014:19:57"
+              "src": "1054:19:57"
             },
             "payable": false,
             "returnParameters": {
               "id": 8549,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1055:0:57"
+              "src": "1095:0:57"
             },
             "scope": 8568,
-            "src": "985:198:57",
+            "src": "1025:202:57",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 8569,
-        "src": "171:1014:57"
+        "src": "177:1053:57"
       }
     ],
-    "src": "0:1186:57"
+    "src": "0:1232:57"
   },
   "legacyAST": {
-    "absolutePath": "/Users/steven/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
+    "absolutePath": "/F/Projects/genie/genie-portal/truffle/contracts/utility/CrowdsaleLocked.sol",
     "exportedSymbols": {
       "CrowdsaleLocked": [
         8568
@@ -871,7 +871,7 @@
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "contract",
-        "documentation": "@title CrowdsaleLocked\n@dev A CrowdsaleLocked contract can only be used by its crowdsale account (the one that created it)",
+        "documentation": "@title CrowdsaleLocked\r\n@dev A CrowdsaleLocked contract can only be used by its crowdsale account (the one that created it)\r",
         "fullyImplemented": true,
         "id": 8568,
         "linearizedBaseContracts": [
@@ -886,7 +886,7 @@
             "name": "_crowdsale",
             "nodeType": "VariableDeclaration",
             "scope": 8568,
-            "src": "202:26:57",
+            "src": "209:26:57",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -897,7 +897,7 @@
               "id": 8506,
               "name": "address",
               "nodeType": "ElementaryTypeName",
-              "src": "202:7:57",
+              "src": "209:7:57",
               "typeDescriptions": {
                 "typeIdentifier": "t_address",
                 "typeString": "address"
@@ -923,7 +923,7 @@
                   "name": "recipient",
                   "nodeType": "VariableDeclaration",
                   "scope": 8511,
-                  "src": "271:17:57",
+                  "src": "281:17:57",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -934,7 +934,7 @@
                     "id": 8508,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "271:7:57",
+                    "src": "281:7:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -944,15 +944,15 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "261:33:57"
+              "src": "270:35:57"
             },
-            "src": "235:60:57"
+            "src": "244:62:57"
           },
           {
             "body": {
               "id": 8523,
               "nodeType": "Block",
-              "src": "438:87:57",
+              "src": "454:90:57",
               "statements": [
                 {
                   "expression": {
@@ -969,7 +969,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8507,
-                      "src": "448:10:57",
+                      "src": "465:10:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -986,7 +986,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 9387,
-                        "src": "461:3:57",
+                        "src": "478:3:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
@@ -1000,13 +1000,13 @@
                       "memberName": "sender",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "461:10:57",
+                      "src": "478:10:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "448:23:57",
+                    "src": "465:23:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1014,7 +1014,7 @@
                   },
                   "id": 8518,
                   "nodeType": "ExpressionStatement",
-                  "src": "448:23:57"
+                  "src": "465:23:57"
                 },
                 {
                   "eventCall": {
@@ -1027,7 +1027,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 8507,
-                        "src": "507:10:57",
+                        "src": "525:10:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -1046,7 +1046,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8511,
-                      "src": "486:20:57",
+                      "src": "504:20:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
@@ -1060,7 +1060,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "486:32:57",
+                    "src": "504:32:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -1068,11 +1068,11 @@
                   },
                   "id": 8522,
                   "nodeType": "EmitStatement",
-                  "src": "481:37:57"
+                  "src": "499:37:57"
                 }
               ]
             },
-            "documentation": "@dev Sets the crowdsale account to the one that is creating the CrowdsaleLocked contract.",
+            "documentation": "@dev Sets the crowdsale account to the one that is creating the CrowdsaleLocked contract.\r",
             "id": 8524,
             "implemented": true,
             "isConstructor": true,
@@ -1084,17 +1084,17 @@
               "id": 8512,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "426:2:57"
+              "src": "442:2:57"
             },
             "payable": false,
             "returnParameters": {
               "id": 8513,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "438:0:57"
+              "src": "454:0:57"
             },
             "scope": 8568,
-            "src": "414:111:57",
+            "src": "430:114:57",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "internal"
@@ -1103,7 +1103,7 @@
             "body": {
               "id": 8534,
               "nodeType": "Block",
-              "src": "645:61:57",
+              "src": "669:64:57",
               "statements": [
                 {
                   "expression": {
@@ -1129,7 +1129,7 @@
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 9387,
-                            "src": "663:3:57",
+                            "src": "688:3:57",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
                               "typeString": "msg"
@@ -1143,7 +1143,7 @@
                           "memberName": "sender",
                           "nodeType": "MemberAccess",
                           "referencedDeclaration": null,
-                          "src": "663:10:57",
+                          "src": "688:10:57",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -1158,13 +1158,13 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 8507,
-                          "src": "677:10:57",
+                          "src": "702:10:57",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           }
                         },
-                        "src": "663:24:57",
+                        "src": "688:24:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -1186,7 +1186,7 @@
                         9391
                       ],
                       "referencedDeclaration": 9390,
-                      "src": "655:7:57",
+                      "src": "680:7:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                         "typeString": "function (bool) pure"
@@ -1200,7 +1200,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "655:33:57",
+                    "src": "680:33:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -1208,16 +1208,16 @@
                   },
                   "id": 8532,
                   "nodeType": "ExpressionStatement",
-                  "src": "655:33:57"
+                  "src": "680:33:57"
                 },
                 {
                   "id": 8533,
                   "nodeType": "PlaceholderStatement",
-                  "src": "698:1:57"
+                  "src": "724:1:57"
                 }
               ]
             },
-            "documentation": "@dev Reverts if called from any account other than the crowdsale.",
+            "documentation": "@dev Reverts if called from any account other than the crowdsale.\r",
             "id": 8535,
             "name": "onlyCrowdsale",
             "nodeType": "ModifierDefinition",
@@ -1225,16 +1225,16 @@
               "id": 8525,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "642:2:57"
+              "src": "666:2:57"
             },
-            "src": "620:86:57",
+            "src": "644:89:57",
             "visibility": "internal"
           },
           {
             "body": {
               "id": 8542,
               "nodeType": "Block",
-              "src": "824:34:57",
+              "src": "856:36:57",
               "statements": [
                 {
                   "expression": {
@@ -1244,7 +1244,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 8507,
-                    "src": "841:10:57",
+                    "src": "874:10:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1253,11 +1253,11 @@
                   "functionReturnParameters": 8539,
                   "id": 8541,
                   "nodeType": "Return",
-                  "src": "834:17:57"
+                  "src": "867:17:57"
                 }
               ]
             },
-            "documentation": "@return the address of the crowdsale.",
+            "documentation": "@return the address of the crowdsale.\r",
             "id": 8543,
             "implemented": true,
             "isConstructor": false,
@@ -1269,7 +1269,7 @@
               "id": 8536,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "791:2:57"
+              "src": "823:2:57"
             },
             "payable": false,
             "returnParameters": {
@@ -1282,7 +1282,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 8543,
-                  "src": "815:7:57",
+                  "src": "847:7:57",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1293,7 +1293,7 @@
                     "id": 8537,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "815:7:57",
+                    "src": "847:7:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1303,10 +1303,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "814:9:57"
+              "src": "846:9:57"
             },
             "scope": 8568,
-            "src": "773:85:57",
+            "src": "805:87:57",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -1315,7 +1315,7 @@
             "body": {
               "id": 8566,
               "nodeType": "Block",
-              "src": "1055:128:57",
+              "src": "1095:132:57",
               "statements": [
                 {
                   "expression": {
@@ -1339,7 +1339,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 8545,
-                          "src": "1073:9:57",
+                          "src": "1114:9:57",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -1360,7 +1360,7 @@
                               "kind": "number",
                               "lValueRequested": false,
                               "nodeType": "Literal",
-                              "src": "1094:1:57",
+                              "src": "1135:1:57",
                               "subdenomination": null,
                               "typeDescriptions": {
                                 "typeIdentifier": "t_rational_0_by_1",
@@ -1382,7 +1382,7 @@
                             "isPure": true,
                             "lValueRequested": false,
                             "nodeType": "ElementaryTypeNameExpression",
-                            "src": "1086:7:57",
+                            "src": "1127:7:57",
                             "typeDescriptions": {
                               "typeIdentifier": "t_type$_t_address_$",
                               "typeString": "type(address)"
@@ -1397,13 +1397,13 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "1086:10:57",
+                          "src": "1127:10:57",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           }
                         },
-                        "src": "1073:23:57",
+                        "src": "1114:23:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
                           "typeString": "bool"
@@ -1425,7 +1425,7 @@
                         9391
                       ],
                       "referencedDeclaration": 9390,
-                      "src": "1065:7:57",
+                      "src": "1106:7:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
                         "typeString": "function (bool) pure"
@@ -1439,7 +1439,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1065:32:57",
+                    "src": "1106:32:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -1447,7 +1447,7 @@
                   },
                   "id": 8557,
                   "nodeType": "ExpressionStatement",
-                  "src": "1065:32:57"
+                  "src": "1106:32:57"
                 },
                 {
                   "expression": {
@@ -1464,7 +1464,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8507,
-                      "src": "1107:10:57",
+                      "src": "1149:10:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -1479,13 +1479,13 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8545,
-                      "src": "1120:9:57",
+                      "src": "1162:9:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "1107:22:57",
+                    "src": "1149:22:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1493,7 +1493,7 @@
                   },
                   "id": 8561,
                   "nodeType": "ExpressionStatement",
-                  "src": "1107:22:57"
+                  "src": "1149:22:57"
                 },
                 {
                   "eventCall": {
@@ -1506,7 +1506,7 @@
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
                         "referencedDeclaration": 8507,
-                        "src": "1165:10:57",
+                        "src": "1208:10:57",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -1525,7 +1525,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 8511,
-                      "src": "1144:20:57",
+                      "src": "1187:20:57",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
@@ -1539,7 +1539,7 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "1144:32:57",
+                    "src": "1187:32:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
@@ -1547,11 +1547,11 @@
                   },
                   "id": 8565,
                   "nodeType": "EmitStatement",
-                  "src": "1139:37:57"
+                  "src": "1182:37:57"
                 }
               ]
             },
-            "documentation": "@dev Transfers contract to a new crowdsale.\n@param recipient The address of new crowdsale.",
+            "documentation": "@dev Transfers contract to a new crowdsale.\r\n@param recipient The address of new crowdsale.\r",
             "id": 8567,
             "implemented": true,
             "isConstructor": false,
@@ -1567,14 +1567,14 @@
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
                   "referencedDeclaration": 8535,
-                  "src": "1041:13:57",
+                  "src": "1081:13:57",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
                     "typeString": "modifier ()"
                   }
                 },
                 "nodeType": "ModifierInvocation",
-                "src": "1041:13:57"
+                "src": "1081:13:57"
               }
             ],
             "name": "transferCrowdsaleKey",
@@ -1589,7 +1589,7 @@
                   "name": "recipient",
                   "nodeType": "VariableDeclaration",
                   "scope": 8567,
-                  "src": "1015:17:57",
+                  "src": "1055:17:57",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1600,7 +1600,7 @@
                     "id": 8544,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1015:7:57",
+                    "src": "1055:7:57",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1610,33 +1610,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1014:19:57"
+              "src": "1054:19:57"
             },
             "payable": false,
             "returnParameters": {
               "id": 8549,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1055:0:57"
+              "src": "1095:0:57"
             },
             "scope": 8568,
-            "src": "985:198:57",
+            "src": "1025:202:57",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 8569,
-        "src": "171:1014:57"
+        "src": "177:1053:57"
       }
     ],
-    "src": "0:1186:57"
+    "src": "0:1232:57"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.25+commit.59dbf8f1.Emscripten.clang"
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.2",
-  "updatedAt": "2019-04-02T19:42:19.680Z"
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2022-02-08T17:32:15.854Z"
 }
