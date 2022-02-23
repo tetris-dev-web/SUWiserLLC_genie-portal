@@ -1,8 +1,5 @@
-import {
-  CLOSE_LOGIN_MODAL,
-  OPEN_LOGIN_MODAL
-} from '../actions/modal_actions';
-import { merge } from 'lodash';
+import { CLOSE_LOGIN_MODAL, OPEN_LOGIN_MODAL } from "../actions/modal_actions";
+import { merge } from "lodash";
 
 const loginModalReducer = (state = true, action) => {
   // FILO, a stack state
@@ -12,7 +9,7 @@ const loginModalReducer = (state = true, action) => {
       return true;
     }
     case CLOSE_MODAL: {
-      return false
+      return false;
     }
     default:
       return state;

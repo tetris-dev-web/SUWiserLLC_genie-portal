@@ -1,14 +1,10 @@
-import { connect } from 'react-redux';
-import Navbar from './navbar';
+import { connect } from "react-redux";
+import Navbar from "./navbar";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    account: state.network.account
+    account: state.network.account,
   };
 };
 
-
-export default connect(
-  mapStateToProps,
-  null
-)(Navbar);
+export default connect(mapStateToProps, null)(Navbar);

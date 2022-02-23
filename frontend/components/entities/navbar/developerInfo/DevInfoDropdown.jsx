@@ -1,90 +1,78 @@
-import React from 'react';
-import './developerInfo.scss';
-import  Modal  from 'react-modal';
+import React, { useState } from "react";
+import "./developerInfo.scss";
+import Modal from "react-modal";
 
-import {Strategy, Bylaws } from './createInfoModals';
+import { Strategy, Bylaws } from "./createInfoModals";
 
 console.log("Strategy", Strategy);
 
 const modalInfo = {
-  "strategy" : <Strategy />,
-  "bylaws": <Bylaws />,
-  "about": <Bylaws />
-}
+  strategy: <Strategy />,
+  bylaws: <Bylaws />,
+  about: <Bylaws />,
+};
 
-class DevInfoDropdown extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      DropdownIsOpen: false,
-      InfoModalIsOpen: false,
-      InfoModalComponent: ""
-    };
-    this.toggleDropdown = this.toggleDropdown.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
+const DevInfoDropdown = (props) => {
+  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
+  const [infoModal, setInfoModal] = useState({
+    InfoModalIsOpen: false,
+    InfoModalComponent: "",
+  });
 
-  toggleDropdown(e) {
-    this.setState({
-      DropdownIsOpen: !this.state.DropdownIsOpen
-    })
-  }
+  const toggleDropdown = (e) => {
+    setDropdownIsOpen(!dropdownIsOpen);
+  };
 
-  handleClick(type) {
-    // console.log('handling click')
-    this.setState({
-      InfoModalIsOpen: !this.state.InfoModalIsOpen,
-      InfoModalComponent: modalInfo[type]
-    })
-  }
+  const handleClick = (type) => {
+    setInfoModal({
+      InfoModalIsOpen: !InfoModalIsOpen,
+      InfoModalComponent: modalInfo[type],
+    });
+  };
 
-  render() {
-
-    const showSidebarOptions = (
-      <ul className={` ${this.state.DropdownIsOpen? "dev-info-list" : "hidden"}`}>
-        <li className="strategy ">
-          <div className= "button-text bounceOnHover"
-            onClick={() => this.handleClick("strategy")}>
-            STRATEGY
-          </div>
-        </li>
-        <li className="bylaws ">
-          <div className="button-text bounceOnHover"
-            onClick={() => this.handleClick("bylaws")}>
-            BYLAWS
-          </div>
-        </li>
-        <li className="about bounceOnHover">
-          <div className="button-text bounceOnHover"
-            onClick={() => this.handleClick("about")}>
-            OFFER CIRCULAR
-          </div>
-        </li>
-      </ul>
-    );
-
-    return(
-      <div className='dev-info-container' >
-
-        <div className={`${this.state.DropdownIsOpen?  "devinfo-dropdown" : "devinfo-up bounceOnHover"}`}>
-          <div className={`"button-text dev-dropdown-button" ${this.state.DropdownIsOpen?  "opaque" : ""}`} onClick={this.toggleDropdown}>
-            DEVELOPER INFO
-          </div>
-          {showSidebarOptions}
+  const showSidebarOptions = (
+    <ul className={` ${dropdownIsOpen ? "dev-info-list" : "hidden"}`}>
+      <li className="strategy ">
+        <div className="button-text bounceOnHover" onClick={() => handleClick("strategy")}>
+          STRATEGY
         </div>
-        <Modal
-          isOpen={this.state.InfoModalIsOpen}
-          onRequestClose={this.handleClick}
-          contentLabel="info modal"
-          className="devinfo-selection-modal-container"
-          ariaHideApp={false}>
+      </li>
+      <li className="bylaws ">
+        <div className="button-text bounceOnHover" onClick={() => handleClick("bylaws")}>
+          BYLAWS
+        </div>
+      </li>
+      <li className="about bounceOnHover">
+        <div className="button-text bounceOnHover" onClick={() => handleClick("about")}>
+          OFFER CIRCULAR
+        </div>
+      </li>
+    </ul>
+  );
 
-          {this.state.InfoModalComponent}
-
-        </Modal>
+  const { InfoModalComponent, InfoModalIsOpen } = infoModal;
+  return (
+    <div className="dev-info-container">
+      <div className={`${dropdownIsOpen ? "devinfo-dropdown" : "devinfo-up bounceOnHover"}`}>
+        <div
+          className={`"button-text dev-dropdown-button" ${dropdownIsOpen ? "opaque" : ""}`}
+          onClick={toggleDropdown}
+        >
+          DEVELOPER INFO
+        </div>
+        {showSidebarOptions}
       </div>
-    );
-  }
-}
+      <Modal
+        isOpen={InfoModalIsOpen}
+        onRequestClose={handleClick}
+        contentLabel="info modal"
+        className="devinfo-selection-modal-container"
+        ariaHideApp={false}
+      >
+        {InfoModalComponent}
+      </Modal>
+    </div>
+  );
+};
 
 export default DevInfoDropdown;

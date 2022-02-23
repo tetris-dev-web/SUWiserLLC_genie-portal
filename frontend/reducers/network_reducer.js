@@ -1,5 +1,5 @@
-import { UPDATE_NETWORK, CLEAR_NETWORK_ACCOUNT } from '../actions/chain_actions/network_actions';
-import { merge } from 'lodash';
+import { UPDATE_NETWORK, CLEAR_NETWORK_ACCOUNT } from "../actions/chain_actions/network_actions";
+import { merge } from "lodash";
 
 const networkReducer = (state = {}, action) => {
   Object.freeze(state);
@@ -7,7 +7,7 @@ const networkReducer = (state = {}, action) => {
     case UPDATE_NETWORK:
       return merge({}, state, action.network);
     default:
-    return state;
+      return state;
   }
 };
 

@@ -1,37 +1,28 @@
-import React from 'react';
+import React from "react";
 
-class LocGraphRect extends React.Component {
-  constructor() {
-    super();
+const LocGraphRect = (props) => {
+  const { className, transform, text } = props;
+  const [showText, setShowText] = useState(false);
 
-    this.state = {
-      showText: false
-    };
-  }
-
-  handleHover(boolean) {
+  const handleHover = (boolean) => {
     return () => {
-      this.setState({showText: boolean});
+      setShowText(boolean);
     };
-  }
+  };
 
-  render() {
-    const { className, transform, text } = this.props;
-    const { showText } = this.state;
-
-    return (
-      <g className={`${className}-group`}
-      transform={transform}>
-        <rect className={className}
-          onMouseEnter={this.handleHover(true)}
-          onMouseLeave={this.handleHover(false)}></rect>
-        {
-          // showText &&
-          <text y={-10}>{text}</text>
-        }
-      </g>
-    );
-  }
-}
+  return (
+    <g className={`${className}-group`} transform={transform}>
+      <rect
+        className={className}
+        onMouseEnter={handleHover(true)}
+        onMouseLeave={handleHover(false)}
+      ></rect>
+      {
+        // showText &&
+        <text y={-10}>{text}</text>
+      }
+    </g>
+  );
+};
 
 export default LocGraphRect;

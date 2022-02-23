@@ -1,101 +1,109 @@
 //libraries
-import React from 'react';
+import React, { useState } from "react";
 //components
-import DashboardGraph from './dashboard_graph_container';
+import DashboardGraph from "./dashboard_graph_container";
 //project graph types
-import LocGraphContainer from './project_dashboard/loc_view/loc_graph_container';
-import VotesGraphContainer from './project_dashboard/votes_view/votes_graph_container';
-import {voteViewIcon, locViewIcon} from './project_dashboard/ProjectDashboardIcons';
+import LocGraphContainer from "./project_dashboard/loc_view/loc_graph_container";
+import VotesGraphContainer from "./project_dashboard/votes_view/votes_graph_container";
+import { voteViewIcon, locViewIcon } from "./project_dashboard/ProjectDashboardIcons";
 
 //token graph types
-import TokenGraph from './token_dashboard/token_view/token_graph';
-import {byUserIcon, allUsersIcon} from './token_dashboard/TokenDashboardIcons';
+import TokenGraph from "./token_dashboard/token_view/token_graph";
+import { byUserIcon, allUsersIcon } from "./token_dashboard/TokenDashboardIcons";
 
-import Loader from './loader/loader';
-import TimeAxis from './time_axis/time_axis';
+// import Loader from './loader/loader';
+import TimeAxis from "./time_axis/time_axis";
 
-class Dashboard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showAxis: false,
-      LowerDashboardisClosed: true,
-      UpperDashboardisClosed: true,
-      LowerGraphNeedsAnAxis: false,
-      UpperGraphNeedsAnAxis: false
-      // OtherDashboardNeedsanAxis: false,
-    }
-    this.showAxis = this.showAxis.bind(this);
-  }
+const Dashboard = (props) => {
+  const [stateLower, setStateLower] = useState({
+    LowerDashboardisClosed: true,
+    LowerGraphNeedsAnAxis: false,
+  });
+  const [stateUpper, setStateUpper] = useState({
+    UpperDashboardisClosed: true,
+    UpperGraphNeedsAnAxis: false,
+  });
 
-  showAxis(ThisDashboardNeedsanAxis, dashboardIsClosed, dashboardType) {
+  const [showAxis, setShowAxis] = useState(false);
 
-    let {LowerDashboardisClosed, UpperDashboardisClosed, LowerGraphNeedsAnAxis, UpperGraphNeedsAnAxis} = this.state
-
+  const showAxisFunc = (ThisDashboardNeedsanAxis, dashboardIsClosed, dashboardType) => {
     if (dashboardType === "token") {
-      UpperDashboardisClosed = dashboardIsClosed
-      UpperGraphNeedsAnAxis = ThisDashboardNeedsanAxis
-      this.setState({UpperDashboardisClosed: dashboardIsClosed, UpperGraphNeedsAnAxis: ThisDashboardNeedsanAxis})
+      setStateUpper({
+        // ...stateUpper,
+        UpperDashboardisClosed: dashboardIsClosed,
+        UpperGraphNeedsAnAxis: ThisDashboardNeedsanAxis,
+      });
     }
     if (dashboardType === "project") {
-      LowerDashboardisClosed = dashboardIsClosed
-      LowerGraphNeedsAnAxis = ThisDashboardNeedsanAxis
-      this.setState({LowerDashboardisClosed: dashboardIsClosed, LowerGraphNeedsAnAxis: ThisDashboardNeedsanAxis})
+      setStateLower({
+        // ...stateLower,
+        LowerDashboardisClosed: dashboardIsClosed,
+        LowerGraphNeedsAnAxis: ThisDashboardNeedsanAxis,
+      });
     }
 
-    if (LowerDashboardisClosed && !UpperDashboardisClosed) {
-      if (UpperGraphNeedsAnAxis) {
-        this.setState({showAxis: true})
+    if (stateLower.LowerDashboardisClosed && !stateUpper.UpperDashboardisClosed) {
+      if (stateUpper.UpperGraphNeedsAnAxis) {
+        setShowAxis((c) => true);
       } else {
-        this.setState({showAxis: false})
+        setShowAxis((c) => false);
       }
-    } else if (UpperDashboardisClosed && !LowerDashboardisClosed) {
-      if (LowerGraphNeedsAnAxis) {
-        this.setState({showAxis: true})
+    } else if (stateUpper.UpperDashboardisClosed && !stateLower.LowerDashboardisClosed) {
+      if (stateLower.LowerGraphNeedsAnAxis) {
+        setShowAxis((c) => true);
       } else {
-        this.setState({showAxis: false})
-      }
-    } else if (!LowerDashboardisClosed && !UpperDashboardisClosed) {
-      if (UpperGraphNeedsAnAxis || LowerGraphNeedsAnAxis) {
-        this.setState({showAxis: true})
-      } else {
-        this.setState({showAxis: false})
+        setShowAxis((c) => false);
       }
     } else {
-      this.setState({showAxis: false})
+      setShowAxis((c) => false);
     }
+  };
+  const updateTimeAxis = (startTime, endTime) => {};
 
-  }
+  console.log(stateLower.LowerDashboardisClosed, stateLower.LowerDashboardisClosed, "lower, upper");
 
-  render() {
+  const boxClass =
+    !stateLower.LowerDashboardisClosed || !stateUpper.UpperDashboardisClosed === true
+      ? "dashboardsOpenClass"
+      : "dashboardClosedClass";
 
-    console.log(this.state.LowerDashboardisClosed, this.state.LowerDashboardisClosed, "lower, upper");
-
-    const boxClass = !this.state.LowerDashboardisClosed || !this.state.UpperDashboardisClosed === true ? "dashboardsOpenClass" : "dashboardClosedClass"
-
-    return (<div className={`dashboardBox ${boxClass}`}>
-                <DashboardGraph showAxis={this.showAxis} updateTimeAxis={this.updateTimeAxis} graphs={{
-                    "BY USER" : <TokenGraph currentView="BY USER"/>,
-                    "BY ALL" : <TokenGraph currentView="BY ALL"/>
-                  }} graphsNeedingAxis={["BY USER", "BY ALL"]} dashboardType="token" dashboardTitle="TOKEN DASHBOARD" dashboardDescription="The token dashboard tracks the performance of the portal's token, providing investors perspective on the deployment and earnings history of tokens in circulation." toggleView={this.toggleView} optionIcons={{
-                    "BY USER" : byUserIcon,
-                    "BY ALL" : allUsersIcon
-                  }}/> {
-                  this.state.showAxis
-                    ? <TimeAxis/>
-                    : <div></div>
-                }
-                <DashboardGraph showAxis={this.showAxis} updateTimeAxis={this.updateTimeAxis} graphs={{
-                    "LOCATION VIEW" : <LocGraphContainer currentView="LOCATION VIEW"/>,
-                    "VOTE VIEW" : <VotesGraphContainer currentView="VOTE VIEW"/>
-                  }} graphsNeedingAxis={["VOTE VIEW"]} dashboardType="project" dashboardTitle="PROJECT DASHBOARD" dashboardDescription="The project dashboard tracks the performance of the projects providing investors a comparative framework to provide direction on which investments to focus on." toggleView={this.toggleView} optionIcons={{
-                    "VOTE VIEW" : voteViewIcon,
-                    "LOCATION VIEW" : locViewIcon
-                  }}/>
-            </div>);
-
-    return <div className="box"><Loader/></div>;
-  }
+  return (
+    <div className={`dashboardBox ${boxClass}`}>
+      <DashboardGraph
+        showAxis={showAxisFunc}
+        updateTimeAxis={updateTimeAxis}
+        graphs={{
+          "BY USER": <TokenGraph currentView="BY USER" />,
+          "BY ALL": <TokenGraph currentView="BY ALL" />,
+        }}
+        graphsNeedingAxis={["BY USER", "BY ALL"]}
+        dashboardType="token"
+        dashboardTitle="TOKEN DASHBOARD"
+        dashboardDescription="The token dashboard tracks the performance of the portal's token, providing investors perspective on the deployment and earnings history of tokens in circulation."
+        optionIcons={{
+          "BY USER": byUserIcon,
+          "BY ALL": allUsersIcon,
+        }}
+      />
+      {showAxis ? <TimeAxis /> : <div></div>}
+      <DashboardGraph
+        showAxis={showAxisFunc}
+        updateTimeAxis={updateTimeAxis}
+        graphs={{
+          "LOCATION VIEW": <LocGraphContainer currentView="LOCATION VIEW" />,
+          "VOTE VIEW": <VotesGraphContainer currentView="VOTE VIEW" />,
+        }}
+        graphsNeedingAxis={["VOTE VIEW"]}
+        dashboardType="project"
+        dashboardTitle="PROJECT DASHBOARD"
+        dashboardDescription="The project dashboard tracks the performance of the projects providing investors a comparative framework to provide direction on which investments to focus on."
+        optionIcons={{
+          "VOTE VIEW": voteViewIcon,
+          "LOCATION VIEW": locViewIcon,
+        }}
+      />
+    </div>
+  );
 };
 
 export default Dashboard;

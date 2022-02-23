@@ -1,19 +1,16 @@
 import {
   RECEIVE_TOKEN_GRAPH_DATA,
-  RECEIVE_TOKEN_TRANSFER
-} from '../actions/chain_actions/token_actions';
-import {
-  RECEIVE_DIVIDENDS
-} from '../actions/chain_actions/dividends_actions';
-import { merge } from 'lodash';
+  RECEIVE_TOKEN_TRANSFER,
+} from "../actions/chain_actions/token_actions";
+import { RECEIVE_DIVIDENDS } from "../actions/chain_actions/dividends_actions";
+import { merge } from "lodash";
 
 const tokenGraphByAllReducer = (state = null, action) => {
   Object.freeze(state);
   let newState;
   switch (action.type) {
-
     case RECEIVE_TOKEN_GRAPH_DATA:
-      if (action.currentViewType === 'BY ALL') {
+      if (action.currentViewType === "BY ALL") {
         return action.tokenGraphData;
       }
       return state;
@@ -27,7 +24,7 @@ const tokenGraphByAllReducer = (state = null, action) => {
         let { activeTokens, totalTokens, earnings, date } = newState[newState.length - 1];
 
         if (from == "0x0000000000000000000000000000000000000000") {
-          if (type == 'inactive') {
+          if (type == "inactive") {
             totalTokens += args.value;
           } else {
             activeTokens += args.value;
@@ -38,7 +35,7 @@ const tokenGraphByAllReducer = (state = null, action) => {
           activeTokens,
           totalTokens,
           date: blockNumber,
-          earnings
+          earnings,
         };
 
         if (date === blockNumber) {
@@ -52,7 +49,7 @@ const tokenGraphByAllReducer = (state = null, action) => {
 
       return state;
     case RECEIVE_DIVIDENDS:
-    //this isnt going to happen yet
+      //this isnt going to happen yet
       newState = merge({}, state);
       let { activeTokens, totalTokens, earnings, date } = newState[newState.length - 1];
 
@@ -60,12 +57,12 @@ const tokenGraphByAllReducer = (state = null, action) => {
         activeTokens,
         totalTokens,
         data: Number(action.dividends.blockNumber),
-        earnings: earnings + Number(action.dividends.args.weiAmount)
-      })
+        earnings: earnings + Number(action.dividends.args.weiAmount),
+      });
 
       return newState;
     default:
-    return state;
+      return state;
   }
-}
+};
 export default tokenGraphByAllReducer;

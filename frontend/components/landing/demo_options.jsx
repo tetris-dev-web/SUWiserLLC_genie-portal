@@ -1,36 +1,35 @@
-import React from 'react';
-import { withRouter } from 'react-router';
+import React from "react";
+import { withRouter } from "react-router";
 
-class DemoOptions extends React.Component {
+const DemoOptions = (props) => {
+  const { history } = props;
 
-  constructor (props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
+  const handleClick = (demoType) => {
+    history.push(`/dashboard/${demoType}`);
+  };
 
-  handleClick (demoType) {
-    this.props.history.push(`/dashboard/${demoType}`);
-  }
-
-  render () {
-    return (
-      <div className='demo_options'>
-        <DashBoardOption userDisplay={'demo investor dashboard'} navigateToDashBoard={() => this.handleClick('demoInvestor')}/>
-        <DashBoardOption userDisplay={'demo developer dashboard'} navigateToDashBoard={() => this.handleClick('demoDeveloper')}/>
-      </div>
-    )
-  }
-}
+  return (
+    <div className="demo_options">
+      <DashBoardOption
+        userDisplay={"demo investor dashboard"}
+        navigateToDashBoard={() => handleClick("demoInvestor")}
+      />
+      <DashBoardOption
+        userDisplay={"demo developer dashboard"}
+        navigateToDashBoard={() => handleClick("demoDeveloper")}
+      />
+    </div>
+  );
+};
 
 const DashBoardOption = ({ userDisplay, navigateToDashBoard }) => {
   return (
-    <div  className='bounceOnHover demo_option'>
+    <div className="bounceOnHover demo_option">
       <p onClick={navigateToDashBoard}>{`${userDisplay}`}</p>
     </div>
-  )
-}
+  );
+};
 
 export default withRouter(DemoOptions);
-
 
 // <DashBoardOption userDisplay={'demo with your own account'} navigateToDashBoard={() => this.handleClick('demo')}/>

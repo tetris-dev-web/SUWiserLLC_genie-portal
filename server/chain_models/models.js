@@ -1,4 +1,4 @@
-const { web3Instance } = require('./web3_instance_connect');
+const { web3Instance } = require("./web3_instance_connect");
 
 const {
   activationAddress,
@@ -10,18 +10,18 @@ const {
   projectLeaderTrackerAddress,
   votingAddress,
   votingTokenAddress,
-} = require('./contract_addresses');
+} = require("./contract_addresses");
 
-const Activation = require('../../truffle/build/contracts/Activation.json');
-const ActiveToken = require('../../truffle/build/contracts/ActiveToken.json');
-const GNITokenCrowdsale = require('../../truffle/build/contracts/GNITokenCrowdsale.json');
-const Dividends = require('../../truffle/build/contracts/Dividends.json');
-const InactiveToken = require('../../truffle/build/contracts/InactiveToken.json');
-const Project = require('../../truffle/build/contracts/Project.json');
-const ProjectFactory = require('../../truffle/build/contracts/ProjectFactory.json');
-const ProjectLeaderTracker = require('../../truffle/build/contracts/ProjectLeaderTracker.json');
-const Voting = require('../../truffle/build/contracts/Voting.json');
-const VotingToken = require('../../truffle/build/contracts/VotingToken.json');
+const Activation = require("../../truffle/build/contracts/Activation.json");
+const ActiveToken = require("../../truffle/build/contracts/ActiveToken.json");
+const GNITokenCrowdsale = require("../../truffle/build/contracts/GNITokenCrowdsale.json");
+const Dividends = require("../../truffle/build/contracts/Dividends.json");
+const InactiveToken = require("../../truffle/build/contracts/InactiveToken.json");
+const Project = require("../../truffle/build/contracts/Project.json");
+const ProjectFactory = require("../../truffle/build/contracts/ProjectFactory.json");
+const ProjectLeaderTracker = require("../../truffle/build/contracts/ProjectLeaderTracker.json");
+const Voting = require("../../truffle/build/contracts/Voting.json");
+const VotingToken = require("../../truffle/build/contracts/VotingToken.json");
 
 module.exports = {
   _projectInstance: (projectAddress) => web3Instance(Project, projectAddress),

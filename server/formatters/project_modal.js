@@ -1,4 +1,4 @@
-const { merge } = require('lodash');
+const { merge } = require("lodash");
 
 const formatProject = (project) => {
   const {

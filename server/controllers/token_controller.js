@@ -1,16 +1,16 @@
-const { web3 } = require('../chain_connection/web3_configuration');
-const { fetchEvents } = require('../chain_util/chain_util');
-const { numberParser } = require('../util/number_util');
-const { merge } = require('lodash');
-const { formatTokenGraphData } = require('../formatters/token_graph');
-const { fetchDividendReceptions } = require('./dividends_controller');
+const { web3 } = require("../chain_connection/web3_configuration");
+const { fetchEvents } = require("../chain_util/chain_util");
+const { numberParser } = require("../util/number_util");
+const { merge } = require("lodash");
+const { formatTokenGraphData } = require("../formatters/token_graph");
+const { fetchDividendReceptions } = require("./dividends_controller");
 const {
   inactiveTokenInstance,
   activeTokenInstance,
   dividendsInstance,
-} = require('../chain_models/models');
-const { inactiveTokenAddress } = require('../chain_models/contract_addresses');
-const { sendTransaction } = require('../chain_util/chain_util');
+} = require("../chain_models/models");
+const { inactiveTokenAddress } = require("../chain_models/contract_addresses");
+const { sendTransaction } = require("../chain_util/chain_util");
 
 const fetchTokenHistoryWithEarnings = async (currentViewType, account) => {
   const dividendReceptions = await fetchDividendReceptions();
@@ -39,7 +39,7 @@ const fetchTokenTransfers = async () => {
 };
 
 const transfersData = async (tokenInstance) => {
-  const events = await fetchEvents(tokenInstance, 'Transfer');
+  const events = await fetchEvents(tokenInstance, "Transfer");
   return events
     .filter((event) => Number(event.returnValues.value) > 0)
     .map((event) => {
@@ -51,7 +51,7 @@ const transfersData = async (tokenInstance) => {
 };
 
 const fetchInvestorBalance = async () => {
-  const account = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
+  const account = process.env.DEV_ACCOUNT;
   const accountInactive = await inactiveTokenInstance.methods.balanceOf(account).call();
   const accountActive = await activeTokenInstance.methods.balanceOf(account).call();
   const accountPending = await inactiveTokenInstance.methods.pendingActivations(account).call();
@@ -69,7 +69,7 @@ const fetchInvestorBalance = async () => {
 };
 
 const activateDemoInvestorPending = async () => {
-  const address = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
+  const address = process.env.DEV_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   let nonce = await web3.eth.getTransactionCount(address);
 

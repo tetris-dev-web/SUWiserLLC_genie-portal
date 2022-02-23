@@ -1,4 +1,4 @@
-const { merge } = require('lodash');
+const { merge } = require("lodash");
 
 const formatTokenGraphData = (tokenTransferData, dividendsLogs, currentViewType, account) => {
   const dividendsHistory = formatDividendsHistory(dividendsLogs);
@@ -17,7 +17,7 @@ const formatDividendsHistory = (dividendsLogs) => {
 const formatTokenHistory = (
   tokenTransferData,
   currentViewType,
-  account = '0xef898fd948f50d5010d3ec20233fae23d89a1a51',
+  account = process.env.DEV_ACCOUNT,
 ) => {
   const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferData);
 
@@ -25,7 +25,7 @@ const formatTokenHistory = (
     return x.blockNumber - y.blockNumber;
   });
 
-  return currentViewType === 'BY USER'
+  return currentViewType === "BY USER"
     ? tokenHistoryByUser(account, allTransfers)
     : tokenHistoryByAll(allTransfers);
 };
@@ -42,7 +42,7 @@ const mergeHistories = (dividendsHistory, tokenHistory, currentViewType) => {
   };
 
   const incrementEarnings = () => {
-    if (currentViewType === 'BY USER') {
+    if (currentViewType === "BY USER") {
       earnings +=
         Number(currentDividendsRecord.weiAmount) *
         (currentTokenRecord.activeTokens / currentTokenRecord.allActiveTokens);
@@ -105,7 +105,7 @@ const getTransferHistory = (tokenTransferData) => {
   const { inactiveTransferData, activeTransferData } = tokenTransferData;
 
   const helper = (transferData) => {
-    const type = transferData === inactiveTransferData ? 'inactive' : 'active';
+    const type = transferData === inactiveTransferData ? "inactive" : "active";
     return transferData.map((_data) => {
       const data = merge({}, _data);
       data.type = type;
@@ -130,8 +130,8 @@ const tokenHistoryByUser = (account, allTransfers) => {
 
   return userTransfers.map((transferData) => {
     if (
-      transferData.type === 'active' &&
-      transferData.from === '0x0000000000000000000000000000000000000000'
+      transferData.type === "active" &&
+      transferData.from === "0x0000000000000000000000000000000000000000"
     ) {
       allActiveTokens += transferData.value;
     }
@@ -139,12 +139,12 @@ const tokenHistoryByUser = (account, allTransfers) => {
     if (transferData.to.toLowerCase() === account) {
       //if the account's overall balance is increasing
       if (
-        transferData.type == 'inactive' ||
-        transferData.from !== '0x0000000000000000000000000000000000000000'
+        transferData.type == "inactive" ||
+        transferData.from !== "0x0000000000000000000000000000000000000000"
       ) {
         totalTokens += transferData.value;
       }
-      if (transferData.type == 'active') {
+      if (transferData.type == "active") {
         //if the accounts own tokens were activated
         activeTokens += transferData.value;
       }
@@ -152,12 +152,12 @@ const tokenHistoryByUser = (account, allTransfers) => {
       //if the account is doing the transfering
       //if the account is losing overall tokens
       if (
-        transferData.type == 'active' ||
-        transferData.to !== '0x0000000000000000000000000000000000000000'
+        transferData.type == "active" ||
+        transferData.to !== "0x0000000000000000000000000000000000000000"
       ) {
         totalTokens -= transferData.value;
       }
-      if (transferData.type === 'active') {
+      if (transferData.type === "active") {
         activeTokens -= transferData.value;
       }
     }
@@ -176,8 +176,8 @@ const tokenHistoryByAll = (allTransfers) => {
   let activeTokens = 0;
 
   return allTransfers.map((transferData) => {
-    if (transferData.from == '0x0000000000000000000000000000000000000000') {
-      if (transferData.type == 'inactive') {
+    if (transferData.from == "0x0000000000000000000000000000000000000000") {
+      if (transferData.type == "inactive") {
         totalTokens += transferData.value;
       } else {
         activeTokens += transferData.value;

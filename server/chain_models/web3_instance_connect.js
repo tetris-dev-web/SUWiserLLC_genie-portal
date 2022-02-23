@@ -1,5 +1,5 @@
-const { web3 } = require('../chain_connection/web3_configuration');
-const TruffleContract = require('truffle-contract');
+const { web3 } = require("../chain_connection/web3_configuration");
+const TruffleContract = require("truffle-contract");
 
 const web3Instance = (contract, instanceAddress) => {
   const truffleContract = TruffleContract(contract);

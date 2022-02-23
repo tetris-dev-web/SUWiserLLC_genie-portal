@@ -4,19 +4,19 @@ const {
   projectFactoryInstance,
   _projectInstance,
   activationInstance,
-} = require('../chain_models/models');
-const { web3 } = require('../chain_connection/web3_configuration');
+} = require("../chain_models/models");
+const { web3 } = require("../chain_connection/web3_configuration");
 const {
   votingAddress,
   projectLeaderTrackerAddress,
-} = require('../chain_models/contract_addresses');
-const { dotenv } = require('../chain_connection/web3_configuration');
-const { attemptProjectActivation } = require('./activation_controller');
-const { sendTransaction } = require('../chain_util/chain_util');
+} = require("../chain_models/contract_addresses");
+const { dotenv } = require("../chain_connection/web3_configuration");
+const { attemptProjectActivation } = require("./activation_controller");
+const { sendTransaction } = require("../chain_util/chain_util");
 
 const voteAndUpdateProjects = async (votes, type, projectAddress) => {
   //using a demo account for now
-  const address = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
+  const address = process.env.DEV_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
 
   await recordVotes(projectAddress, votes, type, address, privateKey);
@@ -31,7 +31,7 @@ const voteAndUpdateProjects = async (votes, type, projectAddress) => {
 const recordVotes = async (projectAddress, votes, type, address, privateKey) => {
   let method;
 
-  if (type === 'removeVotes') {
+  if (type === "removeVotes") {
     method = votingInstance.methods.voteAgainstProject(projectAddress, votes);
   } else {
     method = votingInstance.methods.voteForProject(projectAddress, votes);
@@ -39,7 +39,7 @@ const recordVotes = async (projectAddress, votes, type, address, privateKey) => 
 
   const nonce = await web3.eth.getTransactionCount(address);
 
-  console.log('REALLY WANT TO VOTE HERE');
+  console.log("REALLY WANT TO VOTE HERE");
   return await sendTransaction(
     {
       nonce,

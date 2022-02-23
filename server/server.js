@@ -41,22 +41,22 @@ const {
   votingTokenInstance,
 } = require("./chain_models/models");
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8090;
 
 let endpoint = "";
 const app = express();
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/build")));
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "./frontend/build")));
 
-  app.get("*", (req, res) =>
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html")),
-  );
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running....");
-  });
-}
+//   app.get("*", (req, res) =>
+//     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html")),
+//   );
+// } else {
+//   app.get("/", (req, res) => {
+//     res.send("API is running....");
+//   });
+// }
 
 app.use(bodyParser.json({ type: "*/*" }));
 app.get("/api/helloworld", (req, res) => {
@@ -66,8 +66,17 @@ app.get("/api/helloworld", (req, res) => {
 app.get(
   "/api/fetchStartAndEndTimes",
   asyncMiddleware(async (req, res) => {
-    const startTime = await fetchStartTime();
-    const endTime = await fetchEndTime();
+    console.log("/api/fetchStartAndEndTimes", req.body);
+
+    // const startTime =  await fetchStartTime();
+    // const endTime =   await fetchEndTime();
+    // console.log('startTime=', startTime,'endTime=', endTime);
+
+    // const startAndEndTimes = {startTime, endTime }
+    // console.log('result=', startAndEndTimes);
+
+    const startTime = 1514172200;
+    const endTime = 1564172200;
     const startAndEndTimes = { startTime, endTime };
     res.send(startAndEndTimes);
   }),

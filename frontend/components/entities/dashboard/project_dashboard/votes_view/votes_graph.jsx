@@ -1,133 +1,137 @@
-import React from 'react';
-import * as d3 from 'd3';
-import VotesViewCapitalRaised from './votes_view_capital_raised/votes_view_capital_raised';
-import VotesViewPitchedProjects from './votes_view_pitched_projects/votes_view_pitched_projects';
-import VoteShiftTool from './vote_shift_tool';
-import Loader from '../../loader/loader';
-import './votes_graph.scss';
+import React, { useEffect, useState } from "react";
+import * as d3 from "d3";
+import VotesViewCapitalRaised from "./votes_view_capital_raised/votes_view_capital_raised";
+import VotesViewPitchedProjects from "./votes_view_pitched_projects/votes_view_pitched_projects";
+import VoteShiftTool from "./vote_shift_tool";
+import Loader from "../../loader/loader";
+import "./votes_graph.scss";
+import { merge } from "lodash";
 
-class VotesGraph extends React.Component {
-  constructor() {
-    super();
+const VotesGraph = (props) => {
+  const [state, setState] = useState({
+    selectedProject: null,
+    componentVisible: "invisible",
+    voteViewOpen: false,
+  });
 
-    this.state = {
-      selectedProject: null,
-      componentVisible: "invisible",
-      voteViewOpen: false,
-    };
+  const margin = { top: 20, right: 50, bottom: 30, left: 50 };
+  const SVGWidth = (960 - margin.left - margin.right) * 0.5;
+  const SVGHeight = 600 * 0.5;
+  const timeWidth = (960 - margin.left - margin.right) * 0.5;
+  const { wait, projectsLoaded, fetchSharedProjectGraphData } = props;
 
-    this.margin = { top: 20, right: 50, bottom: 30, left: 50 };
-    this.SVGWidth = (960 - this.margin.left - this.margin.right) * .5;
-    this.SVGHeight = 600 * .5;
-    this.timeWidth = (960 - this.margin.left - this.margin.right) * .5;
-    this.watchTokenPurchase = this.watchTokenPurchase.bind(this);
-    this.watchProjectPitch = this.watchProjectPitch.bind(this);
-  }
+  let voteShiftTool;
 
-  componentDidMount() {
-    console.log("wait",this.props.wait);
+  useEffect(() => {
+    console.log("wait", wait);
     setTimeout(() => {
-      this.setState({componentVisible: ""});
-    }, this.props.wait);
+      setState(merge({}, state, { componentVisible: "" }));
+    }, wait);
 
-
-    if (!this.props.projectsLoaded) {
-      this.props.fetchSharedProjectGraphData();
+    if (projectsLoaded) {
+      fetchSharedProjectGraphData();
     }
 
-    this.props.fetchCapitalHistory(this.props.crowdsaleInstance);
-    this.watchProjectPitch();
-    this.watchTokenPurchase();
-  }
+    props.fetchCapitalHistory(props.crowdsaleInstance);
+    watchProjectPitch();
+    watchTokenPurchase();
+  }, []);
 
-  // componentDidUpdate(prevProps) {
-  //   const prevLineData = prevProps.lineData;
-  //   const { lineData, updateTimeAxis, startTime, endTime } = this.props;
-  //   if (prevLineData !== lineData) {
-  //     updateTimeAxis(startTime, endTime)
-  //   }
-  // }
-
-  watchProjectPitch () { //event listener for pitched projects // get project from database and integrate into store
-    const { projectFactoryInstance, projectContract } = this.props;
+  const watchProjectPitch = () => {
+    //event listener for pitched projects // get project from database and integrate into store
+    const { projectFactoryInstance, projectContract } = props;
     projectFactoryInstance.ProjectPitch().watch((error, event) => {
       const address = event.args.projectAddress;
       // const id = event.args.projectId;
-      this.props.fetchProject(address);
+      props.fetchProject(address);
     });
-  }
+  };
 
-  watchTokenPurchase () {
-    console.log("watching purchase")
-    this.props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
-      this.props.receiveTokenPurchase({blockNumber: event.blockNumber, value: Number(event.args.value)});
-      this.props.notifyTransactionCompletion({notification: "Your token purchase transaction has been mined to the blockchain."});
-    })
-  }
+  const watchTokenPurchase = () => {
+    console.log("watching purchase");
+    props.crowdsaleInstance.TokenPurchase().watch((error, event) => {
+      props.receiveTokenPurchase({
+        blockNumber: event.blockNumber,
+        value: Number(event.args.value),
+      });
+      props.notifyTransactionCompletion({
+        notification: "Your token purchase transaction has been mined to the blockchain.",
+      });
+    });
+  };
 
-  createScales(){
-    const { capitalBeingRaised, capitalDeployed, capitalTotal, pitchedProjectsValuationMinMax, allProjectsValuationMinMax } = this.props;
-    const { startTime, endTime } = this.props;
+  const createScales = () => {
+    const {
+      capitalBeingRaised,
+      capitalDeployed,
+      capitalTotal,
+      pitchedProjectsValuationMinMax,
+      allProjectsValuationMinMax,
+    } = props;
+    const { startTime, endTime } = props;
     return {
-      SVGHeightScale: d3.scaleLinear()
-        .range([0, this.SVGHeight])
-        .domain([0, capitalDeployed + Math.max(pitchedProjectsValuationMinMax[1], capitalBeingRaised)]),
-      SVGYScale: d3.scaleLinear()
-        .range([this.SVGHeight, 0])
-        .domain([0, capitalDeployed + Math.max(pitchedProjectsValuationMinMax[1], capitalBeingRaised)]),
-      SVGTimeXScale: d3.scaleLinear()
-        .domain([startTime, endTime])
-        .range([0, this.timeWidth]),
-      circleScale: d3.scaleLinear()
-        .domain(allProjectsValuationMinMax)
-        .range([5, 10])
+      SVGHeightScale: d3
+        .scaleLinear()
+        .range([0, SVGHeight])
+        .domain([
+          0,
+          capitalDeployed + Math.max(pitchedProjectsValuationMinMax[1], capitalBeingRaised),
+        ]),
+      SVGYScale: d3
+        .scaleLinear()
+        .range([SVGHeight, 0])
+        .domain([
+          0,
+          capitalDeployed + Math.max(pitchedProjectsValuationMinMax[1], capitalBeingRaised),
+        ]),
+      SVGTimeXScale: d3.scaleLinear().domain([startTime, endTime]).range([0, timeWidth]),
+      circleScale: d3.scaleLinear().domain(allProjectsValuationMinMax).range([5, 10]),
     };
-  }
+  };
 
-  dataHasLoaded(){
-    return this.props.lineData;
-  }
-  renderGraph() {
-    const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = this.createScales();
-    const { selectedProject, componentVisible } = this.state;
-    const { startTime, endTime } = this.props
-    let button
-    if(!this.state.voteViewOpen){
-      button = (<button
-                className="voteBreakDownButtonOpen bounceOnHover"
-                onClick={() => this.setState({voteViewOpen: !this.state.voteViewOpen})}>
-                projects under consideration
-                </button>)
-    }else if(selectedProject){
-      button = ""
-    }else{
-      button = (<button
-                className="voteBreakDownButtonClose bounceOnHover"
-                onClick={() => this.setState({voteViewOpen: !this.state.voteViewOpen})}>
-                X
-                </button>)
+  const dataHasLoaded = () => {
+    return props.lineData;
+  };
+
+  const renderGraph = () => {
+    const { SVGHeightScale, SVGYScale, SVGTimeXScale, circleScale } = createScales();
+    const { selectedProject, componentVisible } = state;
+    const { startTime, endTime } = props;
+    let button;
+    if (!state.voteViewOpen) {
+      button = (
+        <button
+          className="voteBreakDownButtonOpen bounceOnHover"
+          onClick={() => setState(merge({}, state, { voteViewOpen: !state.voteViewOpen }))}
+        >
+          projects under consideration
+        </button>
+      );
+    } else if (selectedProject) {
+      button = "";
+    } else {
+      button = (
+        <button
+          className="voteBreakDownButtonClose bounceOnHover"
+          onClick={() => setState(merge({}, state, { voteViewOpen: !state.voteViewOpen }))}
+        >
+          X
+        </button>
+      );
     }
 
     return (
       <div className={`votes-graph ${componentVisible}`}>
-        <div className="vote-shift-tool-container"
-          ref={node => this.voteShiftTool = node}>
-          {
-            selectedProject &&
-            <VoteShiftTool selectedProject={selectedProject.address}/>
-          }
+        <div className="vote-shift-tool-container" ref={(node) => (voteShiftTool = node)}>
+          {selectedProject && <VoteShiftTool selectedProject={selectedProject.address} />}
         </div>
-        {
-          button
-        }
+        {button}
 
-        <svg className="votes-view-svg"
-          preserveAspectRatio="xMinYMin meet"
-          viewBox="0 0 960 300">
+        <svg className="votes-view-svg" preserveAspectRatio="xMinYMin meet" viewBox="0 0 960 300">
           <VotesViewCapitalRaised
-            {...this.props}
-            {...this.state}
-            margin={this.margin}
+            {...props}
+            {...state}
+            margin={margin}
             SVGYScale={SVGYScale}
             SVGHeightScale={SVGHeightScale}
             SVGTimeXScale={SVGTimeXScale}
@@ -136,29 +140,29 @@ class VotesGraph extends React.Component {
             endTime={endTime}
           />
 
-          {
-          !this.state.voteViewOpen?
-          ""
-          : <VotesViewPitchedProjects
-              {...this.props}
-              {...this.state}
-              margin={this.margin}
+          {!state.voteViewOpen ? (
+            ""
+          ) : (
+            <VotesViewPitchedProjects
+              {...props}
+              {...state}
+              margin={margin}
               SVGYScale={SVGYScale}
               SVGHeightScale={SVGHeightScale}
-              SVGWidth={this.SVGWidth}
+              SVGWidth={SVGWidth}
               circleScale={circleScale}
-              voteShiftTool={this.voteShiftTool}
-              toggleSelectedProject={selectedProject => this.setState({selectedProject})}
+              voteShiftTool={voteShiftTool}
+              toggleSelectedProject={(selectedProject) =>
+                setState(merge({}, state, { selectedProject }))
+              }
             />
-           }
+          )}
         </svg>
       </div>
     );
-  }
+  };
 
-  render() {
-    return this.dataHasLoaded() ? this.renderGraph() : <Loader/>;
-  }
-}
+  return dataHasLoaded() ? renderGraph() : <Loader />;
+};
 
 export default VotesGraph;

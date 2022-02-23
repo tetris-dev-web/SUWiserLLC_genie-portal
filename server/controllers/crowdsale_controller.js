@@ -1,26 +1,26 @@
-const { web3 } = require('../chain_connection/web3_configuration');
-const { fetchEvents } = require('../chain_util/chain_util');
-const { numberParser } = require('../util/number_util');
-const { crowdsaleInstance } = require('../chain_models/models');
-const { crowdsaleAddress } = require('../chain_models/contract_addresses');
-const { formatCapitalHistoryData } = require('../formatters/capital_history');
-const { sendTransaction } = require('../chain_util/chain_util');
-const { attemptProjectActivation } = require('./activation_controller');
-const { dotenv } = require('../chain_connection/web3_configuration');
+const { web3 } = require("../chain_connection/web3_configuration");
+const { fetchEvents } = require("../chain_util/chain_util");
+const { numberParser } = require("../util/number_util");
+const { crowdsaleInstance } = require("../chain_models/models");
+const { crowdsaleAddress } = require("../chain_models/contract_addresses");
+const { formatCapitalHistoryData } = require("../formatters/capital_history");
+const { sendTransaction } = require("../chain_util/chain_util");
+const { attemptProjectActivation } = require("./activation_controller");
+const { dotenv } = require("../chain_connection/web3_configuration");
 
 const fetchWeiRaised = async () => {
   return await numberParser(crowdsaleInstance.methods.weiRaised_());
 };
 
 const fetchPurchases = async () => {
-  const tokenPurchases = await fetchEvents(crowdsaleInstance, 'TokenPurchase');
+  const tokenPurchases = await fetchEvents(crowdsaleInstance, "TokenPurchase");
 
   return formatCapitalHistoryData(tokenPurchases);
 };
 
 const buyTokens = async (wei) => {
   //using demo account for now
-  const address = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
+  const address = process.env.DEV_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
 
@@ -35,7 +35,7 @@ const buyTokens = async (wei) => {
     privateKey,
   );
 
-  console.log('TRANSACTION:', transaction);
+  console.log("TRANSACTION:", transaction);
 
   await attemptProjectActivation();
 };

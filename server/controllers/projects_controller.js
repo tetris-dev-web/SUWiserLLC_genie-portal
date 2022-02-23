@@ -1,12 +1,12 @@
-const { web3 } = require('../chain_connection/web3_configuration');
-const { fetchEvents } = require('../chain_util/chain_util');
-const { numberParser } = require('../util/number_util');
-const { formatProject } = require('../formatters/project_modal');
-const { sendTransaction } = require('../chain_util/chain_util');
-const { projectFactoryInstance, _projectInstance } = require('../chain_models/models');
+const { web3 } = require("../chain_connection/web3_configuration");
+const { fetchEvents } = require("../chain_util/chain_util");
+const { numberParser } = require("../util/number_util");
+const { formatProject } = require("../formatters/project_modal");
+const { sendTransaction } = require("../chain_util/chain_util");
+const { projectFactoryInstance, _projectInstance } = require("../chain_models/models");
 
 const demoDepositCashflow = async (wei, projectAddress) => {
-  const address = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
+  const address = process.env.DEV_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
   const projectInstance = _projectInstance(projectAddress);
@@ -64,7 +64,7 @@ const _fetchProjectGraphData = async (options) => {
   const openingTime = await numberParser(projectMethods.openingTime());
   const { busLink, description } = JSON.parse(projectData[1]);
   const prePortalCashflow = JSON.parse(projectData[4]);
-  const cashflow = await fetchEvents(projectInstance, 'ReceiveCashFlow');
+  const cashflow = await fetchEvents(projectInstance, "ReceiveCashFlow");
 
   return {
     id,
@@ -118,7 +118,7 @@ const fetchProjectGraphData = async (address) => {
 
 const demoInvestorVotesByProject = async (projectAddress) => {
   const projectInstance = _projectInstance(projectAddress);
-  return await projectInstance.methods.votesOf('0xef898fd948f50d5010d3ec20233fae23d89a1a51').call();
+  return await projectInstance.methods.votesOf(process.env.DEV_ACCOUNT).call();
 };
 
 module.exports = {

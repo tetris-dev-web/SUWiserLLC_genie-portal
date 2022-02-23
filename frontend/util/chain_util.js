@@ -1,14 +1,14 @@
-import sigUtil from "eth-sig-util"
+import sigUtil from "eth-sig-util";
 
 export const fetchProjectVotes = async (account, projectContract, projectAddress) => {
-  console.log(projectAddress)
+  console.log(projectAddress);
   const project = await projectContract.at(projectAddress);
   return await project.votesOf.call(account);
-}
+};
 
 export const fetchFreeVotes = async (account, votingToken) => {
   return await votingToken.freedUpBalanceOf(account);
-}
+};
 
 export const voteAndUpdateProjects = async (
   account,
@@ -19,7 +19,7 @@ export const voteAndUpdateProjects = async (
   projects,
   projectLeaderTracker,
   activation,
-  web3
+  web3,
 ) => {
   // const block = web3.eth.getBlock("latest");
   // const batch = web3.createBatch();
@@ -39,30 +39,22 @@ export const voteAndUpdateProjects = async (
   // })
   //
   const leader = await projectLeaderTracker.tentativeLeader();
-  console.log('leader', leader)
+  console.log("leader", leader);
   // batch.add(activation.tryActivateProject.request({from: account}));
   // return await batch.execute();
   // await activation.tryActivateProject({from: account});
-}
+};
 
 export const pitchProject = async (projectFactoryInstance, data, account) => {
-  let {
-      title,
-      description,
-      capital_required,
-      valuation,
-      latitude,
-      longitude,
-      cashflow,
-      busLink
-    } = data;
+  let { title, description, capital_required, valuation, latitude, longitude, cashflow, busLink } =
+    data;
 
   const projectInfo = JSON.stringify({
     title,
     description,
     busLink,
     lat: latitude,
-    lng: longitude
+    lng: longitude,
   });
 
   return await projectFactoryInstance.createProject(
@@ -70,7 +62,7 @@ export const pitchProject = async (projectFactoryInstance, data, account) => {
     Math.round(valuation),
     Math.round(capital_required),
     cashflow,
-    {from: account}
+    { from: account },
   );
 };
 
@@ -84,10 +76,10 @@ export const fetchTokenBalances = async (inactiveToken, activeToken, account) =>
     accountInactive,
     accountActive,
     totalInactive,
-    totalActive
-  }
-}
+    totalActive,
+  };
+};
 
 export const buyTokens = async (crowdsale, account, weiAmount) => {
-  await crowdsale.buyTokens({from: account, value: weiAmount});
+  await crowdsale.buyTokens({ from: account, value: weiAmount });
 };

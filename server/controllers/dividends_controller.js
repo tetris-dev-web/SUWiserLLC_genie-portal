@@ -1,13 +1,13 @@
-const { web3 } = require('../chain_connection/web3_configuration');
-const { sendTransaction } = require('../chain_util/chain_util');
-const { fetchEvents } = require('../chain_util/chain_util');
-const { numberParser } = require('../util/number_util');
-const { merge } = require('lodash');
-const { dividendsInstance, activeTokenInstace } = require('../chain_models/models');
-const { dividendsAddress } = require('../chain_models/contract_addresses');
+const { web3 } = require("../chain_connection/web3_configuration");
+const { sendTransaction } = require("../chain_util/chain_util");
+const { fetchEvents } = require("../chain_util/chain_util");
+const { numberParser } = require("../util/number_util");
+const { merge } = require("lodash");
+const { dividendsInstance, activeTokenInstace } = require("../chain_models/models");
+const { dividendsAddress } = require("../chain_models/contract_addresses");
 
 const fetchDividendReceptions = async () => {
-  const dividendReceptions = await fetchEvents(dividendsInstance, 'ReceiveDividends');
+  const dividendReceptions = await fetchEvents(dividendsInstance, "ReceiveDividends");
 
   return dividendReceptions
     .filter((event) => Number(event.returnValues.weiAmount) > 0)
@@ -21,7 +21,7 @@ const fetchDividendReceptions = async () => {
 //for now we will call this every time cashflows are received.
 //in the future, we will call this on a quarterly invterval
 const distributeDividends = async () => {
-  const address = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
+  const address = process.env.DEV_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
 
   const distributeDividend = async (investorId, nonce) => {
@@ -53,7 +53,7 @@ const distributeDividends = async () => {
 };
 
 const collectDemoInvestorDividend = async () => {
-  const address = '0xef898fd948f50d5010d3ec20233fae23d89a1a51';
+  const address = process.env.DEV_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   let nonce = await web3.eth.getTransactionCount(address);
 

@@ -1,41 +1,38 @@
-import React from 'react';
-import Modal from 'react-modal';
+import React, { useState } from "react";
+import Modal from "react-modal";
 
-import BuyForm from './buy_form';
-import ModalStyle from './modal_style';
+import BuyForm from "./buy_form";
+import ModalStyle from "./modal_style";
 
-class BuyFormModal extends React.Component {
-  constructor(props) {
-    super(props);
+const BuyFormModal = (props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    this.state = { isModalOpen: false };
+  const handleClick = () => {
+    console.log("OPENING MODAL");
+    setIsModalOpen(!isModalOpen);
+  };
 
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick() {
-    console.log("OPENING MODAL")
-    this.setState({ isModalOpen: !this.state.isModalOpen });
-  }
-
-  render() {
-    return (
-      <div className="modal-button-cont">
-        <div className={this.state.isModalOpen ? "modal-button-modal-open" : "modal-button"} onClick={this.handleClick}>BUY</div>
-
-        <Modal
-          isOpen={this.state.isModalOpen}
-          onRequestClose={this.handleClick}
-          style={ModalStyle}
-          contentLabel="Transfer Modal"
-          className="modal-container">
-          <BuyForm
-            closeModal={this.handleClick}/>
-        </Modal>
+  return (
+    <div className="modal-button-cont">
+      <div
+        className={isModalOpen ? "modal-button-modal-open" : "modal-button"}
+        onClick={handleClick}
+      >
+        BUY
       </div>
-    );
-  }
-}
+
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={handleClick}
+        style={ModalStyle}
+        contentLabel="Transfer Modal"
+        className="modal-container"
+      >
+        <BuyForm closeModal={handleClick} />
+      </Modal>
+    </div>
+  );
+};
 // account={this.props.account}
 // contract={this.props.contract}
 

@@ -1,52 +1,50 @@
-import React from 'react';
-import ProjectForm from 'Entities/navbar/project_form/project_form';
-import { shallow, mount } from 'enzyme';
+import React from "react";
+import ProjectForm from "Entities/navbar/project_form/project_form";
+import { shallow, mount } from "enzyme";
 
-function setUp(){
- const props = {
-   fetchProjects: jest.fn(() => {
-     return Promise.resolve();
-   }),
-   projects: {
-     project1: projectCashflow
-   }
- };
- const eWrapper = shallow(<ProjectForm {...props}/>);
- const mountWrapper = mount(<ProjectForm {...props}/>);
- return {
-   props,
-   eWrapper,
-   mountWrapper
- };
+function setUp() {
+  const props = {
+    fetchProjects: jest.fn(() => {
+      return Promise.resolve();
+    }),
+    projects: {
+      project1: projectCashflow,
+    },
+  };
+  const eWrapper = shallow(<ProjectForm {...props} />);
+  const mountWrapper = mount(<ProjectForm {...props} />);
+  return {
+    props,
+    eWrapper,
+    mountWrapper,
+  };
 }
 
-describe('Project Form Component', () => {
+describe("Project Form Component", () => {
+  it("should render without throwing an error", () => {
+    const { eWrapper } = setUp();
+    expect(eWrapper).toMatchSnapshot();
+  });
 
- it('should render without throwing an error', () => {
-   const { eWrapper } = setUp()
-   expect(eWrapper).toMatchSnapshot();
- });
+  it("expects props", () => {
+    const { eWrapper } = setUp();
+    expect(eWrapper.props).toBeTruthy();
+  });
 
- it('expects props', () => {
-   const { eWrapper } = setUp()
-   expect(eWrapper.props).toBeTruthy();
- });
+  it("Correctly enters a title", () => {
+    const { eWrapper } = setUp();
+    let projectTitleInput = eWrapper.find(".title-input");
+    projectTitleInput.value = "Project";
+    expect(projectTitleInput.value).toEqual("Project");
+  });
 
- it('Correctly enters a title', () => {
-   const { eWrapper } = setUp();
-   let projectTitleInput = eWrapper.find('.title-input');
-   projectTitleInput.value = "Project";
-   expect(projectTitleInput.value).toEqual("Project")
- });
-
- it('Expects discount rate to have text', () => {
-   const { mountWrapper } = setUp();
-   let discountFactorBox = mountWrapper.find('div.amount-box');
-   expect(discountFactorBox.text()).toBeTruthy();
-   console.log("Text is: ", discountFactorBox.text());
- })
-
-})
+  it("Expects discount rate to have text", () => {
+    const { mountWrapper } = setUp();
+    let discountFactorBox = mountWrapper.find("div.amount-box");
+    expect(discountFactorBox.text()).toBeTruthy();
+    console.log("Text is: ", discountFactorBox.text());
+  });
+});
 
 let projectCashflow = `{
  "01A": -36974,

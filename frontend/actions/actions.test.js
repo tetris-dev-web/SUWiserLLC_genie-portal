@@ -1,17 +1,13 @@
-import * as project_actions from './project_actions'
-import * as APIUtil from '../util/project_api_util';
+import * as project_actions from "./project_actions";
+import * as APIUtil from "../util/project_api_util";
 
-
-
-describe('todo actions', () => {
-  it('recieveProject action should call specific project by id', () => {
+describe("todo actions", () => {
+  it("recieveProject action should call specific project by id", () => {
     expect(project_actions.receiveProject(1)).toEqual({
-      type: 'RECEIVE_PROJECT',
+      type: "RECEIVE_PROJECT",
       project: 1,
-    })
-  })
-
-
+    });
+  });
 
   //
   // it('setVisibilityFilter should create SET_VISIBILITY_FILTER action', () => {
@@ -27,4 +23,4 @@ describe('todo actions', () => {
   //     id: 1
   //   })
   // })
-})
+});
