@@ -19,7 +19,7 @@ const fetchDividendReceptions = async () => {
 //for now we will call this every time cashflows are received.
 //in the future, we will call this on a quarterly invterval
 const distributeDividends = async () => {
-  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const address = process.env.DEMO_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
 
   const distributeDividend = async (investorId, nonce) => {
@@ -52,7 +52,7 @@ const distributeDividends = async () => {
 
 
 const collectDemoInvestorDividend = async () => {
-  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const address = process.env.DEMO_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   let nonce = await web3.eth.getTransactionCount(address);
 

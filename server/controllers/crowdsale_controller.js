@@ -21,7 +21,7 @@ const fetchPurchases = async () => {
 
 const buyTokens = async wei => {
   //using demo account for now
-  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const address = process.env.DEMO_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
 

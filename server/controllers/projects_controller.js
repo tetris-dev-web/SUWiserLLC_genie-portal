@@ -6,7 +6,7 @@ const { sendTransaction } = require('../chain_util/chain_util');
 const { projectFactoryInstance, _projectInstance } = require('../chain_models/models');
 
 const demoDepositCashflow = async (wei, projectAddress) => {
-  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const address = process.env.DEMO_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
   const projectInstance = _projectInstance(projectAddress);
@@ -118,7 +118,7 @@ const fetchProjectGraphData = async (address) => {
 
 const demoInvestorVotesByProject = async projectAddress => {
   const projectInstance = _projectInstance(projectAddress);
-  return await projectInstance.methods.votesOf("0xef898fd948f50d5010d3ec20233fae23d89a1a51").call();
+  return await projectInstance.methods.votesOf(process.env.DEMO_ACCOUNT).call();
 }
 
 module.exports = {

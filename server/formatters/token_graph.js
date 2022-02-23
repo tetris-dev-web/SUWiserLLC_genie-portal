@@ -14,7 +14,7 @@ const formatDividendsHistory = dividendsLogs => {
   })
 }
 
-const formatTokenHistory = (tokenTransferData, currentViewType, account="0xef898fd948f50d5010d3ec20233fae23d89a1a51") => {
+const formatTokenHistory = (tokenTransferData, currentViewType, account=process.env.DEMO_ACCOUNT) => {
   const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferData);
 
   const allTransfers = inactiveHistory.concat(activeHistory).sort((x, y) => {

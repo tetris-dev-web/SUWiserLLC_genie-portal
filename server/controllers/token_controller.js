@@ -47,7 +47,7 @@ const transfersData = async (tokenInstance) => {
 }
 
 const fetchInvestorBalance = async () => {
-  const account = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const account = process.env.DEMO_ACCOUNT;
   const accountInactive = await inactiveTokenInstance.methods.balanceOf(account).call();
   const accountActive = await activeTokenInstance.methods.balanceOf(account).call();
   const accountPending = await inactiveTokenInstance.methods.pendingActivations(account).call();
@@ -65,7 +65,7 @@ const fetchInvestorBalance = async () => {
 }
 
 const activateDemoInvestorPending = async () => {
-  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const address = process.env.DEMO_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   let nonce = await web3.eth.getTransactionCount(address);
 

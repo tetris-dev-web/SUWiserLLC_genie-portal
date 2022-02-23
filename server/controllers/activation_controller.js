@@ -4,7 +4,7 @@ const { activationAddress } = require('../chain_models/contract_addresses');
 const { sendTransaction } = require('..//chain_util/chain_util');
 
 const attemptProjectActivation = async () => {
-  const address = "0xef898fd948f50d5010d3ec20233fae23d89a1a51";
+  const address = process.env.DEMO_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
 
