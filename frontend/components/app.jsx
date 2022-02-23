@@ -52,7 +52,7 @@ class App extends React.Component {
   }
 
   watchAccountChange () {
-    this.props.web3.currentProvider.publicConfigStore.on('update', network => {
+    this.props.web3.currentProvider.on('accountsChanged', network => {
       this.setAccount();
     });
   }

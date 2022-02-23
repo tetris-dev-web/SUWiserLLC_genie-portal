@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (typeof web3 !== 'undefined') {
     web3Provider = web3.currentProvider;
+    web3Provider = window.ethereum;
     // web3Provider.enable();
     provider = new Web3(web3Provider);
 
