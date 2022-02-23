@@ -7,22 +7,22 @@ const { fetchEvents } = require('../chain_util/chain_util');
 
 
 const fetchStartTime = async () => {
-  const lastProjecPitch = await fetchEvents(projectFactoryInstance, 'ProjectPitch' );
-  return lastProjecPitch[0].blockNumber ; // in demo mode, need to switch time scale for live version
+  const lastProjecPitch = await fetchEvents(projectFactoryInstance, 'ProjectPitch');
+  return lastProjecPitch[0].blockNumber; // in demo mode, need to switch time scale for live version
 }
 
 
 const pitchProject = async params => {
   let {
-      title,
-      description,
-      capital_required,
-      valuation,
-      latitude,
-      longitude,
-      cashflow,
-      busLink
-    } = params;
+    title,
+    description,
+    capital_required,
+    valuation,
+    latitude,
+    longitude,
+    cashflow,
+    busLink
+  } = params;
 
   const projectInfo = JSON.stringify({
     title,
@@ -37,12 +37,11 @@ const pitchProject = async params => {
   const nonce = await web3.eth.getTransactionCount(address);
 
   const developer = await projectFactoryInstance.methods.developer().call();
-  console.log('developer', developer)
 
-  await sendTransaction(
+  const recipt = await sendTransaction(
     {
       nonce,
-      gasLimit: web3.utils.toHex(3000000),
+      gasLimit: web3.utils.toHex(5000000),
       to: projectFactoryAddress,
       value: 0,
       data: projectFactoryInstance.methods.createProject(
@@ -55,6 +54,8 @@ const pitchProject = async params => {
     address,
     privateKey
   )
+  
+  console.log(recipt);
 
   return null;
 }
