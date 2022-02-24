@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import DevInfoDropdown from "./DevInfoDropdown";
 import { setDemoType } from "../../../../actions/ui_actions";
+import OWLogo from "../../../../images/icons/ow-logo.svg";
 
 const DeveloperInfo = (props) => {
   const { setDemoType, history } = props;
@@ -17,16 +18,13 @@ const DeveloperInfo = (props) => {
 
   const DevLogo = () => (
     <div className="DevLogo" onClick={handleClick}>
-      <img className="gen-logo" src="https://s3.amazonaws.com/genie-portal-dev/static/logo.png" />
-      <div className="genus-dev-dash">
+      <img className="gen-logo" src={OWLogo} />
+      <div className="genus-dev-dash" style={{ marginLeft: 10 }}>
         <div className={`gen-dev ${tag === "demoDeveloper" ? "active" : void 0}`}>
           {" "}
-          GENUS DEVELOPMENT{" "}
+          DEVELOPMENT{" "}
         </div>
-        <div className={`gen-dash ${tag === "demoInvestor" ? "active" : void 0}`}>
-          {" "}
-          GENIE DASHBOARD{" "}
-        </div>
+        <div className={`gen-dash ${tag === "demoInvestor" ? "active" : void 0}`}> DASHBOARD </div>
       </div>
     </div>
   );

@@ -121,13 +121,13 @@ const TokenGraphOverlay = (props) => {
             x2={width + 200}
             y2={yScaleEarnings(data[indexHovered].earnings)}
           ></line>
-          <text x="-70" y={yScaleTokens(data[indexHovered].totalTokens) - 10}>
+          <text x="-70" y={yScaleTokens(data[indexHovered].totalTokens) - 10} fill="white">
             <tspan>{`${data[indexHovered].totalTokens} tokens held`}</tspan>
           </text>
-          <text x="-70" y={yScaleTokens(data[indexHovered].activeTokens) + 25}>
+          <text x="-70" y={yScaleTokens(data[indexHovered].activeTokens) + 25} fill="white">
             <tspan>{`${data[indexHovered].activeTokens} active tokens`}</tspan>
           </text>
-          <text x={width + 5} y={yScaleEarnings(data[indexHovered].earnings) - 10}>
+          <text x={width + 5} y={yScaleEarnings(data[indexHovered].earnings) - 10} fill="white">
             <tspan>{`$${data[indexHovered].earnings} in earnings`}</tspan>
           </text>
           <line

@@ -33,7 +33,7 @@ const TokenGraphSideBar = (props) => {
                 height={subRect.height}
                 y={subRect.y}
               ></rect>
-              <text y={subRect.y} x={side === "left" ? 110 : -70}>
+              <text y={subRect.y} x={side === "left" ? 110 : -70} fill="white">
                 <tspan>{subRect.text}</tspan>
               </text>
             </React.Fragment>
