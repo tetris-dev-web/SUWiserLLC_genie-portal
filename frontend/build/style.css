@@ -57,7 +57,8 @@
   #root .rootDiv {
     height: 100%;
     display: flex;
-    flex-direction: column; }
+    flex-direction: column;
+    background: url(frontend/assets/main-bg-f4173aa7.png); }
     #root .rootDiv .dashboardBox {
       width: 100%;
       height: 100%;
@@ -500,29 +501,6 @@ svg {
     cursor: pointer;
     color: #333; }
 
-.dashboard-token,
-.dashboard-project {
-  display: flex; }
-
-.dashboard-token {
-  flex-direction: column; }
-
-.dashboard-project {
-  flex-direction: column-reverse;
-  transition: min-height cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
-.hidden {
-  display: none; }
-
-.opaque {
-  opacity: 0.5; }
-
-.bounceOnHover {
-  transition: all 0.2s ease-in-out; }
-  .bounceOnHover:hover {
-    transform: scale(1.1);
-    cursor: pointer;
-    color: #333; }
-
 .navbar-container {
   position: absolute;
   width: 100%;
@@ -613,6 +591,29 @@ svg {
   .navbar-right {
     float: none !important;
     margin-right: 0 !important; } }
+.hidden {
+  display: none; }
+
+.opaque {
+  opacity: 0.5; }
+
+.bounceOnHover {
+  transition: all 0.2s ease-in-out; }
+  .bounceOnHover:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    color: #333; }
+
+.dashboard-token,
+.dashboard-project {
+  display: flex; }
+
+.dashboard-token {
+  flex-direction: column; }
+
+.dashboard-project {
+  flex-direction: column-reverse;
+  transition: min-height cubic-bezier(0, 0, 0.18, 0.75) 0.5s; }
 .hidden {
   display: none; }
 
@@ -877,7 +878,7 @@ svg {
       top: 50%;
       right: calc(100% + 20px);
       transform: translateY(-50%);
-      color: #9b9287;
+      color: white;
       white-space: nowrap;
       margin-top: 20px; }
       .toggle-view-options-container-graph-open .toggle-view-options-border-layer .toggle-view-title .toggle-view-current-view,
@@ -893,7 +894,8 @@ svg {
   .toggle-view-options-container-graph-open .toggle-view-dashboard-description,
   .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description {
     width: 18%;
-    position: fixed; }
+    position: fixed;
+    color: white; }
     .toggle-view-options-container-graph-open .toggle-view-dashboard-description .greenText,
     .toggle-view-options-container-graph-hidden .toggle-view-dashboard-description .greenText {
       color: #61aba9; }
@@ -1132,6 +1134,24 @@ svg {
     cursor: pointer;
     color: #333; }
 
+#doomsday-container {
+  display: flex;
+  width: 100%;
+  height: 500px;
+  justify-content: center; }
+.hidden {
+  display: none; }
+
+.opaque {
+  opacity: 0.5; }
+
+.bounceOnHover {
+  transition: all 0.2s ease-in-out; }
+  .bounceOnHover:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    color: #333; }
+
 .transfer-div {
   display: flex;
   border-top: 1px solid rgba(179, 185, 207, 0.8);
@@ -1243,24 +1263,6 @@ svg {
     .transfer-button-cont .transfer-button:hover {
       background-color: #384778;
       color: white; }
-.hidden {
-  display: none; }
-
-.opaque {
-  opacity: 0.5; }
-
-.bounceOnHover {
-  transition: all 0.2s ease-in-out; }
-  .bounceOnHover:hover {
-    transform: scale(1.1);
-    cursor: pointer;
-    color: #333; }
-
-#doomsday-container {
-  display: flex;
-  width: 100%;
-  height: 500px;
-  justify-content: center; }
 .hidden {
   display: none; }
 
@@ -1633,82 +1635,6 @@ svg {
     cursor: pointer;
     color: #333; }
 
-.votes-graph {
-  position: relative;
-  transition: opacity 0.3s;
-  visibility: visible;
-  opacity: 1;
-  text-align: center; }
-  .votes-graph .voteBreakDownButtonOpen {
-    background: #9b9287;
-    border-radius: 15px;
-    color: white;
-    margin: 25px; }
-  .votes-graph .voteBreakDownButtonClose {
-    background: #9b9287;
-    border-radius: 15px;
-    color: white;
-    opacity: 0.3;
-    margin: 25px; }
-  .votes-graph.invisible {
-    visibility: hidden;
-    opacity: 0; }
-  .votes-graph .votes-view {
-    top: 0;
-    position: absolute;
-    width: 100%; }
-  .votes-graph .votes-view-svg {
-    width: 100%; }
-  .votes-graph .ProjectCrossLine {
-    stroke: #bdc4c9;
-    stroke-width: 5px; }
-  .votes-graph .CapitalRaisedPath {
-    fill: none;
-    stroke: #61aba9;
-    stroke-width: 4px; }
-  .votes-graph .questionIcon {
-    fill: #61aba9; }
-  .votes-graph text {
-    text-anchor: middle;
-    pointer-events: none; }
-  .votes-graph .votes-view-vote-breakdown-text {
-    fill: #fff;
-    font-size: 12px; }
-  .votes-graph .votes-view-circle-text-hovers {
-    fill: #bdc4c9; }
-  .votes-graph .votes-view-capital-raised-text {
-    fill: #fff; }
-  .votes-graph .votes-view-capital-raised-text-right {
-    fill: #fff; }
-  .votes-graph .votes-view-percentage-breakdown {
-    fill: #fff;
-    font-size: 12px; }
-  .votes-graph .votes-view-onhover-text-group text {
-    font-size: 12px; }
-  .votes-graph .votes-view-onhover-text-group .votes-view-project-title {
-    font-size: 12px;
-    fill: white; }
-  .votes-graph .votes-view-onhover-project-outlines-group rect {
-    fill: #fff;
-    pointer-events: none; }
-  .votes-graph .votes-view-project-circle {
-    transition: r 0.5s;
-    cursor: pointer; }
-    .votes-graph .votes-view-project-circle:hover {
-      r: 12px; }
-.hidden {
-  display: none; }
-
-.opaque {
-  opacity: 0.5; }
-
-.bounceOnHover {
-  transition: all 0.2s ease-in-out; }
-  .bounceOnHover:hover {
-    transform: scale(1.1);
-    cursor: pointer;
-    color: #333; }
-
 .vote-shift-tool-container {
   position: absolute;
   left: 20px; }
@@ -1796,9 +1722,86 @@ svg {
     cursor: pointer;
     color: #333; }
 
+.votes-graph {
+  position: relative;
+  transition: opacity 0.3s;
+  visibility: visible;
+  opacity: 1;
+  text-align: center; }
+  .votes-graph .voteBreakDownButtonOpen {
+    background: #9b9287;
+    border-radius: 15px;
+    color: white;
+    margin: 25px; }
+  .votes-graph .voteBreakDownButtonClose {
+    background: #9b9287;
+    border-radius: 15px;
+    color: white;
+    opacity: 0.3;
+    margin: 25px; }
+  .votes-graph.invisible {
+    visibility: hidden;
+    opacity: 0; }
+  .votes-graph .votes-view {
+    top: 0;
+    position: absolute;
+    width: 100%; }
+  .votes-graph .votes-view-svg {
+    width: 100%; }
+  .votes-graph .ProjectCrossLine {
+    stroke: #bdc4c9;
+    stroke-width: 5px; }
+  .votes-graph .CapitalRaisedPath {
+    fill: none;
+    stroke: #61aba9;
+    stroke-width: 4px; }
+  .votes-graph .questionIcon {
+    fill: #61aba9; }
+  .votes-graph text {
+    text-anchor: middle;
+    pointer-events: none; }
+  .votes-graph .votes-view-vote-breakdown-text {
+    fill: #fff;
+    font-size: 12px; }
+  .votes-graph .votes-view-circle-text-hovers {
+    fill: #bdc4c9; }
+  .votes-graph .votes-view-capital-raised-text {
+    fill: #fff; }
+  .votes-graph .votes-view-capital-raised-text-right {
+    fill: #fff; }
+  .votes-graph .votes-view-percentage-breakdown {
+    fill: #fff;
+    font-size: 12px; }
+  .votes-graph .votes-view-onhover-text-group text {
+    font-size: 12px; }
+  .votes-graph .votes-view-onhover-text-group .votes-view-project-title {
+    font-size: 12px;
+    fill: white; }
+  .votes-graph .votes-view-onhover-project-outlines-group rect {
+    fill: #fff;
+    pointer-events: none; }
+  .votes-graph .votes-view-project-circle {
+    transition: r 0.5s;
+    cursor: pointer; }
+    .votes-graph .votes-view-project-circle:hover {
+      r: 12px; }
+.hidden {
+  display: none; }
+
+.opaque {
+  opacity: 0.5; }
+
+.bounceOnHover {
+  transition: all 0.2s ease-in-out; }
+  .bounceOnHover:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    color: #333; }
+
 .token-graph-placeholder {
   margin: auto;
-  width: 103px; }
+  width: 103px;
+  color: white; }
 
 .token-graph {
   transition: opacity 0.3s;
@@ -1830,7 +1833,7 @@ svg {
       rx: 20;
       ry: 20; }
     .token-graph .token-svg .token-graph-side-bars .token-graph-background-rect {
-      fill: transparent;
+      fill: gray;
       stroke: black;
       stroke-width: 0.5px;
       stroke-dasharray: 5, 5; }
