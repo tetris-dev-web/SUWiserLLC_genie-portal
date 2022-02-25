@@ -13,6 +13,7 @@ const ProjectLeaderTracker = artifacts.require('ProjectLeaderTracker');
 const Voting = artifacts.require('Voting');
 const Activation = artifacts.require('Activation');
 const Project = artifacts.require('Project');
+// const InvestorListMock = artifacts.require('InvestorListMock');
 const { seed } = require('../seeds');
 
 let activeTokenInstance;
@@ -39,6 +40,9 @@ module.exports = function (deployer, network, accounts) {
       .then(() => {
         return deployer.deploy(VotingToken);
       })
+      // .then(() => {
+      //   return deployer.deploy(InvestorListMock);
+      // })
       .then(() => {
         return deployer.deploy(ActiveToken, VotingToken.address);
       })
@@ -262,6 +266,8 @@ module.exports = function (deployer, network, accounts) {
             accounts[1],
             accounts[2],
           );
+        } else {
+          console.log('We made it on development', network)
         }
       })
   );
