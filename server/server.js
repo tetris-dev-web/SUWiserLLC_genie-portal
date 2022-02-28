@@ -75,8 +75,8 @@ app.get(
     // const startAndEndTimes = {startTime, endTime }
     // console.log('result=', startAndEndTimes);
 
-    const startTime = 1514172200;
-    const endTime = 1564172200;
+    const startTime = 1640707827;
+    const endTime = 1672243827;
     const startAndEndTimes = { startTime, endTime };
     res.send(startAndEndTimes);
   }),
