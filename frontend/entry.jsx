@@ -24,10 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let web3Provider;
   let provider;
   let preloadedState = {};
-  if (typeof web3 !== "undefined") {
-    web3Provider = web3.currentProvider;
+  if (typeof window.ethereum !== "undefined") {
+    web3Provider = window.ethereum;
 
     provider = new Web3(web3Provider);
+    console.log(window.ethereum)
 
     const inactiveToken = TruffleContract(InactiveToken);
     inactiveToken.setProvider(web3Provider);
