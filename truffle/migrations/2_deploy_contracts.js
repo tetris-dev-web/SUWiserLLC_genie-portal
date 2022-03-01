@@ -13,7 +13,6 @@ const ProjectLeaderTracker = artifacts.require('ProjectLeaderTracker');
 const Voting = artifacts.require('Voting');
 const Activation = artifacts.require('Activation');
 const Project = artifacts.require('Project');
-// const InvestorListMock = artifacts.require('InvestorListMock');
 const { seed } = require('../seeds');
 
 let activeTokenInstance;
@@ -40,9 +39,6 @@ module.exports = function (deployer, network, accounts) {
       .then(() => {
         return deployer.deploy(VotingToken);
       })
-      // .then(() => {
-      //   return deployer.deploy(InvestorListMock);
-      // })
       .then(() => {
         return deployer.deploy(ActiveToken, VotingToken.address);
       })
@@ -161,7 +157,7 @@ module.exports = function (deployer, network, accounts) {
         return projectFactoryInst.transferCrowdsaleKey(crowdsaleInstance.address);
       })
       .then(() => {
-        return (projectFactoryHelper = ProjectFactoryHelper.at(ProjectFactoryHelper.address));
+        return projectFactoryHelper = ProjectFactoryHelper.at(ProjectFactoryHelper.address);
       })
       .then(() => {
         return projectFactoryHelper.transferOwnership(projectFactoryInst.address);
@@ -217,7 +213,7 @@ module.exports = function (deployer, network, accounts) {
       })
       .then((_inactiveTokenInstance) => {
         console.log('setting inactive token inst');
-        return (inactiveTokenInstance = _inactiveTokenInstance);
+        return inactiveTokenInstance = _inactiveTokenInstance;
       })
       .then(() => {
         console.log('setting inactive token crowdsale key');

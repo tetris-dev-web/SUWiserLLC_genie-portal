@@ -336,7 +336,7 @@ const formatCitiesAndContinents = async (locationsData) => {
 };
 
 export const latLngToCityContinent = async (lat, lng) => {
-  Geocode.setApiKey("AIzaSyBEKs3aCzKqgrhaZgnNU4ac-SL-IN431uA");
+  Geocode.setApiKey("AIzaSyD813hevX4qwctMHRUh8sxVchp7NyAHorM");
   // if (lat === "31.2304" && lng === '121.4737') {
   //   return {
   //     continent: "Asia",
@@ -347,8 +347,9 @@ export const latLngToCityContinent = async (lat, lng) => {
 
   try {
     console.log("I will try...");
-    const { results } = await Geocode.fromLatLng(lat, lng);
-    console.log("results=", results);
+    const response = await Geocode.fromLatLng(lat, lng, "AIzaSyD813hevX4qwctMHRUh8sxVchp7NyAHorM");
+    const { results } = response;
+    console.log("results=", response);
     // console.log(results)
     return results.reduce((location, el) => {
       if (
