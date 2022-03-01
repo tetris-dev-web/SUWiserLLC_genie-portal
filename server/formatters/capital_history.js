@@ -1,6 +1,6 @@
 const formatCapitalHistoryData = async (tokenPurchases) => {
   return tokenPurchases.reduce((propsData, purchase) => {
-    const time = purchase.blockNumber;
+    const time = purchase.returnValues.time;
 
     if (!propsData.history) {
       propsData.history = [];
