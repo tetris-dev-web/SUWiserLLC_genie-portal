@@ -23,7 +23,11 @@ const LocGraphCircle = (props) => {
     >
       <circle className={`${className} outter`} r={r} fill={fill}></circle>
       <circle className={`${className} inner`} r="10" fill="white"></circle>
-      {showText && <text y={-r - 10}>{project.title}</text>}
+      {showText && (
+        <text y={-r - 10} fill="white">
+          {project.title}
+        </text>
+      )}
     </g>
   );
 };

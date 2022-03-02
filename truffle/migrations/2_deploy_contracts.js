@@ -157,7 +157,7 @@ module.exports = function (deployer, network, accounts) {
         return projectFactoryInst.transferCrowdsaleKey(crowdsaleInstance.address);
       })
       .then(() => {
-        return (projectFactoryHelper = ProjectFactoryHelper.at(ProjectFactoryHelper.address));
+        return projectFactoryHelper = ProjectFactoryHelper.at(ProjectFactoryHelper.address);
       })
       .then(() => {
         return projectFactoryHelper.transferOwnership(projectFactoryInst.address);
@@ -213,7 +213,7 @@ module.exports = function (deployer, network, accounts) {
       })
       .then((_inactiveTokenInstance) => {
         console.log('setting inactive token inst');
-        return (inactiveTokenInstance = _inactiveTokenInstance);
+        return inactiveTokenInstance = _inactiveTokenInstance;
       })
       .then(() => {
         console.log('setting inactive token crowdsale key');
@@ -262,6 +262,8 @@ module.exports = function (deployer, network, accounts) {
             accounts[1],
             accounts[2],
           );
+        } else {
+          console.log('We made it on development', network)
         }
       })
   );

@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
-const ngrok = require("ngrok");
+// const ngrok = require("ngrok");
 const decodeJWT = require("did-jwt").decodeJWT;
 const { Credentials } = require("uport-credentials");
 const transports = require("uport-transports").transport;

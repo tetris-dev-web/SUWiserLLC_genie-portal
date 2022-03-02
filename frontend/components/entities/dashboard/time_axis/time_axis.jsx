@@ -29,7 +29,9 @@ const TimeAxis = (props) => {
   return (
     <div className="time-axis">
       <svg className="time-axis-svg" viewBox="0 0 960 100" preserveAspectRatio="xMinYMin meet">
-        <text transform="translate(-70, 71)">QTR</text>
+        <text transform="translate(-70, 71)" fill="white">
+          QTR
+        </text>
         <g
           className="time-axis-g"
           ref={(node) => (axis = node)}

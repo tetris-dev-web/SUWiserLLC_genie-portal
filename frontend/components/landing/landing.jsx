@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import { LandingDescription } from "./landing_description";
 import DemoOptions from "./demo_options";
 import { setDemoType } from "../../actions/ui_actions";
+import OWLogo from "../../images/icons/ow-logo.svg";
 import "./landing.scss";
 
 const Landing = () => {
@@ -14,12 +15,12 @@ const Landing = () => {
       ariaHideApp={false}
       style={{
         overlay: {
-          backgroundColor: "#333",
+          backgroundColor: "#030306",
         },
       }}
     >
       <div className="landing">
-        <h1 className="landing_title">PROGENY DEMO</h1>
+        <img className="gen-logo" src={OWLogo} style={{ marginTop: 15 }} />
         <LandingDescription />
         <DemoOptions />
       </div>
