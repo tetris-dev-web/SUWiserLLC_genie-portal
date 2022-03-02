@@ -15,6 +15,7 @@ const { sendTransaction } = require("../chain_util/chain_util");
 const fetchTokenHistoryWithEarnings = async (currentViewType, account) => {
   const dividendReceptions = await fetchDividendReceptions();
   const tokenTransfers = await fetchTokenTransfers();
+
   return formatTokenGraphData(tokenTransfers, dividendReceptions, currentViewType, account);
 };
 

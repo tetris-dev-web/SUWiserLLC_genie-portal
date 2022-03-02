@@ -3,13 +3,14 @@ const { merge } = require("lodash");
 const formatTokenGraphData = (tokenTransferData, dividendsLogs, currentViewType, account) => {
   const dividendsHistory = formatDividendsHistory(dividendsLogs);
   const tokenHistory = formatTokenHistory(tokenTransferData, currentViewType, account);
+
   return mergeHistories(dividendsHistory, tokenHistory, currentViewType);
 };
 
 const formatDividendsHistory = (dividendsLogs) => {
   return dividendsLogs.map((_data) => {
     const data = merge({}, _data);
-    data.date = data.blockNumber;
+    data.date = data.time;
     return data;
   });
 };
@@ -20,7 +21,6 @@ const formatTokenHistory = (
   account = process.env.DEV_ACCOUNT,
 ) => {
   const { inactiveHistory, activeHistory } = getTransferHistory(tokenTransferData);
-
   const allTransfers = inactiveHistory.concat(activeHistory).sort((x, y) => {
     return x.blockNumber - y.blockNumber;
   });
@@ -121,7 +121,7 @@ const getTransferHistory = (tokenTransferData) => {
 
 const tokenHistoryByUser = (account, allTransfers) => {
   const userTransfers = allTransfers.filter((transfer) => {
-    return transfer.from.toLowerCase() === account || transfer.to.toLowerCase() === account;
+    return account !== null && (transfer.from.toLowerCase() === account.toLowerCase() || transfer.to.toLowerCase() === account.toLowerCase());
   });
 
   let totalTokens = 0;
@@ -136,7 +136,7 @@ const tokenHistoryByUser = (account, allTransfers) => {
       allActiveTokens += transferData.value;
     }
     //if the account is receiving the tranfer
-    if (transferData.to.toLowerCase() === account) {
+    if (transferData.to.toLowerCase() === account.toLowerCase()) {
       //if the account's overall balance is increasing
       if (
         transferData.type == "inactive" ||
@@ -163,7 +163,7 @@ const tokenHistoryByUser = (account, allTransfers) => {
     }
 
     return {
-      date: transferData.blockNumber,
+      date: transferData.time,
       totalTokens,
       activeTokens,
       allActiveTokens,
@@ -185,7 +185,7 @@ const tokenHistoryByAll = (allTransfers) => {
     }
 
     return {
-      date: transferData.blockNumber,
+      date: transferData.time,
       totalTokens,
       activeTokens,
     };

@@ -71,6 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let activationInstance;
     let projectLeaderTrackerInstance;
     let dividendsInstance;
+
+    account = process.env.DEV_ACCOUNT;
     // provider.eth.getCoinbase((err, _account) => {
     // account = _account;
     // console.log("tokenInst: ", token)
