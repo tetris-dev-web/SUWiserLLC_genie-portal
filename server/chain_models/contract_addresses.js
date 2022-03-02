@@ -1,14 +1,124 @@
 module.exports = {
-  activationAddress: "0x958a397260b21df229bbdbac31bd669ccf22a009",
-  activeTokenAddress: "0x81deaad64d8a1edc5cd8d7961f6e465ebe14ac82",
-  crowdsaleAddress: "0x400ce1d71b64bd8d5432f129bf17e5eb4a8374a2",
-  dividendsAddress: "0x79dd898acbea562171672086125388e2b508e45b",
-  inactiveTokenAddress: "0x4b81ae5d23e7c5cb81469707bd5422996ab2c244",
-  projectFactoryAddress: "0xd333c19833b92d0b012162ecb19c253b748642aa",
-  projectLeaderTrackerAddress: "0x32491489558e773c832f0b9118ba082f331d19a1",
-  votingAddress: "0x9849d0d6e42d2a483485425d842e5ba39fa3c3fd",
-  votingTokenAddress: "0x68da1f213e7af93c38b9b50bb2c92ea5a012935c",
+  activationAddress: "0xb85958319e0332495c9dd5d2881093194ac1772d",
+  activeTokenAddress: "0x76100bc60e13fd29939181a78891dd5459175b00",
+  crowdsaleAddress: "0x8473832279ba4a318ef8f14dfc67597c4974861d",
+  dividendsAddress: "0xc98e83bfd6f736142165f7f17bacbb95513858ab",
+  inactiveTokenAddress: "0x7514433191aaa155201309381017f26b9860aeea",
+  projectFactoryAddress: "0x5b1ea9b3329a6beb663948d4369d2a245fbaf5d7",
+  projectLeaderTrackerAddress: "0xe74c985a3c3643a2850c5262210b92ca0b713ef0",
+  votingAddress: "0x46182bfd9abfc8574a690495cd02ad8f0cf07905",
+  votingTokenAddress: "0x3b0e3514d4aad88e4e845a27024de5cf06828046",
 };
+
+/////  ////////
+// Running migration: 2_deploy_contracts.js
+// NETWORK ropsten
+//   Running step...
+//   Replacing ProjectLeaderTracker...
+//   ... 0xbbc768aeaf9ddff89e22b5c61a7546e371a5b12b9d19670bfdfc55294d7b9958
+//   ProjectLeaderTracker:
+//   Replacing VotingToken...
+//   ... 0x44cce5f997118eaf1c944431c881919bc64f0e56bcf9712709bda46d6b1754e3
+//   VotingToken:
+//   Replacing ActiveToken...
+//   ... 0x8e39cb7bf2a0120e50d1fd9cf81e5d6cca298e84412c9fbe4d3d1f445510d176
+//   ActiveToken:
+//   Replacing InactiveToken...
+//   ... 0x5f9dc1189108cd9ee835a91ae3fbeaf1c75d74f38e7fce87a0350cc8aaf307c0
+//   InactiveToken:
+//   Replacing Dividends...
+//   ... 0x8c6ed34ded26d1d16c1dfb08f0c69e332913834e28467f742bb576e40db1d4c7
+//   Dividends:
+//   Replacing Reimbursements...
+//   ... 0x938254383acd78cfdcc4f6a1e0305e0b0fd1fb6c94cae2d304b35ef83e1a35e5
+//   Reimbursements: 0x76b67758057414168380ac1a74c868933ee074d1
+//   Replacing Activation...
+//   ... 0x52e0f22f662745fce10761847952dc14fac17afae4a92d8561f2af8c2b1e3405
+//   Activation:
+//   Replacing Voting...
+//   ... 0x72f4f358c2ff25df7faf27b85c0fff9276126e44e621190564ae8742246dc18c
+//   Voting:
+//   Replacing SeedableCrowdsale...
+//   ... 0x7646d67bd6eba9a07ca4190f969f69548a289dc8328768607743c6ce5d479ff3
+//   SeedableCrowdsale:
+//   Replacing TokenPurchaseHelper...
+//   ... 0x47b78d9cab69882ac7d1ec16b66b0168bd18ea1661ea7c380350a2493d39f4cc
+//   TokenPurchaseHelper: 0x74be6af54c3800c66bec56fba3bae729f5089f20
+//   ... 0x956961fde82e1dd9ced9de776d17ca84b850669d5e04c6d7752c0831943ac08f
+//   ... 0x63e42c00bfce32f340a2f6ad49e7693d577deb328b3817fc91b8f527ce5c782a
+//   ... 0x8d074c65d4e58c883901dae16c1e259accbf216ec0a5475e11a5f858a9ff3689
+//   ... 0xa8953cb7ff05732f4141147b580628c8f6b38a911f94b5f8824ee8359127656f
+//   Replacing ProjectFactoryHelper...
+//   ... 0xd82a64fe4dc04b8a619be98ec1e86a51c5725601688a293775fa46dd488276d8
+//   ... 0xfcf68bcbcf8f3816f221f4faf39425a7e00627cac1ddd3ee7c6ddbcfc3ce6d70
+//   ProjectFactoryHelper: 0x604515cde09b29208ec7deb5c4f41ce042d951e3
+//   Replacing ProjectFactory...
+//   ... 0x6ffc15d6d5def1f73d6cb2d45ff273897d055124e450b233bca56b88094d5953
+//   ProjectFactory:
+//   ... 0x29f839aaf8e21d0a78db49197a9008868deee384d04edfa490d36d7e13a040c0
+//   ... 0x36385b97bdecf24623f445d5c40a9c4eb7d776b3ec5d8a5390b9ea8c288aca69
+//   ... 0x7a3ea565c302c7c8b5f15f660314ce44c77a0e45e79482cb0ec405c2e9d0c062
+//   ... 0x4a37b5303cbbd2fde32f192ff33c0bf765ed09f87470b90f4c917f3973d0e561
+//   ... 0xa0edd30155473811b2ccd53f0831db8cc71c10afd6739333250a1daa2be10d1c
+//   ... 0xd52cb97c44fb31e4e9e1fc191493077db3a61e2fc87dfe31734b8bacde7dde7d
+//   ... 0x378d048f3c64ac9222e9c4ae610013e9777ad67e7ef86d4b2f5b89ba4a542068
+//   ... 0xf3b05916e0a527fbf102189831f6c4436e14678b8e4de471a71757931864c936
+// pfh 0x604515cde09b29208ec7deb5c4f41ce042d951e3
+//   ... 0x71dd6173bba3111bfc6ca24a968be319d055f6f7d12e414787d911a723f60b60
+//   ... 0x523501c7a1372ef9f379d58a2d01ec75130ae4d2e24e932d9ae45858f84eb1f8
+//   ... 0x1262685cbc79de47eadc0f95a861618aa086caef397dd01bb8e1381168658349
+//   ... 0x92fae86b40db3d313bef7c841bbff44d6a8b0365e0f445f27fc30b905062a2cb
+// getting inactive token inst
+// setting inactive token inst
+// setting inactive token crowdsale key
+//   ... 0x2f87264b89f76fd0ca96de506d5559443c78194e91c9664f9a61c2ca10dbad75
+// setting inactive token activation key
+//   ... 0xa5a043ee983d4bd6890dc80054c72b9b6f6366a5d89b75ee2f754916382ec61f
+// getting voting token inst
+// setting voting token inst
+//   ... 0x11ace7ab9c2437e23824cdeb84d8bcf2735d64286ecdbfe8214b709bb4b7a74e
+// setting voting token active token
+//   ... 0xf53760bdcf2e39a6ce7c9718c84f9032205ab284e345d5f5b60a522330fd6a2a
+// setting voting token inactive token
+//   ... 0xcb1da4cc8b67b9ffe7b7a2a3ac69ffc58702f9299382e29e3054247df36c03d3
+// getting reimbursements
+// setting reimbursements
+//   ... 0xe870520f9b147d8985f004ec41241640bf21772b1af36a4818e20b0e830b3fdd
+// WE MADE IT!!!
+//   ... 0xc5f7bee90b20b68d4bf3a9748ce35868a35dd782c331c0e241a07deaa9b6f368
+// p1 0x00cb0e60f48e46dccab969c70aacb3083290c333
+//   ... 0x963c245e6a693c29b2d61b8d313b9a4eb1a02f0999023a32d7ef129d2055dfd0
+// p2 0x776ec9b45ac96669a1f9c11e0e178871bad4a474
+//   ... 0xe0002c898e1005f4415c4e5f892a47dbe1b646b328b17c192c7ca968aa0100e7
+// p3 0xe75d58380d74dcdbb8ab35116a06aef3d013d120
+//   ... 0x0a39183a45b45134da15cab9625719c35d32fe87175ec34083355c7c578866c5
+// p4 0xc975355c4a024f74144c2cbda7bc848033654848
+//   ... 0x356641b2739200f4fcbae98ab2c1c8e3a7d886018de5372455f66ea335cc01d8
+// p5 0x64fb6a48b44953738c235e0c20786cc231f2e20d
+//   ... 0x254aebedc69b6cfd36bd752d5354925c7a7dafa24b3b89582e2319ca50b8f8db
+// p6 0x6e8f3e3200650c25af4486a899a37b0d74041af7
+// PITCHES COMPLETE
+//   ... 0x9ef3fc18e00470b8af032dede37311017ffe49ed3ca35e7ab2fa66de7b73fdb1
+//   ... 0xcf3de418d94fb67f22256aecaaf7469353861bafe76b8f64867b442153f9d3ad
+//   ... 0x0666157a57fc9b196887cd34777b7f6822194773a5563d742244179db15de35d
+//   ... 0x32fac4b29e946efe9ee6e93edc791d983bc60d1ce19dcabe440d1f5ebfea710b
+// BUYS COMPLETE
+//   ... 0x58873099692828244e3fc403effebbaff44a404a5881f4707805041fa6db783e
+//   ... 0xa2dbc6ba05ba2410be46a9868e134be372cb393092ccc9fbbca68b59e94392e8
+//   ... 0xa4553ad842c645bf9c13dcb23214030c90c0ac422839712a96e976907714bcf5
+//   ... 0x874cf5b1650f5650ae55f7435fbe6e850be2b59c0a6246f92134084d710030f5
+//   ... 0xda123b72aac0211cf89fecb64e0891be763825d175550edc99ef1abb198af2d1
+// VOTES COMPLETE
+//   ... 0x66b4fe06a77761ed09def47f838d9a34da584772156c0e0d2be53f5956f827d8
+// TOKENS ACTIVATED
+//   ... 0x3da8fd1f45b20d490030c9025f8380304746ec4d9035b5cd8ba3bda7f0a559f4
+//   ... 0xce0277de653201204b105768491d7aaaa538df1cda1756ad9b8411089df21a78
+//   ... 0xcfbfbc89099f11a9c63f2cdd802a4868fb3376bb103bd30f624eeb4428115815
+//   ... 0xe002b1e40d6829246e946ca51669aaee4ce5adecb3d31e8d9be45c7c5b434a55
+//   ... 0x5b43c5288a87cec8343a57db3031c860c354dfba880e71960d52fc238875f501
+// Saving successful migration to network...
+//   ... 0xa9b82433743f4649a27d61b9f0c64f89e82c0e443be4401bbafe8a1c4084168c
+// Saving artifacts...
 
 // Deploying ProjectLeaderTracker...
 //   ... 0x3f7ae8c93d2a37f7f3a5aba43e28d5159c79d149fd5ac1be18659b5b14bf22b0
