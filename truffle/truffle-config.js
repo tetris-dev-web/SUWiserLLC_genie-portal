@@ -27,7 +27,7 @@ module.exports = {
     ropsten: {
       provider: function() {
         return new HDWalletProvider(
-          process.env.PRIVATE_KEY,
+          'b876c5402b7ae1bee47eb12db8af8b653abaa0cd098b09ca337081a1810c2871',
           "https://ropsten.infura.io/v3/" + "27aa9fbf74164ddca2339562d9b6c1de",
           0,
           1
