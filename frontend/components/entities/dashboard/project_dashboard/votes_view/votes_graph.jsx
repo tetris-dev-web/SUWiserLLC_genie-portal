@@ -31,13 +31,10 @@ const VotesGraph = (props) => {
     if (!projectsLoaded) {
       fetchSharedProjectGraphData();
     }
-console.log("1");
+
     props.fetchCapitalHistory(props.crowdsaleInstance);
-console.log("2");
     watchProjectPitch();
     watchTokenPurchase();
-console.log("3");
-
   }, []);
 
   const watchProjectPitch = () => {
