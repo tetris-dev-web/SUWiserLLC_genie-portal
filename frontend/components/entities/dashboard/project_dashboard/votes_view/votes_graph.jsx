@@ -23,12 +23,12 @@ const VotesGraph = (props) => {
   let voteShiftTool;
 
   useEffect(() => {
-    console.log("wait", wait);
+
     setTimeout(() => {
       setState(merge({}, state, { componentVisible: "" }));
     }, wait);
 
-    if (projectsLoaded) {
+    if (!projectsLoaded) {
       fetchSharedProjectGraphData();
     }
 
