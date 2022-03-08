@@ -16,6 +16,7 @@ const mapStateToProps = (state) => {
   const projects = Object.values(state.chain_data.projectGraph.projects).map((project) =>
     merge({}, project),
   );
+
   return {
     projectFactoryInstance: state.network.projectFactoryInstance,
     projectContract: state.network.projectContract,

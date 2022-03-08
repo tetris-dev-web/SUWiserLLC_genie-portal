@@ -5,6 +5,7 @@ import LocGraphRect from "./loc_graph_rect";
 import LocGraphCircle from "./loc_graph_circle";
 import NorthAmerica from "../../../../../assets/NorthAmerica.png";
 import { getLocationGraphData } from "../../../../../util/location_util";
+import Loader from "../../loader/loader";
 import { merge } from "lodash";
 const rosyBrown = "#AB7A5E";
 const lightBlue = "#5EABAA";
@@ -197,16 +198,6 @@ const LocGraph = (props) => {
     }
   };
 
-  const watchProjectPitch = () => {
-    //event listener for pitched projects // get project from database and integrate into store
-    const { projectFactoryInstance, projectContract } = props;
-    projectFactoryInstance.ProjectPitch().watch((error, event) => {
-      const address = event.args.projectAddress;
-      // const id = event.args.projectId;
-      props.fetchProject(address);
-    });
-  };
-
   const { data, projects, cities, continents } = state;
   if (data) {
     // const { projects, cities, continents, linksData } = this.props;
@@ -274,7 +265,7 @@ const LocGraph = (props) => {
       </div>
     );
   } else {
-    return <div></div>;
+    return <Loader />;
   }
 };
 
