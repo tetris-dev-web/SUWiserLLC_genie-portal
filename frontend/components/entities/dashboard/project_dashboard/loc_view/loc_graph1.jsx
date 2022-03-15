@@ -1,17 +1,16 @@
-import React, { useState, useRef, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import * as d3 from "d3";
 import "./loc_graph.scss";
 import LocGraphRect from "./loc_graph_rect";
 import LocGraphCircle from "./loc_graph_circle";
 import NorthAmerica from "../../../../../assets/NorthAmerica.png";
 import { getLocationGraphData } from "../../../../../util/location_util";
-import Loader from "../../loader/loader";
 import { merge } from "lodash";
 const rosyBrown = "#AB7A5E";
 const lightBlue = "#5EABAA";
 
 const LocGraph = (props) => {
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     projectCities: null,
     cities: null,
     continents: null,
@@ -26,100 +25,74 @@ const LocGraph = (props) => {
 
   const { projectsLoaded, fetchSharedProjectGraphData } = props;
 
-  // const prevState = useRef(state).current;
-  let prevState = {
-    projectCities: null,
-    cities: null,
-    continents: null,
-    data: null,
-    center: null,
-    projects: null,
-  };
+  const prevData = useRef({ state, props }).current;
 
   let simulation;
-
-  const [, forceUpdate] = useReducer((x) => x + 1, 0);
-
-  // console.log('prevState Now:',prevState);
-
-  const populateState = async (props) => {
-    // console.log('popluateState', props, "Type of ", typeof props.projects);
-    if (props !== undefined) {
-      const projects2 = Object.values(props.projects);
-      const { projects, cities, continents, data, center } = await getLocationGraphData(projects2);
-
-      const newState = merge({}, state, {
-        projects: projects,
-        cities,
-        continents,
-        data,
-        center,
+  useEffect(() => {
+    if (projectsLoaded) {
+      populateState();
+    } else {
+      fetchSharedProjectGraphData().then(() => {
+        populateState();
       });
-      console.log("newState=", newState);
-      setState(newState);
     }
+  }, []);
+
+  const populateState = () => {
+    getLocationGraphData(props.projects).then((res) =>
+      setState(
+        merge({}, state, {
+          projects: res.projects,
+          cities: res.cities,
+          continents: res.continents,
+          data: res.data,
+          center: res.center,
+        }),
+      ),
+    );
+    // const {
+    //   projects,
+    //   cities,
+    //   continents,
+    //   data,
+    //   center
+    // } = res
+
+    // setState(merge({}, state, {
+    //     projects,
+    //     cities,
+    //     continents,
+    //     data,
+    //     center
+    //   }))
+  };
+
+  const forceUpdate = () => {
+    const [v1, setV1] = useState(0);
+    return () => setV1((v1) => v1 + 1);
   };
 
   useEffect(() => {
-    console.log("projectsLoaded = ", projectsLoaded);
-    if (projectsLoaded) {
-      populateState(props);
-    } else {
-      fetchSharedProjectGraphData().then((props) => {
-        populateState(props);
-      });
-    }
-    return removeDragHandlers();
-  }, []);
-  //
-  useEffect(() => {
-    if (state.data) {
-      addDragHandlers();
-      simulation = configureSimulation.bind(null, props)();
-      console.log("configSimulation=", simulation);
-      // addDragHandlers();
-      simulation.on("tick", () => {
+    addDragHandlers();
+    const { data, projects, cities, continents, center } = state;
+    if ((!prevData.state.data && data) || prevData.state.data !== data) {
+      configureSimulation(props).on("tick", () => {
         forceUpdate();
       });
     }
-  }, [state.data, props]);
 
-  useEffect(() => {
-    if (simulation !== undefined) {
-      simulation
-        .nodes(state.projects.concat(continents).concat(state.cities).concat([state.center]))
-        .force("link", d3.forceLink(state.data).distance(20));
-      simulation.alpha(1).restart();
+    if (
+      prevData.state.projects !== projects ||
+      prevData.state.cities !== cities ||
+      prevData.state.data !== data
+    ) {
+      configureSimulation(props)
+        .nodes(projects.concat(continents).concat(cities).concat([center]))
+        .force("link", d3.forceLink(data).distance(20))
+        .alpha(1)
+        .restart();
     }
-  }, [state.projects, state.cities, state.data]);
-
-  // useEffect(()=>{
-  //     addDragHandlers();
-  //     const { data, projects, cities, continents, center } = state;
-  //     // console.log('state or props changed ');
-  //   if ((!prevState.data && data) || prevState.data !== data) {
-  //     simulation = configureSimulation.bind(null, props)();
-  //     console.log('configSimulation=', simulation);
-  //     addDragHandlers();
-  //     simulation.on("tick", () => {
-  //       forceUpdate();
-  //     });
-  //   }
-
-  //   if (
-  //     prevState.projects !== projects ||
-  //     prevState.cities !== cities ||
-  //     prevState.data !== data
-  //   ) {
-  //     console.log('Kuangkuo=', simulation);
-  //     console.log('prevState=', prevState, 'state=', state);
-  //     simulation.nodes(projects.concat(continents).concat(cities).concat([center]))
-  //       .force("link", d3.forceLink(data).distance(20));
-  //     simulation.alpha(1).restart();
-  //   }
-  //   prevState = state;
-  //   console.log('prevState upgraded:',prevState);
-  // },[state, props])
+  }, [state, props]);
 
   const configureSimulation = (props) => {
     const { data, projects, cities, continents, linksData, center } = state;
@@ -165,9 +138,6 @@ const LocGraph = (props) => {
       outterCircleScale: d3.scaleLinear().domain(allProjectsValuationMinMax).range([15, 30]),
     };
   };
-  const removeDragHandlers = () => {
-    d3.drag().on("drag", null);
-  };
 
   const addDragHandlers = () => {
     const { projects, cities, continents } = state;
@@ -196,6 +166,16 @@ const LocGraph = (props) => {
       handleDrag(d3.selectAll(".loc-svg-continent-node").data(continents));
       handleDrag(d3.selectAll(".loc-svg-project-node-group").data(projects));
     }
+  };
+
+  const watchProjectPitch = () => {
+    //event listener for pitched projects // get project from database and integrate into store
+    const { projectFactoryInstance, projectContract } = props;
+    projectFactoryInstance.ProjectPitch().watch((error, event) => {
+      const address = event.args.projectAddress;
+      // const id = event.args.projectId;
+      props.fetchProject(address);
+    });
   };
 
   const { data, projects, cities, continents } = state;
@@ -265,7 +245,7 @@ const LocGraph = (props) => {
       </div>
     );
   } else {
-    return <Loader />;
+    return <div></div>;
   }
 };
 

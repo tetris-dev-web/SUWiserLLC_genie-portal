@@ -1,43 +1,35 @@
-import React from 'react';
-import Modal from 'react-modal';
-import ProfileContent from './profile_content';
-import './user_profile.scss';
+import React, { useState } from "react";
+import Modal from "react-modal";
+import ProfileContent from "./profile_content";
+import "./user_profile.scss";
 
-class UserProfile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showProfile: false
-    }
-    this.setShowProfileStatus = this.setShowProfileStatus.bind(this);
-  }
+const UserProfile = (props) => {
+  const [state, setState] = useState(false);
 
-  setShowProfileStatus (status) {
-    this.setState({
-      showProfile: status
-    })
-  }
+  const setShowProfileStatus = (status) => {
+    setState(status);
+  };
 
-  render () {
-    return (
-      <div className='user_profile'>
-        <div onClick={() => this.setShowProfileStatus(true)}>DEMO USER</div>
-        <img
+  return (
+    <div className="user_profile">
+      <div className="demo_user" onClick={() => setShowProfileStatus(true)}>
+        DEMO USER
+      </div>
+      <img
         className="button-img"
         src="https://s3.amazonaws.com/genie-portal-dev/static/profile.svg"
-        onClick={() => this.setShowProfileStatus(true)}
-        />
-        <Modal
-        className='user_profile_modal'
-        isOpen={this.state.showProfile}
+        onClick={() => setShowProfileStatus(true)}
+      />
+      <Modal
+        className="user_profile_modal"
+        isOpen={state}
         ariaHideApp={false}
-        onRequestClose={() => this.setShowProfileStatus(false)}
-        >
+        onRequestClose={() => setShowProfileStatus(false)}
+      >
         <ProfileContent />
-        </Modal>
-      </div>
-    );
-  }
-}
+      </Modal>
+    </div>
+  );
+};
 
 export default UserProfile;

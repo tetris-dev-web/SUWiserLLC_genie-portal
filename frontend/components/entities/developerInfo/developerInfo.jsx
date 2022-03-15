@@ -1,91 +1,85 @@
-import React from 'react';
-import './developerInfo.scss';
-import { connect } from 'react-redux';
-import {
-  openModal,
-  closeModal
- } from '../../../actions/modal_actions';
+import React, { useState } from "react";
+import "./developerInfo.scss";
+import { connect } from "react-redux";
+import { openModal, closeModal } from "../../../actions/modal_actions";
 
-const mapPropsToState = state => {
+const mapPropsToState = (state) => {
   return {
-    modals: state.ui.modals
+    modals: state.ui.modals,
   };
 };
 
-const mapDispatchToState = dispatch => {
+const mapDispatchToState = (dispatch) => {
   return {
-    openModal: modal => dispatch(openModal(modal)),
-    closeModal: () => dispatch(closeModal())
+    openModal: (modal) => dispatch(openModal(modal)),
+    closeModal: () => dispatch(closeModal()),
   };
 };
 
-class DeveloperInfo extends React.Component {
-  constructor(props) {
-    super(props);
+const DeveloperInfo = (props) => {
+  const { modals, openModal, closeModal } = props;
+  const [showDropdown, setShowDropdown] = useState(false);
+  let dropdown;
 
-    this.state = {
-      showDropdown: false
-    };
-
-    this.toggleDropdown = this.toggleDropdown.bind(this);
-  }
-
-  toggleDropdown(e) {
-    const { showDropdown } = this.state;
+  const toggleDropdown = (e) => {
     if (showDropdown) {
       const modal = document.getElementsByClassName("modal-child")[0];
-      if (
-        this.dropdown.contains(e.target) ||
-        modal && modal.contains(e.target)
-      ) return;
-      document.removeEventListener("click", this.toggleDropdown);
+      if (dropdown.contains(e.target) || (modal && modal.contains(e.target))) return;
+      document.removeEventListener("click", toggleDropdown);
     } else {
-      document.addEventListener("click", this.toggleDropdown);
+      document.addEventListener("click", toggleDropdown);
     }
 
-    this.setState({showDropdown: !this.state.showDropdown});
-  }
+    setShowDropdown(!showDropdown);
+  };
 
-  handleClick(type) {
-    const { modals, openModal, closeModal } = this.props;
-    return (
-      () => {
-        if (modals.length) closeModal();
-        openModal({ type });
-      }
-    );
-  }
+  const handleClick = (type) => {
+    return () => {
+      if (modals.length) closeModal();
+      openModal({ type });
+    };
+  };
 
-  render() {
-    const { modals } = this.props;
-    const { showDropdown } = this.state;
-    let activeDropdown = showDropdown ? 'active-dropdown' : '';
+  let activeDropdown = showDropdown ? "active-dropdown" : "";
 
-    const showSidebarOptions = (
-      <React.Fragment>
-        <li className="strategy">
-          <div className={`button-text strategy-button ${modals[0] && modals[0].type === "strategy" ? "selected" : ""}`}
-            onClick={this.handleClick("strategy")}>STRATEGY</div>
-        </li>
-        <li className="bylaws">
-          <div className={`button-text bylaw-button ${modals[0] && modals[0].type === "bylaw" ? "selected" : ""}`}
-            onClick={this.handleClick("bylaw")}>BYLAWS</div>
-        </li>
-        <li className="about">
-          <div className="button-text">ABOUT</div>
-        </li>
-      </React.Fragment>
-    );
+  const showSidebarOptions = (
+    <React.Fragment>
+      <li className="strategy">
+        <div
+          className={`button-text strategy-button ${
+            modals[0] && modals[0].type === "strategy" ? "selected" : ""
+          }`}
+          onClick={handleClick("strategy")}
+        >
+          STRATEGY
+        </div>
+      </li>
+      <li className="bylaws">
+        <div
+          className={`button-text bylaw-button ${
+            modals[0] && modals[0].type === "bylaw" ? "selected" : ""
+          }`}
+          onClick={handleClick("bylaw")}
+        >
+          BYLAWS
+        </div>
+      </li>
+      <li className="about">
+        <div className="button-text">ABOUT</div>
+      </li>
+    </React.Fragment>
+  );
 
-    return(
-      <div className={`dev-info-container ${activeDropdown}`}>
-        <div className="button-text dev-dropdown-button" onClick={this.toggleDropdown}>DEVELOPER INFO</div>
-        <ul className="dev-info-list" ref={node => this.dropdown = node}>
-          {showSidebarOptions}
-        </ul>
+  return (
+    <div className={`dev-info-container ${activeDropdown}`}>
+      <div className="button-text dev-dropdown-button" onClick={toggleDropdown}>
+        DEVELOPER INFO
       </div>
-    );
-  }
-}
+      <ul className="dev-info-list" ref={(node) => (dropdown = node)}>
+        {showSidebarOptions}
+      </ul>
+    </div>
+  );
+};
 
 export default connect(mapPropsToState, mapDispatchToState)(DeveloperInfo);

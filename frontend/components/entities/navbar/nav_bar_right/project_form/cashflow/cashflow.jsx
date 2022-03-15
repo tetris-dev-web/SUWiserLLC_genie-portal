@@ -1,92 +1,81 @@
-import React from 'react';
-import { keys } from 'lodash';
-import CashFlowGraph from '../../../../entities/dashboard/project_dashboard/project_cashflow_graph';
-import ThumbsUp from '../thumbs_up_svg';
-import { calculateAccumulatedRevenue,  processCashData } from '../../../../../util/project_api_util';
-import './cashflow.scss';
+import React, { useState } from "react";
+import { keys, merge } from "lodash";
+import CashFlowGraph from "../../../../entities/dashboard/project_dashboard/project_cashflow_graph";
+import ThumbsUp from "../thumbs_up_svg";
+import { calculateAccumulatedRevenue, processCashData } from "../../../../../util/project_api_util";
+import "./cashflow.scss";
 
-class CashFlow extends React.Component {
-  constructor(props) {
-    super(props);
-    // Uploading local JSON files may not be possible. May have to refactor
-    // ProjectForm later to account for that.
-    let { cashflowData, currentQuarter  } = this.props;
-    const project = cashflowData ? processCashData(cashflowData) : sampleProject;
-    currentQuarter = currentQuarter ? currentQuarter : sampleCurrentQuarter;
-    this.state = {
-      project,
-      accumulatedRevenue: calculateAccumulatedRevenue(project),
-      currentQuarter
-    };
+const CashFlow = (props) => {
+  const { closeModal } = props;
+  // Uploading local JSON files may not be possible. May have to refactor
+  // ProjectForm later to account for that.
+  let { cashflowData, currentQuarter } = props;
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.processJSONForGraph = this.processJSONForGraph.bind(this);
-    this.renderColor = this.renderColor.bind(this);
-    this.update = this.update.bind(this);
-  }
+  const project = cashflowData ? processCashData(cashflowData) : sampleProject;
+  currentQuarter = currentQuarter ? currentQuarter : sampleCurrentQuarter;
+  const [state, setState] = useState({
+    project,
+    accumulatedRevenue: calculateAccumulatedRevenue(project),
+    currentQuarter,
+  });
 
+  const handleSubmit = () => {};
 
-  handleSubmit() {
-
-  }
-
-  update(quarter) {
-    return e => {
+  const update = (quarter) => {
+    return (e) => {
       e.preventDefault();
-      let project = Object.assign({}, this.state.project);
+      let project = Object.assign({}, state.project);
       project[quarter] = e.currentTarget.value;
       const accumulatedRevenue = calculateAccumulatedRevenue(project);
-      this.setState({ project, accumulatedRevenue });
+      const newState = merge({}, state, project, accumulatedRevenue);
+      setState(newState);
     };
-  }
+  };
 
-  renderColor(currentQuarter, quarter) {
+  const renderColor = (currentQuarter, quarter) => {
     if (quarter <= currentQuarter) {
       return "actual-quarter-blue";
     } else {
       return "expected-quarter-black";
     }
-  }
+  };
 
-  render() {
-    // 7 years of data is the standard, translating to 28 quarters
-    const { project,
-      accumulatedRevenue,
-      currentQuarter } = this.state;
-    const quarters = keys(project);
-    return(
-      <form onSubmit={this.handleSubmit}>
-        <h3>Quarter</h3>
-        <h3>Cashflow</h3>
-        <div>
-          {quarters.map((quarter, idx) => {
-            return(
-              <React.Fragment key={idx}>
-                <label htmlFor={`quarter-${quarter}`}>{`${quarter}`}</label>
-                <input className={this.renderColor(currentQuarter, quarter)}
-                  id={`quarter-${quarter}`}
-                  type="number"
-                  placeholder="10,000"
-                  onChange={this.update(quarter)}
-                  value={project[quarter]} />
-              </React.Fragment>
-            );
-          })}
-        </div>
-        <button>Download Json Sample</button>
-        <CashFlowGraph
-          cashflow={project}
-          valuation={"?"}
-          accumulatedRevenue={accumulatedRevenue} />
-        <input type="submit" value="Submit">
-          <ThumbsUp />
-        </input>
-        <div className="blue-close-modal-button close-modal-button"
-          onClick={this.props.closeModal}>&times;</div>
-      </form>
-    );
-  }
-}
+  // 7 years of data is the standard, translating to 28 quarters
+  let { project, accumulatedRevenue, currentQuarter } = state;
+  const quarters = keys(project);
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h3>Quarter</h3>
+      <h3>Cashflow</h3>
+      <div>
+        {quarters.map((quarter, idx) => {
+          return (
+            <React.Fragment key={idx}>
+              <label htmlFor={`quarter-${quarter}`}>{`${quarter}`}</label>
+              <input
+                className={renderColor(currentQuarter, quarter)}
+                id={`quarter-${quarter}`}
+                type="number"
+                placeholder="10,000"
+                onChange={update(quarter)}
+                value={project[quarter]}
+              />
+            </React.Fragment>
+          );
+        })}
+      </div>
+      <button>Download Json Sample</button>
+      <CashFlowGraph cashflow={project} valuation={"?"} accumulatedRevenue={accumulatedRevenue} />
+      <input type="submit" value="Submit">
+        <ThumbsUp />
+      </input>
+      <div className="blue-close-modal-button close-modal-button" onClick={closeModal}>
+        &times;
+      </div>
+    </form>
+  );
+};
 
 export default CashFlow;
 

@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 
 function DivWithCorners(props) {
-  return(
+  return (
     <div className="cornered-container">
-        {props.children}
-        <div className="top-left-corner"></div>
+      {props.children}
+      <div className="top-left-corner"></div>
 
-        <div className="top-right-corner"></div>
+      <div className="top-right-corner"></div>
 
-        <div className="bottom-left-corner"></div>
+      <div className="bottom-left-corner"></div>
 
-        <div className="bottom-right-corner"></div>
+      <div className="bottom-right-corner"></div>
     </div>
   );
 }

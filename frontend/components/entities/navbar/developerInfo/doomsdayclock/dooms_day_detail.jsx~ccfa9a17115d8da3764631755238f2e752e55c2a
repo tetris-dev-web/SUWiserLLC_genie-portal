@@ -6,7 +6,6 @@ const width = 700;
 const height = 350;
 
 
-
 class DoomsDayDetail extends React.Component {
   constructor(props){
     super(props);
@@ -16,7 +15,6 @@ class DoomsDayDetail extends React.Component {
     this.failDate = this.failDate.bind(this);
   }
 
-
   startGraph(){
     const graphBase = d3.select("#doomsday-graph").append('svg')
       .attr("width", width)
@@ -24,7 +22,6 @@ class DoomsDayDetail extends React.Component {
 
     return graphBase;
   }
-
 
   failDate(date){
     let sleepDate = new Date(date.getTime() + (9*30) * 86400000);
@@ -87,7 +84,6 @@ class DoomsDayDetail extends React.Component {
   // away that projects time - added time, to allow the yellow bar from tokens to connect with it
   // ###data[data.length-1][1].date = new Date(finalProjectDiff);
 
-
   // create scales
   // let scaleSleepTime = new Date(sleepDate.getTime() + (6*6) * 86400000)
 
@@ -98,7 +94,6 @@ class DoomsDayDetail extends React.Component {
       {'project': 'top',   'date': new Date(sleepDate), 'type': 'top'}
     ]
   );
-
 
   data.push(
 
@@ -126,7 +121,6 @@ class DoomsDayDetail extends React.Component {
     return data.slice(0,-1).map(d => d[0].project);
   })())
   .range([20, height]);
-
 
 
   // brown line extending determining extra time because of each token
@@ -166,7 +160,6 @@ class DoomsDayDetail extends React.Component {
     );
   });
 
-
   // create transparent bars that will show text when hovered over
   var bar = graph.selectAll("g")
       .data(rectData)
@@ -186,7 +179,6 @@ class DoomsDayDetail extends React.Component {
     });
 
 
-
   bar.append("rect")
      .attr('width', d => d.width)
      .attr('height', 30)
@@ -196,7 +188,6 @@ class DoomsDayDetail extends React.Component {
      // .attr('fill', 'blue')
      .attr('stroke', 'none')
      // .classed('hidden', true)
-
 
 
   const lineGenerator = d3.line()
@@ -222,14 +213,12 @@ class DoomsDayDetail extends React.Component {
 
   this.setState({lineChartData});
 
-
   const lines = graph.selectAll('path')
    .data(lineChartData).enter().append('path')
    .attr('d', d => d.path)
    .attr('fill', 'none')
    .attr('stroke-width', 2)
    .attr('stroke', d => d.fill)
-
 
   this.setState({lines});
 
@@ -265,7 +254,6 @@ class DoomsDayDetail extends React.Component {
     .style('font-size', d => d.font_size)
     .style('fill', d => d.fill)
     .attr('font-weight', 'bold');
-
 
 }
 
