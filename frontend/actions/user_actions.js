@@ -12,11 +12,11 @@ export const receiveUser = (user) => {
 export const fetchUser = (address, email) => {
   return (dispatch) => {
     if (address != '') {
-      return ExpressAPI.fetchApiData(`user/email/${email}`).then((profile) => {
+      return ExpressAPI.fetchApiData(`user/address/${address}`).then((profile) => {
         return profile;
       });
     } else if (email != '') {
-      return ExpressAPI.fetchApiData(`user/address/${address}`).then((profile) => {
+      return ExpressAPI.fetchApiData(`user/email/${email}`).then((profile) => {
         return profile;
       });
     }
@@ -24,6 +24,7 @@ export const fetchUser = (address, email) => {
 };
 
 export const updateUser = (profile) => (dispatch) => {
+  console.log('here');
   return ExpressAPI.fetchApiData(`user`, {
     method: "POST",
     headers: {

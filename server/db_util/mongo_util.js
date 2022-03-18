@@ -12,8 +12,6 @@ const _getMongoClusterClient = async() => {
 const getData = async (condition, collection = _collection, database = _database) => {
   const client = _getMongoClusterClient();
   
-  let result = {};
-
   try {
     await client.connect();
     const result = await client.db(database).collection(collection).findOne(condition);
