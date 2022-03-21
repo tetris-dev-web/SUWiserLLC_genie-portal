@@ -25,6 +25,10 @@ const TextInputWithUpdate = (props) => (
 
 const ProfileEdit = (props) => {
   const { account } = props;
+  const {
+    updateUser,
+    fetchUser,
+  } = props;
 
   const [profile, setProfile] = React.useState({
     firstName: "",
@@ -51,7 +55,7 @@ const ProfileEdit = (props) => {
   const [isInit, setIsInit] = React.useState(true);
 
   useEffect(() => {
-    // setProfile(fetchUser(account, ''));
+    setProfile(fetchUser(account, ''));
   }, [account]);
 
   const updateProfile = (e) => {
@@ -126,5 +130,11 @@ const mapStateToProps = (state) => {
     account: state.network.account,
   };
 };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchUser: (account, email) => dispatch(fetchUser(account, email)),
+    updateUser: (profile) => dispatch(updateUser(profile)),
+  };
+};
 
-export default connect(mapStateToProps)(ProfileEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileEdit);
