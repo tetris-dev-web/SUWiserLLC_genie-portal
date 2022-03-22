@@ -24,7 +24,6 @@ export const fetchUser = (address, email) => {
 };
 
 export const updateUser = (profile) => (dispatch) => {
-  console.log('here');
   return ExpressAPI.fetchApiData(`user`, {
     method: "POST",
     headers: {

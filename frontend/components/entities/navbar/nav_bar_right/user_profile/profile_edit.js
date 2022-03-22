@@ -38,7 +38,8 @@ const ProfileEdit = (props) => {
     mobileNumber: "",
     nationality: "",
     kyc: "",
-    email: ''
+    email: '',
+    account : account
   });
 
   const [profileError, setProfileError] = React.useState({
@@ -53,40 +54,49 @@ const ProfileEdit = (props) => {
   });
 
   const [isInit, setIsInit] = React.useState(true);
+  const [saveLabel, setSaveLabel] = React.useState('Save');
+  const [getEmail, setGetEmail] = React.useState('');
 
   useEffect(() => {
-    setProfile(fetchUser(account, ''));
+    fetchUser(account, '').then((existingProfile) => {
+      setProfile(merge({}, existingProfile, {account: account}));
+    });
   }, [account]);
 
   const updateProfile = (e) => {
     setProfile(merge({}, profile, { [e.target.name]: e.target.value }));
     if (e.target.name == "email") setIsInit(false);
+    setSaveLabel('Save');
   };
+
+  const onGetEmailChange = (e) => {
+    setGetEmail(e.target.value);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     let isError = false;
     let errorFirstName = false;
-    if (profile.firstName == '') {errorFirstName = true; isError = true;}
+    if (profile.firstName == '' || profile.firstName == null) {errorFirstName = true; isError = true;}
 
     let errorLastName = false;
-    if (profile.lastName == '') {errorLastName = true; isError = true;}
+    if (profile.lastName == '' || profile.lastName == null) {errorLastName = true; isError = true;}
 
     let errorAlias = false;
-    if (profile.alias == '') {errorAlias = true; isError = true;}
+    if (profile.alias == '' || profile.alias == null) {errorAlias = true; isError = true;}
 
     let errorMobileNumber = false;
-    if (profile.mobileNumber == '') {errorMobileNumber = true; isError = true;}
+    if (profile.mobileNumber == '' || profile.mobileNumber == null) {errorMobileNumber = true; isError = true;}
 
     let errorNationality = false;
-    if (profile.nationality == '') {errorNationality = true; isError = true;}
+    if (profile.nationality == '' || profile.nationality == null) {errorNationality = true; isError = true;}
 
     let errorKyc = false;
-    if (profile.kyc == '') {errorKyc = true; isError = true;}
+    if (profile.kyc == '' || profile.kyc == null) {errorKyc = true; isError = true;}
 
     let errorEmail = false;
-    if (profile.email == '') {errorEmail = true; isError = true;}
+    if (profile.email == '' || profile.email == null) {errorEmail = true; isError = true;}
 
     setProfileError({
       firstName: errorFirstName,
@@ -99,16 +109,49 @@ const ProfileEdit = (props) => {
       email: errorEmail
     });
 
-    console.log(isError);
     if(!isError) {
-      console.log(profile);
-      updateUser(profile);
+      setSaveLabel('Saving ...');
+      updateUser(profile).then((newProfile) => {
+        setSaveLabel('Saved !');
+      });
+    }
+  };
+
+  const onGetProfileByEmail = () => {
+
+    let errorEmail = false;
+    if (onGetEmailChange == '' || onGetEmailChange == null) {errorEmail = true;}
+
+    if(!errorEmail) {
+      fetchUser('', getEmail).then((existingProfile) => {
+        setProfile({
+          firstName: existingProfile.firstName == null ? '' : existingProfile.firstName,
+          middleName: existingProfile.middleName == null ? '' : existingProfile.middleName,
+          lastName: existingProfile.lastName == null ? '' : existingProfile.lastName,
+          alias: existingProfile.alias == null ? '' : existingProfile.alias,
+          mobileNumber: existingProfile.mobileNumber == null ? '' : existingProfile.mobileNumber,
+          nationality: existingProfile.nationality == null ? '' : existingProfile.nationality,
+          kyc: existingProfile.kyc == null ? '' : existingProfile.kyc,
+          email: existingProfile.email == null ? '' : existingProfile.email,
+          account : existingProfile.account == null ? '' : existingProfile.account
+        });
+      });
     }
   };
 
   return (
     <div className="profile_items">
       <form className="p-form-box" onSubmit={handleSubmit}>
+        <div className="profile_item">
+          <div className={`profile_item_type`}>Account</div>
+          <input
+            className={`text-input email-input`}
+            type="text"
+            value={profile.account}
+            disabled
+          />        
+        </div>
+
         <TextInputWithUpdate input="firstName" placeholder="First Name" value={profile.firstName} error={profileError.firstName} onChange={updateProfile} />
         <TextInputWithUpdate input="middleName" placeholder="Middle Name" value={profile.middleName} error={profileError.middleName} onChange={updateProfile} />
         <TextInputWithUpdate input="lastName" placeholder="Last Name" value={profile.lastName} error={profileError.lastName} onChange={updateProfile} />
@@ -116,9 +159,21 @@ const ProfileEdit = (props) => {
         <TextInputWithUpdate input="mobileNumber" placeholder="Mobile Number" value={profile.mobileNumber} error={profileError.mobileNumber} onChange={updateProfile} />
         <TextInputWithUpdate input="nationality" placeholder="Nationality" value={profile.nationality} error={profileError.nationality} onChange={updateProfile} />
         <TextInputWithUpdate input="kyc" placeholder="KYC" value={profile.kyc} error={profileError.kyc} onChange={updateProfile} />
-        <TextInputWithUpdate input="email" placeholder="Email" value={profile.email} error={profileError.email} onChange={updateProfile} disabled={(profile.email == '' || !isInit) ? false : true}/>
+        <TextInputWithUpdate input="email" placeholder="Email" value={profile.email} error={profileError.email} onChange={updateProfile} disabled={(profile.email == '' || profile.email == null || !isInit) ? false : true}/>
         <div className="profile_item">
-          <input className="profile_item_button submit-button" type="submit" value="Save" />
+          <input className="profile_item_button submit-button" type="submit" value={saveLabel} />
+        </div>
+        <div className="profile_item">
+          <div className={`profile_item_type ${props.error ? 'error' : ''}`}>
+          <input className="profile_item_button submit-button" type="button" onClick = {onGetProfileByEmail} value="Get profile by email" />
+          </div>
+          <input
+            className={`text-input email-input`}
+            type="text"
+            placeholder="email"
+            onChange={onGetEmailChange}
+            value={getEmail}
+          />        
         </div>
       </form>
     </div>

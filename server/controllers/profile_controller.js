@@ -1,4 +1,4 @@
-const {getData, setData} = require("../db_util/mongo_util");
+const {getData, setData} = require("../db_util/profile");
 
 const getProfileDataByEmail = async (email) => {
   return await getData({email: email});

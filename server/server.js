@@ -231,16 +231,36 @@ app.get(
   asyncMiddleware(async (req, res) => {
     const { email } = req.params;
     const profile = await getProfileDataByEmail(email);
-    res.send(profile);
-  }),
+    res.send({
+      firstName : profile.first_name,
+      middleName : profile.middle_name,
+      lastName : profile.last_name,
+      alias : profile.alias,
+      mobileNumber : profile.mobile_number,
+      nationality : profile.nationality,
+      kyc : profile.kyc,
+      email : profile.email,
+      account : profile.address
+    });
+  })
 );
 
 app.get(
   "/api/user/address/:address",
   asyncMiddleware(async (req, res) => {
-    const { email } = req.params;
-    const profile = await getProfileDataByAddress(email);
-    res.send(profile);
+    const { address } = req.params;
+    const profile = await getProfileDataByAddress(address);
+    res.send({
+      firstName : profile.first_name,
+      middleName : profile.middle_name,
+      lastName : profile.last_name,
+      alias : profile.alias,
+      mobileNumber : profile.mobile_number,
+      nationality : profile.nationality,
+      kyc : profile.kyc,
+      email : profile.email,
+      account : profile.address
+    });
   }),
 );
 
@@ -248,7 +268,7 @@ app.get(
 app.post(
   "/api/user",
   asyncMiddleware(async (req, res) => {
-    const { firstName, middleName, lastName, alias, mobileNumber, nationality, kyc, email } = req.body;
+    const { firstName, middleName, lastName, alias, mobileNumber, nationality, kyc, email, account } = req.body;
     const profile = {
       firstName : firstName,
       middleName : middleName,
@@ -257,10 +277,11 @@ app.post(
       mobileNumber : mobileNumber,
       nationality : nationality,
       kyc : kyc,
-      email : email
+      email : email,
+      address : account
     };
 
-    const success = await saveProfileData(profile);
+    const newProfile = await saveProfileData(profile);
     res.send(newProfile);
   }),
 );
