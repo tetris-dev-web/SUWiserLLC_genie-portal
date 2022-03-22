@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Loader from "../../../dashboard/loader/loader";
 import { merge } from "lodash";
 
 import {
@@ -53,12 +54,14 @@ const ProfileEdit = (props) => {
     email: false
   });
 
+  const [isLoading, setIsLoading] = React.useState(true);
   const [isInit, setIsInit] = React.useState(true);
   const [saveLabel, setSaveLabel] = React.useState('Save');
   const [getEmail, setGetEmail] = React.useState('');
 
   useEffect(() => {
     fetchUser(account, '').then((existingProfile) => {
+      setIsLoading(false);
       setProfile(merge({}, existingProfile, {account: account}));
     });
   }, [account]);
@@ -111,8 +114,10 @@ const ProfileEdit = (props) => {
 
     if(!isError) {
       setSaveLabel('Saving ...');
+      setIsLoading(true);
       updateUser(profile).then((newProfile) => {
         setSaveLabel('Saved !');
+        setIsLoading(false);
       });
     }
   };
@@ -123,6 +128,7 @@ const ProfileEdit = (props) => {
     if (onGetEmailChange == '' || onGetEmailChange == null) {errorEmail = true;}
 
     if(!errorEmail) {
+      setIsLoading(true);
       fetchUser('', getEmail).then((existingProfile) => {
         setProfile({
           firstName: existingProfile.firstName == null ? '' : existingProfile.firstName,
@@ -135,12 +141,14 @@ const ProfileEdit = (props) => {
           email: existingProfile.email == null ? '' : existingProfile.email,
           account : existingProfile.account == null ? '' : existingProfile.account
         });
+        setIsLoading(false);
       });
     }
   };
 
   return (
     <div className="profile_items">
+      {isLoading ? <Loader /> : '' }
       <form className="p-form-box" onSubmit={handleSubmit}>
         <div className="profile_item">
           <div className={`profile_item_type`}>Account</div>
