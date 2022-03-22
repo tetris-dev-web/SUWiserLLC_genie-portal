@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "./vote_shift_tool.scss";
 import { merge } from "lodash";
+
 // TODO make into object
 const VOTE_BAR_WIDTH = 140;
 const VOTE_BAR_HEIGHT = 25;
@@ -10,8 +11,27 @@ const VOTE_SHIFT_LINE_WIDTH = 5;
 const VOTE_SHIFT_LINE_HEIGHT = 80;
 const INNER_BAR_HEIGHT = VOTE_BAR_HEIGHT - 2 * VOTE_BAR_INNER_MARGIN;
 
-const VoteShiftTool = (props) => {
-  const { votesNotDedicated, votesPerProject } = props;
+const VoteShiftTool = ({
+  votesPerProject,
+  votesNotDedicated,
+  votingInstance,
+  fetchFreeVotes,
+  fetchProjectVotes,
+  fetchDemoInvestorFreeVotes,
+  fetchDemoInvestorProjectVotes,
+  projectContract,
+  votingToken,
+  account,
+  selectedProject,
+  accountVotes,
+  voteAndUpdateProjects,
+  demoInvestorVoteAndUpdateProjects,
+  projects,
+  activation,
+  projectLeaderTracker,
+  web3,
+  updateTransactionModal,
+}) => {
   const [state, setState] = React.useState({
     showLogButton: false,
     blockchainLoading: false,
@@ -20,35 +40,44 @@ const VoteShiftTool = (props) => {
     voteBarAppliedWidth: 0,
     voteBarFreedUpWidth: 0,
     voteShiftLineLeft: 0,
+    offsetX: 0,
   });
-
-  let offsetX, shiftLine, votesPerPixel;
-  let totalVotes;
-  let voteBarContainer, voteBarApplied, voteBarFreedup;
+  const shiftLine = useRef(null);
+  const voteBarContainer = useRef(null);
+  const voteBarApplied = useRef(null);
+  const voteBarFreedup = useRef(null);
 
   useEffect(() => {
     fetchVoteData();
     watchVoteChange();
-    populateState();
   }, []);
 
   useEffect(() => {
-    populateState();
+    // const votesPerProject = accountVotes[selectedProject];
+    // const votesNotDedicated = accountVotes.freeVotes;
+    const totalVotes = votesNotDedicated + votesPerProject;
+    const votesPerPixel =
+      totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
+
+    const voteBarAppliedWidth = votesPerProject === 0 ? 0 : votesPerProject / votesPerPixel;
+    const voteBarFreedUpWidth = votesNotDedicated === 0 ? 0 : votesNotDedicated / votesPerPixel;
+
+    setState((c) =>
+      merge({}, c, {
+        totalVotes,
+        votesPerPixel,
+        showLogButton: false,
+        blockchainLoading: false,
+        newVotesPerProject: votesPerProject,
+        newVotesNotDedicated: votesNotDedicated,
+        voteBarAppliedWidth,
+        voteBarFreedUpWidth,
+        voteShiftLineLeft: 2 * VOTE_BAR_INNER_MARGIN + voteBarAppliedWidth,
+      }),
+    );
   }, [votesNotDedicated, votesPerProject]);
 
   const fetchVoteData = () => {
-    const {
-      fetchFreeVotes,
-      fetchProjectVotes,
-      fetchDemoInvestorFreeVotes,
-      fetchDemoInvestorProjectVotes,
-      projectContract,
-      votingToken,
-      account,
-      selectedProject,
-      // loggedInToMetaMask
-    } = props;
-
     // if (loggedInToMetaMask) {
     // fetchFreeVotes(account, votingToken).then(() => {
     //   fetchProjectVotes(account, projectContract, selectedProject);
@@ -60,15 +89,19 @@ const VoteShiftTool = (props) => {
 
   const handleDragStart = (e) => {
     e.preventDefault();
-    offsetX = e.clientX - shiftLine.getBoundingClientRect().left;
+    setState((c) =>
+      merge({}, c, {
+        offsetX: e.clientX - shiftLine.current.getBoundingClientRect().left,
+      }),
+    );
 
     document.addEventListener("mousemove", handleDragging);
     document.addEventListener("mouseup", handleDragEnd);
   };
 
   const handleDragging = (e) => {
-    const mouseX = e.clientX - voteBarContainer.getBoundingClientRect().left;
-    let voteShiftLineLeft = mouseX - offsetX;
+    const mouseX = e.clientX - voteBarContainer.current.getBoundingClientRect().left;
+    let voteShiftLineLeft = mouseX - state.offsetX;
 
     if (voteShiftLineLeft < 2 * VOTE_BAR_INNER_MARGIN) {
       voteShiftLineLeft = 2 * VOTE_BAR_INNER_MARGIN;
@@ -82,10 +115,10 @@ const VoteShiftTool = (props) => {
     const voteBarFreedUpWidth =
       VOTE_BAR_WIDTH - voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
 
-    setState(
-      merge({}, state, {
-        newVotesPerProject: Math.ceil(voteBarAppliedWidth * votesPerPixel),
-        newVotesNotDedicated: Math.floor(voteBarFreedUpWidth * votesPerPixel),
+    setState((c) =>
+      merge({}, c, {
+        newVotesPerProject: Math.ceil(voteBarAppliedWidth * c.votesPerPixel),
+        newVotesNotDedicated: Math.floor(voteBarFreedUpWidth * c.votesPerPixel),
         voteBarAppliedWidth,
         voteBarFreedUpWidth,
         voteShiftLineLeft,
@@ -94,35 +127,19 @@ const VoteShiftTool = (props) => {
   };
 
   const handleDragEnd = () => {
-    const { votesPerProject, votesNotDedicated } = props;
-
     document.removeEventListener("mousemove", handleDragging);
     document.removeEventListener("mouseup", handleDragEnd);
-    setState(
-      merge({}, state, {
+    setState((c) =>
+      merge({}, c, {
         showLogButton: !(
-          state.newVotesPerProject === votesPerProject && newVotesNotDedicated === votesNotDedicated
+          c.newVotesPerProject === votesPerProject && c.newVotesNotDedicated === votesNotDedicated
         ),
       }),
     );
   };
 
   const handleLogClick = () => {
-    setState(merge({}, state, { blockchainLoading: !state.blockchainLoading }));
-
-    const {
-      account,
-      votingInstance,
-      selectedProject,
-      votesPerProject,
-      voteAndUpdateProjects,
-      demoInvestorVoteAndUpdateProjects,
-      projects,
-      activation,
-      projectLeaderTracker,
-      web3,
-      updateTransactionModal,
-    } = props;
+    setState((c) => merge({}, c, { blockchainLoading: !c.blockchainLoading }));
     const { newVotesPerProject } = state;
 
     let type;
@@ -156,62 +173,34 @@ const VoteShiftTool = (props) => {
   };
 
   const handleVoteClick = (vote) => {
-    const { votesPerProject, votesNotDedicated } = props;
-
     return () => {
       if (
-        (vote > 0 && totalVotes === state.newVotesPerProject) ||
+        (vote > 0 && state.totalVotes === state.newVotesPerProject) ||
         (vote < 0 && state.newVotesPerProject === 0)
       )
         return;
-      const voteShiftLineLeft = state.voteShiftLineLeft + vote / votesPerPixel;
+      const voteShiftLineLeft = state.voteShiftLineLeft + vote / state.votesPerPixel;
       const voteBarAppliedWidth = voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN;
       const voteBarFreedUpWidth =
         VOTE_BAR_WIDTH - voteShiftLineLeft - 2 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH;
 
-      setState(
-        merge({}, state, {
-          newVotesPerProject: state.newVotesPerProject + vote,
-          newVotesNotDedicated: state.newVotesNotDedicated - vote,
+      setState((c) =>
+        merge({}, c, {
+          newVotesPerProject: c.newVotesPerProject + vote,
+          newVotesNotDedicated: c.newVotesNotDedicated - vote,
           voteBarAppliedWidth,
           voteBarFreedUpWidth,
           voteShiftLineLeft,
           showLogButton: !(
-            state.newVotesPerProject + vote === votesPerProject &&
-            state.newVotesNotDedicated - vote === votesNotDedicated
+            c.newVotesPerProject + vote === votesPerProject &&
+            c.newVotesNotDedicated - vote === votesNotDedicated
           ),
         }),
       );
     };
   };
 
-  const populateState = () => {
-    const { votesNotDedicated, votesPerProject } = props;
-    // const votesPerProject = this.props.accountVotes[this.props.selectedProject];
-    // const votesNotDedicated = this.props.accountVotes.freeVotes;
-    offsetX = 0;
-    totalVotes = votesNotDedicated + votesPerProject;
-    votesPerPixel =
-      totalVotes / (VOTE_BAR_WIDTH - 4 * VOTE_BAR_INNER_MARGIN - VOTE_SHIFT_LINE_WIDTH);
-
-    const voteBarAppliedWidth = votesPerProject === 0 ? 0 : votesPerProject / votesPerPixel;
-    const voteBarFreedUpWidth = votesNotDedicated === 0 ? 0 : votesNotDedicated / votesPerPixel;
-
-    setState(
-      merge({}, state, {
-        showLogButton: false,
-        blockchainLoading: false,
-        newVotesPerProject: votesPerProject,
-        newVotesNotDedicated: votesNotDedicated,
-        voteBarAppliedWidth,
-        voteBarFreedUpWidth,
-        voteShiftLineLeft: 2 * VOTE_BAR_INNER_MARGIN + voteBarAppliedWidth,
-      }),
-    );
-  };
-
   const watchVoteChange = () => {
-    const { votingInstance } = props;
     votingInstance.VoteChange().watch((error, event) => {
       fetchVoteData();
     });
@@ -234,7 +223,7 @@ const VoteShiftTool = (props) => {
           <div
             className="vote-bar-inner-container"
             style={{ padding: VOTE_BAR_INNER_MARGIN }}
-            ref={(node) => (voteBarContainer = node)}
+            ref={voteBarContainer}
           >
             <div
               className="vote-bar-applied"
@@ -243,7 +232,7 @@ const VoteShiftTool = (props) => {
                 width: state.voteBarAppliedWidth,
                 borderRadius: VOTE_BAR_RADIUS,
               }}
-              ref={(node) => (voteBarApplied = node)}
+              ref={voteBarApplied}
             ></div>
 
             <div
@@ -253,7 +242,7 @@ const VoteShiftTool = (props) => {
                 width: VOTE_SHIFT_LINE_WIDTH,
                 left: state.voteShiftLineLeft,
               }}
-              ref={(node) => (shiftLine = node)}
+              ref={shiftLine}
               onMouseDown={handleDragStart}
             >
               <span className="vote-bar-applied-votes-number">
@@ -277,7 +266,7 @@ const VoteShiftTool = (props) => {
                 width: state.voteBarFreedUpWidth,
                 borderRadius: VOTE_BAR_RADIUS,
               }}
-              ref={(node) => (voteBarFreedup = node)}
+              ref={voteBarFreedup}
             ></div>
           </div>
         </div>
@@ -288,9 +277,8 @@ const VoteShiftTool = (props) => {
         )}
       </React.Fragment>
     );
-  } else {
-    return []; //make loader
   }
+  return []; //make loader
 };
 
 VoteShiftTool.defaultProps = {
