@@ -7,6 +7,7 @@ import {
 import { activateDemoInvestorPending } from "../../../../../actions/chain_actions/dividends_actions";
 import { connect } from "react-redux";
 import { merge } from "lodash";
+import Loader from "../../../dashboard/loader/loader";
 
 const ProfileContent = (props) => {
   const { inactiveTokenInstance, activeTokenInstance, account, dividendsInstance, balance } = props;
@@ -19,6 +20,8 @@ const ProfileContent = (props) => {
     "GNI (active)": "",
     "Dividend Owed": 0,
   });
+
+  const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
     // this.props.fetchTokenBalances(inactiveTokenInstance, activeTokenInstance, account).then(balances => {
@@ -41,7 +44,8 @@ const ProfileContent = (props) => {
       } = balances;
 
       console.log(balances, "sup");
-
+      setIsLoading(false);
+      
       const newState = merge({}, state, {
         account,
         ETH: Number(accountBalance),
@@ -157,7 +161,12 @@ const ProfileContent = (props) => {
     );
   });
 
-  return <div className="profile_items">{userInfo}</div>;
+  return (
+    <div className="profile_items">
+      {isLoading ? <Loader /> : '' }
+      {userInfo}
+    </div>
+  );
 };
 // {
 //   item === "GNI (pending)" || item === "Dividend Owed" ?

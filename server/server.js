@@ -26,6 +26,11 @@ const { voteAndUpdateProjects } = require("./controllers/voting_controller");
 const { pitchProject, fetchStartTime } = require("./controllers/project_factory_controller");
 const { demoInvestorFreeVotes } = require("./controllers/voting_token_controller");
 const { collectDemoInvestorDividend } = require("./controllers/dividends_controller");
+const {
+  getProfileDataByEmail,
+  getProfileDataByAddress,
+  saveProfileData,
+} = require("./controllers/profile_controller");
 const safeStringify = require("json-stringify-safe");
 
 const {
@@ -218,6 +223,66 @@ app.get(
   asyncMiddleware(async (req, res) => {
     await collectDemoInvestorDividend();
     res.send({});
+  }),
+);
+
+app.get(
+  "/api/user/email/:email",
+  asyncMiddleware(async (req, res) => {
+    const { email } = req.params;
+    const profile = await getProfileDataByEmail(email);
+    res.send({
+      firstName : profile.first_name,
+      middleName : profile.middle_name,
+      lastName : profile.last_name,
+      alias : profile.alias,
+      mobileNumber : profile.mobile_number,
+      nationality : profile.nationality,
+      kyc : profile.kyc,
+      email : profile.email,
+      account : profile.address
+    });
+  })
+);
+
+app.get(
+  "/api/user/address/:address",
+  asyncMiddleware(async (req, res) => {
+    const { address } = req.params;
+    const profile = await getProfileDataByAddress(address);
+    res.send({
+      firstName : profile.first_name,
+      middleName : profile.middle_name,
+      lastName : profile.last_name,
+      alias : profile.alias,
+      mobileNumber : profile.mobile_number,
+      nationality : profile.nationality,
+      kyc : profile.kyc,
+      email : profile.email,
+      account : profile.address
+    });
+  }),
+);
+
+
+app.post(
+  "/api/user",
+  asyncMiddleware(async (req, res) => {
+    const { firstName, middleName, lastName, alias, mobileNumber, nationality, kyc, email, account } = req.body;
+    const profile = {
+      firstName : firstName,
+      middleName : middleName,
+      lastName : lastName,
+      alias : alias,
+      mobileNumber : mobileNumber,
+      nationality : nationality,
+      kyc : kyc,
+      email : email,
+      address : account
+    };
+
+    const newProfile = await saveProfileData(profile);
+    res.send(newProfile);
   }),
 );
 

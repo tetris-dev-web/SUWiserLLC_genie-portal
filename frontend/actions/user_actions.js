@@ -1,9 +1,4 @@
-// not seeing use here
-
-import * as APIUtil from "../util/user_api_util";
-
-// ADDED
-import { receiveCurrentUser } from "./session_actions";
+import * as ExpressAPI from "../util/fetch_util/express_api_util";
 
 export const RECEIVE_USER = "RECEIVE_USER";
 
@@ -14,17 +9,27 @@ export const receiveUser = (user) => {
   };
 };
 
-export const fetchUser = (id) => (dispatch) => {
-  return APIUtil.fetchUser(id).then((user) => {
-    return dispatch(receiveCurrentUser(user));
-  });
+export const fetchUser = (address, email) => {
+  return (dispatch) => {
+    if (address != '') {
+      return ExpressAPI.fetchApiData(`user/address/${address}`).then((profile) => {
+        return profile;
+      });
+    } else if (email != '') {
+      return ExpressAPI.fetchApiData(`user/email/${email}`).then((profile) => {
+        return profile;
+      });
+    }
+  };
 };
 
-export const updateUser = (user) => (dispatch) => {
-  return APIUtil.updateUser(user).then((res) => {
-    // changed to receiveCurrentUser so that state is updated
-    return dispatch(receiveCurrentUser(res), (err) => {
-      return dispatch(receiveSessionErrors(err.responseText));
-    });
+export const updateUser = (profile) => (dispatch) => {
+  return ExpressAPI.fetchApiData(`user`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(profile),
   });
 };
