@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require('mongoose');
 const path = require("path");
 const bodyParser = require("body-parser");
 // const ngrok = require("ngrok");
@@ -292,6 +293,11 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
   });
 }
+
+const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER_NAME}.srdd2.mongodb.net/genie-portal-nft?retryWrites=true&w=majority`;
+mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+    .then(() => console.log('MongoDB Database Connected'))
+    .catch(err => console.log(err));
 
 const server = app.listen(port, () => {
   console.log("listening on port", port);
