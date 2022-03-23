@@ -246,34 +246,17 @@ app.get(
 );
 
 app.get(
-  "/api/investor/dividend/:account",
+  "/api/investor/summary/:account",
   asyncMiddleware(async (req, res) => {
     const { account } = req.params;
     const dividend = await fetchInvestorDividend(account);
-    
-    res.send(dividend);
-  })
-);
-
-app.get(
-  "/api/investor/purchase_total/:account",
-  asyncMiddleware(async (req, res) => {
-    const { account } = req.params;
     const purchaseTotal = await fetchInvestorPurchaseTotal(account);
-    console.log(purchaseTotal);
-    res.send({
-      purchaseTotal : purchaseTotal
-    });
-  })
-);
-
-app.get(
-  "/api/investor/account_balance/:account",
-  asyncMiddleware(async (req, res) => {
-    const { account } = req.params;
     const accountBalance = await web3.eth.getBalance(account);
     
     res.send({
+      dividend : dividend.dividendAmount,
+      dividendOwed : dividend.dividendOwedAmount,
+      purchaseTotal : purchaseTotal,
       accountBalance : accountBalance
     });
   })

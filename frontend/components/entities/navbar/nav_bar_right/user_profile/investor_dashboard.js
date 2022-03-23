@@ -4,8 +4,7 @@ import { merge } from "lodash";
 
 import { connect } from "react-redux";
 
-import { fetchInvestorDividend } from "../../../../../actions/chain_actions/dividends_actions";
-import { fetchInvestorPurchaseTotal, fetchInvestorAccountBalance } from "../../../../../actions/chain_actions/token_actions";
+import { fetchInvestorSummary } from "../../../../../actions/chain_actions/dividends_actions";
 
 const InvestorDashboard = (props) => {
   const { account } = props;
@@ -18,66 +17,38 @@ const InvestorDashboard = (props) => {
   const [ary, setARY] = React.useState(0);
 
   useEffect(() => {
-    fetchInvestorDividend(account).then((amount) => {
-      setDividend(Number(amount.dividendAmount));
-      setDividendOwned(Number(amount.dividendOwedAmount));
-      calcARY();
-    });
-    fetchInvestorPurchaseTotal(account).then((amount) => {
-      setPurchaseTotal(Number(amount.purchaseTotal));
-      calcARY();
-    });
-    
-    fetchInvestorAccountBalance(account).then((amount) => {
-      setWalletBalance(amount.accountBalance);
+    fetchInvestorSummary(account).then((summary) => {
+      setDividend(Number(summary.dividend));
+      setDividendOwned(Number(summary.dividendOwed));
+      setWalletBalance(summary.accountBalance);
+      setPurchaseTotal(Number(summary.purchaseTotal));
+
+      const earning = Number(summary.dividend) + Number(summary.dividendOwed);
+      if (Number(summary.purchaseTotal) > 0) setARY(Math.round(earning * 100 / Number(summary.purchaseTotal)));
+
+      setIsLoading(false);
     });
 
   }, [account]);
-
-  const calcARY = () => {
-    const earning = dividend + dividendOwned;
-    console.log(purchaseTotal);
-    if (purchaseTotal > 0) setARY(Math.round(earning * 100 / purchaseTotal));
-  }
 
   return (
     <div className="profile_items">
       {isLoading ? <Loader /> : '' }
       <div className="profile_item">
-        <div className={`profile_item_type`}>Total Investments(wei)</div>
-        <input
-          className={`text-input email-input`}
-          type="text"
-          value={purchaseTotal}
-          disabled
-        />        
+        <div className={`profile_item_type`}>Total Investments (wei)</div>
+        <span className="profile_item_value">{new Intl.NumberFormat().format(purchaseTotal)}</span>
       </div>
       <div className="profile_item">
-        <div className={`profile_item_type`}>Total Earning(wei)</div>
-        <input
-          className={`text-input email-input`}
-          type="text"
-          value={dividend + dividendOwned}
-          disabled
-        />        
+        <div className={`profile_item_type`}>Total Earning (wei)</div>
+        <span className="profile_item_value">{new Intl.NumberFormat().format(dividend + dividendOwned)}</span>
       </div>
       <div className="profile_item">
         <div className={`profile_item_type`}>Annual Rental Yield (%)</div>
-        <input
-          className={`text-input email-input`}
-          type="text"
-          value={ary}
-          disabled
-        />        
+        <span className="profile_item_value">{new Intl.NumberFormat().format(dividend + ary)}</span>
       </div>
       <div className="profile_item">
-        <div className={`profile_item_type`}>Wallent Balance</div>
-        <input
-          className={`text-input email-input`}
-          type="text"
-          value={walletBalance}
-          disabled
-        />        
+        <div className={`profile_item_type`}>Wallent Balance (wei)</div>
+        <span className="profile_item_value">{new Intl.NumberFormat().format(dividend + walletBalance)}</span>
       </div>
     </div>
   );
@@ -90,9 +61,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchInvestorDividend: (account) => dispatch(fetchInvestorDividend(account)),
-    fetchInvestorPurchaseTotal: (account) => dispatch(fetchInvestorPurchaseTotal(account)),
-    fetchInvestorAccountBalance: (account) => dispatch(fetchInvestorAccountBalance(account)),
+    fetchInvestorSummary: (account) => dispatch(fetchInvestorSummary(account)),
   };
 };
 

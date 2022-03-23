@@ -45,7 +45,7 @@ const UserProfile = (props) => {
         <ProfileContent />
       </Modal>
       <Modal
-        className="user_profile_modal"
+        className="user_profile_modal investor_summary_modal"
         isOpen={showInvestorDashboard}
         ariaHideApp={false}
         onRequestClose={() => setShowInvestorDashboard(false)}
