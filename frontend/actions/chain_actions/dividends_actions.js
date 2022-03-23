@@ -12,3 +12,9 @@ export const receiveReceiveDividends = (dividends) => {
 export const collectDemoInvestorDividend = () => {
   return ExpressAPI.fetchApiData("demo/collect_investor_dividend");
 };
+
+export const fetchInvestorDividend = (account) => {
+  return ExpressAPI.fetchApiData(`investor/dividend/${account}`).then((amount) => {
+    return amount;
+  });
+}

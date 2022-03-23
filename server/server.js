@@ -1,3 +1,4 @@
+const { web3 } = require("./chain_connection/web3_configuration");
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -20,12 +21,20 @@ const {
   activateDemoInvestorPending,
   fetchEndTime,
 } = require("./controllers/token_controller");
-const { fetchWeiRaised, fetchPurchases, buyTokens } = require("./controllers/crowdsale_controller");
+const { 
+  fetchWeiRaised, 
+  fetchPurchases, 
+  buyTokens, 
+  fetchInvestorPurchaseTotal 
+} = require("./controllers/crowdsale_controller");
 const { voteAndUpdateProjects } = require("./controllers/voting_controller");
 
 const { pitchProject, fetchStartTime } = require("./controllers/project_factory_controller");
 const { demoInvestorFreeVotes } = require("./controllers/voting_token_controller");
-const { collectDemoInvestorDividend } = require("./controllers/dividends_controller");
+const { 
+  collectDemoInvestorDividend,
+  fetchInvestorDividend
+} = require("./controllers/dividends_controller");
 const {
   getProfileDataByEmail,
   getProfileDataByAddress,
@@ -227,21 +236,55 @@ app.get(
 );
 
 app.get(
+  "/api/investor/dividend/:account",
+  asyncMiddleware(async (req, res) => {
+    const { account } = req.params;
+    const dividend = await fetchInvestorDividend(account);
+    
+    res.send(dividend);
+  })
+);
+
+app.get(
+  "/api/investor/dividend/:account",
+  asyncMiddleware(async (req, res) => {
+    const { account } = req.params;
+    const dividend = await fetchInvestorDividend(account);
+    
+    res.send(dividend);
+  })
+);
+
+app.get(
+  "/api/investor/purchase_total/:account",
+  asyncMiddleware(async (req, res) => {
+    const { account } = req.params;
+    const purchaseTotal = await fetchInvestorPurchaseTotal(account);
+    console.log(purchaseTotal);
+    res.send({
+      purchaseTotal : purchaseTotal
+    });
+  })
+);
+
+app.get(
+  "/api/investor/account_balance/:account",
+  asyncMiddleware(async (req, res) => {
+    const { account } = req.params;
+    const accountBalance = await web3.eth.getBalance(account);
+    
+    res.send({
+      accountBalance : accountBalance
+    });
+  })
+);
+
+app.get(
   "/api/user/email/:email",
   asyncMiddleware(async (req, res) => {
     const { email } = req.params;
     const profile = await getProfileDataByEmail(email);
-    res.send({
-      firstName : profile.first_name,
-      middleName : profile.middle_name,
-      lastName : profile.last_name,
-      alias : profile.alias,
-      mobileNumber : profile.mobile_number,
-      nationality : profile.nationality,
-      kyc : profile.kyc,
-      email : profile.email,
-      account : profile.address
-    });
+    res.send(profile);
   })
 );
 
@@ -250,20 +293,9 @@ app.get(
   asyncMiddleware(async (req, res) => {
     const { address } = req.params;
     const profile = await getProfileDataByAddress(address);
-    res.send({
-      firstName : profile.first_name,
-      middleName : profile.middle_name,
-      lastName : profile.last_name,
-      alias : profile.alias,
-      mobileNumber : profile.mobile_number,
-      nationality : profile.nationality,
-      kyc : profile.kyc,
-      email : profile.email,
-      account : profile.address
-    });
+    res.send(profile);
   }),
 );
-
 
 app.post(
   "/api/user",

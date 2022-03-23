@@ -58,7 +58,7 @@ const fetchInvestorBalance = async () => {
   const accountPending = await inactiveTokenInstance.methods.pendingActivations(account).call();
   const accountDividend = await dividendsInstance.methods.dividendOwedTo(account).call();
   const accountBalance = await web3.eth.getBalance(account);
-  console.log(accountInactive, accountActive);
+  
   return {
     account,
     accountBalance,

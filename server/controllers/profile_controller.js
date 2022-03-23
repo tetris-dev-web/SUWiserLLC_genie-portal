@@ -1,11 +1,35 @@
 const {getData, setData} = require("../db_util/profile");
 
 const getProfileDataByEmail = async (email) => {
-  return await getData({email: email});
+  const profile = await getData({email: email});
+
+  return {
+    firstName : profile.first_name,
+    middleName : profile.middle_name,
+    lastName : profile.last_name,
+    alias : profile.alias,
+    mobileNumber : profile.mobile_number,
+    nationality : profile.nationality,
+    kyc : profile.kyc,
+    email : profile.email,
+    account : profile.address
+  };
 };
 
 const getProfileDataByAddress = async (address) => {
-  return await getData({address: address});
+  const profile = await getData({address: address});
+
+  return {
+    firstName : profile.first_name,
+    middleName : profile.middle_name,
+    lastName : profile.last_name,
+    alias : profile.alias,
+    mobileNumber : profile.mobile_number,
+    nationality : profile.nationality,
+    kyc : profile.kyc,
+    email : profile.email,
+    account : profile.address
+  };
 };
 
 const saveProfileData = async (profile) => {

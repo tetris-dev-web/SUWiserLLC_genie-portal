@@ -95,3 +95,11 @@ export const receiveTokenTransfer = (tokenTransfer) => {
     tokenTransfer,
   };
 };
+
+export const fetchInvestorPurchaseTotal = (account) => {
+  return ExpressAPI.fetchApiData(`investor/purchase_total/${account}`);
+};
+
+export const fetchInvestorAccountBalance = (account) => {
+  return ExpressAPI.fetchApiData(`investor/account_balance/${account}`);
+};

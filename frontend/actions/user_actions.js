@@ -12,13 +12,9 @@ export const receiveUser = (user) => {
 export const fetchUser = (address, email) => {
   return (dispatch) => {
     if (address != '') {
-      return ExpressAPI.fetchApiData(`user/address/${address}`).then((profile) => {
-        return profile;
-      });
+      return ExpressAPI.fetchApiData(`user/address/${address}`);
     } else if (email != '') {
-      return ExpressAPI.fetchApiData(`user/email/${email}`).then((profile) => {
-        return profile;
-      });
+      return ExpressAPI.fetchApiData(`user/email/${email}`);
     }
   };
 };

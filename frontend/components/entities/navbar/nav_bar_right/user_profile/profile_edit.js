@@ -8,6 +8,9 @@ import {
 } from "../../../../../actions/user_actions";
 import { connect } from "react-redux";
 
+import { fetchInvestorDividend } from "../../../../../actions/chain_actions/dividends_actions";
+import { fetchInvestorPurchaseTotal, fetchInvestorAccountBalance } from "../../../../../actions/chain_actions/token_actions";
+
 const TextInputWithUpdate = (props) => (
   <div className="profile_item">
     <div className={`profile_item_type ${props.error ? 'error' : ''}`}>{props.placeholder}</div>
@@ -64,6 +67,18 @@ const ProfileEdit = (props) => {
       setIsLoading(false);
       setProfile(merge({}, existingProfile, {account: account}));
     });
+
+    fetchInvestorDividend(account).then((amount) => {
+      console.log(amount);
+    });
+    fetchInvestorPurchaseTotal(account).then((amount) => {
+      console.log(amount);
+    });
+    
+    fetchInvestorAccountBalance(account).then((amount) => {
+      console.log(amount);
+    });
+
   }, [account]);
 
   const updateProfile = (e) => {
@@ -197,6 +212,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchUser: (account, email) => dispatch(fetchUser(account, email)),
     updateUser: (profile) => dispatch(updateUser(profile)),
+    fetchInvestorDividend: (account) => dispatch(fetchInvestorDividend(account)),
+    fetchInvestorPurchaseTotal: (account) => dispatch(fetchInvestorPurchaseTotal(account)),
+    fetchInvestorAccountBalance: (account) => dispatch(fetchInvestorAccountBalance(account)),
   };
 };
 
