@@ -1,9 +1,9 @@
-const { votingTokenInstance } = require('../chain_models/models');
+const { votingTokenInstance } = require("../chain_models/models");
 
 const demoInvestorFreeVotes = async () => {
-  return await votingTokenInstance.methods.freedUpBalanceOf(process.env.DEMO_ACCOUNT).call();
-}
+  return await votingTokenInstance.methods.freedUpBalanceOf(process.env.DEV_ACCOUNT).call();
+};
 
 module.exports = {
-  demoInvestorFreeVotes
-}
+  demoInvestorFreeVotes,
+};

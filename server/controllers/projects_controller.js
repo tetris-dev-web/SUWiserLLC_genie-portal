@@ -1,12 +1,12 @@
-const { web3 } = require('../chain_connection/web3_configuration');
-const { fetchEvents } = require('../chain_util/chain_util');
-const { numberParser } = require('../util/number_util');
-const { formatProject } = require('../formatters/project_modal');
-const { sendTransaction } = require('../chain_util/chain_util');
-const { projectFactoryInstance, _projectInstance } = require('../chain_models/models');
+const { web3 } = require("../chain_connection/web3_configuration");
+const { fetchEvents } = require("../chain_util/chain_util");
+const { numberParser } = require("../util/number_util");
+const { formatProject } = require("../formatters/project_modal");
+const { sendTransaction } = require("../chain_util/chain_util");
+const { projectFactoryInstance, _projectInstance } = require("../chain_models/models");
 
 const demoDepositCashflow = async (wei, projectAddress) => {
-  const address = process.env.DEMO_ACCOUNT;
+  const address = process.env.DEV_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
   const projectInstance = _projectInstance(projectAddress);
@@ -16,23 +16,23 @@ const demoDepositCashflow = async (wei, projectAddress) => {
       nonce,
       to: projectAddress,
       value: web3.utils.toHex(wei),
-      data: projectInstance.methods.deposit().encodeABI()
+      data: projectInstance.methods.deposit().encodeABI(),
     },
     address,
-    privateKey
-  )
-}
+    privateKey,
+  );
+};
 
 const fetchProjects = async () => {
   const totalProjectCount = await projectFactoryInstance.methods.totalProjectCount().call();
   const projectsData = [];
 
   for (let projectId = 1; projectId <= totalProjectCount; projectId++) {
-    let projectData = _fetchProjectGraphData({id: projectId});
+    let projectData = _fetchProjectGraphData({ id: projectId });
     projectsData.push(projectData);
   }
 
-  return Promise.all(projectsData).then(resolvedProjectsData => {
+  return Promise.all(projectsData).then((resolvedProjectsData) => {
     return resolvedProjectsData.reduce((projects, project) => {
       projects[project.id] = project;
       return projects;
@@ -40,19 +40,19 @@ const fetchProjects = async () => {
   });
 };
 
-const _fetchProjectGraphData = async options => {
+const _fetchProjectGraphData = async (options) => {
   if (!options.address) {
     options.address = await projectFactoryInstance.methods.projectById(options.id).call();
   }
 
-  const projectInstance = _projectInstance(options.address)
+  const projectInstance = _projectInstance(options.address);
 
   if (!options.id) {
-    options.id =  await numberParser(projectInstance.methods.id());
+    options.id = await numberParser(projectInstance.methods.id());
   }
 
   const { address, id } = options;
-  const projectMethods = projectInstance.methods
+  const projectMethods = projectInstance.methods;
 
   const activationTime = await numberParser(projectMethods.activationTime());
   const votes = await numberParser(projectMethods.totalVotes());
@@ -63,8 +63,8 @@ const _fetchProjectGraphData = async options => {
   const closingTime = await numberParser(projectMethods.closingTime());
   const openingTime = await numberParser(projectMethods.openingTime());
   const { busLink, description } = JSON.parse(projectData[1]);
-  const prePortalCashflow = JSON.parse(projectData[4])
-  const cashflow = await fetchEvents(projectInstance, 'ReceiveCashFlow');
+  const prePortalCashflow = JSON.parse(projectData[4]);
+  const cashflow = await fetchEvents(projectInstance, "ReceiveCashFlow");
 
   return {
     id,
@@ -82,13 +82,13 @@ const _fetchProjectGraphData = async options => {
     busLink,
     description,
     closingTime,
-    openingTime
+    openingTime,
   };
 };
 
 const fetchProjectGraphData = async (address) => {
-  return await _fetchProjectGraphData({address});
-}
+  return await _fetchProjectGraphData({ address });
+};
 
 // const  fetchProjectPerformanceData  = async (projectAddress) => {
 //   const projectInstance = _projectInstance(projectAddress);
@@ -116,15 +116,15 @@ const fetchProjectGraphData = async (address) => {
 //   });
 // }
 
-const demoInvestorVotesByProject = async projectAddress => {
+const demoInvestorVotesByProject = async (projectAddress) => {
   const projectInstance = _projectInstance(projectAddress);
-  return await projectInstance.methods.votesOf(process.env.DEMO_ACCOUNT).call();
-}
+  return await projectInstance.methods.votesOf(process.env.DEV_ACCOUNT).call();
+};
 
 module.exports = {
   fetchProjects,
   fetchProjectGraphData,
   // fetchProjectModalData,
   demoInvestorVotesByProject,
-  demoDepositCashflow
+  demoDepositCashflow,
 };

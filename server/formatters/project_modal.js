@@ -1,6 +1,6 @@
-const { merge } = require('lodash');
+const { merge } = require("lodash");
 
-const formatProject = project => {
+const formatProject = (project) => {
   const {
     id,
     prePortalCashflow,
@@ -10,7 +10,7 @@ const formatProject = project => {
     busLink,
     description,
     closingTime,
-    openingTime
+    openingTime,
   } = project;
 
   const cashFlow = formatCashflow(prePortalCashflow, cashflow);
@@ -23,9 +23,9 @@ const formatProject = project => {
     busLink,
     description,
     closingTime,
-    openingTime
-  }
-}
+    openingTime,
+  };
+};
 
 const formatCashflow = (prePortalCashflow, portalCashflow) => {
   const prePortalLen = Object.keys(prePortalCashflow).length;
@@ -36,19 +36,15 @@ const formatCashflow = (prePortalCashflow, portalCashflow) => {
 
     result[len] = {
       cashFlow: Number(currentCashFlow.returnValues.weiAmount),
-      isActuals: true
-    }
+      isActuals: true,
+    };
 
     return result;
   }, {});
 
-  return merge(
-    {},
-    prePortalCashflow,
-    formattedPortalCashflow
-  );
-}
+  return merge({}, prePortalCashflow, formattedPortalCashflow);
+};
 
 module.exports = {
-  formatProject
-}
+  formatProject,
+};

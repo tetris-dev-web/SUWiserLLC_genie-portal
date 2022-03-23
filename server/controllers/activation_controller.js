@@ -1,10 +1,10 @@
-const { web3 } = require('../chain_connection/web3_configuration');
-const { activationInstance } = require('../chain_models/models');
-const { activationAddress } = require('../chain_models/contract_addresses');
-const { sendTransaction } = require('..//chain_util/chain_util');
+const { web3 } = require("../chain_connection/web3_configuration");
+const { activationInstance } = require("../chain_models/models");
+const { activationAddress } = require("../chain_models/contract_addresses");
+const { sendTransaction } = require("..//chain_util/chain_util");
 
 const attemptProjectActivation = async () => {
-  const address = process.env.DEMO_ACCOUNT;
+  const address = process.env.DEV_ACCOUNT;
   const privateKey = process.env.PRIVATE_KEY;
   const nonce = await web3.eth.getTransactionCount(address);
 
@@ -14,13 +14,13 @@ const attemptProjectActivation = async () => {
       gasLimit: web3.utils.toHex(4700000),
       to: activationAddress,
       value: 0,
-      data: activationInstance.methods.tryActivateProject().encodeABI()
+      data: activationInstance.methods.tryActivateProject().encodeABI(),
     },
     address,
-    privateKey
-  )
-}
+    privateKey,
+  );
+};
 
 module.exports = {
-  attemptProjectActivation
-}
+  attemptProjectActivation,
+};
