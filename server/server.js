@@ -237,16 +237,6 @@ app.get(
 );
 
 app.get(
-  "/api/investor/dividend/:account",
-  asyncMiddleware(async (req, res) => {
-    const { account } = req.params;
-    const dividend = await fetchInvestorDividend(account);
-    
-    res.send(dividend);
-  })
-);
-
-app.get(
   "/api/investor/summary/:account",
   asyncMiddleware(async (req, res) => {
     const { account } = req.params;
