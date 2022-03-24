@@ -60,10 +60,18 @@ const ProfileEdit = (props) => {
   const [getEmail, setGetEmail] = React.useState('');
 
   useEffect(() => {
-    fetchUser(account, '').then((existingProfile) => {
+    const localProfile = JSON.parse(localStorage.getItem('user_profile'));
+
+    if (localProfile == null || localProfile.account == null || localProfile.account != account ) {
+      fetchUser(account, '').then((existingProfile) => {
+        localStorage.setItem('user_profile', JSON.stringify(existingProfile));
+        setProfile(merge({}, existingProfile, {account: account}));
+        setIsLoading(false);
+      });
+    } else {
+      setProfile(merge({}, localProfile));
       setIsLoading(false);
-      setProfile(merge({}, existingProfile, {account: account}));
-    });
+    }
   }, [account]);
 
   const updateProfile = (e) => {
@@ -118,6 +126,7 @@ const ProfileEdit = (props) => {
       updateUser(profile).then((newProfile) => {
         setSaveLabel('Saved !');
         setIsLoading(false);
+        localStorage.setItem('user_profile', JSON.stringify(newProfile));
       });
     }
   };
@@ -128,21 +137,29 @@ const ProfileEdit = (props) => {
     if (onGetEmailChange == '' || onGetEmailChange == null) {errorEmail = true;}
 
     if(!errorEmail) {
-      setIsLoading(true);
-      fetchUser('', getEmail).then((existingProfile) => {
-        setProfile({
-          firstName: existingProfile.firstName == null ? '' : existingProfile.firstName,
-          middleName: existingProfile.middleName == null ? '' : existingProfile.middleName,
-          lastName: existingProfile.lastName == null ? '' : existingProfile.lastName,
-          alias: existingProfile.alias == null ? '' : existingProfile.alias,
-          mobileNumber: existingProfile.mobileNumber == null ? '' : existingProfile.mobileNumber,
-          nationality: existingProfile.nationality == null ? '' : existingProfile.nationality,
-          kyc: existingProfile.kyc == null ? '' : existingProfile.kyc,
-          email: existingProfile.email == null ? '' : existingProfile.email,
-          account : existingProfile.account == null ? '' : existingProfile.account
+      const localProfile = JSON.parse(localStorage.getItem('user_profile'));
+
+      if (localProfile == null || localProfile.account == null || localProfile.email != getEmail ) {
+        setIsLoading(true);
+        fetchUser('', getEmail).then((existingProfile) => {
+          const newProfile = {
+            firstName: existingProfile.firstName == null ? '' : existingProfile.firstName,
+            middleName: existingProfile.middleName == null ? '' : existingProfile.middleName,
+            lastName: existingProfile.lastName == null ? '' : existingProfile.lastName,
+            alias: existingProfile.alias == null ? '' : existingProfile.alias,
+            mobileNumber: existingProfile.mobileNumber == null ? '' : existingProfile.mobileNumber,
+            nationality: existingProfile.nationality == null ? '' : existingProfile.nationality,
+            kyc: existingProfile.kyc == null ? '' : existingProfile.kyc,
+            email: existingProfile.email == null ? '' : existingProfile.email,
+            account : existingProfile.account == null ? '' : existingProfile.account
+          };
+          localStorage.setItem('user_profile', JSON.stringify(existingProfile));
+          setProfile(merge({}, newProfile));
+          setIsLoading(false);
         });
-        setIsLoading(false);
-      });
+      } else {
+        setProfile(merge({}, localProfile));
+      }
     }
   };
 
