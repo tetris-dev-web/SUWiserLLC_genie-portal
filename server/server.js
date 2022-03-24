@@ -299,10 +299,18 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER_NAME}.srdd2.mongodb.net/genie-portal-nft?retryWrites=true&w=majority`;
-mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
-    .then(() => console.log('MongoDB Database Connected'))
-    .catch(err => console.log(err));
+const { MONGO_USER, MONGO_PASSWORD, MONGO_CLUSTER_NAME, NODE_ENV } = process.env;
+const _database = "genie-portal-nft";
+
+const uri =
+  NODE_ENV === "production"
+    ? `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_CLUSTER_NAME}.srdd2.mongodb.net/${_database}?retryWrites=true&w=majority`
+    : `mongodb://localhost:27017/${_database}`;
+
+mongoose
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB Database Connected"))
+  .catch((err) => console.log("MongoDB Database Connection error", err));
 
 const server = app.listen(port, () => {
   console.log("listening on port", port);
