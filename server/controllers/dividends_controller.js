@@ -68,8 +68,28 @@ const collectDemoInvestorDividend = async () => {
     privateKey,
   );
 };
+
+const fetchInvestorDividend = async (account) => {
+  // Get DividendCollection
+  const dividendCollection = await fetchEvents(dividendsInstance, "DividendCollection", {account: account});
+
+  const dividendAmount =  dividendCollection
+    .filter((event) => Number(event.returnValues.amount) > 0)
+    .map((event) => event.returnValues.amount)
+    .reduce((prev, cur) => prev + cur, 0);
+  
+    // Get dividendOwedAmount
+  const dividendOwedAmount = await dividendsInstance.methods.dividendOwedTo(account).call();
+
+  return {
+    dividendAmount : dividendAmount,
+    dividendOwedAmount : dividendOwedAmount
+  };
+}
+
 module.exports = {
   fetchDividendReceptions,
   distributeDividends,
   collectDemoInvestorDividend,
+  fetchInvestorDividend
 };

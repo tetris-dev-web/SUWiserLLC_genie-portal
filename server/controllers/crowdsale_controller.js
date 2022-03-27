@@ -18,6 +18,15 @@ const fetchPurchases = async () => {
   return formatCapitalHistoryData(tokenPurchases);
 };
 
+const fetchInvestorPurchaseTotal = async (account) => {
+  const tokenPurchases = await fetchEvents(crowdsaleInstance, "TokenPurchase", {_beneficiary : account});
+
+  return amount = tokenPurchases
+  .filter((event) => Number(event.returnValues.value) > 0)
+  .map((event) => Number(event.returnValues.value))
+  .reduce((prev, cur) => prev + cur, 0);
+}
+
 const buyTokens = async (wei) => {
   //using demo account for now
   const address = process.env.DEV_ACCOUNT;
@@ -44,4 +53,5 @@ module.exports = {
   fetchWeiRaised,
   fetchPurchases,
   buyTokens,
+  fetchInvestorPurchaseTotal
 };
