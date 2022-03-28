@@ -1,3 +1,4 @@
+const { web3 } = require("./chain_connection/web3_configuration");
 const express = require("express");
 const mongoose = require('mongoose');
 const path = require("path");
@@ -21,12 +22,20 @@ const {
   activateDemoInvestorPending,
   fetchEndTime,
 } = require("./controllers/token_controller");
-const { fetchWeiRaised, fetchPurchases, buyTokens } = require("./controllers/crowdsale_controller");
+const { 
+  fetchWeiRaised, 
+  fetchPurchases, 
+  buyTokens, 
+  fetchInvestorPurchaseTotal 
+} = require("./controllers/crowdsale_controller");
 const { voteAndUpdateProjects } = require("./controllers/voting_controller");
 
 const { pitchProject, fetchStartTime } = require("./controllers/project_factory_controller");
 const { demoInvestorFreeVotes } = require("./controllers/voting_token_controller");
-const { collectDemoInvestorDividend } = require("./controllers/dividends_controller");
+const { 
+  collectDemoInvestorDividend,
+  fetchInvestorDividend
+} = require("./controllers/dividends_controller");
 const {
   getProfileDataByEmail,
   getProfileDataByAddress,
@@ -228,21 +237,28 @@ app.get(
 );
 
 app.get(
+  "/api/investor/summary/:account",
+  asyncMiddleware(async (req, res) => {
+    const { account } = req.params;
+    const dividend = await fetchInvestorDividend(account);
+    const purchaseTotal = await fetchInvestorPurchaseTotal(account);
+    const accountBalance = await web3.eth.getBalance(account);
+    
+    res.send({
+      dividend : dividend.dividendAmount,
+      dividendOwed : dividend.dividendOwedAmount,
+      purchaseTotal : purchaseTotal,
+      accountBalance : accountBalance
+    });
+  })
+);
+
+app.get(
   "/api/user/email/:email",
   asyncMiddleware(async (req, res) => {
     const { email } = req.params;
     const profile = await getProfileDataByEmail(email);
-    res.send({
-      firstName : profile.first_name,
-      middleName : profile.middle_name,
-      lastName : profile.last_name,
-      alias : profile.alias,
-      mobileNumber : profile.mobile_number,
-      nationality : profile.nationality,
-      kyc : profile.kyc,
-      email : profile.email,
-      account : profile.address
-    });
+    res.send(profile);
   })
 );
 
@@ -251,20 +267,9 @@ app.get(
   asyncMiddleware(async (req, res) => {
     const { address } = req.params;
     const profile = await getProfileDataByAddress(address);
-    res.send({
-      firstName : profile.first_name,
-      middleName : profile.middle_name,
-      lastName : profile.last_name,
-      alias : profile.alias,
-      mobileNumber : profile.mobile_number,
-      nationality : profile.nationality,
-      kyc : profile.kyc,
-      email : profile.email,
-      account : profile.address
-    });
+    res.send(profile);
   }),
 );
-
 
 app.post(
   "/api/user",
@@ -294,10 +299,18 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER_NAME}.srdd2.mongodb.net/genie-portal-nft?retryWrites=true&w=majority`;
-mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
-    .then(() => console.log('MongoDB Database Connected'))
-    .catch(err => console.log(err));
+const { MONGO_USER, MONGO_PASSWORD, MONGO_CLUSTER_NAME, NODE_ENV } = process.env;
+const _database = "genie-portal-nft";
+
+const uri =
+  NODE_ENV === "production"
+    ? `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_CLUSTER_NAME}.srdd2.mongodb.net/${_database}?retryWrites=true&w=majority`
+    : `mongodb://localhost:27017/${_database}`;
+
+mongoose
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB Database Connected"))
+  .catch((err) => console.log("MongoDB Database Connection error", err));
 
 const server = app.listen(port, () => {
   console.log("listening on port", port);
