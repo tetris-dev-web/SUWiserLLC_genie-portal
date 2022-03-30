@@ -18,13 +18,18 @@ const fetchPurchases = async () => {
   return formatCapitalHistoryData(tokenPurchases);
 };
 
-const fetchInvestorPurchaseTotal = async (account) => {
-  const tokenPurchases = await fetchEvents(crowdsaleInstance, "TokenPurchase", {_beneficiary : account});
+const fetchInvestorPurchase = async (account) => {
+  const tokenPurchases = await fetchEvents(crowdsaleInstance, "TokenPurchase", {beneficiary : account});
 
   return amount = tokenPurchases
   .filter((event) => Number(event.returnValues.value) > 0)
-  .map((event) => Number(event.returnValues.value))
-  .reduce((prev, cur) => prev + cur, 0);
+  .map((event) => { return {
+    purchaser : event.returnValues.purchaser,
+    beneficiary : event.returnValues.beneficiary,
+    value : Number(event.returnValues.value),
+    amount : Number(event.returnValues.amount),
+    time : Number(event.returnValues.time)
+  }});
 }
 
 const buyTokens = async (wei) => {
@@ -53,5 +58,5 @@ module.exports = {
   fetchWeiRaised,
   fetchPurchases,
   buyTokens,
-  fetchInvestorPurchaseTotal
+  fetchInvestorPurchase
 };

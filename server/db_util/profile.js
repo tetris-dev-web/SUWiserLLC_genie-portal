@@ -1,4 +1,4 @@
-const ProfileModel = require('./models/profile_model');
+const ProfileModel = require("./models/profile_model");
 
 const getData = async (condition) => {
   let newProfileInstance;
@@ -8,7 +8,7 @@ const getData = async (condition) => {
   });
 
   return newProfileInstance != null ? newProfileInstance : {};
-}
+};
 
 const setData = async (data) => {
   var profile_instance = {
@@ -21,16 +21,21 @@ const setData = async (data) => {
     kyc: data.kyc,
     address: data.address,
     email: data.email,
-    updated_at: Date.now()
+    updated_at: Date.now(),
   };
 
   // Check the data is exist
-  ProfileModel.findOneAndUpdate({email : data.email}, profile_instance, {upsert : true}, (err, doc) => {
-    if (err) return console.log(err);
-  });
+  ProfileModel.findOneAndUpdate(
+    { email: data.email },
+    profile_instance,
+    { upsert: true },
+    (err, doc) => {
+      if (err) return console.log(err);
+    },
+  );
 
   return profile_instance;
-}
+};
 
 module.exports = {
   getData,
