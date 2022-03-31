@@ -1,12 +1,12 @@
-export const OPEN_MODAL = 'OPEN_MODAL';
-export const CLOSE_MODAL = 'CLOSE_MODAL';
+export const OPEN_MODAL = "OPEN_MODAL";
+export const CLOSE_MODAL = "CLOSE_MODAL";
 // export const RECEIVE_PROJECT = 'RECEIVE_PROJECT';
 // import * as ExpressAPI  from '../util/fetch_util/express_api_util';
 
 // export const OPEN_LOGIN_MODAL = 'OPEN_LOGIN_MODAL';
 // export const CLOSE_LOGIN_MODAL = 'CLOSE_LOGIN_MODAL';
 
-export const openModal = projectId => {
+export const openModal = (projectId) => {
   return {
     type: OPEN_MODAL,
     projectId,
@@ -18,7 +18,6 @@ export const closeModal = () => {
     type: CLOSE_MODAL,
   };
 };
-
 
 // export const receiveProjectPerformanceData = project => {
 //   return {
@@ -34,8 +33,6 @@ export const closeModal = () => {
 //     })
 //   }
 // }
-
-
 
 //
 // export const openLoginModal = modal => {

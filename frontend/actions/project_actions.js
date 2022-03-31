@@ -1,65 +1,70 @@
-import * as APIUtil from '../util/project_api_util';
+import * as APIUtil from "../util/project_api_util";
 
-export const RECEIVE_PROJECT = 'RECEIVE_PROJECT';
+export const RECEIVE_PROJECT = "RECEIVE_PROJECT";
 
-export const RECEIVE_PROJECT_ERRORS = 'RECEIVE_PROJECT_ERRORS';
-export const CLEAR_PROJECT_ERRORS = 'CLEAR_PROJECT_ERRORS';
+export const RECEIVE_PROJECT_ERRORS = "RECEIVE_PROJECT_ERRORS";
+export const CLEAR_PROJECT_ERRORS = "CLEAR_PROJECT_ERRORS";
 
-
-export const receiveProjectPerformanceData = project => {
+export const receiveProjectPerformanceData = (project) => {
   return {
     type: RECEIVE_PROJECT,
-    project
+    project,
   };
 };
 
-export const receiveProjectErrors = errors => {
+export const receiveProjectErrors = (errors) => {
   return {
     type: RECEIVE_PROJECT_ERRORS,
-    errors
+    errors,
   };
 };
 
 export const clearProjectErrors = () => {
   return {
-    type: CLEAR_PROJECT_ERRORS
+    type: CLEAR_PROJECT_ERRORS,
   };
 };
 
 export const fetchProjects = () => {
-  return dispatch => {
-    return APIUtil.fetchProjects().then(projects => {
+  return (dispatch) => {
+    return APIUtil.fetchProjects().then((projects) => {
       return dispatch(receiveProjects(projects));
     });
   };
 };
 
 export const fetchProject = (id) => {
-  return dispatch => {
-    return APIUtil.fetchProject(id).then(project => {
+  return (dispatch) => {
+    return APIUtil.fetchProject(id).then((project) => {
       return dispatch(receiveProject(project));
     });
   };
 };
 
 export const createProject = (project) => {
-  return dispatch => {
-    return APIUtil.createProject(project).then(project => {
-      dispatch(receiveProject(project));
-      return project;
-    }, err => {
-      return dispatch(receiveProjectErrors(err.responseJSON));
-    });
+  return (dispatch) => {
+    return APIUtil.createProject(project).then(
+      (project) => {
+        dispatch(receiveProject(project));
+        return project;
+      },
+      (err) => {
+        return dispatch(receiveProjectErrors(err.responseJSON));
+      },
+    );
   };
 };
 
 export const editProject = (project) => {
-  return dispatch => {
-    return APIUtil.editProject(project).then(project => {
-      dispatch(receiveProject(project));
-      return project;
-    }, err => {
-    return dispatch(receiveProjectErrors(err.responseJSON));
-    });
+  return (dispatch) => {
+    return APIUtil.editProject(project).then(
+      (project) => {
+        dispatch(receiveProject(project));
+        return project;
+      },
+      (err) => {
+        return dispatch(receiveProjectErrors(err.responseJSON));
+      },
+    );
   };
 };

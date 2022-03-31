@@ -1,10 +1,10 @@
-import byAll from './token_graph_by_all_reducer';
-import byUser from './token_graph_by_user_reducer';
-import { combineReducers } from 'redux';
+import byAll from "./token_graph_by_all_reducer";
+import byUser from "./token_graph_by_user_reducer";
+import { combineReducers } from "redux";
 
-const tokenGraphData =  combineReducers({
+const tokenGraphData = combineReducers({
   byAll,
-  byUser
-})
+  byUser,
+});
 
 export default tokenGraphData;

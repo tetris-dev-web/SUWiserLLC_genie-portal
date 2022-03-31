@@ -650,8 +650,6 @@ const ProjectForm = (props) => {
         updateCashflowValue={updateCashflowValue}
         receiveCashflowData={receiveCashflowData}
         updateFile={updateFile}
-        calculateNetPresentValue={calculateNetPresentValue}
-        calculateDiscountFactor={calculateDiscountFactor}
         update={update}
       />
       <PlanInputs state model_id={projectData.model_id} update={update} updateFile={updateFile} />

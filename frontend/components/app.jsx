@@ -88,6 +88,11 @@ const App = (props) => {
         }
       />
     );
+  } else if (history.location.pathname == "/dashboard/investor") {
+    return (
+      <div className="rootDiv">
+      </div>
+    );
   } else {
     return (
       <div className="rootDiv">

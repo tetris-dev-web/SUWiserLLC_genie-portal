@@ -1,8 +1,4 @@
-
-import {
-  RECEIVE_PROJECT_ERRORS,
-  CLEAR_PROJECT_ERRORS
-} from '../actions/project_actions';
+import { RECEIVE_PROJECT_ERRORS, CLEAR_PROJECT_ERRORS } from "../actions/project_actions";
 
 const _nullErrors = [];
 

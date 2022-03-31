@@ -1,58 +1,55 @@
-import { keys } from 'lodash'; // TODO - see if .keys works instead of keys()
+import { keys } from "lodash"; // TODO - see if .keys works instead of keys()
 
 export const fetchProjects = () => {
   return $.ajax({
-    method: 'GET',
-    url: 'api/projects',
+    method: "GET",
+    url: "api/projects",
   });
-
 };
 
-export const fetchProject = id => {
+export const fetchProject = (id) => {
   return $.ajax({
-    method: 'GET',
+    method: "GET",
     url: `api/projects/${id}`,
   });
 };
 
-export const createProject = formData => {
+export const createProject = (formData) => {
   return $.ajax({
-    method: 'POST',
-    url: 'api/projects',
+    method: "POST",
+    url: "api/projects",
     // processData: false,
     // contentType: false,
     // dataType: 'json',
-    data: {project: formData}
+    data: { project: formData },
   });
 };
 
 export const uploadPDF = (project, pdf_file) => {
   return $.ajax({
-    method: 'PATCH',
+    method: "PATCH",
     processData: false,
     contentType: false,
     url: `api/projects/${project.id}`,
-    data: {project:{pdf_file}},
-    dataType: 'json',
+    data: { project: { pdf_file } },
+    dataType: "json",
   });
 };
 
-export const editProject = project => {
+export const editProject = (project) => {
   return $.ajax({
-    method: 'PATCH',
+    method: "PATCH",
     url: `api/projects/${project.id}`,
-    data: { project }
+    data: { project },
   });
 };
 
 export const getFailedProjects = () => {
   return $.ajax({
-    method: 'GET',
-    url: 'api/projects/failed_projects_count'
+    method: "GET",
+    url: "api/projects/failed_projects_count",
   });
 };
-
-
 
 export const formatProjectData = (cashflow) => {
   let {
@@ -60,7 +57,7 @@ export const formatProjectData = (cashflow) => {
     actual_cashflow,
     accum_actual_cashflow,
     accum_projected_cashflow,
-    accumulated_revenue
+    accumulated_revenue,
   } = parseCashflows(cashflow);
 
   return {
@@ -68,73 +65,74 @@ export const formatProjectData = (cashflow) => {
     actual_cashflow,
     accum_actual_cashflow,
     accum_projected_cashflow,
-    accumulated_revenue
+    accumulated_revenue,
   };
 };
 
-export const parseCashflows = cashflow => {
+export const parseCashflows = (cashflow) => {
   let accumulatedSum = 0;
   let actualSum = 0;
   let projectedSum = 0;
 
-  return Object.keys(cashflow).reduce((result, quarter) => {
-    accumulatedSum += cashflow[quarter]["cashFlow"];
-    result.accumulated_revenue[quarter] = accumulatedSum;
+  return Object.keys(cashflow).reduce(
+    (result, quarter) => {
+      accumulatedSum += cashflow[quarter]["cashFlow"];
+      result.accumulated_revenue[quarter] = accumulatedSum;
 
-    if (cashflow[quarter]["isActuals"]) {
-      actualSum += cashflow[quarter]["cashFlow"];
+      if (cashflow[quarter]["isActuals"]) {
+        actualSum += cashflow[quarter]["cashFlow"];
 
+        result.projected_cashflow[quarter] = 0;
+        result.actual_cashflow[quarter] = cashflow[quarter]["cashFlow"];
+        result.accum_actual_cashflow[quarter] = actualSum;
+        result.accum_projected_cashflow[quarter] = 0;
+      } else {
+        projectedSum += cashflow[quarter]["cashFlow"];
 
-      result.projected_cashflow[quarter] = 0;
-      result.actual_cashflow[quarter] = cashflow[quarter]["cashFlow"];
-      result.accum_actual_cashflow[quarter] = actualSum;
-      result.accum_projected_cashflow[quarter] = 0;
-    } else {
-      projectedSum += cashflow[quarter]["cashFlow"];
+        result.projected_cashflow[quarter] = cashflow[quarter]["cashFlow"];
+        result.actual_cashflow[quarter] = 0;
+        result.accum_actual_cashflow[quarter] = 0;
+        result.projected_sum = projectedSum;
+        result.accum_projected_cashflow[quarter] = cashflow[quarter]["cashFlow"];
+      }
 
-      result.projected_cashflow[quarter] = cashflow[quarter]["cashFlow"]
-      result.actual_cashflow[quarter] = 0
-      result.accum_actual_cashflow[quarter] = 0
-      result.projected_sum = projectedSum;
-      result.accum_projected_cashflow[quarter] = cashflow[quarter]["cashFlow"]
-    }
-
-    return result;
-  }, {
-    projected_cashflow: {},
-    actual_cashflow: {},
-    accum_actual_cashflow: {},
-    accum_projected_cashflow: {},
-    accumulated_revenue: {}
-  });
-}
+      return result;
+    },
+    {
+      projected_cashflow: {},
+      actual_cashflow: {},
+      accum_actual_cashflow: {},
+      accum_projected_cashflow: {},
+      accumulated_revenue: {},
+    },
+  );
+};
 
 export const calculateCashflowData = (cashflow) => {
-  const projectedCashflow = {}
-  const actualCashflow = {}
-  const accumActualCashflow = {}
+  const projectedCashflow = {};
+  const actualCashflow = {};
+  const accumActualCashflow = {};
   const accumProjectedCashflow = {};
   let actualSum = 0;
-  let projectedSum = 0
+  let projectedSum = 0;
 
-  for (var quarter in cashflow){
-    accumProjectedCashflow[quarter] = {}
-    projectedCashflow[quarter] = {}
-    actualCashflow[quarter] = {}
-    accumActualCashflow[quarter] = {}
-    if (cashflow[quarter]["isActuals"] === true){
-      projectedCashflow[quarter] = 0
-      actualCashflow[quarter] = cashflow[quarter]["cashFlow"]
-      actualSum += cashflow[quarter]["cashFlow"]
-      accumActualCashflow[quarter] = actualSum
-      accumProjectedCashflow[quarter] = 0
-
+  for (var quarter in cashflow) {
+    accumProjectedCashflow[quarter] = {};
+    projectedCashflow[quarter] = {};
+    actualCashflow[quarter] = {};
+    accumActualCashflow[quarter] = {};
+    if (cashflow[quarter]["isActuals"] === true) {
+      projectedCashflow[quarter] = 0;
+      actualCashflow[quarter] = cashflow[quarter]["cashFlow"];
+      actualSum += cashflow[quarter]["cashFlow"];
+      accumActualCashflow[quarter] = actualSum;
+      accumProjectedCashflow[quarter] = 0;
     } else {
-      projectedCashflow[quarter] = cashflow[quarter]["cashFlow"]
-      actualCashflow[quarter] = 0
-      accumActualCashflow[quarter] = 0
-      projectedSum += cashflow[quarter]["cashFlow"]
-      accumProjectedCashflow[quarter] = projectedSum
+      projectedCashflow[quarter] = cashflow[quarter]["cashFlow"];
+      actualCashflow[quarter] = 0;
+      accumActualCashflow[quarter] = 0;
+      projectedSum += cashflow[quarter]["cashFlow"];
+      accumProjectedCashflow[quarter] = projectedSum;
     }
   }
 
@@ -145,7 +143,7 @@ export const calculateCashflowData = (cashflow) => {
     projected_cashflow: projectedCashflow,
     actual_cashflow: actualCashflow,
     accum_projected_cashflow: accumProjectedCashflow,
-    accum_actual_cashflow: accumActualCashflow
+    accum_actual_cashflow: accumActualCashflow,
   };
 };
 
@@ -201,7 +199,7 @@ export const calculateCashflowData = (cashflow) => {
 export const processCashData = (cashflow) => {
   if (cashflow.tempfile) {
     return JSON.parse(cashflow.tempfile.join(""));
-  } else if (typeof(cashflow) === 'string') {
+  } else if (typeof cashflow === "string") {
     return JSON.parse(cashflow);
   } else {
     return cashflow;

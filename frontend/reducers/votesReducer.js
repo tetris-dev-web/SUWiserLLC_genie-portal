@@ -1,9 +1,6 @@
-import { merge, values } from 'lodash';
+import { merge, values } from "lodash";
 
-import {
-  RECEIVE_FREE_VOTES,
-  RECEIVE_PROJECT_VOTES
-} from '../actions/chain_actions/votes_actions';
+import { RECEIVE_FREE_VOTES, RECEIVE_PROJECT_VOTES } from "../actions/chain_actions/votes_actions";
 
 const votesReducer = (state = {}, action) => {
   Object.freeze(state);
