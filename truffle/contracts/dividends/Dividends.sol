@@ -14,7 +14,7 @@ contract Dividends {
   mapping(address => uint256) public lastDividendPoints;
 
   event ReceiveDividends(uint256 weiAmount, uint256 time);
-  event DividendCollection(address account, uint256 amount);
+  event DividendCollection(address account, uint256 amount, uint256 time);
 
   uint256 public totalDividendPoints;
   uint256 internal pointMultiplier = 10e30;
@@ -29,7 +29,7 @@ contract Dividends {
     uint256 dividend = dividendOwedTo(account);
     account.transfer(dividend);
     lastDividendPoints[account] = totalDividendPoints;
-    emit DividendCollection(account, dividend);
+    emit DividendCollection(account, dividend, now);
     return true;
   }
 

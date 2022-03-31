@@ -11,22 +11,23 @@ const message = require("uport-transports").message.util;
 const { asyncMiddleware } = require("./middlewares/async_middleware");
 const {
   fetchProjects,
-  fetchProjectModuleData,
   fetchProjectGraphData,
   demoInvestorVotesByProject,
   demoDepositCashflow,
+  fetchProjectCashFlow
 } = require("./controllers/projects_controller");
 const {
   fetchTokenHistoryWithEarnings,
   fetchInvestorBalance,
   activateDemoInvestorPending,
   fetchEndTime,
+  fetchTokenTransfers
 } = require("./controllers/token_controller");
 const { 
   fetchWeiRaised, 
   fetchPurchases, 
   buyTokens, 
-  fetchInvestorPurchaseTotal 
+  fetchInvestorPurchase 
 } = require("./controllers/crowdsale_controller");
 const { voteAndUpdateProjects } = require("./controllers/voting_controller");
 
@@ -34,7 +35,8 @@ const { pitchProject, fetchStartTime } = require("./controllers/project_factory_
 const { demoInvestorFreeVotes } = require("./controllers/voting_token_controller");
 const { 
   collectDemoInvestorDividend,
-  fetchInvestorDividend
+  fetchDividendCollection,
+  fetchDividendOwedTo
 } = require("./controllers/dividends_controller");
 const {
   getProfileDataByEmail,
@@ -240,14 +242,18 @@ app.get(
   "/api/investor/summary/:account",
   asyncMiddleware(async (req, res) => {
     const { account } = req.params;
-    const dividend = await fetchInvestorDividend(account);
-    const purchaseTotal = await fetchInvestorPurchaseTotal(account);
+    const dividendCollection = await fetchDividendCollection(account);
+    const dividendOwedTo = await fetchDividendOwedTo(account);
+    const purchaseHistory = await fetchInvestorPurchase(account);
     const accountBalance = await web3.eth.getBalance(account);
-    
+
+    const tokenHistory = await fetchTokenTransfers();
+console.log(tokenHistory);
+
     res.send({
-      dividend : dividend.dividendAmount,
-      dividendOwed : dividend.dividendOwedAmount,
-      purchaseTotal : purchaseTotal,
+      dividend : dividendCollection.reduce((prev, cur) => prev.amount + cur.amount, 0),
+      dividendOwed : dividendOwedTo,
+      purchaseTotal : purchaseHistory.reduce((prev, cur) => prev.value + cur.value, 0),
       accountBalance : accountBalance
     });
   })
@@ -303,7 +309,7 @@ const { MONGO_USER, MONGO_PASSWORD, MONGO_CLUSTER_NAME, NODE_ENV } = process.env
 const _database = "genie-portal-nft";
 
 const uri =
-  NODE_ENV === "production"
+  NODE_ENV !== "localhost"
     ? `mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_CLUSTER_NAME}.srdd2.mongodb.net/${_database}?retryWrites=true&w=majority`
     : `mongodb://localhost:27017/${_database}`;
 

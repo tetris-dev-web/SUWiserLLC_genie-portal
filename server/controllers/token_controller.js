@@ -29,9 +29,9 @@ const fetchEndTime = async () => {
   return endTime;
 };
 
-const fetchTokenTransfers = async () => {
-  const inactiveTransferData = await transfersData(inactiveTokenInstance);
-  const activeTransferData = await transfersData(activeTokenInstance);
+const fetchTokenTransfers = async (account = '') => {
+  const inactiveTransferData = await transfersData(inactiveTokenInstance, account);
+  const activeTransferData = await transfersData(activeTokenInstance, account);
 
   return {
     inactiveTransferData,
@@ -39,14 +39,18 @@ const fetchTokenTransfers = async () => {
   };
 };
 
-const transfersData = async (tokenInstance) => {
+const transfersData = async (tokenInstance, account = '') => {
   const events = await fetchEvents(tokenInstance, "Transfer");
   return events
-    .filter((event) => Number(event.returnValues.value) > 0)
+    .filter((event) => Number(event.returnValues.value) > 0 && (account == '' ? true : (account != '' && ( event.returnValues.from == account ||  event.returnValues.to == account ))))
     .map((event) => {
-      const data = merge({}, event.returnValues);
-      data.blockNumber = event.blockNumber;
-      data.value = Number(data.value);
+      const data = merge({}, {
+        from : event.returnValues.from,
+        to : event.returnValues.to,
+        blockNumber : event.blockNumber,
+        time : Number(event.returnValues.time),
+        value : Number(event.returnValues.value)
+      });
       return data;
     });
 };
@@ -91,4 +95,5 @@ module.exports = {
   fetchInvestorBalance,
   activateDemoInvestorPending,
   fetchEndTime,
+  fetchTokenTransfers
 };

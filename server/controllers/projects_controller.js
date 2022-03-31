@@ -90,6 +90,22 @@ const fetchProjectGraphData = async (address) => {
   return await _fetchProjectGraphData({ address });
 };
 
+const fetchProjectCashFlow = async (address) => {
+  const projectInstance = _projectInstance(address);
+
+  const cashFlow = await fetchEvents(projectInstance, "ReceiveCashFlow");
+
+  return cashFlow
+    .filter((event) => Number(event.returnValues.weiAmount) > 0)
+    .map((event) => {
+      return {
+        amount : Number(event.returnValues.weiAmount),
+        time : Number(event.returnValues.time),
+        project_id : event.returnValues.projectId
+      }
+    });
+}
+
 // const  fetchProjectPerformanceData  = async (projectAddress) => {
 //   const projectInstance = _projectInstance(projectAddress);
 //   const projectMethods = projectInstance.methods;
@@ -127,4 +143,5 @@ module.exports = {
   // fetchProjectModalData,
   demoInvestorVotesByProject,
   demoDepositCashflow,
+  fetchProjectCashFlow
 };
