@@ -18,6 +18,10 @@ const DemoOptions = (props) => {
         userDisplay={"demo developer dashboard"}
         navigateToDashBoard={() => handleClick("demoDeveloper")}
       />
+      <DashBoardOption
+        userDisplay={"investor dashboard(new)"}
+        navigateToDashBoard={() => handleClick("investor")}
+      />
     </div>
   );
 };
