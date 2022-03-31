@@ -17,6 +17,7 @@ module.exports = {
     new ExtractTextPlugin("style.css"),
     new HtmlWebpackPlugin({
       template: "./public/index.html",
+      favicon: "./frontend/images/icons/favicon.png"
     }),
   ],
   mode: "development",
