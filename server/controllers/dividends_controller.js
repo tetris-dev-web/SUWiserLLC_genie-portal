@@ -70,7 +70,6 @@ const collectDemoInvestorDividend = async () => {
 };
 
 const fetchDividendCollection = async (account) => {
-  // Get DividendCollection
   const dividendCollection = await fetchEvents(dividendsInstance, "DividendCollection", {account: account});
 
   return dividendCollection

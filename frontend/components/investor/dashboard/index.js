@@ -2,7 +2,7 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Card from './cards/card';
-import Orders from './details/Orders';
+import DashboardDetails from './details';
 
 export default function Dashboard() {
   return (
@@ -61,7 +61,7 @@ export default function Dashboard() {
       {/* Recent Orders */}
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-          <Orders />
+          <DashboardDetails />
         </Paper>
       </Grid>
     </Grid>
