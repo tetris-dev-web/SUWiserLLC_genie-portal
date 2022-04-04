@@ -32,7 +32,8 @@ function a11yProps(index) {
   };
 }
 
-export default function DashboardDetails() {
+ const DashboardDetails = (props) => {
+  const {assetList } = props;
 
   const [tabValue, setTabValue] = React.useState(0);
 
@@ -51,7 +52,7 @@ export default function DashboardDetails() {
         </Tabs>
       </Box>
       <TabPanel value={tabValue} index={0}>
-        <Assets />
+        <Assets assetList = {assetList} />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
         Item Two
@@ -65,3 +66,5 @@ export default function DashboardDetails() {
     </React.Fragment>
   );
 }
+
+export default DashboardDetails;
