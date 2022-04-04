@@ -8,7 +8,7 @@ function preventDefault(event) {
 }
 
 export default function Card(props) {
-  console.log(props.action);
+
   return (
     <React.Fragment>
       <Title>{props.title}</Title>

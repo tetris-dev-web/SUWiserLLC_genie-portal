@@ -5,6 +5,7 @@ import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 
 import Assets from './assets'
+import Earnings from './earnings'
 
 function TabPanel(props) {
   const { children, value, index, } = props;
@@ -33,7 +34,7 @@ function a11yProps(index) {
 }
 
  const DashboardDetails = (props) => {
-  const {assetList } = props;
+  const {assetList, setLoading } = props;
 
   const [tabValue, setTabValue] = React.useState(0);
 
@@ -55,10 +56,10 @@ function a11yProps(index) {
         <Assets assetList = {assetList} />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        Item Two
+        Transactions
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
-        Item Three
+        <Earnings setLoading = {setLoading} />
       </TabPanel>
       <TabPanel value={tabValue} index={4}>
         Item Three

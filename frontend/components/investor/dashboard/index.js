@@ -10,28 +10,49 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { fetchSharedProjectGraphData } from "../../../actions/chain_actions/project_actions";
+import { fetchInvestorSummary } from "../../../actions/chain_actions/dividends_actions";
 
 const Dashboard = (props) => {
   const { account, fetchSharedProjectGraphData } = props;
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [countAssets, setCountAssets] = React.useState(0);
+  const [purchaseTotal, setPurchaseTotal] = React.useState(0);
+  const [earningTotal, setEarningTotal] = React.useState(0);
   const [assetList, setAssetList] = React.useState({});
+  const [walletBalance, setWalletBalance] = React.useState(0);
+
+  let taskCount = 0;
 
   useEffect(() => {
     // Fetch Project Data
     fetchSharedProjectGraphData().then((projectGraphData) => {
       setCountAssets(Object.keys(projectGraphData.projects).length);
       setAssetList(projectGraphData.projects);
-      setIsLoading(false);
+
+      tastComplete();
+    });
+
+    // Fetch Investor Summary
+    fetchInvestorSummary(account).then((summary) => {
+      setEarningTotal(Number(summary.dividend) + Number(summary.dividendOwed));
+      setWalletBalance(summary.accountBalance);
+      setPurchaseTotal(Number(summary.purchaseTotal));
+
+      tastComplete();
     });
 
   }, [account]);
 
+  const tastComplete = () => {
+    taskCount ++;
+    if (taskCount == 2) setIsLoading(false);
+  }
+
   return (
     <Grid container spacing={3}>
       {/* Total Assets */}
-      <Grid item xs={12} md={4} lg={4}>
+      <Grid item xs={12} md={3} lg={3}>
         <Paper
           sx={{
             p: 2,
@@ -47,7 +68,7 @@ const Dashboard = (props) => {
       </Grid>
 
       {/* Total Investments */}
-      <Grid item xs={12} md={4} lg={4}>
+      <Grid item xs={12} md={3} lg={3}>
         <Paper
           sx={{
             p: 2,
@@ -57,13 +78,13 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Total Investments Value"
-            amount = "$356,000"
+            amount = {`$${purchaseTotal}`}
           />
         </Paper>
       </Grid>   
 
       {/* Total Earnings */}
-      <Grid item xs={12} md={4} lg={4}>
+      <Grid item xs={12} md={3} lg={3}>
         <Paper
           sx={{
             p: 2,
@@ -73,7 +94,23 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Total Earnings"
-            amount = "$23,000"
+            amount = {`$${earningTotal}`}
+          />
+        </Paper>
+      </Grid>
+
+      {/* Wallet Balance */}
+      <Grid item xs={12} md={3} lg={3}>
+        <Paper
+          sx={{
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <Card
+            title = "Wallet Balance"
+            amount = {`$${walletBalance}`}
           />
         </Paper>
       </Grid>  
@@ -83,6 +120,7 @@ const Dashboard = (props) => {
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
           <DashboardDetails
             assetList = {assetList}
+            setLoading = {setIsLoading}
           />
           <Backdrop
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -99,6 +137,7 @@ const Dashboard = (props) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchSharedProjectGraphData: () => dispatch(fetchSharedProjectGraphData()),
+    fetchInvestorSummary: (account) => dispatch(fetchInvestorSummary(account)),
   };
 };
 
