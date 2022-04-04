@@ -24,7 +24,7 @@ function Copyright(props) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        OwnShare
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -176,7 +176,7 @@ function InvestorContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
             {selAction == 'dashboard' && <Dashboard />}
             <Copyright sx={{ pt: 4 }} />
           </Container>

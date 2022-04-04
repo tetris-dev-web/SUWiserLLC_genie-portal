@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 
 import Assets from './assets'
 import Earnings from './earnings'
+import Transactions from './transactions'
+import Investments from './investments'
 
 function TabPanel(props) {
   const { children, value, index, } = props;
@@ -56,13 +58,13 @@ function a11yProps(index) {
         <Assets assetList = {assetList} />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        Transactions
+        <Transactions setLoading = {setLoading} />
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
         <Earnings setLoading = {setLoading} />
       </TabPanel>
       <TabPanel value={tabValue} index={4}>
-        Item Three
+        <Investments setLoading = {setLoading} />
       </TabPanel>
     </React.Fragment>
   );

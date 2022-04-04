@@ -89,6 +89,10 @@ export const fetchDemoInvestorBalances = () => {
   return ExpressAPI.fetchApiData("demo/fetch_investor_balance");
 };
 
+export const fetchTokenHistory = (account) => {
+  return ExpressAPI.fetchApiData(`investor/token_history/${account}`);
+}
+
 export const receiveTokenTransfer = (tokenTransfer) => {
   return {
     type: RECEIVE_TOKEN_TRANSFER,

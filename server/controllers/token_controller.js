@@ -41,8 +41,9 @@ const fetchTokenTransfers = async (account = '') => {
 
 const transfersData = async (tokenInstance, account = '') => {
   const events = await fetchEvents(tokenInstance, "Transfer");
+
   return events
-    .filter((event) => Number(event.returnValues.value) > 0 && (account == '' ? true : (account != '' && ( event.returnValues.from == account ||  event.returnValues.to == account ))))
+    .filter((event) => Number(event.returnValues.value) > 0 && (account == '' ? true : (account != '' && ( String(event.returnValues.from).toLowerCase() == String(account).toLowerCase() || String(event.returnValues.to).toLowerCase() == String(account).toLowerCase()))))
     .map((event) => {
       const data = merge({}, {
         from : event.returnValues.from,

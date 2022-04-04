@@ -15,7 +15,7 @@ import { fetchInvestorSummary } from "../../../actions/chain_actions/dividends_a
 const Dashboard = (props) => {
   const { account, fetchSharedProjectGraphData } = props;
 
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [countAssets, setCountAssets] = React.useState(0);
   const [purchaseTotal, setPurchaseTotal] = React.useState(0);
   const [earningTotal, setEarningTotal] = React.useState(0);
@@ -24,7 +24,9 @@ const Dashboard = (props) => {
 
   let taskCount = 0;
 
+  /*
   useEffect(() => {
+    setIsLoading(true);
     // Fetch Project Data
     fetchSharedProjectGraphData().then((projectGraphData) => {
       setCountAssets(Object.keys(projectGraphData.projects).length);
@@ -43,14 +45,14 @@ const Dashboard = (props) => {
     });
 
   }, [account]);
-
+*/
   const tastComplete = () => {
     taskCount ++;
     if (taskCount == 2) setIsLoading(false);
   }
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={2}>
       {/* Total Assets */}
       <Grid item xs={12} md={3} lg={3}>
         <Paper

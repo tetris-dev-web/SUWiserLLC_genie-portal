@@ -16,14 +16,13 @@ const Earnings = (props) => {
 
 
   useEffect(() => {
-    // Fetch Investor Summary
     setLoading(true);
     fetchDividendCollection(account).then((dividend) => {
 
       let localRows = [];
       let count = 0;
       for (const item of dividend.dividend) {
-        const time = item.time == 'NaN' ? '' : new Date(item.time);
+        const time = item.time == 'NaN' ? '' : new Date(item.time * 1000);
 
         localRows.push({
           id : count,
@@ -36,7 +35,7 @@ const Earnings = (props) => {
       }
 
       localRows.push({
-        count : count,
+        id : count,
         title : 'Owed',
         amount : dividend.dividendOwedTo,
         time : ''

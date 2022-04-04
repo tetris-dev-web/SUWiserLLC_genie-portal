@@ -247,7 +247,6 @@ app.get(
     const purchaseHistory = await fetchInvestorPurchase(account);
     const accountBalance = await web3.eth.getBalance(account);
 
-    const tokenHistory = await fetchTokenTransfers();
 
     res.send({
       dividend : dividendCollection.reduce((total, cur) => total + cur.amount, 0),
@@ -269,6 +268,16 @@ app.get(
       dividend : dividendCollection,
       dividendOwedTo : dividendOwedTo
     });
+  })
+);
+
+app.get(
+  "/api/investor/token_history/:account",
+  asyncMiddleware(async (req, res) => {
+    const { account } = req.params;
+    const tokenHistory = await fetchTokenTransfers(account);
+
+    res.send(tokenHistory);
   })
 );
 

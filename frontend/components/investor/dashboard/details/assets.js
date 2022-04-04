@@ -12,7 +12,7 @@ export default function Assets(props) {
   for (const [key, value] of Object.entries(assetList)) {
     const openingTime = new Date(value.openingTime);
     const closingTime = new Date(value.closingTime);
-    const activationTime = value.activationTime == 0 ? '' : new Date(value.activationTime);
+    const activationTime = value.activationTime == 0 ? '' : new Date(value.activationTime * 1000);
 
     rows.push({
       id : key,
