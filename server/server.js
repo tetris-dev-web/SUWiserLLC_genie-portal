@@ -286,12 +286,8 @@ app.get(
   asyncMiddleware(async (req, res) => {
     const { account } = req.params;
     const purchaseHistory = await fetchInvestorPurchase(account);
-    const tokenHistory = await fetchTokenTransfers(account);
 
-    res.send({
-      purchaseHistory : purchaseHistory,
-      tokenHistory : tokenHistory
-    });
+    res.send(purchaseHistory);
   })
 );
 

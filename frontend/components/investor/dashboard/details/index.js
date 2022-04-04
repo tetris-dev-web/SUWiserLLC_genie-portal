@@ -51,7 +51,7 @@ function a11yProps(index) {
           <Tab label="Latest Assets" {...a11yProps(0)} />
           <Tab label="Recent Transactions" {...a11yProps(1)} />
           <Tab label="Recent Earnings" {...a11yProps(2)} />
-          <Tab label="Viewed Assets" {...a11yProps(3)} />
+          <Tab label="Investments" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <TabPanel value={tabValue} index={0}>
@@ -63,7 +63,7 @@ function a11yProps(index) {
       <TabPanel value={tabValue} index={2}>
         <Earnings setLoading = {setLoading} />
       </TabPanel>
-      <TabPanel value={tabValue} index={4}>
+      <TabPanel value={tabValue} index={3}>
         <Investments setLoading = {setLoading} />
       </TabPanel>
     </React.Fragment>

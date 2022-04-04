@@ -93,6 +93,10 @@ export const fetchTokenHistory = (account) => {
   return ExpressAPI.fetchApiData(`investor/token_history/${account}`);
 }
 
+export const fetchPurchaseHistory = (account) => {
+  return ExpressAPI.fetchApiData(`investor/purchase_history/${account}`);
+}
+
 export const receiveTokenTransfer = (tokenTransfer) => {
   return {
     type: RECEIVE_TOKEN_TRANSFER,

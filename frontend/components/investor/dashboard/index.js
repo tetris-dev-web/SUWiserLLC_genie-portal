@@ -24,7 +24,6 @@ const Dashboard = (props) => {
 
   let taskCount = 0;
 
-  /*
   useEffect(() => {
     setIsLoading(true);
     // Fetch Project Data
@@ -45,7 +44,7 @@ const Dashboard = (props) => {
     });
 
   }, [account]);
-*/
+
   const tastComplete = () => {
     taskCount ++;
     if (taskCount == 2) setIsLoading(false);
