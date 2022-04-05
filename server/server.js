@@ -247,15 +247,47 @@ app.get(
     const purchaseHistory = await fetchInvestorPurchase(account);
     const accountBalance = await web3.eth.getBalance(account);
 
-    const tokenHistory = await fetchTokenTransfers();
-console.log(tokenHistory);
 
     res.send({
-      dividend : dividendCollection.reduce((prev, cur) => prev.amount + cur.amount, 0),
+      dividend : dividendCollection.reduce((total, cur) => total + cur.amount, 0),
       dividendOwed : dividendOwedTo,
-      purchaseTotal : purchaseHistory.reduce((prev, cur) => prev.value + cur.value, 0),
+      purchaseTotal : purchaseHistory.reduce((total, cur) => total + cur.value, 0),
       accountBalance : accountBalance
     });
+  })
+);
+
+app.get(
+  "/api/investor/dividend_history/:account",
+  asyncMiddleware(async (req, res) => {
+    const { account } = req.params;
+    const dividendCollection = await fetchDividendCollection(account);
+    const dividendOwedTo = await fetchDividendOwedTo(account);
+
+    res.send({
+      dividend : dividendCollection,
+      dividendOwedTo : dividendOwedTo
+    });
+  })
+);
+
+app.get(
+  "/api/investor/token_history/:account",
+  asyncMiddleware(async (req, res) => {
+    const { account } = req.params;
+    const tokenHistory = await fetchTokenTransfers(account);
+
+    res.send(tokenHistory);
+  })
+);
+
+app.get(
+  "/api/investor/purchase_history/:account",
+  asyncMiddleware(async (req, res) => {
+    const { account } = req.params;
+    const purchaseHistory = await fetchInvestorPurchase(account);
+
+    res.send(purchaseHistory);
   })
 );
 
