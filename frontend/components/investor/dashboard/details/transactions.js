@@ -89,32 +89,34 @@ const Transactions = (props) => {
   }, [account]);
 
   return (
-    <Table size="small">
-      <TableHead>
-        <TableRow>
-          <TableCell>Token Type</TableCell>
-          <TableCell>Action</TableCell>
-          <TableCell>From</TableCell>
-          <TableCell>To</TableCell>
-          <TableCell>Amount</TableCell>
-          <TableCell>Balance</TableCell>
-          <TableCell>Time</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {rows.map((row) => (
-          <TableRow key = {row.id}>
-            <TableCell>{row.type}</TableCell>
-            <TableCell>{row.action}</TableCell>
-            <TableCell>{row.from}</TableCell>
-            <TableCell>{row.to}</TableCell>
-            <TableCell>{row.amount}</TableCell>
-            <TableCell>{row.balance}</TableCell>
-            <TableCell>{row.time}</TableCell>
+    <div>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Token Type</TableCell>
+            <TableCell>Action</TableCell>
+            <TableCell>From</TableCell>
+            <TableCell>To</TableCell>
+            <TableCell>Amount</TableCell>
+            <TableCell>Balance</TableCell>
+            <TableCell>Time</TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key = {row.id}>
+              <TableCell>{row.type}</TableCell>
+              <TableCell>{row.action}</TableCell>
+              <TableCell>{row.from}</TableCell>
+              <TableCell>{row.to}</TableCell>
+              <TableCell>{row.amount}</TableCell>
+              <TableCell>{row.balance}</TableCell>
+              <TableCell>{row.time}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 

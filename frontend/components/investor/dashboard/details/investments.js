@@ -61,24 +61,26 @@ const Investments = (props) => {
   }, [account]);
 
   return (
-    <Table size="small">
-      <TableHead>
-        <TableRow>
-          <TableCell>Token Amount</TableCell>
-          <TableCell>Price</TableCell>
-          <TableCell>Time</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {rows.map((row) => (
-          <TableRow key = {row.id}>
-            <TableCell>{row.amount}</TableCell>
-            <TableCell>{`$${row.price}`}</TableCell>
-            <TableCell>{row.time}</TableCell>
+    <div>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Token Amount</TableCell>
+            <TableCell>Price</TableCell>
+            <TableCell>Time</TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key = {row.id}>
+              <TableCell>{row.amount}</TableCell>
+              <TableCell>{`$${row.price}`}</TableCell>
+              <TableCell>{row.time}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 

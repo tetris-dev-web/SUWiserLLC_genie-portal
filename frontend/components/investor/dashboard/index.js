@@ -27,6 +27,7 @@ const Dashboard = (props) => {
   useEffect(() => {
     setIsLoading(true);
     // Fetch Project Data
+    console.log('fetch graph');
     fetchSharedProjectGraphData().then((projectGraphData) => {
       setCountAssets(Object.keys(projectGraphData.projects).length);
       setAssetList(projectGraphData.projects);
@@ -35,6 +36,7 @@ const Dashboard = (props) => {
     });
 
     // Fetch Investor Summary
+    console.log('fetch summary : ' + account);
     fetchInvestorSummary(account).then((summary) => {
       setEarningTotal(Number(summary.dividend) + Number(summary.dividendOwed));
       setWalletBalance(summary.accountBalance);
