@@ -1,8 +1,8 @@
 import {
   RECEIVE_TOKEN_GRAPH_DATA,
   RECEIVE_TOKEN_TRANSFER,
-} from "../actions/chain_actions/token_actions";
-import { RECEIVE_DIVIDENDS } from "../actions/chain_actions/dividends_actions";
+} from "../../actions/chain_actions/token_actions";
+import { RECEIVE_DIVIDENDS } from "../../actions/chain_actions/dividends_actions";
 import { merge } from "lodash";
 
 const tokenGraphByAllReducer = (state = null, action) => {

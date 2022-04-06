@@ -1,7 +1,7 @@
 import {
   NOTIFY_TRANSACTION_COMPLETION,
   CLEAR_TRANSACTION_NOTIFICATION,
-} from "../actions/ui_actions";
+} from "../../actions/ui_actions";
 import { merge } from "lodash";
 
 const transactionNotificationReducer = (state = "", action) => {

@@ -1,5 +1,5 @@
 import merge from "lodash/merge";
-import { RECEIVE_START_AND_END_TIME } from "../actions/chain_actions/time_axis_actions";
+import { RECEIVE_START_AND_END_TIME } from "../../actions/chain_actions/time_axis_actions";
 
 const timeAxis = (state = [], action) => {
   // console.log("actionsFromTimeAxis:",action);

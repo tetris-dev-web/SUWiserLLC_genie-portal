@@ -2,7 +2,7 @@ import {
   OPEN_MODAL,
   CLOSE_MODAL,
   // RECEIVE_PROJECT,
-} from "../actions/modal_actions";
+} from "../../actions/modal_actions";
 import { merge } from "lodash";
 
 const modalReducer = (state = [], action) => {

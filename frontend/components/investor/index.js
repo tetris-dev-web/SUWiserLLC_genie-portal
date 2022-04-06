@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { connect } from "react-redux";
+
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -15,6 +17,12 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 import NavItems from './leftNavigation';
 import Dashboard from './dashboard'
 const { merge } = require("lodash");
@@ -93,10 +101,13 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function InvestorContent() {
+const InvestorDashboard = (props) => {
+  const {updateSettingsCurrency} = props;
+
   const [open, setOpen] = React.useState(true);
   const [title, setTitle] = React.useState("Dashboard");
   const [selAction, setSelAction] = React.useState("dashboard");
+  const [currency, setCurrency] = React.useState('wei');
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -106,6 +117,11 @@ function InvestorContent() {
     setTitle(title);
     setSelAction(action);
   }
+
+  const handleCurrencyChange = (event) => {
+    updateSettingsCurrency(event.target.value);
+    setCurrency(event.target.value);
+  };
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -138,11 +154,26 @@ function InvestorContent() {
             >
               {title}
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            {false &&
+              <IconButton color="inherit">
+                <Badge badgeContent={4} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            }
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={currency}
+              label="Currency"
+              variant="standard"
+              color = "primary"
+              onChange={handleCurrencyChange}
+            >
+              <MenuItem value='wei'>WEI</MenuItem>
+              <MenuItem value='eth'>ETH</MenuItem>
+              <MenuItem value='usd'>USD</MenuItem>
+            </Select>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -186,6 +217,20 @@ function InvestorContent() {
   );
 }
 
-export default function InvestorDashboard() {
-  return <InvestorContent />;
-}
+const mapStateToProps = (state) => {
+  return {
+    web3: state.network.web3,
+    account: state.network.account,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateSettingsCurrency: (currency) => dispatch({
+      type : 'SETTINGS_UPDATE_CURRENCY',
+      currency : currency
+    }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(InvestorDashboard);

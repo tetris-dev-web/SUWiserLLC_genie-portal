@@ -5,15 +5,15 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Card from './cards/card';
 import DashboardDetails from './details';
-
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { fetchSharedProjectGraphData } from "../../../actions/chain_actions/project_actions";
 import { fetchInvestorSummary } from "../../../actions/chain_actions/dividends_actions";
+import { showCurrencyValue } from "../../../util/function_util";
 
 const Dashboard = (props) => {
-  const { account, fetchSharedProjectGraphData } = props;
+  const { account, fetchSharedProjectGraphData, currency} = props;
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [countAssets, setCountAssets] = React.useState(0);
@@ -26,13 +26,14 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     setIsLoading(true);
+
     // Fetch Project Data
     console.log('fetch graph');
     fetchSharedProjectGraphData().then((projectGraphData) => {
       setCountAssets(Object.keys(projectGraphData.projects).length);
       setAssetList(projectGraphData.projects);
 
-      tastComplete();
+      taskComplete();
     });
 
     // Fetch Investor Summary
@@ -42,12 +43,12 @@ const Dashboard = (props) => {
       setWalletBalance(summary.accountBalance);
       setPurchaseTotal(Number(summary.purchaseTotal));
 
-      tastComplete();
+      taskComplete();
     });
 
   }, [account]);
 
-  const tastComplete = () => {
+  const taskComplete = () => {
     taskCount ++;
     if (taskCount == 2) setIsLoading(false);
   }
@@ -81,7 +82,7 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Total Investments Value"
-            amount = {`$${purchaseTotal}`}
+            amount = {showCurrencyValue(purchaseTotal, currency)}
           />
         </Paper>
       </Grid>   
@@ -97,7 +98,7 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Total Earnings"
-            amount = {`$${earningTotal}`}
+            amount = {showCurrencyValue(earningTotal, currency)}
           />
         </Paper>
       </Grid>
@@ -113,7 +114,7 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Wallet Balance"
-            amount = {`$${walletBalance}`}
+            amount = {showCurrencyValue(walletBalance, currency)}
           />
         </Paper>
       </Grid>  
@@ -156,6 +157,7 @@ const mapStateToProps = (state) => {
     projectContract: state.network.projectContract,
     projectFactoryInstance: state.network.projectFactoryInstance,
     capitalBeingRaised: state.chain_data.capitalBeingRaised, //undefined
+    currency: state.settings.currency
   };
 };
 

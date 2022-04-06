@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.getState = store.getState; //just for development purposes - remove later - use logger
 
     const root = document.getElementById("root");
-    ReactDOM.render(<Root store={store} window={window} networkVersion={3} />, root);
+    ReactDOM.render(<Root store={store} window={window} networkVersion={3} />, root);gfhfhhffhgj
     // })
   }
 });

@@ -1,7 +1,7 @@
 import {
   RECEIVE_TOKEN_GRAPH_DATA,
   RECEIVE_TOKEN_TRANSFER,
-} from "../actions/chain_actions/token_actions";
+} from "../../actions/chain_actions/token_actions";
 import { merge } from "lodash";
 
 const tokenGraphByUserReducer = (state = null, action) => {

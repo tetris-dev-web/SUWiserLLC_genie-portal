@@ -1,4 +1,4 @@
-import { UPDATE_TRANSACTION_MODAL } from "../actions/ui_actions";
+import { UPDATE_TRANSACTION_MODAL } from "../../actions/ui_actions";
 import { merge } from "lodash";
 
 const transactionModalReducer = (state = { isOpen: false, title: "", message: "" }, action) => {

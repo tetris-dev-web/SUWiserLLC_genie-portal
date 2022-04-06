@@ -3,7 +3,7 @@ import { merge, values } from "lodash";
 import {
   RECEIVE_CAPITAL_HISTORY,
   RECEIVE_TOKEN_PURCHASE,
-} from "../actions/chain_actions/token_actions";
+} from "../../actions/chain_actions/token_actions";
 
 const capitalHistoryReducer = (state = {}, action) => {
   Object.freeze(state);
