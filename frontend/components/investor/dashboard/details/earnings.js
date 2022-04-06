@@ -8,9 +8,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import { fetchDividendCollection } from "../../../../actions/chain_actions/dividends_actions";
+import { showCurrencyValue } from "../../../../util/function_util";
 
 const Earnings = (props) => {
-  const {account, setLoading} = props;
+  const {account, currency, setLoading} = props;
 
   const [rows, setRows] = React.useState([]);
 
@@ -61,7 +62,7 @@ const Earnings = (props) => {
           {rows.map((row) => (
             <TableRow key = {row.id}>
               <TableCell>{row.title}</TableCell>
-              <TableCell>{row.amount}</TableCell>
+              <TableCell>{showCurrencyValue(row.amount, currency)}</TableCell>
               <TableCell>{row.time}</TableCell>
             </TableRow>
           ))}
@@ -80,6 +81,7 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     account: state.network.account,
+    currency: state.settings.currency
   };
 };
 

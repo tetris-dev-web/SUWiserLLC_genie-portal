@@ -8,27 +8,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 import { fetchPurchaseHistory  } from "../../../../actions/chain_actions/token_actions";
-
-const defineAction = (from, to, account) => {
-  if (from == account) {
-    if (to == "0x0000000000000000000000000000000000000000") {
-      return "Burn";
-    } else {
-      return "Transfer";
-    }
-  }
-
-  if (to == account) {
-    if (from == "0x0000000000000000000000000000000000000000") {
-      return "Mint";
-    } else {
-      return "Receive";
-    }
-  }
-}
+import { showCurrencyValue } from "../../../../util/function_util";
 
 const Investments = (props) => {
-  const {account, setLoading} = props;
+  const {account, currency, setLoading} = props;
 
   const [rows, setRows] = React.useState([]);
 
@@ -74,7 +57,7 @@ const Investments = (props) => {
           {rows.map((row) => (
             <TableRow key = {row.id}>
               <TableCell>{row.amount}</TableCell>
-              <TableCell>{`$${row.price}`}</TableCell>
+              <TableCell>{showCurrencyValue(row.price, currency)}</TableCell>
               <TableCell>{row.time}</TableCell>
             </TableRow>
           ))}
@@ -93,6 +76,7 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     account: state.network.account,
+    currency: state.settings.currency
   };
 };
 

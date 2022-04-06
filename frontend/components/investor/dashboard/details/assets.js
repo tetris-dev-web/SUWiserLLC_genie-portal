@@ -35,7 +35,7 @@ export default function Assets(props) {
             <TableCell>Opening</TableCell>
             <TableCell>Closing</TableCell>
             <TableCell>Activation Time</TableCell>
-            <TableCell align="right">Total Vots</TableCell>
+            <TableCell align="right">Total Votes</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
