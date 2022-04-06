@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
-import modals from "./modal_reducer";
-import transactionNotification from "./transaction_notification_reducer";
-import transactionModal from "./transaction_modal_reducer";
+import modals from "./ui/modal_reducer";
+import transactionNotification from "./ui/transaction_notification_reducer";
+import transactionModal from "./ui/transaction_modal_reducer";
 // import loginModal from './login_modal_reducer';
 
 const uiReducer = combineReducers({
