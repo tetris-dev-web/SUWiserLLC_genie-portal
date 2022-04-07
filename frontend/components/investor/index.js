@@ -23,6 +23,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import NavItems from './leftNavigation';
 import Dashboard from './dashboard'
+import OWLogo from "../../images/icons/ow-logo.svg";
+
 const { merge } = require("lodash");
 
 import { getETH2USD } from '../../actions/currency_actions';
@@ -122,12 +124,14 @@ const InvestorDashboard = (props) => {
     if (String(event.target.value).toLowerCase() == 'usd') {
       getETH2USD().then(response => {
         updateSettingsETH2USD(response.data.rates.USD);
+        updateSettingsCurrency(event.target.value);
+        setCurrency(event.target.value);
       });
-      
-    }
+    } else {
+      updateSettingsCurrency(event.target.value);
+      setCurrency(event.target.value);
 
-    updateSettingsCurrency(event.target.value);
-    setCurrency(event.target.value);
+    }
   };
 
   return (
@@ -192,6 +196,9 @@ const InvestorDashboard = (props) => {
               px: [1],
             }}
           >
+            <Link href="/" underline="none">
+            <img className="gen-logo" src={OWLogo} style={{ marginTop: 15 }} />
+            </Link>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>

@@ -11,7 +11,7 @@ import "./root.scss";
 const Root = (props) => {
   const { store, window, networkVersion } = props;
   // console.log('networkVersion=', networkVersion);
-  // console.log('store', store);
+  // console.log('store', store.getState());
   // console.log("window", window);
 
   const RootApplication = () => {
@@ -27,7 +27,8 @@ const Root = (props) => {
       </Provider>
     );
   };
-  if (window.web3 && networkVersion === "3") {
+
+  if (window.ethereum && networkVersion === "3") {
     return <RootApplication />;
   } else {
     const web3 = window.web3;
