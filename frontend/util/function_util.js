@@ -10,7 +10,7 @@ export function usePrevious(value) {
   return ref.current;
 }
 
-export const showCurrencyValue = (wei, currency) => {
+export const showCurrencyValue = (wei, currency, eth2usd) => {
   let returnValue = '';
 
   switch (String(currency).toLowerCase()) {
@@ -18,7 +18,8 @@ export const showCurrencyValue = (wei, currency) => {
       returnValue = Number(wei) / (Math.pow(10, 18));
       break;
     case 'usd':
-      returnValue = `$${wei}`;
+      const usd = Number(wei) * eth2usd/ (Math.pow(10, 18));
+      returnValue = `$${usd}`;
       break;
     case 'wei':
     default:

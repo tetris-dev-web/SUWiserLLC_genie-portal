@@ -11,7 +11,7 @@ import { fetchDividendCollection } from "../../../../actions/chain_actions/divid
 import { showCurrencyValue } from "../../../../util/function_util";
 
 const Earnings = (props) => {
-  const {account, currency, setLoading} = props;
+  const {account, currency, eth2usd, setLoading} = props;
 
   const [rows, setRows] = React.useState([]);
 
@@ -62,7 +62,7 @@ const Earnings = (props) => {
           {rows.map((row) => (
             <TableRow key = {row.id}>
               <TableCell>{row.title}</TableCell>
-              <TableCell>{showCurrencyValue(row.amount, currency)}</TableCell>
+              <TableCell>{showCurrencyValue(row.amount, currency, eth2usd)}</TableCell>
               <TableCell>{row.time}</TableCell>
             </TableRow>
           ))}
@@ -81,7 +81,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     account: state.network.account,
-    currency: state.settings.currency
+    currency: state.settings.currency,
+    eth2usd: state.settings.eth2usd
   };
 };
 

@@ -1,6 +1,5 @@
-export const fetchApiData = (type, payload = {}) => {
-  return fetch(`/api/${type}`, payload).then((response) => {
-    console.log(response, "response");
+export const getETH2USD = () => {
+  return fetch('https://api.coinbase.com/v2/exchange-rates?currency=ETH', {}).then((response) => {
     return response
       .json()
       .then((data) => {

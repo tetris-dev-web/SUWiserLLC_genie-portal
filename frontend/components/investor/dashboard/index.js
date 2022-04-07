@@ -13,7 +13,7 @@ import { fetchInvestorSummary } from "../../../actions/chain_actions/dividends_a
 import { showCurrencyValue } from "../../../util/function_util";
 
 const Dashboard = (props) => {
-  const { account, fetchSharedProjectGraphData, currency} = props;
+  const { account, fetchSharedProjectGraphData, currency, eth2usd} = props;
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [countAssets, setCountAssets] = React.useState(0);
@@ -82,7 +82,7 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Total Investments Value"
-            amount = {showCurrencyValue(purchaseTotal, currency)}
+            amount = {showCurrencyValue(purchaseTotal, currency, eth2usd)}
           />
         </Paper>
       </Grid>   
@@ -98,7 +98,7 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Total Earnings"
-            amount = {showCurrencyValue(earningTotal, currency)}
+            amount = {showCurrencyValue(earningTotal, currency, eth2usd)}
           />
         </Paper>
       </Grid>
@@ -114,7 +114,7 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Wallet Balance"
-            amount = {showCurrencyValue(walletBalance, currency)}
+            amount = {showCurrencyValue(walletBalance, currency, eth2usd)}
           />
         </Paper>
       </Grid>  
@@ -157,7 +157,8 @@ const mapStateToProps = (state) => {
     projectContract: state.network.projectContract,
     projectFactoryInstance: state.network.projectFactoryInstance,
     capitalBeingRaised: state.chain_data.capitalBeingRaised, //undefined
-    currency: state.settings.currency
+    currency: state.settings.currency,
+    eth2usd: state.settings.eth2usd
   };
 };
 

@@ -11,11 +11,9 @@ import { fetchPurchaseHistory  } from "../../../../actions/chain_actions/token_a
 import { showCurrencyValue } from "../../../../util/function_util";
 
 const Investments = (props) => {
-  const {account, currency, setLoading} = props;
+  const {account, currency, eth2usd, setLoading} = props;
 
   const [rows, setRows] = React.useState([]);
-
-  const accountStr = String(account).toLowerCase();
 
   useEffect(() => {
     setLoading(true);
@@ -57,7 +55,7 @@ const Investments = (props) => {
           {rows.map((row) => (
             <TableRow key = {row.id}>
               <TableCell>{row.amount}</TableCell>
-              <TableCell>{showCurrencyValue(row.price, currency)}</TableCell>
+              <TableCell>{showCurrencyValue(row.price, currency, eth2usd)}</TableCell>
               <TableCell>{row.time}</TableCell>
             </TableRow>
           ))}
@@ -76,7 +74,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     account: state.network.account,
-    currency: state.settings.currency
+    currency: state.settings.currency,
+    eth2usd: state.settings.eth2usd
   };
 };
 

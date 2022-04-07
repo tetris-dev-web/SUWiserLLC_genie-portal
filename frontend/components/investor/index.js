@@ -18,14 +18,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import NavItems from './leftNavigation';
 import Dashboard from './dashboard'
 const { merge } = require("lodash");
+
+import { getETH2USD } from '../../actions/currency_actions';
 
 function Copyright(props) {
   return (
@@ -102,7 +102,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 const InvestorDashboard = (props) => {
-  const {updateSettingsCurrency} = props;
+  const {updateSettingsCurrency, updateSettingsETH2USD} = props;
 
   const [open, setOpen] = React.useState(true);
   const [title, setTitle] = React.useState("Dashboard");
@@ -119,6 +119,13 @@ const InvestorDashboard = (props) => {
   }
 
   const handleCurrencyChange = (event) => {
+    if (String(event.target.value).toLowerCase() == 'usd') {
+      getETH2USD().then(response => {
+        updateSettingsETH2USD(response.data.rates.USD);
+      });
+      
+    }
+
     updateSettingsCurrency(event.target.value);
     setCurrency(event.target.value);
   };
@@ -229,6 +236,10 @@ const mapDispatchToProps = (dispatch) => {
     updateSettingsCurrency: (currency) => dispatch({
       type : 'SETTINGS_UPDATE_CURRENCY',
       currency : currency
+    }),
+    updateSettingsETH2USD: (rate) => dispatch({
+      type : 'SETTINGS_UPDATE_ETH2USD',
+      eth2usd : rate
     }),
   };
 };

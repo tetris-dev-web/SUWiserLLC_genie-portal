@@ -5,6 +5,8 @@ const settingsReducer = (state = {}, action) => {
   switch (action.type) {
     case 'SETTINGS_UPDATE_CURRENCY':
       return merge({}, state, {currency : action.currency});
+    case 'SETTINGS_UPDATE_ETH2USD':
+      return merge({}, state, {eth2usd : action.eth2usd});
     default:
       return state;
   }

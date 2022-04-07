@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let provider;
   let preloadedState = {};
   if (typeof window.ethereum !== "undefined") {
+
     web3Provider = window.ethereum;
 
     provider = new Web3(web3Provider);
@@ -198,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.getState = store.getState; //just for development purposes - remove later - use logger
 
     const root = document.getElementById("root");
-    ReactDOM.render(<Root store={store} window={window} networkVersion={3} />, root);gfhfhhffhgj
+    ReactDOM.render(<Root store={store} window={window} networkVersion={3} />, root);
     // })
   }
 });
