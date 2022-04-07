@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
+import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,11 +12,9 @@ import { fetchPurchaseHistory  } from "../../../../actions/chain_actions/token_a
 import { showCurrencyValue } from "../../../../util/function_util";
 
 const Investments = (props) => {
-  const {account, currency, setLoading} = props;
+  const {account, currency, eth2usd, setLoading} = props;
 
   const [rows, setRows] = React.useState([]);
-
-  const accountStr = String(account).toLowerCase();
 
   useEffect(() => {
     setLoading(true);
@@ -44,7 +43,7 @@ const Investments = (props) => {
   }, [account]);
 
   return (
-    <div>
+    <TableContainer>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -57,13 +56,13 @@ const Investments = (props) => {
           {rows.map((row) => (
             <TableRow key = {row.id}>
               <TableCell>{row.amount}</TableCell>
-              <TableCell>{showCurrencyValue(row.price, currency)}</TableCell>
+              <TableCell>{showCurrencyValue(row.price, currency, eth2usd)}</TableCell>
               <TableCell>{row.time}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </div>
+    </TableContainer>
   );
 }
 
@@ -76,7 +75,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     account: state.network.account,
-    currency: state.settings.currency
+    currency: state.settings.currency,
+    eth2usd: state.settings.eth2usd
   };
 };
 

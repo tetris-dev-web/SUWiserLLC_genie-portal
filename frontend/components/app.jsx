@@ -13,6 +13,8 @@ import { updateNetwork } from "../actions/chain_actions/network_actions";
 import "./app.scss";
 import "./landing/landing.scss";
 
+import InvestorContent from "./investor";
+
 const App = (props) => {
   const {
     provider,
@@ -91,6 +93,7 @@ const App = (props) => {
   } else if (history.location.pathname == "/dashboard/investor") {
     return (
       <div className="rootDiv">
+        <InvestorContent />
       </div>
     );
   } else {

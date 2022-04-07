@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
+import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -89,7 +90,7 @@ const Transactions = (props) => {
   }, [account]);
 
   return (
-    <div>
+    <TableContainer >
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -116,7 +117,7 @@ const Transactions = (props) => {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </TableContainer>
   );
 }
 

@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { fetchProjects, fetchProject } from "../../../actions/chain_actions/project_actions";
+import { fetchProject } from "../../../actions/chain_actions/project_actions";
 import DashboardGraph from "./dashboard_graph";
 import { fetchTokenPurchaseLogs } from "../../../actions/chain_actions/token_actions";
 

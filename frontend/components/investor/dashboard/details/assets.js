@@ -1,4 +1,5 @@
 import * as React from 'react';
+import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -26,7 +27,7 @@ export default function Assets(props) {
   }
 
   return (
-    <div>
+    <TableContainer>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -51,6 +52,6 @@ export default function Assets(props) {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </TableContainer>
   );
 }

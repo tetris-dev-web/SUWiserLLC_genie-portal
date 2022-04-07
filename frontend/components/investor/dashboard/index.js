@@ -13,7 +13,7 @@ import { fetchInvestorSummary } from "../../../actions/chain_actions/dividends_a
 import { showCurrencyValue } from "../../../util/function_util";
 
 const Dashboard = (props) => {
-  const { account, fetchSharedProjectGraphData, currency} = props;
+  const { account, fetchSharedProjectGraphData, currency, eth2usd} = props;
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [countAssets, setCountAssets] = React.useState(0);
@@ -28,7 +28,6 @@ const Dashboard = (props) => {
     setIsLoading(true);
 
     // Fetch Project Data
-    console.log('fetch graph');
     fetchSharedProjectGraphData().then((projectGraphData) => {
       setCountAssets(Object.keys(projectGraphData.projects).length);
       setAssetList(projectGraphData.projects);
@@ -37,7 +36,6 @@ const Dashboard = (props) => {
     });
 
     // Fetch Investor Summary
-    console.log('fetch summary : ' + account);
     fetchInvestorSummary(account).then((summary) => {
       setEarningTotal(Number(summary.dividend) + Number(summary.dividendOwed));
       setWalletBalance(summary.accountBalance);
@@ -82,7 +80,7 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Total Investments Value"
-            amount = {showCurrencyValue(purchaseTotal, currency)}
+            amount = {showCurrencyValue(purchaseTotal, currency, eth2usd)}
           />
         </Paper>
       </Grid>   
@@ -98,7 +96,7 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Total Earnings"
-            amount = {showCurrencyValue(earningTotal, currency)}
+            amount = {showCurrencyValue(earningTotal, currency, eth2usd)}
           />
         </Paper>
       </Grid>
@@ -114,7 +112,7 @@ const Dashboard = (props) => {
         >
           <Card
             title = "Wallet Balance"
-            amount = {showCurrencyValue(walletBalance, currency)}
+            amount = {showCurrencyValue(walletBalance, currency, eth2usd)}
           />
         </Paper>
       </Grid>  
@@ -148,16 +146,9 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
 
   return {
-    //token related props
-    crowdsale: state.network.crowdsaleInstance,
     account: state.network.account,
-    //projects related props
-    web3: state.network.web3,
-    crowdsaleInstance: state.network.crowdsaleInstance,
-    projectContract: state.network.projectContract,
-    projectFactoryInstance: state.network.projectFactoryInstance,
-    capitalBeingRaised: state.chain_data.capitalBeingRaised, //undefined
-    currency: state.settings.currency
+    currency: state.settings.currency,
+    eth2usd: state.settings.eth2usd
   };
 };
 
