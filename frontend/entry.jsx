@@ -5,6 +5,7 @@ import configureStore from "./store/store";
 import Root from "./components/root";
 import merge from "lodash/merge";
 import Web3 from "web3";
+
 import TruffleContract from "truffle-contract";
 import GNITokenCrowdsale from "../truffle/build/contracts/GNITokenCrowdsale.json";
 import SeedableCrowdsale from "../truffle/build/contracts/SeedableCrowdsale.json";
@@ -19,16 +20,21 @@ import Activation from "../truffle/build/contracts/Activation.json";
 import ProjectLeaderTracker from "../truffle/build/contracts/ProjectLeaderTracker.json";
 import Dividends from "../truffle/build/contracts/Dividends.json";
 
-document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", async () => {
   let store;
   let web3Provider;
   let provider;
   let preloadedState = {};
-  if (typeof window.ethereum !== "undefined") {
-    web3Provider = window.ethereum;
+  const Web3 = require('web3');
 
+  if (typeof window.ethereum !== "undefined") {
+
+    const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
+    window.web3 = new Web3(window.ethereum);
+
+    web3Provider = window.ethereum;
     provider = new Web3(web3Provider);
-    console.log(window.ethereum)
 
     const inactiveToken = TruffleContract(InactiveToken);
     inactiveToken.setProvider(web3Provider);
@@ -72,7 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let projectLeaderTrackerInstance;
     let dividendsInstance;
 
-    account = process.env.DEV_ACCOUNT;
+    account = accounts[0];
+
     // provider.eth.getCoinbase((err, _account) => {
     // account = _account;
     // console.log("tokenInst: ", token)
