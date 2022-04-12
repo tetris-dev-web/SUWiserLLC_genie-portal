@@ -4,11 +4,11 @@ export const fetchApiData = (type, payload = {}) => {
     return response
       .json()
       .then((data) => {
-        console.log(data, "data");
+        console.log(data);
         return data;
       })
       .catch((error) => {
-        console.log(error, "error");
+        console.error(error);
         return error;
       });
   });
