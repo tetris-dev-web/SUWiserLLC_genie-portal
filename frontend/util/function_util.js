@@ -9,3 +9,22 @@ export function usePrevious(value) {
   });
   return ref.current;
 }
+
+export const showCurrencyValue = (wei, currency, eth2usd) => {
+  let returnValue = '';
+
+  switch (String(currency).toLowerCase()) {
+    case 'eth':
+      returnValue = Number(wei) / (Math.pow(10, 18));
+      break;
+    case 'usd':
+      const usd = Number(wei) * eth2usd/ (Math.pow(10, 18));
+      returnValue = `$${usd}`;
+      break;
+    case 'wei':
+    default:
+      returnValue = wei;
+  }
+
+  return returnValue;
+}
